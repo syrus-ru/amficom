@@ -18,5 +18,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mapinfo_v1_modifying"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapviewclient_v1_modifying"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/filterclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/measurement_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/analysis"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dadara_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

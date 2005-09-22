@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilder.java,v 1.3 2005/08/31 10:29:03 peskovsky Exp $
+ * $Id: ReportBuilder.java,v 1.4 2005/09/22 14:50:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ public class ReportBuilder extends AbstractApplication {
 	
 	@Override
 	protected void init() {
-		super.init();
 		super.aContext.setApplicationModel(new ReportBuilderApplicationModelFactory().create());
 		super.startMainFrame(new ReportBuilderMainFrame(super.aContext), (Image)UIManager.get(ICON_SCHEMATICS));
 	}

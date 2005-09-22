@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeMouseListener.java,v 1.1 2005/09/18 13:13:19 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeMouseListener.java,v 1.2 2005/09/22 14:50:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.reportbuilder.ModuleMode.MODULE_MODE;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportDataChecker;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -45,6 +46,9 @@ public class ReportTemplateElementsTreeMouseListener implements MouseListener{
 			TreePath treePath = 
 				this.tree.getPathForLocation(e.getX(),e.getY());
 			
+			if (treePath == null)
+				return;
+			
 			if (treePath.getPathCount() < 2)
 				//TODO Отслеживать значение pathCount - оно от дерева
 				//Схемных элементов зависит
@@ -58,14 +62,7 @@ public class ReportTemplateElementsTreeMouseListener implements MouseListener{
 			Object lastNodeObject =
 				((IconedNode)(treePath.getLastPathComponent())).getObject();
 
-			if (!(		(lastNodeObject instanceof Scheme)
-					||	(lastNodeObject instanceof SchemeElement)
-					||	(lastNodeObject instanceof AbstractSchemePort)
-					||	(lastNodeObject instanceof AbstractSchemeLink)
-					||	(lastNodeObject instanceof SchemePath)
-					||	(lastNodeObject instanceof PhysicalLink)
-					||	(lastNodeObject instanceof SiteNode)
-					||	(lastNodeObject instanceof Collector)))
+			if (!(ReportDataChecker.isObjectInstallable(lastNodeObject)))
 				return;
 			
 			if (ModuleMode.getMode().equals(MODULE_MODE.REPORT_PREVIEW))

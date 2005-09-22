@@ -1,5 +1,5 @@
 /*
- * $Id: RTEDataRenderingComponent.java,v 1.1 2005/09/20 09:25:54 peskovsky Exp $
+ * $Id: RTEDataRenderingComponent.java,v 1.2 2005/09/22 14:50:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -160,8 +160,11 @@ public class RTEDataRenderingComponent extends
 		if (reportObjectId != null) {
 			StorableObject storableObject =
 				StorableObjectPool.getStorableObject(reportObjectId,true);
-			Namable namableStorableObject = (Namable) storableObject;
-			this.objectName = namableStorableObject.getName();
+			//TODO Здесь костыль. Нужно, чтобы все были Namable
+			if (storableObject instanceof Namable)
+				this.objectName = ((Namable)storableObject).getName();
+			else
+				this.objectName = storableObject.getClass().getName();
 		}
 		else 
 			this.objectName = "";
@@ -197,6 +200,8 @@ public class RTEDataRenderingComponent extends
 	}
 	
 	public void removeDropTargetListener() {
-		this.dropTarget.removeDropTargetListener(this.dropTargetListener);
+		if (	this.dropTarget != null
+			&&	this.dropTargetListener != null)
+			this.dropTarget.removeDropTargetListener(this.dropTargetListener);
 	}
 }

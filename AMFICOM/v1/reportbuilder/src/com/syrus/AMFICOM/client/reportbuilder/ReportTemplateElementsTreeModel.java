@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.9 2005/09/16 13:26:30 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.10 2005/09/22 14:50:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,8 @@ import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.Client.Analysis.UI.ResultChildrenFactory;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
@@ -62,21 +63,19 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 	}
 	
 	public void populate(Item node) {
-		Collection<Object> contents = CommonUIUtilities.getChildObjects(node);
-		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
 			if (s.equals(TREE_ROOT)) {
-				createRootItems(node, contents);
+				createRootItems(node);
 			}
 			else if (s.equals(AVAILABLE_TEMPLATES)) {
 			}
 			else if (s.equals(REPORT_DATA_ROOT)) {
-				createReportElementsModels(node, contents);
+				createReportElementsModels(node);
 			}
 			else if (s.equals(TEMPLATE_ELEMENTS_ROOT)) {
 				try {
-					createTemplateElementsModels(node, contents);
+					createTemplateElementsModels(node);
 				} catch (CreateModelException e) {
 					Log.errorMessage("ReportTemplateElementsTreeModel.populate | " + e.getMessage());
 					Log.errorException(e);			
@@ -90,7 +89,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		} 
 		else {
 			if (node.getObject() instanceof ReportModel) {
-				createReportModelItems(node, contents);
+				createReportModelItems(node);
 			}
 		}
 	}
@@ -110,7 +109,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		return this.root;
 	}
 	
-	private void createRootItems(Item node, Collection contents) {
+	private void createRootItems(Item node) {
 		node.addChild(new PopulatableIconedNode(
 				this,
 				ReportTemplateElementsTreeModel.REPORT_DATA_ROOT,
@@ -124,7 +123,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 				UIManager.getIcon(ICON_CATALOG)));
 	}
 	
-	private void createTemplateElementsModels(Item node, Collection contents) throws CreateModelException {
+	private void createTemplateElementsModels(Item node) throws CreateModelException {
 		//Модель для модуля "Карта"
 		ReportModel mapReportModel =
 			ReportModelPool.getModel(MapReportModel.class.getName());
@@ -207,14 +206,20 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 //				UIManager.getIcon(ICON_CATALOG)));
 	}
 
-	private void createReportElementsModels(Item node, Collection contents) {
+	private void createReportElementsModels(Item node) {
 		PopulatableIconedNode schemeRoot = (PopulatableIconedNode)(new SchemeTreeModel(this.aContext)).getRoot();
 		schemeRoot.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME));
 		node.addChild(schemeRoot);
-		node.addChild(MapTreeModel.createAllMapsRoot());
+		
+		PopulatableIconedNode mapRoot = (new MapTreeModel()).createAllMapsRoot();
+		node.addChild(mapRoot);
+		
+		PopulatableIconedNode analysisRoot = (new ResultChildrenFactory()).getRoot();
+		analysisRoot.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));		
+		node.addChild(analysisRoot);
 	}
 	
-	private void createReportModelItems(Item node, Collection contents) {
+	private void createReportModelItems(Item node) {
 		ReportModel reportModel = (ReportModel) node.getObject();
 		
 		Collection<String> itemsToAdd = null;
