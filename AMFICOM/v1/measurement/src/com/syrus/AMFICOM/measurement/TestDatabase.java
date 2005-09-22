@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.126 2005/09/20 07:05:44 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.127 2005/09/22 16:19:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,6 @@ import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +29,6 @@ import java.util.TreeMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.DatabaseStorableObjectCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -48,7 +46,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.126 $, $Date: 2005/09/20 07:05:44 $
+ * @version $Revision: 1.127 $, $Date: 2005/09/22 16:19:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -377,122 +375,10 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 		
 		final Map<Identifier, SortedMap<Date, String>> idsStopsMap = this.createStopsMap(tests);
-		this.updateStops(idsStopsMap);
-	}
-
-	private final void updateStops(final Map<Identifier, SortedMap<Date, String>> idStopsMap) throws UpdateObjectException {
-		if (idStopsMap == null || idStopsMap.isEmpty()) {
-			return;
-		}
-
-		Map<Identifier, SortedMap<Date, String>> dbLinkedObjIdsMap = null;
 		try {
-			dbLinkedObjIdsMap = this.retrieveStops(idStopsMap.keySet());
-		} catch (RetrieveObjectException roe) {
-			throw new UpdateObjectException(roe);
-		}
-
-		final Map<Identifier, SortedMap<Date, String>> insertIdStopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
-		final Map<Identifier, SortedMap<Date, String>> deleteIdStopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
-		for (final Identifier id : idStopsMap.keySet()) {
-			final SortedMap<Date, String> localStoppingMap = idStopsMap.get(id);
-			final SortedMap<Date, String> dbStoppingMap = dbLinkedObjIdsMap.get(id);
-
-			final Set<Date> localStoppingKeys = localStoppingMap.keySet();		
-
-			if (dbStoppingMap != null) {
-				final Set<Date> dbStoppingKeys = dbStoppingMap.keySet();
-
-				final Set<Date> localStoppingCopyKeys = new HashSet<Date>(localStoppingKeys);			
-				final Set<Date> dbStoppingCopyKeys = new HashSet<Date>(dbStoppingKeys);
-
-				localStoppingCopyKeys.removeAll(dbStoppingKeys);			
-
-				dbStoppingCopyKeys.removeAll(localStoppingKeys);
-
-				//	Prepare map for insertion
-				for(final Date stoppingDate : localStoppingCopyKeys) {
-					SortedMap<Date, String> stopping = insertIdStopsMap.get(id);
-					if (stopping == null) {
-						stopping = new TreeMap<Date, String>();
-						insertIdStopsMap.put(id, stopping);
-					}
-					stopping.put(stoppingDate, localStoppingMap.get(stoppingDate));
-				}
-
-				//	Prepare map for deletion
-				for(final Date stoppingDate : dbStoppingCopyKeys) {
-					SortedMap<Date, String> stopping = deleteIdStopsMap.get(id);
-					if (stopping == null) {
-						stopping = new TreeMap<Date, String>();
-						deleteIdStopsMap.put(id, stopping);
-					}
-					stopping.put(stoppingDate, dbStoppingMap.get(stoppingDate));
-				}
-			} else {
-				//	Insert all linked ids for this id
-				insertIdStopsMap.put(id, localStoppingMap);
-			}	
-		}
-
-		this.deleteStops(deleteIdStopsMap);
-		try {
-			this.insertStops(insertIdStopsMap);
-		} catch (final CreateObjectException e) {
-			throw new UpdateObjectException(e);
-		}
-	}
-
-	private final void deleteStops(final Map<Identifier, SortedMap<Date, String>> idStopsMap) {
-		if (idStopsMap == null || idStopsMap.isEmpty()) {
-			return;
-		}
-
-		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + TEST_STOPPING_LINK
-				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
-		
-		for (final Identifier id : idStopsMap.keySet()) {
-			final SortedMap<Date, String> stopping = idStopsMap.get(id);
-			for (final Date stoppingDate : stopping.keySet()) {
-				sql.append(SQL_OR);
-				sql.append(OPEN_BRACKET);
-				sql.append(LINK_COLMN_TEST_ID);
-				sql.append(EQUALS);
-				sql.append(DatabaseIdentifier.toSQLString(id));
-				sql.append(SQL_AND);
-				sql.append(LINK_COLUMN_STOPPING_TIME);
-				sql.append(EQUALS);
-				sql.append(DatabaseDate.toUpdateSubString(stoppingDate));
-				sql.append(CLOSE_BRACKET);
-			}
-		}
-		
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.deleteStoppings | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql.toString());
-			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (final SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
+			this.insertStops(idsStopsMap);
+		} catch (CreateObjectException coe) {
+			throw new UpdateObjectException(coe);
 		}
 	}
 
