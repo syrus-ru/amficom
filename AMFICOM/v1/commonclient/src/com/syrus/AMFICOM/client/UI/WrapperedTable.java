@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.13 2005/09/14 10:58:02 bob Exp $
+* $Id: WrapperedTable.java,v 1.14 2005/09/22 10:53:59 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,11 +9,14 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,27 +24,35 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
+import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/14 10:58:02 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/22 10:53:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
-public class WrapperedTable<T> extends ATable {
+public final class WrapperedTable<T> extends ATable {
 
 	private static final long	serialVersionUID	= -437251205606073016L;
 	
 	private boolean allowSorting = true;
 	private boolean allowAutoResize = false;
+
+	private int	sortedColumnIndex;
+
+	private MouseListener	mouseListener;
 
 	public WrapperedTable(final Wrapper<T> controller, final List<T> objectResourceList, final String[] keys) {
 		this(new WrapperedTableModel<T>(controller, objectResourceList, keys));
@@ -103,6 +114,83 @@ public class WrapperedTable<T> extends ATable {
 		}
 	}
 	
+	@Override
+	public void setTableHeader(final JTableHeader tableHeader) {
+		
+		if (this.mouseListener == null) {
+			this.mouseListener = new MouseAdapter() {
+
+				@Override
+				public void mouseClicked(MouseEvent evt) {
+					if (!WrapperedTable.this.isAllowSorting()) {
+						return;
+					}
+					
+					final JTableHeader header = (JTableHeader) evt.getSource();
+					final JTable table = header.getTable();
+					final TableColumnModel colModel = table.getColumnModel();
+
+					// The index of the column whose header was
+					// clicked
+					final int columnIndex = colModel.getColumnIndexAtX(evt.getX());
+					final int mColIndex = table.convertColumnIndexToModel(columnIndex);
+
+					WrapperedTable.this.sortColumn(mColIndex);
+
+					// Return if not clicked on any column header
+					if (columnIndex == -1) {
+						return;
+					}
+
+					// Determine if mouse was clicked between column
+					// heads
+					final Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
+					if (columnIndex == 0) {
+						headerRect.width -= 3; // Hard-coded
+						// constant
+					} else {
+						headerRect.grow(-3, 0); // Hard-coded
+						// constant
+					}
+					if (!headerRect.contains(evt.getX(), evt.getY())) {
+						// Mouse was clicked between column
+						// heads
+						// vColIndex is the column head closest
+						// to the click
+
+						// vLeftColIndex is the column head to
+						// the left of the
+						// click
+						int vLeftColIndex = columnIndex;
+						if (evt.getX() < headerRect.x) {
+							vLeftColIndex--;
+						}
+					}
+				}
+			};
+		}
+		
+		assert Log
+				.debugMessage("WrapperedTable.setTableHeader | ", Log.DEBUGLEVEL09);
+
+		if (this.tableHeader != null) {
+            this.tableHeader.removeMouseListener(this.mouseListener);
+            TableCellRenderer defaultRenderer = this.tableHeader.getDefaultRenderer();
+            if (defaultRenderer instanceof SortableHeaderRenderer) {
+                this.tableHeader.setDefaultRenderer(((SortableHeaderRenderer) defaultRenderer).tableCellRenderer);
+            }
+        }
+		
+		super.setTableHeader(tableHeader);
+		
+        if (tableHeader != null) {
+            tableHeader.addMouseListener(this.mouseListener);
+            tableHeader.setDefaultRenderer(
+                    new SortableHeaderRenderer(tableHeader.getDefaultRenderer()));
+        }
+        
+    }
+	
 	public void setAllowSorting(final boolean allowSorting) {
 		this.allowSorting = allowSorting;
 	}
@@ -153,6 +241,7 @@ public class WrapperedTable<T> extends ATable {
 		super.resizeAndRepaint();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void updateModel() {
 		final WrapperedTableModel<T> model = this.getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
@@ -193,85 +282,99 @@ public class WrapperedTable<T> extends ATable {
 	}
 	
 	public void sortColumn(int mColIndex) {
+		this.sortedColumnIndex = mColIndex;
 		WrapperedTableModel<T> model = this.getModel();
-		String s;
-		if (model.getSortOrder(mColIndex)) {
-			s = " ^ "; //$NON-NLS-1$
-		} else {
-			s = " v "; //$NON-NLS-1$
-		}
-		final String columnName = model.getColumnName(mColIndex);
-		this.getColumnModel().getColumn(this.convertColumnIndexToView(mColIndex)).setHeaderValue(s
-				+ (columnName == null ? "" : columnName)
-				+ s);
-
-		for (int i = 0; i < model.getColumnCount(); i++) {
-			if (i != mColIndex) {
-				this.getColumnModel().getColumn(this.convertColumnIndexToView(i)).setHeaderValue(model.getColumnName(i));
-			}
-		}
-
-		// Force the header to resize and repaint itself
-		this.getTableHeader().resizeAndRepaint();
 		model.sortRows(mColIndex);
 	}
 	
-	private void initialization() {
+	private final void initialization() {
 		this.updateModel();
 		this.setColumnSelectionAllowed(false);
-		this.setRowSelectionAllowed(true);
+		this.setRowSelectionAllowed(true);	
+	}
+	
+    Icon getHeaderRendererIcon(int column) {
+    	WrapperedTableModel<T> model = this.getModel();
+        if (this.sortedColumnIndex != column) {
+            return null; 
+        } 
+        return model.getSortOrder(column) ? Arrow.ARROW_ASCEND : Arrow.ARROW_DESCEND; 
+    }
+	
+	private class SortableHeaderRenderer implements TableCellRenderer {
+        final TableCellRenderer tableCellRenderer;
 
-		this.getTableHeader().addMouseListener(new MouseAdapter() {
+        public SortableHeaderRenderer(final TableCellRenderer tableCellRenderer) {
+            this.tableCellRenderer = tableCellRenderer;
+        }
 
-			@Override
-			public void mouseClicked(MouseEvent evt) {
-				if (!WrapperedTable.this.isAllowSorting()) {
-					return;
-				}
-				
-				final JTableHeader header = (JTableHeader) evt.getSource();
-				final JTable table = header.getTable();
-				final TableColumnModel colModel = table.getColumnModel();
-
-				// The index of the column whose header was
-				// clicked
-				final int columnIndex = colModel.getColumnIndexAtX(evt.getX());
-				final int mColIndex = table.convertColumnIndexToModel(columnIndex);
-
-				WrapperedTable.this.sortColumn(mColIndex);
-
-				// Return if not clicked on any column header
-				if (columnIndex == -1) {
-					return;
-				}
-
-				// Determine if mouse was clicked between column
-				// heads
-				final Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
-				if (columnIndex == 0) {
-					headerRect.width -= 3; // Hard-coded
-					// constant
-				} else {
-					headerRect.grow(-3, 0); // Hard-coded
-					// constant
-				}
-				if (!headerRect.contains(evt.getX(), evt.getY())) {
-					// Mouse was clicked between column
-					// heads
-					// vColIndex is the column head closest
-					// to the click
-
-					// vLeftColIndex is the column head to
-					// the left of the
-					// click
-					int vLeftColIndex = columnIndex;
-					if (evt.getX() < headerRect.x) {
-						vLeftColIndex--;
-					}
-				}
-			}
-		});
-
+        public Component getTableCellRendererComponent(final JTable table, 
+                                                       final Object value,
+                                                       final boolean isSelected, 
+                                                       final boolean hasFocus,
+                                                       final int row, 
+                                                       final int column) {
+        	final  Component c = this.tableCellRenderer.getTableCellRendererComponent(table, value, 
+                                                                          isSelected, 
+                                                                          hasFocus, 
+                                                                          row, column);
+            if (c instanceof JLabel) {
+            	final JLabel label = (JLabel) c;
+                label.setHorizontalTextPosition(SwingConstants.LEFT);
+                int modelColumn = WrapperedTable.this.convertColumnIndexToModel(column);
+//                label.setIcon(getHeaderRendererIcon(modelColumn, label.getFont().getSize()));
+                label.setIcon(WrapperedTable.this.getHeaderRendererIcon(modelColumn));
+            }
+            return c;
+        }
+    }
+	
+	private static final class Arrow implements Icon {
+		
+		private final int	size;
+		private final boolean	ascend;
+		private final int	size32;
+		
+		protected static final Arrow ARROW_ASCEND = new Arrow(true, 10);
+		protected static final Arrow ARROW_DESCEND = new Arrow(false, 10);
+		
+		private Arrow(final boolean ascend, 
+			final int size){
+			this.ascend = ascend;
+			this.size = size;
+			this.size32 = (int) (this.size * Math.sqrt(0.75) + 0.5);
+			
+//			this.polygon = new Polygon();
+		}
+		
+		/* (non-Javadoc)
+		 * @see javax.swing.Icon#getIconHeight()
+		 */
+		public int getIconHeight() {			
+			return this.size + 2;
+		}
+		
+		/* (non-Javadoc)
+		 * @see javax.swing.Icon#getIconWidth()
+		 */
+		public int getIconWidth() {
+			return this.size + 2;
+		}
+		
+		/* (non-Javadoc)
+		 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
+		 */
+		public void paintIcon(	final Component c,
+		                      	final Graphics g,
+		                      	final int x,
+		                      	final int y) {
+			Graphics2D g2d = (Graphics2D) g;
+			g2d.setColor(Color.GRAY);
+			final int y1 = y + (this.ascend ? 0 : this.size32) + 2;
+			g2d.fillPolygon(new int[] {x, x + this.size, x + this.size/2}, 
+				new int[] {y1, y1, y + 2 + (this.ascend ? this.size32 : 0) },
+				3);
+		}
 	}
 
 }
