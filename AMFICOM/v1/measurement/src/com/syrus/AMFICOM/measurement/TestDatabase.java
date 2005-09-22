@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.128 2005/09/22 16:31:33 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.129 2005/09/22 19:39:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,6 @@ import java.util.TreeMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -47,18 +46,17 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/09/22 16:31:33 $
+ * @version $Revision: 1.129 $, $Date: 2005/09/22 19:39:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
 public final class TestDatabase extends StorableObjectDatabase<Test> {
-	public static final String LINK_COLMN_TEST_ID = "test_id";
-	
+	private static final String LINK_COLUMN_TEST_ID = "test_id";
 	private static final String LINK_COLUMN_STOPPING_TIME = "stop_time";
 	private static final String LINK_COLUMN_STOPPING_REASON = "stop_reason";
-	
+
 	private static String columns;
 	private static String updateMultipleSQLValues;	
 
@@ -203,7 +201,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 		final Map<Identifier, Set<Identifier>> msIdsMap = this.retrieveLinkedEntityIds(tests,
 				MEASUREMENTSETUP_TEST_LINK,
-				LINK_COLMN_TEST_ID,
+				LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 
 		final Map<Identifier, SortedMap<Date, String>> stops = this.retrieveStops(tests);
@@ -227,12 +225,12 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		}
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ LINK_COLMN_TEST_ID + COMMA
+				+ LINK_COLUMN_TEST_ID + COMMA
 				+ DatabaseDate.toQuerySubString(LINK_COLUMN_STOPPING_TIME) + COMMA
 				+ LINK_COLUMN_STOPPING_REASON 
 				+ SQL_FROM + TEST_STOPPING_LINK
 				+ SQL_WHERE);
-		sql.append(idsEnumerationString(identifiables, LINK_COLMN_TEST_ID, true));
+		sql.append(idsEnumerationString(identifiables, LINK_COLUMN_TEST_ID, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -245,7 +243,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 			final Map<Identifier, SortedMap<Date, String>> stopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
 			while (resultSet.next()) {
-				final Identifier storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLMN_TEST_ID);
+				final Identifier storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TEST_ID);
 				SortedMap<Date, String> testStopsMap = stopsMap.get(storabeObjectId);
 				if (testStopsMap == null) {
 					testStopsMap = new TreeMap<Date, String>();
@@ -301,15 +299,13 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		this.insertStops(idsStopsMap);
 	}
 
-	private final void insertStops(final Map<Identifier, SortedMap<Date, String>> idStoppingsMap) throws CreateObjectException {
-		if (idStoppingsMap == null || idStoppingsMap.isEmpty()) {
+	private final void insertStops(final Map<Identifier, SortedMap<Date, String>> stopsMap) throws CreateObjectException {
+		if (stopsMap == null || stopsMap.isEmpty()) {
 			return;
 		}
 
-		this.deleteStops(idStoppingsMap.keySet());
-
 		final String sql = SQL_INSERT_INTO + TEST_STOPPING_LINK + OPEN_BRACKET
-				+ LINK_COLMN_TEST_ID + COMMA
+				+ LINK_COLUMN_TEST_ID + COMMA
 				+ LINK_COLUMN_STOPPING_TIME + COMMA
 				+ LINK_COLUMN_STOPPING_REASON
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -323,9 +319,9 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			for (final Iterator<Identifier> idIt = idStoppingsMap.keySet().iterator(); idIt.hasNext();) {
+			for (final Iterator<Identifier> idIt = stopsMap.keySet().iterator(); idIt.hasNext();) {
 				id = idIt.next();
-				final SortedMap<Date, String> stopping = idStoppingsMap.get(id);
+				final SortedMap<Date, String> stopping = stopsMap.get(id);
 				for (final Date stoppingTime : stopping.keySet()) {
 					final String reason = stopping.get(stoppingTime);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
@@ -376,10 +372,47 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				MEASUREMENTSETUP_TEST_LINK,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
-		
-		final Map<Identifier, SortedMap<Date, String>> idsStopsMap = this.createStopsMap(tests);
+
+		this.updateStops(tests);
+	}
+
+	private void updateStops(final Set<Test> tests) throws UpdateObjectException {
+		if (tests == null || tests.isEmpty()) {
+			return;
+		}
+
+		final Map<Identifier, SortedMap<Date, String>> stopsMap = this.createStopsMap(tests);
+
+		Map<Identifier, SortedMap<Date, String>> dbStopsMap = null;
 		try {
-			this.insertStops(idsStopsMap);
+			dbStopsMap = this.retrieveStops(tests);
+		} catch (RetrieveObjectException roe) {
+			throw new UpdateObjectException(roe);
+		}
+
+		final Map<Identifier, SortedMap<Date, String>> insertStopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
+		for (final Identifier id : stopsMap.keySet()) {
+			final SortedMap<Date, String> objectStops = stopsMap.get(id);
+			final SortedMap<Date, String> dbObjectStops = dbStopsMap.get(id);
+
+			if (dbObjectStops != null) {
+				for (final Date stopDate : objectStops.keySet()) {
+					if (!dbObjectStops.containsKey(stopDate)) {
+						SortedMap<Date, String> aStops = insertStopsMap.get(id);
+						if (aStops == null) {
+							aStops = new TreeMap<Date, String>();
+							insertStopsMap.put(id, aStops);
+						}
+						aStops.put(stopDate, objectStops.get(stopDate));
+					}
+				}
+			} else {
+				insertStopsMap.put(id, objectStops);
+			}
+		}
+
+		try {
+			this.insertStops(insertStopsMap);
 		} catch (CreateObjectException coe) {
 			throw new UpdateObjectException(coe);
 		}
@@ -399,47 +432,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			stopsMap.put(test.getId(), test.getStoppingMap());
 		}
 		return stopsMap;
-	}
-
-	private void deleteStops(final Set<? extends Identifiable> tests) {
-		assert tests != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (tests.isEmpty()) {
-			return;
-		}
-
-		final StringBuffer sql = new StringBuffer();
-		sql.append(SQL_DELETE_FROM);
-		sql.append(LINK_COLMN_TEST_ID);
-		sql.append(SQL_WHERE);
-		sql.append(idsEnumerationString(tests, LINK_COLMN_TEST_ID, true));
-
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.deleteStops | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql.toString());
-			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
 	}
 
 	@Override
