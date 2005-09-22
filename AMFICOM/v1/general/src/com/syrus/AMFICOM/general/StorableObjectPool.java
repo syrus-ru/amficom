@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.177 2005/09/22 15:44:47 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.178 2005/09/22 16:20:58 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,10 +30,11 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.177 $, $Date: 2005/09/22 15:44:47 $
+ * @version $Revision: 1.178 $, $Date: 2005/09/22 16:20:58 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
+ * Предпочтительный уровень отладочных сообщений: 8
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
  * 1) заполнить кишки разнообразными объектами;
@@ -215,7 +216,7 @@ public final class StorableObjectPool {
 				final LRUMap objectPool = (LRUMap) obj;
 				objectPoolMap.put(entityCode, objectPool);
 				Log.debugMessage("StorableObjectPool.addObjectPool | Pool for '" + ObjectEntities.codeToString(entityCode)
-						+ "'/" + entityCode + " of size " + objectPoolSize + " added", Log.DEBUGLEVEL10);
+						+ "'/" + entityCode + " of size " + objectPoolSize + " added", Log.DEBUGLEVEL08);
 			} else
 				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | Object pool class "
 						+ objectPoolClass.getName() + " must extend LRUMap");
@@ -296,7 +297,7 @@ public final class StorableObjectPool {
 
 	public static <T extends StorableObject> Set<T> getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
-		Log.debugMessage("StorableObjectPool.getStorableObjects | Requested for: " + ids, Log.DEBUGLEVEL10);
+		Log.debugMessage("StorableObjectPool.getStorableObjects | Requested for: " + ids, Log.DEBUGLEVEL08);
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
 		}
@@ -315,7 +316,7 @@ public final class StorableObjectPool {
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 		if (entityDeletedIds != null) {
 			Log.debugMessage("StorableObjectPool.getStorableObjects | Found among deleted (excluded): " + entityDeletedIds,
-					Log.DEBUGLEVEL10);
+					Log.DEBUGLEVEL08);
 			Identifier.subtractFromIdentifiers(loadIds, entityDeletedIds);
 		}
 
@@ -331,13 +332,13 @@ public final class StorableObjectPool {
 		}
 
 		Log.debugMessage("StorableObjectPool.getStorableObjects | Found in pool " + storableObjects.size()
-				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL10);
+				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL08);
 
 		if (useLoader && !loadIds.isEmpty()) {
 			final Set<T> loadedObjects = objectLoader.loadStorableObjects(loadIds);
 
 			Log.debugMessage("StorableObjectPool.getStorableObjects | Loaded " + loadedObjects.size()
-					+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL10);
+					+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL08);
 
 			for (final T storableObject : loadedObjects) {
 				storableObjects.add(storableObject);
@@ -346,7 +347,7 @@ public final class StorableObjectPool {
 		}
 
 		Log.debugMessage("StorableObjectPool.getStorableObjects | Returning " + storableObjects.size()
-				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL10);
+				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL08);
 
 		return storableObjects;
 	}
@@ -413,7 +414,7 @@ public final class StorableObjectPool {
 				+ condition.getEntityCode() + ", ids entity code: " + StorableObject.getEntityCodeOfIdentifiables(ids);
 
 		Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Requested but: " + ids
-				+ ", for condition: " + condition, Log.DEBUGLEVEL10);
+				+ ", for condition: " + condition, Log.DEBUGLEVEL08);
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
@@ -426,7 +427,7 @@ public final class StorableObjectPool {
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 		if (entityDeletedIds != null) {
 			Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Found among deleted (added to excluded): "
-					+ entityDeletedIds, Log.DEBUGLEVEL10);
+					+ entityDeletedIds, Log.DEBUGLEVEL08);
 			Identifier.addToIdentifiers(loadButIds, entityDeletedIds);
 		}
 
@@ -441,7 +442,7 @@ public final class StorableObjectPool {
 		}
 
 		Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Found in pool " + storableObjects.size()
-				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL10);
+				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL08);
 
 		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
 			Identifier.addToIdentifiers(loadButIds, storableObjects);
@@ -458,7 +459,7 @@ public final class StorableObjectPool {
 			}
 			if (loadedObjects != null) {
 				Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Loaded " + loadedObjects.size()
-						+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL10);
+						+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL08);
 
 				for (final T storableObject : loadedObjects) {
 					final Identifier id = storableObject.getId();
@@ -494,7 +495,7 @@ public final class StorableObjectPool {
 		}
 
 		Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Returning " + storableObjects.size()
-				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL10);
+				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL08);
 
 		return storableObjects;
 	}
@@ -725,7 +726,7 @@ public final class StorableObjectPool {
 
 		if (storableObject.isChanged()) {
 			Log.debugMessage("StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",
-					Log.DEBUGLEVEL10);
+					Log.DEBUGLEVEL08);
 			DEPENDENCY_SORTED_CONTAINER.put(storableObject, dependencyLevel);
 		}
 	}
@@ -915,7 +916,7 @@ public final class StorableObjectPool {
 	 */
 	public static void refresh(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
-		Log.debugMessage("StorableObjectPool.refresh | Requested for: " + ids, Log.DEBUGLEVEL10);
+		Log.debugMessage("StorableObjectPool.refresh | Requested for: " + ids, Log.DEBUGLEVEL08);
 		if (ids.isEmpty()) {
 			return;
 		}
@@ -1073,7 +1074,7 @@ public final class StorableObjectPool {
 			Log.debugMessage("StorableObjectPool.deserialize | deserializing time "
 				+ (System.currentTimeMillis() - time0) 
 				+ " ms, refreshing time " 
-				+ refreshingTime + " ms", Log.DEBUGLEVEL10);
+				+ refreshingTime + " ms", Log.DEBUGLEVEL08);
 
 		}
 	}
@@ -1088,7 +1089,7 @@ public final class StorableObjectPool {
 				saver.save(map, ObjectEntities.codeToString(entityCode), true);
 			}
 			Log.debugMessage("StorableObjectPool.serialize | serializing time "
-				+ (System.currentTimeMillis() - time0) + " ms", Log.DEBUGLEVEL10);
+				+ (System.currentTimeMillis() - time0) + " ms", Log.DEBUGLEVEL08);
 		}
 	}
 
