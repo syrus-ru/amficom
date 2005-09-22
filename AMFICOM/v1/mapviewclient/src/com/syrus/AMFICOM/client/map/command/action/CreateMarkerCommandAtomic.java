@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.35 2005/09/19 15:37:43 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.36 2005/09/22 10:38:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/09/19 15:37:43 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/22 10:38:07 $
  * @module mapviewclient
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand {
@@ -91,9 +91,8 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 			MapViewController mapViewController = getLogicalNetLayer().getMapViewController();
 
 			for(CablePath cablePath : cablePaths) {
-				CableController cc = (CableController)mapViewController.getController(cablePath);
 				boolean found = false;
-				if(cc.isMouseOnElement(cablePath, this.point)) {
+				if(mapViewController.isMouseOnElement(cablePath, this.point)) {
 					List<NodeLink> nodeLinks = new LinkedList<NodeLink>(cablePath.getSortedNodeLinks());
 					if(nodeLinks.size() == 0) {
 						break;
