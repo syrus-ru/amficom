@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.17 2005/09/19 17:03:59 arseniy Exp $
+-- $Id: test.sql,v 1.18 2005/09/22 17:21:44 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -47,6 +47,7 @@ CREATE TABLE TestStoppingLink (
  stop_time DATE NOT NULL,
  stop_reason VARCHAR2(256 CHAR),
 --
+ CONSTRAINT tslink_test_uniq UNIQUE (test_id, stop_time),
  CONSTRAINT tslink_test_fk FOREIGN KEY (test_id)
   REFERENCES Test (id) ON DELETE CASCADE
 );
