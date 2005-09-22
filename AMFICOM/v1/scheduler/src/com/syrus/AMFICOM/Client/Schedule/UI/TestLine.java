@@ -484,17 +484,41 @@ final class TestLine extends TimeLine {
 				final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
 				final long measurementDuration = measurementSetup.getMeasurementDuration();
 
+				Color selectedColor = SchedulerModel.getColor(test.getStatus(), true);
+				Color color = SchedulerModel.getColor(test.getStatus(), false);
+				
 				this.testIds.add(testId);
 				if (this.isTestNewer(test)) {
 					this.unsavedTestIds.add(testId);
-					final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
-					TestTimeLine testTimeLine = new TestTimeLine();
-					testTimeLine.testId = testId;
-					testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
-					testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
-					testTimeLine.startTime = test.getStartTime().getTime();
-					testTimeLine.duration = measurementSetup.getMeasurementDuration();
-					measurementTestList.add(testTimeLine);
+					final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();					
+
+					switch (test.getTemporalType().value()) {
+					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: 
+						final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+						final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
+						for(final Date date : times) {
+							TestTimeLine testTimeLine = new TestTimeLine();
+							testTimeLine.testId = testId;
+							testTimeLine.color = color;
+							testTimeLine.selectedColor = selectedColor;
+							testTimeLine.startTime = date.getTime();									
+							testTimeLine.duration = measurementSetup.getMeasurementDuration();
+							measurementTestList.add(testTimeLine);
+						}
+						break;					
+					default:
+						TestTimeLine testTimeLine = new TestTimeLine();
+						testTimeLine.testId = testId;
+						testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
+						testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
+						testTimeLine.startTime = test.getStartTime().getTime();
+						testTimeLine.duration = test.getEndTime() != null ? 
+								test.getEndTime().getTime() - testTimeLine.startTime :
+								measurementSetup.getMeasurementDuration();
+						measurementTestList.add(testTimeLine);
+						break;
+					}
+					
 					this.measurements.put(testId, measurementTestList);
 				} else {
 					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(testId, ObjectEntities.MEASUREMENT_CODE);
@@ -502,8 +526,7 @@ final class TestLine extends TimeLine {
 					final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
 					this.measurements.put(testId, measurementTestList);
 					
-					Color selectedColor = SchedulerModel.getColor(test.getStatus(), true);
-					Color color = SchedulerModel.getColor(test.getStatus(), false);
+					
 
 						
 					final Set<Measurement> testMeasurements = new HashSet(StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true));
@@ -613,7 +636,9 @@ final class TestLine extends TimeLine {
 							
 							if (!foundMeasurement) {
 								testTimeLine.startTime = time;
-								testTimeLine.duration = measurementDuration;
+								testTimeLine.duration = test.getEndTime() != null ? 
+										test.getEndTime().getTime() - testTimeLine.startTime :
+										measurementSetup.getMeasurementDuration();
 								testTimeLine.color = color;
 								testTimeLine.selectedColor = selectedColor;
 //									testTimeLine.haveMeasurement = false;
