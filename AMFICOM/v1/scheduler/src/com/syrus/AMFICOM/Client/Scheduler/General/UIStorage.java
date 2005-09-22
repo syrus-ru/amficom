@@ -68,10 +68,10 @@ public final class UIStorage {
 																			.getImage("images/zoom_out.gif"));		//$NON-NLS-1$
 	public static final Icon				NOZOOM_ICON				= new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_actual.gif"));	//$NON-NLS-1$
 
-	public static final Font				ARIAL_12_FONT			= new Font("Arial", //$NON-NLS-1$
-																				Font.PLAIN, 12);
-	public static final Font				MONOSPACED_14_FONT		= new Font("Monospaced", //$NON-NLS-1$
-																				Font.BOLD, 14);
+//	public static final Font				ARIAL_12_FONT			= new Font("Arial", //$NON-NLS-1$
+//																				Font.PLAIN, 12);
+//	public static final Font				MONOSPACED_14_FONT		= new Font("Monospaced", //$NON-NLS-1$
+//																				Font.BOLD, 14);
 	public static final SimpleDateFormat	HOUR_MINUTE_DATE_FORMAT	= new SimpleDateFormat("HH:mm");
 
 	private UIStorage() {
