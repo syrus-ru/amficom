@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerVisualManager.java,v 1.4 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: MarkerVisualManager.java,v 1.5 2005/09/22 10:39:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ public class MarkerVisualManager implements VisualManager {
 	private static MarkerVisualManager instance;
 
 	private static MarkerEditor generalPanel;
-	private static MapElementCharacteristicsEditor charPanel;
 
 	public static MarkerVisualManager getInstance() {
 		if (instance == null) 
@@ -31,9 +30,7 @@ public class MarkerVisualManager implements VisualManager {
 	}
 
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		if (charPanel == null)
-			charPanel = new MapElementCharacteristicsEditor();
-		return charPanel;
+		return null;
 	}
 
 	public StorableObjectWrapper getController() {
