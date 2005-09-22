@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.2 2005/08/30 12:41:57 krupenn Exp $
+ * $Id: NodeLink.java,v 1.3 2005/09/22 10:32:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,6 +75,10 @@ public class NodeLink {
 		xmlId = xmlNodeLink.addNewEndNodeId();
 		xmlId.setStringValue(this.endNodeId);
 
+		if(this.uid == null || this.uid.length() == 0) {
+			System.out.println("null at " + xmlNodeLink);
+		}
+
 		return xmlNodeLink;
 	}
 
@@ -82,10 +86,10 @@ public class NodeLink {
 		NodeLink nodeLink = new NodeLink();
 		
 		nodeLink.setId(link.getId() + "nodelink");
+		nodeLink.setLength(link.getLength());
 		nodeLink.setPhysicalLinkId(link.getId());
 		nodeLink.setStartNodeId(link.getStartNodeId());
 		nodeLink.setEndNodeId(link.getEndNodeId());
-		nodeLink.setLength(link.getLength());
 		
 		link.addNodeLink(nodeLink);
 		return nodeLink;

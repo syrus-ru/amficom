@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.2 2005/09/02 09:08:50 krupenn Exp $
+ * $Id: Collector.java,v 1.3 2005/09/22 10:32:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -66,8 +66,8 @@ public class Collector {
 
 		XmlIdentifier xmlId = xmlCollector.addNewId();
 		xmlId.setStringValue(this.uid);
-		xmlCollector.setDescription(this.description);
 		xmlCollector.setName(this.name);
+		xmlCollector.setDescription(this.description);
 
 		XmlIdentifierSeq xmlPhysicalLinkUIds = xmlCollector.addNewPhysicalLinkIds();
 

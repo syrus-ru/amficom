@@ -1,5 +1,5 @@
 /**
- * $Id: Link.java,v 1.3 2005/09/02 09:08:50 krupenn Exp $
+ * $Id: Link.java,v 1.4 2005/09/22 10:32:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -129,16 +129,16 @@ public class Link {
 		xmlPhysicalLink.setName(this.name);
 		xmlPhysicalLink.setDescription(this.description);
 		xmlPhysicalLink.setPhysicalLinkTypeCodename(this.proto);
-		xmlPhysicalLink.setCity(this.city);
-		xmlPhysicalLink.setStreet(this.street);
-		xmlPhysicalLink.setBuilding(this.building);
 		xmlId = xmlPhysicalLink.addNewStartNodeId();
 		xmlId.setStringValue(this.startNodeId);
 		xmlId = xmlPhysicalLink.addNewEndNodeId();
 		xmlId.setStringValue(this.endNodeId);
+		xmlPhysicalLink.setCity(this.city);
+		xmlPhysicalLink.setStreet(this.street);
+		xmlPhysicalLink.setBuilding(this.building);
 
 		if(this.name == null || this.name.length() == 0 || this.startNodeId == null || this.startNodeId.length() == 0 || this.endNodeId == null || this.endNodeId.length() == 0) {
-			System.out.println("null at " + xmlPhysicalLink);
+			System.out.println("link " + this.uid + " has no name!");
 			this.name = this.uid;
 			xmlPhysicalLink.setName(this.name);
 		}

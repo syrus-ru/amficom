@@ -30,20 +30,12 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/09/12 06:53:15 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/22 10:32:28 $
  * @module mapviewclient_v1
  */
 public class UniCableMapExportCommand 
 {
 	UniCableMapDatabase ucmDatabase;
-
-	public static final String MAP_TYPE = "map";
-	public static final String MARK_TYPE = "mapmarkelement";
-	public static final String SITE_TYPE = "mapsiteelement";
-	public static final String NODE_TYPE = "mapnodeelement";
-	public static final String NODELINK_TYPE = "mapnodelinkelement";
-	public static final String COLLECTOR_TYPE = "mappipepathelement";
-	public static final String LINK_TYPE = "maplinkelement";
 
 	String fileName;
 
@@ -133,7 +125,7 @@ public class UniCableMapExportCommand
 		System.out.print("Scanning buildings... ");
 		Collection<UniCableMapObject> ucmBuildings = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_BUILDING_PLAN));
-		System.out.print(ucmPiquets.size() + " objects... ");
+		System.out.print(ucmBuildings.size() + " objects... ");
 		createSites(importSites, ucmBuildings, "defaultbuilding");
 		long t4 = System.currentTimeMillis();
 		System.out.println(" Done in " + (t4 - t3) + " ms!");
@@ -199,6 +191,7 @@ public class UniCableMapExportCommand
 		long t9 = System.currentTimeMillis();
 		System.out.println(" Done in " + (t9 - t8) + " ms!");
 		if(isXmlValid) {
+//		if(true) {
 			System.out.print("Writing XML document... ");
 			File f = new File(fileName);
 

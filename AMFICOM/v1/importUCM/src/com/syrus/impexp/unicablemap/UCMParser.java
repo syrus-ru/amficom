@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMParser.java,v 1.1 2005/08/30 12:42:37 krupenn Exp $
+ * $Id: UCMParser.java,v 1.2 2005/09/22 10:32:28 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import org.apache.xmlbeans.XmlOptions;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/08/30 12:42:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/22 10:32:28 $
  * @module importUCM
  */
 
@@ -53,11 +53,11 @@ public final class UCMParser {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			System.out.println("Invalid XML: ");
+			System.out.println("Invalid XML: " + validationMessages.size() + " errors");
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
 				System.out.println("");
-				System.out.println(xml);
+//				System.out.println(xml);
 				System.out.println("");
 				System.out.println(error.getMessage());
 				System.out.println(error.getObjectLocation());
@@ -66,6 +66,7 @@ public final class UCMParser {
 				System.out.println("Offset " + error.getOffset());
 				System.out.println("Object at cursor " + error.getCursorLocation().getObject());
 				System.out.println("Source name " + error.getSourceName());
+//				break;
 			}
 		}
 		return isXmlValid;
