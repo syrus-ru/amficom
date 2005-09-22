@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.74 2005/09/20 10:42:00 bass Exp $
+ * $Id: Identifier.java,v 1.75 2005/09/22 15:00:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.74 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/22 15:00:33 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -418,19 +418,21 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	}
 
 	/**
-	 * <p>This method is of no use for <code>Identifier</code>s, so formal
-	 * parameter of type <code>StorableObject</code> is ok.</p>
+	 * <p>This method is of no use for <code>Identifier</code>s, but the
+	 * formal parameter is still of type <code>Identifiable</code>, since
+	 * we want to be able to pass both {@code StorableObject}s
+	 * and {@Characterizable}s (but, of course, not {@code Identifier}s).</p>
 	 *
 	 * <p><em>Shouldn&apos;t be invoked by clients &amp; mousebusters as
 	 * they should never mess with <code>Identifier</code>s directly.</em></p>
 	 *
-	 * @param storableObject a <code>StorableObject</code> whose
+	 * @param identifiable an <code>Identifiable</code> whose
 	 *        identifier is to be determined; can be <code>null</code>.
 	 * @return an <code>Identifier</code> of the object supplied, or
 	 *         {@link #VOID_IDENTIFIER} if the object is <code>null</code>.
 	 */
-	public static Identifier possiblyVoid(final StorableObject storableObject) {
-		return storableObject == null ? VOID_IDENTIFIER : storableObject.getId();
+	public static Identifier possiblyVoid(final Identifiable identifiable) {
+		return identifiable == null ? VOID_IDENTIFIER : identifiable.getId();
 	}
 
 	/**
