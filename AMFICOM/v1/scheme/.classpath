@@ -12,5 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/schemexml"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xbean"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/configurationxml"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapxml"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
