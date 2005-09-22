@@ -480,37 +480,48 @@ final class TestLine extends TimeLine {
 						
 						switch (test.getTemporalType().value()) {
 							case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
-								final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-								final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
-								final SortedMap<Date, String> stoppings = test.getStoppingMap();
-								
-								
-								for(final Date date : times) {
-									TestTimeLine testTimeLine = new TestTimeLine();
-									testTimeLine.testId = test.getId();
-									final long time = date.getTime();
-									boolean foundMeasurement = false;
-									for (final Measurement measurement : testMeasurements) {
-										final Date measurementTime = measurement.getStartTime();
-										final long time2 = measurementTime.getTime();
-										if (time <= time2 &&  time2 <= time + measurementDuration) {
-											testTimeLine.startTime = time2;
-											testTimeLine.duration = measurement.getDuration();
-											testTimeLine.haveMeasurement = true;
-											foundMeasurement = true;
-											testMeasurements.remove(measurement);
-											break;
-										}
-									}
+								if (test.getStatus() != TestStatus.TEST_STATUS_COMPLETED) {
+									final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+									final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
+									final SortedMap<Date, String> stoppings = test.getStoppingMap();
 									
-									if (!foundMeasurement) {
-										if (stoppings.tailMap(date).isEmpty()) {
-											testTimeLine.startTime = time;									
-											testTimeLine.duration = measurementDuration;
-											testTimeLine.haveMeasurement = false;
+									
+									for(final Date date : times) {
+										TestTimeLine testTimeLine = new TestTimeLine();
+										testTimeLine.testId = test.getId();
+										final long time = date.getTime();
+										boolean foundMeasurement = false;
+										for (final Measurement measurement : testMeasurements) {
+											final Date measurementTime = measurement.getStartTime();
+											final long time2 = measurementTime.getTime();
+											if (time <= time2 &&  time2 <= time + measurementDuration) {
+												testTimeLine.startTime = time2;
+												testTimeLine.duration = measurement.getDuration();
+												testTimeLine.haveMeasurement = true;
+												foundMeasurement = true;
+												testMeasurements.remove(measurement);
+												break;
+											}
 										}
+										
+										if (!foundMeasurement) {
+											if (stoppings.tailMap(date).isEmpty()) {
+												testTimeLine.startTime = time;									
+												testTimeLine.duration = measurementDuration;
+												testTimeLine.haveMeasurement = false;
+											}
+										}
+										measurementTestList.add(testTimeLine);
 									}
-									measurementTestList.add(testTimeLine);
+								} else {
+									for (final Measurement measurement : testMeasurements) {
+										TestTimeLine testTimeLine = new TestTimeLine();
+										testTimeLine.testId = test.getId();
+										testTimeLine.startTime = measurement.getStartTime().getTime();
+										testTimeLine.duration = measurement.getDuration();
+										testTimeLine.haveMeasurement = true;
+										measurementTestList.add(testTimeLine);
+									}
 								}
 							}
 								break;
