@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.105 2005/09/22 12:41:59 bob Exp $
+ * $Id: SchedulerModel.java,v 1.106 2005/09/22 12:46:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/09/22 12:41:59 $
+ * @version $Revision: 1.106 $, $Date: 2005/09/22 12:46:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -963,8 +963,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				Date endTime = test.getEndTime();				
 				endTime = stoppingMap.isEmpty() ? 
 						new Date((endTime != null ? 
-								endTime.getTime() : 
-								startTime.getTime() + measurementDuration) + measurementDuration) : 
+								endTime.getTime() + measurementDuration : 
+								startTime.getTime() + measurementDuration)) : 
 						stoppingMap.lastKey();
 				
 				assert startTime != null;
