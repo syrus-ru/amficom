@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.3 2005/09/19 07:56:30 bob Exp $
+* $Id: ProcessingDialog.java,v 1.4 2005/09/22 12:52:17 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/09/19 07:56:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/22 12:52:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -95,8 +95,8 @@ public final class ProcessingDialog {
 							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , Log.DEBUGLEVEL10);
 							synchronized (LOCK) {
 								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', Log.DEBUGLEVEL10);
-								runnable = runnableTasks.remove(0);
-								title = runnableTaskNames.remove(runnable);
+								runnable = runnableTasks.get(0);
+								title = runnableTaskNames.get(runnable);
 							}
 							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', Log.DEBUGLEVEL10);
 							modalDialog.setTitle(title);
@@ -106,6 +106,11 @@ public final class ProcessingDialog {
 							} catch(final Throwable throwable) {
 								// too unlikely
 								new Launcher.DefaultThrowableHandler().handle(throwable);
+							}
+							synchronized (LOCK) {
+								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', Log.DEBUGLEVEL10);
+								runnableTasks.remove(0);
+								runnableTaskNames.remove(runnable);
 							}
 						}
 						modalDialog.dispose();
