@@ -148,8 +148,10 @@ public class SimpleGraphPanel extends JPanel
 	 * окон в модуле, т.к. после его вызова (или невызова) масштаб все равно
 	 * принудительно устанавливается через прямой доступ к полям масштаба из
 	 * соответствующих LayeredPanel'ов.
+	 * 
+	 * Этот метод используется в редакторе отчетов - deprecate убран
+	 * Stas
 	 */
-	@Deprecated
 	public void setDefaultScales()
 	{
 		setGraphBounds(0, y.length);
