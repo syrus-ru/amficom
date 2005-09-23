@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.106 2005/09/22 12:46:22 bob Exp $
+ * $Id: SchedulerModel.java,v 1.107 2005/09/23 06:47:51 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/09/22 12:46:22 $
+ * @version $Revision: 1.107 $, $Date: 2005/09/23 06:47:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -314,21 +314,21 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.refreshMeasurementSetups();
 	}
 
-	private void refreshTest() {
+	private void refreshTest(final Object source) {
 		if (this.selectedFirstTest != null) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source,
 					COMMAND_SET_MEASUREMENT_TYPE,
 					null,
 					this.selectedFirstTest.getMeasurementType()));
 			MonitoredElement monitoredElement1 = this.selectedFirstTest.getMonitoredElement();
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
 
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, this.selectedFirstTest.getAnalysisType()));
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEMPORAL_STAMPS, null, null));
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_SET_ANALYSIS_TYPE, this, this.selectedFirstTest.getAnalysisType()));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_REFRESH_TEMPORAL_STAMPS, null, null));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
 
 		}
-		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_REFRESH_TEST, null, null));
 	}
 
 	private void refreshTemporalStamps() {
@@ -337,7 +337,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	private void refreshTests() {
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
-		this.refreshTest();
+		this.refreshTest(this);
 	}
 
 	public void applyTest() throws ApplicationException {
@@ -470,7 +470,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 	}
 
-	public void addSelectedTest(final Test selectedTest) {
+	public void addSelectedTest(final Object source, final Test selectedTest) {
 		final Identifier selectedTestId = selectedTest.getId();
 		synchronized (this) {
 			if (this.selectedTestIds == null) {
@@ -483,7 +483,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				}
 				if (!this.selectedTestIds.contains(selectedTestId)) {
 					this.selectedTestIds.add(selectedTestId);
-					this.refreshTest();
+					this.refreshTest(source);
 				}
 			} else {
 				Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Level.FINEST);
@@ -718,7 +718,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (this.selectedTestIds != null) {
 				this.selectedTestIds.clear();
 			}
-			this.addSelectedTest(test);
+			this.addSelectedTest(this, test);
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 
 		}

@@ -179,7 +179,7 @@ final class TestLine extends TimeLine {
 
 						public void run() {
 							TestLine.this.skip = true;
-							TestLine.this.schedulerModel.addSelectedTest(test);
+							TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
 							TestLine.this.skip = false;
 						}
 					}, LangModelGeneral.getString("Message.Information.PlsWait"));
