@@ -1,5 +1,5 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.7 2005/09/07 13:06:00 bob Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.8 2005/09/23 15:02:04 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.resource.LayoutItemXML;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/07 13:06:00 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/23 15:02:04 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -114,7 +114,7 @@ public final class XMLSessionEnvironment {
 //		XMLContext.registerXML(new MapViewXML());
 	}
 	
-	public void openSession() {
+	public void openSession() throws ApplicationException {
 		StorableObjectPool.deserialize(this.poolContext.getLRUSaver());
 	}
 
