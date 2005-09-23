@@ -54,7 +54,6 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
-import com.syrus.util.Log;
 
 final class TestLine extends TimeLine {
 
@@ -80,7 +79,7 @@ final class TestLine extends TimeLine {
 
 	static class TestTimeItem implements Comparable<TestTimeItem> {
 		int x;
-		private int width;
+		int width;
 		
 		TestTimeLine testTimeLine;
 
@@ -105,10 +104,6 @@ final class TestLine extends TimeLine {
 		@Override
 		public int hashCode() {
 			return this.testTimeLine.testId == null ? 0 : this.testTimeLine.testId.hashCode();
-		}
-
-		public int getWidth() {
-			return this.width;
 		}
 
 		public void setWidth(final int width) {			
@@ -168,7 +163,7 @@ final class TestLine extends TimeLine {
 		final List<TestTimeItem> list = new ArrayList<TestTimeItem>(testTimeItems); 
 		for (final ListIterator it = list.listIterator(list.size()); it.hasPrevious();) {
 			final TestTimeItem testTimeItem = (TestTimeItem) it.previous();
-			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
+			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 				if (this.selectedTestIds == null) {
 					this.selectedTestIds = new HashSet<Identifier>();
 				}
@@ -205,7 +200,7 @@ final class TestLine extends TimeLine {
 			final Identifier testId = this.selectedTestIds.iterator().next();
 			for (final TestTimeItem element : this.timeItems) {
 				if (element.testTimeLine.testId.equals(testId)) {
-					rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.getWidth(), this.getHeight()
+					rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.width, this.getHeight()
 							- (this.titleHeight / 2 + 4)
 							- 2);
 					break;
@@ -215,7 +210,7 @@ final class TestLine extends TimeLine {
 			if (rectangle == null) {
 				for (final TestTimeItem element : this.unsavedTestTimeItems) {
 					if (element.testTimeLine.testId.equals(testId)) {
-						rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.getWidth(), this.getHeight()
+						rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.width, this.getHeight()
 								- (this.titleHeight / 2 + 4)
 								- 2);
 						break;
@@ -239,7 +234,7 @@ final class TestLine extends TimeLine {
 			int h = this.getHeight() - y - 2;
 
 			for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
-				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, this.flash
+				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.width, h, this.flash
 						? (((this.selectedTestIds == null) || (!this.selectedTestIds.contains(testTimeItem.testTimeLine.testId)))
 								? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_SCHEDULED_SELECTED)
 						: SchedulerModel.COLOR_UNRECOGNIZED);
@@ -309,7 +304,7 @@ final class TestLine extends TimeLine {
 		if (!this.timeItems.isEmpty() && super.scale > 0.0) {
 			synchronized (this) {
 				for (final TestTimeItem testTimeItem : this.timeItems) {
-					this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, (this.selectedTestIds == null)
+					this.drawItemRect(g, testTimeItem.x, y, testTimeItem.width, h, (this.selectedTestIds == null)
 							|| (!this.selectedTestIds.contains(testTimeItem.testTimeLine.testId)) ? testTimeItem.testTimeLine.color
 							: testTimeItem.testTimeLine.selectedColor);
 				}
@@ -347,8 +342,6 @@ final class TestLine extends TimeLine {
 							}
 						}
 					} else if (!selectTest(x, TestLine.this.unsavedTestTimeItems)) {
-						assert Log
-								.debugMessage(".mousePressed | " + TestLine.this.getParent(), Log.DEBUGLEVEL09);
 						for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
 							mouseListener.mousePressed(e);
 						}
@@ -410,7 +403,7 @@ final class TestLine extends TimeLine {
 							TestTimeItem testTimeItem = (TestTimeItem) it.next();
 							if (testTimeItem.x < minX) {
 								minX = testTimeItem.x;
-								width = testTimeItem.getWidth();
+								width = testTimeItem.width;
 							}
 							
 						}
@@ -485,18 +478,14 @@ final class TestLine extends TimeLine {
 				this.testIds.add(testId);
 				
 				final boolean newerTest = this.isTestNewer(test);
-				
-				if (this.isTestNewer(test)) {
-					this.unsavedTestIds.add(testId);
-				}
 
 				final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
 				this.measurements.put(testId, measurementTestList);
 				
-				
 				final Set<Measurement> testMeasurements;
 				if (newerTest) {
 					testMeasurements = Collections.emptySet();
+					this.unsavedTestIds.add(testId);
 				} else {
 					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(testId, ObjectEntities.MEASUREMENT_CODE);	
 					testMeasurements = new HashSet(StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true));
@@ -696,8 +685,7 @@ final class TestLine extends TimeLine {
 						testTimeItem.testTimeLine = testTimeLine;
 						
 						this.timeItems.add(testTimeItem);
-					}
-	
+					}	
 				}
 	
 				this.unsavedTestTimeItems.clear();
@@ -721,40 +709,42 @@ final class TestLine extends TimeLine {
 		final int x = event.getX();
 		String toolTip = this.getTitle(x, this.timeItems);
 		if (toolTip == null) {
-			toolTip = this.getTitle(x, this.unsavedTestTimeItems);			
-		}
+			toolTip = this.getTitle(x, this.unsavedTestTimeItems);
+			if (toolTip == null) {
+				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				toolTip = this.title + " " + sdf.format(new Date(
+					(long) (this.start + ((x - PlanPanel.MARGIN / 2) / this.scale))));
+
+			}
+		} 
 		return toolTip;
 	}
 
 	private String getTitle(final int x,
 							final Set<TestTimeItem> testTimeItems) {
-		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-
-		if (!testTimeItems.isEmpty()) {
-			final TestController testController = TestController.getInstance();
-			for (final TestTimeItem testTimeItem : testTimeItems) {
-				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
-					
-					try {
-						final Test test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
-						return "<html>" + testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString()
-								+ "<br>" + testController.getName(TestController.KEY_START_TIME) 
-								+ " : " 
-								+ testController.getValue(test, TestController.KEY_START_TIME) 
-								+ "<br><br>" 
-								+ sdf.format(testTimeItem.testTimeLine.date)
-								+ " : "
-								+ testTimeItem.testTimeLine.title
-								+ "</html>";
-					} catch (ApplicationException e) {
-						AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
-					}
+		
+		final TestController testController = TestController.getInstance();
+		for (final TestTimeItem testTimeItem : testTimeItems) {
+			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
+				
+				try {
+					final Test test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
+					return "<html>" + testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString()
+							+ "<br>" + testController.getName(TestController.KEY_START_TIME) 
+							+ " : " 
+							+ testController.getValue(test, TestController.KEY_START_TIME) 
+							+ "<br><br>" 
+							+ sdf.format(testTimeItem.testTimeLine.date)
+							+ " : "
+							+ testTimeItem.testTimeLine.title
+							+ "</html>";
+				} catch (ApplicationException e) {
+					AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 				}
 			}
 		}
-		return this.title + " " + sdf.format(new Date(
-							(long) (this.start + ((x - PlanPanel.MARGIN / 2) / this.scale))));
-
+		return null;
 	}
 
 }
