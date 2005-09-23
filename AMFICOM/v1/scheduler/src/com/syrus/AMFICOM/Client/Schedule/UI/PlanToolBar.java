@@ -350,6 +350,8 @@ final class PlanToolBar {
 			public void actionPerformed(final ActionEvent e) {
 				final JButton button = (JButton) e.getSource();
 				dialog.setLocationRelativeTo(button);
+				dialog.setLocation(dialog.getX() + dialog.getWidth() / 2, 
+					dialog.getY() + dialog.getHeight() / 2);
 				dialog.setVisible(true);
 			}
 		};
