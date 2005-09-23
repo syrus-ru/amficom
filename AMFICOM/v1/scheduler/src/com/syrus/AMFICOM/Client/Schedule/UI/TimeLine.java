@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.16 2005/08/08 11:51:00 arseniy Exp $
+ * $Id: TimeLine.java,v 1.17 2005/09/23 05:39:50 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -24,12 +21,10 @@ import javax.swing.JComponent;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 11:51:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/09/23 05:39:50 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -107,29 +102,6 @@ public abstract class TimeLine extends JComponent {
 	}
 
 	abstract void refreshTimeItems();
-	
-	@Override
-	public String getToolTipText(MouseEvent event) {
-		int x = event.getX();
-//		Log.debugMessage("TimeLine.getToolTipText | this.timeItems.size() " + this.timeItems.size(), Log.FINEST);
-		if (!this.timeItems.isEmpty()) {
-			for (final TestTimeItem testTimeItem : this.timeItems) {
-//				Log.debugMessage("TimeLine.getToolTipText | testTimeItem.x " + testTimeItem.x, Log.FINEST);
-//				Log.debugMessage("TimeLine.getToolTipText | x " + x, Log.FINEST);
-//				Log.debugMessage("TimeLine.getToolTipText | testTimeItem.x + testTimeItem.getWidth() " + (testTimeItem.x + testTimeItem.getWidth()), Log.FINEST);
-				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
-					Object object = testTimeItem.object;
-					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					if (object instanceof Test) {
-						final Test test = (Test) object;
-						return sdf.format(test.getStartTime());
-					}
-					return sdf.format(new Date((long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));
-				}
-			}
-		}
-		return this.title;
-	}
 	
 	final void updateScale() {
 		double scale1 = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
