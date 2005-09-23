@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.18 2005/07/06 12:15:16 arseniy Exp $
+ * $Id: BellcoreStructure.java,v 1.19 2005/09/23 10:38:14 saa Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/07/06 12:15:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/09/23 10:38:14 $
+ * @author $Author: saa $
  * @module util
  */
 public class BellcoreStructure {
@@ -332,10 +332,6 @@ public class BellcoreStructure {
 
 	public Date getDate() {
 		return new Date(this.fxdParams.dts * 1000);
-	}
-
-	public String getUnits() {
-		return this.fxdParams.ud;
 	}
 
 	public int getWavelength() {
