@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.24 2005/09/21 14:57:06 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.25 2005/09/23 13:56:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,10 +31,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/21 14:57:06 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/23 13:56:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -213,6 +214,25 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 					Log.errorException(ae);
 				}
 			}
+		}
+	}
+
+	@Override
+	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
+		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (ids.isEmpty()) {
+			return Collections.emptyMap();
+		}
+
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		switch (entityCode) {
+			case MEASUREMENT_CODE:
+			case ANALYSIS_CODE:
+			case RESULT_CODE:
+				return this.databaseObjectLoader.getRemoteVersions(ids);
+			default:
+				return super.getRemoteVersions(ids);
 		}
 	}
 
