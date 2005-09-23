@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.4 2005/09/22 12:52:17 bob Exp $
+* $Id: ProcessingDialog.java,v 1.5 2005/09/23 05:46:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.swing.JDialog;
 import javax.swing.JProgressBar;
@@ -31,13 +32,15 @@ import com.syrus.util.Log;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/09/22 12:52:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/23 05:46:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public final class ProcessingDialog {
 
+	final static Level LOGLEVEL = Log.DEBUGLEVEL10;
+	
 	final static Object LOCK = new Object(); 
 	
 	static List<Runnable> runnableTasks = 
@@ -48,22 +51,44 @@ public final class ProcessingDialog {
 	public ProcessingDialog(final Runnable runnable, final String title) {
 		final String threadName = Thread.currentThread().getName();
 		assert Log.debugMessage("ProcessingDialog.ProcessingDialog | before LOCK " + new Date() + " " + title + '[' + threadName + ']',
-			Log.DEBUGLEVEL10);
+			LOGLEVEL);
 		synchronized (LOCK) {
 			assert Log.debugMessage("ProcessingDialog.ProcessingDialog | LOCK " + new Date() + " " + title + '[' + threadName + ']',
-				Log.DEBUGLEVEL10);			
+				LOGLEVEL);			
 			runnableTasks.add(runnable);
 			runnableTaskNames.put(runnable, title);
 		}
 		assert Log.debugMessage("ProcessingDialog.ProcessingDialog | after LOCK " + new Date() + " " + title + '[' + threadName + ']',
-			Log.DEBUGLEVEL10);
+			LOGLEVEL);
 		this.startIfItNeeded();
 	}
 	
 	private void  startIfItNeeded() {
-		if (runnableTasks.size() > 1) {
-			return;
+		final String currentThreadName = Thread.currentThread().getName();
+		assert Log.debugMessage("ProcessingDialog.startIfItNeeded | before LOCK " 
+				+ new Date()  
+				+ '[' 
+				+ currentThreadName 
+				+ ']' , 
+			LOGLEVEL);
+		synchronized (LOCK) {
+			assert Log.debugMessage("ProcessingDialog.startIfItNeeded | LOCK " 
+					+ new Date()  
+					+ '[' 
+					+ currentThreadName 
+					+ ']' , 
+				LOGLEVEL);
+			if (runnableTasks.size() > 1) {
+				assert Log.debugMessage("ProcessingDialog.startIfItNeeded | LOCK -- there is working queue -- return -- " 
+						+ new Date()  
+						+ '[' 
+						+ currentThreadName 
+						+ ']' , 
+					LOGLEVEL);
+				return;
+			}
 		}
+		assert Log.debugMessage("ProcessingDialog.startIfItNeeded | after LOCK " + new Date()  + '[' + currentThreadName + ']' , LOGLEVEL);
 		
 		final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
 		final Dimension screenSize = defaultToolkit.getScreenSize();
@@ -92,13 +117,13 @@ public final class ProcessingDialog {
 						while(!runnableTasks.isEmpty()) {
 							final Runnable runnable;
 							final String title;							
-							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , Log.DEBUGLEVEL10);
+							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
 							synchronized (LOCK) {
-								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', Log.DEBUGLEVEL10);
+								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 								runnable = runnableTasks.get(0);
 								title = runnableTaskNames.get(runnable);
 							}
-							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', Log.DEBUGLEVEL10);
+							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 							modalDialog.setTitle(title);
 							progressBar.setString(title);
 							try {
@@ -108,7 +133,7 @@ public final class ProcessingDialog {
 								new Launcher.DefaultThrowableHandler().handle(throwable);
 							}
 							synchronized (LOCK) {
-								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', Log.DEBUGLEVEL10);
+								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 								runnableTasks.remove(0);
 								runnableTaskNames.remove(runnable);
 							}
