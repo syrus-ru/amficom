@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.66 2005/09/21 13:47:58 bass Exp $
+ * $Id: Characteristic.java,v 1.67 2005/09/23 11:45:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.*;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/09/21 13:47:58 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/23 11:45:45 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -374,12 +374,86 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		this.value = value;
 	}
 
+	/**
+	 * @todo add check whether parentCharacterizableId is non-void.
+	 */
 	public Identifier getParentCharacterizableId() {
+		assert this.parentCharacterizableId != null : NON_NULL_EXPECTED;
+
 		return this.parentCharacterizableId;
 	}
 
-	public void setParentCharacterizableId(final Identifier parentCharacterizableId) {
-		this.parentCharacterizableId = parentCharacterizableId;
+	/**
+	 * A wrapper around {@link #getParentCharacterizableId()}.
+	 *
+	 * @throws ApplicationException
+	 * @todo add check whether parentCharacterizable is non-null.
+	 */
+	public Characterizable getParentCharacterizable() throws ApplicationException {
+		final StorableObject storableObject = StorableObjectPool.getStorableObject(this.getParentCharacterizableId(), true);
+		if (storableObject == null || storableObject instanceof Characterizable) {
+			return (Characterizable) storableObject;
+		}
+		throw new ClassCastException();
+	}
+
+	/**
+	 * A wrapper around {@link #setParentCharacterizable(Characterizable, boolean)}.
+	 *
+	 * @param parentCharacterizableId
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @bug current code permits orphan characteristics.
+	 */
+	public void setParentCharacterizableId(
+			final Identifier parentCharacterizableId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentCharacterizableId != null : NON_NULL_EXPECTED;
+		/*
+		 * Further check for identifier validity (e. g.: either void or
+		 * major corresponds to some specific entity code) cannot be
+		 * performed since multiple StorableObject descendants may
+		 * implement Characterizable (in other words, we don't have a
+		 * special CHARACTERIZABLE_CODE).
+		 */
+
+		if (this.parentCharacterizableId.equals(parentCharacterizableId)) {
+			return;
+		}
+
+		final StorableObject storableObject = StorableObjectPool.getStorableObject(parentCharacterizableId, true);
+		if (storableObject == null || storableObject instanceof Characterizable) {
+			this.setParentCharacterizable((Characterizable) storableObject, usePool);
+		} else {
+			throw new ClassCastException();
+		}
+	}
+
+	/**
+	 * @param parentCharacterizable
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @bug current code permits orphan characteristics.
+	 */
+	public void setParentCharacterizable(
+			final Characterizable parentCharacterizable,
+			final boolean usePool)
+	throws ApplicationException {
+		final Identifier newParentCharacterizableId = Identifier.possiblyVoid(parentCharacterizable);
+		if (this.parentCharacterizableId.equals(newParentCharacterizableId)) {
+			return;
+		}
+
+		final Characterizable oldParentCharacterizable = this.getParentCharacterizable();
+		if (oldParentCharacterizable != null) {
+			oldParentCharacterizable.getCharacteristicContainerWrappee().removeFromCache(this, usePool);
+		}
+		if (parentCharacterizable != null) {
+			parentCharacterizable.getCharacteristicContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentCharacterizableId = newParentCharacterizableId;
 		super.markAsChanged();
 	}
 

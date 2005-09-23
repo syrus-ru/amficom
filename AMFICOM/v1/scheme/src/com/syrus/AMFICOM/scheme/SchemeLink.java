@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.82 2005/09/21 13:47:58 bass Exp $
+ * $Id: SchemeLink.java,v 1.83 2005/09/23 11:45:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/09/21 13:47:58 $
+ * @version $Revision: 1.83 $, $Date: 2005/09/23 11:45:44 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -531,6 +531,8 @@ public final class SchemeLink extends AbstractSchemeLink
 	 */
 	@Override
 	public SchemeLink clone() throws CloneNotSupportedException {
+		final boolean usePool = false;
+
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
 		final int depth = 1;
 		if (stackTrace.length > depth) {
@@ -564,10 +566,10 @@ public final class SchemeLink extends AbstractSchemeLink
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics(true)) {
+			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setParentCharacterizableId(clone.id);
+				clone.addCharacteristic(characteristicClone, usePool);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {

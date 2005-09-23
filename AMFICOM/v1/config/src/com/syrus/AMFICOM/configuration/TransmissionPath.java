@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.91 2005/09/21 13:22:09 bass Exp $
+ * $Id: TransmissionPath.java,v 1.92 2005/09/23 11:45:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,13 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.91 $, $Date: 2005/09/21 13:22:09 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/23 11:45:45 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -51,8 +54,6 @@ public final class TransmissionPath extends DomainMember
 	private String description;
 	private Identifier startPortId;
 	private Identifier finishPortId;
-
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	public TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
 		try {
@@ -212,13 +213,6 @@ public final class TransmissionPath extends DomainMember
 		return dependencies;
 	}
 
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee.getContainees(usePool);
-	}
-	
 	/**
 	 * @param finishPortId The finishPortId to set.
 	 */
@@ -254,5 +248,94 @@ public final class TransmissionPath extends DomainMember
 	public Set<Identifier> getMonitoredElementIds() {
 		//TODO Implement
 		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: characteristics                             *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 */
+	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+		}
+		return this.characteristicContainerWrappee;
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void addCharacteristic(final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void removeCharacteristic(
+			final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 */
+	public Set<Characteristic> getCharacteristics(boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	throws ApplicationException {
+		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param characteristics
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 */
+	public void setCharacteristics(final Set<Characteristic> characteristics,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristics != null : NON_NULL_EXPECTED;
+
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+
+		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
+		toRemove.removeAll(characteristics);
+		for (final Characteristic characteristic : toRemove) {
+			this.removeCharacteristic(characteristic, usePool);
+		}
+
+		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
+		toAdd.removeAll(oldCharacteristics);
+		for (final Characteristic characteristic : toAdd) {
+			this.addCharacteristic(characteristic, usePool);
+		}
 	}
 }

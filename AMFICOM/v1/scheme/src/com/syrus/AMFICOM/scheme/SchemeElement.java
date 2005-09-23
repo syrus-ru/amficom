@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.113 2005/09/21 13:47:58 bass Exp $
+ * $Id: SchemeElement.java,v 1.114 2005/09/23 11:45:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.113 $, $Date: 2005/09/21 13:47:58 $
+ * @version $Revision: 1.114 $, $Date: 2005/09/23 11:45:44 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -630,10 +630,10 @@ public final class SchemeElement extends AbstractSchemeElement
 				clone.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
 				clone.setSchemeCell(schemeCellClone);
 			}
-			for (final Characteristic characteristic : this.getCharacteristics(true)) {
+			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setParentCharacterizableId(clone.id);
+				clone.addCharacteristic(characteristicClone, usePool);
 			}
 			for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
@@ -1793,8 +1793,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @throws ApplicationException
 	 * @see SchemeProtoElement#clone()
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	private void fillProperties(final SchemeProtoElement schemeProtoElement, Identifier creatorId)
 	throws ApplicationException {
+		final boolean usePool = true;
+
 		try {
 			if (super.clonedIdMap == null) {
 				super.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -1822,10 +1825,10 @@ public final class SchemeElement extends AbstractSchemeElement
 				super.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
 				this.setSchemeCell(schemeCellClone);
 			}
-			for (final Characteristic characteristic : schemeProtoElement.getCharacteristics(true)) {
+			for (final Characteristic characteristic : schemeProtoElement.getCharacteristics(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				super.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setParentCharacterizableId(super.id);
+				this.addCharacteristic(characteristicClone, usePool);
 			}
 			for (final SchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices0()) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();

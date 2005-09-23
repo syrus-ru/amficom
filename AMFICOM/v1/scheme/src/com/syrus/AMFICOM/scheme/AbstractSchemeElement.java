@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.55 2005/09/21 13:22:08 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.56 2005/09/23 11:45:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/09/21 13:22:08 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/23 11:45:44 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -64,8 +65,6 @@ public abstract class AbstractSchemeElement
 	 *       and SchemeLink may be enclosed not by Scheme only.
 	 */
 	Identifier parentSchemeId;
-
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @param id
@@ -113,16 +112,6 @@ public abstract class AbstractSchemeElement
 	 */
 	AbstractSchemeElement() {
 		// super();
-	}
-
-	/**
-	 * @see Characterizable#getCharacteristics(boolean)
-	 */
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	/**
@@ -306,6 +295,95 @@ public abstract class AbstractSchemeElement
 			for (final Characteristic characteristic : characteristics) {
 				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 			}
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: characteristics                             *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 */
+	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+		}
+		return this.characteristicContainerWrappee;
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public final void addCharacteristic(final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public final void removeCharacteristic(
+			final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 */
+	public final Set<Characteristic> getCharacteristics(boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	final Set<Characteristic> getCharacteristics0(final boolean usePool)
+	throws ApplicationException {
+		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param characteristics
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 */
+	public final void setCharacteristics(final Set<Characteristic> characteristics,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristics != null : NON_NULL_EXPECTED;
+
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+
+		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
+		toRemove.removeAll(characteristics);
+		for (final Characteristic characteristic : toRemove) {
+			this.removeCharacteristic(characteristic, usePool);
+		}
+
+		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
+		toAdd.removeAll(oldCharacteristics);
+		for (final Characteristic characteristic : toAdd) {
+			this.addCharacteristic(characteristic, usePool);
 		}
 	}
 

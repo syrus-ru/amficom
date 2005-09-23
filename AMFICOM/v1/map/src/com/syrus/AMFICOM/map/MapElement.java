@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.21 2005/08/31 13:25:08 bass Exp $
+ * $Id: MapElement.java,v 1.22 2005/09/23 11:45:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,11 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.general.Characterizable;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
@@ -19,10 +23,10 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/08/31 13:25:08 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/23 11:45:46 $
  * @module map
  */
-public interface MapElement extends Characterizable, Namable {
+public interface MapElement extends Identifiable, Namable {
 	/**
 	 * Получить флаг выделения элемента.
 	 * @return флаг выделения элемента
@@ -80,5 +84,7 @@ public interface MapElement extends Characterizable, Namable {
 	 * @param removed флаг удаления элемента
 	 */
 	void setRemoved(final boolean removed);
-}
 
+	Set<Characteristic> getCharacteristics(final boolean usePool)
+	throws ApplicationException;
+}

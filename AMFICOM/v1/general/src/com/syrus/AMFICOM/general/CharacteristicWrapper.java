@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.23 2005/09/21 13:47:58 bass Exp $
+ * $Id: CharacteristicWrapper.java,v 1.24 2005/09/23 11:45:45 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.util.PropertyChangeException;
+
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/21 13:47:58 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/23 11:45:45 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -120,22 +122,29 @@ public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic>
 	}
 
 	@Override
-	public void setValue(final Characteristic characteristic, final String key, final Object value) {
-		if (characteristic != null) {
-			if (key.equals(COLUMN_TYPE_ID))
-				characteristic.setType((CharacteristicType) value);
-			else if (key.equals(COLUMN_NAME))
-				characteristic.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
-				characteristic.setDescription0((String) value);
-			else if (key.equals(COLUMN_CHARACTERIZABLE_ID))
-				characteristic.setParentCharacterizableId((Identifier) value);
-			else if (key.equals(COLUMN_EDITABLE))
-				characteristic.setEditable(((Boolean) value).booleanValue());
-			else if (key.equals(COLUMN_VISIBLE))
-				characteristic.setVisible(((Boolean) value).booleanValue());
-			else if (key.equals(COLUMN_VALUE))
-				characteristic.setValue((String) value);
+	public void setValue(final Characteristic characteristic, final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (characteristic != null) {
+				if (key.equals(COLUMN_TYPE_ID))
+					characteristic.setType((CharacteristicType) value);
+				else if (key.equals(COLUMN_NAME))
+					characteristic.setName((String) value);
+				else if (key.equals(COLUMN_DESCRIPTION))
+					characteristic.setDescription0((String) value);
+				else if (key.equals(COLUMN_CHARACTERIZABLE_ID))
+					characteristic.setParentCharacterizableId((Identifier) value, usePool);
+				else if (key.equals(COLUMN_EDITABLE))
+					characteristic.setEditable(((Boolean) value).booleanValue());
+				else if (key.equals(COLUMN_VISIBLE))
+					characteristic.setVisible(((Boolean) value).booleanValue());
+				else if (key.equals(COLUMN_VALUE))
+					characteristic.setValue((String) value);
+			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 }

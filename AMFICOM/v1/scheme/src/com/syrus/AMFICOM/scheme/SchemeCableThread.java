@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.84 2005/09/21 13:47:58 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.85 2005/09/23 11:45:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
@@ -75,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/21 13:47:58 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/23 11:45:44 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -97,8 +98,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	Identifier targetSchemePortId;
 
 	Identifier parentSchemeCableLinkId;
-
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	private boolean linkTypeSet = false;
 
@@ -285,6 +284,8 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public SchemeCableThread clone() throws CloneNotSupportedException {
+		final boolean usePool = false;
+
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
 		final int depth = 1;
 		if (stackTrace.length > depth) {
@@ -315,10 +316,10 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics(true)) {
+			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setParentCharacterizableId(clone.id);
+				clone.addCharacteristic(characteristicClone, usePool);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {
@@ -349,16 +350,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
-	}
-
-	/**
-	 * @see Characterizable#getCharacteristics(boolean)
-	 */
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	/**
@@ -917,5 +908,94 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		return this.linkId != null
 				&& this.linkTypeId != null
 				&& (this.linkId.isVoid() ^ this.linkTypeId.isVoid());
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: characteristics                             *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 */
+	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+		}
+		return this.characteristicContainerWrappee;
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void addCharacteristic(final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void removeCharacteristic(
+			final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 */
+	public Set<Characteristic> getCharacteristics(boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	throws ApplicationException {
+		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param characteristics
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 */
+	public void setCharacteristics(final Set<Characteristic> characteristics,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristics != null : NON_NULL_EXPECTED;
+
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+
+		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
+		toRemove.removeAll(characteristics);
+		for (final Characteristic characteristic : toRemove) {
+			this.removeCharacteristic(characteristic, usePool);
+		}
+
+		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
+		toAdd.removeAll(oldCharacteristics);
+		for (final Characteristic characteristic : toAdd) {
+			this.addCharacteristic(characteristic, usePool);
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.6 2005/09/21 13:22:08 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.7 2005/09/23 11:45:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,14 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -35,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/21 13:22:08 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/23 11:45:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -46,8 +49,6 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 
 	private String name;
 	private EnumSet<MeasurementType> measurementTypes;
-
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	public MeasurementPortType(final IdlMeasurementPortType mptt) throws CreateObjectException {
 		try {
@@ -182,11 +183,92 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 		return Collections.emptySet();
 	}
 
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+	/*-********************************************************************
+	 * Children manipulation: characteristics                             *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 */
+	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
 			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characteristicContainerWrappee.getContainees(usePool);
+		return this.characteristicContainerWrappee;
 	}
 
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void addCharacteristic(final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void removeCharacteristic(
+			final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 */
+	public Set<Characteristic> getCharacteristics(boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	throws ApplicationException {
+		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param characteristics
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 */
+	public void setCharacteristics(final Set<Characteristic> characteristics,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristics != null : NON_NULL_EXPECTED;
+
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+
+		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
+		toRemove.removeAll(characteristics);
+		for (final Characteristic characteristic : toRemove) {
+			this.removeCharacteristic(characteristic, usePool);
+		}
+
+		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
+		toAdd.removeAll(oldCharacteristics);
+		for (final Characteristic characteristic : toAdd) {
+			this.addCharacteristic(characteristic, usePool);
+		}
+	}
 }

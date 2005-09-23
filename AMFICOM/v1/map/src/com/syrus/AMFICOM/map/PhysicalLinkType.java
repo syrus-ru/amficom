@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.90 2005/09/21 13:09:29 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.91 2005/09/23 11:45:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,14 @@ package com.syrus.AMFICOM.map;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,10 +33,8 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -49,7 +50,6 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkType;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
-import com.syrus.util.Shitlet;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
@@ -57,7 +57,7 @@ import com.syrus.util.Shitlet;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/09/21 13:09:29 $
+ * @version $Revision: 1.91 $, $Date: 2005/09/23 11:45:46 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -94,9 +94,6 @@ public final class PhysicalLinkType extends StorableObjectType
 	private Identifier mapLibraryId;
 	
 	private boolean topological;
-
-	@Shitlet
-	private transient Set<Characteristic> characteristics;
 
 	public PhysicalLinkType(final IdlPhysicalLinkType pltt) throws CreateObjectException {
 		try {
@@ -297,39 +294,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	protected void setCodename0(final String codename) {
 		super.setCodename0(codename);
 	}
-
-	@Shitlet
-	public void addCharacteristic(Characteristic characteristic) {
-		if(this.characteristics == null) {
-			try {
-				final Set<Characteristic> chs = StorableObjectPool.getStorableObjectsByCondition(
-						new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE), 
-						true);
-				this.characteristics = new HashSet<Characteristic>(chs);
-			} catch(ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		this.characteristics.add(characteristic);
-	}
 	
-	@Shitlet
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if(this.characteristics == null) {
-			try {
-				final Set<Characteristic> chs = StorableObjectPool.getStorableObjectsByCondition(
-						new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE), 
-						true);
-				this.characteristics = new HashSet<Characteristic>(chs);
-			} catch(ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return this.characteristics;
-	}
-
 	public PhysicalLinkTypeSort getSort() {
 		return this.sort;
 	}
@@ -486,5 +451,94 @@ public final class PhysicalLinkType extends StorableObjectType
 	
 	protected void setMapLibrary0(MapLibrary mapLibrary) {
 		this.mapLibraryId = mapLibrary.getId();
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: characteristics                             *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 */
+	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+		}
+		return this.characteristicContainerWrappee;
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void addCharacteristic(final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void removeCharacteristic(
+			final Characteristic characteristic,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 */
+	public Set<Characteristic> getCharacteristics(boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<Characteristic> getCharacteristics0(final boolean usePool)
+	throws ApplicationException {
+		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param characteristics
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 */
+	public void setCharacteristics(final Set<Characteristic> characteristics,
+			final boolean usePool)
+	throws ApplicationException {
+		assert characteristics != null : NON_NULL_EXPECTED;
+
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+
+		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
+		toRemove.removeAll(characteristics);
+		for (final Characteristic characteristic : toRemove) {
+			this.removeCharacteristic(characteristic, usePool);
+		}
+
+		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
+		toAdd.removeAll(oldCharacteristics);
+		for (final Characteristic characteristic : toAdd) {
+			this.addCharacteristic(characteristic, usePool);
+		}
 	}
 }

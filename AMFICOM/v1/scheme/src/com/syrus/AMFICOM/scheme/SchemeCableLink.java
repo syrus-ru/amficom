@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.94 2005/09/22 15:27:10 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.95 2005/09/23 11:45:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,8 +89,8 @@ import com.syrus.util.Shitlet;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.94 $, $Date: 2005/09/22 15:27:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.95 $, $Date: 2005/09/23 11:45:44 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -302,6 +302,8 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 */
 	@Override
 	public SchemeCableLink clone() throws CloneNotSupportedException {
+		final boolean usePool = false;
+
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
 		final int depth = 1;
 		if (stackTrace.length > depth) {
@@ -332,10 +334,10 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics(true)) {
+			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setParentCharacterizableId(clone.id);
+				clone.addCharacteristic(characteristicClone, usePool);
 			}
 			for (final SchemeCableThread schemeCableThread : this.getSchemeCableThreads0()) {
 				final SchemeCableThread schemeCableThreadClone = schemeCableThread.clone();
