@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.9 2005/09/14 18:23:22 arseniy Exp $
+ * $Id: ClientServantManager.java,v 1.10 2005/09/23 15:02:33 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,10 @@
  */
 package com.syrus.AMFICOM.general;
 
+import javax.swing.JOptionPane;
+
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.CommonServerHelper;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
@@ -18,8 +22,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/14 18:23:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/09/23 15:02:33 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -105,18 +109,25 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	@Override
 	protected final void onLoseConnection(final String servantName) {
 		Log.debugMessage("AbstractClientServantManager.onLoseConnection() | Connection with '" + servantName + "' lost",
-				Log.DEBUGLEVEL08);
-		/**
-		 * @todo Maybe, GUI-specific actions
-		 */
+			Log.DEBUGLEVEL08);
+		final String msg = LangModelGeneral.getString("Error.ConnectionWith.ConnectionWith") + " '" + servantName + "' " + LangModelGeneral.getString("Error.ConnectionWith.Lost");
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+			msg,
+			LangModelGeneral.getString("Error.ErrorOccur"),
+			JOptionPane.ERROR_MESSAGE);		
 	}
 
 	@Override
 	protected final void onRestoreConnection(final String servantName) {
 		Log.debugMessage("AbstractClientServantManager.onRestoreConnection() | Connection with '" + servantName + "' restored",
-				Log.DEBUGLEVEL08);
-		/**
-		 * @todo Maybe, GUI-specific actions
-		 */
+			Log.DEBUGLEVEL08);
+		final String msg = LangModelGeneral.getString("Text.InfoMessage.ConnectionWith.ConnectionWith") 
+			+ " '" + servantName 
+			+ "' " + LangModelGeneral.getString("Text.InfoMessage.ConnectionWith.Restored");
+//		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+//			msg,
+//			LangModelGeneral.getString("Text.InfoMessage.Title"),
+//			JOptionPane.INFORMATION_MESSAGE);
+
 	}
 }
