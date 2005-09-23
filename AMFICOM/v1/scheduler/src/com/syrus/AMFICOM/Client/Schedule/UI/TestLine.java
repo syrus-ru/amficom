@@ -464,9 +464,14 @@ final class TestLine extends TimeLine {
 				final Identifier testId = test.getId();
 				final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
 				final long measurementDuration = measurementSetup.getMeasurementDuration();
-
+				final SortedMap<Date, String> stoppings = test.getStoppingMap();
 				Color selectedColor = SchedulerModel.getColor(test.getStatus(), true);
 				Color color = SchedulerModel.getColor(test.getStatus(), false);
+				
+				if (test.getStatus() == TestStatus.TEST_STATUS_PROCESSING) {
+					selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, true);
+					color = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, false);
+				}
 				
 				this.testIds.add(testId);
 				
@@ -493,7 +498,7 @@ final class TestLine extends TimeLine {
 						if (test.getStatus() != TestStatus.TEST_STATUS_COMPLETED) {
 							final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 							final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
-							final SortedMap<Date, String> stoppings = test.getStoppingMap();
+							
 							
 							
 							for(final Date date : times) {
@@ -506,26 +511,8 @@ final class TestLine extends TimeLine {
 									final long time2 = measurementTime.getTime();
 									if (time <= time2 &&  time2 <= time + measurementDuration) {
 										testTimeLine.startTime = time2;
-										testTimeLine.duration = measurement.getDuration();
-										
-										switch (measurement.getStatus().value()) {
-										case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
-											testTimeLine.color = SchedulerModel.COLOR_ABORDED;
-											testTimeLine.selectedColor = SchedulerModel.COLOR_ABORDED_SELECTED;
-											break;
-										case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-											testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
-											testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
-											break;
-										case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-										case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-											testTimeLine.color = color;
-											testTimeLine.selectedColor = selectedColor;
-										default:
-											testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
-											testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
-											break;														
-										}
+										testTimeLine.duration = measurement.getDuration();										
+										this.updateTestTimeLine(testTimeLine, measurement);
 										foundMeasurement = true;
 										testMeasurements.remove(measurement);
 										break;
@@ -533,12 +520,16 @@ final class TestLine extends TimeLine {
 								}
 								
 								if (!foundMeasurement) {
+									testTimeLine.startTime = time;
+									testTimeLine.duration = measurementDuration;
 									if (stoppings.tailMap(date).isEmpty()) {
 										testTimeLine.color = color;
 										testTimeLine.selectedColor = selectedColor;
-										testTimeLine.startTime = time;									
-										testTimeLine.duration = measurementDuration;
+									} else {
+										testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, false);
+										testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, true);
 									}
+						
 								}
 								measurementTestList.add(testTimeLine);
 							}
@@ -546,8 +537,13 @@ final class TestLine extends TimeLine {
 							for (final Measurement measurement : testMeasurements) {
 								TestTimeLine testTimeLine = new TestTimeLine();
 								testTimeLine.testId = testId;
-								testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
-								testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
+								if (stoppings.tailMap(measurement.getStartTime()).isEmpty()) {
+									testTimeLine.color = color;
+									testTimeLine.selectedColor = selectedColor;
+								} else {
+									testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, false);
+									testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, true);
+								}
 								testTimeLine.startTime = measurement.getStartTime().getTime();
 								testTimeLine.duration = measurement.getDuration();
 								measurementTestList.add(testTimeLine);
@@ -567,20 +563,7 @@ final class TestLine extends TimeLine {
 							if (time <= time2 &&  time2 <= time + measurementDuration) {
 								testTimeLine.startTime = time2;
 								testTimeLine.duration = measurement.getDuration();
-								switch (measurement.getStatus().value()) {
-								case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
-									testTimeLine.color = SchedulerModel.COLOR_ABORDED;
-									testTimeLine.selectedColor = SchedulerModel.COLOR_ABORDED_SELECTED;
-									break;
-								case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-									testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
-									testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
-									break;
-								default:
-									testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
-									testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
-									break;														
-								}
+								this.updateTestTimeLine(testTimeLine, measurement);
 								foundMeasurement = true;
 								testMeasurements.remove(measurement);
 								break;
@@ -610,6 +593,24 @@ final class TestLine extends TimeLine {
 		this.refreshTimeItems();
 	}
 
+	private final void updateTestTimeLine(final TestTimeLine testTimeLine,  
+	                                final Measurement measurement) {
+		switch (measurement.getStatus().value()) {
+		case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
+			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_ABORTED, false);
+			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_ABORTED, true);
+			break;
+		case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, false);
+			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, true);
+			break;
+		default:
+			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_COMPLETED, false);
+			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_COMPLETED, true);
+			break;														
+		}
+	}
+	
 	@Override
 	public void setStart(long start) {
 		long oldValue = super.start;
