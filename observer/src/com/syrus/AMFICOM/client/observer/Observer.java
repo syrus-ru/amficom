@@ -15,7 +15,6 @@ public class Observer extends AbstractApplication {
 
 	@Override
 	protected void init() {
-		super.init();		
 		super.aContext.setApplicationModel(new DefaultObserverApplicationModelFactory().create());
 		super.startMainFrame(new ObserverMainFrame(this.aContext), Toolkit.getDefaultToolkit().getImage("images/main/observe_mini.gif"));
 	}

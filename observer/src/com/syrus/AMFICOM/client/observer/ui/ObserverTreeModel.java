@@ -1,5 +1,5 @@
 /*-
- * $Id: ObserverTreeModel.java,v 1.3 2005/09/14 14:00:32 krupenn Exp $
+ * $Id: ObserverTreeModel.java,v 1.4 2005/09/23 13:39:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,24 +13,23 @@ import java.util.Collection;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.UI.ResultChildrenFactory;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.ui.MapEditorTreeModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/09/14 14:00:32 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/09/23 13:39:38 $
  * @module surveyclient_v1
  */
 
-public class ObserverTreeModel implements ChildrenFactory{
+public class ObserverTreeModel extends AbstractChildrenFactory {
 	ApplicationContext aContext;
 	PopulatableIconedNode root;
 	
@@ -39,7 +38,7 @@ public class ObserverTreeModel implements ChildrenFactory{
 	}
 	
 	public void populate(Item node) {
-		Collection contents = CommonUIUtilities.getChildObjects(node);
+		Collection contents = getChildObjects(node);
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
