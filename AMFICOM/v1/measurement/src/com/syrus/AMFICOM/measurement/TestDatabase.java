@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.129 2005/09/22 19:39:27 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.130 2005/09/23 13:31:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.TableNames.MEASUREMENTSETUP_TEST_LINK;
-import static com.syrus.AMFICOM.general.TableNames.TEST_STOPPING_LINK;
+import static com.syrus.AMFICOM.general.TableNames.TEST_STOP_LINK;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.129 $, $Date: 2005/09/22 19:39:27 $
+ * @version $Revision: 1.130 $, $Date: 2005/09/23 13:31:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -54,8 +54,8 @@ import com.syrus.util.database.DatabaseString;
 
 public final class TestDatabase extends StorableObjectDatabase<Test> {
 	private static final String LINK_COLUMN_TEST_ID = "test_id";
-	private static final String LINK_COLUMN_STOPPING_TIME = "stop_time";
-	private static final String LINK_COLUMN_STOPPING_REASON = "stop_reason";
+	private static final String LINK_COLUMN_STOP_TIME = "stop_time";
+	private static final String LINK_COLUMN_STOP_REASON = "stop_reason";
 
 	private static String columns;
 	private static String updateMultipleSQLValues;	
@@ -226,9 +226,9 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ LINK_COLUMN_TEST_ID + COMMA
-				+ DatabaseDate.toQuerySubString(LINK_COLUMN_STOPPING_TIME) + COMMA
-				+ LINK_COLUMN_STOPPING_REASON 
-				+ SQL_FROM + TEST_STOPPING_LINK
+				+ DatabaseDate.toQuerySubString(LINK_COLUMN_STOP_TIME) + COMMA
+				+ LINK_COLUMN_STOP_REASON 
+				+ SQL_FROM + TEST_STOP_LINK
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(identifiables, LINK_COLUMN_TEST_ID, true));
 
@@ -238,7 +238,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.retrieveStoppings | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEntityName() + "Database.retrieveStops | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, SortedMap<Date, String>> stopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
@@ -249,14 +249,14 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 					testStopsMap = new TreeMap<Date, String>();
 					stopsMap.put(storabeObjectId, testStopsMap);
 				}
-				testStopsMap.put(DatabaseDate.fromQuerySubString(resultSet, LINK_COLUMN_STOPPING_TIME),
-					DatabaseString.fromQuerySubString(resultSet.getString(LINK_COLUMN_STOPPING_REASON)));
+				testStopsMap.put(DatabaseDate.fromQuerySubString(resultSet, LINK_COLUMN_STOP_TIME),
+					DatabaseString.fromQuerySubString(resultSet.getString(LINK_COLUMN_STOP_REASON)));
 			}
 
 			return stopsMap;
 		} catch (SQLException sqle) {
 			final String mesg = this.getEntityName()
-					+ "Database.retrieveStoppings | Cannot retrieve linked entity identifiers for entity -- "
+					+ "Database.retrieveStops | Cannot retrieve linked entity identifiers for entity -- "
 					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
@@ -304,10 +304,10 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			return;
 		}
 
-		final String sql = SQL_INSERT_INTO + TEST_STOPPING_LINK + OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + TEST_STOP_LINK + OPEN_BRACKET
 				+ LINK_COLUMN_TEST_ID + COMMA
-				+ LINK_COLUMN_STOPPING_TIME + COMMA
-				+ LINK_COLUMN_STOPPING_REASON
+				+ LINK_COLUMN_STOP_TIME + COMMA
+				+ LINK_COLUMN_STOP_REASON
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -327,7 +327,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					preparedStatement.setTimestamp(2, new Timestamp(stoppingTime.getTime()));
 					DatabaseString.setString(preparedStatement, 3, reason, StorableObjectDatabase.SIZE_DESCRIPTION_COLUMN);
-					Log.debugMessage(this.getEntityName() + "Database.insertStoppings | Inserting stopping  '"
+					Log.debugMessage(this.getEntityName() + "Database.insertStops | Inserting stopping  '"
 							+ reason + "' at " + stoppingTime + " for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
@@ -342,7 +342,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				}
 			}
 			final String mesg = this.getEntityName()
-					+ "Database.insertLinkedEntityIds | Cannot insert stopping for '" + id + "' -- " + sqle.getMessage();
+					+ "Database.insertStops | Cannot insert stopping for '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
