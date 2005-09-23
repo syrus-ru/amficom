@@ -54,6 +54,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.Log;
 
 final class TestLine extends TimeLine {
 
@@ -77,12 +78,8 @@ final class TestLine extends TimeLine {
 	static class TestTimeItem implements Comparable<TestTimeItem> {
 		int x;
 		private int width;
-
-		Color color;
-		Color selectedColor;
 		
-		// Test test;
-		Object object;
+		TestTimeLine testTimeLine;
 
 		public int compareTo(final TestTimeItem item) {
 			return (this.x - item.x);
@@ -90,22 +87,21 @@ final class TestLine extends TimeLine {
 
 		@Override
 		public boolean equals(final Object obj) {
-			final boolean result = super.equals(obj);
-			if (result) {
-				return result;
+			if (obj == this) {
+				return true;
 			}
-			if (!(obj instanceof TestLine.TestTimeItem)) {
-				return false;
+			
+			if (obj instanceof TestLine.TestTimeItem) {
+				final TestTimeItem testTimeItem = (TestTimeItem) obj;
+				return testTimeItem.testTimeLine.testId == this.testTimeLine.testId ||
+						testTimeItem.testTimeLine.testId != null && testTimeItem.testTimeLine.testId.equals(this.testTimeLine.testId);
 			}
-			final TestTimeItem testTimeItem = (TestTimeItem) obj;
-			final boolean b1 = (testTimeItem.object == this.object && this.object == null);
-			final boolean b2 = (testTimeItem.object != null && testTimeItem.object.equals(this.object));
-			return b1 || b2;
+			return false;
 		}
 
 		@Override
 		public int hashCode() {
-			return this.object == null ? 0 : this.object.hashCode();
+			return this.testTimeLine.testId == null ? 0 : this.testTimeLine.testId.hashCode();
 		}
 
 		public int getWidth() {
@@ -149,10 +145,9 @@ final class TestLine extends TimeLine {
 
 	protected volatile boolean 	skip					= false;
 
-	final PlanPanel	planPanel;
-
-	public TestLine(ApplicationContext aContext, PlanPanel planPanel, String title, Identifier monitoredElementId) {
-		this.planPanel = planPanel;
+	public TestLine(final ApplicationContext aContext, 
+	                final String title, final 
+	                Identifier monitoredElementId) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.createMouseListener();
 		this.title = title;
@@ -177,7 +172,7 @@ final class TestLine extends TimeLine {
 				try {
 					final Test test = 
 						StorableObjectPool.getStorableObject(
-							(Identifier) testTimeItem.object,
+							testTimeItem.testTimeLine.testId,
 							true);
 					this.selectedTestIds.add(test.getId());
 					new ProcessingDialog(new Runnable() {
@@ -206,7 +201,7 @@ final class TestLine extends TimeLine {
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Identifier testId = this.selectedTestIds.iterator().next();
 			for (final TestTimeItem element : this.timeItems) {
-				if (((Identifier) element.object).equals(testId)) {
+				if (element.testTimeLine.testId.equals(testId)) {
 					rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.getWidth(), this.getHeight()
 							- (this.titleHeight / 2 + 4)
 							- 2);
@@ -216,7 +211,7 @@ final class TestLine extends TimeLine {
 			
 			if (rectangle == null) {
 				for (final TestTimeItem element : this.unsavedTestTimeItems) {
-					if (((Identifier) element.object).equals(testId)) {
+					if (element.testTimeLine.testId.equals(testId)) {
 						rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.getWidth(), this.getHeight()
 								- (this.titleHeight / 2 + 4)
 								- 2);
@@ -227,16 +222,6 @@ final class TestLine extends TimeLine {
 		}
 		return rectangle;
 	}
-
-	// public void propertyChange(PropertyChangeEvent evt) {
-	// String propertyName = evt.getPropertyName();
-	// if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-	// updateTests();
-	// } else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-	// updateTest();
-	// }
-	//		
-	// }
 	
 	boolean isTestNewer(final Test test) {
 		return test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) 
@@ -251,15 +236,8 @@ final class TestLine extends TimeLine {
 			int h = this.getHeight() - y - 2;
 
 			for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
-				Identifier testId = (Identifier) testTimeItem.object;
-//				 if (this.startPoint != null) {
-//				 Log.debugMessage("TestLine.paintFlash | " + testTimeItem.x,
-//				 Log.DEBUGLEVEL08);
-//				 Log.debugMessage("TestLine.paintFlash | testTimeItem > " +
-//				 ((Test) testTimeItem.object).getId(), Log.DEBUGLEVEL08);
-//				 }
 				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, this.flash
-						? (((this.selectedTestIds == null) || (!this.selectedTestIds.contains(testId)))
+						? (((this.selectedTestIds == null) || (!this.selectedTestIds.contains(testTimeItem.testTimeLine.testId)))
 								? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_SCHEDULED_SELECTED)
 						: SchedulerModel.COLOR_UNRECOGNIZED);
 			}
@@ -287,9 +265,8 @@ final class TestLine extends TimeLine {
 
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
-				final Identifier testId = (Identifier) testTimeItem.object;
 				for (final Identifier identifier : this.selectedTestIds) {
-					if (testId.equals(identifier)) {
+					if (testTimeItem.testTimeLine.testId.equals(identifier)) {
 						this.selectedItems.add(testTimeItem);
 						break;
 					}
@@ -298,9 +275,8 @@ final class TestLine extends TimeLine {
 			}
 
 			for (final TestTimeItem testTimeItem : this.timeItems) {
-				final Identifier testId = (Identifier) testTimeItem.object;
 				for (final Identifier identifier : this.selectedTestIds) {
-					if (testId.equals(identifier)) {
+					if (testTimeItem.testTimeLine.testId.equals(identifier)) {
 						this.selectedItems.add(testTimeItem);
 						break;
 					}
@@ -331,8 +307,8 @@ final class TestLine extends TimeLine {
 			synchronized (this) {
 				for (final TestTimeItem testTimeItem : this.timeItems) {
 					this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, (this.selectedTestIds == null)
-							|| (!this.selectedTestIds.contains(testTimeItem.object)) ? testTimeItem.color
-							: testTimeItem.selectedColor);
+							|| (!this.selectedTestIds.contains(testTimeItem.testTimeLine.testId)) ? testTimeItem.testTimeLine.color
+							: testTimeItem.testTimeLine.selectedColor);
 				}
 			}
 		}
@@ -362,10 +338,15 @@ final class TestLine extends TimeLine {
 						if (!selectTest(x, TestLine.this.timeItems)) {
 							if (!selectTest(x, TestLine.this.unsavedTestTimeItems)) {
 								TestLine.this.schedulerModel.unselectTests();
+								for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
+									mouseListener.mousePressed(e);
+								}
 							}
 						}
 					} else if (!selectTest(x, TestLine.this.unsavedTestTimeItems)) {
-						for(final MouseListener mouseListener : TestLine.this.planPanel.getMouseListeners()) {
+						assert Log
+								.debugMessage(".mousePressed | " + TestLine.this.getParent(), Log.DEBUGLEVEL09);
+						for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
 							mouseListener.mousePressed(e);
 						}
 					}
@@ -388,7 +369,7 @@ final class TestLine extends TimeLine {
 					if (TestLine.this.selectedItems != null && !TestLine.this.selectedItems.isEmpty()) {
 						final TestTimeItem testTimeItem = TestLine.this.selectedItems.first();
 						try {
-							final Test test = (Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object, true);
+							final Test test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
 							final Date startTime = test.getStartTime();
 							TestLine.this.schedulerModel.moveSelectedTests(new Date(startTime.getTime() + offset));
 							TestLine.this.dispatcher
@@ -451,7 +432,7 @@ final class TestLine extends TimeLine {
 					for (Iterator it = TestLine.this.selectedItems.iterator(); it.hasNext();) {
 						TestTimeItem testTimeItem = (TestTimeItem) it.next();
 						try {
-							final Test test = StorableObjectPool.getStorableObject((Identifier) testTimeItem.object, true);
+							final Test test = StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
 							if (!isTestNewer(test)) {
 								continue;
 							}
@@ -488,170 +469,140 @@ final class TestLine extends TimeLine {
 				Color color = SchedulerModel.getColor(test.getStatus(), false);
 				
 				this.testIds.add(testId);
+				
+				final boolean newerTest = this.isTestNewer(test);
+				
 				if (this.isTestNewer(test)) {
 					this.unsavedTestIds.add(testId);
-					final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();					
+				}
 
-					switch (test.getTemporalType().value()) {
-					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: 
-						final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-						final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
-						for(final Date date : times) {
-							TestTimeLine testTimeLine = new TestTimeLine();
-							testTimeLine.testId = testId;
-							testTimeLine.color = color;
-							testTimeLine.selectedColor = selectedColor;
-							testTimeLine.startTime = date.getTime();									
-							testTimeLine.duration = measurementSetup.getMeasurementDuration();
-							measurementTestList.add(testTimeLine);
+				final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
+				this.measurements.put(testId, measurementTestList);
+				
+				
+				final Set<Measurement> testMeasurements;
+				if (newerTest) {
+					testMeasurements = Collections.emptySet();
+				} else {
+					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(testId, ObjectEntities.MEASUREMENT_CODE);	
+					testMeasurements = new HashSet(StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true));
+				}
+				
+				switch (test.getTemporalType().value()) {
+					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
+						if (test.getStatus() != TestStatus.TEST_STATUS_COMPLETED) {
+							final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+							final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
+							final SortedMap<Date, String> stoppings = test.getStoppingMap();
+							
+							
+							for(final Date date : times) {
+								TestTimeLine testTimeLine = new TestTimeLine();
+								testTimeLine.testId = testId;
+								final long time = date.getTime();
+								boolean foundMeasurement = false;
+								for (final Measurement measurement : testMeasurements) {
+									final Date measurementTime = measurement.getStartTime();
+									final long time2 = measurementTime.getTime();
+									if (time <= time2 &&  time2 <= time + measurementDuration) {
+										testTimeLine.startTime = time2;
+										testTimeLine.duration = measurement.getDuration();
+										
+										switch (measurement.getStatus().value()) {
+										case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
+											testTimeLine.color = SchedulerModel.COLOR_ABORDED;
+											testTimeLine.selectedColor = SchedulerModel.COLOR_ABORDED_SELECTED;
+											break;
+										case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+											testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
+											testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
+											break;
+										case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+										case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+											testTimeLine.color = color;
+											testTimeLine.selectedColor = selectedColor;
+										default:
+											testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
+											testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
+											break;														
+										}
+										foundMeasurement = true;
+										testMeasurements.remove(measurement);
+										break;
+									}
+								}
+								
+								if (!foundMeasurement) {
+									if (stoppings.tailMap(date).isEmpty()) {
+										testTimeLine.color = color;
+										testTimeLine.selectedColor = selectedColor;
+										testTimeLine.startTime = time;									
+										testTimeLine.duration = measurementDuration;
+									}
+								}
+								measurementTestList.add(testTimeLine);
+							}
+						} else {
+							for (final Measurement measurement : testMeasurements) {
+								TestTimeLine testTimeLine = new TestTimeLine();
+								testTimeLine.testId = testId;
+								testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
+								testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
+								testTimeLine.startTime = measurement.getStartTime().getTime();
+								testTimeLine.duration = measurement.getDuration();
+								measurementTestList.add(testTimeLine);
+							}
 						}
-						break;					
+					}
+						break;
 					default:
 						TestTimeLine testTimeLine = new TestTimeLine();
 						testTimeLine.testId = testId;
-						testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
-						testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
-						testTimeLine.startTime = test.getStartTime().getTime();
-						testTimeLine.duration = test.getEndTime() != null ? 
-								test.getEndTime().getTime() - testTimeLine.startTime :
-								measurementSetup.getMeasurementDuration();
-						measurementTestList.add(testTimeLine);
-						break;
-					}
-					
-					this.measurements.put(testId, measurementTestList);
-				} else {
-					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(testId, ObjectEntities.MEASUREMENT_CODE);
-					
-					final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
-					this.measurements.put(testId, measurementTestList);
-					
-					
-
 						
-					final Set<Measurement> testMeasurements = new HashSet(StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true));
-					
-					switch (test.getTemporalType().value()) {
-						case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
-							if (test.getStatus() != TestStatus.TEST_STATUS_COMPLETED) {
-								final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-								final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
-								final SortedMap<Date, String> stoppings = test.getStoppingMap();
-								
-								
-								for(final Date date : times) {
-									TestTimeLine testTimeLine = new TestTimeLine();
-									testTimeLine.testId = testId;
-									final long time = date.getTime();
-									boolean foundMeasurement = false;
-									for (final Measurement measurement : testMeasurements) {
-										final Date measurementTime = measurement.getStartTime();
-										final long time2 = measurementTime.getTime();
-										if (time <= time2 &&  time2 <= time + measurementDuration) {
-											testTimeLine.startTime = time2;
-											testTimeLine.duration = measurement.getDuration();
-//												testTimeLine.haveMeasurement = true;
-											
-											switch (measurement.getStatus().value()) {
-											case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
-												testTimeLine.color = SchedulerModel.COLOR_ABORDED;
-												testTimeLine.selectedColor = SchedulerModel.COLOR_ABORDED_SELECTED;
-												break;
-											case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-												testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
-												testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
-												break;
-											case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-											case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-												testTimeLine.color = color;
-												testTimeLine.selectedColor = selectedColor;
-											default:
-												testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
-												testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
-												break;														
-											}
-											foundMeasurement = true;
-											testMeasurements.remove(measurement);
-											break;
-										}
-									}
-									
-									if (!foundMeasurement) {
-										if (stoppings.tailMap(date).isEmpty()) {
-											testTimeLine.color = color;
-											testTimeLine.selectedColor = selectedColor;
-											testTimeLine.startTime = time;									
-											testTimeLine.duration = measurementDuration;
-//												testTimeLine.haveMeasurement = false;
-										}
-									}
-									measurementTestList.add(testTimeLine);
-								}
-							} else {
-								for (final Measurement measurement : testMeasurements) {
-									TestTimeLine testTimeLine = new TestTimeLine();
-									testTimeLine.testId = testId;
+						final long time = test.getStartTime().getTime();
+						boolean foundMeasurement = false;
+						for (final Measurement measurement : testMeasurements) {
+							final Date measurementTime = measurement.getStartTime();
+							final long time2 = measurementTime.getTime();
+							if (time <= time2 &&  time2 <= time + measurementDuration) {
+								testTimeLine.startTime = time2;
+								testTimeLine.duration = measurement.getDuration();
+								switch (measurement.getStatus().value()) {
+								case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
+									testTimeLine.color = SchedulerModel.COLOR_ABORDED;
+									testTimeLine.selectedColor = SchedulerModel.COLOR_ABORDED_SELECTED;
+									break;
+								case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+									testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
+									testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
+									break;
+								default:
 									testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
 									testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
-									testTimeLine.startTime = measurement.getStartTime().getTime();
-									testTimeLine.duration = measurement.getDuration();
-//										testTimeLine.haveMeasurement = true;
-									measurementTestList.add(testTimeLine);
+									break;														
 								}
+								foundMeasurement = true;
+								testMeasurements.remove(measurement);
+								break;
 							}
 						}
-							break;
-						default:
-							TestTimeLine testTimeLine = new TestTimeLine();
-							testTimeLine.testId = testId;
-							
-							final long time = test.getStartTime().getTime();
-							boolean foundMeasurement = false;
-							for (final Measurement measurement : testMeasurements) {
-								final Date measurementTime = measurement.getStartTime();
-								final long time2 = measurementTime.getTime();
-								if (time <= time2 &&  time2 <= time + measurementDuration) {
-									testTimeLine.startTime = time2;
-									testTimeLine.duration = measurement.getDuration();
-									switch (measurement.getStatus().value()) {
-									case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
-										testTimeLine.color = SchedulerModel.COLOR_ABORDED;
-										testTimeLine.selectedColor = SchedulerModel.COLOR_ABORDED_SELECTED;
-										break;
-									case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-										testTimeLine.color = SchedulerModel.COLOR_SCHEDULED;
-										testTimeLine.selectedColor = SchedulerModel.COLOR_SCHEDULED_SELECTED;
-										break;
-									default:
-										testTimeLine.color = SchedulerModel.COLOR_COMPLETED;
-										testTimeLine.selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
-										break;														
-									}
-//										testTimeLine.haveMeasurement = true;
-									foundMeasurement = true;
-									testMeasurements.remove(measurement);
-									break;
-								}
-							}
-							
-							if (!foundMeasurement) {
-								testTimeLine.startTime = time;
-								testTimeLine.duration = test.getEndTime() != null ? 
-										test.getEndTime().getTime() - testTimeLine.startTime :
-										measurementSetup.getMeasurementDuration();
-								testTimeLine.color = color;
-								testTimeLine.selectedColor = selectedColor;
-//									testTimeLine.haveMeasurement = false;
-							}
-							measurementTestList.add(testTimeLine);
-							break;
-					}
-
-
-					Collections.sort(measurementTestList);
+						
+						if (!foundMeasurement) {
+							testTimeLine.startTime = time;
+							testTimeLine.duration = test.getEndTime() != null ? 
+									test.getEndTime().getTime() - testTimeLine.startTime :
+									measurementSetup.getMeasurementDuration();
+							testTimeLine.color = color;
+							testTimeLine.selectedColor = selectedColor;
+						}
+						measurementTestList.add(testTimeLine);
+						break;
 				}
+
+
+				Collections.sort(measurementTestList);
 			}
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 		}
 
@@ -698,9 +649,7 @@ final class TestLine extends TimeLine {
 						width = width > this.minimalWidth ? width : this.minimalWidth;
 						testTimeItem.setWidth(width);						
 						
-						testTimeItem.object = test.getId();
-						testTimeItem.selectedColor = testTimeLine.selectedColor;
-						testTimeItem.color = testTimeLine.color;
+						testTimeItem.testTimeLine = testTimeLine;
 						
 						this.timeItems.add(testTimeItem);
 					}
@@ -710,7 +659,7 @@ final class TestLine extends TimeLine {
 				this.unsavedTestTimeItems.clear();
 				for (final Iterator it = this.timeItems.iterator(); it.hasNext();) {
 					final TestTimeItem testTimeItem = (TestTimeItem) it.next();
-					if (this.isTestNewer((Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object, true))) {
+					if (this.isTestNewer((Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true))) {
 						it.remove();
 						this.unsavedTestTimeItems.add(testTimeItem);
 					}
@@ -724,19 +673,13 @@ final class TestLine extends TimeLine {
 	}
 
 	@Override
-	public String getToolTipText(MouseEvent event) {
-		int x = event.getX();
-		String title1 = this.getTitle(x, this.timeItems);
-		if (title1 == null) {
-			title1 = this.getTitle(x, this.unsavedTestTimeItems);
-			if (title1 == null) {
-				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				title1 = this.title + " " + 
-					sdf.format(new Date(
-									(long) (this.start + ((x - PlanPanel.MARGIN / 2) / this.scale))));
-			}
+	public String getToolTipText(final MouseEvent event) {
+		final int x = event.getX();
+		String toolTip = this.getTitle(x, this.timeItems);
+		if (toolTip == null) {
+			toolTip = this.getTitle(x, this.unsavedTestTimeItems);			
 		}
-		return title1;
+		return toolTip;
 	}
 
 	private String getTitle(final int x,
@@ -745,26 +688,22 @@ final class TestLine extends TimeLine {
 			final TestController testController = TestController.getInstance();
 			for (final TestTimeItem testTimeItem : testTimeItems) {
 				if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
-					final Object object = testTimeItem.object;
-					final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					if (object instanceof Identifier) {
-						try {
-							final Test test = (Test) StorableObjectPool.getStorableObject((Identifier) object, true);
-							return "<html>" + testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString()
-									+ "<br>" + testController.getName(TestController.KEY_START_TIME) + " : " 
-									+ testController.getValue(test, TestController.KEY_START_TIME) + "</html>";
-						} catch (ApplicationException e) {
-							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
-						}
-
+					
+					try {
+						final Test test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
+						return "<html>" + testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString()
+								+ "<br>" + testController.getName(TestController.KEY_START_TIME) + " : " 
+								+ testController.getValue(test, TestController.KEY_START_TIME) + "</html>";
+					} catch (ApplicationException e) {
+						AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 					}
-					return sdf
-							.format(new Date(
-												(long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));
 				}
 			}
 		}
-		return null;
+		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+		return this.title + " " + sdf.format(new Date(
+							(long) (this.start + ((x - PlanPanel.MARGIN / 2) / this.scale))));
+
 	}
 
 }
