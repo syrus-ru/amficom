@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.57 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.58 2005/09/23 11:45:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.57 $, $Date: 2005/09/16 14:53:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/09/23 11:45:33 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -244,7 +244,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.flush(attribute, userId, true);
-				linkType.addCharacteristic(attribute);
+				linkType.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -289,7 +289,7 @@ public final class LinkTypeController extends AbstractLinkController {
 			try {
 				attribute = Characteristic.createInstance(userId, this.styleCharType, "name", "1", style, linkType, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 				StorableObjectPool.flush(attribute, userId, true);
-				linkType.addCharacteristic(attribute);
+				linkType.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -341,7 +341,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.flush(attribute, userId, true);
-				linkType.addCharacteristic(attribute);
+				linkType.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -414,7 +414,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.flush(attribute, userId, true);
-				linkType.addCharacteristic(attribute);
+				linkType.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -487,7 +487,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.flush(attribute, userId, true);
-				linkType.addCharacteristic(attribute);
+				linkType.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;

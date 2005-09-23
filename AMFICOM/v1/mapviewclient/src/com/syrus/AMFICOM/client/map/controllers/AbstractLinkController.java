@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.41 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.42 2005/09/23 11:45:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,13 +39,13 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.41 $, $Date: 2005/09/16 15:45:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/09/23 11:45:33 $
  * @module mapviewclient
  */
 public abstract class AbstractLinkController extends AbstractMapElementController {
@@ -175,13 +176,37 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	}
 
 	/**
+	 * @deprecated should be rewritten via StorableObjectCondition 
+	 */
+	@Shitlet
+	@Deprecated
+	public static Characteristic getCharacteristic(final Characterizable characterizable, final CharacteristicType characteristicType) {
+		try {
+			final long d = System.nanoTime();
+			final Set<Characteristic> characteristics = characterizable.getCharacteristics(false);
+			final long f = System.nanoTime();
+			MapViewController.addTime6(f - d);
+			// Log.debugMessage("mapElement.getCharacteristics() at " + (f - d) + "
+			// ns", Level.INFO);
+			for (final Characteristic ch : characteristics) {
+				if (ch.getType().equals(characteristicType)) {
+					return ch;
+				}
+			}
+		} catch (ApplicationException e) {
+			Log.debugException(e, Level.WARNING);
+		}
+		return null;
+	}
+
+	/**
 	 * Установить толщину линии. Толщина определяется
 	 * атрибутом {@link #ATTRIBUTE_THICKNESS}. В случае, если
 	 * такого атрибута у элемента нет, создается новый.
 	 * @param mapElement элемент карты
 	 * @param size толщина линии
 	 */
-	public void setLineSize(final MapElement mapElement, final int size) {
+	public void setLineSize(final Characterizable mapElement, final int size) {
 		Characteristic attribute = getCharacteristic(mapElement, this.thicknessCharType);
 		if (attribute == null) {
 			try {
@@ -194,7 +219,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				((PhysicalLink)mapElement).addCharacteristic(attribute);
+				mapElement.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -233,7 +258,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param mapElement элемент карты
 	 * @param style стиль
 	 */
-	public void setStyle(final MapElement mapElement, final String style) {
+	public void setStyle(final Characterizable mapElement, final String style) {
 		Characteristic attribute = getCharacteristic(mapElement, this.styleCharType);
 		if (attribute == null) {
 			try {
@@ -246,7 +271,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				((PhysicalLink)mapElement).addCharacteristic(attribute);
+				mapElement.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -318,7 +343,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param color
 	 *        цвет
 	 */
-	public void setColor(final MapElement mapElement, final Color color) {
+	public void setColor(final Characterizable mapElement, final Color color) {
 		Characteristic attribute = getCharacteristic(mapElement, this.colorCharType);
 		if(attribute == null) {
 			try {
@@ -332,7 +357,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				((PhysicalLink)mapElement).addCharacteristic(attribute);
+				mapElement.addCharacteristic(attribute, false);
 			} catch(CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -376,7 +401,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param mapElement элемент карты
 	 * @param color цвет
 	 */
-	public void setAlarmedColor(final MapElement mapElement, final Color color) {
+	public void setAlarmedColor(final Characterizable mapElement, final Color color) {
 		Characteristic attribute = getCharacteristic(mapElement, this.alarmedColorCharType);
 		if (attribute == null) {
 			try {
@@ -389,7 +414,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				((PhysicalLink)mapElement).addCharacteristic(attribute);
+				mapElement.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -432,7 +457,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param mapElement элемент карты
 	 * @param size толщина линии
 	 */
-	public void setAlarmedLineSize(final MapElement mapElement, final int size) {
+	public void setAlarmedLineSize(final Characterizable mapElement, final int size) {
 		Characteristic attribute = getCharacteristic(mapElement, this.alarmedThicknessCharType);
 		if (attribute == null) {
 			try {
@@ -445,7 +470,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				((PhysicalLink)mapElement).addCharacteristic(attribute);
+				mapElement.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;

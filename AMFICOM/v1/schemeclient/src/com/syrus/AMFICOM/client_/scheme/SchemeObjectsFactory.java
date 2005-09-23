@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.33 2005/09/21 13:47:59 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.34 2005/09/23 11:45:33 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/09/21 13:47:59 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/23 11:45:33 $
  * @module schemeclient
  */
 
@@ -142,7 +142,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : schemeElement.getEquipmentType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizableId(eq.getId());
+				cloned.setParentCharacterizable(eq, false);
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -191,7 +191,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizableId(link.getId());
+				cloned.setParentCharacterizable(link, false);
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -211,7 +211,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizableId(cableLink.getId());
+				cloned.setParentCharacterizable(cableLink, false);
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -230,7 +230,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : sp.getPortType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setParentCharacterizableId(port.getId());
+				cloned.setParentCharacterizable(port, false);
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
