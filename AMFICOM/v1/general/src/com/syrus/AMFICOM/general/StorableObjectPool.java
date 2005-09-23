@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.182 2005/09/23 09:03:38 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.183 2005/09/23 15:29:35 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.182 $, $Date: 2005/09/23 09:03:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.183 $, $Date: 2005/09/23 15:29:35 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -1158,7 +1158,8 @@ public final class StorableObjectPool {
 
 	/*	Serialization */
 
-	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) {
+	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) 
+	throws ApplicationException {
 		synchronized (objectPoolMap) {
 			final long time0 = System.currentTimeMillis();
 			long refreshingTime = 0;
@@ -1173,14 +1174,10 @@ public final class StorableObjectPool {
 							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 					Log.errorException(e);
 				}
-				try {
-					final long time1 = System.currentTimeMillis();
-					refresh(Identifier.createIdentifiers(storableObjects));
-					refreshingTime += (System.currentTimeMillis() - time1);
-
-				} catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
+				final long time1 = System.currentTimeMillis();
+				refresh(Identifier.createIdentifiers(storableObjects));
+				refreshingTime += (System.currentTimeMillis() - time1);
+				
 			}
 
 			Log.debugMessage("StorableObjectPool.deserialize | deserializing time "
