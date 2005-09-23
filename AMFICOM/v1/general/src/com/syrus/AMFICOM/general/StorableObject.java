@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.101 2005/09/23 10:14:52 bass Exp $
+ * $Id: StorableObject.java,v 1.102 2005/09/23 14:46:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/09/23 10:14:52 $
+ * @version $Revision: 1.102 $, $Date: 2005/09/23 14:46:34 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -527,12 +527,41 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	}
 
 	/**
+	 * This class shouldn&apos;t have been declared static since it&apos;s
+	 * not referenced within a static context anywhere, unless an ugly
+	 * fucking bug in javac (up to version 1.5.0_03):
+	 *
+	 * <pre>java.lang.NullPointerException
+	 * at com.sun.tools.javac.code.Types$IsSameTypeFcn.visitClassType(Types.java:652)
+	 * at com.sun.tools.javac.code.Type$ClassType.accept(Type.java:473)
+	 * at com.sun.tools.javac.code.Types$IsSameTypeFcn.isSameType(Types.java:601)
+	 * at com.sun.tools.javac.code.Types$IsSameTypeFcn.visitClassType(Types.java:669)
+	 * at com.sun.tools.javac.code.Type$ClassType.accept(Type.java:473)
+	 * at com.sun.tools.javac.code.Types$IsSameTypeFcn.isSameType(Types.java:601)
+	 * at com.sun.tools.javac.code.Types.isSameType(Types.java:591)
+	 * at com.sun.tools.javac.code.Types.covariantReturnType(Types.java:2640)
+	 * at com.sun.tools.javac.code.Types.resultSubtype(Types.java:2602)
+	 * at com.sun.tools.javac.code.Types.returnTypeSubstitutable(Types.java:2610)
+	 * at com.sun.tools.javac.code.Symbol$MethodSymbol.overrides(Symbol.java:821)
+	 * at com.sun.tools.javac.code.Symbol$MethodSymbol.implementation(Symbol.java:873)
+	 * at com.sun.tools.javac.comp.Check.firstUndef(Check.java:1354)
+	 * at com.sun.tools.javac.comp.Check.firstUndef(Check.java:1367)
+	 * at com.sun.tools.javac.comp.Check.checkAllDefined(Check.java:1319)
+	 * at com.sun.tools.javac.comp.Attr.attribClassBody(Attr.java:2436)
+	 * at com.sun.tools.javac.comp.Attr.attribClass(Attr.java:2406)
+	 * at com.sun.tools.javac.comp.Attr.attribClass(Attr.java:2355)
+	 * at com.sun.tools.javac.main.JavaCompiler.compile(JavaCompiler.java:444)
+	 * at com.sun.tools.javac.main.Main.compile(Main.java:592)
+	 * at com.sun.tools.javac.main.Main.compile(Main.java:544)
+	 * at com.sun.tools.javac.Main.compile(Main.java:67)
+	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
+	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.101 $, $Date: 2005/09/23 10:14:52 $
+	 * @version $Revision: 1.102 $, $Date: 2005/09/23 14:46:34 $
 	 * @module general
 	 */
-	protected final class StorableObjectContainerWrappee<T extends StorableObject>
+	protected static final class StorableObjectContainerWrappee<T extends StorableObject>
 			implements Serializable {
 		private static final long serialVersionUID = -1264974065379428032L;
 
