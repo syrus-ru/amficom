@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.180 2005/09/23 08:59:31 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.181 2005/09/23 09:00:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.180 $, $Date: 2005/09/23 08:59:31 $
+ * @version $Revision: 1.181 $, $Date: 2005/09/23 09:00:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -1044,7 +1044,7 @@ public final class StorableObjectPool {
 		}
 
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
-		
+
 		final Set<StorableObject> refreshObjects = new HashSet<StorableObject>();
 		synchronized (objectPool) {
 			for (final StorableObject storableObject : objectPool) {
