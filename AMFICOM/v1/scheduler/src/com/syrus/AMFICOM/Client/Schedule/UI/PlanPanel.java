@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.54 2005/09/23 08:42:11 bob Exp $
+ * $Id: PlanPanel.java,v 1.55 2005/09/23 11:17:18 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -51,9 +52,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/09/23 08:42:11 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/23 11:17:18 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -67,6 +69,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	
 	private static final Color EDGE_COLOR =  new Color(240, 240, 240);
 
+	@Shitlet
 	private final static class Step {
 
 		int	align;		// âûðàâíèâàíèå ïî êðàòíîìó
@@ -104,7 +107,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	
 	/**
 	 * SCALES in milliseconds
-	 */
+	 */	
 	public static final long[]		SCALES_MS			= new long[] { 
 		1000L * 60L * 10L, 
 		1000L * 60L * 60L,
@@ -113,6 +116,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		1000L * 60L * 60L * 24L * 7L, 
 		1000L * 60L * 60L * 31L};
 
+	@Shitlet
 	protected static final Step[]	STEPS				= new Step[] { 
 		new Step(Calendar.MINUTE, 1, 10, 6, 1),
 		new Step(Calendar.MINUTE, 10, 60, 5, 5), 
@@ -220,13 +224,6 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		};		
 	}
 	
-	final Date getDateByMousePosition(final MouseEvent e) {
-		long start = PlanPanel.this.scaleStart.getTime();
-		long end = PlanPanel.this.scaleEnd.getTime();
-		
-		return new Date((start + ((e.getX() - PlanPanel.MARGIN / 2) *  (end - start) / ((PlanPanel.this.getWidth() - PlanPanel.MARGIN)))));
-	}
-	
 	private final MouseListener createMouseListener() {
 		return new MouseAdapter() {
 
@@ -247,14 +244,13 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				PlanPanel.this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 				if (PlanPanel.this.startPosition != null && PlanPanel.this.currentPosition != null
 						&& Math.abs(PlanPanel.this.startPosition.x - PlanPanel.this.currentPosition.x) > 5) {
-					double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * MARGIN)
+					final double k = (PlanPanel.this.parent.getVisibleRect().width - 2 * MARGIN)
 							/ Math.abs((double) (PlanPanel.this.startPosition.x - PlanPanel.this.currentPosition.x));
-					int viewX = Math.min(PlanPanel.this.startPosition.x, PlanPanel.this.currentPosition.x);
-					updateScale(k, viewX);
+					PlanPanel.this.updateScale(k, Math.min(PlanPanel.this.startPosition.x, PlanPanel.this.currentPosition.x));
 				}
 				PlanPanel.this.startPosition = null;
 				PlanPanel.this.currentPosition = null;
@@ -299,6 +295,13 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			}
 
 		};
+	}	
+	
+	final Date getDateByMousePosition(final MouseEvent e) {
+		final long start = PlanPanel.this.scaleStart.getTime();
+		final long end = PlanPanel.this.scaleEnd.getTime();
+		
+		return new Date((start + ((e.getX() - PlanPanel.MARGIN / 2) *  (end - start) / ((PlanPanel.this.getWidth() - PlanPanel.MARGIN)))));
 	}
 
 	public int getScale() {
@@ -357,6 +360,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	public void actionPerformed(final ActionEvent e) {
+		// self repainting better neither repaint each item
 		this.revalidate();
 		this.repaint();
 	}
@@ -376,72 +380,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			}
 		}	
 	}
-
-	protected void paintScaleDigits(final Graphics g,
-	                                final long diff,
-	                                final double delta,
-	                                final double subDelta) {
-		final int h = getHeight() - 1;
-		// int w = getWidth();
-
-		long tmpDiff = diff;
-		double tmpDelta = delta;
-		if (subDelta > 60) {
-			tmpDelta = subDelta;
-			tmpDiff = diff / STEPS[this.actualScale].subscales;
-		} else if (this.actualScale == 0) {
-			this.sdf.applyPattern("HH:mm"); //$NON-NLS-1$
-		}
-
-		final int shift = (int) g.getFontMetrics().getStringBounds(this.sdf.format(this.cal.getTime()), g).getCenterX();
-
-		this.cal.setTime(this.scaleStart);
-		g.setColor(Color.BLACK);
-		int counter = 0;
-		while (this.cal.getTime().compareTo(this.scaleEnd) <= 0) {
-			g.setColor(EDGE_COLOR);
-			g.drawLine((int) (tmpDelta * counter) + MARGIN, 0, (int) (tmpDelta * counter) + MARGIN, h);
-			g.setColor(Color.BLACK);
-			g.drawLine((int) (tmpDelta * counter) + MARGIN, h, (int) (tmpDelta * counter) + MARGIN, h - 5);
-
-			String value = this.sdf.format(this.cal.getTime());
-			this.cal.setTimeInMillis(this.cal.getTimeInMillis() + tmpDiff);
-			g.drawString(value, (int) (tmpDelta * counter) + MARGIN - shift, h - 7);
-			if (value.startsWith("00:00")) {
-				g.drawString(this.sdf2.format(this.cal 
-						.getTime()), (int) (tmpDelta * counter) + MARGIN - 27, h - 17);
-			} 
-			counter++;
-		}
-		this.cal.setTime(this.scaleStart);
-	}
-
-	protected void paintScales(	Graphics g,
-								long diff,
-								double delta,
-								double subDelta) {
-
-		int h = getHeight() - 1;
-		int w = getWidth();
-
-		long tmpDiff = diff;
-		double tmpDelta = delta;
-		if (subDelta > 10) {
-			tmpDelta = subDelta;
-			tmpDiff = diff / STEPS[this.actualScale].subscales;
-		}
-
-		this.cal.setTime(this.scaleStart);
-		g.setColor(Color.black);
-		int counter = 0;
-		while (this.cal.getTime().compareTo(this.scaleEnd) <= 0) {
-			this.cal.setTimeInMillis(this.cal.getTimeInMillis() + tmpDiff);
-			g.drawLine((int) (tmpDelta * counter) + MARGIN, h, (int) (tmpDelta * counter) + MARGIN, h - 3);
-			counter++;
-		}
-		this.cal.setTime(this.scaleStart);
-		g.drawLine(0, h, w, h);
-	}
+	
 
 	void setDate(	Date startDate,
 					int scale) {
@@ -460,10 +399,77 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
+	private final void paintScale(final Graphics g,
+	                                final long diff,
+	                                final double subDelta) {
+		final int h = getHeight() - 1;
+		final int w = getWidth();
+
+		long tmpDiff = diff;
+		if (subDelta > 60) {
+			tmpDiff = diff / STEPS[this.actualScale].subscales;
+		} 
+
+		final FontMetrics fontMetrics = g.getFontMetrics();
+		final int shift = fontMetrics.stringWidth(this.sdf.format(this.cal.getTime())) / 2;
+		
+		
+		g.setColor(Color.BLACK);
+		
+		final long start = PlanPanel.this.scaleStart.getTime();
+		final long end = PlanPanel.this.scaleEnd.getTime();
+		
+		this.cal.setTimeInMillis(start);
+		this.cal.set(Calendar.HOUR_OF_DAY, 0);
+		this.cal.set(Calendar.MINUTE, 0);
+
+		long start2 = this.cal.getTimeInMillis(); 
+		
+		final long timeRegion = end-start;
+		
+		for (long calendarTime = start2; calendarTime <= end;) {			
+			final int currentX = (int)((w - MARGIN) * (calendarTime - start)/timeRegion) + MARGIN/2;
+			g.setColor(EDGE_COLOR);			
+			g.drawLine(currentX, 0, currentX, h);
+			
+			g.setColor(Color.BLACK);
+			g.drawLine(currentX, h, currentX, h - 5);
+
+			g.drawString(this.sdf.format(this.cal.getTime()), currentX - shift, h - 7);
+			
+			if (subDelta > 10) {
+				int d2 = (int)(w/6 * tmpDiff/timeRegion);
+				int currentX2 = currentX;
+				for(int i = 1; i < 6; i++) {
+					currentX2 += d2;
+					g.drawLine(currentX2, h, currentX2, h - 3);
+				}
+			}			
+			
+			int hour = this.cal.get(Calendar.HOUR_OF_DAY);
+			calendarTime += tmpDiff;
+			this.cal.setTimeInMillis(calendarTime);
+			int hour1 = this.cal.get(Calendar.HOUR_OF_DAY);			
+			
+			if (hour1 < hour) {
+				this.cal.set(Calendar.HOUR_OF_DAY, 0);
+				this.cal.set(Calendar.MINUTE, 0);
+				final String dayString = this.sdf2.format(this.cal.getTime());
+				g.drawString(dayString, 
+						(int)(w * (this.cal.getTimeInMillis() - start)/timeRegion) 
+						- fontMetrics.stringWidth(dayString)/2, 
+					h - 17);
+				this.cal.setTimeInMillis(calendarTime);
+			}
+		}
+		this.cal.setTime(this.scaleStart);
+	}
+
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 
+		// ËÇ/ÁÍ ÷ÏÔ ÜÔÏÔ ÂÙ ÉÓÞÏ ËÕÓÏÞÅÇ ÇÏÆÎÁ ÐÉÒÉÐÉÓÃÁÔØ ...
 		this.cal.setTimeInMillis(0);
 		this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
 		long diff = this.cal.getTimeInMillis();
@@ -471,18 +477,18 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
 		double subDelta = delta / STEPS[this.actualScale].subscales;
 
-		paintScales(g, diff, delta, subDelta);
-		paintScaleDigits(g, diff, delta, subDelta);
+		// ËÇ/ÁÍ É ÞÏ ÜÔÁ ÚÁ diff É subDelta - ÞÅÓÔÎÁ ÓËÏÖÕ - ÎÉÉÂÕ
+		this.paintScale(g, diff, subDelta);
 
 		if (this.currentPosition != null && this.startPosition != null) {
 			if (this.selectionColor == null) {
-				Color color = UIManager.getColor("List.selectionBackground");
+				final Color color = UIManager.getColor("List.selectionBackground");
 				this.selectionColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 50);
 			}
-			Color color = g.getColor();
+			final Color color = g.getColor();
 			g.setColor(this.selectionColor);
-			int x;
-			int w;
+			final int x;
+			final int w;
 			if (this.currentPosition.x > this.startPosition.x) {
 				x = this.startPosition.x;
 			    w = this.currentPosition.x - this.startPosition.x;
