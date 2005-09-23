@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.21 2005/09/14 18:21:32 arseniy Exp $
+ * $Id: LoginManager.java,v 1.22 2005/09/23 13:52:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@ package com.syrus.AMFICOM.general;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.omg.CORBA.SystemException;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
@@ -21,8 +23,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/14 18:21:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/09/23 13:52:09 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -59,18 +61,19 @@ public final class LoginManager {
 			sessionKeyT = loginServer.login(login, password, userIdHolder);
 			sessionKey = new SessionKey(sessionKeyT);
 			userId = new Identifier(userIdHolder.value);
-		}
-		catch (AMFICOMRemoteException are) {
+		} catch (final AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
 				case IdlErrorCode._ERROR_ILLEGAL_LOGIN:
-					throw new LoginException("Illegal login");
+					throw new LoginException(I18N.getString("Error.IllegalLogin"));
 				case IdlErrorCode._ERROR_ILLEGAL_PASSWORD:
-					throw new LoginException("Illegal password");
+					throw new LoginException(I18N.getString("Error.IllegalPassword"));
 				case IdlErrorCode._ERROR_ALREADY_LOGGED:
-					throw new LoginException("Already logged");
+					throw new LoginException(I18N.getString("Error.AlreadyLogged"));
 				default:
-					throw new LoginException("Cannot login -- " + are.message);
+					throw new LoginException(I18N.getString("Error.CannotLogin") + " -- " + are.message);
 			}
+		} catch (final SystemException se) {
+			throw new LoginException(I18N.getString("Error.CannotLogin") + " -- " + se.getMessage());
 		}
 	}
 
@@ -142,6 +145,13 @@ public final class LoginManager {
 		return sessionKeyT;
 	}
 
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public static void setUserId(Identifier userId1) {
+		userId = userId1;
+	}
+	
 	public static Identifier getUserId() {
 		return userId;
 	}
