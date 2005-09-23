@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.13 2005/09/14 18:21:32 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.14 2005/09/23 16:02:18 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/14 18:21:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/23 16:02:18 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -99,9 +99,10 @@ public class VerifiedConnectionManager {
 	private Verifiable activateAndGet(final String servantName) throws CommunicationException {
 		this.activateVerifiableReference(servantName);
 		Verifiable reference = this.referencesMap.get(servantName);
-		if (reference != null)
+		if (reference != null) {
 			return reference;
-		throw new CommunicationException("Cannot establish connection with  '" + servantName + "'");
+		}
+		throw new CommunicationException(I18N.getString("Error.CannotEstablishConnectionWith") + " '" + servantName + '\'');
 	}
 
 	private void activateVerifiableReference(final String servantName) {
