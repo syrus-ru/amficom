@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.181 2005/09/23 09:00:04 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.182 2005/09/23 09:03:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.181 $, $Date: 2005/09/23 09:00:04 $
+ * @version $Revision: 1.182 $, $Date: 2005/09/23 09:03:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -704,7 +704,7 @@ public final class StorableObjectPool {
 	 * @param force
 	 * @throws ApplicationException
 	 */
-	public static void flush(final Set<Identifiable> identifiables, final Identifier modifierId, final boolean force)
+	public static void flush(final Set<? extends Identifiable> identifiables, final Identifier modifierId, final boolean force)
 			throws ApplicationException {
 		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (identifiables.isEmpty()) {
@@ -730,7 +730,7 @@ public final class StorableObjectPool {
 
 	}
 
-	private static Set<Identifiable> flushDeleted(final Set<Identifiable> identifiables) throws ApplicationException {
+	private static Set<Identifiable> flushDeleted(final Set<? extends Identifiable> identifiables) throws ApplicationException {
 		final Set<Identifiable> objectsNotToDelete = new HashSet<Identifiable>();
 
 		final Map<Short, Set<Identifier>> objectsToDeleteIdsMap = new HashMap<Short, Set<Identifier>>();
