@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.17 2005/09/21 14:15:50 bob Exp $
+* $Id: CORBAServer.java,v 1.18 2005/09/23 15:03:35 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/21 14:15:50 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/23 15:03:35 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -224,7 +224,11 @@ public class CORBAServer {
 			Log.debugMessage("CORBAServer.resolveReference | Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
 			return ref;
 		} catch (UserException nf) {
-			throw new CommunicationException("Name '" + name + "' not found", nf);
+			throw new CommunicationException('\'' 
+					+ name 
+					+ "' " 
+					+ I18N.getString("Error.Text.NotFound"),
+				nf);
 		}
 	}
 
