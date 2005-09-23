@@ -604,6 +604,12 @@ final class TestLine extends TimeLine {
 			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, false);
 			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_SCHEDULED, true);
 			break;
+		case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_PROCESSING, false);
+			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_PROCESSING, true);
+			break;
+		case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+		case MeasurementStatus._MEASUREMENT_STATUS_COMPLETED:
 		default:
 			testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_COMPLETED, false);
 			testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_COMPLETED, true);
