@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseListener.java,v 1.4 2005/09/18 13:13:19 peskovsky Exp $
+ * $Id: DRIComponentMouseListener.java,v 1.5 2005/09/23 08:14:12 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,11 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
@@ -16,6 +19,8 @@ import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
+import com.syrus.AMFICOM.report.StorableElement;
+import com.syrus.AMFICOM.report.TableDataStorableElement;
 
 public class DRIComponentMouseListener implements MouseListener{
 	ApplicationContext applicationContext;
@@ -62,7 +67,25 @@ public class DRIComponentMouseListener implements MouseListener{
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		//Empty
+		if (!SwingUtilities.isRightMouseButton(e))
+			return;
+
+		final DataRenderingComponent component =
+			(DataRenderingComponent) e.getSource();
+		final StorableElement storableElement = component.getElement();
+		
+		if (	!RendererMode.getMode().equals(RENDERER_MODE.NO_SPECIAL)
+			||	!(storableElement instanceof TableDataStorableElement))
+			return;
+
+		TableDataComponentMenu menu = new TableDataComponentMenu(
+				(TableDataStorableElement)storableElement,
+				this.applicationContext);
+		Point screenLocation = component.getLocationOnScreen();
+		menu.setLocation(
+			screenLocation.x + component.getWidth() / 2,
+			screenLocation.y + component.getHeight() / 2);
+		menu.setVisible(true);
 	}
 
 	public void mouseEntered(MouseEvent e) {
