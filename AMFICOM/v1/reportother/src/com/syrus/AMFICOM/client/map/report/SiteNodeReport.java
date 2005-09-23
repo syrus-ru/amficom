@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.4 2005/09/23 08:15:03 peskovsky Exp $
+ * $Id: SiteNodeReport.java,v 1.5 2005/09/23 12:10:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
@@ -50,7 +47,7 @@ public class SiteNodeReport {
 				new SiteNodeInfoTableModel(
 						siteNode,
 						vertDivisionsCount),
-				createTableColumnModel(vertDivisionsCount));
+				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
 			Log.errorMessage("SiteNodeReport.createReport | " + e.getMessage());
 			Log.errorException(e);			
@@ -63,22 +60,21 @@ public class SiteNodeReport {
 		return renderingComponent;
 	}
 	
-	private static TableColumnModel createTableColumnModel(int vertDivisionsCount) {
-		TableColumnModel tableColumnModel = new DefaultTableColumnModel();
+	private static List<Integer> getTableColumnWidths(int vertDivisionsCount) {
+		List<Integer> tableColumnWidths = new ArrayList<Integer>();
 		
 		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnModel.addColumn(new TableColumn(
-					j * COLUMNS_COUNT,
-					PROPERTY_NAME_COLUMN_WIDTH));
-			tableColumnModel.addColumn(new TableColumn(
-					j * COLUMNS_COUNT + 1,
-					PROPERTY_VALUE_COLUMN_WIDTH));
+			tableColumnWidths.add(PROPERTY_NAME_COLUMN_WIDTH);
+			tableColumnWidths.add(PROPERTY_VALUE_COLUMN_WIDTH);
 		}
-		return tableColumnModel;
+		return tableColumnWidths;
 	}
 }
 
 class SiteNodeInfoTableModel extends AbstractTableModel {
+	private static final String PARAMETER_NAME = "report.UI.propertyName";
+	private static final String PARAMETER_VALUE = "report.UI.propertyValue";
+	
 	private static final String NAME = "report.Modules.SchemeEditor.Common.name";		
 	private static final String TYPE = "report.Modules.SchemeEditor.Common.type";
 	private static final String DESCRIPTION = "report.Modules.SchemeEditor.Common.description";
@@ -222,6 +218,17 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	public String getColumnName(int columnIndex) {
+		switch (columnIndex % SiteNodeReport.COLUMNS_COUNT) {
+		case 0:
+			return LangModelReport.getString(PARAMETER_NAME);
+		case 1:
+			return LangModelReport.getString(PARAMETER_VALUE);
+			
+		}
+		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");
+    }	
+	
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / TunnelCableListReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)

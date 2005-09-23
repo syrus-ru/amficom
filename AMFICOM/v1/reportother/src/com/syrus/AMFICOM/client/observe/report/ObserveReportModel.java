@@ -1,5 +1,5 @@
 /*
- * $Id: ObserveReportModel.java,v 1.2 2005/09/16 13:26:27 peskovsky Exp $
+ * $Id: ObserveReportModel.java,v 1.3 2005/09/23 12:10:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@ package com.syrus.AMFICOM.client.observe.report;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;

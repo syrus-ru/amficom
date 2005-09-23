@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataRenderingComponent.java,v 1.2 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: TableDataRenderingComponent.java,v 1.3 2005/09/23 12:10:05 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,28 +8,34 @@
 package com.syrus.AMFICOM.client.report;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.util.List;
 
-import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 
 public final class TableDataRenderingComponent extends DataRenderingComponent {
 	private static final long serialVersionUID = -7406942647346619853L;
 
-	private JTable table = null;
+	private ATable table = null;
 	private TableModel tableModel = null;
-	private TableColumnModel tableColumnModel = null;
+	private List<Integer> tableColumnWidths = null;
 	
 	public TableDataRenderingComponent(
 			TableDataStorableElement trde,
 			TableModel tableModel,
-			TableColumnModel tableColumnModel) {
+			List<Integer> tableColumnWidths) {
 		super(trde);
 		
 		this.tableModel = tableModel;
-		this.tableColumnModel = tableColumnModel;
+		this.tableColumnWidths = tableColumnWidths;
 		
 		jbinit();
 	}
@@ -40,12 +46,24 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 		layout.setVgap(RenderingComponent.EDGE_SIZE);		
 		this.setLayout(layout);
 		
-		this.table = new JTable(this.tableModel,this.tableColumnModel);
-		this.add(this.table,BorderLayout.CENTER);
+		this.table = new ATable(this.tableModel);
+		for (int i = 0; i < this.table.getColumnCount(); i++) {
+			TableColumn tableColumn = this.table.getColumnModel().getColumn(i);
+			tableColumn.setWidth(this.tableColumnWidths.get(i));
+			tableColumn.setPreferredWidth(this.tableColumnWidths.get(i));			
+		}
+		JScrollPane scrollPane = new JScrollPane(this.table);
+		scrollPane.setVerticalScrollBarPolicy(
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPane.setHorizontalScrollBarPolicy(
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
+		this.add(scrollPane,BorderLayout.CENTER);
+
 		this.setSize(
 				this.getElement().getWidth(),
-				this.table.getPreferredSize().height);
+				(int)(this.table.getPreferredSize().getHeight()
+				+ this.table.getTableHeader().getPreferredSize().getHeight()) + 2);
 		this.setPreferredSize(this.getSize());
 		this.setBorder(DataRenderingComponent.DEFAULT_BORDER);
 	}
@@ -66,7 +84,7 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 		this.setSize(this.getWidth(),height);
 	}
 	
-	public JTable getTable() {
+	public ATable getTable() {
 		return this.table;
 	}
 }

@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 
+import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Collector;
@@ -23,7 +21,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Отчёт "Прокладка кабеля"
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/09/23 08:15:03 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/23 12:10:04 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -44,33 +42,28 @@ public class CableLayoutReport {
 			new CableLayoutReportTableModel(
 					cableLink,
 					vertDivisionsCount),
-			createTableColumnModel(vertDivisionsCount));
+			getTableColumnWidths(vertDivisionsCount));
 		
 		return renderingComponent;
 	}
 	
-	private static TableColumnModel createTableColumnModel(int vertDivisionsCount) {
-		TableColumnModel tableColumnModel = new DefaultTableColumnModel();
+	private static List<Integer> getTableColumnWidths(int vertDivisionsCount) {
+		List<Integer> tableColumnWidths = new ArrayList<Integer>();
 		
 		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnModel.addColumn(new TableColumn(
-					j * COLUMNS_COUNT,
-					SITE_NAME_COLUMN_WIDTH));
-			tableColumnModel.addColumn(new TableColumn(
-					j * COLUMNS_COUNT + 1,
-					CABLE_ENTRANCE_RESERVE_COLUMN_WIDTH));
-			tableColumnModel.addColumn(new TableColumn(
-					j * COLUMNS_COUNT + 2,
-					CABLE_EXIT_RESERVE_COLUMN_WIDTH));
-			tableColumnModel.addColumn(new TableColumn(
-					j * COLUMNS_COUNT + 3,
-					TUNNEL_INFO_COLUMN_WIDTH));
+			tableColumnWidths.add(SITE_NAME_COLUMN_WIDTH);
+			tableColumnWidths.add(CABLE_ENTRANCE_RESERVE_COLUMN_WIDTH);
+			tableColumnWidths.add(CABLE_EXIT_RESERVE_COLUMN_WIDTH);
+			tableColumnWidths.add(TUNNEL_INFO_COLUMN_WIDTH);
 		}
-		return tableColumnModel;
+		return tableColumnWidths;
 	}
 }
 
 class CableLayoutReportTableModel extends AbstractTableModel {
+	private static final String PARAMETER_NAME = "report.UI.propertyName";
+	private static final String PARAMETER_VALUE = "report.UI.propertyValue";
+	
 	private static final String START_NODE = "StartNode";
 	private static final String START_SPARE = "StartSpare";
 	private static final String END_SPARE = "EndSpare";
@@ -188,6 +181,17 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	public String getColumnName(int columnIndex) {
+		switch (columnIndex % CableLayoutReport.COLUMNS_COUNT) {
+		case 0:
+			return LangModelReport.getString(PARAMETER_NAME);
+		case 1:
+			return LangModelReport.getString(PARAMETER_VALUE);
+			
+		}
+		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");
+    }	
+	
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / CableLayoutReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)
