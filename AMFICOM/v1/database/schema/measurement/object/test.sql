@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.18 2005/09/22 17:21:44 arseniy Exp $
+-- $Id: test.sql,v 1.19 2005/09/23 13:31:19 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -42,7 +42,7 @@ CREATE TABLE Test (
   REFERENCES MonitoredElement (id) ON DELETE CASCADE
 );
 
-CREATE TABLE TestStoppingLink (
+CREATE TABLE TestStopLink (
  test_id NOT NULL,
  stop_time DATE NOT NULL,
  stop_reason VARCHAR2(256 CHAR),
