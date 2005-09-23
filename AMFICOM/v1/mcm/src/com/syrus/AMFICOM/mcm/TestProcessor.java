@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.74 2005/09/21 14:57:06 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.75 2005/09/23 09:48:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -46,7 +47,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/09/21 14:57:06 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/23 09:48:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -277,6 +278,8 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	private final void processMeasurementResults() {
+		final Set<Identifiable> objectsToFlush = new HashSet<Identifiable>();
+
 		synchronized (this.measurementResults) {
 			for (final Iterator<Result> it = this.measurementResults.iterator(); it.hasNext();) {
 				final Result measurementResult = it.next();
@@ -287,6 +290,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 						if (aeResults[i] != null) {
 							Log.debugMessage("TestProcessor.processMeasurementResult | Analysis result: '" + aeResults[i].getId()
 									+ "' of measurement '" + measurement.getId() + "'", Log.DEBUGLEVEL07);
+							objectsToFlush.add(aeResults[i]);
 						}
 					}
 				} catch (AnalysisException ae) {
@@ -294,14 +298,14 @@ abstract class TestProcessor extends SleepButWorkThread {
 				}
 
 				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+				objectsToFlush.add(measurement);
 
 				it.remove();
 			}
 		}
 
 		try {
-			StorableObjectPool.flush(ObjectEntities.RESULT_CODE, LoginManager.getUserId(), false);
-			// - Every action contains in dependencies of it's result
+			StorableObjectPool.flush(objectsToFlush, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
@@ -411,7 +415,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			for (final Measurement measurement : measurements) {
 				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 			}
-			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, LoginManager.getUserId(), false);
+			StorableObjectPool.flush(measurements, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
