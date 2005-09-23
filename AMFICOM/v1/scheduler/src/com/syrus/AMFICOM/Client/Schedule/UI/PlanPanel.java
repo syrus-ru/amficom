@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.51 2005/09/22 16:21:24 bob Exp $
+ * $Id: PlanPanel.java,v 1.52 2005/09/23 05:39:26 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -52,7 +53,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/09/22 16:21:24 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/23 05:39:26 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -164,14 +165,40 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
-		this.dispatcher = aContext.getDispatcher();
+		this.dispatcher = aContext.getDispatcher();		
 		
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		
-		this.addComponentListener(new ComponentAdapter() {
+		this.addComponentListener(this.createComponentListener());
+		this.addMouseListener(this.createMouseListener());
+		this.addMouseMotionListener(this.createMouseMotionListener());
+
+		this.timer.start();
+
+		this.setToolTipText("");
+		this.setStartDate(new Date(System.currentTimeMillis()));
+		this.updateRealScale();
+		this.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
+	}
+
+	// private static final int TIME_OUT = 500;
+
+
+	public PlanPanel(final JScrollPane parent, 
+	                 final ApplicationContext aContext, 
+	                 final Date start,
+	                 final int scale) {
+		this(parent, aContext);
+		this.setScale(scale);
+		this.setStartDate(start);
+		this.updateRealScale();
+	}
+	
+	private final ComponentAdapter createComponentListener() {
+		return new ComponentAdapter() {
 
 			@Override
 			public void componentResized(ComponentEvent e) {
@@ -188,29 +215,33 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 					}
 				}
 			}
-		});
-
-		this.timer.start();
-
-		this.addMouseListener(new MouseAdapter() {
+		};		
+	}
+	
+	final Date getDateByMousePosition(final MouseEvent e) {
+		long start = PlanPanel.this.scaleStart.getTime();
+		long end = PlanPanel.this.scaleEnd.getTime();
+		
+		return new Date((start + ((e.getX() - PlanPanel.MARGIN / 2) *  (end - start) / ((PlanPanel.this.getWidth() - PlanPanel.MARGIN)))));
+	}
+	
+	private final MouseListener createMouseListener() {
+		return new MouseAdapter() {
 
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(final MouseEvent e) {
 				this.mouseClicked(e);
 			}
 			
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(final MouseEvent e) {
 				PlanPanel.this.schedulerModel.unselectTests();
 				
-				long start = PlanPanel.this.scaleStart.getTime();
-				long end = PlanPanel.this.scaleEnd.getTime();
 				
-				final Date date = new Date((start + ((e.getX() - PlanPanel.MARGIN / 2) *  (end - start) / ((PlanPanel.this.getWidth() - PlanPanel.MARGIN)))));
 				PlanPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, 
 					SchedulerModel.COMMAND_DATE_OPERATION, 
 					null, 
-					date));
+					PlanPanel.this.getDateByMousePosition(e)));
 				
 				
 			}
@@ -230,8 +261,12 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				PlanPanel.this.currentPosition = null;
 				PlanPanel.this.repaint();
 			}
-		});
-		this.addMouseMotionListener(new MouseMotionAdapter() {
+		};
+		
+	}
+	
+	private final MouseMotionAdapter createMouseMotionListener() {
+		return new MouseMotionAdapter() {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
@@ -264,20 +299,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				PlanPanel.this.repaint();
 			}
 
-		});
-
-		this.setStartDate(new Date(System.currentTimeMillis()));
-		this.updateRealScale();
-		this.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
-	}
-
-	// private static final int TIME_OUT = 500;
-
-	public PlanPanel(JScrollPane parent, ApplicationContext aContext, Date start, int scale) {
-		this(parent, aContext);
-		setScale(scale);
-		setStartDate(start);
-		updateRealScale();
+		};
 	}
 
 	public int getScale() {
@@ -292,15 +314,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		return this.toolBar;
 	}
 
-	public void setScale(int n) {
+	public void setScale(final int n) {
 		if (n < 0 || n >= SCALES.length) {
-			Environment.log(Environment.LOG_LEVEL_WARNING, "Unsupported scale: " //$NON-NLS-1$
+			throw new IllegalArgumentException("Unsupported scale: " //$NON-NLS-1$
 					+ n + ". Use setScale(n);" //$NON-NLS-1$
 					+ " where n determine one of PlanPanel.getSupportedScales() element"); //$NON-NLS-1$
-			return;
 		}
 		this.scale = n;
-		setStartDate(this.scaleStart);
+		this.setStartDate(this.scaleStart);
 	}
 
 	public void setStartDate(Date start) {
@@ -330,8 +351,13 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		
 	}
 
+	@Override
+	public String getToolTipText(final MouseEvent event) {
+		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+		return sdf.format(this.getDateByMousePosition(event));
+	}
 
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(final ActionEvent e) {
 		this.revalidate();
 		this.repaint();
 	}
@@ -624,7 +650,9 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 //			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
 //			System.out.println("PlanPanel.updateTest() | this.scaleStart " + this.scaleStart);
 //			System.out.println("PlanPanel.updateTest() | this.scaleEnd " + this.scaleEnd);
-			if (this.scaleStart.before(startTime) && startTime.before(this.scaleEnd)) {
+			
+			// if selected test is not in visible range			
+			if (!(this.scaleStart.before(startTime) && startTime.before(this.scaleEnd))) {
 				final Date time = new Date(startTime.getTime() - 30L * 60L * 1000);
 				this.toolBar.dateSpinner.setValue(time);
 				this.toolBar.timeSpinner.setValue(time);
@@ -658,7 +686,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				final MonitoredElement monitoredElement = test.getMonitoredElement();
 				final Identifier monitoredElementId = monitoredElement.getId();
 				if (!this.testLines.containsKey(monitoredElementId)) {
-					final TestLine testLine = new TestLine(this.aContext, this, monitoredElement.getName(), monitoredElementId);
+					final TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElementId);
 					// testLine.setTestTemporalStamps((TestTemporalStamps)
 					// this.testTemporalLines.get(monitoredElement));
 					this.testLines.put(monitoredElementId, testLine);
