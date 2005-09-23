@@ -12,6 +12,9 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
+/**
+ * Используется из модуля "наблюдение".
+ */
 public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 {
 	public MapThresholdsLayeredPanel(Dispatcher dispatcher)
