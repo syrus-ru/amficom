@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.100 2005/09/21 13:22:09 bass Exp $
+ * $Id: StorableObject.java,v 1.101 2005/09/23 10:14:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/09/21 13:22:09 $
+ * @version $Revision: 1.101 $, $Date: 2005/09/23 10:14:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -529,10 +529,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.100 $, $Date: 2005/09/21 13:22:09 $
+	 * @version $Revision: 1.101 $, $Date: 2005/09/23 10:14:52 $
 	 * @module general
 	 */
-	protected final class StorableObjectContainerWrappee<T extends StorableObject> {
+	protected final class StorableObjectContainerWrappee<T extends StorableObject>
+			implements Serializable {
+		private static final long serialVersionUID = -1264974065379428032L;
+
 		private boolean cacheBuilt = false;
 
 		private StorableObjectCondition condition;
