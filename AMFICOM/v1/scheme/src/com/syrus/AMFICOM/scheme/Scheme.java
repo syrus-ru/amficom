@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.101 2005/09/22 15:27:10 arseniy Exp $
+ * $Id: Scheme.java,v 1.102 2005/09/23 10:04:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,8 +85,8 @@ import com.syrus.util.Shitlet;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.101 $, $Date: 2005/09/22 15:27:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.102 $, $Date: 2005/09/23 10:04:28 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1149,7 +1149,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * A wrapper {@link #setParentSchemeElement(SchemeElement, boolean)}.
+	 * A wrapper around {@link #setParentSchemeElement(SchemeElement, boolean)}.
 	 *
 	 * @param parentSchemeElementId
 	 * @param usePool
