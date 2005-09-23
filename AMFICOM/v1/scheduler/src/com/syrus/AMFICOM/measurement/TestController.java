@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.25 2005/09/22 15:23:34 bob Exp $
+ * $Id: TestController.java,v 1.26 2005/09/23 12:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/22 15:23:34 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/23 12:29:27 $
  * @author $Author: bob $
  * @module module
  */
@@ -69,20 +69,13 @@ public class TestController implements Wrapper<Test> {
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 		this.statusMap = new HashMap<Component, TestStatus>();
-		this.addStatusItem(TestStatus.TEST_STATUS_ABORTED, 
-			LangModelSchedule.getString("Text.Test.Status.Aborted"));
-		this.addStatusItem(TestStatus.TEST_STATUS_COMPLETED, 
-			LangModelSchedule.getString("Text.Test.Status.Completed"));
-		this.addStatusItem(TestStatus.TEST_STATUS_NEW, 
-			LangModelSchedule.getString("Text.Test.Status.New"));
-		this.addStatusItem(TestStatus.TEST_STATUS_PROCESSING, 
-			LangModelSchedule.getString("Text.Test.Status.Processing"));
-		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED, 
-			LangModelSchedule.getString("Text.Test.Status.Scheduled"));
-		this.addStatusItem(TestStatus.TEST_STATUS_STOPPING, 
-			LangModelSchedule.getString("Text.Test.Status.Stopping"));
-		this.addStatusItem(TestStatus.TEST_STATUS_STOPPED, 
-			LangModelSchedule.getString("Text.Test.Status.Stopped"));
+		this.addStatusItem(TestStatus.TEST_STATUS_ABORTED);
+		this.addStatusItem(TestStatus.TEST_STATUS_COMPLETED);
+		this.addStatusItem(TestStatus.TEST_STATUS_NEW);
+		this.addStatusItem(TestStatus.TEST_STATUS_PROCESSING);
+		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED);
+		this.addStatusItem(TestStatus.TEST_STATUS_STOPPING);
+		this.addStatusItem(TestStatus.TEST_STATUS_STOPPED);
 
 		this.temporalTypeMap = new HashMap<TestTemporalType, String>();
 		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, 
@@ -93,16 +86,16 @@ public class TestController implements Wrapper<Test> {
 			LangModelSchedule.getString("Text.Test.TemporalType.Continual"));
 	}
 
-	private Component getStatusComponent(final TestStatus testStatus, final String name) {
-		final ComparableLabel label = new ComparableLabel(name);
+	private Component getStatusComponent(final TestStatus testStatus) {
+		final ComparableLabel label = new ComparableLabel(SchedulerModel.getStatusName(testStatus));
 		label.setOpaque(true);
 		final Color color = SchedulerModel.getColor(testStatus);
 		label.setBackground(color.brighter());
 		return label;
 	}
 
-	private void addStatusItem(final TestStatus testStatus, final String name) {
-		this.statusMap.put(this.getStatusComponent(testStatus, name), testStatus);
+	private void addStatusItem(final TestStatus testStatus) {
+		this.statusMap.put(this.getStatusComponent(testStatus), testStatus);
 	}
 
 	public static TestController getInstance() {
