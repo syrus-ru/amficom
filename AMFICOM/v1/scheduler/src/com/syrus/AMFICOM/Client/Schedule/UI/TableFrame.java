@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.47 2005/09/23 08:02:58 bob Exp $
+ * $Id: TableFrame.java,v 1.48 2005/09/23 08:42:11 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/09/23 08:02:58 $
+ * @version $Revision: 1.48 $, $Date: 2005/09/23 08:42:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -71,7 +71,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	
 	
 
-//	PropertyChangeEvent propertyChangeEvent;
+	PropertyChangeEvent propertyChangeEvent;
 	Icon	deleteIcon;
 	Icon	resumeIcon;
 	Icon	pauseIcon;
@@ -125,14 +125,14 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	}
 
 	public void propertyChange(final PropertyChangeEvent evt) {
-//		this.propertyChangeEvent = evt;
+		this.propertyChangeEvent = evt;
 		final String propertyName = evt.getPropertyName();
 		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
 			this.updateTests();
 		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
 			this.updateTest();
 		}
-//		this.propertyChangeEvent = null;
+		this.propertyChangeEvent = null;
 	}
 
 	private void setTests() {
@@ -172,17 +172,9 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 
 				public void valueChanged(final ListSelectionEvent e) {
-					if (e.getValueIsAdjusting()) {
+					if (e.getValueIsAdjusting() || TableFrame.this.propertyChangeEvent != null) {
 						return;
 					}
-
-					try {
-						throw new Exception();
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					
 					final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 					if (!lsm.isSelectionEmpty()) {
 						final int selectedRow = lsm.getMinSelectionIndex();

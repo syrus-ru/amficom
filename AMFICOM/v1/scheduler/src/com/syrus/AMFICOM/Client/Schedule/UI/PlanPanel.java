@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.53 2005/09/23 08:03:06 bob Exp $
+ * $Id: PlanPanel.java,v 1.54 2005/09/23 08:42:11 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,10 +51,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/09/23 08:03:06 $
+ * @version $Revision: 1.54 $, $Date: 2005/09/23 08:42:11 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -238,15 +237,12 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			
 			@Override
 			public void mouseClicked(final MouseEvent e) {
-				PlanPanel.this.schedulerModel.unselectTests(PlanPanel.this);
-				
+				PlanPanel.this.schedulerModel.unselectTests(this);
 				
 				PlanPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, 
 					SchedulerModel.COMMAND_DATE_OPERATION, 
 					null, 
 					PlanPanel.this.getDateByMousePosition(e)));
-				
-				
 			}
 			
 			@Override
@@ -626,7 +622,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	private void updateTest() throws ApplicationException {
-		Test selectedTest = this.schedulerModel.getSelectedTest();
+		
+		final Test selectedTest = this.schedulerModel.getSelectedTest();
 		if (selectedTest != null) {
 			final Date startTime = selectedTest.getStartTime();
 //			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
