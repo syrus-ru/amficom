@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.178 2005/09/22 16:20:58 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.179 2005/09/23 08:06:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.178 $, $Date: 2005/09/22 16:20:58 $
+ * @version $Revision: 1.179 $, $Date: 2005/09/23 08:06:59 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -658,6 +658,64 @@ public final class StorableObjectPool {
 		}
 	}
 
+	public static void flush(final Set<Identifiable> identifiables, final Identifier modifierId, final boolean force)
+			throws ApplicationException {
+		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (identifiables.isEmpty()) {
+			return;
+		}
+
+		final Set<Identifiable> objectsToSave = flushDeleted(identifiables);
+		if (objectsToSave.isEmpty()) {
+			return;
+		}
+
+		synchronized (DEPENDENCY_SORTED_CONTAINER) {
+			SAVING_OBJECT_IDS.clear();
+			DEPENDENCY_SORTED_CONTAINER.clear();
+			for (final Identifiable identifiable : objectsToSave) {
+				final StorableObject storableObject = fromIdentifiable(identifiable);
+				if (storableObject != null) {
+					checkChangedWithDependencies(storableObject, 0);
+				}
+			}
+			saveWithDependencies(modifierId, force);
+		}
+
+	}
+
+	private static Set<Identifiable> flushDeleted(final Set<Identifiable> identifiables) throws ApplicationException {
+		final Set<Identifiable> objectsNotToDelete = new HashSet<Identifiable>();
+
+		final Map<Short, Set<Identifier>> objectsToDeleteIdsMap = new HashMap<Short, Set<Identifier>>();
+		synchronized (identifiables) {
+			for (final Identifiable identifiable : identifiables) {
+				final Identifier id = identifiable.getId();
+				final Short entityKey = new Short(id.getMajor());
+				final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(entityKey);
+				if (entityDeletedIds != null && entityDeletedIds.contains(id)) {
+					Set<Identifier> entityObjectsToDeleteIds = objectsToDeleteIdsMap.get(entityKey);
+					if (entityObjectsToDeleteIds == null) {
+						entityObjectsToDeleteIds = new HashSet<Identifier>();
+						objectsToDeleteIdsMap.put(entityKey, entityObjectsToDeleteIds);
+					}
+					entityObjectsToDeleteIds.add(id);
+				} else {
+					objectsNotToDelete.add(identifiable);
+				}
+			}
+		}
+
+		for (final Short entityKey : objectsToDeleteIdsMap.keySet()) {
+			final Set<Identifier> entityObjectsToDeleteIds = objectsToDeleteIdsMap.get(entityKey);
+			final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(entityKey);
+			objectLoader.delete(entityObjectsToDeleteIds);
+			entityDeletedIds.removeAll(entityObjectsToDeleteIds);
+		}
+
+		return objectsNotToDelete;
+	}
+
 	public static void flush(final short entityCode, final Identifier modifierId, final boolean force) throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
@@ -704,7 +762,7 @@ public final class StorableObjectPool {
 				final Set<Identifiable> dependencies = storableObject.getDependencies();
 				for (final Identifiable identifiable : dependencies) {
 					assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
-					StorableObject dependencyObject = fromIdentifiable(identifiable);
+					final StorableObject dependencyObject = fromIdentifiable(identifiable);
 					if (dependencyObject != null) {
 						checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
 					}
