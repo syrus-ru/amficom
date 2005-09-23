@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.102 2005/09/23 14:46:34 bass Exp $
+ * $Id: StorableObject.java,v 1.103 2005/09/23 15:32:30 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/09/23 14:46:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.103 $, $Date: 2005/09/23 15:32:30 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -529,7 +529,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * This class shouldn&apos;t have been declared static since it&apos;s
 	 * not referenced within a static context anywhere, unless an ugly
-	 * fucking bug in javac (up to version 1.5.0_03):
+	 * fucking bug in javac (up to version 1.5.0_05):
 	 *
 	 * <pre>java.lang.NullPointerException
 	 * at com.sun.tools.javac.code.Types$IsSameTypeFcn.visitClassType(Types.java:652)
@@ -557,8 +557,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.102 $, $Date: 2005/09/23 14:46:34 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.103 $, $Date: 2005/09/23 15:32:30 $
 	 * @module general
 	 */
 	protected static final class StorableObjectContainerWrappee<T extends StorableObject>
