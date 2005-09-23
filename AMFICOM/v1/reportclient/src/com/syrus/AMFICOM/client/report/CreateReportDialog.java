@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.3 2005/09/16 13:26:29 peskovsky Exp $
+ * $Id: CreateReportDialog.java,v 1.4 2005/09/23 12:10:59 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
  * открытия шаблонов определённого типа.
  *
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/09/16 13:26:29 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/23 12:10:59 $
  * @module generalclient_v1
  */
 public class CreateReportDialog extends JDialog {
@@ -252,21 +252,10 @@ public class CreateReportDialog extends JDialog {
 		ReportRenderer reportRenderer = this.createReportRendererForSelectedTemplate();
 		if (reportRenderer == null)
 			return;
-		
-		try {
-			ReportPrinter.printReport(
-					this.selectedTemplate,
-					this.reportData,
-					this.aContext);
-		} catch (ReportException e) {
-			Log.errorMessage("CreateReportDialog.printSelectedTemplate | " + e.getMessage());
-			Log.errorException(e);			
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					e.getMessage(),
-					LangModelReport.getString("report.Exception.error"),
-					JOptionPane.ERROR_MESSAGE);
-		}
+
+		ReportPrinter.printReport(
+				reportRenderer,
+				this.selectedTemplate);
 	}
 
 	void exit()	{

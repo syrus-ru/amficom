@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.8 2005/09/18 13:13:18 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.9 2005/09/23 12:10:59 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.8 $, $Date: 2005/09/18 13:13:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/23 12:10:59 $
  * @module reportclient_v1
  */
 public class ReportRenderer extends JPanel {
@@ -92,7 +92,8 @@ public class ReportRenderer extends JPanel {
 					this.aContext);
 			
 			((JComponent)component).setLocation(dataElement.getX(),dataElement.getY());
-			//Размеры выставляются в createReport
+			//Размер выставляется в createReport
+			((JComponent)component).setPreferredSize(this.getSize());			
 			
 			this.add((JComponent)component);
 		}
@@ -177,18 +178,21 @@ public class ReportRenderer extends JPanel {
 	}
 	
 	/**
-	 * Вызвается когда готовится HTML документ для печати. Иначе MSHTML,
-	 * который в текущий момент используется для печати документов, складывает
-	 * свои поля по умолчанию с нашими.
+	 * Вызывается с параметром true, когда готовится HTML документ для печати.
+	 * Иначе MSHTML, который в текущий момент используется для печати документов,
+	 * складывает свои поля по умолчанию с нашими.
+	 * Вызывается с параметром false после печати
  	 */
-	public void setPrintable() {
-		int marginSize = this.reportTemplate.getMarginSize();
+	public void setPrintable(boolean pritable) {
+		int shift = this.reportTemplate.getMarginSize();
+		if (!pritable)
+			shift = -shift;
 		for (int i = 0; i < this.getComponentCount(); i++) {
 			Component component = this.getComponent(i);
 			Point componentLocation = component.getLocation();
 			component.setLocation(
-				componentLocation.x - marginSize,
-				componentLocation.y - marginSize);
+				componentLocation.x - shift,
+				componentLocation.y - shift);
 		}
 	}
 }

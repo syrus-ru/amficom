@@ -1,5 +1,5 @@
 /*
- * $Id: ReportPrinter.java,v 1.4 2005/09/16 13:26:29 peskovsky Exp $
+ * $Id: ReportPrinter.java,v 1.5 2005/09/23 12:10:59 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,9 +7,6 @@
  */
 package com.syrus.AMFICOM.client.report;
 
-import java.util.Map;
-
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 public class ReportPrinter {
@@ -18,17 +15,15 @@ public class ReportPrinter {
 //	private static final String FILES_DIR_NAME = TEMP_DIR + "print.files";	
 	
 	public static void printReport(
-			ReportTemplate reportTemplate,
-			Map<Object, Object> data,
-			ApplicationContext aContext) throws CreateReportException, CreateModelException {
-		ReportRenderer reportPreviewRenderer = new ReportRenderer(aContext);
-		reportPreviewRenderer.setReportTemplate(reportTemplate);
-		reportPreviewRenderer.setData(data);
-		reportPreviewRenderer.setPrintable();
+			ReportRenderer reportPreviewRenderer,
+			ReportTemplate reportTemplate) {
+		reportPreviewRenderer.setPrintable(true);
 		
 		HTMLReportEncoder encoder = new HTMLReportEncoder(
 				reportPreviewRenderer.getRenderingComponents(),
 				reportTemplate);
+
+		reportPreviewRenderer.setPrintable(false);		
 		
 		try {
 			encoder.encodeToHTML(PRINTABLE_FILE_NAME);
