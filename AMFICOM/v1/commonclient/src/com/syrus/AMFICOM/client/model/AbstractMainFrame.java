@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.18 2005/09/18 13:15:31 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.19 2005/09/23 15:01:37 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/18 13:15:31 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/23 15:01:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -322,14 +322,14 @@ implements PropertyChangeListener {
 		JOptionPane.showMessageDialog(component, 
 			exception.getMessage(),
 			LangModelGeneral.getString("Error.ErrorOccur"),
-			JOptionPane.OK_OPTION);
+			JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void showErrorMessage(final String errorMessage) {
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 			errorMessage,
 			LangModelGeneral.getString("Error.ErrorOccur"),
-			JOptionPane.OK_OPTION);
+			JOptionPane.ERROR_MESSAGE);
 	}
 	
 	protected Command getShowWindowLazyCommand(final UIDefaults frames,
