@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.108 2005/09/23 08:01:00 bob Exp $
+ * $Id: SchedulerModel.java,v 1.109 2005/09/23 12:29:02 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/09/23 08:01:00 $
+ * @version $Revision: 1.109 $, $Date: 2005/09/23 12:29:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1032,4 +1032,23 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return color;
 	}
 
+	public static String getStatusName(final TestStatus testStatus) {
+		switch(testStatus.value()) {
+		case TestStatus._TEST_STATUS_ABORTED: 
+			return LangModelSchedule.getString("Text.Test.Status.Aborted");
+		case TestStatus._TEST_STATUS_COMPLETED: 
+			return LangModelSchedule.getString("Text.Test.Status.Completed");
+		case TestStatus._TEST_STATUS_NEW: 
+			return LangModelSchedule.getString("Text.Test.Status.New");
+		case TestStatus._TEST_STATUS_PROCESSING: 
+			return LangModelSchedule.getString("Text.Test.Status.Processing");
+		case TestStatus._TEST_STATUS_SCHEDULED: 
+			return LangModelSchedule.getString("Text.Test.Status.Scheduled");
+		case TestStatus._TEST_STATUS_STOPPING: 
+			return LangModelSchedule.getString("Text.Test.Status.Stopping");
+		case TestStatus._TEST_STATUS_STOPPED: 
+			return LangModelSchedule.getString("Text.Test.Status.Stopped");
+		}
+		return null;
+	}
 }
