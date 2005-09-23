@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.34 2005/09/15 00:48:22 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.35 2005/09/23 13:53:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/09/15 00:48:22 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/23 13:53:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -54,7 +54,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		return database.retrieveButIdsByCondition(ids, condition);
 	}
 
-	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws RetrieveObjectException {
+	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptyMap();
