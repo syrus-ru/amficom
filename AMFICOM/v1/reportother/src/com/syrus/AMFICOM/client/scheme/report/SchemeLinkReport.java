@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLinkReport.java,v 1.2 2005/09/16 13:26:27 peskovsky Exp $
+ * $Id: SchemeLinkReport.java,v 1.3 2005/09/23 08:15:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -181,7 +181,7 @@ class AbstractLinkTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / SchemeElementReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)
-			throw new AssertionError("AbstractLinkTableModel.getValueAt | Index exceeds data size");
+			return EMPTY_STRING;
 
 		switch (columnIndex % SchemeElementReport.COLUMNS_COUNT) {
 			case 0:

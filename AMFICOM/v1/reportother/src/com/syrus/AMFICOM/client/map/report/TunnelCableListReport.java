@@ -226,7 +226,7 @@ class TunnelCableListTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / TunnelCableListReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)
-			throw new AssertionError("SchemeElementTableModel.getValueAt | Index exceeds data size");
+			return EMPTY_STRING;
 
 		switch (columnIndex % TunnelCableListReport.COLUMNS_COUNT) {
 			case 0:

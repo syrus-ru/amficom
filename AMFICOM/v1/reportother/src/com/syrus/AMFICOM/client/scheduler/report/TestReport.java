@@ -1,5 +1,5 @@
 /*
- * $Id: TestReport.java,v 1.1 2005/09/22 14:46:43 peskovsky Exp $
+ * $Id: TestReport.java,v 1.2 2005/09/23 08:15:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -195,7 +195,7 @@ class TestReportTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / TestReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)
-			throw new AssertionError("SchemeElementTableModel.getValueAt | Index exceeds data size");
+			return EMPTY_STRING;
 
 		switch (columnIndex % TestReport.COLUMNS_COUNT) {
 			case 0:
@@ -204,6 +204,6 @@ class TestReportTableModel extends AbstractTableModel {
 				return this.propertyValuesColumn.get(index);
 		}
 
-		throw new AssertionError("SchemeElementTableModel.getValueAt | Unreachable code");
+		throw new AssertionError("TestReportTableModel.getValueAt | Unreachable code");
 	}
 }

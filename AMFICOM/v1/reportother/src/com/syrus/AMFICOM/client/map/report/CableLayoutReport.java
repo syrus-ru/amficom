@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Collector;
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Отчёт "Прокладка кабеля"
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/09/16 13:26:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/23 08:15:03 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -36,7 +35,7 @@ public class CableLayoutReport {
 	
 	public static TableDataRenderingComponent createReport(
 			TableDataStorableElement tableStorableElement,
-			SchemeCableLink cableLink) throws CreateReportException {
+			SchemeCableLink cableLink) {
 		int vertDivisionsCount = tableStorableElement.getVerticalDivisionsCount();
 		TableDataRenderingComponent renderingComponent = null;
 		
@@ -81,7 +80,8 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 	private static final String TUNNEL = "Tunnel";
 	private static final String COLLECTOR = "Collector";
 	private static final String MAP_TUNNEL_POSIT = "maptunnelposit";
-	private static final String EMPTY_STRING = "--";
+	private static final String EMPTY_OBJECT_STRING = "--";
+	private static final String EMPTY_STRING = "";
 	
 	private int vertDivisionsCount = 1;
 	private int originalRowCount = 0;	
@@ -118,7 +118,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 			if(currentItemIndex != 0)
 				endSpareString = Double.toString(chanellingItem.getEndSpare());
 			else
-				endSpareString = EMPTY_STRING;
+				endSpareString = EMPTY_OBJECT_STRING;
 			
 			this.endSpareColumn.add(endSpareString);
 			
@@ -126,7 +126,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 			// xxx
 			String tunnelInfoString = null;
 			if(currentItemIndex == channelingItems.size() - 1)
-				tunnelInfoString = EMPTY_STRING;
+				tunnelInfoString = EMPTY_OBJECT_STRING;
 			else {
 				//Тип и имя тоннеля
 				PhysicalLink physicalLink = chanellingItem.getPhysicalLink();
@@ -191,7 +191,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / CableLayoutReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)
-			throw new AssertionError("CableLayoutReportTableModel.getValueAt | Index exceeds data size");
+			return EMPTY_STRING;
 
 		switch (columnIndex % CableLayoutReport.COLUMNS_COUNT) {
 			case 0:

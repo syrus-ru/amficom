@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.3 2005/09/22 14:46:43 peskovsky Exp $
+ * $Id: SiteNodeReport.java,v 1.4 2005/09/23 08:15:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -225,7 +225,7 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / TunnelCableListReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)
-			throw new AssertionError("SchemeElementTableModel.getValueAt | Index exceeds data size");
+			return EMPTY_STRING;
 
 		switch (columnIndex % TunnelCableListReport.COLUMNS_COUNT) {
 			case 0:

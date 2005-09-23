@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorInfoReport.java,v 1.1 2005/09/16 13:26:27 peskovsky Exp $
+ * $Id: CollectorInfoReport.java,v 1.2 2005/09/23 08:15:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -165,7 +165,7 @@ class CollectorInfoReportTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int index = this.getRowCount() * (columnIndex / TunnelCableListReport.COLUMNS_COUNT) + rowIndex;
 		if (index >= this.originalRowCount)
-			throw new AssertionError("SchemeElementTableModel.getValueAt | Index exceeds data size");
+			return EMPTY_STRING;
 
 		switch (columnIndex % TunnelCableListReport.COLUMNS_COUNT) {
 			case 0:
