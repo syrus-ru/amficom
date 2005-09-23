@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -190,7 +191,6 @@ final class PlanToolBar {
 		{
 			final JButton button = this.toolBar.add(this.createApplyAction());
 			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			button.setFocusable(false);
 		}
 		
 		this.toolBar.addSeparator();
@@ -285,6 +285,11 @@ final class PlanToolBar {
 				}, LangModelSchedule.getString("StatusMessage.UpdatingTests"));
 			}
 		};
+		
+		this.toolBar.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK), apply);
+		
+		apply.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK));
+		apply.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_R));
 		apply.putValue(Action.SHORT_DESCRIPTION, LangModelSchedule.getString("Text.Plan.Toolbar.Apply")); 
 		return apply;
 	}
