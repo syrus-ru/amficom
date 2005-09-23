@@ -112,7 +112,7 @@ final class TestLine extends TimeLine {
 
 	}
 
-	Set<Identifier> testIds = new HashSet<Identifier>();
+	final Set<Identifier> testIds = new HashSet<Identifier>();
 
 	Dispatcher dispatcher;
 
@@ -121,15 +121,15 @@ final class TestLine extends TimeLine {
 	// Set selectedTests;
 	Set<Identifier> selectedTestIds;
 
-	Collection<Identifier> unsavedTestIds = new LinkedList<Identifier>();
-	SortedSet<TestTimeItem> unsavedTestTimeItems = new TreeSet<TestTimeItem>();
+	final Collection<Identifier> unsavedTestIds = new LinkedList<Identifier>();
+	final SortedSet<TestTimeItem> unsavedTestTimeItems = new TreeSet<TestTimeItem>();
 
-	Map<Identifier, List<TestTimeLine>> measurements = new HashMap<Identifier, List<TestTimeLine>>();
+	final Map<Identifier, List<TestTimeLine>> measurements = new HashMap<Identifier, List<TestTimeLine>>();
 	private Identifier monitoredElementId;
 
 	// private static final long ONE_MINUTE = 60L * 1000L;
 
-	SortedSet<TestTimeItem> selectedItems = new TreeSet<TestTimeItem>();
+	final SortedSet<TestTimeItem> selectedItems = new TreeSet<TestTimeItem>();
 
 	SortedMap offsetIdBuffer = new TreeMap();
 	SortedMap offsetDurationBuffer = new TreeMap();
@@ -493,14 +493,11 @@ final class TestLine extends TimeLine {
 				
 				switch (test.getTemporalType().value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
+						final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+						final SortedSet<Date> times = temporalPattern.getTimes(testTime, test.getEndTime());
 						if (status != TestStatus.TEST_STATUS_COMPLETED) {
-							final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-							final SortedSet<Date> times = temporalPattern.getTimes(testTime, test.getEndTime());
-							
-							
-							
 							for(final Date date : times) {
-								TestTimeLine testTimeLine = new TestTimeLine();
+								final TestTimeLine testTimeLine = new TestTimeLine();
 								testTimeLine.testId = testId;
 								final long time = date.getTime();
 								boolean foundMeasurement = false;
@@ -549,22 +546,35 @@ final class TestLine extends TimeLine {
 								measurementTestList.add(testTimeLine);
 							}
 						} else {
-							for (final Measurement measurement : testMeasurements) {
-								TestTimeLine testTimeLine = new TestTimeLine();
+							for(final Date date : times) {
+								final TestTimeLine testTimeLine = new TestTimeLine();
 								testTimeLine.testId = testId;
-								final Date measurementStartTime = measurement.getStartTime();
-								testTimeLine.date = measurementStartTime;
-								if (stoppings.tailMap(measurementStartTime).isEmpty()) {
-									testTimeLine.title = title;
-									testTimeLine.color = color;
-									testTimeLine.selectedColor = selectedColor;
-								} else {
-									testTimeLine.title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_STOPPED);
-									testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, false);
-									testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, true);
+								final long time = date.getTime();
+								boolean foundMeasurement = false;
+								for (final Measurement measurement : testMeasurements) {
+									final Date measurementTime = measurement.getStartTime();
+									final long time2 = measurementTime.getTime();
+									if (time <= time2 &&  time2 <= time + measurementDuration) {
+										testTimeLine.date = measurementTime;
+										testTimeLine.startTime = time2;
+										testTimeLine.duration = measurement.getDuration();										
+										this.updateTestTimeLine(testTimeLine, measurement);
+										foundMeasurement = true;
+										testMeasurements.remove(measurement);
+										break;
+									}
 								}
-								testTimeLine.startTime = measurementStartTime.getTime();
-								testTimeLine.duration = measurement.getDuration();
+								
+								if (!foundMeasurement) {
+									testTimeLine.date = date;
+									testTimeLine.startTime = time;
+									testTimeLine.duration = measurementDuration;
+									if (!stoppings.tailMap(date).isEmpty()) {
+										testTimeLine.title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_STOPPED);
+										testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, false);
+										testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, true);
+									}						
+								}
 								measurementTestList.add(testTimeLine);
 							}
 						}
