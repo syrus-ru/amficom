@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.179 2005/09/23 08:06:59 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.180 2005/09/23 08:59:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.179 $, $Date: 2005/09/23 08:06:59 $
+ * @version $Revision: 1.180 $, $Date: 2005/09/23 08:59:31 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -254,6 +254,14 @@ public final class StorableObjectPool {
 
 	/*	Get */
 
+	/**
+	 * Get {@link StorableObject} of the given {@link Identifier}.
+	 * @param <T>
+	 * @param id
+	 * @param useLoader
+	 * @return The {@link StorableObject} of the given id or null, if not found
+	 * @throws ApplicationException
+	 */
 	public static <T extends StorableObject> T getStorableObject(final Identifier id, final boolean useLoader)
 			throws ApplicationException {
 		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
@@ -295,6 +303,14 @@ public final class StorableObjectPool {
 		return null;
 	}
 
+	/**
+	 * Get {@link Set} of {@link StorableObject} for {@link Set} of {@link Identifier}
+	 * @param <T>
+	 * @param ids
+	 * @param useLoader
+	 * @return {@link Set} of {@link StorableObject} with identifiers in the given set. If none objects found, returns empty set.
+	 * @throws ApplicationException
+	 */
 	public static <T extends StorableObject> Set<T> getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		Log.debugMessage("StorableObjectPool.getStorableObjects | Requested for: " + ids, Log.DEBUGLEVEL08);
@@ -353,10 +369,11 @@ public final class StorableObjectPool {
 	}
 
 	/**
-	 * Break on load error
+	 * Get {@link Set} of {@link StorableObject} matching the condition.
+	 * This method breaks in case of load error.
 	 * @param condition
 	 * @param useLoader
-	 * @return Set of StorableObject matching condition 
+	 * @return {@link Set} of {@link StorableObject} matching the given condition 
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)  throws ApplicationException {
@@ -364,11 +381,12 @@ public final class StorableObjectPool {
 	}
 
 	/**
+	 * Get {@link Set} of {@link StorableObject} matching the condition.
 	 * 3-d parameter controls if break on load error
 	 * @param condition
 	 * @param useLoader
 	 * @param breakOnLoadError
-	 * @return Set of StorableObject matching condition
+	 * @return {@link Set} of {@link StorableObject} matching the given condition
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjectsByCondition(final StorableObjectCondition condition,
@@ -379,11 +397,12 @@ public final class StorableObjectPool {
 	}
 
 	/**
-	 * Break on load error
+	 * Get {@link Set} of {@link StorableObject} matching the condition with ids not in the given set.
+	 * This method breaks in case of load error.
 	 * @param ids
 	 * @param condition
 	 * @param useLoader
-	 * @return Set of StorableObject matching condition with ids not in given set
+	 * @return {@link Set} of {@link StorableObject} matching the given condition with ids not in the given set.
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
@@ -393,12 +412,13 @@ public final class StorableObjectPool {
 	}
 
 	/**
+	 * Get {@link Set} of {@link StorableObject} matching the condition with ids not in the given set.
 	 * 3-d parameter controls if break on load error
 	 * @param ids
 	 * @param condition
 	 * @param useLoader
 	 * @param breakOnLoadError
-	 * @return Set of StorableObject matching condition with ids not in given set
+	 * @return {@link Set} of {@link StorableObject} matching the given condition with ids not in the given set.
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
@@ -463,10 +483,6 @@ public final class StorableObjectPool {
 
 				for (final T storableObject : loadedObjects) {
 					final Identifier id = storableObject.getId();
-//	If locally isConditionTrue == false and remote isConditionTrue == true,
-//	object will be loaded. But it can not replace the local object in pool and cannot be returned.
-//				storableObjects.add(storableObject);
-//				objectPool.put(storableObject.getId(), storableObject);
 					if (!objectPool.containsKey(id)) {
 						storableObjects.add(storableObject);
 						objectPool.put(id, storableObject);
@@ -503,6 +519,12 @@ public final class StorableObjectPool {
 
 	/*	Put */
 
+	/**
+	 * Put single {@link StorableObject} to pool
+	 * Normally, you never use this method.
+	 * @param storableObject
+	 * @throws IllegalObjectEntityException
+	 */
 	public static void putStorableObject(final StorableObject storableObject) throws IllegalObjectEntityException {
 		assert storableObject != null;
 		final Identifier id = storableObject.getId();
@@ -521,6 +543,12 @@ public final class StorableObjectPool {
 		}
 	}
 
+	/**
+	 * Put {@link Set} of {@link StorableObject} to pool
+	 * Normally, you never use this method.
+	 * @param storableObjects
+	 * @throws IllegalObjectEntityException
+	 */
 	public static void putAllStorableObject(final Set<? extends StorableObject> storableObjects)
 			throws IllegalObjectEntityException {
 		for (final StorableObject storableObject : storableObjects) {
@@ -531,6 +559,10 @@ public final class StorableObjectPool {
 
 	/*	Clean changed objects */
 
+	/**
+	 * Clean all changed objects from pool 
+	 * @param entityCode
+	 */
 	public static void cleanChangedStorableObjects(final short entityCode) {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
@@ -631,6 +663,13 @@ public final class StorableObjectPool {
 
 	/*	Flush */
 
+	/**
+	 * Flush single object.
+	 * @param identifiable
+	 * @param modifierId
+	 * @param force
+	 * @throws ApplicationException
+	 */
 	public static void flush(final Identifiable identifiable, final Identifier modifierId, final boolean force) throws ApplicationException {
 		final Identifier id = identifiable.getId();
 		final short entityCode = id.getMajor();
@@ -658,6 +697,13 @@ public final class StorableObjectPool {
 		}
 	}
 
+	/**
+	 * Flush set of objects of different entities.
+	 * @param identifiables
+	 * @param modifierId
+	 * @param force
+	 * @throws ApplicationException
+	 */
 	public static void flush(final Set<Identifiable> identifiables, final Identifier modifierId, final boolean force)
 			throws ApplicationException {
 		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
@@ -716,6 +762,13 @@ public final class StorableObjectPool {
 		return objectsNotToDelete;
 	}
 
+	/**
+	 * Flush all present in pool objects of the given entity.
+	 * @param entityCode
+	 * @param modifierId
+	 * @param force
+	 * @throws ApplicationException
+	 */
 	public static void flush(final short entityCode, final Identifier modifierId, final boolean force) throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
@@ -900,10 +953,11 @@ public final class StorableObjectPool {
 	/*	From transferable*/
 
 	/**
-	 * 
+	 * Create {@link Set} of {@link StorableObject} from the array of {@link IdlStorableObject}.
+	 * Update in pool every object.
 	 * @param transferables
 	 * @param continueOnError
-	 * @return Set of Storable Objects
+	 * @return {@link Set} of {@link StorableObject}
 	 * @throws ApplicationException
 	 */
 	public static <T extends StorableObject> Set<T> fromTransferables(final IdlStorableObject[] transferables,
