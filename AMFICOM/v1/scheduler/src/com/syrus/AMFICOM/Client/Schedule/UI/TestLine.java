@@ -332,12 +332,12 @@ final class TestLine extends TimeLine {
 						if (TestLine.this.selectedTestIds != null) {
 							TestLine.this.selectedTestIds.clear();
 						}
-						TestLine.this.schedulerModel.unselectTests();
+						TestLine.this.schedulerModel.unselectTests(TestLine.this);
 					}
 					if (!TestLine.this.timeItems.isEmpty()) {
 						if (!selectTest(x, TestLine.this.timeItems)) {
 							if (!selectTest(x, TestLine.this.unsavedTestTimeItems)) {
-								TestLine.this.schedulerModel.unselectTests();
+								TestLine.this.schedulerModel.unselectTests(TestLine.this);
 								for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
 									mouseListener.mousePressed(e);
 								}
