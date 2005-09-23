@@ -1,5 +1,5 @@
 /*
- * $Id: SchedulerReportModel.java,v 1.2 2005/09/22 14:46:43 peskovsky Exp $
+ * $Id: SchedulerReportModel.java,v 1.3 2005/09/23 13:20:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,14 @@ package com.syrus.AMFICOM.client.scheduler.report;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.table.AbstractTableModel;
+
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
+import com.syrus.AMFICOM.client.report.TableModelVerticalDivider;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -77,6 +80,16 @@ public class SchedulerReportModel extends ReportModel {
 				} catch (ApplicationException e) {
 				}
 			}
+		}
+		else if (reportName.equals(TESTS_LIST)) {
+			if (!(data instanceof AbstractTableModel))
+				throw new CreateReportException(
+						reportName,
+						modelClassName,
+						CreateReportException.WRONG_DATA_TO_INSTALL);
+			result = TableModelVerticalDivider.createReport(
+					(AbstractTableModel)data,
+					(TableDataStorableElement)element);
 		}
 		
 		if (result == null)

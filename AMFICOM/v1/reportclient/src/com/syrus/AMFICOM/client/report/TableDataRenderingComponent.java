@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataRenderingComponent.java,v 1.3 2005/09/23 12:10:05 peskovsky Exp $
+ * $Id: TableDataRenderingComponent.java,v 1.4 2005/09/23 13:20:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,11 @@
 package com.syrus.AMFICOM.client.report;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.util.List;
 
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.client.UI.ATable;

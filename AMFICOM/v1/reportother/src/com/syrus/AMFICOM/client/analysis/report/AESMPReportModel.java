@@ -19,11 +19,13 @@ import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
+import com.syrus.AMFICOM.client.report.TableModelVerticalDivider;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.io.BellcoreStructure;
 
@@ -68,11 +70,9 @@ public abstract class AESMPReportModel extends ReportModel
 		RenderingComponent result = null;
 		
 		if (data instanceof AbstractTableModel) {
-//			TableModelDividerReport er = new TableModelDividerReport(rp, divisionsNumber);
-//			returnValue = new ReportResultsTablePanel(
-//				er.columnModel,
-//				er.tableModel,
-//				rt.findROforReport(rp));
+			result = TableModelVerticalDivider.createReport(
+					(AbstractTableModel)data,
+					(TableDataStorableElement)element);
 		}
 		else if (data instanceof SimpleGraphPanel) {
 			SimpleGraphPanel sgPanel = (SimpleGraphPanel)data;
@@ -82,8 +82,7 @@ public abstract class AESMPReportModel extends ReportModel
 					element.getHeight() - RenderingComponent.EDGE_SIZE);
 			
 			boolean oldShowMarkers = false;
-			if (sgPanel instanceof AnalysisPanel)
-			{
+			if (sgPanel instanceof AnalysisPanel) {
 				oldShowMarkers = ((AnalysisPanel) sgPanel).show_markers;
 				((AnalysisPanel) sgPanel).show_markers = false;
 			}
