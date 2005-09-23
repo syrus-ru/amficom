@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.107 2005/09/23 06:47:51 bob Exp $
+ * $Id: SchedulerModel.java,v 1.108 2005/09/23 08:01:00 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/09/23 06:47:51 $
+ * @version $Revision: 1.108 $, $Date: 2005/09/23 08:01:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -491,14 +491,14 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 	}
 
-	public void unselectTests() {
+	public void unselectTests(final Object source) {
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
 		}
 		this.selectedFirstTestId = null;
 		this.measurementSetup = null;
-		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));
-		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP, null, null));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_REFRESH_TEST, null, null));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(source, COMMAND_SET_MEASUREMENT_SETUP, null, null));
 	}
 
 	public void setSelectedMeasurementType(final MeasurementType measurementType) {
