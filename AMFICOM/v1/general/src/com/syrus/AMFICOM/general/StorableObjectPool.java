@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.183 2005/09/23 15:29:35 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.184 2005/09/23 16:00:50 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.183 $, $Date: 2005/09/23 15:29:35 $
+ * @version $Revision: 1.184 $, $Date: 2005/09/23 16:00:50 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -583,6 +583,25 @@ public final class StorableObjectPool {
 		}
 	}
 
+	/**
+	 * Clean all objects from pool 
+	 */
+	public static void cleanStorableObjects() {
+		for(final short entityCode : objectPoolMap.keys()) {
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
+	
+			DELETED_IDS_MAP.remove(new Short(entityCode));
+	
+			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+			if (objectPool != null) {
+				objectPool.clear();
+			}
+			else {
+				Log.errorMessage("StorableObjectPool.cleanStorableObjects | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+			}
+		}
+	}
 
 	/*	Delete */
 
