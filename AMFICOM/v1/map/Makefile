@@ -16,7 +16,19 @@ LIBNAME_GENERALXML = generalxml.jar
 LIBNAME_CONFIGURATIONXML = $(MODULE_NAME)xml.jar
 LIBNAME_MAPXML = mapxml.jar
 
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filter.jar
+
+DEPENDENCIES = \
+configuration \
+general \
+administration \
+resource \
+util \
+bugs
+
+EMPTY =
+SPACE = $(EMPTY) $(EMPTY)
+APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
+
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
 # If TROVE4J_HOME is defined, search in ${TROVE4J_HOME}/lib
@@ -27,7 +39,6 @@ EXTCLASSPATH := $(TROVE4J_HOME)/lib/trove.jar
 endif
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
-
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
