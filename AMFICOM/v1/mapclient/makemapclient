@@ -34,7 +34,7 @@ impl:
 
 loc:
 	copy /y \
-		$(SRC)\com\syrus\AMFICOM\client\resource\map_ru.properties \
+		$(SRC)\com\syrus\AMFICOM\client\resource\*.properties \
 		$(CLASSES)\com\syrus\AMFICOM\client\resource
 
 javadoc:
