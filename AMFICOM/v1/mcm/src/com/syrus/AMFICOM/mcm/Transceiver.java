@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.68 2005/09/22 12:54:27 arseniy Exp $
+ * $Id: Transceiver.java,v 1.69 2005/09/25 10:56:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,12 +11,15 @@ package com.syrus.AMFICOM.mcm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -29,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/09/22 12:54:27 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/25 10:56:19 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -168,56 +171,49 @@ final class Transceiver extends SleepButWorkThread {
 						Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 						Measurement measurement = null;
 						try {
-							measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
+							measurement = StorableObjectPool.getStorableObject(measurementId, true);
 						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
 						if (measurement != null) {
 
-							if (measurement.getStatus() != MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED) {
-								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
-								try {
-									StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
-								} catch (ApplicationException ae) {
-									Log.errorException(ae);
-								}
-							}
-
 							Result result = null;
 							try {
-								result = this.kisReport.createResult();
-							} catch (MeasurementException me) {
-								final int code = me.getCode();
-								switch (code) {
-									case MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE:
-									case MeasurementException.COMMUNICATION_FAILED_CODE:
-										Log.debugMessage("Transceiver.run | Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
-										try {
-											MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-										} catch (CommunicationException ce) {
-											Log.errorException(ce);
-										}
-									default:
-										super.fallCode = FALL_CODE_CREATE_RESULT;
-										super.sleepCauseOfFall();
+								result = this.kisReport.getResult();
+								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
+								final Set<Identifiable> saveObjects = new HashSet<Identifiable>();
+								saveObjects.add(measurement);
+								saveObjects.add(result);
+								StorableObjectPool.flush(saveObjects, LoginManager.getUserId(), false);
+							} catch (ApplicationException ae) {
+								Log.errorException(ae);
+								Log.debugMessage("Transceiver.run | Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
+								try {
+									MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+								} catch (CommunicationException ce) {
+									Log.errorException(ce);
 								}
+								result = null;
+								super.fallCode = FALL_CODE_CREATE_RESULT;
+								this.measurementToRemove = measurement;
+								super.sleepCauseOfFall();
 							}
 
-							TestProcessor testProcessor = this.testProcessors.remove(measurementId);
-							if (testProcessor == null) {
-								Log.errorMessage("Transceiver.run | WARNING: Cannot find test processor for measurement '" + measurementId
-										+ "'; searching in global MCM map");
-								testProcessor = MeasurementControlModule.testProcessors.get(measurement.getTestId());
-							}
-							if (testProcessor != null) {
-								if (result != null) {
+							if (result != null) {
+								TestProcessor testProcessor = this.testProcessors.remove(measurementId);
+								if (testProcessor == null) {
+									Log.errorMessage("Transceiver.run | WARNING: Cannot find test processor for measurement '" + measurementId
+											+ "'; searching in global MCM map");
+									testProcessor = MeasurementControlModule.testProcessors.get(measurement.getTestId());
+								}
+								if (testProcessor != null) {
 									testProcessor.addMeasurementResult(result);
 									this.kisReport = null;
-								}
-							} else {// if (testProcessor != null)
-								Log.errorMessage("Transceiver.run | ERROR: Test processor for measurement '" + measurementId + "' + not found");
-								this.throwAwayKISReport();
-							}// else if (testProcessor != null)
+								} else {// if (testProcessor != null)
+									Log.errorMessage("Transceiver.run | ERROR: Test processor for measurement '" + measurementId + "' + not found");
+									this.throwAwayKISReport();
+								}// else if (testProcessor != null)
+							}
 
 						} else {// if (measurement != null)
 							Log.errorMessage("Transceiver.run | ERROR: Measurement for id '" + measurementId + "' + not found");
@@ -265,8 +261,7 @@ final class Transceiver extends SleepButWorkThread {
 				Log.errorMessage("Transceiver.processFall | ERROR: Many errors while readig KIS report");
 				break;
 			case FALL_CODE_CREATE_RESULT:
-				Log.errorMessage("Transceiver.processFall | ERROR: Cannot create result");
-				this.throwAwayKISReport();
+				this.abortMeasurementAndReport();
 				break;
 		default:
 				Log.errorMessage("processError | ERROR: Unknown error code: " + super.fallCode);
@@ -290,6 +285,22 @@ final class Transceiver extends SleepButWorkThread {
 		} else {
 			Log.errorMessage("Transceiver.removeMeasurement | ERROR: Measurement to remove is null -- nothing to remove");
 		}
+	}
+
+	private void abortMeasurementAndReport() {
+		Log.errorMessage("Transceiver.processFall | ERROR: Cannot create result");
+		if (this.measurementToRemove != null) {
+			this.measurementToRemove.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+			try {
+				StorableObjectPool.flush(this.measurementToRemove, LoginManager.getUserId(), true);
+			} catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+			this.measurementToRemove = null;
+		} else {
+			Log.errorMessage("Transceiver.abortMeasurementAndReport | ERROR: Measurement to abort is null -- nothing to abort");
+		}
+		this.throwAwayKISReport();
 	}
 
 	private void throwAwayKISReport() {
