@@ -3,6 +3,6 @@ CREATE TABLE ImportUIDMap (
  foreign_uid VARCHAR2(128) NOT NULL,
  id NUMBER(19) NOT NULL,
 --
- CONSTRAINT ium_pk PRIMARY KEY (import_kind, foreign_uid),
- CONSTRAINT ium_uniq UNIQUE (import_kind, foreign_uid, id)
+ CONSTRAINT ium_pk PRIMARY KEY (foreign_uid, import_kind),
+ CONSTRAINT ium_uniq UNIQUE (id, import_kind)
 );
