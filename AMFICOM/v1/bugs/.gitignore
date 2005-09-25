@@ -2,3 +2,8 @@ classes
 docs
 .classpath
 .project
+.mach
+*.tar
+*.gz
+*.jar
+*.swp
