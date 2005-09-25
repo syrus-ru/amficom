@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.69 2005/09/25 10:56:19 arseniy Exp $
+ * $Id: Transceiver.java,v 1.70 2005/09/25 17:48:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/09/25 10:56:19 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/25 17:48:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -73,27 +73,27 @@ final class Transceiver extends SleepButWorkThread {
 		this.running = true;
 	}
 
-	void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
+	synchronized void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
 			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.scheduledMeasurements.add(measurement);
 			this.testProcessors.put(measurementId, testProcessor);
 
-			this.interrupt();
+			this.notifyAll();
 		} else {
 			Log.errorMessage("Transceiver.transmitMeasurementToKIS | ERROR: Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
 		}
 	}
 
-	void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
+	synchronized void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
 
-			this.interrupt();
+			this.notifyAll();
 		} else {
 			Log.errorMessage("Transceiver.addAcquiringMeasurement | ERROR: Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
@@ -122,12 +122,13 @@ final class Transceiver extends SleepButWorkThread {
 	public void run() {
 		while (this.running) {
 
-			if (this.testProcessors.isEmpty()) {
-				try {
-					sleep(10000);
-					continue;
-				} catch (InterruptedException ie) {
-					Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+			synchronized (this) {
+				while (this.testProcessors.isEmpty()) {
+					try {
+						this.wait(10000);
+					} catch (InterruptedException ie) {
+						Log.debugMessage(this.getName() + " -- interrupted", Log.DEBUGLEVEL07);
+					}
 				}
 			}
 
@@ -151,6 +152,7 @@ final class Transceiver extends SleepButWorkThread {
 							super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
 							this.measurementToRemove = measurement;
 							super.sleepCauseOfFall();
+							continue;
 						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
@@ -252,13 +254,13 @@ final class Transceiver extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			case FALL_CODE_ESTABLISH_CONNECTION:
-				Log.errorMessage("Transceiver.processFall | ERROR: Many errors while establishing connection");
+				Log.errorMessage("Transceiver.processFall | ERROR: Many errors during establishing connection");
 				break;
 			case FALL_CODE_TRANSMIT_MEASUREMENT:
 				this.removeMeasurement();
 				break;
 			case FALL_CODE_RECEIVE_KIS_REPORT:
-				Log.errorMessage("Transceiver.processFall | ERROR: Many errors while readig KIS report");
+				Log.errorMessage("Transceiver.processFall | ERROR: Many errors during readig KIS report");
 				break;
 			case FALL_CODE_CREATE_RESULT:
 				this.abortMeasurementAndReport();
