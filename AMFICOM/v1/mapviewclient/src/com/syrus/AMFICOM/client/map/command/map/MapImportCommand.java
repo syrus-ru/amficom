@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.50 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.51 2005/09/25 17:25:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/25 17:25:04 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -105,10 +105,9 @@ public class MapImportCommand extends ImportCommand {
 		
 		final String extension = ext;
 
-		new ProcessingDialog(new Runnable() {
-
-			@SuppressWarnings("synthetic-access")
-			public void run() {
+//		new ProcessingDialog(new Runnable() {
+//
+//			public void run() {
 				try {
 					Map map = null;
 					MapImportCommand.this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
@@ -159,8 +158,8 @@ public class MapImportCommand extends ImportCommand {
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				}
-			}
-		}, LangModelMap.getString(MapEditorResourceKeys.MESSAGE_INFORMATION_IMPORTING_PLS_WAIT));
+//			}
+//		}, LangModelMap.getString(MapEditorResourceKeys.MESSAGE_INFORMATION_IMPORTING_PLS_WAIT));
 	}
 
 	protected Map loadXML(String fileName)
