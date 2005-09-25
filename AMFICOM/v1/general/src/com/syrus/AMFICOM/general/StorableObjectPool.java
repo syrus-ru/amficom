@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.184 2005/09/23 16:00:50 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.185 2005/09/25 11:02:48 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.184 $, $Date: 2005/09/23 16:00:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.185 $, $Date: 2005/09/25 11:02:48 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -1177,8 +1177,7 @@ public final class StorableObjectPool {
 
 	/*	Serialization */
 
-	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) 
-	throws ApplicationException {
+	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) throws ApplicationException {
 		synchronized (objectPoolMap) {
 			final long time0 = System.currentTimeMillis();
 			long refreshingTime = 0;
