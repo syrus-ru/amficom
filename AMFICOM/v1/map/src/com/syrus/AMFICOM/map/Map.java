@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.101 2005/09/20 16:41:21 bass Exp $
+ * $Id: Map.java,v 1.102 2005/09/25 15:47:00 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/09/20 16:41:21 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.102 $, $Date: 2005/09/25 15:47:00 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1143,24 +1143,34 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			}
 		}
 
-		for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeArray()) {
-			this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode));
+		if(xmlMap.isSetTopologicalNodes()) {
+			for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeArray()) {
+				this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode));
+			}
 		}
 
-		for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeArray()) {
-			this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode));
+		if(xmlMap.isSetSiteNodes()) {
+			for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeArray()) {
+				this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode));
+			}
 		}
 
-		for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkArray()) {
-			this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink));
+		if(xmlMap.isSetPhysicalLinks()) {
+			for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkArray()) {
+				this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink));
+			}
 		}
 
-		for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkArray()) {
-			this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink));
+		if(xmlMap.isSetNodeLinks()) {
+			for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkArray()) {
+				this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink));
+			}
 		}
 
-		for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorArray()) {
-			this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector));
+		if(xmlMap.isSetCollectors()) {
+			for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorArray()) {
+				this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector));
+			}
 		}
 	}
 
@@ -1209,5 +1219,41 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			Log.debugException(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
+	}
+
+	public Set<Identifier> getCollectorIds() {
+		return this.collectorIds;
+	}
+
+	public Set<Identifier> getExternalNodeIds() {
+		return this.externalNodeIds;
+	}
+
+	public Set<Identifier> getMapIds() {
+		return this.mapIds;
+	}
+
+	public Set<Identifier> getMapLibraryIds() {
+		return this.mapLibraryIds;
+	}
+
+	public Set<Identifier> getMarkIds() {
+		return this.markIds;
+	}
+
+	public Set<Identifier> getNodeLinkIds() {
+		return this.nodeLinkIds;
+	}
+
+	public Set<Identifier> getPhysicalLinkIds() {
+		return this.physicalLinkIds;
+	}
+
+	public Set<Identifier> getSiteNodeIds() {
+		return this.siteNodeIds;
+	}
+
+	public Set<Identifier> getTopologicalNodeIds() {
+		return this.topologicalNodeIds;
 	}
 }
