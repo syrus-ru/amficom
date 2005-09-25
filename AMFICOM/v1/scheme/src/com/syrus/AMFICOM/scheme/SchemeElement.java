@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.114 2005/09/23 11:45:44 bass Exp $
+ * $Id: SchemeElement.java,v 1.115 2005/09/25 17:13:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.114 $, $Date: 2005/09/23 11:45:44 $
+ * @version $Revision: 1.115 $, $Date: 2005/09/25 17:13:55 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -731,13 +731,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentId() {
-		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
-			assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
-			if (!this.assertEquipmentTypeSetStrict()) {
-				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-			}
-			assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
+		assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
+		if (!this.assertEquipmentTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		}
+		assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
 		return this.equipmentId;
 	}
 	
@@ -754,13 +752,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentTypeId() {
-		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
-			assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-			if (!this.assertEquipmentTypeSetStrict()) {
-				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-			}
-			assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
+		assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		if (!this.assertEquipmentTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		}
+		assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
 		return this.equipmentTypeId;
 	}
 
@@ -1197,9 +1193,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		assert equipmentTypeId != null : NON_NULL_EXPECTED;
 		assert equipmentId != null : NON_NULL_EXPECTED;
-		assert kind == SCHEME_ELEMENT_CONTAINER
-				? (equipmentTypeId.isVoid() ^ equipmentId.isVoid())
-				: (equipmentTypeId.isVoid() && equipmentId.isVoid()) : OBJECT_BADLY_INITIALIZED;
+		assert equipmentTypeId.isVoid() ^ equipmentId.isVoid() : OBJECT_BADLY_INITIALIZED;
 		
 		assert kisId != null : NON_NULL_EXPECTED;
 		assert siteNodeId != null : NON_NULL_EXPECTED;
