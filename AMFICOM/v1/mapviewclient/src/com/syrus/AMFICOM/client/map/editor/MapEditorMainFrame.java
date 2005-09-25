@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.59 2005/09/20 08:25:17 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.60 2005/09/25 16:03:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -69,6 +69,7 @@ import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
@@ -76,7 +77,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.59 $, $Date: 2005/09/20 08:25:17 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/25 16:03:11 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -90,7 +91,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	public MapEditorMainFrame(ApplicationContext aContext) {
 		super(
 			aContext, 
-			LangModelMap.getString("Map"),  //$NON-NLS-1$
+			LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_EDITOR),
 			new MapEditorMenuBar(aContext.getApplicationModel()), 
 			new MapEditorToolBar());
 			
@@ -358,14 +359,14 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, true);
 
 				aModel.fireModelChanged();
-				setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getNewValue()).getName()); //$NON-NLS-1$ //$NON-NLS-2$
+				setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW) + ": " + ((MapView )pce.getNewValue()).getName()); //$NON-NLS-1$
 			}
 			else if(mapEventType.equals(MapEvent.MAP_VIEW_CLOSED)) {
 				for(int i = 0; i < this.desktopPane.getComponents().length; i++) {
 					Component comp = this.desktopPane.getComponent(i);
 					if(comp instanceof MapFrame) {
 						((MapFrame) comp).setVisible(false);
-						((MapFrame) comp).setContext(null);
+//						((MapFrame) comp).setContext(null);
 					} else if(comp instanceof MapGeneralPropertiesFrame) {
 						((MapGeneralPropertiesFrame) comp).setVisible(false);
 					} else if(comp instanceof MapAdditionalPropertiesFrame) {
@@ -404,7 +405,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, false);
 
 				aModel.fireModelChanged();
-				setTitle(LangModelMap.getString("MapView")); //$NON-NLS-1$
+				setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW));
 			}
 		}
 	}

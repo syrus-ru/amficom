@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.75 2005/09/20 08:26:18 krupenn Exp $
+ * $Id: MapFrame.java,v 1.76 2005/09/25 16:06:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -69,6 +69,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -207,7 +208,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * 
  * 
  * 
- * @version $Revision: 1.75 $, $Date: 2005/09/20 08:26:18 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/25 16:06:52 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -321,7 +322,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		this.setMaximizable(true);
 		this.setResizable(true);
 
-		this.setTitle(LangModelMap.getString("Map")); //$NON-NLS-1$
+		this.setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP));
 
 		// визуальный компонент обозревателя карты
 		// обозреватель карты сам по себе не является компонентом, а содержит
@@ -544,7 +545,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 
 	public void closeMap() {
 		Log.debugMessage("Closing map", Level.INFO); //$NON-NLS-1$
-		this.setContext(null);
+//		this.setContext(null);
 	}
 
 	public boolean checkChangesPresent() {
@@ -565,11 +566,11 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 			}
 		}
 		if (changesPresent) {
-			final String message = LangModelMap.getString("Message.UnsavedElementsPresent"); //$NON-NLS-1$
+			final String message = LangModelMap.getString(MapEditorResourceKeys.MESSAGE_UNSAVED_ELEMENTS_PRESENT);
 
 			final int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 					message,
-					LangModelMap.getString("Message.ObjectWasChanged"), //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.TITLE_OBJECT_WAS_CHANGED),
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if (ret == JOptionPane.YES_OPTION) {
