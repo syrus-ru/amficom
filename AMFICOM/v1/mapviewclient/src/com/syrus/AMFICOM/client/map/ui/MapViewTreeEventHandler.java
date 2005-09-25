@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.14 2005/09/20 16:38:16 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.15 2005/09/25 16:07:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
-import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
