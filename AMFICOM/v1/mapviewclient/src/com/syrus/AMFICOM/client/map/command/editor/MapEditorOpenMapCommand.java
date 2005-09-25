@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.24 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.25 2005/09/25 16:00:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.24 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/25 16:00:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -66,7 +67,7 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
-		if(this.mapFrame != null) {
+		if(this.mapFrame != null && this.mapFrame.isVisible()) {
 			if(this.mapFrame.checkChangesPresent())
 				return;
 		}
@@ -95,6 +96,8 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 			if(this.mapFrame == null)
 				return;
 
+			this.mapFrame.setVisible(true);
+			
 			MapViewNewCommand cmd = new MapViewNewCommand(
 					this.map,
 					this.aContext);
@@ -113,13 +116,15 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 						this.aContext);
 				propCommand.execute();
 				this.propFrame = propCommand.frame;
+				new ViewAdditionalPropertiesCommand(this.desktop, this.aContext).execute();
+				new ViewCharacteristicsCommand(this.desktop, this.aContext).execute();
 				ViewMapViewNavigatorCommand elementsCommand = new ViewMapViewNavigatorCommand(
 						this.desktop,
 						this.aContext);
 				elementsCommand.execute();
 				this.treeFrame = elementsCommand.treeFrame;
 			} catch(MapException e) {
-				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
+				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 				e.printStackTrace();
 			}
 		}
