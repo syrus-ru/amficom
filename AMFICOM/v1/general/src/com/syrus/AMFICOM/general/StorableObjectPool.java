@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.185 2005/09/25 11:02:48 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.186 2005/09/25 11:27:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.185 $, $Date: 2005/09/25 11:02:48 $
+ * @version $Revision: 1.186 $, $Date: 2005/09/25 11:27:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -557,7 +557,7 @@ public final class StorableObjectPool {
 	}
 
 
-	/*	Clean changed objects */
+	/*	Clean objects */
 
 	/**
 	 * Clean all changed objects from pool 
@@ -584,24 +584,20 @@ public final class StorableObjectPool {
 	}
 
 	/**
-	 * Clean all objects from pool 
+	 * Clean all objects from pool, including those, marked as deleted.
 	 */
-	public static void cleanStorableObjects() {
+	public static void clean() {
 		for(final short entityCode : objectPoolMap.keys()) {
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
-	
+
 			DELETED_IDS_MAP.remove(new Short(entityCode));
-	
+
 			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
-			if (objectPool != null) {
-				objectPool.clear();
-			}
-			else {
-				Log.errorMessage("StorableObjectPool.cleanStorableObjects | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
-						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-			}
+			assert objectPool != null : ErrorMessages.NON_NULL_EXPECTED + ", entity: " + ObjectEntities.codeToString(entityCode);
+			objectPool.clear();
 		}
 	}
+
 
 	/*	Delete */
 
@@ -956,8 +952,7 @@ public final class StorableObjectPool {
 			}
 			if (!LOCKED_IDS.contains(id)) {
 				LOCKED_IDS.add(id);
-			}
-			else {
+			} else {
 				LOCKED_IDS.removeAll(savingObjectsIds);
 				throw new UpdateObjectException("Cannot obtain lock on object '" + id + "'");
 			}
