@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.19 2005/08/19 12:50:29 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.20 2005/09/25 16:05:46 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,14 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/19 12:50:29 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/25 16:05:46 $
  * @module mapviewclient
  */
 
@@ -45,51 +43,30 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 		this.object = object;
 		super.clear();
 
+		Characterizable characterizable = null;
+
 		if(object instanceof MapElement) {
 			MapElement mapElement = (MapElement) object;
+			characterizable = mapElement.getCharacterizable();
+		}
+		else if(object instanceof Characterizable) {
+			characterizable = (Characterizable) object;
+		}
 			
-			if (mapElement != null
-					&& !(mapElement instanceof Selection)) {
-					super.setTypeSortMapping(
-							CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-							mapElement,
-							mapElement.getId(), 
-							true);
-				try {
-					super.addCharacteristics(mapElement.getCharacteristics(true), mapElement.getId());
-				} catch(ApplicationException e) {
-					Log.debugException(e, Level.WARNING);
-				}
-			}
-			else
-				super.showNoSelection();
-		}
-		else if(object instanceof SiteNodeType) {
-			SiteNodeType siteNodeType = (SiteNodeType)object;
-			super.setTypeSortMapping(
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-					siteNodeType,
-					siteNodeType.getId(), 
-					true);
+		if(characterizable != null) {
+				super.setTypeSortMapping(
+						CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+						characterizable,
+						characterizable.getId(), 
+						true);
 			try {
-				super.addCharacteristics(siteNodeType.getCharacteristics(false), siteNodeType.getId());
+				super.addCharacteristics(characterizable.getCharacteristics(true), characterizable.getId());
 			} catch(ApplicationException e) {
 				Log.debugException(e, Level.WARNING);
 			}
 		}
-		else if(object instanceof PhysicalLinkType) {
-			PhysicalLinkType physicalLinkType = (PhysicalLinkType)object;
-			super.setTypeSortMapping(
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-					physicalLinkType,
-					physicalLinkType.getId(), 
-					true);
-			try {
-				super.addCharacteristics(physicalLinkType.getCharacteristics(false), physicalLinkType.getId());
-			} catch(ApplicationException e) {
-				Log.debugException(e, Level.WARNING);
-			}
-		}
+		else
+			super.showNoSelection();
 	}
 
 }
