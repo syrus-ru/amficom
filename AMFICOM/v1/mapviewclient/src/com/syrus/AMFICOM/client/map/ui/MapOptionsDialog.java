@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class MapOptionsDialog extends JDialog 
@@ -214,7 +215,7 @@ public class MapOptionsDialog extends JDialog
 		this.showNodeNamesCheckBox.setActionCommand("showNodeNamesCheckBox"); //$NON-NLS-1$
 		this.showPhysicalNodesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowNodes")); //$NON-NLS-1$
 
-		this.okButton.setText(LangModelMap.getString("Button.Apply")); //$NON-NLS-1$
+		this.okButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_APPLY));
 		this.okButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -222,7 +223,7 @@ public class MapOptionsDialog extends JDialog
 					ok();
 				}
 			});
-		this.cancelButton.setText(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
+		this.cancelButton.setText(LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL));
 		this.cancelButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -1115,7 +1116,7 @@ public class MapOptionsDialog extends JDialog
 		}
 		catch(Exception e)
 		{
-			System.out.println(LangModelMap.getString("MapOptionsDialog.Error.NumberFormat")); //$NON-NLS-1$
+			System.out.println(LangModelMap.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
 			// cannot parse
 		}
 

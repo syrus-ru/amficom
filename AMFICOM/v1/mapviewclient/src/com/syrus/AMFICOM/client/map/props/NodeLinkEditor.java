@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.NodeLink;
 
@@ -53,12 +54,12 @@ public class NodeLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.linkLabel.setText(LangModelMap.getString("Physical_link_id")); //$NON-NLS-1$
-		this.startLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
-		this.endLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
+		this.linkLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL));
+		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
+		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
+		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
 
 		GridBagConstraints constraints = new GridBagConstraints();
 

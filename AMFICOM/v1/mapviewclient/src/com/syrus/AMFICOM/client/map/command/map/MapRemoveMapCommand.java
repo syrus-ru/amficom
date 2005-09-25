@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveMapCommand.java,v 1.11 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapRemoveMapCommand.java,v 1.12 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,13 +22,14 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapRemoveMapCommand extends AbstractCommand {
@@ -57,12 +58,12 @@ public class MapRemoveMapCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_REMOVING_INTERNAL_MAP)));
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
 		Map map = (Map )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Map"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP),
 				mapView.getMap().getMaps(),
 				mapTableController,
 				mapTableController.getKeysArray(),

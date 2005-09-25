@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.11 2005/09/16 14:53:36 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.12 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,16 +31,17 @@ import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 public class LayersDialog extends JDialog {
 
-	private static final String LABEL = "label"; //$NON-NLS-1$
+	private static final String LABEL = MapEditorResourceKeys.LABEL_LABEL;
 
 	private static final String LABEL_VISIBLE_COMBO = "labelVisibleCombo"; //$NON-NLS-1$
 
-	private static final String NAME = "name"; //$NON-NLS-1$
+	private static final String NAME = MapEditorResourceKeys.LABEL_NAME;
 
 	private static final String VISIBLE_COMBO = "visibleCombo"; //$NON-NLS-1$
 
@@ -92,13 +93,13 @@ public class LayersDialog extends JDialog {
 		this.setSize(new Dimension(550, 400));
 		this.getContentPane().setLayout(new BorderLayout());
 
-		this.okButton.setText(LangModelMap.getString("Button.Apply")); //$NON-NLS-1$
+		this.okButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_APPLY));
 		this.okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ok();
 				}
 			});
-		this.cancelButton.setText(LangModelMap.getString("Button.Cancel")); //$NON-NLS-1$
+		this.cancelButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL));
 		this.cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					cancel();
@@ -193,9 +194,9 @@ public class LayersDialog extends JDialog {
 		this.siteTableModel.addRow(
 				new Object[] {
 					this.allSitesVisibility, 
-					LangModelMap.getString("all"), //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL),
 					this.allSitesVisibility,
-					LangModelMap.getString("all") } ); //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL) } );
 		this.siteTable.setModel(this.siteTableModel);
 		this.siteTable.setTableHeader(null);
 		this.siteTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
@@ -256,9 +257,9 @@ public class LayersDialog extends JDialog {
 		this.linkTableModel.addRow(
 				new Object[] {
 					this.allLinksVisibility, 
-					LangModelMap.getString("all"), //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL),
 					this.allLinksVisibility,
-					LangModelMap.getString("all") } ); //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL) } );
 		this.linkTable.setModel(this.linkTableModel);
 		this.linkTable.setTableHeader(null);
 		this.linkTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
@@ -285,9 +286,9 @@ public class LayersDialog extends JDialog {
 		this.cableTableModel.addRow(
 				new Object[] {
 					this.allCablesVisibility.getVisible(), 
-					LangModelMap.getString("all"), //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL),
 					this.allCablesVisibility.getLabelVisible(),
-					LangModelMap.getString("all") } ); //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL) } );
 		this.cableTable.setModel(this.cableTableModel);
 		this.cableTable.setTableHeader(null);
 		this.cableTable.setDefaultRenderer(Boolean.class, LayersTableCellRenderer.getInstance());
@@ -337,7 +338,7 @@ public class LayersDialog extends JDialog {
 						visibility, 
 						type.getName(),
 						visibility,
-						LangModelMap.getString("label") } ); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.LABEL_LABEL) } );
 		}
 		updateAllSitesVisibility();
 
@@ -356,7 +357,7 @@ public class LayersDialog extends JDialog {
 						visibility, 
 						type.getName(),
 						visibility,
-						LangModelMap.getString("label") } ); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.LABEL_LABEL) } );
 		}
 		updateAllLinksVisibility();
 	}

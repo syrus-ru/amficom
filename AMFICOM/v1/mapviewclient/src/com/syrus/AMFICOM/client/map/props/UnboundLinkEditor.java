@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
@@ -58,13 +59,13 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
-		this.cableLabel.setText(LangModelMap.getString("cable")); //$NON-NLS-1$
-		this.startLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
-		this.endLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.typeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TYPE));
+		this.cableLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_CABLE));
+		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
+		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
 		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
 
 		GridBagConstraints constraints = new GridBagConstraints();

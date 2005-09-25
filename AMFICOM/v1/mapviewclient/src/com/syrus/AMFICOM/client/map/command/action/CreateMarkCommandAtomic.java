@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.28 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.29 2005/09/25 16:08:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -34,7 +35,7 @@ import com.syrus.util.Log;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/25 16:08:01 $
  * @module mapviewclient
  */
 public class CreateMarkCommandAtomic extends MapActionCommand {
@@ -110,7 +111,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 						LoginManager.getUserId(),
 						this.link, 
 						this.distance);
-				this.mark.setName(LangModelMap.getString("mark")); //$NON-NLS-1$
+				this.mark.setName(LangModelMap.getString(MapEditorResourceKeys.ENTITY_MARK));
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 			}

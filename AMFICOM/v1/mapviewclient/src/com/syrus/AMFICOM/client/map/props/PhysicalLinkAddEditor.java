@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -122,7 +123,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString("LinkBinding")); //$NON-NLS-1$
+		this.jPanel.setName(LangModelMap.getString(MapEditorResourceKeys.LABEL_CABLES_BINDING));
 		this.cableList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if(PhysicalLinkAddEditor.this.processSelection) {
@@ -138,7 +139,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif"))); //$NON-NLS-1$
-		this.bindButton.setToolTipText(LangModelMap.getString("Button.BindCableToPipe")); //$NON-NLS-1$
+		this.bindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_BIND_CABLE_TO_PIPE));
 		this.bindButton.setPreferredSize(buttonSize);
 		this.bindButton.setMaximumSize(buttonSize);
 		this.bindButton.setMinimumSize(buttonSize);
@@ -150,7 +151,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
-		this.unbindButton.setToolTipText(LangModelMap.getString("Button.UnbindLinkBinding")); //$NON-NLS-1$
+		this.unbindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_UNBIND_LINK_BINDING));
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -167,7 +168,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.selectButton.setToolTipText(LangModelMap.getString("Button.SelectElement")); //$NON-NLS-1$
+		this.selectButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
 		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);
@@ -180,7 +181,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.dimensionLabel.setText(LangModelMap.getString("Dimension")); //$NON-NLS-1$
+		this.dimensionLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DIMENSION));
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
 
@@ -226,11 +227,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		});
 
 		this.horvertLabel.setIcon(horverticon);
-		this.horvertLabel.setToolTipText(LangModelMap.getString("Button.NumberingDirection")); //$NON-NLS-1$
+		this.horvertLabel.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_NUMBERING_DIRECTION));
 		this.topDownLabel.setIcon(topdownicon);
-		this.topDownLabel.setToolTipText(LangModelMap.getString("Button.VerticalOrder")); //$NON-NLS-1$
+		this.topDownLabel.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_VERTICAL_ORDER));
 		this.leftRightLabel.setIcon(leftrighticon);
-		this.leftRightLabel.setToolTipText(LangModelMap.getString("Button.HorizontalOrder")); //$NON-NLS-1$
+		this.leftRightLabel.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_HORIZONTAL_ORDER));
 		
 		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getUgoPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);

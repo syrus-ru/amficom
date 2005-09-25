@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.16 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.17 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,13 +23,14 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapViewRemoveSchemeCommand extends AbstractCommand {
@@ -63,13 +64,13 @@ public class MapViewRemoveSchemeCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_REMOVING_SCHEME_FROM_MAP_VIEW)));
 
 		SchemeTableController schemeTableController = 
 			SchemeTableController.getInstance();
 
 		Scheme scheme = (Scheme )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Scheme"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_SCHEME),
 				mapView.getSchemes(),
 				schemeTableController,
 				schemeTableController.getKeysArray(),

@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.14 2005/09/16 14:53:37 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.15 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,11 +25,12 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
- * @version $Revision: 1.14 $, $Date: 2005/09/16 14:53:37 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/25 16:08:03 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -98,8 +99,8 @@ public final class NodeSizePanel extends JPanel
 				}
 			});
 			
-	    this.leftButton.setToolTipText(LangModelMap.getString("ReduceIcon")); //$NON-NLS-1$
-	    this.rightButton.setToolTipText(LangModelMap.getString("EnlargeIcon")); //$NON-NLS-1$
+	    this.leftButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.TOOLTIP_REDUCE_ICON));
+	    this.rightButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.TOOLTIP_ENLARGE_ICON));
 		
 		this.add(this.leftButton, BorderLayout.WEST);
 		this.add(this.rightButton, BorderLayout.EAST);

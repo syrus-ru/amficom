@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.Mark;
@@ -57,12 +58,12 @@ public class MarkEditor extends DefaultStorableObjectEditor {
 		this.linkComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.linkLabel.setText(LangModelMap.getString("physicallink")); //$NON-NLS-1$
-		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
-		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.linkLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL));
+		this.longLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
+		this.latLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LATITUDE));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));

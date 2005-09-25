@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.11 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapEditorNewLinkTypeCommand.java,v 1.12 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -46,15 +47,15 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 						new StatusMessageEvent(
 								this, 
 								StatusMessageEvent.STATUS_MESSAGE, 
-								LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
+								LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 				return;
 			}
 			PhysicalLinkType physicalLinkType = PhysicalLinkType.createInstance(
 					LoginManager.getUserId(), 
 					PhysicalLinkTypeSort.TUNNEL, 
 					"codename", //$NON-NLS-1$
-					LangModelMap.getString("New"), //$NON-NLS-1$
-					"", //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					MapEditorResourceKeys.EMPTY_STRING,
 					new IntDimension(1, 1),
 					true,
 					MapLibraryController.getDefaultMapLibrary().getId());
@@ -62,7 +63,7 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
 			physicalLinkTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString("physicallinktype"), //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.ENTITY_PHYSICAL_LINK_TYPE),
 					physicalLinkType,
 					physicalLinkTypeEditor) ) {
 				StorableObjectPool.flush(physicalLinkType, LoginManager.getUserId(), true);

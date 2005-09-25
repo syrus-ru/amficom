@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.10 2005/09/20 16:30:19 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.11 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -45,10 +46,8 @@ public class ExternalMapElementChooserDialog extends JDialog
 	static public final int RET_CANCEL = 2;
 
 	protected JPanel topPanel = new JPanel();
-	protected JButton buttonHelp = new JButton();
 	protected JButton buttonCancel = new JButton();
 	protected JButton buttonOpen = new JButton();
-	protected JButton buttonDelete = new JButton();
 
 	protected JScrollPane scrollPane = new JScrollPane();
 
@@ -103,9 +102,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.getContentPane().setLayout(this.borderLayout2);
 		this.topPanel.setLayout(this.borderLayout3);
 		this.topPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		this.buttonHelp.setText(LangModelGeneral.getString("Help")); //$NON-NLS-1$
-		this.buttonHelp.setEnabled(false);
-		this.buttonCancel.setText(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
+		this.buttonCancel.setText(LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL));
 		this.buttonCancel.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -113,7 +110,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 					buttonCancel_actionPerformed(e);
 				}
 			});
-		this.buttonOpen.setText(LangModelGeneral.getString("Choose")); //$NON-NLS-1$
+		this.buttonOpen.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
 		this.buttonOpen.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -127,8 +124,6 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.flowLayout3.setAlignment(2);
 		this.eastPanel.add(this.buttonOpen, null);
 		this.eastPanel.add(this.buttonCancel, null);
-		this.eastPanel.add(this.buttonHelp, null);
-		this.westPanel.add(this.buttonDelete, null);
 		this.bottomPanel.add(this.westPanel, BorderLayout.WEST);
 		this.bottomPanel.add(this.eastPanel, BorderLayout.CENTER);
 		this.getContentPane().add(this.bottomPanel, BorderLayout.SOUTH);
@@ -136,7 +131,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 
 		this.model = new MapTreeModel();
 
-		this.root = new IconedNode("root", LangModelMap.getString("Map")); //$NON-NLS-1$ //$NON-NLS-2$
+		this.root = new IconedNode("root", LangModelMap.getString(MapEditorResourceKeys.TREE_MAP)); //$NON-NLS-1$
 		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();
@@ -149,6 +144,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 //		this.tree.setCellRenderer(this.treeRenderer);
 
 		this.topPanel.add(this.scrollPane, BorderLayout.CENTER);
+		this.buttonOpen.setEnabled(false);
 	}
 
 	public int getReturnCode()

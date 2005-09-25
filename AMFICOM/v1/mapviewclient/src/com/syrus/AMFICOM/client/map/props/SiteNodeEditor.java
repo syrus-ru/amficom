@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -93,17 +94,17 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
-		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
-		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
-		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
-		this.cityLabel.setText(LangModelMap.getString("CityKurz")); //$NON-NLS-1$
-		this.streetLabel.setText(LangModelMap.getString("StreetKurz")); //$NON-NLS-1$
-		this.buildingLabel.setText(LangModelMap.getString("BuildingKurz")); //$NON-NLS-1$
-		this.addressLabel.setText(LangModelMap.getString("Address")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.typeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TYPE));
+		this.longLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
+		this.latLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LATITUDE));
+		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.cityLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_CITY_KURZ));
+		this.streetLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_STREET_KURZ));
+		this.buildingLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_BUILDING_KURZ));
+		this.addressLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_ADDRESS));
 
 		this.streetPanel.setLayout(this.gridBagLayout3);
 

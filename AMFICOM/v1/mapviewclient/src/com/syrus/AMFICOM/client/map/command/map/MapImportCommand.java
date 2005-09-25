@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.49 2005/09/20 08:23:39 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.50 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -58,7 +59,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.49 $, $Date: 2005/09/20 08:23:39 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -141,7 +142,7 @@ public class MapImportCommand extends ImportCommand {
 		
 					setResult(Command.RESULT_OK);
 				} catch(MapException e) {
-					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
+					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(DatabaseException e) {
@@ -151,7 +152,7 @@ public class MapImportCommand extends ImportCommand {
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(XmlException e) {
-					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("Exception.FileFormat"))); //$NON-NLS-1$
+					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_XML_EXCEPTION)));
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(IOException e) {
@@ -159,7 +160,7 @@ public class MapImportCommand extends ImportCommand {
 					setResult(Command.RESULT_NO);
 				}
 			}
-		}, LangModelMap.getString("Message.Information.ImportingPlsWait"));	 //$NON-NLS-1$
+		}, LangModelMap.getString(MapEditorResourceKeys.MESSAGE_INFORMATION_IMPORTING_PLS_WAIT));
 	}
 
 	protected Map loadXML(String fileName)
@@ -198,10 +199,13 @@ public class MapImportCommand extends ImportCommand {
 						xmlMap.getImportType(),
 						xmlMap);
 				map.setName(map.getName()
-						+ LangModelMap.getString("ImportedWithOpeningParenthesis") //$NON-NLS-1$
+						+ "(" //$NON-NLS-1$
+						+ LangModelMap.getString(MapEditorResourceKeys.IMPORTED)
 						+ MapPropertiesManager.getDateFormat()
 							.format(new Date(System.currentTimeMillis())) 
-						+ LangModelMap.getString("FromWithOpeningApostrophe") //$NON-NLS-1$
+						+ " " //$NON-NLS-1$
+						+ LangModelMap.getString(MapEditorResourceKeys.OUT_OF_LOWERCASE)
+						+ " \'" //$NON-NLS-1$
 						+ xmlfile.getName() + "\')"); //$NON-NLS-1$
 				
 				map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());

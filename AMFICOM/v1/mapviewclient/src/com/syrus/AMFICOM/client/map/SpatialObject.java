@@ -1,5 +1,5 @@
 /**
- * $Id: SpatialObject.java,v 1.10 2005/08/29 16:09:38 arseniy Exp $
+ * $Id: SpatialObject.java,v 1.11 2005/09/25 16:08:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,10 +16,9 @@ package com.syrus.AMFICOM.client.map;
  * текущее использование класса - в списке найденных по строковому шаблону
  * графических объектов.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/29 16:09:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/09/25 16:08:01 $
  * @module mapviewclient
- * @see com.syrus.AMFICOM.client.map.operations.SpatialSearchPanel
  */
 public abstract class SpatialObject implements Comparable<SpatialObject> {
 	protected String label;

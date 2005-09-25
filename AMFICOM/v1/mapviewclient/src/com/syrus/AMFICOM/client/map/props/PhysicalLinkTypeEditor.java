@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.Identifier;
@@ -76,14 +77,14 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		this.libraryComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES)); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.libraryLabel.setText(LangModelMap.getString("InLibrary")); //$NON-NLS-1$
-		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
-		this.colorLabel.setText(LangModelMap.getString("Color")); //$NON-NLS-1$
-		this.thicknessLabel.setText(LangModelMap.getString("Thickness")); //$NON-NLS-1$
-		this.styleLabel.setText(LangModelMap.getString("Style")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME)); //$NON-NLS-1$
+		this.libraryLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
+		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.colorLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_COLOR));
+		this.thicknessLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_THICKNESS));
+		this.styleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_STYLE));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -214,18 +215,18 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.thicknessComboBox, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 4;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(this.styleLabel, constraints);
+//		constraints.gridx = 0;
+//		constraints.gridy = 4;
+//		constraints.gridwidth = 1;
+//		constraints.gridheight = 1;
+//		constraints.weightx = 0.0;
+//		constraints.weighty = 0.0;
+//		constraints.anchor = GridBagConstraints.WEST;
+//		constraints.fill = GridBagConstraints.NONE;
+//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+//		constraints.ipadx = 0;
+//		constraints.ipady = 0;
+//		this.jPanel.add(this.styleLabel, constraints);
 
 //		constraints.gridx = 1;
 //		constraints.gridy = 4;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.57 2005/09/19 15:37:44 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.58 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,11 +17,7 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
@@ -40,10 +36,9 @@ import com.syrus.AMFICOM.client.map.command.action.MapElementStateChangeCommand;
 import com.syrus.AMFICOM.client.map.command.action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
@@ -65,7 +60,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.57 $, $Date: 2005/09/19 15:37:44 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -84,14 +79,14 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	public Point getPoint() {
 		return this.point;
 	}
-
+/*
 	public void showProperties(Object me) {
 		StorableObjectEditor prop = MapVisualManager.getVisualManager(me).getGeneralPropertiesPanel();
 		if(prop == null)
 			return;
 //		MapElementState mes = me.getState();
 		if(EditorDialog.showEditorDialog(
-				LangModelGeneral.getString("Properties"),  //$NON-NLS-1$
+				LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES),
 				me,
 				prop)) {
 // MapElementState mes2 = me.getState();
@@ -104,8 +99,8 @@ public abstract class MapPopupMenu extends JPopupMenu {
 			
 		}
 	}
-
-	public abstract void setElement(Object me);
+*/
+	public abstract void setElement(Object object);
 
 	protected Collector selectCollector() {
 		Collection list = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getAllCollectors();
@@ -172,8 +167,8 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	protected Collector createCollector() {
 		String inputValue = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(), 
-				LangModelMap.getString("Message.EnterCollectorName"),  //$NON-NLS-1$
-				LangModelMap.getString("DefaultCollectorName")); //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.MESSAGE_ENTER_COLLECTOR_NAME),
+				LangModelMap.getString(MapEditorResourceKeys.VALUE_DEFAULT_COLLECTOR_NAME));
 		if(inputValue != null) {
 			CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic(inputValue);
 			LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();

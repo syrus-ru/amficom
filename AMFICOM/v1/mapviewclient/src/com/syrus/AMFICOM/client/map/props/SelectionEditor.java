@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -64,12 +65,12 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		this.elementsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.countLabel.setText(LangModelMap.getString("SelectionCount")); //$NON-NLS-1$
-		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
-		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
-		this.elementsLabel.setText(LangModelMap.getString("Elements")); //$NON-NLS-1$
+		this.countLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SELECTION_COUNT));
+		this.longLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
+		this.latLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LATITUDE));
+		this.elementsLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_ELEMENTS));
 		this.elementsList.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));

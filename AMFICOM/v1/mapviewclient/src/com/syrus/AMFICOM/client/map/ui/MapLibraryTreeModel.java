@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTreeModel.java,v 1.7 2005/09/16 14:53:36 krupenn Exp $
+ * $Id: MapLibraryTreeModel.java,v 1.8 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,8 +38,8 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 
 	private static MapLibraryTreeModel instance = null;
 
-	private static final String SITENODETYPE_BRANCH = "sitenodetype"; //$NON-NLS-1$
-	private static final String PHYSICALLINKTYPE_BRANCH = "physicallinktype"; //$NON-NLS-1$
+	private static final String SITENODETYPE_BRANCH = MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE;
+	private static final String PHYSICALLINKTYPE_BRANCH = MapEditorResourceKeys.ENTITY_PHYSICAL_LINK_TYPE;
 	static final int IMG_SIZE = 16;
 
 	public static NodeTypeComparator nodeTypeComparator = new NodeTypeComparator();

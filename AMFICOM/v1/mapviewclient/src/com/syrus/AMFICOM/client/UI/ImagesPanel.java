@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.11 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: ImagesPanel.java,v 1.12 2005/09/25 16:08:01 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import javax.swing.border.BevelBorder;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -139,7 +140,7 @@ public class ImagesPanel extends JPanel
 
 	public void showAddImageDialog() {
 		JFileChooser chooser = new JFileChooser();
-		chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", LangModelMap.getString("FileFilter.Picture"))); //$NON-NLS-1$ //$NON-NLS-2$
+		chooser.addChoosableFileFilter(new ChoosableFileFilter(MapEditorResourceKeys.EXTENSION_GIF, LangModelMap.getString(MapEditorResourceKeys.FILE_CHOOSER_PICTURE)));
 		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = chooser.getSelectedFile();

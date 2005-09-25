@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapViewNavigatorCommand.java,v 1.12 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: ViewMapViewNavigatorCommand.java,v 1.13 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,11 +24,12 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * отобразить окно привязки схем к карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/09/16 15:45:54 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class ViewMapViewNavigatorCommand extends AbstractCommand {
@@ -36,7 +37,7 @@ public class ViewMapViewNavigatorCommand extends AbstractCommand {
 
 	public JDesktopPane desktop;
 
-	public String title = LangModelMap.getString("Navigator.Title"); //$NON-NLS-1$
+	public String title = LangModelMap.getString(MapEditorResourceKeys.TITLE_NAVIGATOR);
 
 	public MapViewTreeFrame treeFrame;
 

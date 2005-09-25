@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapLayersCommand.java,v 1.3 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: ViewMapLayersCommand.java,v 1.4 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Log;
 
 /**
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.3 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/25 16:08:02 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -70,12 +71,12 @@ public class ViewMapLayersCommand extends AbstractCommand {
 		else
 			this.layersPanel.setMapFrame(this.mapFrame);
 		
-		final String okButton = LangModelGeneral.getString("Button.OK"); //$NON-NLS-1$
-		final String cancelButton = LangModelGeneral.getString("Button.Cancel"); //$NON-NLS-1$
+		final String okButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_OK);
+		final String cancelButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL);
 		JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				this.layersPanel,
-				LangModelMap.getString("ConfigureTopologicalLayers"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_CONFIGURE_TOPOLOGICAL_LAYERS),
 				JOptionPane.OK_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

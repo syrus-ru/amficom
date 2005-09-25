@@ -7,6 +7,7 @@ import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 
@@ -38,14 +39,14 @@ public final class NodePopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
+		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeNode();
 			}
 		});
 
-		this.placeSiteMenuItem.setText(LangModelMap.getString("PlaceSite")); //$NON-NLS-1$
+		this.placeSiteMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_PLACE_SITE));
 		this.placeSiteMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				placeSite();

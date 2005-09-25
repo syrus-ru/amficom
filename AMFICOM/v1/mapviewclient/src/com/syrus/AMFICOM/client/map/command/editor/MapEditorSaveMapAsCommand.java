@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveMapAsCommand.java,v 1.13 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorSaveMapAsCommand.java,v 1.14 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.util.Log;
 
@@ -27,7 +28,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.13 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/25 16:08:02 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -66,7 +67,7 @@ public class MapEditorSaveMapAsCommand extends AbstractCommand {
 
 			if(mapFrame != null) {
 				mapFrame.getMapView().setMap(newMap);
-				mapFrame.setTitle(LangModelMap.getString("Map") + " - " //$NON-NLS-1$ //$NON-NLS-2$
+				mapFrame.setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP) + " - " //$NON-NLS-1$
 						+ newMap.getName());
 			}
 		}

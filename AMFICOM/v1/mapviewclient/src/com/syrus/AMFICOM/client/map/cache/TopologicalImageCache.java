@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.18 2005/09/20 08:22:07 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.19 2005/09/25 16:08:01 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,13 +28,14 @@ import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/09/20 08:22:07 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/25 16:08:01 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -697,7 +698,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			{
 				//Остановливаем работу потока подгрузки
 				this.loadingThread.cancel();
-				throw new MapConnectionException (LangModelMap.getString("MaException.TopologicalImageTimeout")); //$NON-NLS-1$
+				throw new MapConnectionException (LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_TOPOLOGICAL_IMAGE_TIMEOUT));
 			}
 			
 			try

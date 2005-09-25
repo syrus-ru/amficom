@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorOpenLibraryCommand.java,v 1.7 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapEditorOpenLibraryCommand.java,v 1.8 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -52,7 +53,7 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
+							LangModelMap.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
 			return;
 		}
 
@@ -75,7 +76,7 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 		}
 		
 		this.mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("MapLibrary"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
 				allLibraries,
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),

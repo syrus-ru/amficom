@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.19 2005/09/20 16:33:33 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.20 2005/09/25 16:08:03 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -29,8 +29,6 @@ import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.CollectorConditionWrapper;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapUtils;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.PhysicalLinkConditionWrapper;
@@ -61,19 +59,17 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/20 16:33:33 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/25 16:08:03 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapTreeModel extends AbstractChildrenFactory {
 
-	public static final String ALL_MAPS_BRANCH = "allmaps"; //$NON-NLS-1$
+	public static final String ALL_MAPS_BRANCH = MapEditorResourceKeys.TREE_ALL_MAPS;
 
-	public static final String MAPS_BRANCH = "innermaps"; //$NON-NLS-1$
+	public static final String MAPS_BRANCH = MapEditorResourceKeys.TREE_INNER_MAPS;
 
-	public static final String EXTERNAL_NODES_BRANCH = "externalnode"; //$NON-NLS-1$
-
-	public static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
+	public static final String EXTERNAL_NODES_BRANCH = MapEditorResourceKeys.TREE_EXTERNAL_NODE;
 
 	public static MapElementComparator mapElementComparator = new MapElementComparator();
 
@@ -172,7 +168,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 			MapElement mapElement = (MapElement )object;
 			return mapElement.getName();
 		}
-		return LangModelMap.getString(NONAME_BRANCH);
+		return LangModelMap.getString(MapEditorResourceKeys.NONAME);
 	}
 
 	public void populate(Item node) {
@@ -663,7 +659,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 			if(childNode == null) {
 				Item newItem = new IconedNode(
 						topologicalNode,
-						LangModelMap.getString(NONAME_BRANCH),
+						LangModelMap.getString(MapEditorResourceKeys.NONAME),
 						nodeIcon,
 						false);
 				// if(node.getChildren().isEmpty())

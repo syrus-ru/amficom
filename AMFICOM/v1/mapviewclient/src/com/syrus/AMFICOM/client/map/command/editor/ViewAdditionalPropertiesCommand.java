@@ -1,5 +1,5 @@
 /**
- * $Id: ViewAdditionalPropertiesCommand.java,v 1.8 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: ViewAdditionalPropertiesCommand.java,v 1.9 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,11 +19,12 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * Команда отображает окно свойств элемента карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class ViewAdditionalPropertiesCommand extends AbstractCommand {
@@ -46,7 +47,7 @@ public class ViewAdditionalPropertiesCommand extends AbstractCommand {
 				.findMapAdditionalPropertiesFrame(this.desktop);
 
 		if(this.frame == null) {
-			this.frame = new MapAdditionalPropertiesFrame(LangModelMap.getString("AdditionalProperties"), this.aContext); //$NON-NLS-1$
+			this.frame = new MapAdditionalPropertiesFrame(LangModelMap.getString(MapEditorResourceKeys.TITLE_ADDITIONAL_PROPERTIES), this.aContext); //$NON-NLS-1$
 			this.frame.setClosable(true);
 			this.frame.setResizable(true);
 			this.frame.setMaximizable(false);

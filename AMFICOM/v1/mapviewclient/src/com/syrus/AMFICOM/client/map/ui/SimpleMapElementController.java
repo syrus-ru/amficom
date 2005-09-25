@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -15,11 +16,10 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.util.Wrapper;
 
-public final class SimpleMapElementController implements Wrapper 
-{
+public final class SimpleMapElementController implements Wrapper {
 
-	public static final String KEY_NAME = "name"; //$NON-NLS-1$
-	public static final String KEY_TYPE = "type"; //$NON-NLS-1$
+	public static final String KEY_NAME = MapEditorResourceKeys.LABEL_NAME;
+	public static final String KEY_TYPE = MapEditorResourceKeys.LABEL_TYPE;
 
 	private static SimpleMapElementController instance;
 
@@ -28,9 +28,10 @@ public final class SimpleMapElementController implements Wrapper
 
 	private SimpleMapElementController() {
 		// empty private constructor
-		this.keysArray = new String[] { KEY_NAME, KEY_TYPE};
-	
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(this.keysArray)));
+		this.keysArray = new String[] { KEY_NAME, KEY_TYPE };
+
+		this.keys = Collections.unmodifiableList(new ArrayList(Arrays
+				.asList(this.keysArray)));
 	}
 
 	public static SimpleMapElementController getInstance() {
@@ -49,11 +50,10 @@ public final class SimpleMapElementController implements Wrapper
 
 	public String getName(final String key) {
 		String name = null;
-		if (key.equals(KEY_NAME))
-			name = LangModelGeneral.getString("Name"); //$NON-NLS-1$
-		else
-		if (key.equals(KEY_TYPE))
-			name = LangModelGeneral.getString("Type"); //$NON-NLS-1$
+		if(key.equals(KEY_NAME))
+			name = LangModelGeneral.getString(MapEditorResourceKeys.LABEL_NAME);
+		else if(key.equals(KEY_TYPE))
+			name = LangModelGeneral.getString(MapEditorResourceKeys.LABEL_TYPE);
 		return name;
 	}
 
@@ -62,14 +62,13 @@ public final class SimpleMapElementController implements Wrapper
 
 		if(object == null) {
 			result = " "; //$NON-NLS-1$
-		}
-		else if(key.equals(KEY_NAME)) {
+		} else if(key.equals(KEY_NAME)) {
 			Class clazz = object.getClass();
 			String methodName = "getName"; //$NON-NLS-1$
 			String name = ""; //$NON-NLS-1$
 			try {
 				Method method = clazz.getMethod(methodName, new Class[0]);
-				name = (String )(method.invoke(object, new Object[0]));
+				name = (String) (method.invoke(object, new Object[0]));
 				result = name;
 			} catch(InvocationTargetException iae) {
 				result = " "; //$NON-NLS-1$
@@ -82,10 +81,8 @@ public final class SimpleMapElementController implements Wrapper
 			if(result == null) {
 				methodName = "name"; //$NON-NLS-1$
 				try {
-					Method method = clazz.getMethod(
-							methodName,
-							new Class[0]);
-					name = (String )(method.invoke(object, new Object[0]));
+					Method method = clazz.getMethod(methodName, new Class[0]);
+					name = (String) (method.invoke(object, new Object[0]));
 					result = name;
 				} catch(InvocationTargetException iae) {
 					result = " "; //$NON-NLS-1$
@@ -95,21 +92,19 @@ public final class SimpleMapElementController implements Wrapper
 					result = " "; //$NON-NLS-1$
 				}
 			}
-		}
-		else if(object instanceof MapElement) {
-			MapElement me = (MapElement )object;
+		} else if(object instanceof MapElement) {
+			MapElement me = (MapElement) object;
 			if(key.equals(KEY_TYPE)) {
 				if(me instanceof SiteNode) {
-					SiteNodeType siteNodeType = (((SiteNode)me).getType());
+					SiteNodeType siteNodeType = (((SiteNode) me).getType());
 					result = siteNodeType.getName();
-				}
-				else if(me instanceof PhysicalLink) {
-					PhysicalLinkType physicalLinkType = (((PhysicalLink)me).getType());
+				} else if(me instanceof PhysicalLink) {
+					PhysicalLinkType physicalLinkType = (((PhysicalLink) me)
+							.getType());
 					result = physicalLinkType.getName();
 				}
 			}
-		}
-		else {
+		} else {
 			result = " "; //$NON-NLS-1$
 		}
 		return result + " "; //$NON-NLS-1$
@@ -120,11 +115,11 @@ public final class SimpleMapElementController implements Wrapper
 	}
 
 	public void setValue(Object object, final String key, final Object value) {
-		//empty
+		// empty
 	}
 
 	public String getKey(final int index) {
-		return (String )this.keys.get(index);
+		return (String) this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -136,7 +131,7 @@ public final class SimpleMapElementController implements Wrapper
 			String key,
 			Object objectKey,
 			Object objectValue) {
-		//empty
+		// empty
 	}
 
 	public Class getPropertyClass(String key) {

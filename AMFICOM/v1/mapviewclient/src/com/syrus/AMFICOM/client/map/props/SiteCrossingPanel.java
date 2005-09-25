@@ -18,6 +18,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -277,7 +278,7 @@ public class SiteCrossingPanel extends JPanel {
 
 		AbstractNode node = link.getOtherNode(this.site);
 		
-		String text = LangModelMap.getString("ToSiteWithComma") + node.getName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+		String text = LangModelMap.getString(MapEditorResourceKeys.TO_SITE_LOWERCASE) + " \"" + node.getName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 
 		g2.setColor(LINE_COLOR);
 

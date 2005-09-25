@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.58 2005/09/18 13:54:43 bass Exp $
+ * $Id: MapViewController.java,v 1.59 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -59,23 +60,23 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/09/18 13:54:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.59 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public final class MapViewController {
-	public static final String ELEMENT_SITENODE = "sitenode"; //$NON-NLS-1$
-	public static final String ELEMENT_WELL = "well"; //$NON-NLS-1$
-	public static final String ELEMENT_PIQUET = "piquet"; //$NON-NLS-1$
-	public static final String ELEMENT_PHYSICALLINK = "physicallink"; //$NON-NLS-1$
-	public static final String ELEMENT_COLLECTOR = "collector"; //$NON-NLS-1$
-	public static final String ELEMENT_CABLEPATH = "cablepath"; //$NON-NLS-1$
-	public static final String ELEMENT_TOPOLOGICALNODE = "topologicalnode"; //$NON-NLS-1$
-	public static final String ELEMENT_MARK = "mark"; //$NON-NLS-1$
-	public static final String ELEMENT_MEASUREMENTPATH = "measurementpath"; //$NON-NLS-1$
-	public static final String ELEMENT_MARKER = "marker"; //$NON-NLS-1$
-	public static final String ELEMENT_CABLEINLET = "cableinlet"; //$NON-NLS-1$
-	public static final String ELEMENT_NODELINK = "nodelink"; //$NON-NLS-1$
+	public static final String ELEMENT_SITENODE = MapEditorResourceKeys.ENTITY_SITE_NODE;
+//	public static final String ELEMENT_WELL = "well"; //$NON-NLS-1$
+//	public static final String ELEMENT_PIQUET = MapEditorResourceKeys.ENTITY_PIQUET;
+	public static final String ELEMENT_PHYSICALLINK = MapEditorResourceKeys.ENTITY_PHYSICAL_LINK;
+	public static final String ELEMENT_COLLECTOR = MapEditorResourceKeys.ENTITY_COLLECTOR;
+	public static final String ELEMENT_CABLEPATH = MapEditorResourceKeys.ENTITY_CABLEPATH;
+	public static final String ELEMENT_TOPOLOGICALNODE = MapEditorResourceKeys.ENTITY_TOPOLOGICAL_NODE;
+	public static final String ELEMENT_MARK = MapEditorResourceKeys.ENTITY_MARK;
+	public static final String ELEMENT_MEASUREMENTPATH = MapEditorResourceKeys.ENTITY_MEASUREMENT_PATH;
+	public static final String ELEMENT_MARKER = MapEditorResourceKeys.ENTITY_MARKER;
+//	public static final String ELEMENT_CABLEINLET = "cableinlet"; //$NON-NLS-1$
+	public static final String ELEMENT_NODELINK = MapEditorResourceKeys.ENTITY_NODE_LINK;
 
 	public static String getMapElementReadableType(MapElement mapElement) {
 		if(mapElement instanceof SiteNode) {

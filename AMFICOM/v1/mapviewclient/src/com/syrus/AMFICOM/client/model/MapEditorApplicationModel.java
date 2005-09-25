@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.15 2005/09/16 14:53:38 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.16 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/16 14:53:38 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/25 16:08:03 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -30,52 +30,52 @@ public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties"; //$NON-NLS-1$
 	public static final String ITEM_EDIT_PROPERTIES = "mapActionEditProperties"; //$NON-NLS-1$
 
-	public static final String ITEM_MAP = "menuMap"; //$NON-NLS-1$
-	public static final String ITEM_MAP_NEW = "menuMapNew"; //$NON-NLS-1$
-	public static final String ITEM_MAP_OPEN = "menuMapOpen"; //$NON-NLS-1$
-	public static final String ITEM_MAP_CLOSE = "menuMapClose"; //$NON-NLS-1$
-	public static final String ITEM_MAP_SAVE = "menuMapSave"; //$NON-NLS-1$
-	public static final String ITEM_MAP_SAVE_AS = "menuMapSaveAs"; //$NON-NLS-1$
-	public static final String ITEM_MAP_ADD_MAP = "menuMapAddMap"; //$NON-NLS-1$
-	public static final String ITEM_MAP_REMOVE_MAP = "menuMapRemoveMap"; //$NON-NLS-1$
-	public static final String ITEM_MAP_ADD_EXTERNAL = "menuMapAddExternal"; //$NON-NLS-1$
-	public static final String ITEM_MAP_EXPORT = "menuMapExport"; //$NON-NLS-1$
-	public static final String ITEM_MAP_IMPORT = "menuMapImport"; //$NON-NLS-1$
+	public static final String ITEM_MAP = "Menu.Map"; //$NON-NLS-1$
+	public static final String ITEM_MAP_NEW = "Menu.Map.New"; //$NON-NLS-1$
+	public static final String ITEM_MAP_OPEN = "Menu.Map.Open"; //$NON-NLS-1$
+	public static final String ITEM_MAP_CLOSE = "Menu.Map.Close"; //$NON-NLS-1$
+	public static final String ITEM_MAP_SAVE = "Menu.Map.Save"; //$NON-NLS-1$
+	public static final String ITEM_MAP_SAVE_AS = "Menu.Map.SaveAs"; //$NON-NLS-1$
+	public static final String ITEM_MAP_ADD_MAP = "Menu.Map.AddMap"; //$NON-NLS-1$
+	public static final String ITEM_MAP_REMOVE_MAP = "Menu.Map.RemoveMap"; //$NON-NLS-1$
+	public static final String ITEM_MAP_ADD_EXTERNAL = "Menu.Map.AddExternal"; //$NON-NLS-1$
+	public static final String ITEM_MAP_EXPORT = "Menu.Map.Export"; //$NON-NLS-1$
+	public static final String ITEM_MAP_IMPORT = "Menu.Map.Import"; //$NON-NLS-1$
 
-	public static final String ITEM_MAP_VIEW = "menuMapView"; //$NON-NLS-1$
-	public static final String ITEM_MAP_VIEW_NEW = "menuMapViewNew"; //$NON-NLS-1$
-	public static final String ITEM_MAP_VIEW_OPEN = "menuMapViewOpen"; //$NON-NLS-1$
-	public static final String ITEM_MAP_VIEW_CLOSE = "menuMapViewClose"; //$NON-NLS-1$
-	public static final String ITEM_MAP_VIEW_SAVE = "menuMapViewSave"; //$NON-NLS-1$
-	public static final String ITEM_MAP_VIEW_SAVE_AS = "menuMapViewSaveAs"; //$NON-NLS-1$
-	public static final String ITEM_MAP_VIEW_ADD_SCHEME = "menuMapViewAddScheme"; //$NON-NLS-1$
-	public static final String ITEM_MAP_VIEW_REMOVE_SCHEME = "menuMapViewRemoveScheme"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW = "Menu.MapView"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_NEW = "Menu.MapView.New"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_OPEN = "Menu.MapView.Open"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_CLOSE = "Menu.MapView.Close"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_SAVE = "Menu.MapView.Save"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_SAVE_AS = "Menu.MapView.SaveAs"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_ADD_SCHEME = "Menu.MapView.AddScheme"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_REMOVE_SCHEME = "Menu.MapView.RemoveScheme"; //$NON-NLS-1$
 
-	public static final String ITEM_MAP_LIBRARY = "menuMapLibrary"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_NEW = "menuMapLibraryNew"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_OPEN = "menuMapLibraryOpen"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_SAVE = "menuMapLibrarySave"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_SAVE_AS = "menuMapLibrarySaveAs"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_REMOVE = "menuMapLibraryRemove"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_IMPORT = "menuMapLibraryImport"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_EXPORT = "menuMapLibraryExport"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_NEW_SITE_TYPE = "menuMapLibraryNewSiteType"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_NEW_LINK_TYPE = "menuMapLibraryNewLinkType"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE = "menuMapLibraryRemoveSiteType"; //$NON-NLS-1$
-	public static final String ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE = "menuMapLibraryRemoveLinkType"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY = "Menu.MapLibrary"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_NEW = "Menu.MapLibrary.New"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_OPEN = "Menu.MapLibrary.Open"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_SAVE = "Menu.MapLibrary.Save"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_SAVE_AS = "Menu.MapLibrary.SaveAs"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_REMOVE = "Menu.MapLibrary.Remove"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_IMPORT = "Menu.MapLibrary.Import"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_EXPORT = "Menu.MapLibrary.Export"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_NEW_SITE_TYPE = "Menu.MapLibrary.NewSiteType"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_NEW_LINK_TYPE = "Menu.MapLibrary.NewLinkType"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE = "Menu.MapLibrary.RemoveSiteType"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE = "Menu.MapLibrary.RemoveLinkType"; //$NON-NLS-1$
 
-	public static final String ITEM_VIEW = "menuView"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_GENERAL = "menuViewGeneral"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_ADDITIONAL = "menuViewAdditional"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewCharacteristics"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_MAP_CHOOSER = "menuViewMapChooser"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_MAP_LAYERS = "menuViewMapLayers"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_MAP = "menuViewMap"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_NAVIGATOR = "menuViewNavigator"; //$NON-NLS-1$
-	public static final String ITEM_VIEW_ALL = "menuViewAll"; //$NON-NLS-1$
+	public static final String ITEM_VIEW = "Menu.View"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_GENERAL = "Menu.View.General"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_ADDITIONAL = "Menu.View.Additional"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_CHARACTERISTICS = "Menu.View.Characteristics"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_MAP_CHOOSER = "Menu.View.MapChooser"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_MAP_LAYERS = "Menu.View.MapLayers"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_MAP = "Menu.View.Map"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_NAVIGATOR = "Menu.View.Navigator"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_ALL = "Menu.View.All"; //$NON-NLS-1$
 
-	public static final String ITEM_REPORT = "menuReport"; //$NON-NLS-1$
-	public static final String ITEM_REPORT_CREATE = "menuReportCreate"; //$NON-NLS-1$
+	public static final String ITEM_REPORT = "Menu.Report"; //$NON-NLS-1$
+	public static final String ITEM_REPORT_CREATE = "Menu.Report.Create"; //$NON-NLS-1$
 
 	public MapEditorApplicationModel() {
 		UIManager.put("images/main/map_mini.gif", Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")); //$NON-NLS-1$ //$NON-NLS-2$

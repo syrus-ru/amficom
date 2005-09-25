@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.client.map.controllers.PhysicalLinkController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -97,22 +98,21 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
-		this.startLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
-		this.endLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
-		this.addressLabel.setText(LangModelMap.getString("Address")); //$NON-NLS-1$
-		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
-		this.cityLabel.setText(LangModelMap.getString("CityKurz")); //$NON-NLS-1$
-		this.streetLabel.setText(LangModelMap.getString("StreetKurz")); //$NON-NLS-1$
-		this.buildingLabel.setText(LangModelMap.getString("BuildingKurz")); //$NON-NLS-1$
-		this.addressLabel.setText(LangModelMap.getString("Address")); //$NON-NLS-1$
-		this.colorLabel.setText(LangModelMap.getString("Color")); //$NON-NLS-1$
-		this.thicknessLabel.setText(LangModelMap.getString("Thickness")); //$NON-NLS-1$
-		this.styleLabel.setText(LangModelMap.getString("Style")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.typeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TYPE));
+		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
+		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
+		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
+		this.addressLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_ADDRESS));
+		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.cityLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_CITY_KURZ));
+		this.streetLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_STREET_KURZ));
+		this.buildingLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_BUILDING_KURZ));
+		this.colorLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_COLOR));
+		this.thicknessLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_THICKNESS));
+		this.styleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_STYLE));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));

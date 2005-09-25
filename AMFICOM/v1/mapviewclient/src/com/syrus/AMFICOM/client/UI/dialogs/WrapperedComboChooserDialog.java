@@ -1,5 +1,5 @@
 /**
- * $Id: WrapperedComboChooserDialog.java,v 1.5 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: WrapperedComboChooserDialog.java,v 1.6 2005/09/25 16:08:01 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,13 @@ import javax.swing.JPanel;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @module commonclient_v1
  */
 public class WrapperedComboChooserDialog {
@@ -76,13 +78,13 @@ public class WrapperedComboChooserDialog {
 		mainPanel.add(jLabel, BorderLayout.WEST);
 		mainPanel.add(comboBox, BorderLayout.CENTER);
 
-		final String okButton = LangModelGeneral.getString("Choose"); //$NON-NLS-1$
-		final String cancelButton = LangModelGeneral.getString("Button.Cancel"); //$NON-NLS-1$
+		final String okButton = LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE);
+		final String cancelButton = LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL);
 
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mainPanel,
-				LangModelGeneral.getString("SelectElement"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_SELECT_ELEMENT),
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

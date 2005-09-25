@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.21 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.22 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapViewAddSchemeCommand extends AbstractCommand {
@@ -78,7 +79,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_ADDING_SCHEME_TO_MAP_VIEW)));
 
 		SchemeTableController schemeTableController = 
 			SchemeTableController.getInstance();
@@ -98,7 +99,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 		}
 
 		this.scheme = (Scheme )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Scheme"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_SCHEME),
 				schemes,
 				schemeTableController,
 				schemeTableController.getKeysArray(),

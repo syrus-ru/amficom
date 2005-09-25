@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.28 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.29 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.map.Map;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/16 15:45:54 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapSaveAsCommand extends AbstractCommand {
@@ -54,8 +55,8 @@ public class MapSaveAsCommand extends AbstractCommand {
 			this.newMap = Map.createInstance(
 					userId, 
 					domainId, 
-					this.map .getName() + LangModelMap.getString("IsACopy"),  //$NON-NLS-1$
-					""); //$NON-NLS-1$
+					this.map.getName() + LangModelMap.getString(MapEditorResourceKeys.IS_ACOPY_IN_PARENTHESIS),
+					MapEditorResourceKeys.EMPTY_STRING);
 			this.newMap.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(CreateObjectException e) {
 			e.printStackTrace();
@@ -66,10 +67,10 @@ public class MapSaveAsCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapSaving"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_SAVING)));
 
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString("MapProperties"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_PROPERTIES),
 				this.newMap,
 				MapVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // try

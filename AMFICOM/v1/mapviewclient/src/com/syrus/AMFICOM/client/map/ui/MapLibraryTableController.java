@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTableController.java,v 1.3 2005/09/16 14:53:36 krupenn Exp $
+ * $Id: MapLibraryTableController.java,v 1.4 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
@@ -30,13 +31,13 @@ public class MapLibraryTableController implements Wrapper {
 		return instance;
 	}
 
-	public static final String KEY_NAME = "Name"; //$NON-NLS-1$
+	public static final String KEY_NAME = MapEditorResourceKeys.LABEL_NAME;
 
-	public static final String KEY_USER = "User_id"; //$NON-NLS-1$
+	public static final String KEY_USER = MapEditorResourceKeys.LABEL_USER;
 
-	public static final String KEY_CREATED = "Created"; //$NON-NLS-1$
+	public static final String KEY_CREATED = MapEditorResourceKeys.LABEL_CREATED;
 
-	public static final String KEY_MODIFIED = "Modified"; //$NON-NLS-1$
+	public static final String KEY_MODIFIED = MapEditorResourceKeys.LABEL_MODIFIED;
 
 	private List keys;
 

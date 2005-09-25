@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.17 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.18 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.mapview.AlarmMarker;
 /**
  * Контроллер маркера сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public final class AlarmMarkerController extends MarkerController {
@@ -94,9 +95,9 @@ public final class AlarmMarkerController extends MarkerController {
 
 		try {
 			double distance = super.getFromStartLengthLf(marker);
-			final String s1 = LangModelMap.getString("Alarm") + " " + marker.getName() //$NON-NLS-1$ //$NON-NLS-2$
-					+ " (" + LangModelMap.getString("Path_lowercase") + " " + marker.getMeasurementPath().getName() + ") " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-					+ LangModelMap.getString("Distance_lowercase") + " - " + distance; //$NON-NLS-1$ //$NON-NLS-2$
+			final String s1 = LangModelMap.getString(MapEditorResourceKeys.ENTITY_ALARM) + " " + marker.getName() //$NON-NLS-1$
+					+ " (" + LangModelMap.getString(MapEditorResourceKeys.PATH_LOWERCASE) + " " + marker.getMeasurementPath().getName() + ") " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ LangModelMap.getString(MapEditorResourceKeys.DISTANCE_LOWERCASE) + " - " + distance; //$NON-NLS-1$ //$NON-NLS-2$
 
 			return s1;
 		} catch(MapException e) {

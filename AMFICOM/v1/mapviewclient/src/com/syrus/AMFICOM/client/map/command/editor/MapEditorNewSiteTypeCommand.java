@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.8 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.9 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -46,15 +47,15 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 						new StatusMessageEvent(
 								this, 
 								StatusMessageEvent.STATUS_MESSAGE, 
-								LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
+								LangModelMap.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
 				return;
 			}
 			SiteNodeType siteNodeType = SiteNodeType.createInstance(
 					LoginManager.getUserId(), 
 					SiteNodeTypeSort.BUILDING, 
 					"codename", //$NON-NLS-1$
-					LangModelMap.getString("New"), //$NON-NLS-1$
-					"", //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					MapEditorResourceKeys.EMPTY_STRING,
 					NodeTypeController.getDefaultImageId(),
 					true,
 					MapLibraryController.getDefaultMapLibrary().getId());
@@ -62,7 +63,7 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 			SiteNodeTypeEditor siteNodeTypeEditor = new SiteNodeTypeEditor();
 			siteNodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString("sitenodetype"), //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE),
 					siteNodeType,
 					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);

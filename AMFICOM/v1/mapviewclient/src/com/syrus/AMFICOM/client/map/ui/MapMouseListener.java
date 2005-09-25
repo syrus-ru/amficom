@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.64 2005/09/16 14:53:36 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.65 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.client.map.strategy.MapStrategyManager;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.64 $, $Date: 2005/09/16 14:53:36 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/25 16:08:03 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -612,11 +613,11 @@ public final class MapMouseListener implements MouseListener
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 		JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelMap.getString("Distance")  //$NON-NLS-1$
-					+ " = "  //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.LABEL_DISTANCE)
+					+ " : "  //$NON-NLS-1$
 					+ MapPropertiesManager.getDistanceFormat().format(distance)
 					+ MapPropertiesManager.getMetric(),
-				LangModelMap.getString("MeasureDistance"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MEASURE_DISTANCE),
 				JOptionPane.PLAIN_MESSAGE);
 		this.netMapViewer.repaint(false);
 	}

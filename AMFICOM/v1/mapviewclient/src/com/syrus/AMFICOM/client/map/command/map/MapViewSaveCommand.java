@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.29 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.30 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapViewSaveCommand extends AbstractCommand
@@ -52,13 +53,13 @@ public class MapViewSaveCommand extends AbstractCommand
 	public void execute()
 	{
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString("MapViewProperties"),  //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW_PROPERTIES),
 				this.mapView, 
 				MapViewVisualManager.getInstance().getGeneralPropertiesPanel())) {
 			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
 					this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelMap.getString("MapViewSaving"))); //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_SAVING)));
 
 			MapSaveCommand cmd = new MapSaveCommand(this.mapView.getMap(), this.aContext);
 			cmd.execute();

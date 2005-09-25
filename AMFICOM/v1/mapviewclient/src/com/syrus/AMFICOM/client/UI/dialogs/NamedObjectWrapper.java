@@ -1,5 +1,5 @@
 /**
- * $Id: NamedObjectWrapper.java,v 1.4 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: NamedObjectWrapper.java,v 1.5 2005/09/25 16:08:01 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -15,15 +15,16 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
 public class NamedObjectWrapper implements Wrapper {
-	public static final String KEY_NAME = "name"; //$NON-NLS-1$
+	public static final String KEY_NAME = MapEditorResourceKeys.LABEL_NAME; //$NON-NLS-1$
 
 	private static NamedObjectWrapper instance;
 
@@ -55,7 +56,7 @@ public class NamedObjectWrapper implements Wrapper {
 	public String getName(final String key) {
 		String name = null;
 		if(key.equals(KEY_NAME))
-			name = LangModelGeneral.getString("Name"); //$NON-NLS-1$
+			name = LangModelGeneral.getString(MapEditorResourceKeys.LABEL_NAME); //$NON-NLS-1$
 		return name;
 	}
 

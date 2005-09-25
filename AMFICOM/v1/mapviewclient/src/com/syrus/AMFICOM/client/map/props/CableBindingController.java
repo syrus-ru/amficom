@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -14,7 +15,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -60,20 +61,21 @@ public final class CableBindingController implements Wrapper {
 
 	public String getName(final String key) {
 		String name = null;
-		if (key.equals(KEY_START_NODE))
-			name = LangModelMap.getString("StartNode"); //$NON-NLS-1$
-		else
-		if (key.equals(KEY_START_SPARE))
-			name = LangModelMap.getString("StartSpare"); //$NON-NLS-1$
-		else
-		if (key.equals(KEY_LINK))
-			name = LangModelMap.getString("tunnel"); //$NON-NLS-1$
-		else
-		if (key.equals(KEY_END_SPARE))
-			name = LangModelMap.getString("EndSpare"); //$NON-NLS-1$
-		else
-		if (key.equals(KEY_END_NODE))
-			name = LangModelMap.getString("EndNode"); //$NON-NLS-1$
+		if(key.equals(KEY_START_NODE)) {
+			name = LangModelMap.getString(MapEditorResourceKeys.LABEL_NODE);
+		}
+		else if(key.equals(KEY_START_SPARE)) {
+			name = LangModelMap.getString(MapEditorResourceKeys.LABEL_START_SPARE);
+		}
+		else if(key.equals(KEY_LINK)) {
+			name = LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL);
+		}
+		else if(key.equals(KEY_END_SPARE)) {
+			name = LangModelMap.getString(MapEditorResourceKeys.LABEL_END_SPARE);
+		}
+		else if(key.equals(KEY_END_NODE)) {
+			name = LangModelMap.getString(MapEditorResourceKeys.LABEL_NODE);
+		}
 		return name;
 	}
 

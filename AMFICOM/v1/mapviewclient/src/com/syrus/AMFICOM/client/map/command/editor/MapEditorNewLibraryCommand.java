@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLibraryCommand.java,v 1.7 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapEditorNewLibraryCommand.java,v 1.8 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
@@ -42,16 +43,16 @@ public class MapEditorNewLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
+							LangModelMap.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
 			return;
 		}
 
 		try {
 			MapLibrary mapLibrary = MapLibrary.createInstance(
 					LoginManager.getUserId(),
-					LangModelMap.getString("New"), //$NON-NLS-1$
-					"", //$NON-NLS-1$
-					"", //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					MapEditorResourceKeys.EMPTY_STRING,
+					MapEditorResourceKeys.EMPTY_STRING,
 					null);
 			
 			Map map = mapFrame.getMapView().getMap();

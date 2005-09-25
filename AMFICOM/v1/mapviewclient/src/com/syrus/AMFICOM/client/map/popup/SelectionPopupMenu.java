@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.MapElement;
@@ -65,25 +66,25 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
+		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeSelection();
 			}
 		});
-		this.insertSiteMenuItem.setText(LangModelMap.getString("PlaceSite")); //$NON-NLS-1$
+		this.insertSiteMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_PLACE_SITE));
 		this.insertSiteMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				insertSite();
 			}
 		});
-		this.generateMenuItem.setText(LangModelMap.getString("GenerateCabling")); //$NON-NLS-1$
+		this.generateMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCabling();
 			}
 		});
-		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector")); //$NON-NLS-1$
+		this.newCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_CREATE_COLLECTOR));
 		this.newCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -100,7 +101,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector")); //$NON-NLS-1$
+		this.removeCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_COLLECTOR));
 		this.removeCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -117,7 +118,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector")); //$NON-NLS-1$
+		this.addToCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_ADD_TO_COLLECTOR));
 		this.addToCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -134,7 +135,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector")); //$NON-NLS-1$
+		this.removeFromCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_FROM_COLLECTOR));
 		this.removeFromCollectorMenuItem
 				.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

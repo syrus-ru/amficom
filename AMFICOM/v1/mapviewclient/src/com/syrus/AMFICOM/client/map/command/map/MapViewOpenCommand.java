@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.30 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.31 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * открыть вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapViewOpenCommand extends AbstractCommand {
@@ -72,7 +73,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_OPENING)));
 
 		Collection mapViews;
 		try {
@@ -98,7 +99,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 			MapViewTableController.getInstance();
 
 		this.mapView = (MapView )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("MapView"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW),
 				mapViews,
 				mapViewTableController,
 				mapViewTableController.getKeysArray(),

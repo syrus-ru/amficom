@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundLinkToPhysicalLinkCommandBundle;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
@@ -41,14 +42,14 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.bindMenuItem.setText(LangModelMap.getString("Bind")); //$NON-NLS-1$
+		this.bindMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_BIND));
 		this.bindMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bind();
 			}
 		});
 		this.generateMenuItem
-				.setText(LangModelMap.getString("GenerateCabling")); //$NON-NLS-1$
+				.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCabling();

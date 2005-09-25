@@ -1,5 +1,5 @@
 /**
- * $Id: ViewGeneralPropertiesCommand.java,v 1.8 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: ViewGeneralPropertiesCommand.java,v 1.9 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,12 +18,13 @@ import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * Команда отображает окно свойств элемента карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class ViewGeneralPropertiesCommand extends AbstractCommand {
@@ -46,7 +47,7 @@ public class ViewGeneralPropertiesCommand extends AbstractCommand {
 				.findMapGeneralPropertiesFrame(this.desktop);
 
 		if(this.frame == null) {
-			this.frame = new MapGeneralPropertiesFrame(LangModelGeneral.getString("Properties"), this.aContext); //$NON-NLS-1$
+			this.frame = new MapGeneralPropertiesFrame(LangModelMap.getString(MapEditorResourceKeys.TITLE_PROPERTIES), this.aContext);
 			this.frame.setClosable(true);
 			this.frame.setResizable(true);
 			this.frame.setMaximizable(false);

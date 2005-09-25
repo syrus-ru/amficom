@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.17 2005/09/16 14:53:35 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.18 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,19 +23,18 @@ import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.17 $, $Date: 2005/09/16 14:53:35 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/25 16:08:02 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapChooserPanel extends JPanel
 {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
-
-//	JButton selectButton = new JButton();
 
 	/**
 	 * список возможных видов карты
@@ -58,17 +57,9 @@ public class MapChooserPanel extends JPanel
 
 	private void jbInit()
 	{
-		this.setToolTipText(LangModelMap.getString("ChooseMap")); //$NON-NLS-1$
+		this.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.TITLE_CHOOSE_MAP));
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-//		this.selectButton.setText(LangModelGeneral.getString("Button.OK"));
-//		this.selectButton.addActionListener(new ActionListener()
-//			{
-//				public void actionPerformed(ActionEvent e)
-//				{
-//					mapSelected();
-//				}
-//			});
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
@@ -83,19 +74,6 @@ public class MapChooserPanel extends JPanel
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.combo, constraints);
-
-//		constraints.gridx = 0;
-//		constraints.gridy = 1;
-//		constraints.gridwidth = 1;
-//		constraints.gridheight = 1;
-//		constraints.weightx = 0.0;
-//		constraints.weighty = 0.0;
-//		constraints.anchor = GridBagConstraints.CENTER;
-//		constraints.fill = GridBagConstraints.NONE;
-//		constraints.insets = new Insets(5, 5, 5, 5);
-//		constraints.ipadx = 0;
-//		constraints.ipady = 0;
-//		this.add(this.selectButton, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -158,15 +136,6 @@ public class MapChooserPanel extends JPanel
 			return;
 		
 		changeMap();
-
-//		Thread t = new Thread(new Runnable() 
-//		{
-//			public void run() 
-//			{
-//				changeMap();
-//			}
-//		});
-//		t.start();
 	}
 
 	void changeMap() 

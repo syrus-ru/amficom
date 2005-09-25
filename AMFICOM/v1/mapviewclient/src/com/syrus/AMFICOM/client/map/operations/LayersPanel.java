@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.18 2005/09/16 14:53:35 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.19 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,12 +38,13 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.18 $, $Date: 2005/09/16 14:53:35 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/25 16:08:02 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -85,7 +86,7 @@ public class LayersPanel extends JPanel {
 					netMapViewer.repaint(true);
 				}
 			} catch (MapException e1) {
-				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
+				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 				e1.printStackTrace();
 			}
 		}
@@ -100,7 +101,7 @@ public class LayersPanel extends JPanel {
 	}
 
 	private void jbInit() {
-		this.setToolTipText(LangModelMap.getString("ConfigureTopologicalLayers")); //$NON-NLS-1$
+		this.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.TITLE_CONFIGURE_TOPOLOGICAL_LAYERS));
 
 		this.setLayout(new BorderLayout());
 
@@ -134,7 +135,7 @@ public class LayersPanel extends JPanel {
 		gridbagconstraints.fill = 0;
 		this.titlePanel.add(box, gridbagconstraints);
 
-		JLabel jlabel2 = new JLabel(LangModelMap.getString("Layers")); //$NON-NLS-1$
+		JLabel jlabel2 = new JLabel(LangModelMap.getString(MapEditorResourceKeys.LABEL_LAYERS));
 		gridbagconstraints.gridx = 2;
 		gridbagconstraints.gridy = 0;
 		gridbagconstraints.weightx = 1.0D;

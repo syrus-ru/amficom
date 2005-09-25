@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.47 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.48 2005/09/25 16:08:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.47 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.48 $, $Date: 2005/09/25 16:08:01 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -137,7 +138,7 @@ public final class MapPropertiesManager
 	public static final String DEFAULT_TEXT_BACKGROUND = String.valueOf(Color.YELLOW.getRGB());
 	public static final String DEFAULT_TEXT_COLOR = String.valueOf(SystemColor.controlText.getRGB());
 	public static final String DEFAULT_BORDER_COLOR = String.valueOf(SystemColor.activeCaptionBorder.getRGB());
-	public static final String DEFAULT_METRIC = LangModelMap.getString("metric"); //$NON-NLS-1$
+	public static final String DEFAULT_METRIC = LangModelMap.getString(MapEditorResourceKeys.VALUE_METRIC);
 	public static final String DEFAULT_THICKNESS = String.valueOf(1);
 	public static final String DEFAULT_BORDER_THICKNESS = String.valueOf(1);
 	public static final String DEFAULT_STYLE = "Solid line"; //$NON-NLS-1$

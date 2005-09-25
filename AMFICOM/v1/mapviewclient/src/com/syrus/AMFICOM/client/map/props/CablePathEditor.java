@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -37,8 +38,6 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
-	private JLabel cableLabel = new JLabel();
-	private WrapperedComboBox cableComboBox = null;
 
 	private JLabel topologicalLengthLabel = new JLabel();
 	private JTextField topologicalLengthTextField = new JTextField();
@@ -68,11 +67,6 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		SimpleMapElementController controller = SimpleMapElementController
 				.getInstance();
 
-		this.cableComboBox = new WrapperedComboBox(
-				controller,
-				SimpleMapElementController.KEY_NAME, 
-				SimpleMapElementController.KEY_NAME);
-
 		this.startComboBox = new WrapperedComboBox(
 				controller,
 				SimpleMapElementController.KEY_NAME, 
@@ -84,16 +78,15 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.cableLabel.setText(LangModelMap.getString("cable")); //$NON-NLS-1$
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
-		this.physicalLengthLabel.setText(LangModelMap.getString("PhysicalLength")); //$NON-NLS-1$
-		this.opticalLengthLabel.setText(LangModelMap.getString("OpticalLength")); //$NON-NLS-1$
-		this.startLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
-		this.endLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
-		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
+		this.physicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_PHYSICAL_LENGTH));
+		this.opticalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_OPTICAL_LENGTH));
+		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
+		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
+		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -145,32 +138,6 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.commitButton, constraints);
-
-//		constraints.gridx =  0;
-//		constraints.gridy = 1;
-//		constraints.gridwidth = 1;
-//		constraints.gridheight = 1;
-//		constraints.weightx = 0.0;
-//		constraints.weighty = 0.0;
-//		constraints.anchor = GridBagConstraints.WEST;
-//		constraints.fill = GridBagConstraints.NONE;
-//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-//		constraints.ipadx = 0;
-//		constraints.ipady = 0;
-//		this.jPanel.add(this.cableLabel, constraints);
-//
-//		constraints.gridx =  1;
-//		constraints.gridy = 1;
-//		constraints.gridwidth = 2;
-//		constraints.gridheight = 1;
-//		constraints.weightx = 1.0;
-//		constraints.weighty = 0.0;
-//		constraints.anchor = GridBagConstraints.CENTER;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-//		constraints.ipadx = 0;
-//		constraints.ipady = 0;
-//		this.jPanel.add(this.cableComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -329,7 +296,6 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.descTextArea, constraints);
 
 		this.nameTextField.setEnabled(false);
-		this.cableComboBox.setEditable(false);
 		this.startComboBox.setEnabled(false);
 		this.endComboBox.setEnabled(false);
 		this.topologicalLengthTextField.setEnabled(false);
@@ -346,26 +312,22 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 	public void setObject(Object objectResource) {
 		this.cablePath = (CablePath )objectResource;
 
-		this.cableComboBox.removeAllItems();
 		this.startComboBox.removeAllItems();
 		this.endComboBox.removeAllItems();
 
 		if(this.cablePath == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText(""); //$NON-NLS-1$
-			this.cableComboBox.setEnabled(false);
+			this.nameTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText(""); //$NON-NLS-1$
+			this.descTextArea.setText(MapEditorResourceKeys.EMPTY_STRING);
 
-			this.topologicalLengthTextField.setText(""); //$NON-NLS-1$
-			this.physicalLengthTextField.setText(""); //$NON-NLS-1$
-			this.opticalLengthTextField.setText(""); //$NON-NLS-1$
+			this.topologicalLengthTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
+			this.physicalLengthTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
+			this.opticalLengthTextField.setText(MapEditorResourceKeys.EMPTY_STRING);
 		}
 		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.cablePath.getName());
-			this.cableComboBox.addItem(this.cablePath.getSchemeCableLink());
-			this.cableComboBox.setSelectedItem(this.cablePath.getSchemeCableLink());
 			this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLt()));
 			this.physicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLf()));
 			this.opticalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLo()));

@@ -8,21 +8,22 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.util.Wrapper;
 
 public final class MapTableController implements Wrapper {
-	public static final String KEY_NAME = "Name"; //$NON-NLS-1$
+	public static final String KEY_NAME = MapEditorResourceKeys.LABEL_NAME;
 
-	public static final String KEY_DOMAIN = "Domain"; //$NON-NLS-1$
+	public static final String KEY_DOMAIN = MapEditorResourceKeys.LABEL_DOMAIN;
 
-	public static final String KEY_USER = "User_id"; //$NON-NLS-1$
+	public static final String KEY_USER = MapEditorResourceKeys.LABEL_USER;
 
-	public static final String KEY_CREATED = "Created"; //$NON-NLS-1$
+	public static final String KEY_CREATED = MapEditorResourceKeys.LABEL_CREATED;
 
-	public static final String KEY_MODIFIED = "Modified"; //$NON-NLS-1$
+	public static final String KEY_MODIFIED = MapEditorResourceKeys.LABEL_MODIFIED;
 
 	private List keys;
 

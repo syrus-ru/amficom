@@ -9,10 +9,10 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.CreateMarkerCommandAtomic;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 
 public final class MeasurementPathPopupMenu extends MapPopupMenu {
-	private JMenuItem propertiesMenuItem = new JMenuItem();
 
 	private JMenuItem addMarkerMenuItem = new JMenuItem();
 
@@ -43,25 +43,13 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.propertiesMenuItem.setText(LangModelMap.getString("Properties")); //$NON-NLS-1$
-		this.propertiesMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showProperties();
-			}
-		});
-		this.addMarkerMenuItem.setText(LangModelMap.getString("AddMarker")); //$NON-NLS-1$
+		this.addMarkerMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_ADD_MARKER));
 		this.addMarkerMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addMarker();
 			}
 		});
 		this.add(this.addMarkerMenuItem);
-		this.addSeparator();
-		this.add(this.propertiesMenuItem);
-	}
-
-	void showProperties() {
-		super.showProperties(this.path);
 	}
 
 	void addMarker() {

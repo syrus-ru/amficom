@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.29 2005/09/20 16:39:03 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.30 2005/09/25 16:08:03 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -39,21 +39,19 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/09/20 16:39:03 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/25 16:08:03 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapViewTreeModel implements ChildrenFactory {
 
-	public static final String ALL_MAP_VIEWS_BRANCH = "allmapviews"; //$NON-NLS-1$
+	public static final String ALL_MAP_VIEWS_BRANCH = MapEditorResourceKeys.TREE_ALL_MAP_VIEWS;
 
-	public static final String MAP_BRANCH = "Map"; //$NON-NLS-1$
+	public static final String MAP_BRANCH = MapEditorResourceKeys.TREE_MAP;
 
-	public static final String SCHEMES_BRANCH = "schemes"; //$NON-NLS-1$
+	public static final String SCHEMES_BRANCH = MapEditorResourceKeys.TREE_SCHEMES;
 
-	public static final String LIBRARIES_BRANCH = "libraries"; //$NON-NLS-1$
-
-	public static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
+	public static final String LIBRARIES_BRANCH = MapEditorResourceKeys.TREE_LIBRARIES;
 
 	static final int IMG_SIZE = 16;
 

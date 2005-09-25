@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.33 2005/09/22 10:38:36 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.34 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/09/22 10:38:36 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class ViewMapWindowCommand extends AbstractCommand {
@@ -87,24 +88,24 @@ public class ViewMapWindowCommand extends AbstractCommand {
 							LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 			setResult(Command.RESULT_OK);
 		} catch(MapConnectionException e) {
-			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
+			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelMap.getString("MapException.ServerConnection"), //$NON-NLS-1$
-					"", //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION),
+					MapEditorResourceKeys.EMPTY_STRING,
 					JOptionPane.ERROR_MESSAGE);
 		} catch(MapDataException e) {
 			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection2"))); //$NON-NLS-1$
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelMap.getString("MapException.Data"), //$NON-NLS-1$
-					"", //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_DATA),
+					MapEditorResourceKeys.EMPTY_STRING,
 					JOptionPane.ERROR_MESSAGE);
 		} catch(ApplicationException e) {
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelMap.getString("Exception.Application"), //$NON-NLS-1$
-					"", //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.ERROR_APPLICATION_EXCEPTION),
+					MapEditorResourceKeys.EMPTY_STRING,
 					JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}

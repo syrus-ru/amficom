@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.27 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.28 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
@@ -28,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapNewCommand extends AbstractCommand {
@@ -47,7 +48,7 @@ public class MapNewCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapNew"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_CREATING_NEW_MAP)));
 		try {
 			Identifier userId = LoginManager.getUserId();
 			Identifier domainId = LoginManager.getDomainId();
@@ -55,8 +56,8 @@ public class MapNewCommand extends AbstractCommand {
 			this.map = Map.createInstance(
 					userId, 
 					domainId, 
-					LangModelMap.getString("New"),  //$NON-NLS-1$
-					""); //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					MapEditorResourceKeys.EMPTY_STRING);
 			this.map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -88,7 +89,7 @@ public class MapNewCommand extends AbstractCommand {
 //	
 //			mapView.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
 //			mapFrame.setMapView(mv);
-//			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
+//			mapFrame.setTitle( LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP) + " - " + mv.getName());
 //		}
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(

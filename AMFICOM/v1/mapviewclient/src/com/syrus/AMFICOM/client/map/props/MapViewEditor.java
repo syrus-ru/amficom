@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -86,21 +87,21 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 		this.schemesList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelMap.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.mapLabel.setText(LangModelMap.getString("Map")); //$NON-NLS-1$
-		this.domainLabel.setText(LangModelMap.getString("Domain")); //$NON-NLS-1$
-		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
-		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
-		this.scaleLabel.setText(LangModelMap.getString("Scale")); //$NON-NLS-1$
-		this.schemesLabel.setText(LangModelMap.getString("Schemes")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.mapLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_MAP));
+		this.domainLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DOMAIN));
+		this.longLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
+		this.latLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LATITUDE));
+		this.scaleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SCALE));
+		this.schemesLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SCHEMES));
 		this.schemesScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.schemesScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.schemesScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.schemesScrollPane.getViewport().add(this.schemesList);
 
-		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));

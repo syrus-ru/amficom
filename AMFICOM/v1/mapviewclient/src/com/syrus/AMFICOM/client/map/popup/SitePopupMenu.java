@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
@@ -17,8 +18,6 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 public final class SitePopupMenu extends MapPopupMenu {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem attachCableInletMenuItem = new JMenuItem();
-
-	private JMenuItem propertiesMenuItem = new JMenuItem();
 
 	private SiteNode site;
 
@@ -47,7 +46,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.attachCableInletMenuItem.setText(LangModelMap.getString("AttachCableInlet")); //$NON-NLS-1$
+		this.attachCableInletMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_ATTACH_CABLE_INLET));
 		this.attachCableInletMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -57,22 +56,14 @@ public final class SitePopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
+		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeSite();
 			}
 		});
-		this.propertiesMenuItem.setText(LangModelMap.getString("Properties")); //$NON-NLS-1$
-		this.propertiesMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showProperties();
-			}
-		});
 		this.add(this.attachCableInletMenuItem);
 		this.add(this.removeMenuItem);
-		// this.addSeparator();
-		// this.add(this.propertiesMenuItem);
 	}
 
 	protected void attachCableInlet() throws MapConnectionException, MapDataException {
@@ -82,12 +73,6 @@ public final class SitePopupMenu extends MapPopupMenu {
 			super.createAttachedSiteNode(this.site, siteNodeType);
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
-	}
-
-	void showProperties() {
-		super.showProperties(this.site);
-		this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-				new MapEvent(this.netMapViewer.getLogicalNetLayer(), MapEvent.MAP_ELEMENT_CHANGED, this.site));
 	}
 
 	void removeSite() {

@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.CreateMarkCommandAtomic;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -18,7 +19,6 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 public final class LinkPopupMenu extends MapPopupMenu 
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
-	private JMenuItem propertiesMenuItem = new JMenuItem();
 	private JMenuItem addMarkMenuItem = new JMenuItem();
 	private JMenuItem addToCollectorMenuItem = new JMenuItem();
 	private JMenuItem removeFromCollectorMenuItem = new JMenuItem();
@@ -63,12 +63,12 @@ public final class LinkPopupMenu extends MapPopupMenu
 		if(collector != null)
 		{
 			this.removeCollectorMenuItem.setText(
-					LangModelMap.getString("RemoveCollector") //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_COLLECTOR)
 					+ " ("  //$NON-NLS-1$
 					+ collector.getName()
 					+ ")"); //$NON-NLS-1$
 		this.removeFromCollectorMenuItem.setText(
-					LangModelMap.getString("RemoveFromCollector") //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_FROM_COLLECTOR)
 					+ " ("  //$NON-NLS-1$
 					+ collector.getName()
 					+ ")"); //$NON-NLS-1$
@@ -77,7 +77,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void jbInit()
 	{
-		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
+		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -85,15 +85,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					removeLink();
 				}
 			});
-		this.propertiesMenuItem.setText(LangModelMap.getString("Properties")); //$NON-NLS-1$
-		this.propertiesMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					showProperties();
-				}
-			});
-		this.addMarkMenuItem.setText(LangModelMap.getString("AddMark")); //$NON-NLS-1$
+		this.addMarkMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_ADD_MARK));
 		this.addMarkMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -101,7 +93,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					addMark();
 				}
 			});
-		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector")); //$NON-NLS-1$
+		this.newCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_CREATE_COLLECTOR));
 		this.newCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -113,7 +105,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					}
 				}
 			});
-		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector")); //$NON-NLS-1$
+		this.removeCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_COLLECTOR));
 		this.removeCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -126,7 +118,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 				}
 			});
 
-		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector")); //$NON-NLS-1$
+		this.addToCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_ADD_TO_COLLECTOR));
 		this.addToCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -138,7 +130,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					}
 				}
 			});
-		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector")); //$NON-NLS-1$
+		this.removeFromCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_FROM_COLLECTOR));
 		this.removeFromCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -159,13 +151,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 //		this.addSeparator();
 		this.add(this.newCollectorMenuItem);
 		this.add(this.removeCollectorMenuItem);
-//		this.addSeparator();
-//		this.add(this.propertiesMenuItem);
-	}
-
-	void showProperties()
-	{
-		super.showProperties(this.link);
 	}
 
 	void removeLink()

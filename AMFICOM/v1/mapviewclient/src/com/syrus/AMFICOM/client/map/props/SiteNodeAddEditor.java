@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
@@ -70,9 +71,9 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	private UgoTabbedPane schemePane = new UgoTabbedPane();
 
-	DefaultMutableTreeNode root = new DefaultMutableTreeNode(LangModelMap.getString("SiteNodeTree.Elements")); //$NON-NLS-1$
-	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode(LangModelMap.getString("SiteNodeTree.SchemeElements")); //$NON-NLS-1$
-	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode(LangModelMap.getString("SiteNodeTree.Cables")); //$NON-NLS-1$
+	DefaultMutableTreeNode root = new DefaultMutableTreeNode(LangModelMap.getString(MapEditorResourceKeys.TREE_ELEMENTS_IN_NODE));
+	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode(LangModelMap.getString(MapEditorResourceKeys.TREE_SCHEME_ELEMENTS));
+	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode(LangModelMap.getString(MapEditorResourceKeys.TREE_SCHEME_CABLE_LINKS));
 	
 	private JButton commitButton = new JButton();
 
@@ -106,7 +107,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	private void jbInit() {
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString("SiteBinding")); //$NON-NLS-1$
+		this.jPanel.setName(LangModelMap.getString(MapEditorResourceKeys.LABEL_SITE_BINDING));
 
 		this.elementsTree = new JTree(createTree(null));
 		this.elementsTree.expandRow(0);
@@ -129,7 +130,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				}
 			});
 
-		this.bindButton.setText(LangModelMap.getString("SiteNodeTree.Button.Bind")); //$NON-NLS-1$
+		this.bindButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_BIND));
 		this.bindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -139,7 +140,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				}
 			});
 		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
-		this.unbindButton.setToolTipText(LangModelMap.getString("SiteNodeTree.Button.Unbind")); //$NON-NLS-1$
+		this.unbindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_UNBIND));
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -157,7 +158,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.selectButton.setToolTipText(LangModelMap.getString("SiteNodeTree.Button.SelectElement")); //$NON-NLS-1$
+		this.selectButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
 		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);

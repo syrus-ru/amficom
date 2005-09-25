@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.16 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.17 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapAddExternalNodeCommand extends AbstractCommand
@@ -80,7 +81,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_ADDING_EXTERNAL_NODE)));
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
@@ -100,7 +101,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 		}
 
 		this.map = (Map )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Map"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP),
 				availableMaps,
 				mapTableController,
 				mapTableController.getKeysArray());
@@ -117,7 +118,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 		ExternalMapElementChooserDialog elemengChooserDialog = 
 			new ExternalMapElementChooserDialog(
 				this.map,
-				LangModelMap.getString("externalnode")); //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TREE_EXTERNAL_NODE));
 
 		elemengChooserDialog.setModal(true);
 		elemengChooserDialog.setVisible(true);

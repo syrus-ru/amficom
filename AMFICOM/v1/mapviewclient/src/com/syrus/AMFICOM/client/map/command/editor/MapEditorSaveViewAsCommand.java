@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.20 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.21 2005/09/25 16:08:02 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
@@ -31,7 +32,7 @@ import com.syrus.util.Log;
  * команду MapSaveAsCommand
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/09/16 15:45:54 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  * @see MapViewSaveAsCommand
  */
@@ -78,8 +79,8 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 					JOptionPane
 							.showMessageDialog(
 									Environment.getActiveWindow(),
-									LangModelMap.getString("MapEditorSaveViewAsCommand.MapViewSavedButFailedToOpen"), //$NON-NLS-1$
-									LangModelMap.getString("MapEditorSaveViewAsCommand.SaveAs"), //$NON-NLS-1$
+									LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_VIEW_SAVED_BUT_FAILED_TO_OPEN),
+									LangModelMap.getString(MapEditorResourceKeys.MESASGE_ERROR_OPENING),
 									JOptionPane.WARNING_MESSAGE);
 					setResult(Command.RESULT_OK);
 					e.printStackTrace();
@@ -93,7 +94,7 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 					controller.addScheme((Scheme )it.next());
 				}
 
-				mapFrame.setTitle(LangModelMap.getString("MapView") + " - " //$NON-NLS-1$ //$NON-NLS-2$
+				mapFrame.setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW) + " - " //$NON-NLS-1$
 						+ newMapView.getName());
 				mapFrame.getMapViewer().getLogicalNetLayer().sendMapEvent(MapEvent.MAP_VIEW_CHANGED);
 			}

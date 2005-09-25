@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapChooserCommand.java,v 1.7 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: ViewMapChooserCommand.java,v 1.8 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Log;
 
 /**
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.7 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/25 16:08:02 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -85,12 +86,12 @@ public class ViewMapChooserCommand extends AbstractCommand {
 		else
 			mapChooserPanel.setMapConnection(connection);
 
-		final String okButton = LangModelGeneral.getString("Button.OK"); //$NON-NLS-1$
-		final String cancelButton = LangModelGeneral.getString("Button.Cancel"); //$NON-NLS-1$
+		final String okButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_OK);
+		final String cancelButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL);
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mapChooserPanel,
-				LangModelMap.getString("ChooseMap"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_CHOOSE_MAP),
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

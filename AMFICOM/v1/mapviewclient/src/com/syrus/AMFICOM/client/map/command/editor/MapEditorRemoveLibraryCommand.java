@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLibraryCommand.java,v 1.6 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapEditorRemoveLibraryCommand.java,v 1.7 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
@@ -42,7 +43,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
+							LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 			return;
 		}
 		MapLibraryTableController mapLibraryTableController = MapLibraryTableController.getInstance();
@@ -50,7 +51,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 		Map map = mapFrame.getMapView().getMap();
 
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("MapLibrary"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
 				map.getMapLibraries(),
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),

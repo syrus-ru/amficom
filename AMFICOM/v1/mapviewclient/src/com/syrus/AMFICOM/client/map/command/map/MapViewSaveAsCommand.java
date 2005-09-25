@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.27 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.28 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/16 15:45:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapViewSaveAsCommand extends AbstractCommand {
@@ -53,8 +54,8 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 			this.newMapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
 					userId,
 					domainId,
-					LangModelMap.getString("New"), //$NON-NLS-1$
-					"", //$NON-NLS-1$
+					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					MapEditorResourceKeys.EMPTY_STRING,
 					0.0D,
 					0.0D,
 					1.0D,
@@ -63,7 +64,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 
 			StorableObjectPool.putStorableObject(this.newMapView);
 
-			this.newMapView.setName(this.mapView.getName() + LangModelMap.getString("IsACopy")); //$NON-NLS-1$
+			this.newMapView.setName(this.mapView.getName() + LangModelMap.getString(MapEditorResourceKeys.IS_ACOPY_IN_PARENTHESIS));
 		} catch(CreateObjectException e) {
 			e.printStackTrace();
 			return;
@@ -74,7 +75,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 		}
 
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString("MapViewProperties"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW_PROPERTIES),
 				this.newMapView,
 				MapViewVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // try
@@ -91,6 +92,10 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 				Pool.removeHash(MapPropertiesManager.MAP_CLONED_IDS);
 			}
 */
+			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
+					this,
+					StatusMessageEvent.STATUS_MESSAGE,
+					LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_SAVING)));
 			try {
 				// save mapview
 				StorableObjectPool.flush(this.newMapView, userId, true);

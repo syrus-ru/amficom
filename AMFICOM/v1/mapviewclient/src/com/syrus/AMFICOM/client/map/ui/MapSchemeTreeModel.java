@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.35 2005/09/16 14:53:36 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.36 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
@@ -86,20 +87,18 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.35 $, $Date: 2005/09/16 14:53:36 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/25 16:08:03 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapSchemeTreeModel 
 		implements ChildrenFactory {
 
-	public static final String SCHEME_BRANCH = "innerschemes"; //$NON-NLS-1$
-	public static final String ELEMENT_BRANCH = "schemeelements"; //$NON-NLS-1$
-	public static final String LINK_BRANCH = "schemelinks"; //$NON-NLS-1$
-	public static final String CABLE_BRANCH = "schemecablelinks"; //$NON-NLS-1$
-	public static final String PATH_BRANCH = "schemepaths"; //$NON-NLS-1$
-	public static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
-
+	public static final String SCHEME_BRANCH = MapEditorResourceKeys.TREE_INNER_SCHEMES;
+	public static final String ELEMENT_BRANCH = MapEditorResourceKeys.TREE_SCHEME_ELEMENTS;
+	public static final String LINK_BRANCH = MapEditorResourceKeys.TREE_SCHEME_LINKS;
+	public static final String CABLE_BRANCH = MapEditorResourceKeys.TREE_SCHEME_CABLE_LINKS;
+	public static final String PATH_BRANCH = MapEditorResourceKeys.TREE_SCHEME_PATHS;
 	MapView mapView;
 
 	Item root;
@@ -186,7 +185,7 @@ public class MapSchemeTreeModel
 			SchemePath schemePath = (SchemePath )object;
 			return schemePath.getName();
 		}
-		return LangModelMap.getString(NONAME_BRANCH);
+		return LangModelMap.getString(MapEditorResourceKeys.NONAME);
 	}
 
 	public void populate(Item node) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveCommand.java,v 1.22 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapSaveCommand.java,v 1.23 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapSaveCommand extends AbstractCommand {
@@ -45,10 +46,10 @@ public class MapSaveCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapSaving"))); //$NON-NLS-1$
+						LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_SAVING)));
 
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString("MapProperties"),  //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_PROPERTIES),
 				this.map, 
 				MapVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // aContext.getDispatcher().notify(new StatusMessageEvent(

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapExportCommand.java,v 1.27 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.28 2005/09/25 16:08:02 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlObject;
@@ -29,6 +30,9 @@ import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.xml.MapsDocument;
@@ -41,7 +45,7 @@ import com.syrus.util.Log;
  * по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
@@ -80,13 +84,13 @@ public class MapExportCommand extends ExportCommand {
 		MapPropertiesManager.setLastDirectory(file.getParent());
 
 		String ext = file.getAbsolutePath().substring(
-				file.getAbsolutePath().lastIndexOf(".")); //$NON-NLS-1$
+				file.getAbsolutePath().lastIndexOf(MapEditorResourceKeys.DOT));
 
 		if(ext == null) {
-			ext = ".xml"; //$NON-NLS-1$
+			ext = MapEditorResourceKeys.EXTENSION_DOT_XML;
 		}
 
-		if(ext.equals(".xml")) { //$NON-NLS-1$
+		if(ext.equals(MapEditorResourceKeys.EXTENSION_DOT_XML)) {
 			saveXML(map, fileName);
 		}
 		setResult(Command.RESULT_OK);
@@ -116,6 +120,11 @@ public class MapExportCommand extends ExportCommand {
 					// Writing the XML Instance to a file.
 					doc.save(f, xmlOptions);
 				} catch(IOException e) {
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(), 
+							e.getLocalizedMessage(), 
+							LangModelMap.getString(MapEditorResourceKeys.ERROR_WRITE_ERROR), 
+							JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 				Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO); //$NON-NLS-1$

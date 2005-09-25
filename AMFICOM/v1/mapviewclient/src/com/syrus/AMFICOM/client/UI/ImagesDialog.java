@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesDialog.java,v 1.5 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: ImagesDialog.java,v 1.6 2005/09/25 16:08:01 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,14 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @module commonclient_v1
  */
 public class ImagesDialog {
@@ -41,9 +41,9 @@ public class ImagesDialog {
 		if(ir != null && ir instanceof BitmapImageResource)
 			imagesPanel.setImageResource((BitmapImageResource)ir);
 
-		final JButton cancelButton = new JButton(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
-		final JButton chooseButton = new JButton(LangModelGeneral.getString("Choose")); //$NON-NLS-1$
-		final JButton addButton = new JButton(LangModelGeneral.getString("add")); //$NON-NLS-1$
+		final JButton cancelButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL));
+		final JButton chooseButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
+		final JButton addButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_ADD));
 
 		final JOptionPane optionPane = new JOptionPane(
 				imagesPanel,
@@ -71,7 +71,7 @@ public class ImagesDialog {
 		});
 
 		final JDialog dialog = optionPane.createDialog(
-				Environment.getActiveWindow(), LangModelMap.getString("ImagesDialog.ImageSelection")); //$NON-NLS-1$
+				Environment.getActiveWindow(), LangModelMap.getString(MapEditorResourceKeys.TITLE_IMAGES_DIALOG_IMAGE_SELECTION));
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = Math.min(screenDim.width / 2, 590);
 		int height = Math.min(screenDim.height / 2, 400);

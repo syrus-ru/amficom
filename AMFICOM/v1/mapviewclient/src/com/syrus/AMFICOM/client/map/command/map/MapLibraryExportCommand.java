@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryExportCommand.java,v 1.10 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapLibraryExportCommand.java,v 1.11 2005/09/25 16:08:02 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.map.ui.MapLibraryTableController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -51,7 +52,7 @@ import com.syrus.util.Log;
  * по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class MapLibraryExportCommand extends ExportCommand {
@@ -97,7 +98,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 		}
 
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("MapLibrary"), //$NON-NLS-1$
+				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
 				allLibraries,
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),

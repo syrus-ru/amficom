@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.13 2005/09/20 16:39:22 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.14 2005/09/25 16:08:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,13 +41,11 @@ import com.syrus.util.Log;
 
 public class TopologyTreeModel implements ChildrenFactory {
 
-	public static final String TOPOLOGY_BRANCH = "topology"; //$NON-NLS-1$
-
-	private static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
+	public static final String TOPOLOGY_BRANCH = MapEditorResourceKeys.TREE_TOPOLOGY;
 
 	static final int IMG_SIZE = 16;
 
-	public static final String UPDATE_STRUNG = "updating"; //$NON-NLS-1$
+	public static final String UPDATE_STRUNG = MapEditorResourceKeys.VALUE_UPDATING;
 
 	static ImageIcon layerIcon = new ImageIcon(Toolkit.getDefaultToolkit()
 			.getImage("images/layers.gif").getScaledInstance( //$NON-NLS-1$
@@ -253,7 +251,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 					}
 					String label = spatialObject.getLabel();
 					if(label == null || label.length() == 0) {
-						label = LangModelMap.getString(NONAME_BRANCH);
+						label = LangModelMap.getString(MapEditorResourceKeys.NONAME);
 					}
 					IconedNode newItem = new IconedNode(
 							spatialObject,

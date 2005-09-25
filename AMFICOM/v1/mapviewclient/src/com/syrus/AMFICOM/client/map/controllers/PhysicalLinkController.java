@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.30 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.31 2005/09/25 16:08:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/25 16:08:02 $
  * @module mapviewclient
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -67,7 +68,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 			final AbstractNode smne = link.getStartNode();
 			s2 = "\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString("From") //$NON-NLS-1$
+					+ LangModelMap.getString(MapEditorResourceKeys.FROM_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ smne.getName()
 					+ " [" //$NON-NLS-1$
@@ -76,7 +77,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 			final AbstractNode emne = link.getEndNode();
 			s3 = "\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString("To") //$NON-NLS-1$
+					+ LangModelMap.getString(MapEditorResourceKeys.TO_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ emne.getName()
 					+ " [" //$NON-NLS-1$

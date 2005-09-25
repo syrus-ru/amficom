@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -76,22 +77,22 @@ public final class SiteNodeTypeEditor
 		this.libraryComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
 //		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.libraryLabel.setText(LangModelMap.getString("InLibrary")); //$NON-NLS-1$
+		this.libraryLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
 
-		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 //		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.imageLabel.setText(LangModelMap.getString("Image")); //$NON-NLS-1$
+		this.imageLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IMAGE));
 //		this.imageLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		this.imagePanel.setLayout(new BorderLayout());
 
-		this.imageButton.setText(LangModelMap.getString("Change")); //$NON-NLS-1$
+		this.imageButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHANGE));
 //		this.imageButton.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		this.imageButton.addActionListener(new ActionListener()
 			{

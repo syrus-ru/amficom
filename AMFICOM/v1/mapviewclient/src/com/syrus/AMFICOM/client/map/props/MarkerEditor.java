@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.Marker;
 
@@ -73,14 +74,14 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		this.pathComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
-		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
-		this.distanceLabel.setText(LangModelMap.getString("Distance")); //$NON-NLS-1$
-		this.pathLabel.setText(LangModelMap.getString("measurementpath")); //$NON-NLS-1$
-		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
-		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.typeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TYPE));
+		this.distanceLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DISTANCE));
+		this.pathLabel.setText(LangModelMap.getString(MapEditorResourceKeys.ENTITY_MEASUREMENT_PATH));
+		this.longLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
+		this.latLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LATITUDE));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -287,8 +288,6 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.marker.getName());
 
-//			this.typeTextField.setEnabled(true);
-//			this.typeTextField.setText(LangModelGeneral.getString("node" + MapViewController.getMapElementType(this.marker)));
 			this.distanceTextField.setEnabled(true);
 			try {
 				this.distanceTextField.setText(MapPropertiesManager.getDistanceFormat().format(markerController.getFromStartLengthLf(this.marker)));
