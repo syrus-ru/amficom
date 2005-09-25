@@ -89,6 +89,7 @@ AMFICOM_v1	&tools\
 		&importUCM \
 		&test \
 		&mapper-servlet \
+		&bugs \
 		&manager \
 		&манагер
 
@@ -269,6 +270,8 @@ test_v1			AMFICOM/v1/test
 #M	mapper-servlet
 mapper-servlet		AMFICOM/v1/mapper-servlet
 mapper-servlet_v1	AMFICOM/v1/mapper-servlet
+#M	bugs		See bug #121
+bugs			AMFICOM/v1/bugs
 #M	manager
 manager			AMFICOM/v1/manager
 #M	манагер
