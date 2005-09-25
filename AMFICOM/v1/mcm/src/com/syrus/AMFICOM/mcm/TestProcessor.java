@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.75 2005/09/23 09:48:13 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.76 2005/09/25 12:31:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
@@ -47,7 +48,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/09/23 09:48:13 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/25 12:31:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -55,13 +56,13 @@ import com.syrus.util.Log;
 abstract class TestProcessor extends SleepButWorkThread {
 	static final long PAST_MEASUREMENT_TIMEOUT = 10 * 1000; //msec
 	private static final String ABORT_REASON_DATABASE_ERROR = "Database error";
-	private static final String ABORT_REASON_LONG_TIMEOUT = "Long timeout after last measurement creation";
 
 	/*	Error codes for method processFall()	*/
 	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
 	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
 
 	private Test test;
+	private MeasurementSetup measurementSetup;
 
 	private Date lastMeasurementStartTime;
 	private Date nextMeasurementStartTime;
@@ -71,8 +72,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 	private List<Result> measurementResults;
 
 	private Transceiver transceiver;
-
-	private long waitMResultTimeout;
 
 	private boolean running;
 
@@ -89,6 +88,22 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		this.running = true;
 
+		try {
+			final Set<MeasurementSetup> measurementSetups = StorableObjectPool.getStorableObjects(this.test.getMeasurementSetupIds(), true);
+			if (measurementSetups != null && !measurementSetups.isEmpty()) {
+				this.measurementSetup = measurementSetups.iterator().next();
+			} else {
+				Log.errorMessage("TestProcessor<init> | Measurement setups for test '" + this.test.getId() + "' not found");
+				this.shutdown();
+				return;
+			}
+		} catch (ApplicationException ae) {
+			Log.errorMessage("TestProcessor<init> | Cannot load measurement setups for test '" + this.test.getId() + "'");
+			Log.errorException(ae);
+			this.shutdown();
+			return;
+		}
+
 		final Identifier kisId = test.getKISId();
 		this.transceiver = MeasurementControlModule.transceivers.get(kisId);
 		if (this.transceiver == null) {
@@ -96,9 +111,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 			this.shutdown();
 			return;
 		}
-
-		this.waitMResultTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_WAIT_MRESULT_TIMEOUT,
-				MeasurementControlModule.WAIT_MRESULT_TIMEOUT) * 1000;
 
 		this.setupMeasurements();
 
@@ -336,13 +348,9 @@ abstract class TestProcessor extends SleepButWorkThread {
 		}
 		Log.debugMessage(mesg.toString(), Log.DEBUGLEVEL07);
 
-		if (this.numberOfMResults >= numberOfMeasurements && this.lastMeasurementAcquisition) {
+		if (this.lastMeasurementAcquisition
+				&& System.currentTimeMillis() >= this.test.getEndTime().getTime() + this.measurementSetup.getMeasurementDuration()) {
 			this.complete();
-		} else if (this.lastMeasurementStartTime != null
-				&& System.currentTimeMillis() - this.lastMeasurementStartTime.getTime() > this.waitMResultTimeout) {
-			Log.debugMessage("Passed " + this.waitMResultTimeout / 1000 + " sec from last measurement creation. Aborting test '"
-					+ this.test.getId() + "'", Log.DEBUGLEVEL03);
-			this.abort(ABORT_REASON_LONG_TIMEOUT);
 		}
 	}
 
@@ -371,6 +379,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	void complete() {
+		Log.debugMessage("TestProcessor.complete | Test '" + this.test.getId() + "' is completed", Log.DEBUGLEVEL07);
 		this.test.setStatus(TestStatus.TEST_STATUS_COMPLETED);
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
