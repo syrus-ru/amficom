@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.96 2005/09/25 15:50:05 krupenn Exp $
+ * $Id: SiteNode.java,v 1.97 2005/09/25 17:05:14 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.96 $, $Date: 2005/09/25 15:50:05 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/25 17:05:14 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -376,9 +376,9 @@ public class SiteNode extends AbstractNode
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				null,
-				null,
-				null);
+				"",
+				"",
+				new DoublePoint(0.0, 0.0));
 		/**
 		 * @todo Should go to #fromTransferable(...) or
 		 *       the corresponding complementor.
