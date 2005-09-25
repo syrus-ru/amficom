@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.client.map.operations.ControlsFrame;
 import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -47,15 +46,6 @@ public abstract class MapDesktopCommand {
 			Component comp = desktop.getComponent(i);
 			if(comp != null && comp instanceof MapViewTreeFrame)
 				return (MapViewTreeFrame )comp;
-		}
-		return null;
-	}
-
-	public static ControlsFrame findControlsFrame(JDesktopPane desktop) {
-		for(int i = 0; i < desktop.getComponents().length; i++) {
-			Component comp = desktop.getComponent(i);
-			if(comp != null && comp instanceof ControlsFrame)
-				return (ControlsFrame )comp;
 		}
 		return null;
 	}
