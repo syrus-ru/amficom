@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.107 2005/09/21 14:50:17 saa Exp $
+ * $Id: Heap.java,v 1.108 2005/09/25 18:00:33 stas Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
-import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
 import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
@@ -89,8 +89,8 @@ import com.syrus.util.Log;
  * 1. перед установкой эталона (setEtalon, setMTMEtalon)
  * должен устанавливаться setBSEtalonTrace
  * 
- * @author $Author: saa $
- * @version $Revision: 1.107 $, $Date: 2005/09/21 14:50:17 $
+ * @author $Author: stas $
+ * @version $Revision: 1.108 $, $Date: 2005/09/25 18:00:33 $
  * @module
  */
 public class Heap
@@ -110,7 +110,7 @@ public class Heap
 	private static Map<String,Trace> traces = new HashMap<String,Trace>();
 	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
-	private static Map<String,ReflectogrammLoadDialog> dialogHash = new HashMap<String,ReflectogrammLoadDialog>();	// "dialog", "*"
+	private static Map<String,TraceLoadDialog> dialogHash = new HashMap<String,TraceLoadDialog>();	// "dialog", "*"
 
 	// etalon
 	private static double minTraceLevel;			// (negative value)
@@ -153,12 +153,12 @@ public class Heap
 
 	// methods
 
-	public static ReflectogrammLoadDialog getRLDialogByKey(String key) {
+	public static TraceLoadDialog getRLDialogByKey(String key) {
 		return dialogHash.get(key);
 	}
 
 	public static void setRLDialogByKey(String key,
-			ReflectogrammLoadDialog dialog) {
+			TraceLoadDialog dialog) {
 		dialogHash.put(key, dialog);
 	}
 	public static ModelTraceAndEventsImpl getMTAEPrimary() {

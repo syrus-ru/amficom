@@ -30,6 +30,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 
 	public LoadTraceFromDatabaseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
+		System.out.println("LoadTraceFromDatabaseCommand constructor");
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}

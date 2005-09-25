@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.12 2005/09/20 09:40:55 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.13 2005/09/25 18:00:33 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +23,6 @@ import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -35,9 +33,7 @@ import com.syrus.AMFICOM.filterclient.MonitoredElementConditionWrapper;
 import com.syrus.AMFICOM.filterclient.TestConditionWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -50,26 +46,22 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
+import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.MonitoredElementWrapper;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.ResultWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
-import com.syrus.AMFICOM.newFilter.ConditionKey;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/20 09:40:55 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/25 18:00:33 $
  * @module analysis
  */
 
@@ -377,12 +369,37 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 			try {
 				StorableObjectPool.refresh(Collections.singleton(((Test)nodeObject).getId()));
 				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
-				Set measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-				Set<Identifier> measurementIds = new HashSet<Identifier>();
-				for (Iterator it = measurements.iterator(); it.hasNext();) {
-					measurementIds.add(((Measurement)it.next()).getId());
+				Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				
+				List<Item> toRemove = super.getItemsToRemove(measurements, items);
+				List<StorableObject> toAdd = super.getObjectsToAdd(measurements, objects);
+				
+				for (Item child : toRemove) {
+					child.setParent(null);
 				}
-				if (!measurementIds.isEmpty()) {
+				Collections.sort(toAdd, new WrapperComparator(MeasurementWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+				
+				for (Iterator<StorableObject> iter = toAdd.iterator(); iter.hasNext();) {
+					Measurement measurement = (Measurement)iter.next();
+					PopulatableIconedNode item2 = new PopulatableIconedNode();
+					item2.setObject(measurement);
+					item2.setName(measurement.getName());
+					item2.setCanHaveChildren(false);
+					item2.setChildrenFactory(this);
+					item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_RESULT));
+					// XXX add possibility to insert item in arbitrary location
+					// item.addChildAt(item2, i);
+					item.addChild(item2);
+				}
+								
+				
+//				Set<Identifier> measurementIds = new HashSet<Identifier>();
+//				for (Iterator it = measurements.iterator(); it.hasNext();) {
+//					measurementIds.add(((Measurement)it.next()).getId());
+//				}
+				
+
+	/*			if (!measurementIds.isEmpty()) {
 					StorableObjectCondition condition2 = new LinkedIdsCondition(measurementIds, ObjectEntities.RESULT_CODE);
 					Set<StorableObject> resultSet = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 					
@@ -436,7 +453,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 						it.next();
 						it.remove();
 					}
-				}
+				}*/
 			} catch (ApplicationException ex) {
 				ex.printStackTrace();
 			}
