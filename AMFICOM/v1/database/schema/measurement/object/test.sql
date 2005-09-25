@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.19 2005/09/23 13:31:19 arseniy Exp $
+-- $Id: test.sql,v 1.20 2005/09/25 12:29:27 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -9,8 +9,8 @@ CREATE TABLE Test (
  version NUMBER(19) NOT NULL,
 --
  temporal_type NUMBER(2, 0) NOT NULL,
- start_time DATE,
- end_time DATE,
+ start_time DATE NOT NULL,
+ end_time DATE NOT NULL,
  temporal_pattern_id NUMBER(19),
 --
  measurement_type_code NOT NULL,
