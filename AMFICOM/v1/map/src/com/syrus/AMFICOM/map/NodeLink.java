@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.97 2005/09/23 11:45:46 bass Exp $
+ * $Id: NodeLink.java,v 1.98 2005/09/25 15:42:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/09/23 11:45:46 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/25 15:42:48 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -546,9 +547,26 @@ public final class NodeLink extends StorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
-	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+	@Crutch134(notes = "Remove subclassing here.")
+	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE) {
+				private static final long serialVersionUID = -2741783821486426615L;
+
+				@Override
+				protected void ensureCacheBuilt(final boolean usePool)
+				throws ApplicationException {
+					if (!this.cacheBuilt || usePool) {
+						if (this.containees == null) {
+							this.containees = new HashSet<Characteristic>();
+						} else {
+							this.containees.clear();
+						}
+						this.containees.addAll(StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false));
+						this.cacheBuilt = true;
+					}
+				}
+			};
 		}
 		return this.characteristicContainerWrappee;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.118 2005/09/23 11:45:46 bass Exp $
+ * $Id: PhysicalLink.java,v 1.119 2005/09/25 15:42:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.118 $, $Date: 2005/09/23 11:45:46 $
+ * @version $Revision: 1.119 $, $Date: 2005/09/25 15:42:48 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1045,9 +1046,26 @@ public class PhysicalLink extends StorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
+	@Crutch134(notes = "Remove subclassing here.")
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE) {
+				private static final long serialVersionUID = -2741783821486426615L;
+
+				@Override
+				protected void ensureCacheBuilt(final boolean usePool)
+				throws ApplicationException {
+					if (!this.cacheBuilt || usePool) {
+						if (this.containees == null) {
+							this.containees = new HashSet<Characteristic>();
+						} else {
+							this.containees.clear();
+						}
+						this.containees.addAll(StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false));
+						this.cacheBuilt = true;
+					}
+				}
+			};
 		}
 		return this.characteristicContainerWrappee;
 	}

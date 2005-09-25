@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.103 2005/09/23 15:32:30 bob Exp $
+ * $Id: StorableObject.java,v 1.104 2005/09/25 15:42:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/09/23 15:32:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.104 $, $Date: 2005/09/25 15:42:48 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -557,19 +558,23 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bob $
-	 * @version $Revision: 1.103 $, $Date: 2005/09/23 15:32:30 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.104 $, $Date: 2005/09/25 15:42:48 $
 	 * @module general
 	 */
-	protected static final class StorableObjectContainerWrappee<T extends StorableObject>
+	@Crutch134(notes = "This class should be made final.")
+	protected static class StorableObjectContainerWrappee<T extends StorableObject>
 			implements Serializable {
 		private static final long serialVersionUID = -1264974065379428032L;
 
-		private boolean cacheBuilt = false;
+		@Crutch134(notes = "Narrow visibility from protected to private.")
+		protected boolean cacheBuilt = false;
 
-		private StorableObjectCondition condition;
+		@Crutch134(notes = "Narrow visibility from protected to private.")
+		protected StorableObjectCondition condition;
 
-		private Set<T> containees;
+		@Crutch134(notes = "Narrow visibility from protected to private.")
+		protected Set<T> containees;
 
 		/**
 		 * @param wrapper
@@ -584,7 +589,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * @param containee
 		 * @throws ApplicationException
 		 */
-		public void addToCache(final T containee, final boolean usePool)
+		@Crutch134(notes = "Remove the final modifier: containing class itself should be final.")
+		public final void addToCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
 				this.containees.add(containee);
@@ -599,7 +605,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * @param usePool
 		 * @throws ApplicationException
 		 */
-		public void removeFromCache(final T containee, final boolean usePool)
+		@Crutch134(notes = "Remove the final modifier: containing class itself should be final.")
+		public final void removeFromCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
 				this.containees.remove(containee);
@@ -613,7 +620,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * @param usePool
 		 * @throws ApplicationException
 		 */
-		public Set<T> getContainees(final boolean usePool)
+		@Crutch134(notes = "Remove the final modifier: containing class itself should be final.")
+		public final Set<T> getContainees(final boolean usePool)
 		throws ApplicationException {
 			this.ensureCacheBuilt(usePool);
 			return this.containees;
@@ -623,7 +631,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * @param usePool
 		 * @throws ApplicationException
 		 */
-		private void ensureCacheBuilt(final boolean usePool)
+		@Crutch134(notes = "Narrow visibility from protected to private.")
+		protected void ensureCacheBuilt(final boolean usePool)
 		throws ApplicationException {
 			if (!this.cacheBuilt || usePool) {
 				if (this.containees == null) {
