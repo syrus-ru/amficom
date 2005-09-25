@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.23 2005/09/12 10:47:42 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.24 2005/09/25 17:36:59 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.23 $, $Date: 2005/09/12 10:47:42 $
+// $Revision: 1.24 $, $Date: 2005/09/25 17:36:59 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -610,7 +610,7 @@ void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWavef
 	SystemTimeToFileTime(&sysTime1970,&fileTime1970);
 	ULARGE_INTEGER * time1970 = (ULARGE_INTEGER *) (&fileTime1970);
 	//Calculate difference between theese two dates -- current time since 00:00 1.01.1970 in seconds
-	unsigned long dts = (unsigned long)(time->QuadPart - time1970->QuadPart)/10000000;
+	unsigned long dts = (unsigned long)(time->QuadPart/10000000 - time1970->QuadPart/10000000);
 
 	short tpw = 1;
 	short* pwu = new short[tpw];
