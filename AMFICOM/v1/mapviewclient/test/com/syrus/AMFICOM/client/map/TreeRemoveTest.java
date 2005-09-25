@@ -1,5 +1,5 @@
 /**
- * $Id: TreeRemoveTest.java,v 1.1 2005/09/22 10:41:16 krupenn Exp $
+ * $Id: TreeRemoveTest.java,v 1.2 2005/09/25 15:51:21 krupenn Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
