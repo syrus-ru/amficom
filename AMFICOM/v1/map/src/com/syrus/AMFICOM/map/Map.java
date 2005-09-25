@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.102 2005/09/25 15:47:00 krupenn Exp $
+ * $Id: Map.java,v 1.103 2005/09/25 18:30:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.102 $, $Date: 2005/09/25 15:47:00 $
+ * @version $Revision: 1.103 $, $Date: 2005/09/25 18:30:27 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -146,12 +146,16 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				this.maps.addAll(StorableObjectPool.<Map>getStorableObjects(this.mapIds, true));
 				this.externalNodes.addAll(StorableObjectPool.<SiteNode>getStorableObjects(this.externalNodeIds, true));
 				this.mapLibrarys.addAll(StorableObjectPool.<MapLibrary>getStorableObjects(this.mapLibraryIds, true));
+
+				for(NodeLink nodeLink : this.nodeLinks) {
+					nodeLink.getPhysicalLink().addNodeLink(nodeLink);
+				}
+				
+				this.transientFieldsInitialized = true;
 			} catch(ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			this.transientFieldsInitialized = true;
 		}
 	}
 	
@@ -350,19 +354,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setCollectors0(final Set<Collector> collectors) {
-		this.initialize();
 		this.collectorIds.clear();
-		this.collectors.clear();
-		if (collectors != null) {
+		if(collectors != null) {
 			for (Collector collector : collectors) {
 				this.collectorIds.add(collector.getId());
-				this.collectors.add(collector);
 			}
 		}
 	}
 
 	public void setCollectors(final Set<Collector> collectors) {
+		this.initialize();
 		this.setCollectors0(collectors);
+		this.collectors.clear();
+		if(collectors != null) {
+			for (Collector collector : collectors) {
+				this.collectors.add(collector);
+			}
+		}
 		super.markAsChanged();
 	}
 
@@ -385,18 +393,22 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	public void setMapLibraries(final Set<MapLibrary> mapLibraries) {
+		this.initialize();
+		this.mapLibrarys.clear();
 		this.setMapLibraries0(mapLibraries);
+		if (mapLibraries != null) {
+			for (MapLibrary library : mapLibraries) {
+				this.mapLibrarys.add(library);
+			}
+		}
 		super.markAsChanged();
 	}
 	
 	protected void setMapLibraries0(final Set<MapLibrary> mapLibraries) {
-		this.initialize();
 		this.mapLibraryIds.clear();
-		this.mapLibrarys.clear();
 		if (mapLibraries != null) {
 			for (MapLibrary library : mapLibraries) {
 				this.mapLibraryIds.add(library.getId());
-				this.mapLibrarys.add(library);
 			}
 		}
 	}
@@ -407,19 +419,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setMarks0(final Set<Mark> marks) {
-		this.initialize();
 		this.markIds.clear();
-		this.marks.clear();
 		if (marks != null) {
 			for (Mark mark : marks) {
 				this.markIds.add(mark.getId());
-				this.marks.add(mark);
 			}
 		}
 	}
 
 	public void setMarks(final Set<Mark> marks) {
+		this.initialize();
+		this.marks.clear();
 		this.setMarks0(marks);
+		if (marks != null) {
+			for (Mark mark : marks) {
+				this.marks.add(mark);
+			}
+		}
 		super.markAsChanged();
 	}
 
@@ -442,19 +458,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setNodeLinks0(final Set<NodeLink> nodeLinks) {
-		this.initialize();
 		this.nodeLinkIds.clear();
-		this.nodeLinks.clear();
 		if (nodeLinks != null) {
 			for (NodeLink link : nodeLinks) {
 				this.nodeLinkIds.add(link.getId());
-				this.nodeLinks.add(link);
 			}			
 		}
 	}
 
 	public void setNodeLinks(final Set<NodeLink> nodeLinks) {
+		this.initialize();
+		this.nodeLinks.clear();
 		this.setNodeLinks0(nodeLinks);
+		if (nodeLinks != null) {
+			for (NodeLink link : nodeLinks) {
+				this.nodeLinks.add(link);
+			}			
+		}
 		super.markAsChanged();
 	}
 
@@ -464,20 +484,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setPhysicalLinks0(final Set<PhysicalLink> physicalLinks) {
-		this.initialize();
 		this.physicalLinkIds.clear();
-		this.physicalLinks.clear();
 		if (physicalLinks != null) {
 			for (PhysicalLink link : physicalLinks) {
 				this.physicalLinkIds.add(link.getId());
-				this.physicalLinks.add(link);
 			}
 		}
-		super.markAsChanged();
 	}
 
 	public void setPhysicalLinks(final Set<PhysicalLink> physicalLinks) {
+		this.initialize();
+		this.physicalLinks.clear();
 		this.setPhysicalLinks0(physicalLinks);
+		if (physicalLinks != null) {
+			for (PhysicalLink link : physicalLinks) {
+				this.physicalLinks.add(link);
+			}
+		}
 		super.markAsChanged();
 	}
 
@@ -487,19 +510,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setSiteNodes0(final Set<SiteNode> siteNodes) {
-		this.initialize();
 		this.siteNodeIds.clear();
-		this.siteNodes.clear();
 		if (siteNodes != null) {
 			for (SiteNode node : siteNodes) {
 				this.siteNodeIds.add(node.getId());
-				this.siteNodes.add(node);
 			}
 		}
 	}
 
 	public void setSiteNodes(final Set<SiteNode> siteNodes) {
+		this.initialize();
+		this.siteNodes.clear();
 		this.setSiteNodes0(siteNodes);
+		if (siteNodes != null) {
+			for (SiteNode node : siteNodes) {
+				this.siteNodes.add(node);
+			}
+		}
 		super.markAsChanged();
 	}
 
@@ -509,19 +536,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setTopologicalNodes0(final Set<TopologicalNode> topologicalNodes) {
-		this.initialize();
 		this.topologicalNodeIds.clear();
-		this.topologicalNodes.clear();
 		if (topologicalNodes != null) {
 			for (TopologicalNode node : topologicalNodes) {
 				this.topologicalNodeIds.add(node.getId());
-				this.topologicalNodes.add(node);
 			}
 		}
 	}
 
 	public void setTopologicalNodes(final Set<TopologicalNode> topologicalNodes) {
+		this.initialize();
+		this.topologicalNodes.clear();
 		this.setTopologicalNodes0(topologicalNodes);
+		if (topologicalNodes != null) {
+			for (TopologicalNode node : topologicalNodes) {
+				this.topologicalNodes.add(node);
+			}
+		}
 		super.markAsChanged();
 	}
 
@@ -531,19 +562,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setMaps0(final Set<Map> maps) {
-		this.initialize();
 		this.mapIds.clear();
-		this.maps.clear();
 		if (maps != null) {
 			for (Map map : maps) {
 				this.mapIds.add(map.getId());
-				this.maps.add(map);
 			}
 		}
 	}
 
 	public void setMaps(final Set<Map> maps) {
+		this.initialize();
+		this.maps.clear();
 		this.setMaps0(maps);
+		if (maps != null) {
+			for (Map map : maps) {
+				this.maps.add(map);
+			}
+		}
 		super.markAsChanged();
 	}
 
@@ -553,19 +588,23 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	protected void setExternalNodes0(final Set<SiteNode> externalNodes) {
-		this.initialize();
 		this.externalNodeIds.clear();
-		this.externalNodes.clear();
 		if (externalNodes != null) {
 			for (SiteNode node : externalNodes) {
 				this.externalNodeIds.add(node.getId());
-				this.externalNodes.add(node);
 			}
 		}
 	}
 
 	public void setExternalNodes(final Set<SiteNode> externalNodes) {
+		this.initialize();
+		this.externalNodes.clear();
 		this.setExternalNodes0(externalNodes);
+		if (externalNodes != null) {
+			for (SiteNode node : externalNodes) {
+				this.externalNodes.add(node);
+			}
+		}
 		super.markAsChanged();
 	}
 
