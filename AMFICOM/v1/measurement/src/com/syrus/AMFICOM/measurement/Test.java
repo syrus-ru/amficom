@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.166 2005/09/22 12:26:51 arseniy Exp $
+ * $Id: Test.java,v 1.167 2005/09/25 12:27:28 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.166 $, $Date: 2005/09/22 12:26:51 $
+ * @version $Revision: 1.167 $, $Date: 2005/09/25 12:27:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -622,7 +622,7 @@ public final class Test extends StorableObject implements Describable {
 			switch (temporalType) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = startTime;
-					this.endTime = null;
+					this.endTime = this.startTime;
 					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
@@ -658,7 +658,7 @@ public final class Test extends StorableObject implements Describable {
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = new Date(ttst.startTime());
-					this.endTime = null;
+					this.endTime = this.startTime;
 					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
@@ -707,16 +707,14 @@ public final class Test extends StorableObject implements Describable {
 		}
 
 		protected boolean isValid() {
+			boolean valid = (this.startTime != null) && (this.endTime != null);
 			switch (this.discriminator) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					return this.startTime != null;
+					return valid;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					return this.startTime != null
-							&& this.endTime != null
-							&& this.temporalPatternId != null
-							&& this.startTime.getTime() < this.endTime.getTime();
+					return valid && (this.temporalPatternId != null) && (this.startTime.getTime() < this.endTime.getTime());
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					return this.startTime != null && this.endTime != null && this.startTime.getTime() < this.endTime.getTime();
+					return valid && (this.startTime.getTime() < this.endTime.getTime());
 				default:
 					return false;
 			}
