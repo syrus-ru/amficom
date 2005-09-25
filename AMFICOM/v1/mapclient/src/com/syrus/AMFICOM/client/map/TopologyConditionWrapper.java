@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyConditionWrapper.java,v 1.3 2005/08/25 11:16:22 max Exp $
+ * $Id: TopologyConditionWrapper.java,v 1.4 2005/09/25 15:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -21,7 +22,7 @@ public class TopologyConditionWrapper implements ConditionWrapper {
 	//todo use stub entity code
 	private final static short entityCode = ObjectEntities.COLLECTOR_CODE;
 	
-	private final static String NAME = LangModelMap.getString("Name");
+	private final static String NAME = LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME);
 		
 	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
 	
