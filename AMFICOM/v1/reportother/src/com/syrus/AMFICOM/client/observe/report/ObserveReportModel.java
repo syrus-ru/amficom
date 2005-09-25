@@ -1,5 +1,5 @@
 /*
- * $Id: ObserveReportModel.java,v 1.3 2005/09/23 12:10:04 peskovsky Exp $
+ * $Id: ObserveReportModel.java,v 1.4 2005/09/25 16:23:18 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
@@ -27,7 +28,7 @@ public class ObserveReportModel extends ReportModel {
 	 * Информация о маркере (кабель, тоннель, место в тоннеле,
 	 * расстояние до узлов, географические координаты)
 	 */ 
-	public static String MARKER_INFO = "markerInfo";
+	public static String MARKER_INFO = MapEditorResourceKeys.LABEL_MARKER_INFO;
 	/**
 	 * Список сигналов тревоги
 	 */ 

@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -70,19 +71,19 @@ class TunnelCableListTableModel extends AbstractTableModel {
 	private static final String TYPE = "report.Modules.SchemeEditor.Common.type";
 	private static final String DESCRIPTION = "report.Modules.SchemeEditor.Common.description";
 
-	private static final String CITY_KURZ = "CityKurz";
-	private static final String STREET_KURZ = "StreetKurz";
-	private static final String BUILDING_KURZ = "BuildingKurz";
+	private static final String CITY_KURZ = MapEditorResourceKeys.LABEL_CITY_KURZ;
+	private static final String STREET_KURZ = MapEditorResourceKeys.LABEL_STREET_KURZ;
+	private static final String BUILDING_KURZ = MapEditorResourceKeys.LABEL_BUILDING_KURZ;
 	
-	private static final String TOPOLOGICAL_LENGTH = "TopologicalLength";
-	private static final String TUNNEL = "tunnel";
-	private static final String COLLECTOR = "Collector_id";
-	private static final String CABLE = "cable";	
-	private static final String TUNNEL_CABLE_LIST = "tunnelCableList";
-	private static final String MAP_TUNNEL_POSIT = "maptunnelposit";
-	private static final String MAP_COLLECTOR_POSIT = "mapcollectorposit";
-	private static final String START_NODE = "Start_node_id";
-	private static final String END_NODE = "End_node_id";	
+	private static final String TOPOLOGICAL_LENGTH = MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH;
+	private static final String TUNNEL = MapEditorResourceKeys.LABEL_TUNNEL;
+	private static final String COLLECTOR = MapEditorResourceKeys.ENTITY_COLLECTOR;
+	private static final String CABLE = MapEditorResourceKeys.LABEL_CABLE;	
+	private static final String TUNNEL_CABLE_LIST = MapEditorResourceKeys.LABEL_CABLE_LIST;
+	private static final String MAP_TUNNEL_POSIT = MapEditorResourceKeys.LABEL_PLACE_IN_TUNNEL;
+	private static final String MAP_COLLECTOR_POSIT = MapEditorResourceKeys.LABEL_PLACE_IN_COLLECTOR;
+	private static final String START_NODE = MapEditorResourceKeys.LABEL_START_NODE;
+	private static final String END_NODE = MapEditorResourceKeys.LABEL_END_NODE;	
 	
 	private static final String ADDRESS = "report.Modules.Map.Common.address";
 	private static final String ADDRESS_SEPARATOR = ", ";	

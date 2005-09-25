@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorInfoReport.java,v 1.3 2005/09/23 12:10:04 peskovsky Exp $
+ * $Id: CollectorInfoReport.java,v 1.4 2005/09/25 16:23:18 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -64,8 +65,8 @@ class CollectorInfoReportTableModel extends AbstractTableModel {
 	private static final String TYPE = "report.Modules.SchemeEditor.Common.type";
 	private static final String DESCRIPTION = "report.Modules.SchemeEditor.Common.description";
 	private static final String SUMM_LENGTH = "report.Modules.Map.CollectorInfoReport.summLength";
-	private static final String COLLECTOR = "Collector_id";
-	private static final String METRIC = "metric";
+	private static final String COLLECTOR = MapEditorResourceKeys.ENTITY_COLLECTOR;
+	private static final String METRIC = MapEditorResourceKeys.VALUE_METRIC;
 	private static final String INCLUDING_NODES = "report.Modules.Map.CollectorInfoReport.includingNodes";
 	private static final String INCLUDING_PIQUETS = "report.Modules.Map.CollectorInfoReport.includingPiquets";
 	

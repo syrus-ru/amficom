@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.5 2005/09/23 12:10:04 peskovsky Exp $
+ * $Id: SiteNodeReport.java,v 1.6 2005/09/25 16:23:18 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -79,9 +80,9 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 	private static final String TYPE = "report.Modules.SchemeEditor.Common.type";
 	private static final String DESCRIPTION = "report.Modules.SchemeEditor.Common.description";
 
-	private static final String CITY_KURZ = "CityKurz";
-	private static final String STREET_KURZ = "StreetKurz";
-	private static final String BUILDING_KURZ = "BuildingKurz";
+	private static final String CITY_KURZ = MapEditorResourceKeys.LABEL_CITY_KURZ;
+	private static final String STREET_KURZ = MapEditorResourceKeys.LABEL_STREET_KURZ;
+	private static final String BUILDING_KURZ = MapEditorResourceKeys.LABEL_BUILDING_KURZ;
 	
 	private static final String ATTACHED_SCHEME_ELEMENTS =
 		"report.Modules.Map.SiteNodeReport.schemeElementsAttached";

@@ -9,6 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -20,8 +21,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Отчёт "Прокладка кабеля"
- * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/09/23 12:10:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/09/25 16:23:18 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -61,18 +62,17 @@ public class CableLayoutReport {
 }
 
 class CableLayoutReportTableModel extends AbstractTableModel {
+	private static final String START_NODE = MapEditorResourceKeys.LABEL_START_NODE;
+	private static final String START_SPARE = MapEditorResourceKeys.LABEL_START_SPARE;
+	private static final String END_SPARE = MapEditorResourceKeys.LABEL_END_SPARE;
+	private static final String START_LINK = MapEditorResourceKeys.LABEL_END_NODE;
 	private static final String PARAMETER_NAME = "report.UI.propertyName";
 	private static final String PARAMETER_VALUE = "report.UI.propertyValue";
 	
-	private static final String START_NODE = "StartNode";
-	private static final String START_SPARE = "StartSpare";
-	private static final String END_SPARE = "EndSpare";
-	private static final String START_LINK = "StartLink";
-	
-	private static final String METRIC = "metric";
-	private static final String TUNNEL = "Tunnel";
-	private static final String COLLECTOR = "Collector";
-	private static final String MAP_TUNNEL_POSIT = "maptunnelposit";
+	private static final String METRIC = MapEditorResourceKeys.VALUE_METRIC;
+	private static final String TUNNEL = MapEditorResourceKeys.LABEL_TUNNEL;
+	private static final String COLLECTOR = MapEditorResourceKeys.ENTITY_COLLECTOR;
+	private static final String MAP_TUNNEL_POSIT = MapEditorResourceKeys.LABEL_PLACE_IN_TUNNEL;
 	private static final String EMPTY_OBJECT_STRING = "--";
 	private static final String EMPTY_STRING = "";
 	

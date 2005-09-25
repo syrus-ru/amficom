@@ -1,4 +1,7 @@
 package com.syrus.AMFICOM.client.observe.report;
+
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+
 /*
 import javax.swing.table.TableColumn;
 
@@ -91,7 +94,7 @@ public class MarkerInfoReport{
 //
 //		int curCCI = 0;
 //
-//		this.tableData[0][curCCI] = LangModelMap.getString("Marker");
+//		this.tableData[0][curCCI] = LangModelMap.getString(MapEditorResourceKeys.ENTITY_MARKER);
 //		this.tableData[1][curCCI++] = marker.getName();
 //
 //		this.tableData[0][curCCI] = "";
@@ -104,13 +107,13 @@ public class MarkerInfoReport{
 //		this.tableData[0][curCCI] = "";
 //		this.tableData[1][curCCI++] = "";
 //
-//		this.tableData[0][curCCI] = LangModelMap.getString("mapnodedistances");
+//		this.tableData[0][curCCI] = LangModelMap.getString(MapEditorResourceKeys.LABEL_DISTANCES_TO_NEAREST_NODES);
 //		this.tableData[1][curCCI++] = nodeLink.getName();// !!!!!!И тут тоже
 //
 //		this.tableData[0][curCCI] = "";
 //		this.tableData[1][curCCI++] = "";
 //
-//		this.tableData[0][curCCI] = "fornode" + " "
+//		this.tableData[0][curCCI] = MapEditorResourceKeys.TO_NODE_LOWERCASE + " "
 //				+ marker.getLeft().getName();
 //		try {
 //			this.tableData[1][curCCI++] = Double.toString(
@@ -123,7 +126,7 @@ public class MarkerInfoReport{
 //			e.printStackTrace();
 //		}
 //
-//		this.tableData[0][curCCI] = "fornode" + " "
+//		this.tableData[0][curCCI] = MapEditorResourceKeys.TO_NODE_LOWERCASE + " "
 //				+ marker.getRight().getName();
 //		try {
 //			this.tableData[1][curCCI++] = Double.toString(
@@ -161,17 +164,17 @@ public class MarkerInfoReport{
 //			this.tableData[0][curCCI] = LangModelMap.getString("Collector");
 //			this.tableData[1][curCCI++] = pipePath.getName();
 //
-//			this.tableData[0][curCCI] = LangModelMap.getString("Tunnel");
+//			this.tableData[0][curCCI] = LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL);
 //			this.tableData[1][curCCI++] = physicalLink.getName();
 //			this.length++;
 //
 //			this.tableData[0][curCCI] = LangModelMap
-//					.getString("maptunnelposit");
+//					.getString(MapEditorResourceKeys.LABEL_PLACE_IN_TUNNEL);
 //		} else {
-//			this.tableData[0][curCCI] = LangModelMap.getString("Tunnel");
+//			this.tableData[0][curCCI] = LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL);
 //			this.tableData[1][curCCI++] = physicalLink.getName();
 //			this.tableData[0][curCCI] = LangModelMap
-//					.getString("mapcollectorposit");
+//					.getString(MapEditorResourceKeys.LABEL_PLACE_IN_COLLECTOR);
 //		}
 //
 //		IntPoint binding = physicalLink.getBinding().getBinding(cablePath);// И
@@ -179,7 +182,7 @@ public class MarkerInfoReport{
 //		this.tableData[1][curCCI++] = Integer.toString(binding.x) + ":"
 //				+ Integer.toString(binding.y);
 //
-//		this.tableData[0][curCCI] = LangModelMap.getString("geographicCoords");
+//		this.tableData[0][curCCI] = LangModelMap.getString(MapEditorResourceKeys.LABEL_GEOGRAPHICAL_COORDINATES);
 //		this.tableData[1][curCCI++] = Double.toString(
 //				marker.getLocation().getX())
 //				+ ":" + Double.toString(marker.getLocation().getY());
