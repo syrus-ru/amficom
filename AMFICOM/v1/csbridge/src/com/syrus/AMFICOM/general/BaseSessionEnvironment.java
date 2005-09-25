@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.19 2005/09/23 16:02:48 bob Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.20 2005/09/25 11:30:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/23 16:02:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/09/25 11:30:54 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -79,9 +79,8 @@ public abstract class BaseSessionEnvironment {
 			StorableObjectPool.deserialize(this.poolContext.getLRUSaver());
 		} catch (final ApplicationException e) {
 			// ignore deserializing ?
-			assert Log.debugMessage("BaseSessionEnvironment.login | deserialization failed ",
-				Log.DEBUGLEVEL09);
-			StorableObjectPool.cleanStorableObjects();
+			assert Log.debugMessage("BaseSessionEnvironment.login | deserialization failed ", Log.DEBUGLEVEL09);
+			StorableObjectPool.clean();
 		}
 
 		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
