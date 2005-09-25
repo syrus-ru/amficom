@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.73 2005/09/20 14:34:08 arseniy Exp $
+# $Id: Makefile,v 1.74 2005/09/25 16:12:12 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -20,7 +20,7 @@ $(call checkenve,SCOMPFLAGS)
 
 LIBNAME_GENERALXML=generalxml.jar
 
-APPCLASSPATH := $(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/bugs.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
