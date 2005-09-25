@@ -1,4 +1,4 @@
--- $Id: schemeprotogroup.sql,v 1.7 2005/06/15 17:03:10 bass Exp $
+-- $Id: schemeprotogroup.sql,v 1.8 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE SchemeProtoGroup (
 	id NUMBER(19) NOT NULL,
@@ -23,11 +23,11 @@ CREATE TABLE SchemeProtoGroup (
 		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schemeprotogroup_symbol_fk FOREIGN KEY(symbol_id)
-		REFERENCES ImageResource(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE SET NULL,
 	CONSTRAINT schemeprotogroup_prnt_spg_fk FOREIGN KEY(parent_scheme_proto_group_id)
-		REFERENCES SchemeProtoGroup(id) ON DELETE CASCADE
+		REFERENCES SchemeProtoGroup(id) ON DELETE SET NULL
 );
 
-COMMENT ON TABLE SchemeProtoGroup IS '$Id: schemeprotogroup.sql,v 1.7 2005/06/15 17:03:10 bass Exp $';
+COMMENT ON TABLE SchemeProtoGroup IS '$Id: schemeprotogroup.sql,v 1.8 2005/09/25 17:52:41 bass Exp $';
 
 CREATE SEQUENCE SchemeProtoGroup_Seq ORDER;

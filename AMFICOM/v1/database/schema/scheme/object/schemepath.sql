@@ -1,4 +1,4 @@
--- $Id: schemepath.sql,v 1.6 2005/07/25 11:50:55 bass Exp $
+-- $Id: schemepath.sql,v 1.7 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE SchemePath (
 	id NUMBER(19) NOT NULL,
@@ -23,11 +23,11 @@ CREATE TABLE SchemePath (
 		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmpth_transmission_path_fk FOREIGN KEY(transmission_path_id)
-		REFERENCES TransmissionPath(id) ON DELETE CASCADE,
+		REFERENCES TransmissionPath(id) ON DELETE SET NULL,
 	CONSTRAINT schmpth_prnt_schm_mntng_sln_fk FOREIGN KEY(prnt_schm_mntrng_sltn_id)
 		REFERENCES SchemeMonitoringSolution(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemePath IS '$Id: schemepath.sql,v 1.6 2005/07/25 11:50:55 bass Exp $';
+COMMENT ON TABLE SchemePath IS '$Id: schemepath.sql,v 1.7 2005/09/25 17:52:41 bass Exp $';
 
 CREATE SEQUENCE SchemePath_Seq ORDER;

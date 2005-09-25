@@ -1,4 +1,4 @@
--- $Id: schemeport.sql,v 1.7 2005/06/15 17:03:10 bass Exp $
+-- $Id: schemeport.sql,v 1.8 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE SchemePort (
 	id NUMBER(19) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE SchemePort (
 	CONSTRAINT schemeport_port_fk FOREIGN KEY(port_id)
 		REFERENCES Port(id) ON DELETE CASCADE,
 	CONSTRAINT schemeport_msrmnt_port_fk FOREIGN KEY(measurement_port_id)
-		REFERENCES MeasurementPort(id) ON DELETE CASCADE,
+		REFERENCES MeasurementPort(id) ON DELETE SET NULL,
 	CONSTRAINT schemeport_prnt_schemdev_fk FOREIGN KEY(parent_device_id)
 		REFERENCES SchemeDevice(id) ON DELETE CASCADE,
 --
@@ -43,6 +43,6 @@ CREATE TABLE SchemePort (
 		AND port_id IS NULL))
 );
 
-COMMENT ON TABLE SchemePort IS '$Id: schemeport.sql,v 1.7 2005/06/15 17:03:10 bass Exp $';
+COMMENT ON TABLE SchemePort IS '$Id: schemeport.sql,v 1.8 2005/09/25 17:52:41 bass Exp $';
 
 CREATE SEQUENCE SchemePort_Seq ORDER;

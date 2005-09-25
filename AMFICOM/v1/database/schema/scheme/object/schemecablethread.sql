@@ -1,4 +1,4 @@
--- $Id: schemecablethread.sql,v 1.5 2005/08/31 17:48:30 bass Exp $
+-- $Id: schemecablethread.sql,v 1.6 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE SchemeCableThread (
 	id NUMBER(19) NOT NULL,
@@ -32,13 +32,13 @@ CREATE TABLE SchemeCableThread (
 		REFERENCES Link(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmcblthrd_src_schm_prt_fk FOREIGN KEY(source_scheme_port_id)
-		REFERENCES SchemePort(id) ON DELETE CASCADE,
+		REFERENCES SchemePort(id) ON DELETE SET NULL,
 	CONSTRAINT schmcblthrd_trgt_schm_prt_fk FOREIGN KEY(target_scheme_port_id)
-		REFERENCES SchemePort(id) ON DELETE CASCADE,
+		REFERENCES SchemePort(id) ON DELETE SET NULL,
 	CONSTRAINT schmcblthrd_prntschmcbllnk_fk FOREIGN KEY(parent_scheme_cable_link_id)
 		REFERENCES SchemeCableLink(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemeCableThread IS '$Id: schemecablethread.sql,v 1.5 2005/08/31 17:48:30 bass Exp $';
+COMMENT ON TABLE SchemeCableThread IS '$Id: schemecablethread.sql,v 1.6 2005/09/25 17:52:41 bass Exp $';
 
 CREATE SEQUENCE SchemeCableThread_Seq ORDER;

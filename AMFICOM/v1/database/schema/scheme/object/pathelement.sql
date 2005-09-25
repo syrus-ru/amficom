@@ -1,4 +1,4 @@
--- $Id: pathelement.sql,v 1.9 2005/08/31 17:33:57 bass Exp $
+-- $Id: pathelement.sql,v 1.10 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE PathElement (
 	id NUMBER(19) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE PathElement (
         end_abstract_scheme_port_id NUMBER(19),
 	scheme_cable_thread_id,
 	scheme_link_id,
-	parent_scheme_path_id,
+	parent_scheme_path_id NOT NULL,
 --
 	CONSTRAINT pathelement_pk PRIMARY KEY(id),
 --
@@ -51,6 +51,6 @@ CREATE TABLE PathElement (
 		AND scheme_link_id IS NOT NULL))
 );
 
-COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.9 2005/08/31 17:33:57 bass Exp $';
+COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.10 2005/09/25 17:52:41 bass Exp $';
 
 CREATE SEQUENCE PathElement_Seq ORDER;

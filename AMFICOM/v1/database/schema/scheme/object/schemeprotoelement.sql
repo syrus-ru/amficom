@@ -1,4 +1,4 @@
--- $Id: schemeprotoelement.sql,v 1.8 2005/06/15 17:03:10 bass Exp $
+-- $Id: schemeprotoelement.sql,v 1.9 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE SchemeProtoElement (
 	id NUMBER(19) NOT NULL,
@@ -28,13 +28,13 @@ CREATE TABLE SchemeProtoElement (
 		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schemeprotoelement_eqpmnttp_fk FOREIGN KEY(equipment_type_id)
-		REFERENCES EquipmentType(id) ON DELETE CASCADE,
+		REFERENCES EquipmentType(id) ON DELETE SET NULL,
 	CONSTRAINT schemeprotoelement_symbol_fk FOREIGN KEY(symbol_id)
-		REFERENCES ImageResource(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE SET NULL,
 	CONSTRAINT schemeprotoelement_schmcell_fk FOREIGN KEY(scheme_cell_id)
-		REFERENCES ImageResource(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE SET NULL,
 	CONSTRAINT schemeprotoelement_ugocell_fk FOREIGN KEY(ugo_cell_id)
-		REFERENCES ImageResource(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE SET NULL,
 	CONSTRAINT schemeprotoelement_prnt_spg_fk FOREIGN KEY(parent_scheme_proto_group_id)
 		REFERENCES SchemeProtoGroup(id) ON DELETE CASCADE,
 	CONSTRAINT schemeprotoelement_prnt_spe_fk FOREIGN KEY(parent_scheme_proto_element_id)
@@ -50,6 +50,6 @@ CREATE TABLE SchemeProtoElement (
 		AND parent_scheme_proto_element_id iS NULL))
 );
 
-COMMENT ON TABLE SchemeProtoElement IS '$Id: schemeprotoelement.sql,v 1.8 2005/06/15 17:03:10 bass Exp $';
+COMMENT ON TABLE SchemeProtoElement IS '$Id: schemeprotoelement.sql,v 1.9 2005/09/25 17:52:41 bass Exp $';
 
 CREATE SEQUENCE SchemeProtoElement_Seq ORDER;

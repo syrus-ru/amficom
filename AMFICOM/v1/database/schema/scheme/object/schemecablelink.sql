@@ -1,4 +1,4 @@
--- $Id: schemecablelink.sql,v 1.7 2005/06/15 17:03:10 bass Exp $
+-- $Id: schemecablelink.sql,v 1.8 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE SchemeCableLink (
 	id NUMBER(19) NOT NULL,
@@ -36,9 +36,9 @@ CREATE TABLE SchemeCableLink (
 		REFERENCES CableLink(id) ON DELETE CASCADE,
 --
 	CONSTRAINT schmcbllnk_src_schm_cbl_prt_fk FOREIGN KEY(source_scheme_cable_port_id)
-		REFERENCES SchemeCablePort(id) ON DELETE CASCADE,
+		REFERENCES SchemeCablePort(id) ON DELETE SET NULL,
 	CONSTRAINT schmcbllnk_tgt_schm_cbl_prt_fk FOREIGN KEY(target_scheme_cable_port_id)
-		REFERENCES SchemeCablePort(id) ON DELETE CASCADE,
+		REFERENCES SchemeCablePort(id) ON DELETE SET NULL,
 --
 	CONSTRAINT schmcbllnk_prnt_scheme_fk FOREIGN KEY(parent_scheme_id)
 		REFERENCES Scheme(id) ON DELETE CASCADE,
@@ -52,6 +52,6 @@ CREATE TABLE SchemeCableLink (
 		AND cable_link_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeCableLink IS '$Id: schemecablelink.sql,v 1.7 2005/06/15 17:03:10 bass Exp $';
+COMMENT ON TABLE SchemeCableLink IS '$Id: schemecablelink.sql,v 1.8 2005/09/25 17:52:41 bass Exp $';
 
 CREATE SEQUENCE SchemeCableLink_Seq ORDER;

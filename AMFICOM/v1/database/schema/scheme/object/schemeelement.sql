@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.11 2005/08/15 11:14:34 max Exp $
+-- $Id: schemeelement.sql,v 1.12 2005/09/25 17:52:41 bass Exp $
 
 CREATE TABLE SchemeElement (
 	id NUMBER(19) NOT NULL,
@@ -36,24 +36,27 @@ CREATE TABLE SchemeElement (
 	CONSTRAINT schemeelement_equipmnt_fk FOREIGN KEY(equipment_id)
 		REFERENCES Equipment(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_kis_fk FOREIGN KEY(kis_id)
-		REFERENCES Kis(id) ON DELETE CASCADE,
+		REFERENCES Kis(id) ON DELETE SET NULL,
 	CONSTRAINT schemeelement_sitenode_fk FOREIGN KEY(site_node_id)
-		REFERENCES SiteNode(id) ON DELETE CASCADE,
+		REFERENCES SiteNode(id) ON DELETE SET NULL,
 	CONSTRAINT schemeelement_symbol_fk FOREIGN KEY(symbol_id)
-		REFERENCES ImageResource(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE SET NULL,
 	CONSTRAINT schemeelement_ugo_cell_fk FOREIGN KEY(ugo_cell_id)
-		REFERENCES ImageResource(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE SET NULL,
 	CONSTRAINT schemeelement_scheme_cell_fk FOREIGN KEY(scheme_cell_id)
-		REFERENCES ImageResource(id) ON DELETE CASCADE,
+		REFERENCES ImageResource(id) ON DELETE SET NULL,
 	CONSTRAINT schemeelement_prnt_schm_fk FOREIGN KEY(parent_scheme_id)
 		REFERENCES Scheme(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_prnt_schmlmnt_fk FOREIGN KEY(parent_scheme_element_id)
 		REFERENCES SchemeElement(id) ON DELETE CASCADE,
 --
-	-- Boolean OR: equipment_type_id and equipment_id may be both nulls.
+	-- Boolean XOR: only one of equipment_type_id and
+	-- equipment_id may be defined, and only one may be null.
 	CONSTRAINT schemeelement_equipmnt_chk CHECK
-		((equipment_type_id IS NULL)
-		OR (equipment_id IS NULL)),
+		((equipment_type_id IS NULL
+		AND equipment_id IS NOT NULL)
+		OR (equipment_type_id IS NOT NULL
+		AND equipment_id IS NULL)),
 	-- Boolean XOR: only one of parent_scheme_id and
 	-- parent_scheme_element_id may be defined, and only one may be null.
 	CONSTRAINT schemeelement_prnt_chk CHECK
@@ -63,7 +66,7 @@ CREATE TABLE SchemeElement (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.11 2005/08/15 11:14:34 max Exp $';
+COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.12 2005/09/25 17:52:41 bass Exp $';
 
 ALTER TABLE Scheme ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)
