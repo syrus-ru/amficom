@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.87 2005/09/25 15:42:48 bass Exp $
+ * $Id: Collector.java,v 1.88 2005/09/25 15:50:05 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/09/25 15:42:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.88 $, $Date: 2005/09/25 15:50:05 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -556,5 +556,9 @@ public final class Collector extends StorableObject
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
 		}
+	}
+
+	public Characterizable getCharacterizable() {
+		return this;
 	}
 }

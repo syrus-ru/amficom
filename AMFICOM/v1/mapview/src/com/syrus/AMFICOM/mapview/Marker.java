@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.37 2005/09/09 17:22:08 krupenn Exp $
+ * $Id: Marker.java,v 1.38 2005/09/25 15:50:54 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  *
- * @version $Revision: 1.37 $, $Date: 2005/09/09 17:22:08 $
+ * @version $Revision: 1.38 $, $Date: 2005/09/25 15:50:54 $
  * @module mapview
  * @author $Author: krupenn $
  */
@@ -473,6 +474,10 @@ public class Marker extends AbstractNode {
 	@Override
 	public final IdlStorableObject getTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
+	}
+
+	public Characterizable getCharacterizable() {
+		return null;
 	}
 
 }

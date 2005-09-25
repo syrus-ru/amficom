@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.62 2005/09/08 18:26:29 bass Exp $
+ * $Id: Mark.java,v 1.63 2005/09/25 15:50:05 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/09/08 18:26:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.63 $, $Date: 2005/09/25 15:50:05 $
  * @module map
  */
 public final class Mark extends AbstractNode {
@@ -416,6 +417,10 @@ public final class Mark extends AbstractNode {
 		setDescription(mnes.description);
 		setImageId(mnes.imageId);
 		setLocation(mnes.location);
+	}
+
+	public Characterizable getCharacterizable() {
+		return null;
 	}
 
 }

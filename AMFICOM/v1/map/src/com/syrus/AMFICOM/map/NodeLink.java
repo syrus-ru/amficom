@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.98 2005/09/25 15:42:48 bass Exp $
+ * $Id: NodeLink.java,v 1.99 2005/09/25 15:50:05 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/09/25 15:42:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.99 $, $Date: 2005/09/25 15:50:05 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -642,5 +642,9 @@ public final class NodeLink extends StorableObject
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
 		}
+	}
+
+	public Characterizable getCharacterizable() {
+		return null;
 	}
 }

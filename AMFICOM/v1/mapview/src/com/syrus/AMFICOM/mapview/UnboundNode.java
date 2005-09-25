@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundNode.java,v 1.30 2005/08/24 15:00:29 bass Exp $
+ * $Id: UnboundNode.java,v 1.31 2005/09/25 15:50:54 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,12 +30,11 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному
  * ни к какому элементу топологической схемы.
  *
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/08/24 15:00:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/09/25 15:50:54 $
  * @module mapview
  */
-public final class UnboundNode extends SiteNode
-{
+public final class UnboundNode extends SiteNode {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -191,6 +191,11 @@ public final class UnboundNode extends SiteNode
 	@Override
 	public void setName(final String name) {
 		throw new UnsupportedOperationException("Use SchemeElement.setName(String)");
+	}
+
+	@Override
+	public Characterizable getCharacterizable() {
+		return null;
 	}
 
 }

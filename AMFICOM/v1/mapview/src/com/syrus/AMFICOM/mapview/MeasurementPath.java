@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.49 2005/09/20 08:20:08 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.50 2005/09/25 15:50:54 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -39,7 +40,7 @@ import com.syrus.util.Log;
  * Элемент пути.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.49 $, $Date: 2005/09/20 08:20:08 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/25 15:50:54 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -506,6 +507,10 @@ public final class MeasurementPath implements MapElement {
 	 */
 	public void revert(final MapElementState state) {
 		throw new UnsupportedOperationException();
+	}
+
+	public Characterizable getCharacterizable() {
+		return this.schemePath;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.81 2005/09/20 16:41:21 bass Exp $
+ * $Id: TopologicalNode.java,v 1.82 2005/09/25 15:50:05 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -45,8 +46,8 @@ import com.syrus.util.Log;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/09/20 16:41:21 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.82 $, $Date: 2005/09/25 15:50:05 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -357,5 +358,9 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 			Log.debugException(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
+	}
+
+	public Characterizable getCharacterizable() {
+		return null;
 	}
 }

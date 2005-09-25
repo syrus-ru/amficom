@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.119 2005/09/25 15:42:48 bass Exp $
+ * $Id: PhysicalLink.java,v 1.120 2005/09/25 15:50:05 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.119 $, $Date: 2005/09/25 15:42:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.120 $, $Date: 2005/09/25 15:50:05 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1141,5 +1141,9 @@ public class PhysicalLink extends StorableObject
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
 		}
+	}
+
+	public Characterizable getCharacterizable() {
+		return this;
 	}
 }	

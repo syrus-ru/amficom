@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.95 2005/09/20 16:41:21 bass Exp $
+ * $Id: SiteNode.java,v 1.96 2005/09/25 15:50:05 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -59,8 +60,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/09/20 16:41:21 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.96 $, $Date: 2005/09/25 15:50:05 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -475,5 +476,9 @@ public class SiteNode extends AbstractNode
 			Log.errorException(e);
 		}
 		return Collections.emptySet();
+	}
+
+	public Characterizable getCharacterizable() {
+		return this;
 	}
 }

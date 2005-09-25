@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.22 2005/09/23 11:45:46 bass Exp $
+ * $Id: MapElement.java,v 1.23 2005/09/25 15:50:05 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  *
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/09/23 11:45:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/09/25 15:50:05 $
  * @module map
  */
 public interface MapElement extends Identifiable, Namable {
@@ -87,4 +88,9 @@ public interface MapElement extends Identifiable, Namable {
 
 	Set<Characteristic> getCharacteristics(final boolean usePool)
 	throws ApplicationException;
+
+	/**
+	 * TODO think of usen getCharacterizable instead of getCharacteristics in client code
+	 */
+	Characterizable getCharacterizable();
 }

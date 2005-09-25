@@ -1,5 +1,5 @@
 /*-
- * $Id: VoidElement.java,v 1.21 2005/08/24 15:00:29 bass Exp $
+ * $Id: VoidElement.java,v 1.22 2005/09/25 15:50:54 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.mapview;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -19,8 +20,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Пустой элемент.
  *
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/08/24 15:00:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/09/25 15:50:54 $
  * @module mapview
  */
 public final class VoidElement implements MapElement {
@@ -154,6 +155,10 @@ public final class VoidElement implements MapElement {
 	 */
 	public void setRemoved(final boolean removed) {
 		throw new UnsupportedOperationException();
+	}
+
+	public Characterizable getCharacterizable() {
+		return null;
 	}
 
 }
