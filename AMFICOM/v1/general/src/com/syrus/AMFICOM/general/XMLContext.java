@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLContext.java,v 1.2 2005/08/23 15:52:14 bob Exp $
+* $Id: XMLContext.java,v 1.3 2005/09/25 11:29:16 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/23 15:52:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/09/25 11:29:16 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -46,7 +46,7 @@ public final class XMLContext {
 
 	@SuppressWarnings("unchecked")
 	public static <T extends StorableObject> AbstractStorableObjectXML<T> getXMLHandler(final short entityCode ) {
-		AbstractStorableObjectXML handler = (AbstractStorableObjectXML) ENTITY_CODE_XML_MAP.get(entityCode);
+		final AbstractStorableObjectXML handler = (AbstractStorableObjectXML) ENTITY_CODE_XML_MAP.get(entityCode);
 		assert handler != null : "XML Handler for " + ObjectEntities.codeToString(entityCode) + " isn't registered.";
 		return handler;
 	}

@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.18 2005/09/23 15:03:35 bob Exp $
+* $Id: CORBAServer.java,v 1.19 2005/09/25 11:31:05 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/23 15:03:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/09/25 11:31:05 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -224,15 +224,11 @@ public class CORBAServer {
 			Log.debugMessage("CORBAServer.resolveReference | Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
 			return ref;
 		} catch (UserException nf) {
-			throw new CommunicationException('\'' 
-					+ name 
-					+ "' " 
-					+ I18N.getString("Error.Text.NotFound"),
-				nf);
+			throw new CommunicationException('\'' + name + "' " + I18N.getString("Error.Text.NotFound"), nf);
 		}
 	}
 
-	/*	TODO Maybe return set of CORBA references instead of strings*/
+	/* TODO Maybe return set of CORBA references instead of strings */
 	public String[] getSubContextReferences(final String subContextName) throws CommunicationException {
 		org.omg.CORBA.Object subContextRef = null;
 		try {
