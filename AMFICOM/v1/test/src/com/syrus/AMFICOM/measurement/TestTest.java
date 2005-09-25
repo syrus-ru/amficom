@@ -1,5 +1,5 @@
 /*-
- * $Id: TestTest.java,v 1.2 2005/09/22 12:30:43 arseniy Exp $
+ * $Id: TestTest.java,v 1.3 2005/09/25 12:23:54 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/22 12:30:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/25 12:23:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
@@ -39,7 +39,7 @@ public final class TestTest extends TestCase {
 		System.out.println("Loaded: " + test.toString() + ", status: " + test.getStatus().value());
 		System.out.println("Stops: " + test.getStoppingMap());
 
-		test.addStopping("Надо есчо");
+		test.addStopping("Просто надо");
 
 		System.out.println("Stops: " + test.getStoppingMap());
 
