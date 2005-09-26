@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.5 2005/09/26 11:19:34 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.6 2005/09/26 12:54:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -147,9 +147,10 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 	private static double[] generateTestBellcoreYArray(int len, int dist) {
 		final int N = len;
 		double noise = 10.0;
+		double s2n = 5.0;
 		double resolution = 1.0; // m
 		double att = 0.22; // db/km
-		double y0 = noise + N * 0.5 * att / 1e3 * resolution;
+		double y0 = noise + s2n + N * 0.5 * att / 1e3 * resolution;
 		final int NCONN = 3;
 		int[] connPos = {0, dist, N / 3 * 2}; // FIXME
 		double[] connAmpl = {15, 10, 15};
@@ -183,7 +184,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 				str.println(i + " " + y[i]);
 			}
 		}
-		return new PFTrace(new BellcoreCreator(y).getBS());
+		return new PFTrace(new BellcoreCreator(y, 1.0, 50).getBS());
 	}
 
 	private static ReflectogramMismatch getFirstMismatch(List list) {
@@ -200,7 +201,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		final int N = 10000;
 		final int dist1 = N / 3;
 		System.out.println("generating trace...");
-		PFTrace trace = generateTestTrace(N, dist1, false);
+		PFTrace trace = generateTestTrace(N, dist1, true);
 		System.out.println("Analysing trace...");
 		Collection<PFTrace> trColl =
 			new ArrayList<PFTrace>();
