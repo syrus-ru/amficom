@@ -322,6 +322,23 @@ return;}
 	// удаляем всплески после спадов при маскировании
 	removedMaskedSplashes(accSpl);
 
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+		{
+			int i;
+			fprintf(stderr, "accSpl acter removedMaskedSplashes: Total %d splices\n", accSpl.getLength());
+			for (i = 0; i < accSpl.getLength(); i++) {
+				fprintf(stderr, "spl[%d]: %d - %d  s %+d @ %d -- ampl %g\n",
+					i,
+					((Splash*)accSpl[i])->begin_thr,
+					((Splash*)accSpl[i])->end_thr,
+					((Splash*)accSpl[i])->sign,
+					((Splash*)accSpl[i])->scale,
+					((Splash*)accSpl[i])->f_extr);
+			}
+			fflush(stderr);
+		}
+#endif
+
 	// ======= ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 	findEventsBySplashes(TEMP, accSpl, scaleB); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
 	processEventsBeginsEnds(TEMP); // уточнить границы событий (может использовать accSpl через ссылки из EventParams)
@@ -867,16 +884,17 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 	if (sp1->begin_conn == -1 || sp1->sign < 0)
 		return ret;
 	double distCrit = fabs(sp1->f_extr) > rACrit ? rSBig : rSSmall;
+
 	for (int j = i + 1; j < splashes.getLength(); j++) {
 		Splash *tmp = (Splash*)splashes[j];
 		double ltmp = fabs(tmp->begin_thr - sp1->end_thr);
 		if (ltmp > distCrit) // достигли макс. протяжености
 	break;
 		if (tmp->sign > 0) { // подъем
-			if (tmp->begin_thr != -1)
-	break; // подъем свар. и выше - это уже не наш коннектор
+			if (tmp->begin_conn != -1)
+	break; // подъем конн. и выше - это уже не наш коннектор
 			else
-	continue; // подъем меньше свар. - игнорируем
+	continue; // подъем меньше конн. - игнорируем; XXX: вообще говоря, нужнее всего игнорировать фиктивные подъемы, возникающие из-за centerWletImage, а эту в-ну лучше рассчитывать из наклона и ширины в/л, а не брать такую грубую оценку как эта
 		}
 		// спад в пределах макс. протяженности
 		if (tmp->begin_conn != -1) {
