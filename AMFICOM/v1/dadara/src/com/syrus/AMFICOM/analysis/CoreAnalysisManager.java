@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.114 2005/09/01 17:26:26 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.115 2005/09/26 07:27:56 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.114 $, $Date: 2005/09/01 17:26:26 $
+ * @version $Revision: 1.115 $, $Date: 2005/09/26 07:27:56 $
  * @module
  */
 
@@ -278,30 +278,52 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * Проводит пред-анализ для одной рефлектограммы: <ul>
+	 * Проводит пред-фильтрацию для одной исходной рефлектограммы
+	 * @param bs Исходная рефлектограмма
+	 * @return пред-фильтрованная рефлектограмма
+	 */
+	protected static PFTrace makePreFiltration(BellcoreStructure bs) {
+		return new PFTrace(bs);
+	}
+
+	/**
+	 * Проводит пред-анализ для одной рефлектограммы <ul>
+	 * @return результаты, приемлемые для анализа
+	 *   {@link #makeAnalysis(TracePreAnalysis, AnalysisParameters)}
+	 * @deprecated используйте {@link #makePreAnalysis(PFTrace, boolean)}
+	 */
+	@Deprecated
+	protected static TracePreAnalysis makePreAnalysis(BellcoreStructure bs,
+			boolean needNoise) {
+		return makePreAnalysis(makePreFiltration(bs), needNoise);
+	}
+
+	/**
+	 * Проводит пред-анализ для одной пред-фильтрованной рефлектограммы: <ul>
 	 *   <li> сохраняет traceData рефлектограммы
 	 *   <li> выделяет из р/г параметры тестирования, необходимые для анализа
 	 *     (разрешение, длина импульса, показатель преломления)
 	 *   <li> определяет длину рефлектограммы до "ухода в ноль"
 	 *   <li> если запрошено, определяет также уровень шума
-	 * @param bs Входная рефлектограмма
+	 * @param trace Входная рефлектограмма после пред-фильтрации
 	 * @param needNoise true, если нужено также вычислить уровень шума 
 	 * @return результаты, приемлемые для анализа
 	 *   {@link #makeAnalysis(TracePreAnalysis, AnalysisParameters)}
 	 */
-	protected static TracePreAnalysis makePreAnalysis(BellcoreStructure bs,
+	protected static TracePreAnalysis makePreAnalysis(PFTrace trace,
 			boolean needNoise) {
 		TracePreAnalysis res = new TracePreAnalysis();
 		// данные рефлектограммы
-		double[] y = bs.getTraceData(); // rather slow
-		res.y = y;
-		res.deltaX = bs.getResolution();
-		res.ior = bs.getIOR();
-		res.pulseWidth = bs.getPulsewidth();
-		// данные анализа
-		res.traceLength = calcTraceLength(y);
+		double[] yRaw = trace.getRawTrace();
+		double[] yFilteredClone = trace.getFilteredTraceClone();
+		res.y = yFilteredClone;
+		res.deltaX = trace.getResolution();
+		res.ior = trace.getIOR();
+		res.pulseWidth = trace.getPulsewidth();
+		// данные пред-анализа
+		res.traceLength = calcTraceLength(yRaw);
 		if (needNoise) {
-			double[] noise = calcNoiseArray(y, res.traceLength); // slow
+			double[] noise = calcNoiseArray(yRaw, res.traceLength); // slow
 			res.setNoise(noise);
 		} else {
 			res.setNoise(null);
