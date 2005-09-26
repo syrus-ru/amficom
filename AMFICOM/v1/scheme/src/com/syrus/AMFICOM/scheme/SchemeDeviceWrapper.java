@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceWrapper.java,v 1.8 2005/08/15 15:15:35 max Exp $
+ * $Id: SchemeDeviceWrapper.java,v 1.9 2005/09/26 16:40:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/15 15:15:35 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/09/26 16:40:48 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeDeviceWrapper extends StorableObjectWrapper<SchemeDevice> {
@@ -100,17 +102,26 @@ public final class SchemeDeviceWrapper extends StorableObjectWrapper<SchemeDevic
 	}
 
 	@Override
-	public void setValue(SchemeDevice schemeDevice, String key, Object value) {
-		if (schemeDevice != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeDevice.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeDevice.setDescription((String) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
-				schemeDevice.setParentSchemeProtoElementId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
-				schemeDevice.setParentSchemeElementId((Identifier) value);
+	public void setValue(final SchemeDevice schemeDevice,
+			final String key,
+			final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeDevice != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeDevice.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeDevice.setDescription((String) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+					schemeDevice.setParentSchemeProtoElementId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
+					schemeDevice.setParentSchemeElementId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

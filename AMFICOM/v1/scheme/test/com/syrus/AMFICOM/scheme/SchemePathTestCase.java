@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.22 2005/09/20 11:49:55 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.23 2005/09/26 16:40:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/09/20 11:49:55 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/26 16:40:48 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -711,10 +711,10 @@ public final class SchemePathTestCase extends TestCase {
 		
 		final Scheme scheme0prime = scheme0.clone();
 		final SchemeElement schemeElement0prime = scheme0prime.getSchemeElements().iterator().next();
-		final Scheme scheme1prime = schemeElement0prime.getSchemes(true).iterator().next();
+		final Scheme scheme1prime = schemeElement0prime.getSchemes(usePool).iterator().next();
 		final SchemeElement schemeElement1prime = scheme1prime.getSchemeElements().iterator().next();
 
-		final SchemeDevice schemeDevice0prime = schemeElement1prime.getSchemeDevices().iterator().next();
+		final SchemeDevice schemeDevice0prime = schemeElement1prime.getSchemeDevices(usePool).iterator().next();
 
 		final SchemeLink schemeLink0prime = scheme0prime.getSchemeLinks().iterator().next();
 

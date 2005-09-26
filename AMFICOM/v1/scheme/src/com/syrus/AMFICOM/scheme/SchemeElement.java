@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.118 2005/09/26 15:11:51 bass Exp $
+ * $Id: SchemeElement.java,v 1.119 2005/09/26 16:40:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -91,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.118 $, $Date: 2005/09/26 15:11:51 $
+ * @version $Revision: 1.119 $, $Date: 2005/09/26 16:40:48 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -585,14 +584,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
-	/**
-	 * @param schemeDevice cannot be <code>null</code>.
-	 */
-	public void addSchemeDevice(final SchemeDevice schemeDevice) {
-		assert schemeDevice != null: NON_NULL_EXPECTED;
-		schemeDevice.setParentSchemeElement(this);
-	}
-
 	@Override
 	public SchemeElement clone() throws CloneNotSupportedException {
 		final boolean usePool = false;
@@ -627,10 +618,10 @@ public final class SchemeElement extends AbstractSchemeElement
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
 			}
-			for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
+			for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
 				clone.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
-				clone.addSchemeDevice(schemeDeviceClone);
+				clone.addSchemeDevice(schemeDeviceClone, usePool);
 			}
 			for (final SchemeLink schemeLink : this.getSchemeLinks0(usePool)) {
 				final SchemeLink schemeLinkClone = schemeLink.clone();
@@ -704,7 +695,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeDevices0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeDevices0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeLinks0(usePool)) {
@@ -878,22 +869,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
-	/**
-	 * @return an immutable set.
-	 */
-	public Set<SchemeDevice> getSchemeDevices() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeDevices0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeDevice> getSchemeDevices0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true);
-	}
-
 	Identifier getSiteNodeId() {
 		assert this.siteNodeId != null: OBJECT_NOT_INITIALIZED;
 		assert this.siteNodeId.isVoid() || this.siteNodeId.getMajor() == SITENODE_CODE;
@@ -1038,7 +1013,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		if (schemeElement.isSetSchemeDevices()) {
 			schemeElement.unsetSchemeDevices();
 		}
-		final Set<SchemeDevice> schemeDevices = this.getSchemeDevices0();
+		final Set<SchemeDevice> schemeDevices = this.getSchemeDevices0(usePool);
 		if (!schemeDevices.isEmpty()) {
 			final XmlSchemeDeviceSeq schemeDeviceSeq = schemeElement.addNewSchemeDevices();
 			for (final SchemeDevice schemeDevice : schemeDevices) {
@@ -1105,18 +1080,6 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	private SchemeImageResource getUgoCell0() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
-	}
-
-	/**
-	 * The <code>SchemeDevice</code> must belong to this
-	 * <code>SchemeElement</code>, or crap will meet the fan.
-	 *
-	 * @param schemeDevice
-	 */
-	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
-		assert schemeDevice != null: NON_NULL_EXPECTED;
-		assert schemeDevice.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeDevice.setParentSchemeElement(null);
 	}
 
 	/**
@@ -1398,22 +1361,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.setSchemeCellId(Identifier.possiblyVoid(schemeCell));
 	}
 
-	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) throws ApplicationException {
-		assert schemeDevices != null: NON_NULL_EXPECTED;
-		final Set<SchemeDevice> oldSchemeDevices = this.getSchemeDevices0();
-		/*
-		 * Check is made to prevent SchemeDevices from
-		 * permanently losing their parents.
-		 */
-		oldSchemeDevices.removeAll(schemeDevices);
-		for (final SchemeDevice oldSchemeDevice : oldSchemeDevices) {
-			this.removeSchemeDevice(oldSchemeDevice);
-		}
-		for (final SchemeDevice schemeDevice : schemeDevices) {
-			this.addSchemeDevice(schemeDevice);
-		}
-	}
-
 	public void setSiteNode(final SiteNode siteNode) {
 		final Identifier newSiteNodeId = Identifier.possiblyVoid(siteNode);
 		if (this.siteNodeId.equals(newSiteNodeId))
@@ -1591,6 +1538,91 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	public IdlSchemeElementKind getKind() {
 		return IdlSchemeElementKind.from_int(this.kind);
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme devices                              *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeDevice> getSchemeDeviceContainerWrappee() {
+		if (this.schemeDeviceContainerWrappee == null) {
+			this.schemeDeviceContainerWrappee = new StorableObjectContainerWrappee<SchemeDevice>(this, SCHEMEDEVICE_CODE);
+		}
+		return this.schemeDeviceContainerWrappee;
+	}
+
+	/**
+	 * @param schemeDevice cannot be <code>null</code>.
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void addSchemeDevice(final SchemeDevice schemeDevice,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeDevice != null: NON_NULL_EXPECTED;
+		schemeDevice.setParentSchemeElement(this, usePool);
+	}
+
+	/**
+	 * The <code>SchemeDevice</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeDevice
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void removeSchemeDevice(final SchemeDevice schemeDevice,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeDevice != null: NON_NULL_EXPECTED;
+		assert schemeDevice.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeDevice.setParentSchemeElement(null, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @return an immutable set.
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeDevice> getSchemeDevices(final boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getSchemeDevices0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<SchemeDevice> getSchemeDevices0(final boolean usePool)
+	throws ApplicationException {
+		return this.getSchemeDeviceContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param schemeDevices
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeDevices != null: NON_NULL_EXPECTED;
+
+		final Set<SchemeDevice> oldSchemeDevices = this.getSchemeDevices0(usePool);
+
+		final Set<SchemeDevice> toRemove = new HashSet<SchemeDevice>(oldSchemeDevices);
+		toRemove.removeAll(schemeDevices);
+		for (final SchemeDevice schemeDevice : toRemove) {
+			this.removeSchemeDevice(schemeDevice, usePool);
+		}
+
+		final Set<SchemeDevice> toAdd = new HashSet<SchemeDevice>(schemeDevices);
+		toAdd.removeAll(oldSchemeDevices);
+		for (final SchemeDevice schemeDevice : toAdd) {
+			this.addSchemeDevice(schemeDevice, usePool);
+		}
 	}
 
 	/*-********************************************************************
@@ -1930,7 +1962,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			for (final SchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices0()) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
 				super.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
-				this.addSchemeDevice(schemeDeviceClone);
+				this.addSchemeDevice(schemeDeviceClone, usePool);
 			}
 			for (final SchemeLink schemeLink : schemeProtoElement.getSchemeLinks0()) {
 				final SchemeLink schemeLinkClone = schemeLink.clone();
@@ -1964,7 +1996,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	public Set<SchemePort> getSchemePortsRecursively(final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
-		for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
+		for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
 			schemePorts.addAll(schemeDevice.getSchemePorts0());
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
@@ -1981,7 +2013,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
-		for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
+		for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
 			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts0());
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
@@ -2163,7 +2195,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final AbstractSchemePort abstractSchemePort,
 			final boolean usePool)
 	throws ApplicationException {
-		if (this.getSchemeDevices0().contains(abstractSchemePort.getParentSchemeDeviceId())) {
+		if (this.getSchemeDevices0(usePool).contains(abstractSchemePort.getParentSchemeDeviceId())) {
 			return true;
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {

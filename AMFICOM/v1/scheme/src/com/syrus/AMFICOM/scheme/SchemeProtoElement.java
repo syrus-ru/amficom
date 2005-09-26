@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.97 2005/09/26 15:11:52 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.98 2005/09/26 16:40:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/09/26 15:11:52 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/26 16:40:48 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -1561,6 +1561,19 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
 		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme devices                              *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeDevice> getSchemeDeviceContainerWrappee() {
+		if (this.schemeDeviceContainerWrappee == null) {
+			this.schemeDeviceContainerWrappee = new StorableObjectContainerWrappee<SchemeDevice>(this, SCHEMEDEVICE_CODE);
+		}
+		return this.schemeDeviceContainerWrappee;
 	}
 
 	/*-********************************************************************
