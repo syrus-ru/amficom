@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.109 2005/09/23 12:29:02 bob Exp $
+ * $Id: SchedulerModel.java,v 1.110 2005/09/26 05:53:08 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/09/23 12:29:02 $
+ * @version $Revision: 1.110 $, $Date: 2005/09/26 05:53:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -236,9 +236,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
 			this.analysisType = (AnalysisType) evt.getNewValue();
 		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
-			this.measurementType = (MeasurementType) evt.getNewValue();
+			this.setSelectedMeasurementType((MeasurementType) evt.getNewValue());
 		} else if (propertyName.equals(COMMAND_SET_MONITORED_ELEMENT)) {
-			this.monitoredElement = (MonitoredElement) evt.getNewValue();
+			this.setSelectedMonitoredElement((MonitoredElement) evt.getNewValue());
 		} 
 //		else if (propertyName.equals(COMMAND_SET_SET)) {
 //			this.set = (ParameterSet) evt.getNewValue();
@@ -502,6 +502,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void setSelectedMeasurementType(final MeasurementType measurementType) {
+		assert Log.debugMessage("SchedulerModel.setSelectedMeasurementType | " + this.measurementType + " > " + measurementType,
+			Log.DEBUGLEVEL10);
 		if (this.measurementType == null || measurementType == null
 				|| !this.measurementType.equals(measurementType)) {
 			this.measurementType = measurementType;
@@ -510,6 +512,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement) {
+		assert Log.debugMessage("SchedulerModel.setSelectedMonitoredElement | " + this.monitoredElement + " > " + monitoredElement,
+			Log.DEBUGLEVEL10);
 		if (this.monitoredElement == null || monitoredElement == null
 				|| !this.monitoredElement.equals(monitoredElement)) {
 			this.monitoredElement = monitoredElement;
@@ -518,6 +522,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement, final MeasurementType measurementType) {
+		assert Log.debugMessage("SchedulerModel.setSelectedMonitoredElement | " + this.monitoredElement + " > " + monitoredElement
+			+ "\n\t\t " + this.measurementType + " > " + measurementType,
+			Log.DEBUGLEVEL10);
 		boolean changed = false;
 		if (this.monitoredElement == null
 				|| monitoredElement == null
