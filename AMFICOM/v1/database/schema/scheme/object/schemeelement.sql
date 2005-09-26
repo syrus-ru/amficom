@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.13 2005/09/25 19:12:12 arseniy Exp $
+-- $Id: schemeelement.sql,v 1.14 2005/09/26 10:30:16 bass Exp $
 
 CREATE TABLE SchemeElement (
 	id NUMBER(19) NOT NULL,
@@ -50,13 +50,10 @@ CREATE TABLE SchemeElement (
 	CONSTRAINT schemeelement_prnt_schmlmnt_fk FOREIGN KEY(parent_scheme_element_id)
 		REFERENCES SchemeElement(id) ON DELETE CASCADE,
 --
-	-- Boolean XOR: only one of equipment_type_id and
-	-- equipment_id may be defined, and only one may be null.
---	CONSTRAINT schemeelement_equipmnt_chk CHECK
---		((equipment_type_id IS NULL
---		AND equipment_id IS NOT NULL)
---		OR (equipment_type_id IS NOT NULL
---		AND equipment_id IS NULL)),
+	-- Boolean OR: equipment_type_id and equipment_id may be both nulls.
+	CONSTRAINT schemeelement_equipmnt_chk CHECK
+		((equipment_type_id IS NULL)
+		OR (equipment_id IS NULL)),
 	-- Boolean XOR: only one of parent_scheme_id and
 	-- parent_scheme_element_id may be defined, and only one may be null.
 	CONSTRAINT schemeelement_prnt_chk CHECK
@@ -66,11 +63,11 @@ CREATE TABLE SchemeElement (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.13 2005/09/25 19:12:12 arseniy Exp $';
+COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.14 2005/09/26 10:30:16 bass Exp $';
 
 ALTER TABLE Scheme ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)
-		REFERENCES SchemeElement(id) ON DELETE CASCADE ENABLE
+		REFERENCES SchemeElement(id) ON DELETE SET NULL ENABLE
 );
 
 CREATE SEQUENCE SchemeElement_Seq ORDER;
