@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.97 2005/09/25 17:05:14 krupenn Exp $
+ * $Id: SiteNode.java,v 1.98 2005/09/26 14:16:22 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.map;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_GENERATE_NEW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
-import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.97 $, $Date: 2005/09/25 17:05:14 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/26 14:16:22 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -396,7 +396,7 @@ public class SiteNode extends AbstractNode
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
-			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, MODE_THROW_IF_ABSENT); 
+			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, MODE_GENERATE_NEW_IF_ABSENT); 
 		} else {
 			this.attachmentSiteNodeId = VOID_IDENTIFIER;
 		}
