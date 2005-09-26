@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.76 2005/09/25 16:06:52 krupenn Exp $
+ * $Id: MapFrame.java,v 1.77 2005/09/26 14:22:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -208,7 +208,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * 
  * 
  * 
- * @version $Revision: 1.76 $, $Date: 2005/09/25 16:06:52 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/26 14:22:41 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -217,11 +217,6 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	public static final String	NAME = "mapFrame"; //$NON-NLS-1$
 
 	public static final String MAP_FRAME_SHOWN = "map_frame_shown"; //$NON-NLS-1$
-
-	/**
-	 * Внутренний для окна карты диспетчер сообщений
-	 */
-	protected Dispatcher internalDispatcher = new Dispatcher();
 
 	/**
 	 * Контекст приложения
@@ -490,13 +485,6 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	}
 
 	/**
-	 * геттер
-	 */
-	public Dispatcher getInternalDispatcher() {
-		return this.internalDispatcher;
-	}
-
-	/**
 	 * обработка событий
 	 */
 	public void propertyChange(final PropertyChangeEvent pce) {
@@ -635,6 +623,9 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 
 	@Override
 	public void doDefaultCloseAction() {
+		if (this.checkChangesPresent()) {
+			return;
+		}
 		if (super.isMaximum())
 			try {
 				super.setMaximum(false);
