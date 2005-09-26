@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkWrapper.java,v 1.11 2005/09/08 16:34:40 bass Exp $
+ * $Id: SchemeLinkWrapper.java,v 1.12 2005/09/26 15:11:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/26 15:11:51 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -155,33 +157,42 @@ public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
 	}
 
 	@Override
-	public void setValue(SchemeLink schemeLink, String key, Object value) {
-		if (schemeLink != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeLink.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeLink.setDescription((String) value);
-			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
-				schemeLink.setPhysicalLength(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
-				schemeLink.setOpticalLength(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
-				schemeLink.setAbstractLinkTypeId((Identifier) value);
-			} else if (key.equals(COLUMN_LINK_ID)) {
-				schemeLink.setAbstractLinkId((Identifier) value);
-			} else if (key.equals(COLUMN_SITE_NODE_ID)) {
-				schemeLink.setSiteNodeId((Identifier) value);
-			} else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID)) {
-				schemeLink.setSourceAbstractSchemePortId((Identifier) value);
-			} else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID)) {
-				schemeLink.setTargetAbstractSchemePortId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-				schemeLink.setParentSchemeId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
-				schemeLink.setParentSchemeElementId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
-				schemeLink.setParentSchemeProtoElementId((Identifier) value);
+	public void setValue(final SchemeLink schemeLink,
+			final String key,
+			final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeLink != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeLink.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeLink.setDescription((String) value);
+				} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
+					schemeLink.setPhysicalLength(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
+					schemeLink.setOpticalLength(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
+					schemeLink.setAbstractLinkTypeId((Identifier) value);
+				} else if (key.equals(COLUMN_LINK_ID)) {
+					schemeLink.setAbstractLinkId((Identifier) value);
+				} else if (key.equals(COLUMN_SITE_NODE_ID)) {
+					schemeLink.setSiteNodeId((Identifier) value);
+				} else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID)) {
+					schemeLink.setSourceAbstractSchemePortId((Identifier) value);
+				} else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID)) {
+					schemeLink.setTargetAbstractSchemePortId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
+					schemeLink.setParentSchemeId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
+					schemeLink.setParentSchemeElementId((Identifier) value, usePool);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+					schemeLink.setParentSchemeProtoElementId((Identifier) value);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

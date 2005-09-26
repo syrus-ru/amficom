@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.103 2005/09/26 13:12:15 bass Exp $
+ * $Id: Scheme.java,v 1.104 2005/09/26 15:11:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/09/26 13:12:15 $
+ * @version $Revision: 1.104 $, $Date: 2005/09/26 15:11:51 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1453,6 +1453,19 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 
 		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, POST_IMPORT);
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme links                                *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
+		if (this.schemeLinkContainerWrappee == null) {
+			this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE);
+		}
+		return this.schemeLinkContainerWrappee;
 	}
 
 	/*-********************************************************************

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.84 2005/09/26 13:11:02 bass Exp $
+ * $Id: SchemeLink.java,v 1.85 2005/09/26 15:11:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/26 13:11:02 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/26 15:11:51 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -992,46 +992,88 @@ public final class SchemeLink extends AbstractSchemeLink
 		}
 	}
 
-	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
+	/**
+	 * A wrapper around {@link #setParentSchemeElement(SchemeElement, boolean)}.
+	 *
+	 * @param parentSchemeElementId
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	void setParentSchemeElementId(final Identifier parentSchemeElementId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+
+		if (this.parentSchemeElementId.equals(parentSchemeElementId)) {
+			return;
+		}
+
+		this.setParentSchemeElement(
+				StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true),
+				usePool);
+	}
+
+	/**
+	 * @param parentSchemeElement
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
+			final boolean usePool)
+	throws ApplicationException {
 		assert this.assertParentSetNonStrict() : OBJECT_BADLY_INITIALIZED;
 
-		Identifier newParentSchemeElementId;
+		final boolean parentSchemeElementIsNull = (parentSchemeElement == null);
+
+		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
+		if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			return;
+		}
+
 		if (super.parentSchemeId.isVoid()) {
 			if (this.parentSchemeElementId.isVoid()) {
 				/*
 				 * Moving from a scheme protoelement to a scheme element.
+				 * At this point, newParentSchemeElementId is non-void.
 				 */
-				if (parentSchemeElement == null) {
-					Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-					return;
-				}
-				newParentSchemeElementId = parentSchemeElement.getId();
+				final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
+				assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
+				oldParentSchemeProtoElement.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+
 				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 			} else {
 				/*
 				 * Moving from a scheme element to another scheme element.
+				 * At this point, newParentSchemeElementId may be void.
 				 */
-				if (parentSchemeElement == null) {
+				final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
+				assert oldParentSchemeElement != null : NON_NULL_EXPECTED;
+				oldParentSchemeElement.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+
+				if (parentSchemeElementIsNull) {
 					Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 					StorableObjectPool.delete(this.id);
-					return;
-				}
-				newParentSchemeElementId = parentSchemeElement.getId();
-				if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
 					return;
 				}
 			}
 		} else {
 			/*
-			 * Moving from a scheme to a scheme element.
+			 * Moving from a scheme to a scheme element. At this
+			 * point, newParentSchemeElementId is non-void.
 			 */
-			if (parentSchemeElement == null) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-				return;
-			}
-			newParentSchemeElementId = parentSchemeElement.getId();
+			final Scheme oldParentScheme = super.getParentScheme();
+			assert oldParentScheme != null : NON_NULL_EXPECTED;
+			oldParentScheme.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+
 			super.parentSchemeId = VOID_IDENTIFIER;
 		}
+
+		if (!parentSchemeElementIsNull) {
+			parentSchemeElement.getSchemeLinkContainerWrappee().addToCache(this, usePool);
+		}
+
 		this.parentSchemeElementId = newParentSchemeElementId;
 		super.markAsChanged();
 	}
@@ -1280,14 +1322,6 @@ public final class SchemeLink extends AbstractSchemeLink
 		assert siteNodeId != null : NON_NULL_EXPECTED;
 		assert siteNodeId.isVoid() || siteNodeId.getMajor() == SITENODE_CODE;
 		this.siteNodeId = siteNodeId;
-		super.markAsChanged();
-	}
-
-	void setParentSchemeElementId(Identifier parentSchemeElementId) {
-//		 TODO: inroduce additional sanity checks
-		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
-		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
-		this.parentSchemeElementId = parentSchemeElementId;
 		super.markAsChanged();
 	}
 
