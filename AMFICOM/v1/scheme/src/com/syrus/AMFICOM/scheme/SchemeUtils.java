@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.40 2005/09/21 10:36:26 arseniy Exp $
+ * $Id: SchemeUtils.java,v 1.41 2005/09/26 13:12:15 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Shitlet;
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/09/21 10:36:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/09/26 13:12:15 $
  * @module scheme
  * @deprecated
  */
@@ -73,11 +73,15 @@ public class SchemeUtils {
 		return null;
 	}
 
-	public static SchemeElement getSchemeElementByDevice(final SchemeElement schemeElement, final SchemeDevice schemeDevice) throws ApplicationException {
+	public static SchemeElement getSchemeElementByDevice(
+			final SchemeElement schemeElement,
+			final SchemeDevice schemeDevice,
+			final boolean usePool)
+	throws ApplicationException {
 		if (schemeDevice.getParentSchemeElementId().equals(schemeElement)) {
 			return schemeElement;
 		}
-		for (final SchemeElement schemeElement1 : schemeElement.getSchemeElements0()) {
+		for (final SchemeElement schemeElement1 : schemeElement.getSchemeElements0(usePool)) {
 			if (schemeDevice.getParentSchemeElementId().equals(schemeElement1)) {
 				return schemeElement1;
 			}

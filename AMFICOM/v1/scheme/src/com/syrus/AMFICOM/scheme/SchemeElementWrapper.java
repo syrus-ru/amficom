@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.12 2005/09/08 16:34:40 bass Exp $
+ * $Id: SchemeElementWrapper.java,v 1.13 2005/09/26 13:12:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/26 13:12:15 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -160,35 +162,44 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 	}
 
 	@Override
-	public void setValue(SchemeElement schemeElement, String key, Object value) {
-		if (schemeElement != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeElement.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeElement.setDescription((String) value);
-			} else if (key.equals(COLUMN_KIND)) {
-				//nothing to do 
-			} else if (key.equals(COLUMN_LABEL)) {
-				schemeElement.setLabel((String) value);
-			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
-				schemeElement.setEquipmentTypeId((Identifier) value);
-			} else if (key.equals(COLUMN_EQUIPMENT_ID)) {
-				schemeElement.setEquipmentId((Identifier) value);
-			} else if (key.equals(COLUMN_KIS_ID)) {
-				schemeElement.setKisId((Identifier) value);
-			} else if (key.equals(COLUMN_SITE_NODE_ID)) {
-				schemeElement.setSiteNodeId((Identifier) value);
-			} else if (key.equals(COLUMN_SYMBOL_ID)) {
-				schemeElement.setSymbolId((Identifier) value);
-			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
-				schemeElement.setUgoCellId((Identifier) value);
-			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
-				schemeElement.setSchemeCellId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-				schemeElement.setParentSchemeId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
-				schemeElement.setParentSchemeElementId((Identifier) value);
+	public void setValue(final SchemeElement schemeElement,
+			final String key,
+			final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeElement != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeElement.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeElement.setDescription((String) value);
+				} else if (key.equals(COLUMN_KIND)) {
+					//nothing to do 
+				} else if (key.equals(COLUMN_LABEL)) {
+					schemeElement.setLabel((String) value);
+				} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
+					schemeElement.setEquipmentTypeId((Identifier) value);
+				} else if (key.equals(COLUMN_EQUIPMENT_ID)) {
+					schemeElement.setEquipmentId((Identifier) value);
+				} else if (key.equals(COLUMN_KIS_ID)) {
+					schemeElement.setKisId((Identifier) value);
+				} else if (key.equals(COLUMN_SITE_NODE_ID)) {
+					schemeElement.setSiteNodeId((Identifier) value);
+				} else if (key.equals(COLUMN_SYMBOL_ID)) {
+					schemeElement.setSymbolId((Identifier) value);
+				} else if (key.equals(COLUMN_UGO_CELL_ID)) {
+					schemeElement.setUgoCellId((Identifier) value);
+				} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
+					schemeElement.setSchemeCellId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
+					schemeElement.setParentSchemeId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
+					schemeElement.setParentSchemeElementId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

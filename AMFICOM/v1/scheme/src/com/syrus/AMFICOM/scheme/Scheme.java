@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.102 2005/09/23 10:04:28 bass Exp $
+ * $Id: Scheme.java,v 1.103 2005/09/26 13:12:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.102 $, $Date: 2005/09/23 10:04:28 $
+ * @version $Revision: 1.103 $, $Date: 2005/09/26 13:12:15 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1158,6 +1158,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	void setParentSchemeElementId(final Identifier parentSchemeElementId,
 			final boolean usePool)
 	throws ApplicationException {
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 
 		if (this.parentSchemeElementId.equals(parentSchemeElementId)) {
@@ -1452,6 +1453,19 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 
 		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, POST_IMPORT);
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme elements                             *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
+		if (this.schemeElementContainerWrappee == null) {
+			this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE);
+		}
+		return this.schemeElementContainerWrappee;
 	}
 
 	/*-********************************************************************
