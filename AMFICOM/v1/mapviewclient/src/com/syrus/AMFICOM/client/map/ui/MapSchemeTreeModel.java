@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.36 2005/09/25 16:08:03 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.37 2005/09/26 14:26:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -87,7 +87,7 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.36 $, $Date: 2005/09/25 16:08:03 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/26 14:26:51 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -282,7 +282,7 @@ public class MapSchemeTreeModel
 			if(compoundElements.size() > 0) {
 				for(Iterator it = compoundElements.iterator(); it.hasNext();) {
 					SchemeElement element = (SchemeElement)it.next();
-					boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
+					boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements(false).size() != 0);
 	
 					Scheme internalScheme = element.getScheme(false);
 					
@@ -334,32 +334,28 @@ public class MapSchemeTreeModel
 			MapSchemeTreeNode childNode;
 			treeNode.setTopological(topological);
 
-			Set compoundElements = schemeElement
-					.getSchemeElements();
+			Set compoundElements = schemeElement.getSchemeElements(false);
 
 			if (compoundElements.size() > 0) {
-				for (Iterator it = compoundElements.iterator(); it
-						.hasNext();) {
-					SchemeElement element = (SchemeElement) it
-							.next();
-					boolean allowsChildren = (element
-							.getSchemeLinks()
-							.size() != 0 || element
-							.getSchemeElements()
-							.size() != 0);
+				for (Iterator it = compoundElements.iterator(); it.hasNext();) {
+					SchemeElement element = (SchemeElement) it.next();
+					boolean allowsChildren = (
+							element.getSchemeLinks().size() != 0 
+							|| element.getSchemeElements(false).size() != 0);
 
-					Scheme internalScheme = element
-							.getScheme(false);
+					Scheme internalScheme = element.getScheme(false);
 					if (internalScheme != null) {
 						continue;
 					} else if (topological) {
 						childNode = (MapSchemeTreeNode) buildElementTree(
-								element, true,
+								element, 
+								true,
 								topological,
 								allowsChildren);
 					} else
 						childNode = (MapSchemeTreeNode) buildElementTree(
-								element, false,
+								element, 
+								false,
 								topological,
 								allowsChildren);
 					treeNode.addChild(childNode);
