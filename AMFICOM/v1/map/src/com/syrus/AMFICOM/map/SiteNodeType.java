@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.92 2005/09/25 15:42:48 bass Exp $
+ * $Id: SiteNodeType.java,v 1.93 2005/09/26 06:40:27 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/09/25 15:42:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.93 $, $Date: 2005/09/26 06:40:27 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -523,26 +523,9 @@ public final class SiteNodeType extends StorableObjectType
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
-	@Crutch134(notes = "Remove subclassing here.")
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE) {
-				private static final long serialVersionUID = -2741783821486426615L;
-
-				@Override
-				protected void ensureCacheBuilt(final boolean usePool)
-				throws ApplicationException {
-					if (!this.cacheBuilt || usePool) {
-						if (this.containees == null) {
-							this.containees = new HashSet<Characteristic>();
-						} else {
-							this.containees.clear();
-						}
-						this.containees.addAll(StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false));
-						this.cacheBuilt = true;
-					}
-				}
-			};
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
 		return this.characteristicContainerWrappee;
 	}
