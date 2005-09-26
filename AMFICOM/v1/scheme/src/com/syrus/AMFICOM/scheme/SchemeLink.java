@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.83 2005/09/23 11:45:44 bass Exp $
+ * $Id: SchemeLink.java,v 1.84 2005/09/26 13:11:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/09/23 11:45:44 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/26 13:11:02 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -566,7 +566,7 @@ public final class SchemeLink extends AbstractSchemeLink
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
@@ -600,10 +600,13 @@ public final class SchemeLink extends AbstractSchemeLink
 	/**
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);

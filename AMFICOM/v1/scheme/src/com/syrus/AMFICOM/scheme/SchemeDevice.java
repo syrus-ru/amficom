@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.88 2005/09/23 11:45:44 bass Exp $
+ * $Id: SchemeDevice.java,v 1.89 2005/09/26 13:11:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/23 11:45:44 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/26 13:11:02 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -412,7 +412,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	
 			clone.clonedIdMap.put(this.id, clone.id);
 	
-			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
@@ -453,10 +453,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemePorts0()) {
@@ -605,10 +608,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public void getXmlTransferable(
 			final XmlSchemeDevice schemeDevice,
 			final String importType)
 	throws ApplicationException {
+		final boolean usePool = false;
+
 		super.id.getXmlTransferable(schemeDevice.addNewId(), importType);
 		schemeDevice.setName(this.name);
 		if (schemeDevice.isSetDescription()) {
@@ -632,7 +638,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (schemeDevice.isSetCharacteristics()) {
 			schemeDevice.unsetCharacteristics();
 		}
-		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = schemeDevice.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {

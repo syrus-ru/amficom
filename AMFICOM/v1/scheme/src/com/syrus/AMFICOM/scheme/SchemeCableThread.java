@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.85 2005/09/23 11:45:44 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.86 2005/09/26 13:11:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/23 11:45:44 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/26 13:11:02 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -316,7 +316,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
@@ -375,10 +375,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
@@ -540,10 +543,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public void getXmlTransferable(
 			final XmlSchemeCableThread schemeCableThread,
 			final String importType)
 	throws ApplicationException {
+		final boolean usePool = false;
+
 		super.id.getXmlTransferable(schemeCableThread.addNewId(), importType);
 		schemeCableThread.setName(this.name);
 		if (schemeCableThread.isSetDescription()) {
@@ -579,7 +585,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (schemeCableThread.isSetCharacteristics()) {
 			schemeCableThread.unsetCharacteristics();
 		}
-		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = schemeCableThread.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {

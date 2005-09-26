@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.56 2005/09/23 11:45:44 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.57 2005/09/26 13:11:02 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/09/23 11:45:44 $
+ * @version $Revision: 1.57 $, $Date: 2005/09/26 13:11:02 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -274,10 +274,13 @@ public abstract class AbstractSchemeElement
 	 * @param importType
 	 * @throws ApplicationException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	final void getXmlTransferable(
 			final XmlAbstractSchemeElement abstractSchemeElement,
 			final String importType)
 	throws ApplicationException {
+		final boolean usePool = false;
+
 		super.id.getXmlTransferable(abstractSchemeElement.addNewId(), importType);
 		abstractSchemeElement.setName(this.name);
 		if (abstractSchemeElement.isSetDescription()) {
@@ -286,7 +289,7 @@ public abstract class AbstractSchemeElement
 		if (this.description.length() != 0) {
 			abstractSchemeElement.setDescription(this.description);
 		}
-		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
 		if (abstractSchemeElement.isSetCharacteristics()) { 
 			abstractSchemeElement.unsetCharacteristics();
 		}

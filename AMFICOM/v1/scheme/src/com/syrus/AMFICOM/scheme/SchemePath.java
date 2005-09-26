@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.91 2005/09/23 11:45:44 bass Exp $
+ * $Id: SchemePath.java,v 1.92 2005/09/26 13:11:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.91 $, $Date: 2005/09/23 11:45:44 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/26 13:11:02 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -209,10 +209,13 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {

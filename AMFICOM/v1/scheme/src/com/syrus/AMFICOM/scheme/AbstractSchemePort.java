@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.69 2005/09/23 11:45:44 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.70 2005/09/26 13:11:02 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/09/23 11:45:44 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/26 13:11:02 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -190,10 +190,13 @@ public abstract class AbstractSchemePort
 	/**
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public final Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
@@ -612,7 +615,7 @@ public abstract class AbstractSchemePort
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics(usePool)) {
+			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
@@ -630,9 +633,12 @@ public abstract class AbstractSchemePort
 	 * @param importType
 	 * @throws ApplicationException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	final void getXmlTransferable(final XmlAbstractSchemePort abstractSchemePort,
 			final String importType)
 	throws ApplicationException {
+		final boolean usePool = false;
+
 		super.id.getXmlTransferable(abstractSchemePort.addNewId(), importType);
 		abstractSchemePort.setName(this.name);
 		if (abstractSchemePort.isSetDescription()) {
@@ -652,7 +658,7 @@ public abstract class AbstractSchemePort
 		if (abstractSchemePort.isSetCharacteristics()) {
 			abstractSchemePort.unsetCharacteristics();
 		}
-		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = abstractSchemePort.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
