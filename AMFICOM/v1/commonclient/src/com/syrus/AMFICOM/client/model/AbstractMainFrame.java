@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.19 2005/09/23 15:01:37 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.20 2005/09/26 07:31:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,9 +46,10 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/23 15:01:37 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/26 07:31:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -150,15 +151,17 @@ implements PropertyChangeListener {
 				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
 
 				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				final Identifier userId = LoginManager.getUserId();
 				try {
 					final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 					this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
 
-					SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
+					final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
 					this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
-				} catch (ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (final ApplicationException e) {
+					assert Log.debugMessage("AbstractMainFrame.propertyChange | Cannot acquire " + userId,
+						Log.DEBUGLEVEL02);
+//					e.printStackTrace();
 				}
 			}
 			if (cce.isSessionClosed()) {
@@ -236,13 +239,17 @@ implements PropertyChangeListener {
 
 		aModel.fireModelChanged();
 
+		final Identifier domainId = LoginManager.getDomainId();
 		try {
-			Domain domain = (Domain) StorableObjectPool.getStorableObject(
-					LoginManager.getDomainId(), 
+			Domain domain = StorableObjectPool.getStorableObject(
+					domainId, 
 					true);
 			this.statusBar.setText(StatusBar.FIELD_DOMAIN, domain.getName());
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
+			assert Log.debugMessage("AbstractMainFrame.propertyChange | Cannot acquire " + domainId,
+				Log.DEBUGLEVEL02);
 			showErrorMessage(this, e);
+			return;
 		}
 
 		this.windowArranger.arrange();
