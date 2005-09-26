@@ -133,7 +133,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 	}
 
 	public static boolean checkStrangeConditions() {
-		PFTrace pf = Heap.getBSPrimaryTrace();
+		PFTrace pf = Heap.getPFTracePrimary();
 		if (pf == null)
 		{
 			GUIUtil.showErrorMessage("unkError");

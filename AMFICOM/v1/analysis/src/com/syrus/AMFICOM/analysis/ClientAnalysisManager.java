@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.20 2005/09/26 11:19:34 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.21 2005/09/26 12:05:06 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/09/26 11:19:34 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/26 12:05:06 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -96,7 +96,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		ModelTraceAndEventsImpl mtae = Heap.getMTAEPrimary();
 		if (mtae == null)
 			return;
-		PFTrace pf = Heap.getBSPrimaryTrace();
+		PFTrace pf = Heap.getPFTracePrimary();
 		if (pf == null)
 			return;
 		double yMinAbs = ReflectogramMath.getArrayMin(pf.getFilteredTraceClone());

@@ -174,7 +174,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 	}
 
 	void updTableModel() {
-		final PFTrace pf = Heap.getBSPrimaryTrace();
+		final PFTrace pf = Heap.getPFTracePrimary();
 
 		final TraceEvent ev = Heap.getRefAnalysisPrimary().overallStats;
 		if (ev == null) {

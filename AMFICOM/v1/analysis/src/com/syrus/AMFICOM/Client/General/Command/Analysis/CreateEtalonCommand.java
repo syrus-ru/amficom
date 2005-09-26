@@ -33,7 +33,7 @@ public class CreateEtalonCommand extends AbstractCommand
 
 	public void execute()
 	{
-		Collection<PFTrace> trColl = Heap.getBSCollection();
+		Collection<PFTrace> trColl = Heap.getPFTraceCollection();
 
 		// если не открыта ни одна р/г, просто игнорируем команду.
 		// В такой ситуации команда не должна была вызываться,
@@ -93,7 +93,7 @@ public class CreateEtalonCommand extends AbstractCommand
 							null);
 				}
 			}
-			Heap.setEtalonTraceFromBS(pf, name);
+			Heap.setEtalonTraceFromPFTrace(pf, name);
 			Heap.setMTMEtalon(mtm);
 		} catch (IncompatibleTracesException e){
 			GUIUtil.showErrorMessage("incompatibleTraces");

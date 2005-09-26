@@ -51,7 +51,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 		if (traces.get(Heap.ETALON_TRACE_KEY) != null)
 			return;
 
-		PFTrace pf = Heap.getBSEtalonTrace();
+		PFTrace pf = Heap.getPFTraceEtalon();
 		if (pf != null)
 			addTrace (Heap.ETALON_TRACE_KEY);
 	}
@@ -68,7 +68,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 		if (traces.get(id) != null)
 			return;
 		SimpleGraphPanel p;
-		PFTrace pf = Heap.getAnyBSTraceByKey(id);
+		PFTrace pf = Heap.getAnyPFTraceByKey(id);
 
 		double deltaX = pf.getResolution();
 		double[] y = pf.getFilteredTraceClone();

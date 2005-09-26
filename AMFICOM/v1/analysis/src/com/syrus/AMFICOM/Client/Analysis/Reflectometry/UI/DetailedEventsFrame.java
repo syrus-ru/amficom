@@ -189,7 +189,7 @@ final class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListe
 		if (num >= 0) {
 			final DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
 			final int eventType = ev.getEventType();
-			final double resMt = Heap.getBSPrimaryTrace().getResolution();
+			final double resMt = Heap.getPFTracePrimary().getResolution();
 			final double resKm = resMt / 1000.0;
 			this.res.initAdditional(ev, resKm);
 			switch (eventType) {

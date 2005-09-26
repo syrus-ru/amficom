@@ -63,7 +63,7 @@ public class TraceOpenReferenceCommand extends AbstractCommand
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = activeRefId;
-			Heap.setBSReferenceTrace(bs, bs.title);
+			Heap.setReferenceTraceFromBS(bs, bs.title);
 			//Heap.referenceTraceOpened(activeRefId, bs);
 			try
 			{

@@ -166,7 +166,7 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 
 	public void bsHashAdded(final String key) {
 		if (key.equals(Heap.PRIMARY_TRACE_KEY)) {
-			final PFTrace pf = Heap.getBSPrimaryTrace();
+			final PFTrace pf = Heap.getPFTracePrimary();
 			this.sigma = MathRef.calcSigma(pf.getWavelength(), pf.getPulsewidth());
 			this.setVisible(true);
 		}

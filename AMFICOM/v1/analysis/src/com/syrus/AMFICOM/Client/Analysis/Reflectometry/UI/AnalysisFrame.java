@@ -87,7 +87,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		removeOneTrace(id);
 
 		SimpleGraphPanel p;
-		PFTrace pf = Heap.getAnyBSTraceByKey(id);
+		PFTrace pf = Heap.getAnyPFTraceByKey(id);
 		if (pf == null)
 			return;
 

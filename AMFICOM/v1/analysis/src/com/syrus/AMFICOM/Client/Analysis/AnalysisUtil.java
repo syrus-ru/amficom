@@ -286,7 +286,7 @@ public class AnalysisUtil
 				DataStreamableUtil.writeDataStreamableToBA(
 						Heap.getEtalon()));
 
-		PFTrace trace = Heap.getBSEtalonTrace();
+		PFTrace trace = Heap.getPFTraceEtalon();
 
 		ptype = ParameterType.REFLECTOGRAMMA_ETALON;
 		params[1] = Parameter.createInstance(ptype,

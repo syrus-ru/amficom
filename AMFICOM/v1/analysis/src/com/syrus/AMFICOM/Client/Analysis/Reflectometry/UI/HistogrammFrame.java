@@ -45,7 +45,7 @@ implements BsHashChangeListener, AnalysisParametersListener {
 		{
 			HistogrammPanel p;
 
-			PFTrace pf = Heap.getAnyBSTraceByKey(id);
+			PFTrace pf = Heap.getAnyPFTraceByKey(id);
 			if (pf == null)
 				return;
 

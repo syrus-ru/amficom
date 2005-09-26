@@ -394,7 +394,7 @@ final class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pri
 		}
 		final DetailedEvent[] pevents = Heap.getMTAEPrimary().getDetailedEvents();
 		final DetailedEvent[] eevents = Heap.getMTMEtalon() != null ? Heap.getMTMEtalon().getMTAE().getDetailedEvents() : null;
-		final PFTrace pf = Heap.getBSPrimaryTrace();
+		final PFTrace pf = Heap.getPFTracePrimary();
 		final double resMt = pf.getResolution();
 		final double resKm = resMt / 1000.0;
 		final double sigma = MathRef.calcSigma(pf.getWavelength(), pf.getPulsewidth());

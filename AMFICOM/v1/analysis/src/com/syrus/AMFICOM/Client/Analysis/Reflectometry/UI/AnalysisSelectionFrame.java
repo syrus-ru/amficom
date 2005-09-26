@@ -187,7 +187,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChan
 	public void bsHashAdded(final String key) {
 		final String id = key;
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
-			if (Heap.getBSPrimaryTrace().getBS().measurementId == null)
+			if (Heap.getPFTracePrimary().getBS().measurementId == null)
 				this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
 						+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 			else {
@@ -213,7 +213,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChan
 	}
 
 	public void primaryMTAECUpdated() {
-		final PFTrace pf = Heap.getBSPrimaryTrace();
+		final PFTrace pf = Heap.getPFTracePrimary();
 		if (pf.getBS().measurementId == null) {
 			this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
 					+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');

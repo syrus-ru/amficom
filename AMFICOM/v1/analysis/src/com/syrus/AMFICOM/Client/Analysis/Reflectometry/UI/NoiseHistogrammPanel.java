@@ -49,7 +49,7 @@ public class NoiseHistogrammPanel extends ScaledGraphPanel {
 
 	public void updateHistogrammData() {
 		// get reflectogram
-		PFTrace pf = Heap.getBSPrimaryTrace();
+		PFTrace pf = Heap.getPFTracePrimary();
 		if (pf == null)
 			return; // XXX: no data to process
 		double[] y1 = pf.getFilteredTraceClone();

@@ -84,7 +84,7 @@ public class FileAddCommand extends AbstractCommand
 			*/
 			BellcoreStructure bs = FileOpenCommand.readTraceFromFile(selectedFile);
 			bs.title = selectedFile.getName();
-			Heap.putSecondaryTraceByKey(id, bs);
+			Heap.putSecondaryTraceByKeyFromBS(id, bs);
 			// Heap.secondaryTraceOpened(id, bs);
 			Heap.setCurrentTrace(id);
 			try

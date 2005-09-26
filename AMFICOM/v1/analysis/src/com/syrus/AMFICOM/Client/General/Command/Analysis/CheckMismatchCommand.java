@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckMismatchCommand.java,v 1.5 2005/07/22 06:56:49 saa Exp $
+ * $Id: CheckMismatchCommand.java,v 1.6 2005/09/26 12:05:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 public class CheckMismatchCommand extends AbstractCommand {
 	@Override
 	public void execute() {
-		if (Heap.getBSPrimaryTrace() != null
+		if (Heap.getPFTracePrimary() != null
 				&& Heap.getMinuitAnalysisParams() != null
 				&& Heap.hasEtalon()) {
 			List<ReflectogramMismatch> alarms =

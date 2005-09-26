@@ -22,7 +22,7 @@ public class LoadEtalonCommand extends AbstractCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = Heap.getBSPrimaryTrace().getBS();
+		BellcoreStructure bs = Heap.getPFTracePrimary().getBS();
 		if (bs.measurementId == null)
 		{
 			JOptionPane.showMessageDialog(

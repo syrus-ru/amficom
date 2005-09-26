@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.110 2005/09/26 11:19:34 saa Exp $
+ * $Id: Heap.java,v 1.111 2005/09/26 12:05:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.110 $, $Date: 2005/09/26 11:19:34 $
+ * @version $Revision: 1.111 $, $Date: 2005/09/26 12:05:05 $
  * @module
  */
 public class Heap
@@ -190,13 +190,13 @@ public class Heap
 		traces.remove(key);
 	}
 
-	public static PFTrace getAnyBSTraceByKey(String key) { // FIXME: rename to getAnyPFTraceByKey
+	public static PFTrace getAnyPFTraceByKey(String key) {
 		Trace trace = getAnyTraceByKey(key);
 		return trace != null ? trace.getPFTrace() : null;
 	}
 
-	public static PFTrace getBSPrimaryTrace() { // FIXME: rename to getPFTracePrimary
-		return getAnyBSTraceByKey(PRIMARY_TRACE_KEY);
+	public static PFTrace getPFTracePrimary() {
+		return getAnyPFTraceByKey(PRIMARY_TRACE_KEY);
 	}
 
 	/**
@@ -337,11 +337,11 @@ public class Heap
 		}
 	}
 
-	public static PFTrace getBSEtalonTrace() { // FIXME: rename to getPFTraceEtalon
-		return getAnyBSTraceByKey(ETALON_TRACE_KEY);
+	public static PFTrace getPFTraceEtalon() {
+		return getAnyPFTraceByKey(ETALON_TRACE_KEY);
 	}
 
-	public static void setEtalonTraceFromBS(PFTrace etalonTrace, String name) { // FIXME: rename to setEtalonTraceFromPFTrace
+	public static void setEtalonTraceFromPFTrace(PFTrace etalonTrace, String name) {
 		// @todo - эталон должен храниться отдельно от остальных (первичных и вторичных) рефлектограмм, и вообще не как Trace, а отдельно
 		if (etalonTrace != null) {
 			etalonName = name;
@@ -487,7 +487,7 @@ public class Heap
 		Heap.contextMeasurementSetup = contextMeasurementSetup;
 	}
 
-	public static Collection<PFTrace> getBSCollection() { // @todo: rename to getPFTraceCollection
+	public static Collection<PFTrace> getPFTraceCollection() {
 		Collection<PFTrace> coll = new ArrayList<PFTrace>(traces.size());
 		for (Trace tr: traces.values()) {
 			coll.add(tr.getPFTrace());
@@ -895,14 +895,14 @@ public class Heap
 		notifyBsHashAdd(key);
 	}
 
-	public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) { // FIXME: rename to ...FromBS
+	public static void putSecondaryTraceByKeyFromBS(String key, BellcoreStructure bs) {
 		putSecondaryTrace(new Trace(
 				bs,
 				key,
 				getMinuitAnalysisParams()));
 	}
 
-	public static void setBSReferenceTrace(BellcoreStructure bs, String key) { // FIXME: rename to setReferenceTraceFromBS
+	public static void setReferenceTraceFromBS(BellcoreStructure bs, String key) {
 		traces.put(REFERENCE_TRACE_KEY, new Trace(
 				bs,
 				key,
@@ -956,7 +956,7 @@ public class Heap
 						in[i].getEventType())
 				: in[i + 1];
 		}
-		PFTrace pfTrace = getBSPrimaryTrace();
+		PFTrace pfTrace = getPFTracePrimary();
 		ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
 				mtae, out, pfTrace.getFilteredTraceClone());
 		replacePrimaryAnalysisMTAE(newMtae);
@@ -988,7 +988,7 @@ public class Heap
 		for (int i = nEvent + 1; i < in.length; i++) {
 				out[i + n - 1] = in[i];
 		}
-		PFTrace pf = getBSPrimaryTrace();
+		PFTrace pf = getPFTracePrimary();
 		ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
 				mtae, out, pf.getFilteredTraceClone());
 		replacePrimaryAnalysisMTAE(newMtae);
@@ -1071,7 +1071,7 @@ public class Heap
 				out[i] = in[i];
 			}
 		}
-		PFTrace trace = getBSPrimaryTrace();
+		PFTrace trace = getPFTracePrimary();
 		ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
 				mtae, out, trace.getFilteredTraceClone());
 		replacePrimaryAnalysisMTAE(newMtae);
@@ -1107,7 +1107,7 @@ public class Heap
 	}
 
 	public static void makeAnalysis() {
-		PFTrace pf = getBSPrimaryTrace();
+		PFTrace pf = getPFTracePrimary();
 		if (pf != null)
 		{
 			RefAnalysis a = new RefAnalysis(pf);
@@ -1116,14 +1116,14 @@ public class Heap
 	}
 
 	public static void unSetEtalonPair() {
-		setEtalonTraceFromBS(null, null);
+		setEtalonTraceFromPFTrace(null, null);
 		Heap.setAnchorer(null);
 		Heap.setMTMEtalon(null);
 	}
 
 	public static void setEtalonPair(PFTrace pf,
 			Etalon etalonObj, String etalonName) {
-		setEtalonTraceFromBS(pf, etalonName);
+		setEtalonTraceFromPFTrace(pf, etalonName);
 		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
 		Heap.setAnchorer(etalonObj.getAnc());
 		Heap.setMTMEtalon(etalonObj.getMTM());

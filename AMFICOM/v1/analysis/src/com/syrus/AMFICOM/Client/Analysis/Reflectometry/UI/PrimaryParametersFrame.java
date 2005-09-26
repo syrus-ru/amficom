@@ -99,7 +99,7 @@ public class PrimaryParametersFrame extends JInternalFrame implements BsHashChan
 	}
 
 	void updTableModel(final String id) {
-		final PFTrace pf = Heap.getAnyBSTraceByKey(id);
+		final PFTrace pf = Heap.getAnyPFTraceByKey(id);
 		if (pf == null) {
 			return;
 		}

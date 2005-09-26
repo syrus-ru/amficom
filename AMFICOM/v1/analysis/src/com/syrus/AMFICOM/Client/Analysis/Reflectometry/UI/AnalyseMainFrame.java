@@ -475,7 +475,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	}
 
 	void updFrames() {
-		PFTrace pf = Heap.getBSPrimaryTrace();
+		PFTrace pf = Heap.getPFTracePrimary();
 		RefAnalysis ra = Heap.getRefAnalysisPrimary();
 		if (pf == null || ra == null) {
 			closeFrames();
