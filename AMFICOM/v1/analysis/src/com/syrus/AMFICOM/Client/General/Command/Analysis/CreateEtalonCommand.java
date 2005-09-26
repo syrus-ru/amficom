@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -17,7 +18,6 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.io.BellcoreStructure;
 
 /**
  *  оманда создани€ эталона.
@@ -33,12 +33,12 @@ public class CreateEtalonCommand extends AbstractCommand
 
 	public void execute()
 	{
-		Collection bsColl = Heap.getBSCollection();
+		Collection<PFTrace> trColl = Heap.getBSCollection();
 
 		// если не открыта ни одна р/г, просто игнорируем команду.
 		// ¬ такой ситуации команда не должна была вызыватьс€,
 		// поэтому никака€ user-friendly обработка этой ошибки не нужна.
-		if (bsColl.isEmpty())
+		if (trColl.isEmpty())
 			return;
 
 		Environment.getActiveWindow().setCursor(
@@ -53,14 +53,14 @@ public class CreateEtalonCommand extends AbstractCommand
 		// проводим анализ дл€ всего набора р/г
 
 		ModelTraceManager mtm;
-		BellcoreStructure bs;
+		PFTrace pf;
 		try {
 			if (Heap.hasEtalon()) { // если эталон уже есть
-				// расшир€ем эталон (содержит ли bsColl эталонную р/г,
+				// расшир€ем эталон (содержит ли trColl эталонную р/г,
 				// не должно вли€ть на результат, т.к. она уже должна быть
 				// покрыта этим эталоном)
 				mtm = Heap.getMTMEtalon();
-				CoreAnalysisManager.updateEtalon(mtm, bsColl, ap);
+				CoreAnalysisManager.updateEtalon(mtm, trColl, ap);
 				// —огласно текущему поведению Heap, эталон уже входит в bsColl,
 				// поэтому мы
 				// выбираем наиболее типичную с учетом существующего эталона.
@@ -77,23 +77,23 @@ public class CreateEtalonCommand extends AbstractCommand
 				// с одинаковым весом), несмотр€ на свою матем. нестрогость,
 				// имеет преимущество перед описанными двум€ за счет
 				// эффекта "забывани€" (уменьшени€ веса) старых р/г
-				bs = CoreAnalysisManager.getMostTypicalTrace(bsColl);
+				pf = CoreAnalysisManager.getMostTypicalTrace(trColl);
 			} else { // если эталона еще нет
-				mtm = CoreAnalysisManager.makeEtalon(bsColl, ap);
-				bs = CoreAnalysisManager.getMostTypicalTrace(bsColl);
+				mtm = CoreAnalysisManager.makeEtalon(trColl, ap);
+				pf = CoreAnalysisManager.getMostTypicalTrace(trColl);
 			}
 			String name = LangModelAnalyse.getString("etalon");
 			{
 				// определ€ем временное название дл€ эталона
-				Result result = Heap.getPrimaryTrace().getResult();
-				if (result != null) {
-					Measurement m = AnalysisUtil.getMeasurementByResult(result);
+				Result result1 = Heap.getPrimaryTrace().getResult();
+				if (result1 != null) {
+					Measurement m = AnalysisUtil.getMeasurementByResult(result1);
 					name = AnalysisUtil.makeEtalonRefName(
 							AnalysisUtil.getMEbyMS(m.getSetup()),
 							null);
 				}
 			}
-			Heap.setEtalonTraceFromBS(bs, name);
+			Heap.setEtalonTraceFromBS(pf, name);
 			Heap.setMTMEtalon(mtm);
 		} catch (IncompatibleTracesException e){
 			GUIUtil.showErrorMessage("incompatibleTraces");

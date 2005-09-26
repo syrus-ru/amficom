@@ -17,12 +17,12 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.PrimaryParameters;
 import com.syrus.AMFICOM.analysis.PrimaryParametersWrapper;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.io.BellcoreStructure;
 
 public class PrimaryParametersFrame extends JInternalFrame implements BsHashChangeListener, CurrentTraceChangeListener,
 		ReportTable {
@@ -99,12 +99,12 @@ public class PrimaryParametersFrame extends JInternalFrame implements BsHashChan
 	}
 
 	void updTableModel(final String id) {
-		final BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-		if (bs == null) {
+		final PFTrace pf = Heap.getAnyBSTraceByKey(id);
+		if (pf == null) {
 			return;
 		}
 
-		this.p.init(bs);
+		this.p.init(pf.getBS());
 		this.jTable.getModel().fireTableDataChanged();
 	}
 

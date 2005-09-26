@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.OverallStats;
 import com.syrus.AMFICOM.analysis.OverallStatsWrapper;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -33,7 +34,6 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		RefMismatchListener {
@@ -174,14 +174,14 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 	}
 
 	void updTableModel() {
-		final BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		final PFTrace pf = Heap.getBSPrimaryTrace();
 
 		final TraceEvent ev = Heap.getRefAnalysisPrimary().overallStats;
 		if (ev == null) {
 			return;
 		}
 
-		this.stats.initGeneralStatistics(ev, bs);
+		this.stats.initGeneralStatistics(ev, pf);
 		this.jTable.getModel().fireTableDataChanged();
 	}
 

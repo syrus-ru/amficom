@@ -7,8 +7,8 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.io.BellcoreStructure;
 
 public class HistogrammFrame
 extends ScalableFrame
@@ -45,12 +45,12 @@ implements BsHashChangeListener, AnalysisParametersListener {
 		{
 			HistogrammPanel p;
 
-			BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-			if (bs == null)
+			PFTrace pf = Heap.getAnyBSTraceByKey(id);
+			if (pf == null)
 				return;
 
-			double deltaX = bs.getResolution();
-			double[] y = bs.getTraceData();
+			double deltaX = pf.getResolution();
+			double[] y = pf.getFilteredTraceClone();
 
 			p = new HistogrammPanel(panel, y, deltaX);
 			p.setColorModel(id);

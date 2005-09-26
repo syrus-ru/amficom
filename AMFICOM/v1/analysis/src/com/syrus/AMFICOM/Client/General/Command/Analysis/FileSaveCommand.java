@@ -46,7 +46,7 @@ public class FileSaveCommand extends AbstractCommand
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			BellcoreStructure bs = Heap.getBSPrimaryTrace();
+			BellcoreStructure bs = Heap.getBSPrimaryTrace().getBS();
 			try
 			{
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());

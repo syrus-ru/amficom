@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.19 2005/08/29 09:39:45 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.20 2005/09/26 11:19:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.analysis;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import java.util.Properties;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
@@ -18,12 +17,11 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/08/29 09:39:45 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/26 11:19:34 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -98,10 +96,10 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		ModelTraceAndEventsImpl mtae = Heap.getMTAEPrimary();
 		if (mtae == null)
 			return;
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		if (bs == null)
+		PFTrace pf = Heap.getBSPrimaryTrace();
+		if (pf == null)
 			return;
-		double yMinAbs = ReflectogramMath.getArrayMin(bs.getTraceData());
+		double yMinAbs = ReflectogramMath.getArrayMin(pf.getFilteredTraceClone());
 		double[] yMT = mtae.getModelTrace().getYArray();
 		int maxIndex = ReflectogramMath.getArrayMaxIndex(yMT, 0, yMT.length - 1);
 		int rMinIndex = ReflectogramMath.getArrayMinIndex(yMT, maxIndex, yMT.length - 1);

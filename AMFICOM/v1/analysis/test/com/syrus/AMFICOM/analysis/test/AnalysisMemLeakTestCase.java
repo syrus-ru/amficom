@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: AnalysisMemLeakTestCase.java,v 1.4 2005/09/01 12:08:33 saa Exp $
+ * $Id: AnalysisMemLeakTestCase.java,v 1.5 2005/09/26 11:19:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import junit.framework.TestCase;
+
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
-import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.io.BellcoreStructure;
 import com.syrus.io.SignatureMismatchException;
-
-import junit.framework.TestCase;
 
 public class AnalysisMemLeakTestCase extends TestCase {
 	public static void main(String[] args) {
@@ -31,7 +31,7 @@ public class AnalysisMemLeakTestCase extends TestCase {
 	throws IncompatibleTracesException, SignatureMismatchException, IOException,
 			InvalidAnalysisParametersException {
 		File file = new File("/traces/fail.sor"); // XXX
-		BellcoreStructure bs = FileOpenCommand.readTraceFromFile(file);
+		PFTrace trace = new PFTrace(FileOpenCommand.readTraceFromFile(file));
 		AnalysisParameters ap = new AnalysisParameters(
 				"0.001;0.01;0.5;1.5;1.0;");
 
@@ -74,18 +74,18 @@ public class AnalysisMemLeakTestCase extends TestCase {
 			boolean testReadabilityLeakage = true;
 
 			if (testAnalysis) {
-				CoreAnalysisManager.performAnalysis(bs, ap).getMTAE().
+				CoreAnalysisManager.performAnalysis(trace, ap).getMTAE().
 						getSimpleEvents();
 			}
 			if (testEtalonAndComparison) {
-				Collection<BellcoreStructure> col = new ArrayList<BellcoreStructure>();
-				col.add(bs);
+				Collection<PFTrace> col = new ArrayList<PFTrace>();
+				col.add(trace);
 				ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(col, ap);
 				CoreAnalysisManager.analyseCompareAndMakeAlarms(
-						bs, ap, -99, mtm, null);
+						trace, ap, -99, mtm, null);
 			}
 			if (testReadabilityLeakage) {
-				CoreAnalysisManagerTestCase.checkMTMReadability(bs, false);
+				CoreAnalysisManagerTestCase.checkMTMReadability(trace, false);
 			}
 		}
 

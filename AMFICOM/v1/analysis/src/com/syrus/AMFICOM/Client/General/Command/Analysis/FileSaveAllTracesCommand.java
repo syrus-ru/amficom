@@ -41,7 +41,7 @@ public class FileSaveAllTracesCommand extends AbstractCommand {
 		{
 			File directory = chooser.getSelectedFile();
 			for (Trace trace: Heap.getTraceCollection()) {
-				BellcoreStructure bs = trace.getBS();
+				BellcoreStructure bs = trace.getPFTrace().getBS();
 				// String traceName = bs.title;
 				String traceName = trace.getKey(); // Это временный код для чтения результатов за сентябрь 2005. FIXME: впредь использовать bs.title, см. выше.
 				String fName = traceName.replaceAll("[<>\\\\/\\*\\?\\:]", "_"); // преобразуем к виду, приемлемуму для именования файлов

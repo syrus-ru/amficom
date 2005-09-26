@@ -20,12 +20,12 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.MarkerResource;
 import com.syrus.AMFICOM.analysis.MarkerResourceWrapper;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.io.BellcoreStructure;
 
 public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeListener, BsHashChangeListener {
 	private static final long serialVersionUID = 1645657805656146998L;
@@ -166,8 +166,8 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 
 	public void bsHashAdded(final String key) {
 		if (key.equals(Heap.PRIMARY_TRACE_KEY)) {
-			final BellcoreStructure bs = Heap.getBSPrimaryTrace();
-			this.sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
+			final PFTrace pf = Heap.getBSPrimaryTrace();
+			this.sigma = MathRef.calcSigma(pf.getWavelength(), pf.getPulsewidth());
 			this.setVisible(true);
 		}
 	}

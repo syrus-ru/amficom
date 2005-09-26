@@ -1,21 +1,59 @@
 
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 
-import javax.swing.*;
+import javax.swing.JInternalFrame;
+import javax.swing.UIDefaults;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileCloseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAllTracesCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.NetStudyCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SavePathElementsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
+import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.util.Log;
 
 public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeListener, PrimaryTraceListener,
@@ -437,12 +475,12 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	}
 
 	void updFrames() {
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		PFTrace pf = Heap.getBSPrimaryTrace();
 		RefAnalysis ra = Heap.getRefAnalysisPrimary();
-		if (bs == null || ra == null) {
+		if (pf == null || ra == null) {
 			closeFrames();
 		} else {
-			double deltaX = bs.getResolution();
+			double deltaX = pf.getResolution();
 
 //			double[] filtered = Heap.getRefAnalysisPrimary().filtered;
 			double[] noise = Heap.getRefAnalysisPrimary().noise;

@@ -10,12 +10,12 @@ import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
-import com.syrus.io.BellcoreStructure;
 
 public class AnalysisFrame extends ScalableFrame
 implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
@@ -75,9 +75,9 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		((AnalysisLayeredPanel)panel).updMarkers();
 	}
 
-	protected AnalysisPanel createSpecificAnalysisPanel(BellcoreStructure bs) {
-		double deltaX = bs.getResolution();
-		double[] y = bs.getTraceData();
+	protected AnalysisPanel createSpecificAnalysisPanel(PFTrace pf) {
+		double deltaX = pf.getResolution();
+		double[] y = pf.getFilteredTraceClone();
 		return new AnalysisPanel((AnalysisLayeredPanel)panel,
 				dispatcher, y, deltaX);
 	}
@@ -87,8 +87,8 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		removeOneTrace(id);
 
 		SimpleGraphPanel p;
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-		if (bs == null)
+		PFTrace pf = Heap.getAnyBSTraceByKey(id);
+		if (pf == null)
 			return;
 
 		AnalysisLayeredPanel ppp = (AnalysisLayeredPanel)panel;
@@ -98,14 +98,14 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 			try
 			{
 				MonitoredElement me = (MonitoredElement)StorableObjectPool.getStorableObject(
-								new Identifier(bs.monitoredElementId), true);
+								new Identifier(pf.getBS().monitoredElementId), true);
 				setTitle(me.getName());
 			} catch(Exception ex)
 			{
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
 
-			p = createSpecificAnalysisPanel(bs);
+			p = createSpecificAnalysisPanel(pf);
 			((AnalysisPanel)p).updEvents(id);
 			((AnalysisPanel)p).updateNoiseLevel();
 			((AnalysisPanel)p).draw_noise_level = true;

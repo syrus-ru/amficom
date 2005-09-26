@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.4 2005/09/01 12:08:33 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.5 2005/09/26 11:19:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,17 +24,17 @@ import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.io.BellcoreCreator;
-import com.syrus.io.BellcoreStructure;
 import com.syrus.io.SignatureMismatchException;
 
 public class CoreAnalysisManagerTestCase extends TestCase {
@@ -44,9 +44,9 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 	private static final String TEST_FNAME = "/traces/fail.sor";
 	//private static final String TEST_FNAME = "test/ref/rg0065.ref";
-	private static BellcoreStructure loadTestBS() {
+	private static PFTrace loadTestTrace() {
 		File file = new File(TEST_FNAME); // XXX
-		return FileOpenCommand.readTraceFromFile(file);
+		return new PFTrace(FileOpenCommand.readTraceFromFile(file));
 	}
 	private static final AnalysisParameters defaultAP;
 
@@ -77,20 +77,20 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 	}
 
 	public final void testAnalysisNotCrush() {
-		BellcoreStructure bs = loadTestBS();
+		PFTrace trace = loadTestTrace();
 		SimpleReflectogramEvent re[] = CoreAnalysisManager.
-				performAnalysis(bs, defaultAP).getMTAE().getSimpleEvents();
+				performAnalysis(trace, defaultAP).getMTAE().getSimpleEvents();
 		printEventList(re);
 	}
 
 	// checks and returns number of bytes of byte[]
-	public static int checkMTMReadability(BellcoreStructure bs, boolean verbose)
+	public static int checkMTMReadability(PFTrace bs, boolean verbose)
 	throws IncompatibleTracesException, SignatureMismatchException, IOException {
 		// make etalon
-		Collection<BellcoreStructure> bsColl =
-			new ArrayList<BellcoreStructure>();
-		bsColl.add(bs);
-		ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(bsColl, defaultAP);
+		Collection<PFTrace> trColl =
+			new ArrayList<PFTrace>();
+		trColl.add(bs);
+		ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(trColl, defaultAP);
 
 		// save to byte[]
 		byte[] mtmBytes = DataStreamableUtil.writeDataStreamableToBA(mtm);
@@ -134,10 +134,10 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 	public final void testMTMReadability()
 	throws IncompatibleTracesException, SignatureMismatchException, IOException {
-		// load bs
-		BellcoreStructure bs = loadTestBS();
+		// load trace
+		PFTrace trace = loadTestTrace();
 		// test
-		checkMTMReadability(bs, true);
+		checkMTMReadability(trace, true);
 	}
 
 	private static double xRand(int pos) {
@@ -169,7 +169,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		return ret;
 	}
 
-	private static BellcoreStructure generateTestBellcore(int len, int dist,
+	private static PFTrace generateTestTrace(int len, int dist,
 			boolean dumpToFile) {
 		double[] y = generateTestBellcoreYArray(len, dist);
 		if (dumpToFile) {
@@ -183,7 +183,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 				str.println(i + " " + y[i]);
 			}
 		}
-		return new BellcoreCreator(y).getBS();
+		return new PFTrace(new BellcoreCreator(y).getBS());
 	}
 
 	private static ReflectogramMismatch getFirstMismatch(List list) {
@@ -191,7 +191,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		if (it.hasNext())
 			return (ReflectogramMismatch) it.next();
 		else
-			return null;    	
+			return null;
 	}
 
 	// проверка сравнения масок и определения события, обусловившего аларм
@@ -200,13 +200,13 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		final int N = 10000;
 		final int dist1 = N / 3;
 		System.out.println("generating trace...");
-		BellcoreStructure bs = generateTestBellcore(N, dist1, false);
+		PFTrace trace = generateTestTrace(N, dist1, false);
 		System.out.println("Analysing trace...");
-		Collection<BellcoreStructure> bsColl =
-			new ArrayList<BellcoreStructure>();
-		bsColl.add(bs);
-		ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(bsColl, defaultAP);
-		double breakThresh = ReflectogramMath.getArrayMin(bs.getTraceData());
+		Collection<PFTrace> trColl =
+			new ArrayList<PFTrace>();
+		trColl.add(trace);
+		ModelTraceManager mtm = CoreAnalysisManager.makeEtalon(trColl, defaultAP);
+		double breakThresh = ReflectogramMath.getArrayMin(trace.getFilteredTraceClone());
 		printEventList(mtm.getMTAE().getSimpleEvents());
 
 		ReflectogramMismatch res;
@@ -216,13 +216,13 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res == null);
 
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				bs,
+				trace,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare bs: " + res);
 		assertTrue(res == null);
 
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				generateTestBellcore(N, dist1 - 4, false),
+				generateTestTrace(N, dist1 - 4, false),
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
@@ -230,7 +230,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getCoord() + "==" + dist1, res.getCoord() == dist1); // должна сработать привязка
 
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				generateTestBellcore(N, dist1 - 6, false),
+				generateTestTrace(N, dist1 - 6, false),
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
@@ -238,7 +238,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getCoord() + "<" + dist1, res.getCoord() < dist1); // привязки уже быть не должно
 
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				generateTestBellcore(N, dist1 - 5, false),
+				generateTestTrace(N, dist1 - 5, false),
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм

@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.115 2005/09/26 07:27:56 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.116 2005/09/26 11:19:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.115 $, $Date: 2005/09/26 07:27:56 $
+ * @version $Revision: 1.116 $, $Date: 2005/09/26 11:19:34 $
  * @module
  */
 
@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
@@ -50,7 +50,7 @@ public class CoreAnalysisManager
 	/**
 	 * Фактор запаса (разы) DY-порогов, генерируемых на основе одной р/г и ее м.ф.
 	 */
-	private static final double MTM_DY_FACTOR_BS_BASED = 3.0;
+	private static final double MTM_DY_FACTOR_TR_BASED = 3.0;
 
 	protected CoreAnalysisManager()
 	{ // empty
@@ -278,27 +278,6 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * Проводит пред-фильтрацию для одной исходной рефлектограммы
-	 * @param bs Исходная рефлектограмма
-	 * @return пред-фильтрованная рефлектограмма
-	 */
-	protected static PFTrace makePreFiltration(BellcoreStructure bs) {
-		return new PFTrace(bs);
-	}
-
-	/**
-	 * Проводит пред-анализ для одной рефлектограммы <ul>
-	 * @return результаты, приемлемые для анализа
-	 *   {@link #makeAnalysis(TracePreAnalysis, AnalysisParameters)}
-	 * @deprecated используйте {@link #makePreAnalysis(PFTrace, boolean)}
-	 */
-	@Deprecated
-	protected static TracePreAnalysis makePreAnalysis(BellcoreStructure bs,
-			boolean needNoise) {
-		return makePreAnalysis(makePreFiltration(bs), needNoise);
-	}
-
-	/**
 	 * Проводит пред-анализ для одной пред-фильтрованной рефлектограммы: <ul>
 	 *   <li> сохраняет traceData рефлектограммы
 	 *   <li> выделяет из р/г параметры тестирования, необходимые для анализа
@@ -334,7 +313,7 @@ public class CoreAnalysisManager
 	/**
 	 * Проводит анализ и фитировку на основании результатов пред-анализа.
 	 * @param tpa результаты пред-анализа
-	 *   {@link #makePreAnalysis(BellcoreStructure, boolean)}
+	 *   {@link #makePreAnalysis}
 	 * @param ap набор параметров для IA
 	 * @return результат анализа в виде mtae
 	 */
@@ -422,7 +401,7 @@ public class CoreAnalysisManager
 	 * Собирает информацию о совокупности рефлектограмм, достаточную
 	 * для формирования эталона.
 	 * see {@link TracesAverages}
-	 * @param bsColl входная совокупность р/г ({@link BellcoreStructure})
+	 * @param trColl входная совокупность р/г после пред-фильтрации ({@link PFTrace})
 	 * @param needNoiseInfo нужна ли информация о шуме
 	 * @param needMFInfo нужны ли кривые мин./макс. фитированных кривых
 	 * @param ap Параметры анализа, либо null если needMFInfo==false
@@ -435,17 +414,17 @@ public class CoreAnalysisManager
 	 *   <li>все остальные поля заполнены в любом случае
 	 * </ul>
 	 * @throws IncompatibleTracesException если
-	 *   параметры входных bs, необходимые для проведения анализа, различаются
+	 *   параметры входных р/г, необходимые для проведения анализа, различаются
 	 * @throws IllegalArgumentException если входная совокупность р/г пуста
 	 */
 	protected static TracesAverages findTracesAverages(
-			Collection<BellcoreStructure> bsColl,
+			Collection<PFTrace> trColl,
 			boolean needNoiseInfo,
 			boolean needMFInfo,
 			AnalysisParameters ap)
 	throws IncompatibleTracesException {
 		// определяем число входных р/г
-		final int N_TRACES = bsColl.size();
+		final int N_TRACES = trColl.size();
 
 		if (N_TRACES == 0)
 			throw new IllegalArgumentException("No traces to analyse");
@@ -460,7 +439,7 @@ public class CoreAnalysisManager
 
 		double[] noiseAcc = null; // needs no initialization
 
-		for (Iterator<BellcoreStructure> it = bsColl.iterator(); it.hasNext(); isFirst = false) {
+		for (Iterator<PFTrace> it = trColl.iterator(); it.hasNext(); isFirst = false) {
 			TracePreAnalysis tpa =
 				makePreAnalysis(it.next(), needNoiseInfo);
 
@@ -539,14 +518,29 @@ public class CoreAnalysisManager
 
 	/**
 	 * Выполняет анализ одной рефлектограммы
-	 * @param bs рефлектограмма
+	 * @param trace пред-фильтрованная рефлектограмма
+	 * @param ap параметры анализа
+	 * @return результаты анализа {@link AnalysisResult}
+	 */
+	public static AnalysisResult performAnalysis(
+			PFTrace trace,
+			AnalysisParameters ap) {
+		TracePreAnalysis tpa = makePreAnalysis(trace, true);
+		ModelTraceAndEventsImpl mtae = makeAnalysis(tpa, ap);
+		return new AnalysisResult(tpa.y.length, tpa.traceLength, mtae);
+	}
+
+	/**
+	 * Выполняет пре-фильтрацию, а затем анализ одной рефлектограммы
+	 * XXX: пометить deprecated?
+	 * @param bs исходная р/г
 	 * @param ap параметры анализа
 	 * @return результаты анализа {@link AnalysisResult}
 	 */
 	public static AnalysisResult performAnalysis(
 			BellcoreStructure bs,
 			AnalysisParameters ap) {
-		TracePreAnalysis tpa = makePreAnalysis(bs, true);
+		TracePreAnalysis tpa = makePreAnalysis(new PFTrace(bs), true);
 		ModelTraceAndEventsImpl mtae = makeAnalysis(tpa, ap);
 		return new AnalysisResult(tpa.y.length, tpa.traceLength, mtae);
 	}
@@ -555,39 +549,39 @@ public class CoreAnalysisManager
 	 * Создает эталонный MTM по непустому набору рефлектограмм и параметрам
 	 * анализа.
 	 * <ul>
-	 * <li> Если в наборе только одна р/г, строит пороги по ее bs,
+	 * <li> Если в наборе только одна р/г, строит пороги по исходной р/г (PFTrace),
 	 * <li> если несколько - по всем их mf,
 	 * <li> если ни одной - бросает IllegalArgumentException
 	 *      (see {@link #findTracesAverages(Collection, boolean, boolean, AnalysisParameters)}).
 	 * </ul>
-	 * @todo использовать на входе Collection<Trace>
-	 * вместо Collection<BellcoreStructure>, а не проводить анализ заново
-	 * @param bsColl коллекция входных р/г.
+	 * @todo использовать на входе Collection{Trace}
+	 * вместо Collection{PFTrace}, а не проводить анализ заново
+	 * @param trColl коллекция входных р/г.
 	 *   Должна быть непуста, а р/г должны иметь одинаковые параметры
 	 *   регистрации, используемые в анализе
 	 * @param ap параметры анализа
 	 * @return MTM созданного эталона
-	 * @throws IllegalArgumentException если bsColl пуст
+	 * @throws IllegalArgumentException если коллекция входных р/г пуста
 	 *   ({@link #findTracesAverages})
-	 * @throws IncompatibleTracesException если bsColl содержит р/г
-	 *   с разными длинами, разрешением, длительностью импульса или
-	 *   показателем преломления ({@link #findTracesAverages})
+	 * @throws IncompatibleTracesException если коллекция входных р/г
+	 *   содержит р/г с разными длинами, разрешением, длительностью импульса
+	 *   или показателем преломления ({@link #findTracesAverages})
 	 */
 	public static ModelTraceManager makeEtalon(
-			Collection<BellcoreStructure> bsColl,
+			Collection<PFTrace> trColl,
 			AnalysisParameters ap)
 	throws IncompatibleTracesException
 	{
-		TracesAverages av = findTracesAverages(bsColl, true, true, ap);
+		TracesAverages av = findTracesAverages(trColl, true, true, ap);
 		ModelTraceAndEventsImpl mtae = makeAnalysis(av.av, ap);
 		ModelTraceManager mtm = new ModelTraceManager(mtae);
-		if (bsColl.size() > 1) {
+		if (trColl.size() > 1) {
 			// extend to max dev of _mf_
 			mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED); 
 		}
 		else {
-			// extend to a single curve: original (noisy) _bs_
-			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN, MTM_DY_FACTOR_BS_BASED);
+			// extend to a single curve: original (noisy) _trace_
+			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN, MTM_DY_FACTOR_TR_BASED);
 		}
 		return mtm;
 	}
@@ -596,28 +590,27 @@ public class CoreAnalysisManager
 	 * Расширяет эталонный MTM по непустому набору рефлектограмм и параметрам
 	 * анализа, чтобы включить все аналитические кривые.
 	 * <p>
-	 * XXX Было бы неплохо использовать на входе Collection&lt;Trace&gt;
-	 * вместо Collection&lt;BellcoreStructure&gt;, чтобы не проводить анализ
-	 * заново,
+	 * XXX Было бы неплохо использовать на входе Collection{Trace}
+	 * вместо Collection{PFTrace}, чтобы не проводить анализ заново,
 	 * однако здесь нам важно, чтобы скорректированный MTM строго покрывал
 	 * а/к, построенные при <b>текущих</b> значениях параметров анализа.
 	 * Поэтому использовать результаты анализа, имеющиеся в Trace, можно будет
 	 * только когда Trace сможет как-то поддерживать изменяющиеся AP.
 	 * </p>
 	 * @param mtm расширяемый MTM
-	 * @param bsColl коллекция р/г
+	 * @param trColl коллекция пред-фильтрованных р/г
 	 * @param ap параметры, с которыми анализировать эти р/г
-	 * @throws IllegalArgumentException если bsColl пуст
+	 * @throws IllegalArgumentException если trColl пуст
 	 *   ({@link #findTracesAverages})
-	 * @throws IncompatibleTracesException если bsColl содержит р/г
+	 * @throws IncompatibleTracesException если trColl содержит р/г
 	 *   с разными длинами, разрешением, длительностью импульса или
 	 *   показателем преломления ({@link #findTracesAverages})
 	 */
 	public static void updateEtalon(ModelTraceManager mtm,
-			Collection<BellcoreStructure> bsColl,
+			Collection<PFTrace> trColl,
 			AnalysisParameters ap)
 	throws IncompatibleTracesException, IllegalArgumentException {
-		TracesAverages av = findTracesAverages(bsColl, true, true, ap);
+		TracesAverages av = findTracesAverages(trColl, true, true, ap);
 		// extend to max dev of _mf_
 		mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED);
 	}
@@ -626,22 +619,22 @@ public class CoreAnalysisManager
 	 * Находит в коллекции рефлектограмму, ближайшую к усредненному по
 	 * коллекции значению. Входные р/г должны быть совместны, т.е.
 	 * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
-	 * @param bsColl непустая входная коллекция рефлектограмм
+	 * @param trColl непустая входная коллекция рефлектограмм
 	 * @param av заранее найденное значение по этой коллекции TracesAverages (в нем не нужны ни noiseInfo, ни MFInfo)
 	 * @return самую среднюю рефлектограмму среди входных
 	 */
-	protected static BellcoreStructure getMostTypicalTrace(
-			Collection<BellcoreStructure> bsColl,
+	protected static PFTrace getMostTypicalTrace(
+			Collection<PFTrace> trColl,
 			TracesAverages av) {
-		BellcoreStructure nearest = null;
+		PFTrace nearest = null;
 		double bestDistance = 0;
-		for (BellcoreStructure bs: bsColl) {
-			double[] yBS = bs.getTraceData();
+		for (PFTrace tr: trColl) {
+			double[] y = tr.getFilteredTrace();
 			double distance = ReflectogramComparer.getMaxDeviation(av.av.y,
-					yBS,
+					y,
 					av.av.traceLength);
 			if (nearest == null || distance < bestDistance) {
-				nearest = bs;
+				nearest = tr;
 				bestDistance = distance;
 			}
 		}
@@ -652,20 +645,20 @@ public class CoreAnalysisManager
 	 * Находит в коллекции рефлектограмму, ближайшую к усредненному по
 	 * коллекции значению. Входные р/г должны быть совместны, т.е.
 	 * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
-	 * @param bsColl входная коллекция рефлектограмм
+	 * @param trColl входная коллекция пред-фильтрованных рефлектограмм
 	 * @return самую среднюю рефлектограмму среди входных
 	 * @throws IncompatibleTracesException Если входные рефлектограммы
 	 * несовместны
 	 * @throws IllegalArgumentException Если входная совокупность р/г пуста
 	 */
-	public static BellcoreStructure getMostTypicalTrace(
-			Collection<BellcoreStructure> bsColl)
+	public static PFTrace getMostTypicalTrace(
+			Collection<PFTrace> trColl)
 	throws IncompatibleTracesException {
 		// если входная коллекция пуста, то к этому моменту уже будет
 		// выброшено исключение IllegalArgumentException,
 		// т.ч. return null не произойдет.
-		TracesAverages av = findTracesAverages(bsColl, false, false, null);
-		return getMostTypicalTrace(bsColl, av);
+		TracesAverages av = findTracesAverages(trColl, false, false, null);
+		return getMostTypicalTrace(trColl, av);
 	}
 
 	public static double getMedian(double[] y, int pos)
@@ -721,21 +714,21 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * Проводит анализ рефлектограммы вызовом {@link #performAnalysis(BellcoreStructure, AnalysisParameters)},
+	 * Проводит анализ рефлектограммы вызовом {@link #performAnalysis(PFTrace, AnalysisParameters)},
 	 * затем сравнивает ее с помощью {@link #compareAndMakeAlarms(AnalysisResult, Etalon)}
-	 * @param bs рефлектограмма
+	 * @param trace пред-фильтрованная {@link PFTrace} рефлектограмма
 	 * @param ap параметры анализа
 	 * @param breakThresh
 	 * @param etMTM
 	 * @param anchorer
 	 * @return список алармов
 	 */
-	public static List analyseCompareAndMakeAlarms(BellcoreStructure bs,
+	public static List analyseCompareAndMakeAlarms(PFTrace trace,
 			AnalysisParameters ap,
 			double breakThresh,
 			ModelTraceManager etMTM,
 			EventAnchorer anchorer) {
-		AnalysisResult ar = performAnalysis(bs, ap);
+		AnalysisResult ar = performAnalysis(trace, ap);
 		Etalon etalon = new Etalon(etMTM, breakThresh, anchorer);
 		return compareAndMakeAlarms(ar, etalon);
 	}

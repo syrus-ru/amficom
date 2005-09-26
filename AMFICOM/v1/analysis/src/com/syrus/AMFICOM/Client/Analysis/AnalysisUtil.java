@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
@@ -242,7 +243,7 @@ public class AnalysisUtil
 			return;
 		}
 		etalonBS.title =  makeEtalonRefName(getMEbyMS(ms), ms.getModified());// XXX: ms.getCreated()?
-		Heap.setEtalonPair(etalonBS, etalonObj, etalonBS.title);
+		Heap.setEtalonPair(new PFTrace(etalonBS), etalonObj, etalonBS.title);
 		//Heap.setEtalonEtalonMetas(metas);
 	}
 
@@ -285,11 +286,11 @@ public class AnalysisUtil
 				DataStreamableUtil.writeDataStreamableToBA(
 						Heap.getEtalon()));
 
-		BellcoreStructure bs = Heap.getBSEtalonTrace();
+		PFTrace trace = Heap.getBSEtalonTrace();
 
 		ptype = ParameterType.REFLECTOGRAMMA_ETALON;
 		params[1] = Parameter.createInstance(ptype,
-				new BellcoreWriter().write(bs));
+				new BellcoreWriter().write(trace.getBS()));
 
 		ParameterSet etalon = ParameterSet.createInstance(
 				userId,

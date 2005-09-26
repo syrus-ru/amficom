@@ -10,9 +10,9 @@ import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsFrame extends SimpleResizableFrame
 implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
@@ -51,8 +51,8 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 		if (traces.get(Heap.ETALON_TRACE_KEY) != null)
 			return;
 
-		BellcoreStructure bs = Heap.getBSEtalonTrace();
-		if (bs != null)
+		PFTrace pf = Heap.getBSEtalonTrace();
+		if (pf != null)
 			addTrace (Heap.ETALON_TRACE_KEY);
 	}
 
@@ -68,10 +68,10 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 		if (traces.get(id) != null)
 			return;
 		SimpleGraphPanel p;
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
+		PFTrace pf = Heap.getAnyBSTraceByKey(id);
 
-		double deltaX = bs.getResolution();
-		double[] y = bs.getTraceData();
+		double deltaX = pf.getResolution();
+		double[] y = pf.getFilteredTraceClone();
 
 		ThresholdsLayeredPanel ppp = (ThresholdsLayeredPanel)panel;
 		// XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 

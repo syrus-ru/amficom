@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.8 2005/09/10 14:39:19 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.9 2005/09/26 11:19:34 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -21,20 +21,20 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParametersStorage;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
-import com.syrus.io.BellcoreStructure;
 import com.syrus.util.HashCodeGenerator;
 
 /**
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/09/10 14:39:19 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/26 11:19:34 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -225,7 +225,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 	// cache may be null
 	public static final double evaluateAnalysisDB(AnalysisParameters ap,
 			boolean verbose,
-			HashMap<String, BellcoreStructure> cache)
+			HashMap<String, PFTrace> cache)
 	throws IOException {
 		File file = new File("test/testAnalysisDB.dat"); // FIXME
 		FileReader fr = new FileReader(file);
@@ -475,26 +475,26 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 
 	// cache may be null
 	private static int performTraceTest(String fName,
-			HashMap<String, BellcoreStructure> cache,
+			HashMap<String, PFTrace> cache,
 			ToleranceSimpleReflectogramEvent[][] ets,
 			FailCounter fails, AnalysisParameters ap, boolean verbose) {
 		String fPrefix = "test/ref/";
 		boolean compareBeginEnd = true;
 
-		BellcoreStructure bs;
+		PFTrace trace;
 		if (cache != null && cache.containsKey(fName))
-			bs = cache.get(fName);
+			trace = cache.get(fName);
 		else {
-			bs = FileOpenCommand.readTraceFromFileEx(
-				new File(fPrefix + fName), true);
-			if (cache != null && bs != null)
-				cache.put(fName, bs);
+			trace = new PFTrace(FileOpenCommand.readTraceFromFileEx(
+				new File(fPrefix + fName), true));
+			if (cache != null && trace != null)
+				cache.put(fName, trace);
 		}
-		double dxkm = bs.getResolution() / 1000;
+		double dxkm = trace.getResolution() / 1000;
 		long t0 = System.currentTimeMillis();
 		ReliabilitySimpleReflectogramEvent re[] =
 				(ReliabilitySimpleReflectogramEvent[])CoreAnalysisManager.
-						performAnalysis(bs, ap).getMTAE().getSimpleEvents();
+						performAnalysis(trace, ap).getMTAE().getSimpleEvents();
 		long t1 = System.currentTimeMillis();
 		fails.addTimeAcc(t1 - t0);
 

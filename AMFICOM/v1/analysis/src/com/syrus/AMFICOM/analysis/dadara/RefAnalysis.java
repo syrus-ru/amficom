@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
@@ -10,14 +11,13 @@ import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
-import com.syrus.io.BellcoreStructure;
 
 public class RefAnalysis {
 	public double[] noise; // hope nobody will change it
 	public double[] filtered; // hope nobody will change it
 	public TraceEvent overallStats; // hope nobody will change it
 
-	private BellcoreStructure bs;
+	private PFTrace pfTrace;
 	private AnalysisResult ar;
 
 	/**
@@ -27,25 +27,25 @@ public class RefAnalysis {
 	 * @param mtae
 	 */
 	public RefAnalysis(final RefAnalysis that, final ModelTraceAndEventsImpl mtae) {
-		this.bs = that.bs;
+		this.pfTrace = that.pfTrace;
 		this.ar = new AnalysisResult(that.ar.getDataLength(), that.ar.getTraceLength(), mtae);
 		this.decode();
 	}
 
-	public RefAnalysis(final BellcoreStructure bs, final AnalysisResult ar) {
-		this.bs = bs;
+	public RefAnalysis(final PFTrace pfTrace, final AnalysisResult ar) {
+		this.pfTrace = pfTrace;
 		this.ar = ar;
 		this.decode();
 	}
 
-	public RefAnalysis(final BellcoreStructure bs) {
-		this.bs = bs;
+	public RefAnalysis(final PFTrace pfTrace) {
+		this.pfTrace = pfTrace;
 		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
 		if (ap == null) {
 			new ClientAnalysisManager();
 			ap = Heap.getMinuitAnalysisParams();
 		}
-		this.ar = CoreAnalysisManager.performAnalysis(bs, ap);
+		this.ar = CoreAnalysisManager.performAnalysis(pfTrace, ap);
 		this.decode();
 	}
 
@@ -71,7 +71,7 @@ public class RefAnalysis {
 		}
 
 		if (false) { // FIXME: just another debug
-			final double sigma = MathRef.calcSigma(this.bs.getWavelength(), this.bs.getPulsewidth());
+			final double sigma = MathRef.calcSigma(this.pfTrace.getWavelength(), this.pfTrace.getPulsewidth());
 			final double dx = getMTAE().getDeltaX();
 			final DetailedEvent de[] = getMTAE().getDetailedEvents();
 			System.out.println("detailed events (for modelling):");
@@ -102,7 +102,7 @@ public class RefAnalysis {
 			}
 		}
 
-		final double[] y = this.bs.getTraceData();
+		final double[] y = this.pfTrace.getFilteredTraceClone();
 		// ComplexReflectogramEvent[] re = mtae.getComplexEvents();
 		final DetailedEvent[] de = getMTAE().getDetailedEvents();
 		final ModelTrace mt = getMTAE().getModelTrace();
@@ -189,8 +189,8 @@ public class RefAnalysis {
 		return this.ar.getMTAE();
 	}
 
-	public BellcoreStructure getBS() {
-		return this.bs;
+	public PFTrace getPFTrace() {
+		return this.pfTrace;
 	}
 
 	public AnalysisResult getAR() {

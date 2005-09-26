@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.10 2005/09/26 06:41:14 saa Exp $
+ * $Id: Trace.java,v 1.11 2005/09/26 11:19:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
@@ -22,8 +23,8 @@ import com.syrus.io.DataFormatException;
  * Представляет загруженную рефлектограмму.
  * Агрегирует:
  * <ul>
- * <li> BellcoreStructure bs - собственно рефлектограмма
- * <li> double[] traceData - кэш bs.getTraceData() (полагаемся, что никто не будет изменять этот массив) 
+ * <li> {@link PFTrace} pfTrace - собственно рефлектограмма, но уже пред-фильтрованная
+ * <li> double[] traceData - кэш pfTrace.getFilteredTrace() (полагаемся, что никто не будет изменять этот массив) 
  * <li> ar - результаты первого анализа (для отображения а/к на экране; для primarytrace может отсутствовать)
  *   (ar может быть вычислен в любой момент от загрузки {@link Trace} до запросов
  *   getAR/getMTAE, в соответствии с любыми действующими на этом периоде времени
@@ -36,11 +37,11 @@ import com.syrus.io.DataFormatException;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/09/26 06:41:14 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/26 11:19:34 $
  * @module
  */
 public class Trace {
-	private BellcoreStructure bs;
+	private PFTrace pfTrace;
 	private AnalysisParameters ap; // может использоваться для построения mtae
 	private String key;
 	private Result result; // may be null
@@ -49,7 +50,14 @@ public class Trace {
 	private AnalysisResult ar = null;
 
 	public Trace(BellcoreStructure bs, String key, AnalysisParameters ap) {
-		this.bs = bs;
+		this.pfTrace = new PFTrace(bs);
+		this.ap = ap;
+		this.key = key;
+		this.result = null;
+	}
+
+	public Trace(PFTrace trace, String key, AnalysisParameters ap) {
+		this.pfTrace = trace;
 		this.ap = ap;
 		this.key = key;
 		this.result = null;
@@ -60,7 +68,8 @@ public class Trace {
 	private Trace(Result result,
 			AnalysisParameters ap, AnalysisResult ar)
 	throws SimpleApplicationException {
-		this.bs = AnalysisUtil.getBellcoreStructureFromResult(result);
+		this.pfTrace = new PFTrace(
+				AnalysisUtil.getBellcoreStructureFromResult(result));
 		this.ap = ap;
 		this.key = result.getId().getIdentifierString();
 		this.result = result;
@@ -123,7 +132,7 @@ public class Trace {
 
 	public AnalysisResult getAR() {
 		if (ar == null) {
-			ar = CoreAnalysisManager.performAnalysis(bs, ap);
+			ar = CoreAnalysisManager.performAnalysis(pfTrace, ap);
 		}
 		return ar;
 	}
@@ -134,15 +143,15 @@ public class Trace {
 	/**
 	 * Возвращается всегда один и тот же объект,
 	 * и его можно будет сравнивать по '=='.
-	 * (это нужно для выбора mostTypical {@link Trace} по mostTypical BS)
-	 * @return объект BellcoreStructure, один и тот же при повторных вызовах
+	 * (это нужно для выбора mostTypical {@link Trace} по mostTypical PFTrace)
+	 * @return объект PFTrace, один и тот же при повторных вызовах
 	 */
-	public BellcoreStructure getBS() {
-		return bs;
+	public PFTrace getPFTrace() {
+		return pfTrace;
 	}
 	public double[] getTraceData() {
 		if (traceData == null) {
-			traceData = bs.getTraceData();
+			traceData = pfTrace.getFilteredTraceClone();
 		}
 		return traceData;
 	}
@@ -150,7 +159,7 @@ public class Trace {
 		return key;
 	}
 	public double getDeltaX() {
-		return this.bs.getResolution();
+		return this.pfTrace.getResolution();
 	}
 	public Result getResult() {
 		return result;

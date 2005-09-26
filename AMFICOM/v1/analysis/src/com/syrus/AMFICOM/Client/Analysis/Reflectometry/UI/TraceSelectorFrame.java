@@ -146,7 +146,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 			//tr.setTitle(LangModelAnalyse.getString("etalon"));
 		}
 		else {
-			tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
+			tr.setTitle(Heap.getAnyBSTraceByKey(key).getBS().title);
 		}
 
 		if (Heap.PRIMARY_TRACE_KEY.equals(key)) {

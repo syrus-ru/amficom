@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.AnalysisParametersWrapper;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.io.BellcoreStructure;
 
 public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChangeListener, PrimaryMTAEListener,
 		AnalysisParametersListener, ReportTable {
@@ -187,7 +187,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChan
 	public void bsHashAdded(final String key) {
 		final String id = key;
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
-			if (Heap.getBSPrimaryTrace().measurementId == null)
+			if (Heap.getBSPrimaryTrace().getBS().measurementId == null)
 				this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
 						+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 			else {
@@ -213,8 +213,8 @@ public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChan
 	}
 
 	public void primaryMTAECUpdated() {
-		final BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		if (bs.measurementId == null) {
+		final PFTrace pf = Heap.getBSPrimaryTrace();
+		if (pf.getBS().measurementId == null) {
 			this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
 					+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
 		} else {

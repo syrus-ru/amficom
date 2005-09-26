@@ -25,7 +25,7 @@ public class CreateTestSetupCommand extends AbstractCommand
 
 	public static String getNewMSNameFromDialog()
 	{
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		BellcoreStructure bs = Heap.getBSPrimaryTrace().getBS();
 		if (bs == null) {
 			// странная ситуация - нет primarytrace
 			return null;

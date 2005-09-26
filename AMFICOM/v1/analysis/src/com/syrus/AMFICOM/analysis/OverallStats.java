@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.9 2005/09/07 02:56:49 arseniy Exp $
+ * $Id: OverallStats.java,v 1.10 2005/09/26 11:19:34 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,10 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
-import com.syrus.io.BellcoreStructure;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/09/07 02:56:49 $
+ * @author $Author: saa $
+ * @version $Revision: 1.10 $, $Date: 2005/09/26 11:19:34 $
  * @module analysis
  */
 
@@ -45,8 +44,8 @@ public class OverallStats {
 
 	private List<PropertyChangeListener> propertyChangeListeners;
 	
-	public void initGeneralStatistics(TraceEvent ev, BellcoreStructure bs) {
-		double range_km = ev.last_point * bs.getResolution() / 1000.0;
+	public void initGeneralStatistics(TraceEvent ev, PFTrace pf) {
+		double range_km = ev.last_point * pf.getResolution() / 1000.0;
 		double loss = ev.overallStatsLoss();
 		double attenuation = loss / range_km;
 		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());

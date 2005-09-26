@@ -8,10 +8,10 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.io.BellcoreStructure;
 
 public class NoiseHistogrammPanel extends ScaledGraphPanel {
 	private int nBins = 400;
@@ -49,10 +49,10 @@ public class NoiseHistogrammPanel extends ScaledGraphPanel {
 
 	public void updateHistogrammData() {
 		// get reflectogram
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		if (bs == null)
+		PFTrace pf = Heap.getBSPrimaryTrace();
+		if (pf == null)
 			return; // XXX: no data to process
-		double[] y1 = bs.getTraceData();
+		double[] y1 = pf.getFilteredTraceClone();
 
 		// get end of trace
 		ModelTraceAndEvents mtae = Heap.getMTAEPrimary();

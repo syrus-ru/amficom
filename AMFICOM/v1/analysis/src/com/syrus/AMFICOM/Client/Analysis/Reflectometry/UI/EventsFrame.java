@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.DetailedEventResource;
 import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -45,7 +46,6 @@ import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.io.BellcoreStructure;
 
 final class EventsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		CurrentEventChangeListener, PropertyChangeListener, RefMismatchListener {
@@ -394,10 +394,10 @@ final class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pri
 		}
 		final DetailedEvent[] pevents = Heap.getMTAEPrimary().getDetailedEvents();
 		final DetailedEvent[] eevents = Heap.getMTMEtalon() != null ? Heap.getMTMEtalon().getMTAE().getDetailedEvents() : null;
-		final BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		final double resMt = bs.getResolution();
+		final PFTrace pf = Heap.getBSPrimaryTrace();
+		final double resMt = pf.getResolution();
 		final double resKm = resMt / 1000.0;
-		final double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
+		final double sigma = MathRef.calcSigma(pf.getWavelength(), pf.getPulsewidth());
 
 		final int nRows = this.view.nRows(Heap.getEventList());
 

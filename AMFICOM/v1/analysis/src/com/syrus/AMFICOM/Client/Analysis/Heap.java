@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.109 2005/09/26 06:41:14 saa Exp $
+ * $Id: Heap.java,v 1.110 2005/09/26 11:19:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
@@ -90,7 +91,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.109 $, $Date: 2005/09/26 06:41:14 $
+ * @version $Revision: 1.110 $, $Date: 2005/09/26 11:19:34 $
  * @module
  */
 public class Heap
@@ -189,12 +190,12 @@ public class Heap
 		traces.remove(key);
 	}
 
-	public static BellcoreStructure getAnyBSTraceByKey(String key) {
+	public static PFTrace getAnyBSTraceByKey(String key) { // FIXME: rename to getAnyPFTraceByKey
 		Trace trace = getAnyTraceByKey(key);
-		return trace != null ? trace.getBS() : null;
+		return trace != null ? trace.getPFTrace() : null;
 	}
 
-	public static BellcoreStructure getBSPrimaryTrace() {
+	public static PFTrace getBSPrimaryTrace() { // FIXME: rename to getPFTracePrimary
 		return getAnyBSTraceByKey(PRIMARY_TRACE_KEY);
 	}
 
@@ -242,7 +243,7 @@ public class Heap
 	throws SimpleApplicationException {
 		Trace tr = new Trace(result, ar);
 		openPrimaryTrace(tr);
-		setRefAnalysisPrimary(new RefAnalysis(tr.getBS(), ar));
+		setRefAnalysisPrimary(new RefAnalysis(tr.getPFTrace(), ar));
 		primaryTraceOpened();
 	}
 
@@ -262,7 +263,7 @@ public class Heap
 	throws SimpleApplicationException {
 		Trace tr = new Trace(result, getMinuitAnalysisParams());
 		openPrimaryTrace(tr);
-		setRefAnalysisPrimary(new RefAnalysis(tr.getBS()));
+		setRefAnalysisPrimary(new RefAnalysis(tr.getPFTrace()));
 		primaryTraceOpened();
 	}
 
@@ -281,19 +282,19 @@ public class Heap
 
 	public static void openManyTraces(Collection<Trace> traceColl) {
 		// Создаем {@link Trace} и Bellcore по каждому входному результату
-		Collection<BellcoreStructure> bsColl = new ArrayList<BellcoreStructure>(traceColl.size());
+		Collection<PFTrace> pfColl = new ArrayList<PFTrace>(traceColl.size());
 		for (Trace tr: traceColl) {
-			bsColl.add(tr.getBS());
+			pfColl.add(tr.getPFTrace());
 		}
 
 		// пытаемся выбрать самую типичную рефлектограмму.
 		// если набор несовместен, используем первую попавшуюся.
 		Trace tracePrimary = null;
 		try {
-			BellcoreStructure bs =
-				CoreAnalysisManager.getMostTypicalTrace(bsColl);
+			PFTrace pf =
+				CoreAnalysisManager.getMostTypicalTrace(pfColl);
 			for (Trace tr: traceColl) {
-				if (tr.getBS() == bs) {
+				if (tr.getPFTrace() == pf) {
 					tracePrimary = tr;
 					break;
 				}
@@ -336,11 +337,11 @@ public class Heap
 		}
 	}
 
-	public static BellcoreStructure getBSEtalonTrace() {
+	public static PFTrace getBSEtalonTrace() { // FIXME: rename to getPFTraceEtalon
 		return getAnyBSTraceByKey(ETALON_TRACE_KEY);
 	}
 
-	public static void setEtalonTraceFromBS(BellcoreStructure etalonTrace, String name) {
+	public static void setEtalonTraceFromBS(PFTrace etalonTrace, String name) { // FIXME: rename to setEtalonTraceFromPFTrace
 		// @todo - эталон должен храниться отдельно от остальных (первичных и вторичных) рефлектограмм, и вообще не как Trace, а отдельно
 		if (etalonTrace != null) {
 			etalonName = name;
@@ -486,10 +487,10 @@ public class Heap
 		Heap.contextMeasurementSetup = contextMeasurementSetup;
 	}
 
-	public static Collection<BellcoreStructure> getBSCollection() {
-		Collection<BellcoreStructure> coll = new ArrayList<BellcoreStructure>(traces.size());
+	public static Collection<PFTrace> getBSCollection() { // @todo: rename to getPFTraceCollection
+		Collection<PFTrace> coll = new ArrayList<PFTrace>(traces.size());
 		for (Trace tr: traces.values()) {
-			coll.add(tr.getBS());
+			coll.add(tr.getPFTrace());
 		}
 		return coll;
 	}
@@ -894,14 +895,14 @@ public class Heap
 		notifyBsHashAdd(key);
 	}
 
-	public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
+	public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) { // FIXME: rename to ...FromBS
 		putSecondaryTrace(new Trace(
 				bs,
 				key,
 				getMinuitAnalysisParams()));
 	}
 
-	public static void setBSReferenceTrace(BellcoreStructure bs, String key) {
+	public static void setBSReferenceTrace(BellcoreStructure bs, String key) { // FIXME: rename to setReferenceTraceFromBS
 		traces.put(REFERENCE_TRACE_KEY, new Trace(
 				bs,
 				key,
@@ -955,9 +956,9 @@ public class Heap
 						in[i].getEventType())
 				: in[i + 1];
 		}
-		BellcoreStructure bs = getBSPrimaryTrace();
+		PFTrace pfTrace = getBSPrimaryTrace();
 		ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
-				mtae, out, bs.getTraceData());
+				mtae, out, pfTrace.getFilteredTraceClone());
 		replacePrimaryAnalysisMTAE(newMtae);
 	}
 
@@ -987,9 +988,9 @@ public class Heap
 		for (int i = nEvent + 1; i < in.length; i++) {
 				out[i + n - 1] = in[i];
 		}
-		BellcoreStructure bs = getBSPrimaryTrace();
+		PFTrace pf = getBSPrimaryTrace();
 		ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
-				mtae, out, bs.getTraceData());
+				mtae, out, pf.getFilteredTraceClone());
 		replacePrimaryAnalysisMTAE(newMtae);
 	}
 
@@ -1070,9 +1071,9 @@ public class Heap
 				out[i] = in[i];
 			}
 		}
-		BellcoreStructure bs = getBSPrimaryTrace();
+		PFTrace trace = getBSPrimaryTrace();
 		ModelTraceAndEventsImpl newMtae = ModelTraceAndEventsImpl.replaceRSE(
-				mtae, out, bs.getTraceData());
+				mtae, out, trace.getFilteredTraceClone());
 		replacePrimaryAnalysisMTAE(newMtae);
 	}
 	
@@ -1106,10 +1107,10 @@ public class Heap
 	}
 
 	public static void makeAnalysis() {
-		BellcoreStructure bs = getBSPrimaryTrace();
-		if (bs != null)
+		PFTrace pf = getBSPrimaryTrace();
+		if (pf != null)
 		{
-			RefAnalysis a = new RefAnalysis(bs);
+			RefAnalysis a = new RefAnalysis(pf);
 			setRefAnalysisPrimary(a);
 		}
 	}
@@ -1120,9 +1121,9 @@ public class Heap
 		Heap.setMTMEtalon(null);
 	}
 
-	public static void setEtalonPair(BellcoreStructure bs,
+	public static void setEtalonPair(PFTrace pf,
 			Etalon etalonObj, String etalonName) {
-		setEtalonTraceFromBS(bs, etalonName);
+		setEtalonTraceFromBS(pf, etalonName);
 		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
 		Heap.setAnchorer(etalonObj.getAnc());
 		Heap.setMTMEtalon(etalonObj.getMTM());

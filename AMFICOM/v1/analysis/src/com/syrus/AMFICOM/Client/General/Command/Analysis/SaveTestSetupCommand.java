@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -17,7 +18,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.ParameterSet;
-import com.syrus.io.BellcoreStructure;
 
 public class SaveTestSetupCommand extends AbstractCommand
 {
@@ -133,20 +133,20 @@ public class SaveTestSetupCommand extends AbstractCommand
 	}
 
 	public static boolean checkStrangeConditions() {
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
-		if (bs == null)
+		PFTrace pf = Heap.getBSPrimaryTrace();
+		if (pf == null)
 		{
 			GUIUtil.showErrorMessage("unkError");
 			return false;
 		}
 
-		if (bs.monitoredElementId == null)
+		if (pf.getBS().monitoredElementId == null)
 		{
 			GUIUtil.showErrorMessage("noMonitoredElementError");
 			return false;
 		}
 
-		if (bs.measurementId == null)
+		if (pf.getBS().measurementId == null)
 		{
 			GUIUtil.showErrorMessage("noTestSetupError");
 			return false;
