@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.20 2005/09/08 14:16:25 krupenn Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.21 2005/09/26 12:00:31 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/09/08 14:16:25 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/26 12:00:31 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -68,7 +68,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 			//MapJшного кэширования таблиц.
 			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | Starting first search.", Level.FINE);
 			long t1 = System.currentTimeMillis();
-			
+			this.alreadyPerformed = true;
 			for (SpatialLayer spatialLayer : this.connection.getLayers()){
 				if (!this.connection.searchIsAvailableForLayer(spatialLayer))
 					continue;
