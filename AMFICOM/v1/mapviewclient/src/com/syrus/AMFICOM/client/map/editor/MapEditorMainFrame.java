@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.60 2005/09/25 16:03:11 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.61 2005/09/26 14:21:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,11 +12,13 @@ import java.awt.AWTEvent;
 import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 
 import javax.swing.JInternalFrame;
 import javax.swing.UIDefaults;
 
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseViewCommand;
@@ -65,11 +67,13 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.CloseAllInternalCommand;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemeEditorMainFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
@@ -77,7 +81,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.60 $, $Date: 2005/09/25 16:03:11 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/26 14:21:41 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -311,6 +315,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 			aContext.getDispatcher().addPropertyChangeListener(
 					MapEditorWindowArranger.EVENT_ARRANGE,
 					this);
+			this.statusBar.addDispatcher(this.aContext.getDispatcher());
 		}
 	}
 
@@ -520,6 +525,16 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 
 	private MapFrame getMapFrame() {
 		return this.mapFrame;
+	}
+
+	@Override
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			if (this.mapFrame != null && this.mapFrame.checkChangesPresent()) {
+				return;
+			}
+		}
+		super.processWindowEvent(e);
 	}
 
 	private AbstractCommand getLazyCommand(final Object key) {
