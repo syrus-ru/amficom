@@ -1,5 +1,5 @@
 /*-
- * $Id: PFTrace.java,v 1.1 2005/09/26 07:27:56 saa Exp $
+ * $Id: PFTrace.java,v 1.2 2005/09/26 11:12:30 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.io.BellcoreStructure;
  * ƒанные о самой полученной рефлектограмме нужно брать через методы
  * доступа этого класса; дополнительные данные - через getBS()
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/09/26 07:27:56 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/26 11:12:30 $
  * @module
  */
 public class PFTrace {
@@ -26,21 +26,30 @@ public class PFTrace {
 	double[] filteredTrace; // lazy пред-обработанна€ рефлектограмма
 
 	public PFTrace(BellcoreStructure bs) {
+		assert bs != null;
 		this.bs = bs;
+		this.rawTrace = null;
+		this.filteredTrace = null;
 	}
 
 	/**
 	 * ѕолучить копию исходной кривой
 	 * (используетс€ только при определении уровн€ шума)
+	 * <p>
+	 * NB: ћетод сделан protected, чтобы избежать ошибочного обращени€ к нему
+	 * извне: дл€ доступа к пред-фильтрованной р/г используйте
+	 * {@link #getFilteredTraceClone()}.
+	 * ≈сли же доступ к этому методу все же необходим, его, в принципе,
+	 * можно открыть. 
 	 * @return массив точек.  лиент может измен€ть полученный массив.
 	 */
-	public double[] getRawTraceClone() {
+	protected double[] getRawTraceClone() {
 		return getRawTrace().clone();
 	}
 
 	/**
 	 * ѕолучить копию фильтрованной кривой
-	 * (используетс€ дл€ анализа и отображени€)
+	 * (используетс€ дл€ анализа и отображени€).
 	 * @return массив точек.  лиент может измен€ть полученный массив.
 	 */
 	public double[] getFilteredTraceClone() {
@@ -112,6 +121,7 @@ public class PFTrace {
 	/**
 	 * ¬озвращает нижележащую BellcoreStructure дл€ целей
 	 * сохранени€/восстановлени€ и доступа к специфическим параметрам.
+	 * —читает, что клиент не будет измен€ть полученную BellcoreStructure. 
 	 * @return BellcoreStructure
 	 */
 	public BellcoreStructure getBS() {
