@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.11 2005/09/23 16:01:22 bob Exp $
+ * $Id: ClientServantManager.java,v 1.12 2005/09/26 07:29:40 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/23 16:01:22 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/26 07:29:40 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -118,10 +118,14 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		Log.debugMessage("AbstractClientServantManager.onLoseConnection() | Connection with '" + servantName + "' lost",
 			Log.DEBUGLEVEL08);
 		final String msg = LangModelGeneral.getString("Error.ConnectionWith.ConnectionWith") + " '" + servantName + "' " + LangModelGeneral.getString("Error.ConnectionWith.Lost");
-		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-			msg,
-			LangModelGeneral.getString("Error.ErrorOccur"),
-			JOptionPane.ERROR_MESSAGE);		
+		final Boolean lost = this.connectionLostMap.get(servantName);
+		if (lost != null && !lost.booleanValue()) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				msg,
+				LangModelGeneral.getString("Error.ErrorOccur"),
+				JOptionPane.ERROR_MESSAGE);		
+		}
+		this.connectionLostMap.put(servantName, Boolean.TRUE);
 	}
 
 	@Override
