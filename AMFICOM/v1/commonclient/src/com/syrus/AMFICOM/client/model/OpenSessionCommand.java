@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.21 2005/09/23 13:52:46 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.22 2005/09/26 07:30:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.21 $, $Date: 2005/09/23 13:52:46 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/26 07:30:41 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -97,9 +97,10 @@ public class OpenSessionCommand extends AbstractCommand {
 		do {
 			try {
 				trying = this.logging();
-			} catch (CommunicationException e) {
+			} catch (final CommunicationException e) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-						LangModelGeneral.getString("Error.ServerConnection"), 
+//						LangModelGeneral.getString("Error.ServerConnection"),
+						e.getMessage(),
 						LangModelGeneral.getString("Error.OpenSession"),
 					JOptionPane.ERROR_MESSAGE, null);
 				this.dispatcher.firePropertyChange(
