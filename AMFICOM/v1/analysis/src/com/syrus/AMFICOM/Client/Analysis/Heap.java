@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.108 2005/09/25 18:00:33 stas Exp $
+ * $Id: Heap.java,v 1.109 2005/09/26 06:41:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,8 +89,8 @@ import com.syrus.util.Log;
  * 1. перед установкой эталона (setEtalon, setMTMEtalon)
  * должен устанавливаться setBSEtalonTrace
  * 
- * @author $Author: stas $
- * @version $Revision: 1.108 $, $Date: 2005/09/25 18:00:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.109 $, $Date: 2005/09/26 06:41:14 $
  * @module
  */
 public class Heap
@@ -280,7 +280,7 @@ public class Heap
 	}
 
 	public static void openManyTraces(Collection<Trace> traceColl) {
-		// Создаем Trace и Bellcore по каждому входному результату
+		// Создаем {@link Trace} и Bellcore по каждому входному результату
 		Collection<BellcoreStructure> bsColl = new ArrayList<BellcoreStructure>(traceColl.size());
 		for (Trace tr: traceColl) {
 			bsColl.add(tr.getBS());

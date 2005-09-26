@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.9 2005/09/01 12:08:33 saa Exp $
+ * $Id: Trace.java,v 1.10 2005/09/26 06:41:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.io.DataFormatException;
  * <li> BellcoreStructure bs - собственно рефлектограмма
  * <li> double[] traceData - кэш bs.getTraceData() (полагаемся, что никто не будет изменять этот массив) 
  * <li> ar - результаты первого анализа (для отображения а/к на экране; для primarytrace может отсутствовать)
- *   (ar может быть вычислен в любой момент от загрузки Trace до запросов
+ *   (ar может быть вычислен в любой момент от загрузки {@link Trace} до запросов
  *   getAR/getMTAE, в соответствии с любыми действующими на этом периоде времени
  *   парамерами анализа; может также быть загружен, если такой анализ был
  *   проведен на агенте)
@@ -36,7 +36,7 @@ import com.syrus.io.DataFormatException;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/09/01 12:08:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/26 06:41:14 $
  * @module
  */
 public class Trace {
@@ -92,19 +92,19 @@ public class Trace {
 	}
 
 	/**
-	 * Создает Trace на основе результата измерения.
+	 * Создает {@link Trace} на основе результата измерения.
 	 * <p>
 	 * Определяет, есть ли у измерения, создавшего данный результат,
 	 * результат анализа.
 	 * <ul>
-	 * <li> Если результат анализа есть, то создает Trace c этим результатом.
-	 * <li> Если результата анализа нет, то создает Trace с проведением анализа
+	 * <li> Если результат анализа есть, то создает {@link Trace} c этим результатом.
+	 * <li> Если результата анализа нет, то создает {@link Trace} с проведением анализа
 	 *      и использованием указанных AnalysisParameters.
 	 * </ul>
 	 * @param result результат измерения, содержащий загружаемую рефлектограмму
 	 * @param ap параметры анализа, которые будут использованы в случае,
 	 *   если у измерения нет готовых результатов анализа
-	 * @return Trace
+	 * @return {@link Trace}
 	 * @throws ApplicationException ошибка работы с pool'ом или сервером
 	 * @throws DataFormatException нарушение целостности загружаемых данных
 	 * @throws SimpleApplicationException попытались открыть
@@ -134,7 +134,7 @@ public class Trace {
 	/**
 	 * Возвращается всегда один и тот же объект,
 	 * и его можно будет сравнивать по '=='.
-	 * (это нужно для выбора mostTypical Trace по mostTypical BS)
+	 * (это нужно для выбора mostTypical {@link Trace} по mostTypical BS)
 	 * @return объект BellcoreStructure, один и тот же при повторных вызовах
 	 */
 	public BellcoreStructure getBS() {
