@@ -8,5 +8,6 @@
 	<classpathentry kind="var" path="EXTLIB/xalan.jar"/>
 	<classpathentry kind="var" path="EXTLIB/xbean.jar"/>
 	<classpathentry kind="lib" path="generalxml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bugs"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
