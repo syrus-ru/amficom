@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewMapCommand.java,v 1.22 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: MapEditorNewMapCommand.java,v 1.23 2005/09/26 14:21:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,12 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapCloseCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewCloseCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -30,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.22 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/26 14:21:03 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand
@@ -71,21 +74,42 @@ public class MapEditorNewMapCommand extends AbstractCommand {
 		if(mapFrame.checkChangesPresent())
 			return;
 
-		new MapCloseCommand(mapFrame.getMap()).execute();
+		new MapViewCloseCommand(mapFrame.getMapView()).execute();
 
 		MapNewCommand cmd = new MapNewCommand(mapFrame.getContext());
 		cmd.execute();
 
 		Map map = cmd.getMap();
 
-		MapView mapView = mapFrame.getMapView();
+		MapViewNewCommand cmd2 = new MapViewNewCommand(map, mapFrame.getContext());
+		cmd2.execute();
 
-		mapView.setMap(map);
+		MapView mapView = cmd2.getMapView();
 
-		this.aContext.getDispatcher().firePropertyChange(
-				new MapEvent(this, MapEvent.MAP_VIEW_CHANGED, mapView));
-
-		setResult(Command.RESULT_OK);
+		try {
+			mapView.setCenter(mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getCenter());
+			mapView.setScale(mapFrame.getMapViewer().getLogicalNetLayer().getMapContext().getScale());
+			mapFrame.setMapView(mapView);
+			setResult(Command.RESULT_OK);
+		} catch(MapException e) {
+			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+			e.printStackTrace();
+		}
+//		new MapCloseCommand(mapFrame.getMap()).execute();
+//
+//		MapNewCommand cmd = new MapNewCommand(mapFrame.getContext());
+//		cmd.execute();
+//
+//		Map map = cmd.getMap();
+//
+//		MapView mapView = mapFrame.getMapView();
+//
+//		mapView.setMap(map);
+//
+//		this.aContext.getDispatcher().firePropertyChange(
+//				new MapEvent(this, MapEvent.MAP_VIEW_CHANGED, mapView));
+//
+//		setResult(Command.RESULT_OK);
 	}
 
 }
