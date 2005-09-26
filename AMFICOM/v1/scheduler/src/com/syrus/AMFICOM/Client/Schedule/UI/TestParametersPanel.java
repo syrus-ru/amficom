@@ -406,6 +406,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
+		assert Log.debugMessage("TestParametersPanel.setMeasurementSetups | " + measurementSetups,
+			Log.DEBUGLEVEL10);
 		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();
 		} else {
@@ -417,9 +419,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 		} else {
 			this.msListAnalysisOnly.clear();
 		}
-
+		
 		this.msList.addAll(measurementSetups);
-		for (MeasurementSetup measurementSetup : measurementSetups) {
+		for (final MeasurementSetup measurementSetup : measurementSetups) {
 			if (measurementSetup.getCriteriaSet() != null
 					|| measurementSetup.getEtalon() != null
 					|| measurementSetup.getThresholdSet() != null) {
@@ -503,13 +505,13 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.propertyChangeEvent = evt;
 		final String propertyName = evt.getPropertyName();
 		final Object newValue = evt.getNewValue();
-		if (propertyName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
+		if (propertyName == SchedulerModel.COMMAND_CHANGE_ME_TYPE) {
 			try {
 				this.changeMonitoredElement((Identifier) evt.getNewValue());
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			}
-		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE)) {
+		} else if (propertyName == SchedulerModel.COMMAND_SET_ANALYSIS_TYPE) {
 			this.selectAnalysisType(this.analysisComboBox, (AnalysisType) newValue, true);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_MEASUREMENT_SETUP)){
 			try {
@@ -517,17 +519,17 @@ final class TestParametersPanel implements PropertyChangeListener {
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			}					
-		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
+		} else if (propertyName == SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP) {
 			this.setMeasurementSetup((MeasurementSetup) newValue, true);
-		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
+		} else if (propertyName == SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS) {
 			this.refreshMeasurementSetups();
-		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
+		} else if (propertyName == SchedulerModel.COMMAND_GET_ANALYSIS_TYPE) {
 			this.dispatcher.firePropertyChange(
 				new PropertyChangeEvent(this, 
 					SchedulerModel.COMMAND_SET_ANALYSIS_TYPE,
 					null, 
 					this.getAnalysisType()));
-		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
+		} else if (propertyName == SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP) {
 			MeasurementSetup measurementSetup1 = getMeasurementSetup();
 			if (measurementSetup1 != null) {
 				this.dispatcher.firePropertyChange(
