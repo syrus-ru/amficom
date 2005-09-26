@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.8 2005/09/14 18:15:00 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.9 2005/09/26 14:28:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mcm.corba.MCM;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/14 18:15:00 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/26 14:28:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -177,7 +177,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 
 		final Set<T> mcmLoadedObjects = CORBAObjectLoader.loadStorableObjects(mcmRef, loadIds);
 
-		Log.debugMessage("MServerObjectLoader.loadStorableObjectsFromMCM | Loaded: " + Identifier.createStrings(loadedObjects),
+		Log.debugMessage("MServerObjectLoader.loadStorableObjectsFromMCM | Loaded: " + Identifier.createStrings(mcmLoadedObjects),
 				Log.DEBUGLEVEL10);
 
 		Identifier.subtractFromIdentifiers(loadIds, mcmLoadedObjects);
@@ -199,13 +199,13 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		}
 
 		Log.debugMessage("MServerObjectLoader.loadStorableObjectsButIdsByConditionFromMCM | Loading from MCM '" + mcmId + "' '"
-				+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(loadButIds)) + "'s but ids: " + loadButIds,
+				+ ObjectEntities.codeToString(condition.getEntityCode().shortValue()) + "'s but ids: " + loadButIds,
 				Log.DEBUGLEVEL10);
 
 		final Set<T> mcmLoadedObjects = CORBAObjectLoader.loadStorableObjectsButIdsByCondition(mcmRef, loadButIds, condition);
 
 		Log.debugMessage("MServerObjectLoader.loadStorableObjectsButIdsByConditionFromMCM | Loaded: "
-				+ Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL10);
+				+ Identifier.createStrings(mcmLoadedObjects), Log.DEBUGLEVEL10);
 
 		Identifier.addToIdentifiers(loadButIds, mcmLoadedObjects);
 		loadedObjects.addAll(mcmLoadedObjects);
