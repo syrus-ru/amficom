@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.82 2005/09/20 16:41:21 bass Exp $
+ * $Id: LinkType.java,v 1.83 2005/09/26 15:24:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/09/20 16:41:21 $
+ * @version $Revision: 1.83 $, $Date: 2005/09/26 15:24:33 $
  * @author $Author: bass $
  * @module config
  */
@@ -233,7 +233,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 		this.description = linkType.isSetDescription()
 				? linkType.getDescription()
 				: "";
-		this.sort = linkType.getSort().intValue();
+		this.sort = linkType.getSort().intValue() - 1;
 		this.manufacturer = linkType.isSetManufacturer()
 				? linkType.getManufacturer()
 				: "";

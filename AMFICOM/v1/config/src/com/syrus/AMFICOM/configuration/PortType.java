@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.94 2005/09/23 11:45:45 bass Exp $
+ * $Id: PortType.java,v 1.95 2005/09/26 15:24:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/09/23 11:45:45 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/26 15:24:33 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -226,8 +226,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		this.description = portType.isSetDescription()
 				? portType.getDescription()
 				: "";
-		this.sort = portType.getSort().intValue();
-		this.kind = portType.getKind().intValue();
+		this.sort = portType.getSort().intValue() - 1;
+		this.kind = portType.getKind().intValue() - 1;
 	}
 
 	/**
