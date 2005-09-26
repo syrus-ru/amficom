@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.5 2005/09/23 05:46:56 bob Exp $
+* $Id: ProcessingDialog.java,v 1.6 2005/09/26 06:29:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import java.util.logging.Level;
 
 import javax.swing.JDialog;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.client.launcher.Launcher;
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/09/23 05:46:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/26 06:29:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -60,10 +61,15 @@ public final class ProcessingDialog {
 		}
 		assert Log.debugMessage("ProcessingDialog.ProcessingDialog | after LOCK " + new Date() + " " + title + '[' + threadName + ']',
 			LOGLEVEL);
-		this.startIfItNeeded();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				startIfItNeeded();				
+			}
+		});
+		
 	}
 	
-	private void  startIfItNeeded() {
+	final void  startIfItNeeded() {
 		final String currentThreadName = Thread.currentThread().getName();
 		assert Log.debugMessage("ProcessingDialog.startIfItNeeded | before LOCK " 
 				+ new Date()  
@@ -138,8 +144,13 @@ public final class ProcessingDialog {
 								runnableTaskNames.remove(runnable);
 							}
 						}
-						modalDialog.dispose();
-						
+						SwingUtilities.invokeLater(new Runnable() {
+							
+							public void run() {
+								modalDialog.dispose();
+								
+							}
+						});
 					}
 				}.start();								
 			}
