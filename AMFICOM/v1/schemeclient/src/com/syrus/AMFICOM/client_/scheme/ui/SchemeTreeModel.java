@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.42 2005/09/20 10:04:34 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.43 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.42 $, $Date: 2005/09/20 10:04:34 $
+ * @version $Revision: 1.43 $, $Date: 2005/09/26 14:13:46 $
  * @module schemeclient
  */
 
@@ -21,12 +21,10 @@ import java.util.Set;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.configuration.ui.ConfigurationTreeModel;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -38,7 +36,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
@@ -282,53 +279,57 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 			else if (node.getObject() instanceof SchemeElement) {
 				SchemeElement se = (SchemeElement) node.getObject();
 				
-				if (!contents.contains(SchemeResourceKeys.SCHEME_ELEMENT) && !se.getSchemeElements().isEmpty()) {
-					LinkedIdsCondition condition1 = new LinkedIdsCondition(se.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
-					FiltrableIconedNode child = new FiltrableIconedNode();
-					child.setChildrenFactory(this);
-					child.setObject(SchemeResourceKeys.SCHEME_ELEMENT);
-					child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_ELEMENT));
-					child.setDefaultCondition(condition1);
-					node.addChild(child);
-				}
-				if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !se.getSchemeLinks().isEmpty()) {
-					LinkedIdsCondition condition1 = new LinkedIdsCondition(se.getId(), ObjectEntities.SCHEMELINK_CODE);
-					FiltrableIconedNode child = new FiltrableIconedNode();
-					child.setChildrenFactory(this);
-					child.setObject(SchemeResourceKeys.SCHEME_LINK);
-					child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK));
-					child.setDefaultCondition(condition1);
-					node.addChild(child);
-				}
-				if (!contents.contains(SchemeResourceKeys.SCHEME_CABLE_PORT)) {
-					Set<SchemeCablePort> cablePorts = Collections.emptySet();
-					try {
-						cablePorts = se.getSchemeCablePortsRecursively();
-					} catch (ApplicationException e) {
-						Log.errorException(e);
-					}
-					if (!cablePorts.isEmpty()) {
-						PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_CABLE_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLE_PORT));
+				try {
+					if (!contents.contains(SchemeResourceKeys.SCHEME_ELEMENT) && !se.getSchemeElements(false).isEmpty()) {
+						LinkedIdsCondition condition1 = new LinkedIdsCondition(se.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
+						FiltrableIconedNode child = new FiltrableIconedNode();
+						child.setChildrenFactory(this);
+						child.setObject(SchemeResourceKeys.SCHEME_ELEMENT);
+						child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_ELEMENT));
+						child.setDefaultCondition(condition1);
 						node.addChild(child);
-						for (SchemeCablePort cablePort : cablePorts) {
-							child.addChild(new PopulatableIconedNode(this, cablePort, false));
+					}
+					if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !se.getSchemeLinks().isEmpty()) {
+						LinkedIdsCondition condition1 = new LinkedIdsCondition(se.getId(), ObjectEntities.SCHEMELINK_CODE);
+						FiltrableIconedNode child = new FiltrableIconedNode();
+						child.setChildrenFactory(this);
+						child.setObject(SchemeResourceKeys.SCHEME_LINK);
+						child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK));
+						child.setDefaultCondition(condition1);
+						node.addChild(child);
+					}
+					if (!contents.contains(SchemeResourceKeys.SCHEME_CABLE_PORT)) {
+						Set<SchemeCablePort> cablePorts = Collections.emptySet();
+						try {
+							cablePorts = se.getSchemeCablePortsRecursively(false);
+						} catch (ApplicationException e) {
+							Log.errorException(e);
+						}
+						if (!cablePorts.isEmpty()) {
+							PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_CABLE_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLE_PORT));
+							node.addChild(child);
+							for (SchemeCablePort cablePort : cablePorts) {
+								child.addChild(new PopulatableIconedNode(this, cablePort, false));
+							}
 						}
 					}
-				}
-				if (!contents.contains(SchemeResourceKeys.SCHEME_PORT)) {
-					Set<SchemePort> ports = Collections.emptySet();
-					try {
-						ports = se.getSchemePortsRecursively();
-					} catch (ApplicationException e) {
-						Log.errorException(e);
-					}
-					if (!ports.isEmpty()) {
-						PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_PORT));
-						node.addChild(child);
-						for (SchemePort port : ports) {
-							child.addChild(new PopulatableIconedNode(this, port, false));
+					if (!contents.contains(SchemeResourceKeys.SCHEME_PORT)) {
+						Set<SchemePort> ports = Collections.emptySet();
+						try {
+							ports = se.getSchemePortsRecursively(false);
+						} catch (ApplicationException e) {
+							Log.errorException(e);
+						}
+						if (!ports.isEmpty()) {
+							PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_PORT));
+							node.addChild(child);
+							for (SchemePort port : ports) {
+								child.addChild(new PopulatableIconedNode(this, port, false));
+							}
 						}
 					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 			} 
 			else if (node.getObject() instanceof SchemeMonitoringSolution) {
@@ -372,7 +373,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 		}
 	}
 	
-	private void createSchemes(Item node, Collection contents) {
+	private void createSchemes(Item node, Collection<Object> contents) {
 		IdlKind type = (IdlKind) node.getObject();
 		
 		try {

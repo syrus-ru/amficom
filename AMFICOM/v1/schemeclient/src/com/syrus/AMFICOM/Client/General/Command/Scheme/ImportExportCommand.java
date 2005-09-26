@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.2 2005/09/20 19:57:04 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.3 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -220,7 +220,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 								final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
 								List<Object> oldSerializable = schemeCell1.getData();
 								Object[] cells = (Object[])schemeCell1.getData().get(0);
-								for (Object cell : cells) {
+								for (Object cell : SchemeGraph.getDescendants1(cells)) {
 									if (cell instanceof IdentifiableCell) {
 										IdentifiableCell identifiableCell = (IdentifiableCell)cell;
 										Identifier id = identifiableCell.getId();

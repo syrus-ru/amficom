@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.15 2005/09/13 10:19:05 bass Exp $
+ * $Id: GraphActions.java,v 1.16 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,21 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.GZIPOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
@@ -50,14 +56,78 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2005/09/26 14:13:46 $
  * @module schemeclient
  */
+
+class ByteHolder {
+		ByteHolder(byte[] b){
+			this.b = b;
+		}
+		byte[] b;
+	}
 
 public class GraphActions {
 	private GraphActions () {
 		// empty
+	}
+	
+	
+	
+	public static List<ByteHolder> serialyze (List v) throws IOException {
+		List<ByteHolder> data = new LinkedList<ByteHolder>();
+		
+		Object[] cells = (Object[]) v.get(0);
+		Map viewAttributes = (Map) v.get(1);
+		ConnectionSet cs = (ConnectionSet) v.get(2);
+		
+		long start = System.currentTimeMillis();
+		long time = System.currentTimeMillis();
+		ByteHolder bh;
+		bh = new ByteHolder(pack(viewAttributes));
+		data.add(bh);
+		time = System.currentTimeMillis();
+		System.out.println("1*: " + (time - start) + "ms (" + bh.b.length + " bytes)");
+		start = time;
+		
+		bh = new ByteHolder(pack(cs));
+		data.add(bh);
+		time = System.currentTimeMillis();
+		System.out.println("2*: " + (time - start) + "ms (" + bh.b.length + " bytes)");
+				
+//		Object[] cells1 = new Object[50];
+//		System.arraycopy(cells, 0, cells1, 0, 50);
+
+		start = time;
+		bh = new ByteHolder(pack(cells));
+		data.add(bh);
+		time = System.currentTimeMillis();
+		System.out.println("3*: " + (time - start) + "ms (" + bh.b.length + " bytes)");
+				
+		/*for (int i = 0; i < cells.length; i++) {
+			start = time;
+			bh = new ByteHolder(pack(cells[i]));
+			data.add(bh);
+			time = System.currentTimeMillis();
+			System.out.println(Integer.toString(i) + ": " + (time - start) + "ms (" + bh.b.length + " bytes)");
+		}*/
+		return data;
+	}
+	
+	private static byte[] pack(final Object data1) throws IOException {
+		ObjectOutputStream out = null;
+		ByteArrayOutputStream subOut = null;
+		try {
+			subOut = new ByteArrayOutputStream();
+			out = new ObjectOutputStream(new BufferedOutputStream(new GZIPOutputStream(subOut)));
+			out.writeObject(data1);
+			out.flush();
+		} finally {
+			if (out != null)
+				out.close();
+		}
+		return subOut.toByteArray();
 	}
 	
 	public static Map<DefaultGraphCell, DefaultGraphCell> insertCell(SchemeGraph graph, List serialized, boolean clone) {

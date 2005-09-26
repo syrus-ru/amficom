@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.21 2005/09/20 19:47:52 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.22 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,15 @@
 
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
-
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.swing.JFileChooser;
 import javax.swing.JList;
@@ -35,7 +25,6 @@ import javax.swing.JScrollPane;
 
 import org.apache.xmlbeans.XmlException;
 
-import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
@@ -44,25 +33,14 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateBlockPortAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
@@ -77,51 +55,29 @@ import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlPortType;
 import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSeq;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DataType;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
-import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.AMFICOM.scheme.xml.SchemeProtoGroupsDocument;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
-import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.util.Log;
 
 public class SchemeImportCommand extends ImportExportCommand {
-	private Map<Integer, SchemeProtoElement> straightMuffs;
-	private Map<Integer, SchemeProtoElement> inVrms;
-	private Map<Integer, SchemeProtoElement> outVrms;
-	private Set<EquipmentType> muffTypes;
-
+//	private Map<Integer, SchemeProtoElement> straightMuffs;
+//	private Map<Integer, SchemeProtoElement> inVrms;
+//	private Map<Integer, SchemeProtoElement> outVrms;
+//	private Set<EquipmentType> muffTypes;
 	SchemeTabbedPane pane;
 	
 	private Map<SchemeCablePort, Set<SchemeCableThread>> portThreadsCount = new HashMap<SchemeCablePort, Set<SchemeCableThread>>();
@@ -195,9 +151,6 @@ public class SchemeImportCommand extends ImportExportCommand {
 						return;
 					}
 					
-					parseSchemeCableLinks(scheme);
-					parseSchemeElements(scheme);
-					
 					//	fix connection - connect threads at scheme
 //					for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
 //						SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
@@ -251,7 +204,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 		for(int i = 0; i < xmlSchemesArray.length; i++) {
 			XmlScheme xmlScheme = xmlSchemesArray[i];
 			scheme = Scheme.createInstance(this.userId, xmlScheme);
-			scheme.setName(scheme.getName()	+ "(imported " + " from \'" + xmlfile.getName() + "\')");
+//			scheme.setName(scheme.getName()	+ "(imported " + " from \'" + xmlfile.getName() + "\')");
 			
 			List<String> errorMessages = new LinkedList<String>();
 			for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
@@ -276,6 +229,14 @@ public class SchemeImportCommand extends ImportExportCommand {
 						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
 					throw new CreateObjectException("incorrect input data");
 				}
+			}
+			
+			try {
+				ImportUCMConverter converter = new ImportUCMConverter(this.pane.getContext(), this.pane.getGraph());
+				converter.parseSchemeCableLinks(scheme);
+				converter.parseSchemeElements(scheme);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 			
 			break;
@@ -389,7 +350,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 
 		return fileName;
 	}
-	
+	/*
 	private void parseSchemeCableLinks(Scheme scheme) throws ApplicationException {
 		EquivalentCondition condition1 = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
 		Set<CableLinkType> cableLinkTypes1 = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
@@ -456,7 +417,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 		}
 	}
 	
-	private void parseSchemeElements(Scheme scheme) throws ApplicationException {
+	/*private void parseSchemeElements(Scheme scheme) throws ApplicationException {
 		initMuffs();
 		initVrms();
 		
@@ -673,29 +634,17 @@ public class SchemeImportCommand extends ImportExportCommand {
 			StorableObjectPool.flush(schemeElement.getId(), this.userId, false);
 			scheme.addSchemeElement(newSchemeElement);
 		}
-	}
-
+	}*/
+	
 	private void putToGraph(Scheme scheme) throws ApplicationException {
 		scheme.setWidth(SCHEME_SIZE.width);
 		scheme.setHeight(SCHEME_SIZE.height);
+		
 		ApplicationContext aContext =  this.pane.getContext();
 		Dispatcher internalDispatcher = aContext.getDispatcher();
-		internalDispatcher.firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
-
 		SchemeGraph schemeGraph = this.pane.getGraph();
 		int grid = schemeGraph.getGridSize();
-		schemeGraph.setMakeNotifications(false);
-		
-		Set<Identifier> placedObjectIds = new HashSet<Identifier>();
-		for (Object cell : schemeGraph.getAll()) {
-			if (cell instanceof DeviceGroup) {
-				placedObjectIds.add(((DeviceGroup)cell).getElementId());
-			} else if (cell instanceof DefaultCableLink) {
-				placedObjectIds.add(((DefaultCableLink)cell).getSchemeCableLinkId());
-			} else if (cell instanceof DefaultLink) {
-				placedObjectIds.add(((DefaultLink)cell).getSchemeLinkId());
-			}
-		}
+		internalDispatcher.firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
 		
 		// determine bounds
 		double xmin = 180, ymin = 90, xmax = -180, ymax = -90; 
@@ -714,8 +663,10 @@ public class SchemeImportCommand extends ImportExportCommand {
 		double kx = (xmax - xmin == 0) ? 1 : (SCHEME_SIZE.width - grid * 20) / (xmax - xmin);
 		double ky = (ymax - ymin == 0) ? 1 : (SCHEME_SIZE.height - grid * 20) / (ymax - ymin);
 		
+		Set<Identifier> placedObjects = ImportUCMConverter.getPlacedObjects(schemeGraph);
+		
 		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
-			if (!placedObjectIds.contains(schemeElement.getId())) {
+			if (!ImportUCMConverter.contains(placedObjects, schemeElement)) {
 				Equipment equipment = schemeElement.getEquipment();
 				Point p;
 				if (equipment != null) {
@@ -777,7 +728,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 		}
 		schemeGraph.setMakeNotifications(true);
 	}
-
+/*
 	private void initMuffs() throws ApplicationException {
 		TypicalCondition condition1 = new TypicalCondition(EquipmentTypeCodename.MUFF.stringValue(), OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
 		this.muffTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
@@ -902,5 +853,5 @@ public class SchemeImportCommand extends ImportExportCommand {
 			StorableObjectPool.delete(portToRemove.getId());
 			StorableObjectPool.flush(portToRemove.getId(), this.userId, false);
 		}
-	}
+	}*/
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.3 2005/09/20 19:47:52 stas Exp $
+ * $Id: ClientUtils.java,v 1.4 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.configuration.CableLinkType;
@@ -39,7 +35,6 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
-import com.syrus.util.Log;
 
 public class ClientUtils {
 	private ClientUtils() {
@@ -49,13 +44,13 @@ public class ClientUtils {
 	public static String parseNumberedName(final String name) {
 		char[] chars = name.toCharArray();
 		int i = chars.length - 1;
-		while (Character.isDigit(chars[i]) && i > 0) {
+		while (i >= 0 && Character.isDigit(chars[i])) {
 			i--;
 		}
 		if (i == chars.length - 1) {
 			return name;
 		}
-		return name.substring(i);
+		return name.substring(i + 1);
 	}
 	
 	public static List<SchemeCableThread> getSortedCableThreads(SchemeCableLink link) {

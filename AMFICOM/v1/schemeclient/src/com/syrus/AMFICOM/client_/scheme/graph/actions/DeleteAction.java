@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.21 2005/09/20 09:42:54 stas Exp $
+ * $Id: DeleteAction.java,v 1.22 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/09/20 09:42:54 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/26 14:13:46 $
  * @module schemeclient
  */
 
@@ -234,14 +234,14 @@ public class DeleteAction extends AbstractAction {
 				objectsToDelete.add(((SchemeLink)it.next()).getId());
 			}
 			try {
-				for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
+				for (Iterator it = element.getSchemePortsRecursively(false).iterator(); it.hasNext();) {
 					objectsToDelete.add(((SchemePort)it.next()).getId());
 				}
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			try {
-				for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
+				for (Iterator it = element.getSchemeCablePortsRecursively(false).iterator(); it.hasNext();) {
 					objectsToDelete.add(((SchemeCablePort)it.next()).getId());
 				}
 			} catch (ApplicationException e) {
@@ -250,8 +250,12 @@ public class DeleteAction extends AbstractAction {
 			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
 				objectsToDelete.add(((SchemeDevice)it.next()).getId());
 			}
-			for (Iterator it = element.getSchemeElements().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeElement)it.next()).getId());
+			try {
+				for (Iterator it = element.getSchemeElements(false).iterator(); it.hasNext();) {
+					objectsToDelete.add(((SchemeElement)it.next()).getId());
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 	}

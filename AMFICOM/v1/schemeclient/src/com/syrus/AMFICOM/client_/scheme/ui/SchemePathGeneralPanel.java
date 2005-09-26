@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.5 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.6 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.Vector;
 
@@ -33,14 +34,22 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionWrapper;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
@@ -59,7 +68,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfStartText = new JTextField();
 	JLabel lbEndLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.END_ELEMENT));
 	JTextField tfEndText = new JTextField();
-	JLabel lbPesLabel = new JLabel("pes");
+	JLabel lbPesLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PATH_ELEMENTS));
 	JList lsPesList = new JList();
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2, 10);
@@ -203,6 +212,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbGeneralPanel.setConstraints(this.lbPesLabel, gbcGeneralPanel);
 		this.pnGeneralPanel.add(this.lbPesLabel);
 
+		JScrollPane scpPesList = new JScrollPane(this.lsPesList);
 		gbcGeneralPanel.gridx = 1;
 		gbcGeneralPanel.gridy = 5;
 		gbcGeneralPanel.gridwidth = 9;
@@ -211,8 +221,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 1;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints(this.lsPesList, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.lsPesList);
+		gbGeneralPanel.setConstraints(scpPesList, gbcGeneralPanel);
+		this.pnGeneralPanel.add(scpPesList);
 
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
@@ -324,6 +334,27 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 			this.schemePath.setName(this.tfNameText.getText());
 			this.schemePath.setDescription(this.taDescriptionArea.getText());
 			this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution) this.cmbSolutionCombo.getSelectedItem());
+			
+			// set name for associated MonitoredElement if any
+			try {
+				SortedSet<PathElement> pathMemebers = this.schemePath.getPathMembers();
+				if (!pathMemebers.isEmpty()) {
+					AbstractSchemePort startPort = pathMemebers.first().getEndAbstractSchemePort();
+					if (startPort != null) {
+						Identifier measurementPortId = startPort.getMeasurementPortId();
+						if (!measurementPortId.isVoid()) {
+							LinkedIdsCondition condition = new LinkedIdsCondition(measurementPortId, ObjectEntities.MONITOREDELEMENT_CODE);
+							Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+							if (mes.isEmpty()) {
+								MonitoredElement me = mes.iterator().next();
+								me.setName(this.tfNameText.getText());
+							}
+						}
+					}
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
 
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePath.getId(), SchemeEvent.UPDATE_OBJECT));
 		}

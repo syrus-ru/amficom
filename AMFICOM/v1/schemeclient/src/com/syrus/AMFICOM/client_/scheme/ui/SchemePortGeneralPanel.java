@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.24 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.25 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -46,8 +48,9 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -58,15 +61,18 @@ import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementPortWrapper;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.25 $, $Date: 2005/09/26 14:13:46 $
  * @module schemeclient
  */
 
@@ -105,6 +111,8 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			StorableObjectWrapper.COLUMN_NAME,
 			StorableObjectWrapper.COLUMN_ID);
 	JTextField tfNewMPText = new JTextField();
+	JLabel lbLocalAddressLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LOCAL_ADDRESS));
+	JTextField tfLocalAddressText = new JTextField();
 
 	protected SchemePortGeneralPanel(final SchemePort schemePort) {
 		this();
@@ -356,7 +364,29 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcMpPanel.anchor = GridBagConstraints.NORTH;
 		gbMpPanel.setConstraints(this.cmbMpTypeCombo, gbcMpPanel);
 		this.pnMpPanel.add(this.cmbMpTypeCombo);
+		
+		gbcMpPanel.gridx = 0;
+		gbcMpPanel.gridy = 3;
+		gbcMpPanel.gridwidth = 2;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 0;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints(this.lbLocalAddressLabel, gbcMpPanel);
+		this.pnMpPanel.add(this.lbLocalAddressLabel);
 
+		gbcMpPanel.gridx = 2;
+		gbcMpPanel.gridy = 3;
+		gbcMpPanel.gridwidth = 8;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 1;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints(this.tfLocalAddressText, gbcMpPanel);
+		this.pnMpPanel.add(this.tfLocalAddressText);
+		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 6;
 		gbcGeneralPanel.gridwidth = 10;
@@ -407,6 +437,12 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				SchemePortGeneralPanel.this.mpBox_stateChanged();
 			}
 		});
+		this.cmbExistMPCombo.addItemListener(new ItemListener() {
+			public void itemStateChanged(final ItemEvent e) {
+				SchemePortGeneralPanel.this.mpCombo_itemChanged(e);
+			}
+		});
+		
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		this.taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 
@@ -449,6 +485,24 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 
 	void mpBox_stateChanged() {
 		this.pnMpPanel.setVisible(this.cbMpBox.isSelected());
+	}
+	
+	void mpCombo_itemChanged(ItemEvent e) {
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			MeasurementPort mp =  (MeasurementPort)e.getItem();
+			
+			LinkedIdsCondition condition = new LinkedIdsCondition(mp.getId(), ObjectEntities.MONITOREDELEMENT_CODE);
+			try {
+				Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (!mes.isEmpty()) {
+					this.tfLocalAddressText.setText(mes.iterator().next().getLocalAddress());
+				} else {
+					this.tfLocalAddressText.setText("");
+				}
+			} catch (ApplicationException e1) {
+				Log.errorException(e1);
+			}
+		}
 	}
 
 	void radioButton_stateChanged() {
@@ -562,23 +616,52 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			}
 
 			if (this.cbMpBox.isSelected()) {
+				MeasurementPort mp = null;
 				if (this.rbExistMPBut.isSelected()) {
-					this.schemePort.setMeasurementPort((MeasurementPort) this.cmbExistMPCombo.getSelectedItem());
+					mp = (MeasurementPort) this.cmbExistMPCombo.getSelectedItem();
+					this.schemePort.setMeasurementPort(mp);
 				} else {
 					if (this.parent != null && this.parent.getKis() != null) {
 						try {
 							final MeasurementPortType mpType = (MeasurementPortType) this.cmbMpTypeCombo.getSelectedItem();
-							final MeasurementPort mp = SchemeObjectsFactory.createMeasurementPort(mpType, this.schemePort);
+							mp = SchemeObjectsFactory.createMeasurementPort(mpType, this.schemePort);
 							mp.setName(this.tfNewMPText.getText());
 							mp.setDescription(this.schemePort.getDescription());
-							mp.setType((MeasurementPortType) this.cmbMpTypeCombo.getSelectedItem());
+							mp.setType(mpType);
 							this.schemePort.setMeasurementPort(mp);
-						} catch (CreateObjectException e) {
+						} catch (ApplicationException e) {
 							Log.errorException(e);
 						}
 					} else {
 						Log.debugMessage("Parent KIS not created. Cannot create MeasurementPort", Level.FINEST); //$NON-NLS-1$
 					}
+				}
+				
+				try {
+					if (mp != null) {
+						// if no MonitoredElement associated - create it 
+						LinkedIdsCondition condition = new LinkedIdsCondition(mp.getId(), ObjectEntities.MONITOREDELEMENT_CODE);
+						Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+						MonitoredElement me = null;
+						if (mes.isEmpty()) {
+							// if exists parent Path
+							LinkedIdsCondition condition1 = new LinkedIdsCondition(this.parent.getId(), ObjectEntities.PATHELEMENT_CODE);
+							Set<PathElement> pes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+							if (!pes.isEmpty()) {
+								SchemePath path = pes.iterator().next().getParentPathOwner();
+								// create MonitoredElement
+								me = SchemeObjectsFactory.createMonitoredElement(path, mp);
+								StorableObjectPool.flush(me.getId(), LoginManager.getUserId(), false);
+							}
+						} else {
+							me = mes.iterator().next();
+						}
+						if (me != null) {
+							me.setLocalAddress(this.tfLocalAddressText.getText());
+						}
+					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 			} else {
 				this.schemePort.setMeasurementPort(null);

@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -103,7 +102,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 			}
 			try {
 				se.setSchemeLinks(schemeLinks);
-				se.setSchemeElements(schemeElements);
+				se.setSchemeElements(schemeElements, false);
 			} catch (ApplicationException e1) {
 				Log.errorException(e1);
 			}
@@ -176,15 +175,18 @@ public class SchemeSaveCommand extends AbstractCommand {
 				if (schemeIr == null)
 					schemeIr = SchemeObjectsFactory.createSchemeImageResource();
 				
+//				try {
+//					GraphActions.serialyze((List) graph.getArchiveableState());
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+				long start = System.currentTimeMillis();
 				schemeIr.setData((List) graph.getArchiveableState());
 				scheme.setSchemeCell(schemeIr);
-
+				System.err.println("written for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)");
 				Identifier userId = LoginManager.getUserId();
-				for (Identifiable identifiable : scheme.getReverseDependencies()) {
-					StorableObjectPool.flush(identifiable, userId, false);
-				}
-				StorableObjectPool.flush(scheme.getId(), userId, false);
-				
+				StorableObjectPool.flush(scheme.getReverseDependencies(), userId, false);
+
 				this.schemeTab.setGraphChanged(false);
 				
 				if (scheme.getUgoCell() == null) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.23 2005/09/19 13:10:28 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.24 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/26 14:13:46 $
  * @module schemeclient
  */
 
@@ -532,12 +532,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			UgoPanel p = this.graphPanelsMap.get(this.tabs.getComponentAt(i));
 			if (graph.equals(p.getGraph())) {
 				graph.setGraphChanged(b);
-				if (b)
-					this.tabs.setIconAt(i, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-							"images/close_changed.gif")));
-				else
-					this.tabs.setIconAt(i, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-							"images/close_unchanged.gif")));
+				this.tabs.setIconAt(i, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+							b ? "images/close_changed.gif" : "images/close_unchanged.gif")));
 				return;
 			}
 		}
@@ -545,15 +541,11 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	@Override
 	public void setGraphChanged(boolean b) {
-		if (getGraph().isGraphChanged() == b && b)
+		if (b && getGraph().isGraphChanged())
 			return;
 
 		super.setGraphChanged(b);
-		if (b)
-			this.tabs.setIconAt(this.tabs.getSelectedIndex(), new ImageIcon(Toolkit
-					.getDefaultToolkit().getImage("images/close_changed.gif")));
-		else
-			this.tabs.setIconAt(this.tabs.getSelectedIndex(), new ImageIcon(Toolkit
-					.getDefaultToolkit().getImage("images/close_unchanged.gif")));
+		this.tabs.setIconAt(this.tabs.getSelectedIndex(), new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage(b ? "images/close_changed.gif" : "images/close_unchanged.gif")));
 	}
 }

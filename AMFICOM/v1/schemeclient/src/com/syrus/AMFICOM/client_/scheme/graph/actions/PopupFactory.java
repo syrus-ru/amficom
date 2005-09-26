@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.11 2005/09/20 10:04:34 stas Exp $
+ * $Id: PopupFactory.java,v 1.12 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -320,7 +320,7 @@ public class PopupFactory {
 								
 								Point p = getCenterPoint(graph, view);
 								SchemeActions.insertSEbyPE(graph, schemeElement, schemeElement.getClonedIdMap(), p, true);
-								Set<SchemeCablePort> cablePorts = schemeElement.getSchemeCablePortsRecursively();
+								Set<SchemeCablePort> cablePorts = schemeElement.getSchemeCablePortsRecursively(false);
 								CablePortCell inPort = null;
 								CablePortCell outPort = null;
 
@@ -559,22 +559,26 @@ public class PopupFactory {
 		if (se.getUgoCell() != null) {
 			v = se.getUgoCell().getData();
 		}
-		if ((v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0) && !se.getSchemeElements().isEmpty()) {
-			JMenuItem menu1 = new JMenuItem(new AbstractAction() {
-				private static final long serialVersionUID = 7612382099522511230L;
-				
-				public void actionPerformed(ActionEvent ev) {
-					aContext.getDispatcher().firePropertyChange(
-							new SchemeEvent(this, se.getId(), SchemeEvent.OPEN_SCHEMEELEMENT));
+		try {
+			if ((v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0) && !se.getSchemeElements(false).isEmpty()) {
+				JMenuItem menu1 = new JMenuItem(new AbstractAction() {
+					private static final long serialVersionUID = 7612382099522511230L;
 					
-					if (se.isAlarmed()) {
+					public void actionPerformed(ActionEvent ev) {
 						aContext.getDispatcher().firePropertyChange(
-								new SchemeEvent(this, se.getId(), SchemeEvent.CREATE_ALARMED_LINK));
+								new SchemeEvent(this, se.getId(), SchemeEvent.OPEN_SCHEMEELEMENT));
+						
+						if (se.isAlarmed()) {
+							aContext.getDispatcher().firePropertyChange(
+									new SchemeEvent(this, se.getId(), SchemeEvent.CREATE_ALARMED_LINK));
+						}
 					}
-				}
-			});
-			menu1.setText(LangModelGraph.getString("open_component")); //$NON-NLS-1$
-			return menu1;
+				});
+				menu1.setText(LangModelGraph.getString("open_component")); //$NON-NLS-1$
+				return menu1;
+			}
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 		return null;
 	}

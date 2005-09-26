@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.9 2005/09/01 13:39:19 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.10 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/01 13:39:19 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/26 14:13:46 $
  * @module schemeclient
  */
 
@@ -98,6 +98,7 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String SCHEME_MONITORING_SOLUTION = "scheme_monitoring_solution"; //$NON-NLS-1$
 	
 	String START_ELEMENT = "start_element"; //$NON-NLS-1$
+	String PATH_ELEMENTS = "path_elements"; //$NON-NLS-1$
 	String END_ELEMENT = "end_element"; //$NON-NLS-1$
 	
 	String NAME = "name"; //$NON-NLS-1$
@@ -155,6 +156,7 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String PORTTYPEKIND_SIMPLE = "port"; //$NON-NLS-1$
 	String OK = "ok"; //$NON-NLS-1$
 	String CANCEL = "cancel"; //$NON-NLS-1$
+	String LOCAL_ADDRESS = "local_address";  //$NON-NLS-1$
 	
 	String METRE = "metre_short"; //$NON-NLS-1$
 	String MILLIMETER = "millimetre_short"; //$NON-NLS-1$

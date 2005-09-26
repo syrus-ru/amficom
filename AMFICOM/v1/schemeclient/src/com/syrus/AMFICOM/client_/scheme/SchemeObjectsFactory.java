@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.34 2005/09/23 11:45:33 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.35 2005/09/26 14:13:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,11 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.logging.Level;
 
 import com.jgraph.graph.DefaultGraphCell;
@@ -31,6 +33,8 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
@@ -49,6 +53,8 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -71,8 +77,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/09/23 11:45:33 $
+ * @author $Author: stas $
+ * @version $Revision: 1.35 $, $Date: 2005/09/26 14:13:46 $
  * @module schemeclient
  */
 
@@ -138,40 +144,40 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
 		Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getEquipmentType(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
-
+		
 		try {
 			for (Characteristic c : schemeElement.getEquipmentType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
 				cloned.setParentCharacterizable(eq, false);
 			}
+			
+			schemeElement.setEquipment(eq);
+			
+			Identifier equipmentId = eq.getId();
+			try {
+				for (SchemePort sp : schemeElement.getSchemePortsRecursively(false)) {
+					createPort(sp, equipmentId);
+				}
+			} catch (ApplicationException e) {
+				throw new CreateObjectException(e);
+			}
+			try {
+				for (SchemeCablePort sp : schemeElement.getSchemeCablePortsRecursively(false)) {
+					createPort(sp, equipmentId);
+				}
+			} catch (ApplicationException e) {
+				throw new CreateObjectException(e);
+			}
+			for (SchemeLink sl : schemeElement.getSchemeLinks()) {
+				createLink(sl);
+			}
+			for (SchemeElement se : schemeElement.getSchemeElements(false)) {
+				createEquipment(se);
+			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
 		} catch (CloneNotSupportedException e) {
 			throw new CreateObjectException(e);
-		}
-		
-		schemeElement.setEquipment(eq);
-		
-		Identifier equipmentId = eq.getId();
-		try {
-			for (SchemePort sp : schemeElement.getSchemePortsRecursively()) {
-				createPort(sp, equipmentId);
-			}
-		} catch (ApplicationException e) {
-			throw new CreateObjectException(e);
-		}
-		try {
-			for (SchemeCablePort sp : schemeElement.getSchemeCablePortsRecursively()) {
-				createPort(sp, equipmentId);
-			}
-		} catch (ApplicationException e) {
-			throw new CreateObjectException(e);
-		}
-		for (SchemeLink sl : schemeElement.getSchemeLinks()) {
-			createLink(sl);
-		}
-		for (SchemeElement se : schemeElement.getSchemeElements()) {
-			createEquipment(se);
 		}
 		return eq;
 	}
@@ -386,7 +392,7 @@ public class SchemeObjectsFactory {
 		return solution;
 	}
 	
-	public static PathElement createPathElement(SchemePath path, final Identifier id) throws CreateObjectException {
+	/*public static PathElement createPathElement(SchemePath path, final Identifier id) throws CreateObjectException {
 		if (id.getMajor() == ObjectEntities.SCHEMELINK_CODE) {
 			SchemeLink link;
 			try {
@@ -401,13 +407,61 @@ public class SchemeObjectsFactory {
 		
 		
 		throw new UnsupportedOperationException("Unknown id " + id);
-	}
+	}*/
 	
 	public static SchemePath createSchemePath(SchemeMonitoringSolution solution) throws CreateObjectException {
 		SchemePath path = SchemePath.createInstance(LoginManager.getUserId(), 
 				LangModelScheme.getString("Title.path") + " (" + counter + ")",   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 				solution);
 		return path;
+	}
+	
+	public static TransmissionPath createTransmissionPath(SchemePath path, TransmissionPathType type) throws CreateObjectException {
+		SortedSet<PathElement> pathMembers = path.getPathMembers();
+		AbstractSchemePort startPort = pathMembers.first().getEndAbstractSchemePort();
+		assert startPort != null;
+		AbstractSchemePort endPort = pathMembers.last().getStartAbstractSchemePort();
+		assert endPort != null;
+				
+		TransmissionPath transmissionPath = TransmissionPath.createInstance(
+				LoginManager.getUserId(), LoginManager.getDomainId(), path.getName(), EMPTY, 
+				type, startPort.getId(), endPort.getId());
+		return transmissionPath;
+	}
+	
+	public static TransmissionPathType createTransmissionPathType(String name) throws CreateObjectException {
+		TransmissionPathType type = TransmissionPathType.createInstance(LoginManager.getUserId(), name, EMPTY, name);
+		return type;
+	}
+	
+	public static MonitoredElement createMonitoredElement(SchemePath path, MeasurementPort mp) 
+			throws CreateObjectException {
+		try {
+			final Set<TransmissionPathType> tpTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE), true);
+			// get any TransmissionPathType - it is not used really 
+			TransmissionPathType tpType;
+			if (tpTypes.isEmpty()) {
+				tpType = SchemeObjectsFactory.createTransmissionPathType(mp.getType().getCodename());
+			} else {
+				tpType = tpTypes.iterator().next();
+			}
+			final TransmissionPath tpath = SchemeObjectsFactory.createTransmissionPath(path, tpType);
+			// create ME
+			return SchemeObjectsFactory.createMonitoredElement(
+					path.getName(), mp.getId(), EMPTY, Collections.singleton(tpath.getId()));
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e);
+		}
+	}
+	
+	public static MonitoredElement createMonitoredElement(String name, Identifier measurementPortId,
+			String localAddress, Set<Identifier> monitoredDomainMemberIds) throws CreateObjectException {
+		MonitoredElement me = MonitoredElement.createInstance(LoginManager.getUserId(),
+				LoginManager.getDomainId(), name, measurementPortId, 
+				MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH, 
+				localAddress, monitoredDomainMemberIds);
+		return me;
 	}
 	
 	public static void assignClonedIds(Map<DefaultGraphCell, DefaultGraphCell> clonedCells, Map<Identifier, Identifier> clonedIds) {
@@ -417,13 +471,26 @@ public class SchemeObjectsFactory {
 				Identifier id = dev.getElementId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				if (newId.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE)
 					dev.setProtoElementId(newId);
 				else if (newId.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE)
 					dev.setSchemeElementId(newId);
+				else if (newId.getMajor() == ObjectEntities.SCHEME_CODE) {
+					try {
+						Scheme scheme = StorableObjectPool.getStorableObject(newId, false);
+						SchemeElement parent = scheme.getParentSchemeElement();
+						if (parent != null) {
+							dev.setSchemeElementId(parent.getId());
+						} else {
+							Log.debugMessage("can not insert scheme without parent se for newid " + newId + " no clone performed", Level.FINE);
+						}
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+				}
 				else
 					assert false : "Unknown object identifier " + newId; //$NON-NLS-1$
 			} else if (clonedCell instanceof DeviceCell) {
@@ -431,7 +498,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeDeviceId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeDeviceId(newId);
@@ -440,7 +507,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemePortId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemePortId(newId);
@@ -449,7 +516,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeCablePortId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeCablePortId(newId);
@@ -458,7 +525,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeCableLinkId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeCableLinkId(newId);
@@ -467,7 +534,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeLinkId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeLinkId(newId);
@@ -476,7 +543,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getAbstractSchemePortId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setAbstractSchemePortId(newId);
