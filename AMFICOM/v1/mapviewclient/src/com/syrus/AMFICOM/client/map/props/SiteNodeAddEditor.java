@@ -24,6 +24,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
@@ -502,6 +503,21 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		}
 		else if(or instanceof SchemeElement) {
 			SchemeElement schemeElement = (SchemeElement)or;
+			Scheme scheme = null;
+			try {
+				scheme = schemeElement.getScheme(false);
+			}
+			catch (Exception e) {
+				// nothing
+			}
+			if(scheme != null) {
+				this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(
+						new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
+			}
+			else {
+				this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(
+						new SchemeEvent(this, schemeElement.getId(), SchemeEvent.OPEN_SCHEMEELEMENT));
+			}
 			mapElement = this.logicalNetLayer.getMapView().findElement(schemeElement);
 		}
 		if(mapElement != null) {
