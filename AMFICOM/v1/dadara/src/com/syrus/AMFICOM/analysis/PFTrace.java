@@ -1,5 +1,5 @@
 /*-
- * $Id: PFTrace.java,v 1.2 2005/09/26 11:12:30 saa Exp $
+ * $Id: PFTrace.java,v 1.3 2005/09/26 12:31:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.io.BellcoreStructure;
  * Данные о самой полученной рефлектограмме нужно брать через методы
  * доступа этого класса; дополнительные данные - через getBS()
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/09/26 11:12:30 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/26 12:31:01 $
  * @module
  */
 public class PFTrace {
-	private static final double FILTER_DECAY = 0.5; // dB / m
+	private static final double FILTER_DECAY = 0.5; // dB/m (0.4 .. 0.7)
 	private BellcoreStructure bs;
 	double[] rawTrace; // lazy значение исходной рефлектограммы
 	double[] filteredTrace; // lazy пред-обработанная рефлектограмма
