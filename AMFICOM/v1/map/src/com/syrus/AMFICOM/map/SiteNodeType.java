@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.93 2005/09/26 06:40:27 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.94 2005/09/26 09:45:00 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -73,8 +72,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: krupenn $
- * @version $Revision: 1.93 $, $Date: 2005/09/26 06:40:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.94 $, $Date: 2005/09/26 09:45:00 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -523,7 +522,7 @@ public final class SiteNodeType extends StorableObjectType
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
-	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
 			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}

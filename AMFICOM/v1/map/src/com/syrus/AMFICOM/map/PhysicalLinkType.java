@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.93 2005/09/26 06:40:27 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.94 2005/09/26 09:45:00 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -57,8 +56,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.93 $, $Date: 2005/09/26 06:40:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.94 $, $Date: 2005/09/26 09:45:00 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -463,7 +462,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
-	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
 			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
