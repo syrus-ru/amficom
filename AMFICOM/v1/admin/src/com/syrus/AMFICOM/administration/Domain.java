@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.59 2005/09/23 11:45:48 bass Exp $
+ * $Id: Domain.java,v 1.60 2005/09/27 14:02:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.administration.corba.IdlDomainHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -35,12 +36,14 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/09/23 11:45:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/09/27 14:02:19 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -139,22 +142,29 @@ public final class Domain extends DomainMember implements Characterizable {
 		super.markAsChanged();
 	}
 
-	public final PermissionAttributes getPermissionAttributes(final Identifier userId) 
+	public final PermissionAttributes getPermissionAttributes(final Identifier userId,
+			final Module module) 
 	throws ApplicationException {
 		PermissionAttributes permissionAttributes = null;
-		LinkedIdsCondition domainCondition = 
+		final LinkedIdsCondition domainCondition = 
 			new LinkedIdsCondition(this.id, ObjectEntities.PERMATTR_CODE);
 		
-		LinkedIdsCondition userCondition = 
+		final LinkedIdsCondition userCondition = 
 			new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE);
-
-		CompoundCondition compoundCondition 
+		
+		final CompoundCondition compoundCondition 
 			= new CompoundCondition(
 				domainCondition, 
 				CompoundConditionSort.AND,
 				userCondition);
 		
-		Set<PermissionAttributes> storableObjectsByCondition = 
+		compoundCondition.addCondition(new TypicalCondition(
+			module,
+			OperationSort.OPERATION_IN,
+			ObjectEntities.PERMATTR_CODE,
+			PermissionAttributesWrapper.COLUMN_MODULE_CODE));
+		
+		final Set<PermissionAttributes> storableObjectsByCondition = 
 			StorableObjectPool.getStorableObjectsByCondition(
 			compoundCondition, 
 			true);
