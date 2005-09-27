@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.78 2005/09/27 10:58:30 bass Exp $
+ * $Id: Identifier.java,v 1.79 2005/09/27 14:25:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,9 @@ import static com.syrus.AMFICOM.general.ObjectEntities.UNKNOWN_CODE;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -30,8 +32,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.78 $, $Date: 2005/09/27 10:58:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.79 $, $Date: 2005/09/27 14:25:04 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -240,6 +242,28 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 			}
 		}
 		return identifiers;
+	}
+
+	/**
+	 * Creates Map<Short entityCode, Set<Identifier> ids>
+	 * @param identifiables
+	 * @return
+	 */
+	public static Map<Short, Set<Identifier>> createEntityIdsMap(final Set<? extends Identifiable> identifiables) {
+		assert identifiables != null: NON_NULL_EXPECTED;
+
+		final Map<Short, Set<Identifier>> entityIdsMap = new HashMap<Short, Set<Identifier>>();
+		for (final Identifiable identifiable : identifiables) {
+			final Identifier id = identifiable.getId();
+			final Short entityKey = new Short(id.getMajor());
+			Set<Identifier> entityIds = entityIdsMap.get(entityKey);
+			if (entityIds == null) {
+				entityIds = new HashSet<Identifier>();
+				entityIdsMap.put(entityKey, entityIds);
+			}
+			entityIds.add(id);
+		}
+		return entityIdsMap;
 	}
 
 	/**
