@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.100 2005/09/25 18:29:44 krupenn Exp $
+ * $Id: NodeLink.java,v 1.101 2005/09/27 07:44:21 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.100 $, $Date: 2005/09/25 18:29:44 $
+ * @version $Revision: 1.101 $, $Date: 2005/09/27 07:44:21 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -206,6 +206,9 @@ public final class NodeLink extends StorableObject
 		super.markAsChanged();
 	}
 
+	public double getLength0() {
+		return this.length;
+	}
 	/**
 	 * Если один из концевых узлов линии - кабельный ввод, и другой - 
 	 * телефонный узел или здание, то это - проводка по дому. В этом
@@ -217,7 +220,7 @@ public final class NodeLink extends StorableObject
 		if(getPhysicalLink().getType().getSort().value() == PhysicalLinkTypeSort._INDOOR) {
 			return 0.0D;
 		}
-		return this.length;
+		return this.getLength0();
 	}
 
 	public void setLength(final double length) {
