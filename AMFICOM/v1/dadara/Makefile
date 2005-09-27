@@ -3,7 +3,7 @@ MODULE_NAME := dadara
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-NATIVE_DIR := ./native/common
+NATIVE_DIR := ./native
 
 include ../tools/Makefile.inc
 
