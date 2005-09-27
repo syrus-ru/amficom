@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.35 2005/08/31 05:50:36 bass Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.36 2005/09/27 07:45:16 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/08/31 05:50:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/09/27 07:45:16 $
+ * @author $Author: krupenn $
  * @module map
  */
 public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalLink> {
@@ -92,8 +92,8 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 		preparedStatement.setInt(++startParameterNumber, storableObject.getDimensionX());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getDimensionY());			
 		preparedStatement.setInt(++startParameterNumber, (storableObject.isTopToBottom() ? TOP_BOTTOM : 0) | (storableObject.isLeftToRight() ? LEFT_RIGHT : 0) );
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndNode().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndNodeId());
 		return startParameterNumber;
 	}
 	
@@ -108,8 +108,8 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 			+ storableObject.getDimensionX() + COMMA
 			+ storableObject.getDimensionY() + COMMA
 			+ ((storableObject.isTopToBottom() ? TOP_BOTTOM : 0) | (storableObject.isLeftToRight() ? LEFT_RIGHT : 0)) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getStartNode().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getEndNode().getId());
+			+ DatabaseIdentifier.toSQLString(storableObject.getStartNodeId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getEndNodeId());
 		return values;
 	}
 
