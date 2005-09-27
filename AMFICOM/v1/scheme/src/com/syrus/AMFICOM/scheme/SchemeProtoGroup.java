@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.71 2005/09/20 18:13:35 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.72 2005/09/27 06:52:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/09/20 18:13:35 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/27 06:52:15 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -272,14 +272,15 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
+	 * This implementation differs from other generic ones in the way that
+	 * child {@code SchemeProtoGroup}s along with their dependencies are not
+	 * included since they are saved and deleted separately.
+	 *
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoGroups0()) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
-		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0()) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
