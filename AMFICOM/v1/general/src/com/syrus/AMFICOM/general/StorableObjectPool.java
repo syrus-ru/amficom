@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.187 2005/09/27 14:27:32 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.188 2005/09/27 14:34:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.187 $, $Date: 2005/09/27 14:27:32 $
+ * @version $Revision: 1.188 $, $Date: 2005/09/27 14:34:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -560,7 +560,8 @@ public final class StorableObjectPool {
 	/*	Clean objects */
 
 	/**
-	 * Clean from pool changed objects from the supplied set.  
+	 * Clean from pool changed objects from the supplied set.
+	 * Objects must NOT belong to the same entity.
 	 * @param identifiables
 	 */
 	public static void cleanChangedStorableObjects(final Set<? extends Identifiable> identifiables) {
