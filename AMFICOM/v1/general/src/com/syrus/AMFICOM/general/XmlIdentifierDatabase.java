@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.11 2005/09/21 13:49:29 arseniy Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.12 2005/09/27 10:58:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.idsEnumerationString;
 import static com.syrus.util.Log.DEBUGLEVEL10;
 
 import java.sql.Connection;
@@ -35,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool.Key;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool.XmlKey;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/09/21 13:49:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/09/27 10:58:30 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -193,14 +193,14 @@ final class XmlIdentifierDatabase {
 		sql.append(StorableObjectDatabase.SQL_DELETE_FROM);
 		sql.append(TABLE_NAME_IMPORT_UID_MAP);
 		sql.append(SQL_WHERE);
-		sql.append(idsEnumerationString(idsToDelete, COLUMN_ID, true));
+		sql.append(StorableObjectDatabase.idsEnumerationString(idsToDelete, COLUMN_ID, true));
 		
 		executeQuery(sql.toString());
 		
 	}
 	
-	public static void removeXmlIds(final Set<XmlIdentifier> xmlIdsToDelete) {
-		if(xmlIdsToDelete == null || xmlIdsToDelete.isEmpty()) {
+	public static void removeXmlIds(final Set<XmlKey> xmlKeysToDelete) {
+		if (xmlKeysToDelete == null || xmlKeysToDelete.isEmpty()) {
 			return;
 		}
 		StringBuilder sql = new StringBuilder();
@@ -211,16 +211,15 @@ final class XmlIdentifierDatabase {
 		sql.append(SQL_IN);
 		sql.append(OPEN_BRACKET);
 		int i = 0;
-		for (final Iterator<XmlIdentifier> it = xmlIdsToDelete.iterator(); it.hasNext(); i++) {
-			final XmlIdentifier xmlId= it.next();
+		for (final Iterator<XmlKey> it = xmlKeysToDelete.iterator(); it.hasNext(); i++) {
+			final XmlKey xmlKey = it.next();
 			sql.append(APOSTROPHE);
-			sql.append(xmlId.getStringValue());
+			sql.append(xmlKey.getXmlId().getStringValue());
 			sql.append(APOSTROPHE);
 			if (it.hasNext()) {
 				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
 					sql.append(COMMA);
-				}
-				else {
+				} else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
 					sql.append(COLUMN_FOREIGN_UID);
@@ -230,8 +229,7 @@ final class XmlIdentifierDatabase {
 			}
 		}
 		sql.append(CLOSE_BRACKET);
-
-		executeQuery(sql.toString());
+//		executeQuery(sql.toString());
 	}
 	
 	private static void executeQuery(final String query) {
