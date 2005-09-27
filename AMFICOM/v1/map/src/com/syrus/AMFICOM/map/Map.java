@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.103 2005/09/25 18:30:27 krupenn Exp $
+ * $Id: Map.java,v 1.104 2005/09/27 09:50:48 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.103 $, $Date: 2005/09/25 18:30:27 $
+ * @author $Author: max $
+ * @version $Revision: 1.104 $, $Date: 2005/09/27 09:50:48 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -352,6 +352,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.initialize();
 		return Collections.unmodifiableSet(this.collectors);
 	}
+	
+	void setCollectorIds(Set<Identifier> collectorIds) {
+		this.collectorIds = collectorIds;
+	}
 
 	protected void setCollectors0(final Set<Collector> collectors) {
 		this.collectorIds.clear();
@@ -404,6 +408,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		super.markAsChanged();
 	}
 	
+	void setMapLibraryIds(Set<Identifier> mapLibraryIds) {
+		this.mapLibraryIds = mapLibraryIds;
+	}
+	
 	protected void setMapLibraries0(final Set<MapLibrary> mapLibraries) {
 		this.mapLibraryIds.clear();
 		if (mapLibraries != null) {
@@ -418,6 +426,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return Collections.unmodifiableSet(this.marks);
 	}
 
+	void setMarkIds(Set<Identifier> markIds) {
+		this.markIds = markIds;
+	}
+	
 	protected void setMarks0(final Set<Mark> marks) {
 		this.markIds.clear();
 		if (marks != null) {
@@ -457,6 +469,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return Collections.unmodifiableSet(this.nodeLinks);
 	}
 
+	void setNodeLinkIds(Set<Identifier> nodeLinkIds) {
+		this.nodeLinkIds = nodeLinkIds;
+	}
+	
 	protected void setNodeLinks0(final Set<NodeLink> nodeLinks) {
 		this.nodeLinkIds.clear();
 		if (nodeLinks != null) {
@@ -483,6 +499,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return Collections.unmodifiableSet(this.physicalLinks);
 	}
 
+	void setPhysicalLinkIds(Set<Identifier> physicalLinkIds) {
+		this.physicalLinkIds = physicalLinkIds;
+	}
+	
 	protected void setPhysicalLinks0(final Set<PhysicalLink> physicalLinks) {
 		this.physicalLinkIds.clear();
 		if (physicalLinks != null) {
@@ -509,6 +529,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return Collections.unmodifiableSet(this.siteNodes);
 	}
 
+	void setSiteNodeIds(Set<Identifier> siteNodeIds) {
+		this.siteNodeIds = siteNodeIds;
+	}
+	
 	protected void setSiteNodes0(final Set<SiteNode> siteNodes) {
 		this.siteNodeIds.clear();
 		if (siteNodes != null) {
@@ -535,6 +559,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return Collections.unmodifiableSet(this.topologicalNodes);
 	}
 
+	void setTopologicalNodeIds(Set<Identifier> topologicalNodeIds) {
+		this.topologicalNodeIds = topologicalNodeIds;
+	}
+	
 	protected void setTopologicalNodes0(final Set<TopologicalNode> topologicalNodes) {
 		this.topologicalNodeIds.clear();
 		if (topologicalNodes != null) {
@@ -561,6 +589,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return Collections.unmodifiableSet(this.maps);
 	}
 
+	void setMapIds(Set<Identifier> mapIds) {
+		this.mapIds = mapIds;
+	}
+	
 	protected void setMaps0(final Set<Map> maps) {
 		this.mapIds.clear();
 		if (maps != null) {
@@ -587,6 +619,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return Collections.unmodifiableSet(this.externalNodes);
 	}
 
+	void setExternalNodeIds(Set<Identifier> externalNodeIds) {
+		this.externalNodeIds = externalNodeIds;
+	}
+	
 	protected void setExternalNodes0(final Set<SiteNode> externalNodes) {
 		this.externalNodeIds.clear();
 		if (externalNodes != null) {
