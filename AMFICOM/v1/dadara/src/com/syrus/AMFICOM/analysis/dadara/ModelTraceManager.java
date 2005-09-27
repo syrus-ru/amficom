@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.97 2005/09/27 13:38:20 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.98 2005/09/27 13:43:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,13 +24,13 @@ import com.syrus.io.SignatureMismatchException;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.97 $, $Date: 2005/09/27 13:38:20 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/27 13:43:37 $
  * @module
  */
 public class ModelTraceManager
 implements DataStreamable, Cloneable
 {
-	protected static final long SIGNATURE_THRESH = 3353620050119193102L;
+	protected static final long SIGNATURE_THRESH = 3353620050119193103L;
 	public static final String CODENAME = "ModelTraceManager";
 
 	protected ModelTraceAndEventsImpl mtae;
