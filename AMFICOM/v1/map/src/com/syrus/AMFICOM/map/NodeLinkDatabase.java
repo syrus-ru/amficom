@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.36 2005/09/05 10:36:41 max Exp $
+ * $Id: NodeLinkDatabase.java,v 1.37 2005/09/27 07:44:44 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/09/05 10:36:41 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2005/09/27 07:44:44 $
+ * @author $Author: krupenn $
  * @module map
  */
 public final class NodeLinkDatabase extends StorableObjectDatabase<NodeLink> {
@@ -66,7 +66,7 @@ public final class NodeLinkDatabase extends StorableObjectDatabase<NodeLink> {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getPhysicalLinkId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartNodeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndNodeId());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getLength());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLength0());
 		return startParameterNumber;
 	}
 	
@@ -75,7 +75,7 @@ public final class NodeLinkDatabase extends StorableObjectDatabase<NodeLink> {
 		final String values = DatabaseIdentifier.toSQLString(storableObject.getPhysicalLinkId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getStartNodeId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getEndNodeId()) + COMMA
-			+ storableObject.getLength();
+			+ storableObject.getLength0();
 		return values;
 	}
 	
