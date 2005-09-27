@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.61 2005/09/26 14:21:41 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.62 2005/09/27 07:11:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,10 +15,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.JInternalFrame;
 import javax.swing.UIDefaults;
 
-import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseViewCommand;
@@ -61,19 +59,14 @@ import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
-import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.CloseAllInternalCommand;
-import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
-import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.SchemeEditorMainFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
@@ -81,7 +74,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.61 $, $Date: 2005/09/26 14:21:41 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/27 07:11:41 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -535,28 +528,5 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 			}
 		}
 		super.processWindowEvent(e);
-	}
-
-	private AbstractCommand getLazyCommand(final Object key) {
-		return new AbstractCommand() {
-
-			private Command	command;
-
-			private Command getLazyCommand() {
-				if (this.command == null) {
-					Object object = MapEditorMainFrame.this.frames.get(key);
-					if (object instanceof JInternalFrame) {
-						System.out.println("init getLazyCommand for " + key); //$NON-NLS-1$
-						this.command = new ShowWindowCommand((JInternalFrame)object);
-					}
-				}
-				return this.command;
-			}
-
-			@Override
-			public void execute() {
-				this.getLazyCommand().execute();
-			}
-		};
 	}
 }
