@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesDatabase.java,v 1.3 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: PermissionAttributesDatabase.java,v 1.4 2005/09/27 14:05:04 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.administration;
 
-import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE_CODE;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_USER_ID;
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
 
 import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/09/27 14:05:04 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -46,6 +48,7 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_USER_ID + COMMA
+			+ COLUMN_MODULE_CODE + COMMA
 			+ COLUMN_PERMISSION_MASK;
 		}
 		return columns;
@@ -56,43 +59,49 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 			+ QUESTION + COMMA
+			+ QUESTION + COMMA
 			+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final PermissionAttributes storableObject) throws IllegalDataException {
-		final String sql = DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getUserId()) + COMMA
-			+ storableObject.getPermissionMask();
+	protected String getUpdateSingleSQLValuesTmpl(final PermissionAttributes permissionAttributes) 
+	throws IllegalDataException {
+		final String sql = DatabaseIdentifier.toSQLString(permissionAttributes.getDomainId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(permissionAttributes.getUserId()) + COMMA
+			+ permissionAttributes.getModule().ordinal() + COMMA
+			+ permissionAttributes.getPermissions().toString();
 		return sql;
 	}
 
 	@Override
-	protected PermissionAttributes updateEntityFromResultSet(final PermissionAttributes storableObject, final ResultSet resultSet)
-			throws IllegalDataException, SQLException {
-		final PermissionAttributes permissionAttributes = (storableObject == null) ? new PermissionAttributes(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null, null) : storableObject;
-		permissionAttributes.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+	protected PermissionAttributes updateEntityFromResultSet(final PermissionAttributes permissionAttributes, final ResultSet resultSet)
+	throws IllegalDataException, SQLException {
+		final PermissionAttributes attributes = (permissionAttributes == null) ? new PermissionAttributes(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null, null, null) : permissionAttributes;
+		attributes.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
+				Module.valueOf(resultSet.getInt(COLUMN_MODULE_CODE)),
 				// store without DatabaseString.fromQuerySubString because of contains only numbers
 				new BigInteger(resultSet.getString(COLUMN_PERMISSION_MASK)));
-		return permissionAttributes;
+		return attributes;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final PermissionAttributes storableObject,
+	protected int setEntityForPreparedStatementTmpl(final PermissionAttributes permissionAttributes,
 			final PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException, SQLException {
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getUserId());
-		preparedStatement.setString(++startParameterNumber, storableObject.getPermissionMask().toString());
+			int startParameterNumber) 
+	throws IllegalDataException, SQLException {
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, permissionAttributes.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, permissionAttributes.getUserId());
+		preparedStatement.setInt(++startParameterNumber, permissionAttributes.getModule().ordinal());
+		preparedStatement.setString(++startParameterNumber, permissionAttributes.getPermissions().toString());
 		return startParameterNumber;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.5 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.6 2005/09/27 14:05:04 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/27 14:05:04 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 public class PermissionAttributesWrapper extends StorableObjectWrapper<PermissionAttributes> {
 
 	public static final String	COLUMN_USER_ID			= "user_id";
+	public static final String	COLUMN_MODULE_CODE		= "module_code";
 	public static final String	COLUMN_PERMISSION_MASK	= "permission_mask";
 	
 	private static PermissionAttributesWrapper instance;
@@ -34,9 +35,9 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 	private List<String> keys;
 
 	private PermissionAttributesWrapper() {
-		// empty private constructor
 		final String[] keysArray = new String[] { COLUMN_DOMAIN_ID, 
 				COLUMN_USER_ID, 
+				COLUMN_MODULE_CODE,
 				COLUMN_PERMISSION_MASK };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -68,8 +69,12 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 			if (key.equals(COLUMN_USER_ID)) {
 				return permissionAttributes.getUserId();
 			}
+			if (key.equals(COLUMN_MODULE_CODE)) {
+				// TODO is Integer need ???
+				return Integer.valueOf(permissionAttributes.getModule().ordinal());
+			}
 			if (key.equals(COLUMN_PERMISSION_MASK)) {
-				return permissionAttributes.getPermissionMask();
+				return permissionAttributes.getPermissions();
 			}
 		}
 		return value;
@@ -80,14 +85,21 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 	}
 
 	@Override
-	public void setValue(PermissionAttributes permissionAttributes, final String key, final Object value) {
+	public void setValue(final PermissionAttributes permissionAttributes, 
+	                     final String key, 
+	                     final Object value) {
 		if (permissionAttributes != null) {
 			if (key.equals(COLUMN_DOMAIN_ID)) {
 				permissionAttributes.setDomainId((Identifier) value);
 			} else if (key.equals(COLUMN_USER_ID)) {
 				permissionAttributes.setUserId((Identifier) value);
 			} else if (key.equals(COLUMN_PERMISSION_MASK)) {
-				permissionAttributes.setPermissionMask((BigInteger) value);
+				permissionAttributes.setPermissions((BigInteger) value);
+			} else if (key.equals(COLUMN_MODULE_CODE)) {
+				throw new UnsupportedOperationException(
+					"PermissionAttributesWrapper.setValue() | key " 
+					+ key 
+					+ " is unsupported");
 			}
 
 		}
@@ -116,8 +128,11 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 				|| key.equals(COLUMN_USER_ID)) {
 			return Identifier.class;
 		}
+		if (key.equals(COLUMN_MODULE_CODE)) {
+			return Short.class;
+		}
 		if (key.equals(COLUMN_PERMISSION_MASK)) {
-			return Long.class;
+			return BigInteger.class;
 		}
 		return null;
 	}

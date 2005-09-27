@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributesXML.java,v 1.5 2005/09/14 19:01:23 arseniy Exp $
+* $Id: PermissionAttributesXML.java,v 1.6 2005/09/27 14:05:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,20 +9,23 @@
 package com.syrus.AMFICOM.administration;
 
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
-import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
+
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_USER_ID;
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE_CODE;
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/27 14:05:04 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -40,6 +43,7 @@ public class PermissionAttributesXML extends AbstractStorableObjectXML<Permissio
 		if (keys == null) {
 			final String[] keysArray = new String[] {COLUMN_DOMAIN_ID, 
 					COLUMN_USER_ID, 
+					COLUMN_MODULE_CODE,
 					COLUMN_PERMISSION_MASK };
 			keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 		}
@@ -54,6 +58,7 @@ public class PermissionAttributesXML extends AbstractStorableObjectXML<Permissio
 				this.getVersion(objectMap, StorableObjectWrapper.COLUMN_VERSION),
 				this.getIdentifier(objectMap, COLUMN_DOMAIN_ID),
 				this.getIdentifier(objectMap, COLUMN_USER_ID),
+				Module.valueOf(this.getInteger(objectMap, COLUMN_MODULE_CODE)),
 				this.getBigInteger(objectMap, COLUMN_PERMISSION_MASK));
 		return permissionAttributes;
 	}
