@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.76 2005/09/22 15:44:12 arseniy Exp $
+ * $Id: Identifier.java,v 1.77 2005/09/27 09:20:16 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.76 $, $Date: 2005/09/22 15:44:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.77 $, $Date: 2005/09/27 09:20:16 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -51,14 +51,17 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		MODE_THROW_IF_ABSENT
 	}
 
-	private short major;
-	private long minor;
+	private final short major;
+	private final long minor;
 	
 	private transient int hashCode; 
 
 	private transient long identifierCode;
 	private transient String identifierString;
 
+	/*
+	 * TODO valueOf method
+	 */
 	public Identifier(final IdlIdentifier idlId) {
 		this(idlId.identifierCode);
 	}
