@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.20 2005/09/09 14:37:17 bob Exp $
+ * $Id: administration.idl,v 1.21 2005/09/27 14:01:40 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,15 @@ module administration {
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlPermissionAttributes : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
+			enum ModuleSort {
+				ADMINISTRATION,
+				SCHEME
+			};
+
 			public general::corba::IdlIdentifier domainId;			
 			public general::corba::IdlIdentifier userId;			
+			public ModuleSort moduleSort;
 			public ::CORBA::OctetSeq permissionMask;			
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -84,6 +91,7 @@ module administration {
 					in long long version,
 					in general::corba::IdlIdentifier domainId,
 					in general::corba::IdlIdentifier userId,
+					in ModuleSort moduleSort,
 					in ::CORBA::OctetSeq permissionMask);
 		};
 
@@ -105,7 +113,8 @@ module administration {
 					in general::corba::WString128 name,
 					in general::corba::WString256 description);
 		};
-
+		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlDomain> IdlDomainSeq;
 
 
