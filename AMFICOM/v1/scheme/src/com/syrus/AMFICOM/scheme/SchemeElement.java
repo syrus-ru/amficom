@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.119 2005/09/26 16:40:48 bass Exp $
+ * $Id: SchemeElement.java,v 1.120 2005/09/27 06:51:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.119 $, $Date: 2005/09/26 16:40:48 $
+ * @version $Revision: 1.120 $, $Date: 2005/09/27 06:51:40 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -267,41 +267,26 @@ public final class SchemeElement extends AbstractSchemeElement
 			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 			assert parentScheme != null : NON_NULL_EXPECTED;
 			
-			BitmapImageResource symbol = null;
-			try {
-				symbol = StorableObjectPool.getStorableObject(childScheme.getSymbolId(), true);
-			} catch (final ApplicationException ae) {
-				Log.debugException(ae, SEVERE);
-			}
-			
-			//final SchemeElement schemeElement = createInstance(creatorId, name, "", "", null, null,
-			//		null, null, null, null, null, parentScheme);
-			final SchemeElement schemeElement;
-			try {
-				final Date created = new Date();
-				schemeElement = new SchemeElement(IdentifierPool.getGeneratedIdentifier(SCHEMEELEMENT_CODE),
-						created,
-						created,
-						creatorId,
-						creatorId,
-						StorableObjectVersion.createInitial(),
-						SCHEME_CONTAINER,
-						name,
-						childScheme.getDescription(),
-						childScheme.getLabel(),
-						null,
-						null,
-						null,
-						null,
-						symbol,
-						null,
-						null,
-						parentScheme,
-						null);
-				schemeElement.markAsChanged();
-			} catch (final IdentifierGenerationException ige) {
-				throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
-			}
+			final Date created = new Date();
+			final SchemeElement schemeElement = new SchemeElement(IdentifierPool.getGeneratedIdentifier(SCHEMEELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					SCHEME_CONTAINER,
+					name,
+					childScheme.getDescription(),
+					childScheme.getLabel(),
+					null,
+					null,
+					null,
+					null,
+					childScheme.getSymbol(),
+					null,
+					null,
+					parentScheme,
+					null);
 
 			if (schemeElement.clonedIdMap == null) {
 				schemeElement.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -332,6 +317,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 			schemeElement.addScheme(childScheme, usePool);
 
+			schemeElement.markAsChanged();
 			return schemeElement;
 		} catch (final CloneNotSupportedException cnse) {
 			throw new CreateObjectException(cnse);
@@ -369,7 +355,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentScheme);
 
-			schemeElement.fillProperties(schemeProtoElement, creatorId);
+			schemeElement.fillProperties(schemeProtoElement);
 			return schemeElement;
 		} catch (final CreateObjectException coe) {
 			throw coe;
@@ -405,7 +391,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentSchemeElement);
 
-			schemeElement.fillProperties(schemeProtoElement, creatorId);
+			schemeElement.fillProperties(schemeProtoElement);
 			return schemeElement;
 		} catch (final CreateObjectException coe) {
 			throw coe;
@@ -684,6 +670,10 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
+	 * This implementation differs from other generic ones in the way that
+	 * child {@code Scheme}s along with their dependencies are not included
+	 * since they are saved and deleted separately.
+	 *
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
 	@ParameterizationPending(value = {"final boolean usePool"})
@@ -704,13 +694,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeElements0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		// fix by Stas
-		// no need save(or delete!) subschemes this way
-		// they should save independently in order to save correct scheme image
-		// fact of saving tracked in client
-//		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemes0(usePool)) {
-//			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
-//		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(reverseDependencies);
@@ -1923,7 +1906,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @see SchemeProtoElement#clone()
 	 */
 	@ParameterizationPending(value = {"final boolean usePool"})
-	private void fillProperties(final SchemeProtoElement schemeProtoElement, Identifier creatorId)
+	private void fillProperties(final SchemeProtoElement schemeProtoElement)
 	throws ApplicationException {
 		final boolean usePool = true;
 
@@ -1971,7 +1954,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			}
 			
 			for (SchemeProtoElement proto : schemeProtoElement.getSchemeProtoElements()) {
-				final SchemeElement schemeElement = SchemeElement.createInstance(creatorId, proto, this);
+				final SchemeElement schemeElement = SchemeElement.createInstance(super.creatorId, proto, this);
 				super.clonedIdMap.putAll(schemeElement.getClonedIdMap());
 				this.addSchemeElement(schemeElement, usePool);
 			}
