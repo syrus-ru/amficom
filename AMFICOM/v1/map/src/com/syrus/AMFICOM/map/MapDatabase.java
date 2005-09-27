@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.50 2005/09/27 09:48:53 max Exp $
+ * $Id: MapDatabase.java,v 1.51 2005/09/27 12:44:44 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/09/27 09:48:53 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/27 12:44:44 $
  * @author $Author: max $
  * @module map
  */
@@ -101,7 +101,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			return this.linkColumnName;
 		}
 		
-		public static Set<Identifier> getLinkedIds (Map map, LinkedEntities linkedEntities) throws IllegalDataException {
+		public static Set<Identifier> getLinkedIds(Map map, LinkedEntities linkedEntities) throws IllegalDataException {
 			Set<Identifier> linkedIdsList;
 			switch (linkedEntities) {
 			case MAP_COLLECTORS:
@@ -323,6 +323,10 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifiable identifiable : ids) {
 				final Identifier mapId = identifiable.getId();
 				final Map map = mapIds.get(mapId);
+				if(map == null) {
+					Log.errorMessage(this.getEntityName() + "Database.delete" + "Couldn't found map " + mapId);
+					continue;
+				}
 				try {
 					linkedIds.put(map, LinkedEntities.getLinkedIds(map, linkedEntities));
 				} catch (IllegalDataException e) {
