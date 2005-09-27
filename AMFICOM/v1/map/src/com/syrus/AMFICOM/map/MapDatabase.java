@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.52 2005/09/27 12:46:21 max Exp $
+ * $Id: MapDatabase.java,v 1.53 2005/09/27 13:15:21 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/09/27 12:46:21 $
+ * @version $Revision: 1.53 $, $Date: 2005/09/27 13:15:21 $
  * @author $Author: max $
  * @module map
  */
@@ -303,8 +303,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 
 	@Override
 	public void delete(final Set<? extends Identifiable> ids) {
-		super.delete(ids);
-
+		
 		final java.util.Map<Map, Set<Identifier>> linkedIds = new HashMap<Map, Set<Identifier>>();
 
 		final java.util.Map<Identifier, Map> mapIds = new HashMap<Identifier, Map>();
@@ -312,10 +311,6 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			final Identifier mapId = identifiable.getId();
 			try {
 				final Map map = StorableObjectPool.getStorableObject(mapId, true);
-				if(map == null) {
-					Log.errorMessage(this.getEntityName() + "Database.delete" + "Couldn't found map " + mapId);
-					continue;
-				}
 				mapIds.put(mapId, map);
 			} catch (ApplicationException ae) {
 				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
@@ -327,10 +322,6 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifiable identifiable : ids) {
 				final Identifier mapId = identifiable.getId();
 				final Map map = mapIds.get(mapId);
-				if(map == null) {
-					Log.errorMessage(this.getEntityName() + "Database.delete" + "Couldn't found map " + mapId);
-					continue;
-				}
 				try {
 					linkedIds.put(map, LinkedEntities.getLinkedIds(map, linkedEntities));
 				} catch (IllegalDataException e) {
@@ -341,6 +332,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			this.deleteLinkedObjectIds(linkedIds, linkedEntities);
 			linkedIds.clear();
 		}
+		super.delete(ids);
 	}	
 
 	private void deleteLinkedObjectIds(final java.util.Map<Map, Set<Identifier>> linkedObjectIds,
