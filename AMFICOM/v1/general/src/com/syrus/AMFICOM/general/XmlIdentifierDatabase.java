@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.12 2005/09/27 10:58:30 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.13 2005/09/27 15:17:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
@@ -15,9 +16,11 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.EQUALS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.MAXIMUM_EXPRESSION_NUMBER;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.QUESTION;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_AND;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_NOT_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
@@ -29,9 +32,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool.Key;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool.XmlKey;
@@ -39,11 +43,12 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
+import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/09/27 10:58:30 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/27 15:17:01 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -52,15 +57,14 @@ final class XmlIdentifierDatabase {
 	private static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	private static final String KEY_DB_LOGIN_NAME = "DBLoginName";
 
-	public static final String DB_HOST_NAME = "aldan";
-	public static final String DB_SID = "hodja";
-	public static final String DB_LOGIN_NAME = "amficom";
-	public static final String SERVER_ID = "Server_1";
-	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
+	private static final String DB_HOST_NAME = "aldan";
+	private static final String DB_SID = "hodja";
+	private static final String DB_LOGIN_NAME = "amficom";
+	private static final int DB_CONNECTION_TIMEOUT = 120;	//sec
 
-	private static final String TABLE_NAME_IMPORT_UID_MAP = "ImportUIDMap";
-	private static final String COLUMN_IMPORT_KIND = "import_kind";
-	private static final String COLUMN_FOREIGN_UID = "foreign_uid";
+	private static final String TABLE_NAME_XML_ID_MAP = "ImportUIDMap";
+	private static final String COLUMN_IMPORT_TYPE = "import_kind";
+	private static final String COLUMN_XML_ID = "foreign_uid";
 	private static final String COLUMN_ID = "id";
 
 	private static String columns;
@@ -93,20 +97,20 @@ final class XmlIdentifierDatabase {
 		}
 	}
 
-	protected static void shutdown() {
+	static void shutdown() {
 		DatabaseConnection.closeConnection();
 	}
 	
-	protected static String getColumnsTmpl() {
+	private static String getColumnsTmpl() {
 		if (columns == null) {
 			columns = COLUMN_ID + COMMA
-					+ COLUMN_FOREIGN_UID + COMMA
-					+ COLUMN_IMPORT_KIND;
+					+ COLUMN_XML_ID + COMMA
+					+ COLUMN_IMPORT_TYPE;
 		}
 		return columns;
 	}
 	
-	protected static String getMultipleSQLValuesTmpl() {
+	private static String getMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -115,7 +119,7 @@ final class XmlIdentifierDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	public static Map<Identifier, XmlIdentifier> retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
+	static Map<Identifier, XmlIdentifier> retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
 		Map<Identifier, XmlIdentifier> idXmlIdMap = new HashMap<Identifier, XmlIdentifier>(); 
 		if (importType == null || importType.length() == 0) {
 			return idXmlIdMap;
@@ -124,9 +128,9 @@ final class XmlIdentifierDatabase {
 		sql.append(StorableObjectDatabase.SQL_SELECT);
 		sql.append(getColumnsTmpl());
 		sql.append(SQL_FROM);
-		sql.append(TABLE_NAME_IMPORT_UID_MAP);
+		sql.append(TABLE_NAME_XML_ID_MAP);
 		sql.append(SQL_WHERE);
-		sql.append(COLUMN_IMPORT_KIND);
+		sql.append(COLUMN_IMPORT_TYPE);
 		sql.append(EQUALS);
 		sql.append(APOSTROPHE);
 		sql.append(importType);
@@ -153,7 +157,7 @@ final class XmlIdentifierDatabase {
 				 */
 				if (true || StorableObjectDatabase.isPresentInDatabase(id)) {
 					final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-					xmlId.setStringValue(resultSet.getString(COLUMN_FOREIGN_UID));
+					xmlId.setStringValue(resultSet.getString(COLUMN_XML_ID));
 					idXmlIdMap.put(id, xmlId);
 				} else {
 					resultSet.deleteRow();
@@ -185,51 +189,98 @@ final class XmlIdentifierDatabase {
 		
 	}
 
-	public static void removeIds(final Set<Identifier> idsToDelete) {
-		if(idsToDelete == null || idsToDelete.isEmpty()) {
+	static void removeKeys(final Set<Key> keysToDelete) {
+		if (keysToDelete.isEmpty()) {
 			return;
 		}
-		StringBuilder sql = new StringBuilder();
-		sql.append(StorableObjectDatabase.SQL_DELETE_FROM);
-		sql.append(TABLE_NAME_IMPORT_UID_MAP);
-		sql.append(SQL_WHERE);
-		sql.append(StorableObjectDatabase.idsEnumerationString(idsToDelete, COLUMN_ID, true));
-		
-		executeQuery(sql.toString());
-		
-	}
-	
-	public static void removeXmlIds(final Set<XmlKey> xmlKeysToDelete) {
-		if (xmlKeysToDelete == null || xmlKeysToDelete.isEmpty()) {
-			return;
+
+		final Map<String, Set<Identifier>> sortedIds = new HashMap<String, Set<Identifier>>();
+		for (final Key key : keysToDelete) {
+			final Identifier id = key.getId();
+			if (id.isVoid()) {
+				continue;
+			}
+			final String importType = key.getImportType();
+			Set<Identifier> ids = sortedIds.get(importType);
+			if (ids == null) {
+				ids = new HashSet<Identifier>();
+				sortedIds.put(importType, ids);
+			}
+			ids.add(id);
 		}
-		StringBuilder sql = new StringBuilder();
+
+		final StringBuilder sql = new StringBuilder();
 		sql.append(StorableObjectDatabase.SQL_DELETE_FROM);
-		sql.append(TABLE_NAME_IMPORT_UID_MAP);
+		sql.append(TABLE_NAME_XML_ID_MAP);
 		sql.append(SQL_WHERE);
-		sql.append(COLUMN_FOREIGN_UID);
-		sql.append(SQL_IN);
-		sql.append(OPEN_BRACKET);
+
+		final Set<Entry<String, Set<Identifier>>> entrySet = sortedIds.entrySet();
+		final int entrySetSize = entrySet.size();
 		int i = 0;
-		for (final Iterator<XmlKey> it = xmlKeysToDelete.iterator(); it.hasNext(); i++) {
-			final XmlKey xmlKey = it.next();
+		for (final Entry<String, Set<Identifier>> entry : entrySet) {
+			if (entrySetSize != 1) {
+				sql.append(OPEN_BRACKET);
+			}
+			sql.append(COLUMN_IMPORT_TYPE);
+			sql.append(EQUALS);
 			sql.append(APOSTROPHE);
-			sql.append(xmlKey.getXmlId().getStringValue());
+			sql.append(DatabaseString.toQuerySubString(entry.getKey()));
 			sql.append(APOSTROPHE);
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
-					sql.append(COMMA);
-				} else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(COLUMN_FOREIGN_UID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
+			sql.append(SQL_AND);
+			sql.append(StorableObjectDatabase.idsEnumerationString(entry.getValue(), COLUMN_ID, true));
+			if (entrySetSize != 1) {
+				sql.append(CLOSE_BRACKET);
+			}
+			if (++i < entrySetSize) {
+				sql.append(SQL_OR);
 			}
 		}
-		sql.append(CLOSE_BRACKET);
-//		executeQuery(sql.toString());
+		executeQuery(sql.toString());
+	}
+	
+	static void removeXmlKeys(final Set<XmlKey> xmlKeysToDelete) {
+		if (xmlKeysToDelete.isEmpty()) {
+			return;
+		}
+
+		final Map<String, Set<String>> sortedXmlIds = new HashMap<String, Set<String>>();
+		for (final XmlKey xmlKey : xmlKeysToDelete) {
+			final String importType = xmlKey.getImportType();
+			Set<String> xmlIds = sortedXmlIds.get(importType);
+			if (xmlIds == null) {
+				xmlIds = new HashSet<String>();
+				sortedXmlIds.put(importType, xmlIds);
+			}
+			xmlIds.add(xmlKey.getXmlId().getStringValue());
+		}
+
+		final StringBuilder sql = new StringBuilder();
+		sql.append(StorableObjectDatabase.SQL_DELETE_FROM);
+		sql.append(TABLE_NAME_XML_ID_MAP);
+		sql.append(SQL_WHERE);
+
+		final Set<Entry<String, Set<String>>> entrySet = sortedXmlIds.entrySet();
+		final int entrySetSize = entrySet.size();
+		int i = 0;
+		for (final Entry<String, Set<String>> entry : entrySet) {
+			if (entrySetSize != 1) {
+				sql.append(OPEN_BRACKET);
+			}
+			sql.append(COLUMN_IMPORT_TYPE);
+			sql.append(EQUALS);
+			sql.append(APOSTROPHE);
+			sql.append(DatabaseString.toQuerySubString(entry.getKey()));
+			sql.append(APOSTROPHE);
+			sql.append(SQL_AND);
+			sql.append(xmlIdsEnumerationString(entry.getValue(), COLUMN_XML_ID, true));
+			if (entrySetSize != 1) {
+				sql.append(CLOSE_BRACKET);
+			}
+			if (++i < entrySetSize) {
+				sql.append(SQL_OR);
+			}
+		}
+		executeQuery(sql.toString());
 	}
 	
 	private static void executeQuery(final String query) {
@@ -262,13 +313,13 @@ final class XmlIdentifierDatabase {
 		}
 	}
 
-	public static void insertKeys(Map<Key, XmlIdentifier> keysToCreate) throws CreateObjectException {
+	static void insertKeys(Map<Key, XmlIdentifier> keysToCreate) throws CreateObjectException {
 		if(keysToCreate == null || keysToCreate.isEmpty()) {
 			return;
 		}
 		final StringBuilder sql = new StringBuilder();
 		sql.append(SQL_INSERT_INTO);
-		sql.append(TABLE_NAME_IMPORT_UID_MAP);
+		sql.append(TABLE_NAME_XML_ID_MAP);
 		sql.append(OPEN_BRACKET);
 		sql.append(getColumnsTmpl());
 		sql.append(CLOSE_BRACKET);
@@ -320,5 +371,53 @@ final class XmlIdentifierDatabase {
 				Log.errorException(sqle1);
 			}
 		}
+	}
+
+	/**
+	 * @param xmlIds
+	 * @param idColumn
+	 * @param inList
+	 * @see StorableObjectDatabase#idsEnumerationString(Set, String, boolean)
+	 */
+	private static StringBuilder xmlIdsEnumerationString(
+			final Set<String> xmlIds,
+			final String idColumn,
+			final boolean inList) {
+		assert xmlIds != null : NON_NULL_EXPECTED;
+
+		if (xmlIds.isEmpty()) {
+			return new StringBuilder(inList
+					? DatabaseStorableObjectCondition.FALSE_CONDITION
+					: DatabaseStorableObjectCondition.TRUE_CONDITION);
+		}
+
+		final StringBuilder sql = new StringBuilder();
+		sql.append(OPEN_BRACKET);
+		sql.append(idColumn);
+		sql.append(inList ? SQL_IN : SQL_NOT_IN);
+		sql.append(OPEN_BRACKET);
+
+		int i = 0;
+		final int xmlIdsSize = xmlIds.size();
+		for (final String xmlId : xmlIds) {
+			sql.append(APOSTROPHE);
+			sql.append(DatabaseString.toQuerySubString(xmlId));
+			sql.append(APOSTROPHE);
+			if (++i < xmlIdsSize) {
+				if (i % MAXIMUM_EXPRESSION_NUMBER == 0) {
+					sql.append(CLOSE_BRACKET);
+					sql.append(inList ? SQL_OR : SQL_AND);
+					sql.append(idColumn);
+					sql.append(inList ? SQL_IN : SQL_NOT_IN);
+					sql.append(OPEN_BRACKET);
+				} else {
+					sql.append(COMMA);
+				}
+			}
+		}
+		sql.append(CLOSE_BRACKET);
+		sql.append(CLOSE_BRACKET);
+
+		return sql;
 	}
 }

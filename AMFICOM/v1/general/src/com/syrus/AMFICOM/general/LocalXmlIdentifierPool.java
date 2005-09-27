@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.10 2005/09/27 10:58:30 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.11 2005/09/27 15:17:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/09/27 10:58:30 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -29,15 +29,15 @@ public final class LocalXmlIdentifierPool {
 
 	private static final Map<XmlKey, Identifier> REVERSE_MAP = new HashMap<XmlKey, Identifier>();
 	
-	private static final Set<Identifier> IDS_TO_DELETE = new HashSet<Identifier>();
-	/**
-	 * Unlike pure Java identifiers, XML ones are tied to importType.
-	 */
-	private static final Set<XmlKey> XML_IDS_TO_DELETE = new HashSet<XmlKey>();
+	private static final Set<Key> KEYS_TO_DELETE = new HashSet<Key>();
+	private static final Set<XmlKey> XML_KEYS_TO_DELETE = new HashSet<XmlKey>();
 	private static final Set<String> PREFETCHED_IMPORT_TYPES = new HashSet<String>();
 
-	private enum KeyState { NEW, UP_TO_DATE}
-	
+	private enum KeyState {
+		NEW,
+		UP_TO_DATE
+	}
+
 	private LocalXmlIdentifierPool() {
 		assert false;
 	}
@@ -149,13 +149,18 @@ public final class LocalXmlIdentifierPool {
 
 		final XmlIdentifier xmlId = FORWARD_MAP.get(new Key(id, importType));
 		if (xmlId == null) {
-			if (REVERSE_MAP.containsValue(id)) {
-				throw new IllegalStateException(
-						"Forward map contains no key while reverse map contains a value: id = Identifier(``"
-						+ id.getIdentifierString()
-						+ "''), importType = ``"
-						+ importType + "''");
-			}
+			/**
+			 * @bug The check is turned off: REVERSE_MAP shouldn't
+			 * contain a value, which has a key with the same
+			 * importType. 
+			 */
+//			if (REVERSE_MAP.containsValue(id)) {
+//				throw new IllegalStateException(
+//						"Forward map contains no key while reverse map contains a value: id = Identifier(``"
+//						+ id.getIdentifierString()
+//						+ "''), importType = ``"
+//						+ importType + "''");
+//			}
 			return false;
 		}
 		final Identifier id2 = REVERSE_MAP.get(new XmlKey(xmlId, importType));
@@ -187,13 +192,18 @@ public final class LocalXmlIdentifierPool {
 		final Identifier id = REVERSE_MAP.get(new XmlKey(xmlId, importType));
 		final String xmlIdStringValue = xmlId.getStringValue();
 		if (id == null) {
-			if (FORWARD_MAP.containsValue(xmlId)) {
-				throw new IllegalStateException(
-						"Reverse map contains no key while forward map contains a valuexmlId = XmlIdentifier(``"
-						+ xmlIdStringValue
-						+ "''), importType = ``"
-						+ importType + "''");
-			}
+			/**
+			 * @bug The check is turned off: FORWARD_MAP shouldn't
+			 * contain a value, which has a key with the same
+			 * importType. 
+			 */
+//			if (FORWARD_MAP.containsValue(xmlId)) {
+//				throw new IllegalStateException(
+//						"Reverse map contains no key while forward map contains a valuexmlId = XmlIdentifier(``"
+//						+ xmlIdStringValue
+//						+ "''), importType = ``"
+//						+ importType + "''");
+//			}
 			return false;
 		}
 		final XmlIdentifier xmlId2 = FORWARD_MAP.get(new Key(id, importType));
@@ -234,7 +244,7 @@ public final class LocalXmlIdentifierPool {
 					+ "''), importType = ``"
 					+ importType + "''");
 		}
-		IDS_TO_DELETE.add(id);
+		KEYS_TO_DELETE.add(key);
 	}
 
 	/**
@@ -257,7 +267,7 @@ public final class LocalXmlIdentifierPool {
 					+ "''), importType = ``"
 					+ importType + "''");
 		}
-		XML_IDS_TO_DELETE.add(xmlKey);
+		XML_KEYS_TO_DELETE.add(xmlKey);
 	}
 
 	/**
@@ -323,14 +333,16 @@ public final class LocalXmlIdentifierPool {
 		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
 		}
-		XmlIdentifierDatabase.removeIds(IDS_TO_DELETE);
-		XmlIdentifierDatabase.removeXmlIds(XML_IDS_TO_DELETE);
+		XmlIdentifierDatabase.removeKeys(KEYS_TO_DELETE);
+		KEYS_TO_DELETE.clear();
+		XmlIdentifierDatabase.removeXmlKeys(XML_KEYS_TO_DELETE);
+		XML_KEYS_TO_DELETE.clear();
 	}
-	
+
 	/**
 	 * @author Maxim Selivanov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.10 $, $Date: 2005/09/27 10:58:30 $
+	 * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -348,7 +360,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.10 $, $Date: 2005/09/27 10:58:30 $
+	 * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -423,10 +435,10 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.10 $, $Date: 2005/09/27 10:58:30 $
+	 * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
 	 * @module general
 	 */
-	static class XmlKey extends State{
+	static final class XmlKey extends State {
 		private XmlIdentifier id;
 
 		private String importType;
