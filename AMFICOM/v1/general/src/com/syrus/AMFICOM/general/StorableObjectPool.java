@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.186 2005/09/25 11:27:42 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.187 2005/09/27 14:27:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.186 $, $Date: 2005/09/25 11:27:42 $
+ * @version $Revision: 1.187 $, $Date: 2005/09/27 14:27:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -560,7 +560,49 @@ public final class StorableObjectPool {
 	/*	Clean objects */
 
 	/**
-	 * Clean all changed objects from pool 
+	 * Clean from pool changed objects from the supplied set.  
+	 * @param identifiables
+	 */
+	public static void cleanChangedStorableObjects(final Set<? extends Identifiable> identifiables) {
+		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (identifiables.isEmpty()) {
+			return;
+		}
+
+		final Map<Short, Set<Identifier>> entityIdsMap = Identifier.createEntityIdsMap(identifiables);
+		if (entityIdsMap.isEmpty()) {
+			return;
+		}
+
+		for (final Short entityKey : entityIdsMap.keySet()) {
+			final Set<Identifier> entityIds = entityIdsMap.get(entityKey);
+			if (entityIds.isEmpty()) {
+				continue;
+			}
+
+			final Set<Identifier> deletedIds = DELETED_IDS_MAP.get(entityKey);
+			if (deletedIds != null) {
+				deletedIds.removeAll(entityIds);
+			}
+
+			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityKey);
+			if (objectPool != null) {
+				for (final Iterator<StorableObject> it = objectPool.iterator(); it.hasNext();) {
+					final StorableObject storableObject = it.next();
+					if (entityIds.contains(storableObject.getId()) && storableObject.isChanged()) {
+						it.remove();
+					}
+				}
+			} else {
+				Log.errorMessage("StorableObjectPool.cleanChangedStorableObjects | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+						+ ObjectEntities.codeToString(entityKey) + "'/" + entityKey);
+				continue;
+			}
+		}
+	}
+
+	/**
+	 * Clean all changed objects of the given entity from pool
 	 * @param entityCode
 	 */
 	public static void cleanChangedStorableObjects(final short entityCode) {
@@ -576,8 +618,7 @@ public final class StorableObjectPool {
 					it.remove();
 				}
 			}
-		}
-		else {
+		} else {
 			Log.errorMessage("StorableObjectPool.cleanChangedStorableObjects | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
@@ -872,11 +913,9 @@ public final class StorableObjectPool {
 			Log.errorMessage("StorableObjectPool.fromIdentifiable | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return null;
-		}
-		else if (identifiable instanceof StorableObject) {
+		} else if (identifiable instanceof StorableObject) {
 			return (StorableObject) identifiable;
-		}
-		else {
+		} else {
 			throw new IllegalDataException("Object '" + identifiable.getId()
 					+ "' neither Identifier nor StorableObject -- " + identifiable.getClass().getName());
 		}
@@ -1229,8 +1268,12 @@ public final class StorableObjectPool {
 		}
 	}
 
+	private static <T extends StorableObject> LRUMap<Identifier, T> getLRUMap(final Short entityCode) {
+		return getLRUMap(entityCode.shortValue());
+	}
+
 	@SuppressWarnings("unchecked")
-	private static <K, V> LRUMap<K, V> getLRUMap(final short entityCode) {
+	private static <T extends StorableObject> LRUMap<Identifier, T> getLRUMap(final short entityCode) {
 		return (LRUMap) objectPoolMap.get(entityCode);
 	}
 }
