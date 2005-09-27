@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.54 2005/09/27 14:18:50 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.55 2005/09/27 14:23:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -47,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/09/27 14:18:50 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/27 14:23:05 $
  * @author $Author: arseniy $
  * @module map
  */
