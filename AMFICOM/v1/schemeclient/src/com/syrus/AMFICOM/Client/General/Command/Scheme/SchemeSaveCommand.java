@@ -101,7 +101,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				}
 			}
 			try {
-				se.setSchemeLinks(schemeLinks);
+				se.setSchemeLinks(schemeLinks, false);
 				se.setSchemeElements(schemeElements, false);
 			} catch (ApplicationException e1) {
 				Log.errorException(e1);

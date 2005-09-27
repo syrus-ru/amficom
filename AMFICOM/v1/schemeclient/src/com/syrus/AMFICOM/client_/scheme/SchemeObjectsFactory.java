@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.35 2005/09/26 14:13:46 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.36 2005/09/27 06:50:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2005/09/26 14:13:46 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/27 06:50:45 $
  * @module schemeclient
  */
 
@@ -168,7 +168,7 @@ public class SchemeObjectsFactory {
 			} catch (ApplicationException e) {
 				throw new CreateObjectException(e);
 			}
-			for (SchemeLink sl : schemeElement.getSchemeLinks()) {
+			for (SchemeLink sl : schemeElement.getSchemeLinks(false)) {
 				createLink(sl);
 			}
 			for (SchemeElement se : schemeElement.getSchemeElements(false)) {

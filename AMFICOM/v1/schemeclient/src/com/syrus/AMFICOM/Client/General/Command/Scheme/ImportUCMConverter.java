@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.1 2005/09/26 14:19:30 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.2 2005/09/27 06:50:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -380,14 +380,14 @@ public class ImportUCMConverter {
 	}
 
 	private void substituteSchemeElement(Map<Identifier, Identifier>clonedIds, SchemeElement oldSE, SchemeElement newSE) throws ApplicationException {
-		for (SchemeDevice device: oldSE.getSchemeDevices()) {
-			device.setParentSchemeElement(newSE);
+		for (SchemeDevice device: oldSE.getSchemeDevices(false)) {
+			device.setParentSchemeElement(newSE, false);
 		}
 		for (SchemeElement element: oldSE.getSchemeElements(false)) {
 			element.setParentSchemeElement(newSE, false);
 		}
-		for (SchemeLink link: oldSE.getSchemeLinks()) {
-			link.setParentSchemeElement(newSE);
+		for (SchemeLink link: oldSE.getSchemeLinks(false)) {
+			link.setParentSchemeElement(newSE, false);
 		}
 		for (Identifier id : clonedIds.keySet()) {
 			Identifier value = clonedIds.get(id);

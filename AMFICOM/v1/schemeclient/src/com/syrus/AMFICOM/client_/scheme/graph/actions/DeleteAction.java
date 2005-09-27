@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.22 2005/09/26 14:13:46 stas Exp $
+ * $Id: DeleteAction.java,v 1.23 2005/09/27 06:50:45 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/09/26 14:13:46 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/27 06:50:45 $
  * @module schemeclient
  */
 
@@ -228,29 +228,21 @@ public class DeleteAction extends AbstractAction {
 	static void deleteSchemeElement(SchemeElement element) {
 		objectsToDelete.add(element.getId());
 		if (element.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
-			if(element.getEquipment() != null)
-				objectsToDelete.add(element.getEquipment().getId());
-			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeLink)it.next()).getId());
-			}
 			try {
+				if(element.getEquipment() != null)
+					objectsToDelete.add(element.getEquipment().getId());
+				for (Iterator it = element.getSchemeLinks(false).iterator(); it.hasNext();) {
+					objectsToDelete.add(((SchemeLink)it.next()).getId());
+				}
 				for (Iterator it = element.getSchemePortsRecursively(false).iterator(); it.hasNext();) {
 					objectsToDelete.add(((SchemePort)it.next()).getId());
 				}
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-			try {
 				for (Iterator it = element.getSchemeCablePortsRecursively(false).iterator(); it.hasNext();) {
 					objectsToDelete.add(((SchemeCablePort)it.next()).getId());
 				}
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeDevice)it.next()).getId());
-			}
-			try {
+				for (Iterator it = element.getSchemeDevices(false).iterator(); it.hasNext();) {
+					objectsToDelete.add(((SchemeDevice)it.next()).getId());
+				}
 				for (Iterator it = element.getSchemeElements(false).iterator(); it.hasNext();) {
 					objectsToDelete.add(((SchemeElement)it.next()).getId());
 				}

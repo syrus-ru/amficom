@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.25 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.26 2005/09/27 06:50:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/27 06:50:45 $
  * @module schemeclient
  */
 
@@ -547,7 +547,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 								if (res.getCellContainerType() == SchemeResource.SCHEME)
 									link.setParentScheme(res.getScheme());
 								else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT)
-									link.setParentSchemeElement(res.getSchemeElement());
+									link.setParentSchemeElement(res.getSchemeElement(), false);
 								else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT)
 									link.setParentSchemeProtoElement(res.getSchemeProtoElement());
 							}
@@ -564,14 +564,18 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						
 						UgoPanel panel = this.pane.getCurrentPanel();
 						if (panel instanceof ElementsPanel) {
-							SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
-							if (res.getCellContainerType() == SchemeResource.SCHEME) {
-								link.setParentScheme(res.getScheme());
-							} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-								link.setParentSchemeElement(res.getSchemeElement());
-							} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
-								if (res.getSchemeProtoElement() != null)
-									link.setParentSchemeProtoElement(res.getSchemeProtoElement());
+							try {
+								SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
+								if (res.getCellContainerType() == SchemeResource.SCHEME) {
+									link.setParentScheme(res.getScheme());
+								} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+									link.setParentSchemeElement(res.getSchemeElement(), false);
+								} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
+									if (res.getSchemeProtoElement() != null)
+										link.setParentSchemeProtoElement(res.getSchemeProtoElement());
+								}
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
 							}
 						}
 					}

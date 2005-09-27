@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.43 2005/09/26 14:13:46 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.44 2005/09/27 06:50:45 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.43 $, $Date: 2005/09/26 14:13:46 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/27 06:50:45 $
  * @module schemeclient
  */
 
@@ -289,7 +289,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						child.setDefaultCondition(condition1);
 						node.addChild(child);
 					}
-					if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !se.getSchemeLinks().isEmpty()) {
+					if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !se.getSchemeLinks(false).isEmpty()) {
 						LinkedIdsCondition condition1 = new LinkedIdsCondition(se.getId(), ObjectEntities.SCHEMELINK_CODE);
 						FiltrableIconedNode child = new FiltrableIconedNode();
 						child.setChildrenFactory(this);
