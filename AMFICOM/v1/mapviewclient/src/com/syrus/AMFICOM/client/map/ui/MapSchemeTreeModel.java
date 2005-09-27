@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.37 2005/09/26 14:26:51 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.38 2005/09/27 07:07:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -87,7 +87,7 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.37 $, $Date: 2005/09/26 14:26:51 $
+ * @version $Revision: 1.38 $, $Date: 2005/09/27 07:07:50 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -282,7 +282,7 @@ public class MapSchemeTreeModel
 			if(compoundElements.size() > 0) {
 				for(Iterator it = compoundElements.iterator(); it.hasNext();) {
 					SchemeElement element = (SchemeElement)it.next();
-					boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements(false).size() != 0);
+					boolean allowsChildren = (element.getSchemeLinks(false).size() != 0 || element.getSchemeElements(false).size() != 0);
 	
 					Scheme internalScheme = element.getScheme(false);
 					
@@ -340,7 +340,7 @@ public class MapSchemeTreeModel
 				for (Iterator it = compoundElements.iterator(); it.hasNext();) {
 					SchemeElement element = (SchemeElement) it.next();
 					boolean allowsChildren = (
-							element.getSchemeLinks().size() != 0 
+							element.getSchemeLinks(false).size() != 0 
 							|| element.getSchemeElements(false).size() != 0);
 
 					Scheme internalScheme = element.getScheme(false);
@@ -371,17 +371,22 @@ public class MapSchemeTreeModel
 
 	Item buildLinksTree(SchemeElement schemeElement, boolean topological) {
 		
-		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,LINK_BRANCH, getObjectName(LINK_BRANCH), true);
-		MapSchemeTreeNode childNode;
-		treeNode.setTopological(topological);
+		try {
+			MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,LINK_BRANCH, getObjectName(LINK_BRANCH), true);
+			MapSchemeTreeNode childNode;
+			treeNode.setTopological(topological);
 
-		for(Iterator iter = schemeElement.getSchemeLinks().iterator(); iter.hasNext();) {
-			SchemeLink schemeLink = (SchemeLink )iter.next();
-			childNode = new MapSchemeTreeNode(null,schemeLink, getObjectName(schemeLink), false);
-			treeNode.addChild(childNode);
+			for(Iterator iter = schemeElement.getSchemeLinks(false).iterator(); iter.hasNext();) {
+				SchemeLink schemeLink = (SchemeLink )iter.next();
+				childNode = new MapSchemeTreeNode(null,schemeLink, getObjectName(schemeLink), false);
+				treeNode.addChild(childNode);
+			}
+			
+			return treeNode;
+		} catch(ApplicationException e) {
+			Log.debugException(e, SEVERE);
+			return null;
 		}
-		
-		return treeNode;
 	}
 
 	Item buildLinksTree(Scheme scheme, boolean topological) {

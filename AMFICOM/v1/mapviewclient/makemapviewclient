@@ -40,7 +40,6 @@ impl:
 		src\com\syrus\AMFICOM\client\map\operations\*.java \
 		src\com\syrus\AMFICOM\client\map\popup\*.java \
 		src\com\syrus\AMFICOM\client\map\props\*.java \
-		src\com\syrus\AMFICOM\client\map\report\*.java \
 		src\com\syrus\AMFICOM\client\map\strategy\*.java \
 		src\com\syrus\AMFICOM\client\map\ui\*.java
 
