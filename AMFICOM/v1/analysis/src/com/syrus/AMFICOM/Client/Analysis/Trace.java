@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.11 2005/09/26 11:19:34 saa Exp $
+ * $Id: Trace.java,v 1.12 2005/09/27 15:05:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.io.DataFormatException;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/09/26 11:19:34 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/27 15:05:31 $
  * @module
  */
 public class Trace {
@@ -49,11 +49,14 @@ public class Trace {
 	private double[] traceData = null; // null if not cached yet
 	private AnalysisResult ar = null;
 
+	private boolean analysisLoaded; // true если результат анализа задан извне
+
 	public Trace(BellcoreStructure bs, String key, AnalysisParameters ap) {
 		this.pfTrace = new PFTrace(bs);
 		this.ap = ap;
 		this.key = key;
 		this.result = null;
+		this.analysisLoaded = false;
 	}
 
 	public Trace(PFTrace trace, String key, AnalysisParameters ap) {
@@ -61,6 +64,7 @@ public class Trace {
 		this.ap = ap;
 		this.key = key;
 		this.result = null;
+		this.analysisLoaded = false;
 	}
 	/**
 	 * one of ap and mtae may be null
@@ -74,6 +78,7 @@ public class Trace {
 		this.key = result.getId().getIdentifierString();
 		this.result = result;
 		this.ar = ar;
+		this.analysisLoaded = ar != null;
 	}
 	/**
 	 * Открывает рефлектограмму без предварительно полученных результатов анализа
@@ -163,5 +168,13 @@ public class Trace {
 	}
 	public Result getResult() {
 		return result;
+	}
+	/**
+	 * @return true, если результаты анализа были заданы в момент создания
+	 * этого объекта. Фактически это обычно означает,
+	 * что анализ был проведен на агенте.
+	 */
+	public boolean hasAnalysisLoaded() {
+		return this.analysisLoaded;
 	}
 }
