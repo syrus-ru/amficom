@@ -27,7 +27,7 @@ private:
 public:
 	ThreshArray(JNIEnv *env, jobjectArray arrray);
 	virtual ~ThreshArray();
-	int getLength();
+	int getLength(); // number of thresholds in array
 	int selectId(int id); // boolean: "success"
 	int getX0(int id);
 	int getX1(int id);
@@ -57,12 +57,14 @@ class ThreshDXArray : public ThreshArray
 private:
 	jfieldID id_dX;
 	jfieldID id_isRise;
+	jfieldID id_flags;
 public:
 	ThreshDXArray(JNIEnv *env, jobjectArray array);
 	~ThreshDXArray();
 	int getDX(int id, int key);
 	int getIsRise(int id);
 	void setDX(int id, int key, int value);
+	int hasABCorrFlag(int id);
 };
 
 void ThreshDXArrayToTHXArray(ThreshDXArray &thXi, int key, THX** thxOut, int *thxOutSize);

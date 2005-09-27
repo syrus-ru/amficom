@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.96 2005/09/01 17:29:20 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.97 2005/09/27 13:38:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.io.SignatureMismatchException;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.96 $, $Date: 2005/09/01 17:29:20 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/27 13:38:20 $
  * @module
  */
 public class ModelTraceManager
@@ -151,13 +151,13 @@ implements DataStreamable, Cloneable
 			case SimpleReflectogramEvent.GAIN:
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, true));
+				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, true, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.LOSS:
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, false));
+				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, false, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.NOTIDENTIFIED:
@@ -179,9 +179,9 @@ implements DataStreamable, Cloneable
 				evEnd = pos[2];
 				last.xMax = evBegin;
 				last.eventId1 = i;
-				thresholds.add(new ThreshDX(i, evBegin - DELTA, evCenter, true));
+				thresholds.add(new ThreshDX(i, evBegin - DELTA, evCenter, true, true));
 				thresholds.add(new ThreshDY(i, true, evCenter, evCenter));
-				thresholds.add(new ThreshDX(i, evCenter, evEnd + DELTA, false));
+				thresholds.add(new ThreshDX(i, evCenter, evEnd + DELTA, false, false));
 				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
 				//System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
 				break;

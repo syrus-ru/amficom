@@ -1,4 +1,5 @@
 #include <assert.h>
+#include "../common/com_syrus_AMFICOM_analysis_dadara_ThreshDX.h"
 
 #include "ThreshArray.h"
 #include "names.h"
@@ -109,6 +110,7 @@ ThreshDXArray::ThreshDXArray(JNIEnv *env, jobjectArray array)
 	assert(clazz);
 	id_dX     = env->GetFieldID(clazz, N_ThreshDX_dX, S_ThreshDX_dX);
 	id_isRise = env->GetFieldID(clazz, N_ThreshDX_isRise, S_ThreshDX_isRise);
+	id_flags  = env->GetFieldID(clazz, N_ThreshDX_flags, S_ThreshDX_flags);
 }
 
 ThreshDXArray::~ThreshDXArray()
@@ -197,6 +199,13 @@ void ThreshDXArray::setDX(int id, int key, int value)
 	env->SetIntArrayRegion(dx, key, 1, &data);
 	// округляем вверх Java-методом
 	env->CallVoidMethod(cur_obj, roundUp, key);
+}
+int ThreshDXArray::hasABCorrFlag(int id)
+{
+	if (!selectId(id))
+		return 0; // some error?
+	jbyte flags = env->GetByteField(cur_obj, id_flags);
+	return (flags & com_syrus_AMFICOM_analysis_dadara_ThreshDX_FLAG_AB_CORR) != 0;
 }
 
 int ThreshDYArray::getTypeL(int id)

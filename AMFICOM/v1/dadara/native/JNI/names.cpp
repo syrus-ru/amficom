@@ -36,6 +36,8 @@ const char *N_ThreshDX_dX		= "dX";
 const char *S_ThreshDX_dX		= "[I";
 const char *N_ThreshDX_isRise	= "rise";
 const char *S_ThreshDX_isRise	= "Z";
+const char *N_ThreshDX_flags	= "flags";
+const char *S_ThreshDX_flags	= "B";
 
 const char *N_SE_begin			= "begin";
 const char *S_SE_begin			= "I";

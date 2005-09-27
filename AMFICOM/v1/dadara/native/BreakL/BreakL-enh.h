@@ -52,15 +52,19 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taDX, ThreshDYArray &taDY,
 // Без autoThresh пороги отслеживаются не полностью
 //   (не отслеживаются DY-пороги на участках сшивки границ DX-порогов).
 
-// для mf
-void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
-			   int xMin, int xMax, int autoThresh, TTDX *ttdxOut, TTDY *ttdyOut);
-
 // для массива
 // yArr[0] ~ xMin; yArr[xMax - xMin] ~ xMax
 void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thNpY, int isUpper,
 						   int xMin, int xMax, int autoThresh,
 						   TTDX *ttdxOut, TTDY *ttdyOut);
+
+// для mf
+void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
+			   int xMin, int xMax, int autoThresh, TTDX *ttdxOut, TTDY *ttdyOut);
+
+// для mf - дополнительно есть возможность сделать коррекцию А.Б.: abCorr & 1 != 0
+void ChangeBreakLByThreshABCorrEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
+			   int xMin, int xMax, int autoThresh, TTDX *ttdxOut, TTDY *ttdyOut);
 
 #endif //CANTTDXDY
 

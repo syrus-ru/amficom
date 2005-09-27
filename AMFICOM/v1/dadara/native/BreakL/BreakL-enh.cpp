@@ -1,3 +1,4 @@
+#include <math.h>
 #include <assert.h>
 #include "BreakL-enh.h"
 #include "BreakL-fit.h"
@@ -695,6 +696,120 @@ void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY,
 		delete[] thY;
 }
 
+void ChangeBreakLByThreshABCorrEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
+						   int xMin, int xMax, int autoThresh,
+						   TTDX *ttdxOut, TTDY *ttdyOut)
+{
+	// make threshold curve
+	ChangeBreakLByThreshEx(mf, taX, taY, key, xMin, xMax, autoThresh, ttdxOut, ttdyOut);
+
+	// make correction (ttdx/ttdy need not to be changed)
+	if (!taX.isUpper(key))
+	{
+		int nPts = mf.getNPars() / 2;
+		double *pars = mf.getP();
+
+		int j;
+		for (j = 0; j < taX.getLength(); j++)
+		{
+			if (!taX.getIsRise(j) || !taX.hasABCorrFlag(j))
+				continue;
+			// ищем узел, совпадающий с началом порога
+			int x0 = taX.getX0(j);
+			int k = -1;
+			int p;
+			for (p = 2; p < nPts - 2; p++) // кроме двух начальных и двух последних
+			{
+				if (pars[p * 2] == x0)
+				{
+					k = p;
+					break;
+				}
+			}
+			//fprintf(stderr, "%d @ %4d %2d: %d\n", key, x0, j, k); // FIXME: debug
+			if (k < 0)
+				continue;
+			// проверяем условия
+			int xL = (int)pars[(k - 1) * 2];
+			int xR = (int)pars[(k + 1) * 2];
+			int xVL = (int)pars[(k - 2) * 2];
+			int xVR = (int)pars[(k + 2) * 2];
+			double yL = pars[(k - 1) * 2 + 1];
+			double y0 = pars[ k      * 2 + 1];
+			double yR = pars[(k + 1) * 2 + 1];
+			double yVL = pars[(k - 2) * 2 + 1];
+			double yVR = pars[(k + 2) * 2 + 1];
+			if (y0 > yL && yR == y0 && yVR > yR && xVR > xR && xL > xVL)
+			{
+				// Продолжаем отрезки (k-2,k-1) и (k+1,k+2) до их пересечения
+				// если они пересекаются на участке x in [x[k-1], x[k+1]],
+				// то пытаемся передвинуть имеющиеся точки так, чтобы описать
+				// это пересечение вместо точки k.
+				// Поскольку точка пересечения может не попасть на сетку целых x,
+				// может потребоватся две точки для приближения требуемого
+				// пересечения целыми иксами. С другой стороны, при такой замене
+				// освобождаются три точки: k-1, k, k+1, а значит, среди них 1-2
+				// можно расставить для приближения пересечения, и 1-2 удалить.
+				double aL = (yVL - yL) / (xVL - xL);
+				double aR = (yVR - yR) / (xVR - xR);
+				if (aR > aL)
+				{
+					double xCross = (yL - yR + aR * (xR - xL)) / (aR - aL) + xL;
+					int xC1 = (int)floor(xCross);
+					int xC2 = (int)ceil(xCross);
+					double yC1 = yL + (xC1 - xL) * aL;
+					double yC2 = yR + (xC2 - xR) * aR;
+					if (xC1 >= xL && xC2 <= xR) // пересечение на отрезке xL .. xR
+					{
+						int thirdLeft = xC1 > xL + 1; // впихнуть третью точку слева или справа?
+						//fprintf(stderr, "... UPDATE [%d %d - %d %d]\n", xL, xC1, xC2, xR); // FIXME: debug
+						// новая левая точка
+						pars[(k - 1) * 2] = xC1;
+						pars[(k - 1) * 2 + 1] = yC1;
+						int s0;
+						int s1 = k + 2;
+						if (xC2 > xC1)
+						{
+							// новая правая точка
+							pars[k * 2] = xC2;
+							pars[k * 2 + 1] = yC2;
+							s0 = k + 1;
+						}
+						else
+						{
+							s0 = k;
+						}
+						// удаляем лишние точки: [s1...] -> [s0...]
+						while (s1 < nPts)
+						{
+							pars[s0 * 2] = pars[s1 * 2];
+							pars[s0 * 2 + 1] = pars[s1 * 2 + 1];
+							s0++;
+							s1++;
+						}
+						nPts -= s1 - s0;
+					}
+				}
+			}
+		}
+		//fflush(stderr); // FIXME: debug
+
+		// если изменилось число узлов, корректируем mf
+		if (mf.getNPars() / 2 != nPts)
+		{
+			//fprintf(stderr, "changing nPts from %d to %d\n", mf.getNPars() / 2, nPts); // FIXME: debug
+			//fflush(stderr); // FIXME: debug
+			double *newPars = new double[nPts * 2];
+			assert(newPars);
+			for (j = 0; j < nPts * 2; j++)
+			{
+				newPars[j] = pars[j];
+			}
+			mf.init(mf.getID(), nPts * 2, newPars);
+		}
+	}
+}
+
 #if CANTTDXDY
 // Основное назначение функции соответствует названию - преобразовать м.ф. к ее порогу.
 // Вспомогательное назначение - поиск соответствующего координате DX/DY-порога thCheckPosition.
@@ -724,7 +839,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 	}
 
 	prf_b("Outer BreakL_ChangeByThresh: go inside");
-	ChangeBreakLByThreshEx (mf, taX, taY, key, xMin, xMax, 0, ttdxOut, ttdyOut);
+	ChangeBreakLByThreshABCorrEx (mf, taX, taY, key, xMin, xMax, 0, ttdxOut, ttdyOut);
 
 	prf_b("Outer BreakL_ChangeByThresh: back from inside");
 

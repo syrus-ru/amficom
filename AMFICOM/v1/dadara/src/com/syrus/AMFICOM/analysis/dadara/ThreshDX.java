@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.21 2005/07/22 15:19:38 saa Exp $
+ * $Id: ThreshDX.java,v 1.22 2005/09/27 13:38:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,18 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/07/22 15:19:38 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/27 13:38:20 $
  * @module
  */
 public class ThreshDX extends Thresh
 {
+	// включает для этого DX-порога коррекцию нижних пороговых кривых
+	// от А.Б., 26/09/2005
+	private static final byte FLAG_AB_CORR = 0x1;
+
 	private int[] dX; // accessed from JNI
 	private boolean rise; // accessed from JNI
+	private byte flags; // accessed from JNI
 
 	protected ThreshDX()
 	{ // do nothing -- for DIS reading
@@ -31,6 +36,7 @@ public class ThreshDX extends Thresh
 		super(that);
 		this.dX = that.dX;
 		this.rise = that.rise;
+		this.flags = that.flags;
 	}
 
 	/**
@@ -68,18 +74,23 @@ public class ThreshDX extends Thresh
 		return this.rise ^ IS_KEY_UPPER[key] ? 1 : -1;
 	}
 
-	protected ThreshDX(int eventId, int xMin, int xMax, boolean rise)
+	protected ThreshDX(int eventId, int xMin, int xMax, boolean rise, boolean useABCorr)
 	{
 		super(eventId, eventId, xMin, xMax);
 		int dx = rise ? -1 : +1;
 		this.rise = rise;
 		this.dX = new int[] { dx, 2 * dx, -dx, -2 * dx };
+		this.flags = 0;
+		if (useABCorr) {
+			this.flags |= FLAG_AB_CORR;
+		}
 	}
 
 	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
 		this.rise = dis.readBoolean();
+		this.flags = dis.readByte();
 		this.dX = new int[4];
 		for (int k = 0; k < 4; k++)
 			this.dX[k] = dis.readInt();
@@ -88,6 +99,7 @@ public class ThreshDX extends Thresh
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException
 	{
 		dos.writeBoolean(this.rise);
+		dos.writeByte(this.flags);
 		for (int k = 0; k < 4; k++)
 			dos.writeInt(this.dX[k]);
 	}

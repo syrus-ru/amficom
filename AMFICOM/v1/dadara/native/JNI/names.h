@@ -41,6 +41,8 @@ extern const char *N_ThreshDX_dX;
 extern const char *S_ThreshDX_dX;
 extern const char *N_ThreshDX_isRise;
 extern const char *S_ThreshDX_isRise;
+extern const char *N_ThreshDX_flags;
+extern const char *S_ThreshDX_flags;
 
 extern const char *CL_ThreshDY;
 extern const char *N_ThreshDY_typeL;
