@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.53 2005/09/27 13:15:21 max Exp $
+ * $Id: MapDatabase.java,v 1.54 2005/09/27 14:18:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/09/27 13:15:21 $
- * @author $Author: max $
+ * @version $Revision: 1.54 $, $Date: 2005/09/27 14:18:50 $
+ * @author $Author: arseniy $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -303,35 +303,29 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 
 	@Override
 	public void delete(final Set<? extends Identifiable> ids) {
-		
-		final java.util.Map<Map, Set<Identifier>> linkedIds = new HashMap<Map, Set<Identifier>>();
 
-		final java.util.Map<Identifier, Map> mapIds = new HashMap<Identifier, Map>();
-		for (final Identifiable identifiable : ids) {
-			final Identifier mapId = identifiable.getId();
-			try {
-				final Map map = StorableObjectPool.getStorableObject(mapId, true);
-				mapIds.put(mapId, map);
-			} catch (ApplicationException ae) {
-				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
-			}
+		Set<Map> dbMaps = null;
+		try {
+			dbMaps = this.retrieveByCondition(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true).toString());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return;
 		}
 
+		final java.util.Map<Map, Set<Identifier>> linkedIds = new HashMap<Map, Set<Identifier>>();
 		for (int i = 0; i < LinkedEntities.values().length; i++) {
-			LinkedEntities linkedEntities = LinkedEntities.values()[i];
-			for (final Identifiable identifiable : ids) {
-				final Identifier mapId = identifiable.getId();
-				final Map map = mapIds.get(mapId);
+			final LinkedEntities linkedEntities = LinkedEntities.values()[i];
+			for (final Map map : dbMaps) {
 				try {
 					linkedIds.put(map, LinkedEntities.getLinkedIds(map, linkedEntities));
-				} catch (IllegalDataException e) {
-					Log.errorMessage(this.getEntityName() + "Database.delete | " + e.getMessage());
+				} catch (ApplicationException ae) {
+					Log.errorException(ae);
 				}
 			}
-
 			this.deleteLinkedObjectIds(linkedIds, linkedEntities);
 			linkedIds.clear();
 		}
+
 		super.delete(ids);
 	}	
 
