@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.196 2005/09/22 16:20:58 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.197 2005/09/27 15:16:03 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.196 $, $Date: 2005/09/22 16:20:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.197 $, $Date: 2005/09/27 15:16:03 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -1349,11 +1349,18 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	// //////////////////// misc /////////////////////////
 
 	/**
-	 * If <code>inList</code> is <code>true</code> returns a string like
+	 * <p>If <code>inList</code> is <code>true</code> returns a string like
 	 * "idColumn IN ('id1', 'id2',... , 'idN') OR idColumn IN ('id3', 'id4',... ,
 	 * 'idM') ..." If <code>inList</code> is <code>false</code> returns a
 	 * string like "idColumn NOT IN ('id1', 'id2',... , 'idN') AND idColumn NOT
-	 * IN ('id3', 'id4',... , 'idM') ..."
+	 * IN ('id3', 'id4',... , 'idM') ..."</p>
+	 * 
+	 * <p>If {@code identifiables} contain
+	 * {@link Identifier#VOID_IDENTIFIER VOID_IDENTIFIER}, it is handled
+	 * correctly, e. g.:<pre>
+	 * idColumn IN ('id1', 'id2', ..., 'isN') OR idColumn IS NULL
+	 * idColumn NOT IN ('id1', 'id2', ..., 'isN') AND idColumn IS NOT NULL
+	 * </pre></p>
 	 *
 	 * @param identifiables
 	 * @param idColumn
@@ -1391,40 +1398,45 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					: DatabaseStorableObjectCondition.TRUE_CONDITION);
 		}
 
-		final StringBuffer stringBuffer = new StringBuffer((containsVoidIdentifier ? OPEN_BRACKET : ""));
-		stringBuffer.append(OPEN_BRACKET);
-		stringBuffer.append(idColumn);
-		stringBuffer.append(inList ? SQL_IN : SQL_NOT_IN);
-		stringBuffer.append(OPEN_BRACKET);
+		final StringBuffer sql = new StringBuffer((containsVoidIdentifier ? OPEN_BRACKET : ""));
+		sql.append(OPEN_BRACKET);
+		sql.append(idColumn);
+		sql.append(inList ? SQL_IN : SQL_NOT_IN);
+		sql.append(OPEN_BRACKET);
 
+		/*-
+		 * The following block has been rewritten to utilize the new
+		 * for-each loop. Everyone, do not roll back. Arseniy, I address
+		 * you in person: do not ever roll back.
+		 *
+		 * Bass.
+		 */
 		int i = 0;
-		for (final Iterator<Identifier> it = nonVoidIdentifiers.iterator(); it.hasNext(); i++) {
-			final Identifiable identifiable = it.next();
-			final Identifier id = identifiable.getId();
-			stringBuffer.append(DatabaseIdentifier.toSQLString(id));
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
-					stringBuffer.append(COMMA);
-				}
-				else {
-					stringBuffer.append(CLOSE_BRACKET);
-					stringBuffer.append(inList ? SQL_OR : SQL_AND);
-					stringBuffer.append(idColumn);
-					stringBuffer.append(inList ? SQL_IN : SQL_NOT_IN);
-					stringBuffer.append(OPEN_BRACKET);
+		final int nonVoidIdentifiersSize = nonVoidIdentifiers.size();
+		for (final Identifier id : nonVoidIdentifiers) {
+			sql.append(DatabaseIdentifier.toSQLString(id));
+			if (++i < nonVoidIdentifiersSize) {
+				if (i % MAXIMUM_EXPRESSION_NUMBER == 0) {
+					sql.append(CLOSE_BRACKET);
+					sql.append(inList ? SQL_OR : SQL_AND);
+					sql.append(idColumn);
+					sql.append(inList ? SQL_IN : SQL_NOT_IN);
+					sql.append(OPEN_BRACKET);
+				} else {
+					sql.append(COMMA);
 				}
 			}
 		}
-		stringBuffer.append(CLOSE_BRACKET);
-		stringBuffer.append(CLOSE_BRACKET);
+		sql.append(CLOSE_BRACKET);
+		sql.append(CLOSE_BRACKET);
 
 		if (containsVoidIdentifier) {
-			stringBuffer.append((inList ? SQL_OR : SQL_AND));
+			sql.append((inList ? SQL_OR : SQL_AND));
 			voidSql.append(voidSql);
 			voidSql.append(CLOSE_BRACKET);
 		}
 
-		return stringBuffer;
+		return sql;
 	}
 
 	/**
