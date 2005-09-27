@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.7 2005/09/14 19:01:23 arseniy Exp $
+* $Id: PermissionAttributes.java,v 1.8 2005/09/27 14:02:57 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 import java.math.BigInteger;
+import java.util.BitSet;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +18,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributes;
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesHelper;
+import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesPackage.ModuleSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -28,116 +30,102 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/09/27 14:02:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 public class PermissionAttributes extends StorableObject {
 
-	private static final long	serialVersionUID	= -7619737537568452039L;
+	// TODO generate serialVersionUID when all enum will be made 
 
-	public static enum PermissionCodenames {
-		ADMIN_ENTER,
+	public static enum Module {
+		ADMINSTRATION,
+		SCHEME;
 		
-		ADMIN_ADD_DOMAIN ,
-		ADMIN_ADD_GROUP ,
-		ADMIN_ADD_PROFILE ,
+		public static final Module valueOf(final int ordinal) {
+			return Module.values()[ordinal];
+		} 
 		
-		ADMIN_CHANGE_DOMAIN ,
-		ADMIN_CHANGE_COMMAND ,
-		ADMIN_CHANGE_GROUP ,
-		ADMIN_CHANGE_PROFILE ,
-		ADMIN_CHANGE_CATEGORY,
-		ADMIN_CHANGE_MCM_INFO,
-		ADMIN_CHANGE_SERVER_INFO,
-		ADMIN_CHANGE_CLIENT_INFO,
+		public static final Module valueOf(final Integer ordinal) {
+			return valueOf(ordinal.intValue());
+		}
+	}
+	
+	private interface SwitchableGroupNumber {
+		Module getModule();
+		boolean isEnable();
+	}
+	
+	/**
+	 * Administation permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Adminstration implements SwitchableGroupNumber {
+		ENTER(true),
+		CREATE_DOMAIN(true);
 		
-		ADMIN_READ_DOMAIN ,
-		ADMIN_READ_COMMAND ,
-		ADMIN_READ_GROUP ,
-		ADMIN_READ_PROFILE ,
-		ADMIN_READ_CATEGORY,
-		ADMIN_READ_USERS_INFO,
-		ADMIN_READ_MCM_INFO,
-		ADMIN_READ_SERVER_INFO,
-		ADMIN_READ_CLIENT_INFO,
+		private final boolean	enable;
+
+		private Adminstration(final boolean enable) {
+			this.enable = enable;			
+		}	
 		
-		ADMIN_REMOVE_GROUP ,
-		ADMIN_REMOVE_PROFILE ,
+		public boolean isEnable() {
+			return this.enable;
+		}
 		
-		CONFIG_ENTER,
+		public final Module getModule() {
+			return Module.ADMINSTRATION;
+		}
+	}
+	
+	/**
+	 * Scheme permission enum
+	 * 
+	 *  <p><b>ОХНУНГ !!! Стасег и иво прадалжатили, Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Scheme implements SwitchableGroupNumber {
+		ENTER(true),
+		CREATE_AND_EDIT(true),
+		SAVING(true);
 		
-		CONFIG_CHANGE_COMPONENTS,
-		CONFIG_CHANGE_SCHEMES,
-		CONFIG_CHANGE_TOPOLOGY,
-		CONFIG_CHANGE_CATALOG_TS,
-		CONFIG_CHANGE_CATALOG_SM,
+		private final boolean	enable;
 		
-		CONFIG_READ_SCHEMES,
-		CONFIG_READ_TOPOLOGY,
-		CONFIG_READ_CATALOG_TS,		
-		CONFIG_READ_CATALOG_SM,
+		private Scheme(final boolean enable) {
+			this.enable = enable;			
+		}			
 		
-		OPTIMIZE_ENTER,
+		public boolean isEnable() {
+			return this.enable;
+		}
 		
-		OPTIMIZE_OPEN_MAP,
-		OPTIMIZE_OPEN_SCHEME,
-		OPTIMIZE_SET_OPTIONS,
-		OPTIMIZE_START,
-		OPTIMIZE_ABORT,
-		OPTIMIZE_SAVE_RESULTS,
-		OPTIMIZE_SAVE_OPTIONS,
+		public final Module getModule() {
+			return Module.SCHEME;
+		}
+	}
+	
+	public static enum PermissionCodename {
+		ADMINSTRATION_ENTER(Adminstration.ENTER),
+		ADMINSTRATION_CREATE_DOMAIN(Adminstration.CREATE_DOMAIN),
 		
-		MODELING_ENTER,
+		SCHEME_ENTER(Scheme.ENTER),
+		SCHEME_CREATE_AND_EDIT(Scheme.CREATE_AND_EDIT),
+		SCHEME_SAVING(Scheme.SAVING);
 		
-		MODELING_OPEN_MODELING_LINE_SCHEME,
-		MODELING_OPEN_MODELING_LINE_MAP,
-		MODELING_PERFORM,
-		MODELING_SET_OPTIONS,
-		MODELING_SAVE_REFLECTOGRAM_MODEL,
-		
-		SCHEDULER_ENTER,
-		SCHEDULER_ADD_ONETIME_TEST ,
-		SCHEDULER_ADD_PERIODIAL_TEST ,
-		SCHEDULER_ADD_GROUP_TEST ,
-		SCHEDULER_REFRESH_TESTS ,
-		SCHEDULER_SAVE_TESTS,
-		
-		ANALYSIS_ENTER,
-		EXTEND_ANALYSIS_ENTER,
-		EVALUATION_ENTER,
-		ANALYSIS_OPEN_REFLECTOGRAM_FILE,
-		ANALYSIS_OPEN_REFLECTOGRAM_FROM_DB,
-		ANALYSIS_PERFORM,
-		ANALYSIS_SAVE_REFLECTOGRAM_FILE,
-		ANALYSIS_SAVE_REFLECTOGRAM_TO_DB,
-		
-		
-		SURVEY_ENTER,
-		SURVEY_VIEW_OPERATIVAL_INFO,
-		SURVEY_VIEW_CHANGES_ARCHIVE,
-		SURVEY_QUICK_TASK_SETTING,
-		SURVEY_VIEW_REFLECTOGRAM,
-		SURVEY_VIEW_ALARM_SIGNALS,
-		SURVEY_SIGNAL_CONFIRMING,
-		SURVEY_DELETE_ALARM_SIGNAL,
-		
-		PROGNOSTICATION_ENTER,
-		PROGNOSTICATION_CALCULATE_REFLECTOGRAM,
-		PROGNOSTICATION_ACQUIRE_DATA,
-		PROGNOSTICATION_SAVE_REFLECTOGRAM;
-		
+		private final Enum	e;		
 
 		private static final String KEY_ROOT = "PermissionAttributes.Description.";
 		
 		private String codename;
-		
-		
-		private PermissionCodenames() {
+
+		private PermissionCodename(final SwitchableGroupNumber e) {
+			this.e = (Enum) e;
 			// generate codename as javaNamingStyle from name
 			final String name = this.name();
 			final StringBuffer buffer = new StringBuffer();
@@ -160,13 +148,27 @@ public class PermissionAttributes extends StorableObject {
 		public final String getCodename() {
 			return this.codename;
 		}
+		
+		public final int getOrderInGroup() {
+			return this.e.ordinal();
+		}
+		
+		public final Module getModule() {
+			return ((SwitchableGroupNumber)this.e).getModule();
+		}
+		
+		public boolean isEnable() {
+			return ((SwitchableGroupNumber)this.e).isEnable();
+		}
 	}
 	
 	private Identifier userId;
 	
 	private Identifier domainId;
 	
-	private BigInteger permissionMask;
+	private Module module;
+	
+	private BitSet permissions;
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -188,7 +190,8 @@ public class PermissionAttributes extends StorableObject {
 			final StorableObjectVersion version,
 			final Identifier domainId,
 			final Identifier userId,
-			final BigInteger permissionMask) {
+			final Module module,
+			final BigInteger permissions) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -197,7 +200,8 @@ public class PermissionAttributes extends StorableObject {
 				version);
 		this.domainId = domainId;
 		this.userId = userId;
-		this.permissionMask = permissionMask;
+		this.module = module;
+		this.setPermissions0(permissions);
 	}
 
 	/**
@@ -209,7 +213,8 @@ public class PermissionAttributes extends StorableObject {
 		super.fromTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);
 		this.userId = new Identifier(pat.userId);
-		this.permissionMask = new BigInteger(pat.permissionMask);
+		this.module = Module.valueOf(pat.moduleSort.value());
+		this.setPermissionsByteArray0(pat.permissionMask);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -229,7 +234,8 @@ public class PermissionAttributes extends StorableObject {
 				super.version.longValue(),
 				this.domainId.getTransferable(),
 				this.userId.getTransferable(),
-				this.permissionMask.toByteArray());
+				ModuleSort.from_int(this.module.ordinal()),
+				this.getPermissionByteArray0());
 	}	
 
 	@Override
@@ -237,7 +243,7 @@ public class PermissionAttributes extends StorableObject {
 		return super.isValid()
 				&& this.domainId != null && !this.domainId.isVoid()
 				&& this.userId != null && !this.userId.isVoid() 
-				&& this.permissionMask != null;
+				&& this.permissions != null;
 	}
 
 	/**
@@ -245,14 +251,15 @@ public class PermissionAttributes extends StorableObject {
 	 * @param creatorId
 	 * @param domainId
 	 * @param userId
-	 * @param permissionMask
+	 * @param permissions
 	 * @return new instance for client
 	 * @throws CreateObjectException
 	 */
 	public static PermissionAttributes createInstance(final Identifier creatorId,
 	                                                  final Identifier domainId,
 	                                                  final Identifier userId,
-	                                                  final BigInteger permissionMask) 
+	                                                  final Module module,
+	                                                  final BigInteger permissions) 
 	throws CreateObjectException {
 		try {
 			final PermissionAttributes permissionAttributes = 
@@ -262,7 +269,8 @@ public class PermissionAttributes extends StorableObject {
 					StorableObjectVersion.createInitial(),
 					domainId,
 					userId,
-					permissionMask);
+					module,
+					permissions);
 
 			assert permissionAttributes.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -287,11 +295,13 @@ public class PermissionAttributes extends StorableObject {
 			final StorableObjectVersion version,
 			final Identifier domainId,
 			final Identifier userId,
-            final BigInteger permissionMask) {
+			final Module module,
+            final BigInteger permissions) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.domainId = domainId;
 		this.userId = userId;
-		this.permissionMask = permissionMask;
+		this.module = module;
+		this.setPermissions0(permissions);
 	}
 	
 	/**
@@ -311,19 +321,95 @@ public class PermissionAttributes extends StorableObject {
 		return dependencies;
 	}
 	
-	public final void setPermissionEnable(final PermissionCodenames codename,
+	/**
+	 * @param permissionCode permission codename
+	 * @param enable
+	 * 
+	 * @throws IllegalArgumentException if permission disabled 
+	 * or permission for other module code
+	 */
+	public final void setPermissionEnable(final PermissionCodename permissionCode,
 	                                      final boolean enable) {
-		final int bit = codename.ordinal();
-		if (enable) {
-			this.permissionMask = this.permissionMask.setBit(bit);
-		} else {
-			this.permissionMask = this.permissionMask.clearBit(bit);
+		if (!permissionCode.isEnable()) {
+			throw new IllegalArgumentException("PermissionCode " + permissionCode.name() + " disabled.");
 		}
+		
+		if (this.module != permissionCode.getModule()) {
+			throw new IllegalArgumentException("This Permission doen't support " + permissionCode.name());
+		}
+		assert Log.debugMessage("Permissions.setPermissionEnable | " 
+				+ (enable ? "en" : "dis") + "able " 
+				+ permissionCode.getOrderInGroup() 
+				+ " bit in "
+				+ this.module + " group" ,
+			Log.DEBUGLEVEL10);
+		this.permissions.set(permissionCode.getOrderInGroup(), enable);
+	}
+	
+	/**
+	 * @param permissionCode
+	 * @return true if permission is enabled for permissioncode 
+	 * 
+	 * @throws IllegalArgumentException if permission disabled 
+	 * or permission for other module code
+	 */
+	public final boolean isPermissionEnable(final PermissionCodename permissionCode) {
+		if (!permissionCode.isEnable()) {
+			throw new IllegalArgumentException("PermissionCode " + permissionCode.name() + " disabled.");
+		}
+		
+		if (this.module != permissionCode.getModule()) {
+			throw new IllegalArgumentException("This Permission doen't support " + permissionCode.name());
+		}
+		
+		return this.permissions.get(permissionCode.getOrderInGroup());
+	}
+	
+	
+	/**
+	 * @return permission digital form 
+	 */
+	public final BigInteger getPermissions(){
+		return new BigInteger(this.getPermissionByteArray0());
+	}
+
+	/**
+	 * @return permission byte array digital form
+	 */
+	final byte[] getPermissionByteArray0() {
+		final byte[] bytes = new byte[this.permissions.length()/8+1];
+		for (int i=0; i<this.permissions.length(); i++) {
+		    if (this.permissions.get(i)) {
+		        bytes[bytes.length-i/8-1] |= 1<<(i%8);
+		    }
+		}
+		return bytes;
+	}
+	
+	/**
+	 * set permission from permission digital form
+	 * @param permissions
+	 */
+	public final void setPermissions(final BigInteger permissions) {
+		this.setPermissions0(permissions);
 		super.markAsChanged();
 	}
 	
-	public final boolean isPermissionEnable(final PermissionCodenames codename) {
-		return this.permissionMask.testBit(codename.ordinal());
+	final void setPermissions0(final BigInteger permissions) {
+		this.setPermissionsByteArray0(permissions.toByteArray());
+	}
+
+	/**
+	 * set permission from permission byte array digital form
+	 * @param bytes permission byte array digital form
+	 */
+	final void setPermissionsByteArray0(final byte[] bytes) {
+		this.permissions.clear();
+		for (int i=0; i<bytes.length*8; i++) {
+		    if ((bytes[bytes.length-i/8-1]&(1<<(i%8))) > 0) {
+		        this.permissions.set(i);
+		    }
+		}
 	}
 	
 	public final Identifier getDomainId() {
@@ -344,23 +430,8 @@ public class PermissionAttributes extends StorableObject {
 		super.markAsChanged();
 	}
 	
-	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method. </b>
-	 * </p>
-	 */
-	final BigInteger getPermissionMask() {
-		return this.permissionMask;
-	}
-	
-	/**
-	 * <p>
-	 * <b>Clients must never explicitly call this method. </b>
-	 * </p>
-	 */
-	final void setPermissionMask(final BigInteger permissionMask) {
-		this.permissionMask = permissionMask;
-		super.markAsChanged();
+	public final Module getModule() {
+		return this.module;
 	}
 	
 }
