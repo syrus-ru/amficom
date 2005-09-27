@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.51 2005/09/27 12:44:44 max Exp $
+ * $Id: MapDatabase.java,v 1.52 2005/09/27 12:46:21 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/09/27 12:44:44 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/27 12:46:21 $
  * @author $Author: max $
  * @module map
  */
@@ -312,6 +312,10 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			final Identifier mapId = identifiable.getId();
 			try {
 				final Map map = StorableObjectPool.getStorableObject(mapId, true);
+				if(map == null) {
+					Log.errorMessage(this.getEntityName() + "Database.delete" + "Couldn't found map " + mapId);
+					continue;
+				}
 				mapIds.put(mapId, map);
 			} catch (ApplicationException ae) {
 				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
