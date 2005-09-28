@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPermissionAttributesImpl.java,v 1.4 2005/09/27 14:03:41 bob Exp $
+ * $Id: IdlPermissionAttributesImpl.java,v 1.5 2005/09/28 09:20:04 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.administration.corba;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
-import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesPackage.ModuleSort;
+import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesPackage.IdlModule;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/09/27 14:03:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/28 09:20:04 $
  * @module administration
  */
 final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
@@ -38,7 +38,7 @@ final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
 			final long version,
 			final IdlIdentifier domainId,
 			final IdlIdentifier userId,
-			final ModuleSort moduleSort,  
+			final IdlModule _module,  
 			final byte[] permissionMask) {
 		this.id = id;
 		this.created = created;
@@ -48,7 +48,7 @@ final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
 		this.version = version;
 		this.domainId = domainId;
 		this.userId = userId;
-		this.moduleSort = moduleSort;
+		this._module = _module;
 		this.permissionMask = permissionMask;
 	}
 
