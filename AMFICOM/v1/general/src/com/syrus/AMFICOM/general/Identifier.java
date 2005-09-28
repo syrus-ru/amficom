@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.79 2005/09/27 14:25:04 arseniy Exp $
+ * $Id: Identifier.java,v 1.80 2005/09/28 08:18:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.79 $, $Date: 2005/09/27 14:25:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/09/28 08:18:01 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -247,7 +247,6 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	/**
 	 * Creates Map<Short entityCode, Set<Identifier> ids>
 	 * @param identifiables
-	 * @return
 	 */
 	public static Map<Short, Set<Identifier>> createEntityIdsMap(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
