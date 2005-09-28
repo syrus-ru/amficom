@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedPropertyTable.java,v 1.13 2005/09/28 09:07:24 bob Exp $
+* $Id: WrapperedPropertyTable.java,v 1.14 2005/09/28 10:09:20 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,11 +27,10 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/28 09:07:24 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/28 10:09:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -85,8 +84,6 @@ public class WrapperedPropertyTable<T> extends ATable {
 	}
 
 	public void updateModel() {
-		assert Log.debugMessage("WrapperedPropertyTable.updateModel | ",
-			Log.DEBUGLEVEL09);
 		final WrapperedPropertyTableModel<T> model = this.getModel();
 		for (int mRowIndex = 1; mRowIndex < model.getRowCount(); mRowIndex++) {
 			final Object obj = model.wrapper.getPropertyValue(model.keys[mRowIndex]);
@@ -137,9 +134,6 @@ public class WrapperedPropertyTable<T> extends ATable {
 	}
 
 	private void initialization() {
-		assert Log.debugMessage("WrapperedPropertyTable.initialization | " + this.getModel().getRowCount() + "x" + this.getModel().getColumnCount(),
-			Log.DEBUGLEVEL09);
-
 		this.cellEditors = 
 			new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
 		this.cellRenderers = 
@@ -164,9 +158,6 @@ public class WrapperedPropertyTable<T> extends ATable {
 	@Override
 	public void tableChanged(TableModelEvent e) {		
 		super.tableChanged(e);
-		assert Log.debugMessage("WrapperedPropertyTable.tableChanged | " + this.getModel() + " > " 
-				+ this.getModel().getRowCount() + "x" + this.getModel().getColumnCount(),
-			Log.DEBUGLEVEL09);
 		if (this.cellRenderers != null && 
 				(this.getModel().getRowCount() > this.cellRenderers.length
 					|| (this.cellRenderers.length > 0 && this.getModel().getColumnCount() > this.cellRenderers[0].length))) {
