@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.21 2005/09/25 17:47:53 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.22 2005/09/28 06:42:44 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/25 17:47:53 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/28 06:42:44 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -391,13 +391,11 @@ public class MapTreeModel extends AbstractChildrenFactory {
 			} else if(this.netMapViewer != null) {
 				Double visibleBounds = this.netMapViewer.getVisibleBounds();
 				LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+				MapViewController mapViewController = logicalNetLayer.getMapViewController();
 				Set<SiteNode> visibleSiteNodes = new HashSet<SiteNode>();
 				for(Iterator iter = siteNodes.iterator(); iter.hasNext();) {
 					SiteNode siteNode = (SiteNode) iter.next();
-					MapElementController controller = logicalNetLayer
-							.getMapViewController()
-								.getController(siteNode);
-					if(controller.isElementVisible(siteNode, visibleBounds)) {
+					if(mapViewController.isElementVisible(siteNode, visibleBounds)) {
 						visibleSiteNodes.add(siteNode);
 					}
 				}
