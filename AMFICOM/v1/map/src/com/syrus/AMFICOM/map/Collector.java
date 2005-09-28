@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.88 2005/09/25 15:50:05 krupenn Exp $
+ * $Id: Collector.java,v 1.89 2005/09/28 14:54:14 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch134;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -55,7 +54,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.88 $, $Date: 2005/09/25 15:50:05 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/28 14:54:14 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -461,26 +460,9 @@ public final class Collector extends StorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
-	@Crutch134(notes = "Remove subclassing here.")
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE) {
-				private static final long serialVersionUID = -2741783821486426615L;
-
-				@Override
-				protected void ensureCacheBuilt(final boolean usePool)
-				throws ApplicationException {
-					if (!this.cacheBuilt || usePool) {
-						if (this.containees == null) {
-							this.containees = new HashSet<Characteristic>();
-						} else {
-							this.containees.clear();
-						}
-						this.containees.addAll(StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false));
-						this.cacheBuilt = true;
-					}
-				}
-			};
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
 		return this.characteristicContainerWrappee;
 	}
