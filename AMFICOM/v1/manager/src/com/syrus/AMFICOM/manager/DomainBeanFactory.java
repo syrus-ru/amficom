@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.15 2005/09/12 12:06:26 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.16 2005/09/28 14:04:22 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/28 14:04:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -32,7 +32,7 @@ public class DomainBeanFactory extends TabledBeanFactory {
 		super("Entity.Domain", 
 			"Entity.Domain", 
 			"com/syrus/AMFICOM/manager/resources/icons/domain.gif", 
-			"com/syrus/AMFICOM/manager/resources/domain.png");
+			"com/syrus/AMFICOM/manager/resources/domain2.png");
 		super.graphText = graphText;
 	}
 	
@@ -77,8 +77,8 @@ public class DomainBeanFactory extends TabledBeanFactory {
 		if (this.validator == null) {
 			this.validator = new Validator() {
 				
-				public boolean isValid(	AbstractBean sourceBean,
-										AbstractBean targetBean) {
+				public boolean isValid(	final AbstractBean sourceBean,
+				                       	final AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
 						(sourceBean.getCodeName().startsWith(ObjectEntities.DOMAIN) ||
@@ -91,7 +91,7 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	}
 	
 	@Override
-	public String getCodename() {
+	public final String getCodename() {
 		return ObjectEntities.DOMAIN;
 	}
 }
