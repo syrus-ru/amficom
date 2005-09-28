@@ -65,7 +65,7 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.cableLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_CABLE));
 		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
 		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
+		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
