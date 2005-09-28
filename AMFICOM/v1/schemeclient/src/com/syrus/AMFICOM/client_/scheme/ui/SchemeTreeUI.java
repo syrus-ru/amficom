@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.19 2005/09/27 06:50:45 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.20 2005/09/28 07:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/09/27 06:50:45 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/28 07:31:39 $
  * @module schemeclient
  */
 
@@ -142,17 +142,18 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 								if (protos.isEmpty()) {
 									LinkedIdsCondition condition2 = new LinkedIdsCondition(eqt.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
-									Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
-									if (schemeElements.isEmpty()) {
+									//TODO condition
+//									Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+//									if (schemeElements.isEmpty()) {
 										StorableObjectPool.delete(eqt.getId());
 										StorableObjectPool.flush(eqt, LoginManager.getUserId(), false);
-										
-										TreePath parentPath = selectedPath.getParentPath();
-										SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-										updateRecursively((Item)parentPath.getLastPathComponent());
-									} else {
-										Log.debugMessage("Can not delete EquipmetType as there are SchemeElements with such type", Level.WARNING);
-									}
+//										
+//										TreePath parentPath = selectedPath.getParentPath();
+//										SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
+//										updateRecursively((Item)parentPath.getLastPathComponent());
+//									} else {
+//										Log.debugMessage("Can not delete EquipmetType as there are SchemeElements with such type", Level.WARNING);
+//									}
 								} else {
 									Log.debugMessage("Can not delete EquipmetType as there are PropoElements with such type", Level.WARNING);
 								}
@@ -203,19 +204,20 @@ public class SchemeTreeUI extends IconedTreeUI {
 							}
 						} else if (object instanceof PortType) {
 							PortType type = (PortType)object;
+//						TODO condition
 							try {
-								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMEPORT_CODE);
-								Set<SchemePort> ports = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-								if (ports.isEmpty()) {
+//								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMEPORT_CODE);
+//								Set<SchemePort> ports = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+//								if (ports.isEmpty()) {
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
-									
-									TreePath parentPath = selectedPath.getParentPath();
-									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-									updateRecursively((Item)parentPath.getLastPathComponent());
-								} else {
-									Log.debugMessage("Can not delete PortType as there are SchemePorts with such type", Level.WARNING);
-								}
+//									
+//									TreePath parentPath = selectedPath.getParentPath();
+//									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
+//									updateRecursively((Item)parentPath.getLastPathComponent());
+//								} else {
+//									Log.debugMessage("Can not delete PortType as there are SchemePorts with such type", Level.WARNING);
+//								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}

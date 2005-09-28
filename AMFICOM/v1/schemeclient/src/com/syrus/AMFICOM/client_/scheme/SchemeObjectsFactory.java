@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.36 2005/09/27 06:50:45 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.37 2005/09/28 07:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2005/09/27 06:50:45 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/28 07:31:39 $
  * @module schemeclient
  */
 
@@ -345,7 +345,7 @@ public class SchemeObjectsFactory {
 	}
 
 	public static SchemeDevice createSchemeDevice(String name) throws CreateObjectException {
-		SchemeDevice schemeDevice = SchemeDevice.createInstance(LoginManager.getUserId(), name);
+		SchemeDevice schemeDevice = SchemeDevice.createInstance(LoginManager.getUserId(), name, SchemeProtoElement.createInstance(LoginManager.getUserId(), name));
 		return schemeDevice;
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.34 2005/09/20 10:04:34 stas Exp $
+ * $Id: SchemeActions.java,v 1.35 2005/09/28 07:31:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2005/09/20 10:04:34 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/28 07:31:39 $
  * @module schemeclient
  */
 
@@ -759,12 +759,12 @@ public class SchemeActions {
 
 		SchemePort sp = port.getSchemePort();
 		if (sp == null) {
-			Log.debugMessage("GraphActions.connectSchemeLink() port not found " + port.getSchemePortId(), Level.WARNING); //$NON-NLS-1$
+			Log.debugMessage("SchemeActions.connectSchemeLink() port not found " + port.getSchemePortId(), Level.WARNING); //$NON-NLS-1$
 			return false;
 		}
 		SchemeLink sl = link.getSchemeLink();
 		if (sl == null) {
-			Log.debugMessage("GraphActions.connectSchemeLink() link not found " + link.getSchemeLinkId(), Level.WARNING); //$NON-NLS-1$
+			Log.debugMessage("SchemeActions.connectSchemeLink() link not found " + link.getSchemeLinkId(), Level.WARNING); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -889,7 +889,7 @@ public class SchemeActions {
 				thread.setTargetSchemePort(sport);
 			}
 		}
-		GraphActions.setObjectBackColor(graph, sp, determinePortColor(sp, sl));
+		GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
 		
 		return true;
 	}

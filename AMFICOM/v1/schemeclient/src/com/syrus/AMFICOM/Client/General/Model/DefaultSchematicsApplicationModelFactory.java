@@ -32,7 +32,7 @@ public class DefaultSchematicsApplicationModelFactory
 		aModel.setVisible("menuSchemeLoad", false);
 		aModel.setVisible("menuSchemeSaveAs", false);
 		
-		aModel.setVisible("menuSchemeExport", false);
+//		aModel.setVisible("menuSchemeExport", false);
 						
 		return aModel;
 	}

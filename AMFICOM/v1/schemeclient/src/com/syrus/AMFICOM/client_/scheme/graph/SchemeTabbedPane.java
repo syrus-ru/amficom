@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.24 2005/09/26 14:13:46 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.25 2005/09/28 07:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/09/26 14:13:46 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/28 07:31:39 $
  * @module schemeclient
  */
 
@@ -284,7 +284,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 								LangModelScheme.getString("Message.error.schemeelement_insert_itself"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
-						return;	
+						return;
 					}
 
 					SchemeResource res = panel1.getSchemeResource();

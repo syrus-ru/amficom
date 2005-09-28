@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.22 2005/09/26 14:13:46 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.23 2005/09/28 07:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,6 +90,14 @@ public class SchemeImportCommand extends ImportExportCommand {
 	@Override
 	public void execute() {
 		super.execute();
+		
+//		ImportUCMConverter c = new ImportUCMConverter(pane.getContext(), pane.getGraph());
+//		try {
+//			c.initMuffs();
+//		} catch (ApplicationException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		
 		String user_dir = System.getProperty(USER_DIR);
 		

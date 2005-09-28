@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.2 2005/09/27 06:50:45 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.3 2005/09/28 07:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -65,7 +66,6 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
@@ -380,15 +380,10 @@ public class ImportUCMConverter {
 	}
 
 	private void substituteSchemeElement(Map<Identifier, Identifier>clonedIds, SchemeElement oldSE, SchemeElement newSE) throws ApplicationException {
-		for (SchemeDevice device: oldSE.getSchemeDevices(false)) {
-			device.setParentSchemeElement(newSE, false);
-		}
-		for (SchemeElement element: oldSE.getSchemeElements(false)) {
-			element.setParentSchemeElement(newSE, false);
-		}
-		for (SchemeLink link: oldSE.getSchemeLinks(false)) {
-			link.setParentSchemeElement(newSE, false);
-		}
+		newSE.setSchemeDevices(oldSE.getSchemeDevices(false), false);
+		newSE.setSchemeElements(oldSE.getSchemeElements(false), false);
+		newSE.setSchemeLinks(oldSE.getSchemeLinks(false), false);
+
 		for (Identifier id : clonedIds.keySet()) {
 			Identifier value = clonedIds.get(id);
 			if (id.equals(oldSE.getId())) {
@@ -487,7 +482,7 @@ public class ImportUCMConverter {
 		Set<SchemeProtoElement> muffs = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 		if (muffs.size() == 0) {
 			Log.debugMessage("No muffs found", Level.WARNING);
-			return;
+			throw new CreateObjectException("No muffs found");
 		}
 
 		// put <number of ports, muff>
@@ -499,6 +494,10 @@ public class ImportUCMConverter {
 					this.straightMuffs.put(Integer.valueOf(muff.getSchemePortsRecursively().size() / 2), muff);
 				}
 			}
+		}
+		if (this.straightMuffs.size() == 0) {
+			Log.debugMessage("No straight muffs found", Level.WARNING);
+			throw new CreateObjectException("No straight muffs found");
 		}
 	}
 	

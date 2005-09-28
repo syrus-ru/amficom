@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.1 2005/09/14 10:32:34 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.2 2005/09/28 07:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.util.Set;
+
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -15,12 +17,15 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 public class SchemeImportCommitCommand extends AbstractCommand {
@@ -33,8 +38,6 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		try {
-			LocalXmlIdentifierPool.flush();
-			
 			Identifier userId = LoginManager.getUserId();
 			StorableObjectPool.flush(ObjectEntities.EQUIPMENT_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.PORT_CODE, userId, false);
@@ -47,8 +50,24 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			StorableObjectPool.flush(ObjectEntities.CABLETHREAD_TYPE_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, userId, false);
 			
-			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOGROUP_CODE, userId, false);
-			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOELEMENT_CODE, userId, false);
+			LinkedIdsCondition condition = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, 
+					ObjectEntities.SCHEMEPROTOGROUP_CODE);
+			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition, false);
+
+			for (SchemeProtoGroup group : groups) {
+				Set<Identifiable> ids = group.getReverseDependencies();
+				StorableObjectPool.flush(ids, userId, false);
+			}
+			LocalXmlIdentifierPool.flush();
+						
+//			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOGROUP_CODE, userId, false);
+//			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOELEMENT_CODE, userId, false);
+//			StorableObjectPool.flush(ObjectEntities.SCHEMEDEVICE_CODE, userId, false);
+//			StorableObjectPool.flush(ObjectEntities.SCHEMEPORT_CODE, userId, false);
+//			StorableObjectPool.flush(ObjectEntities.SCHEMECABLEPORT_CODE, userId, false);
+//			StorableObjectPool.flush(ObjectEntities.SCHEMELINK_CODE, userId, false);
+			
+			
 			
 //			StorableObjectPool.flush(ObjectEntities.SCHEME_CODE, userId, false);
 //			StorableObjectPool.flush(ObjectEntities.SCHEMEELEMENT_CODE, userId, false);
