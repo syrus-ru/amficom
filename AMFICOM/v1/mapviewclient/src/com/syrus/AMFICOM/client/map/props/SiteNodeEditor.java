@@ -469,5 +469,6 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		super.commitChanges();
 	}
 }

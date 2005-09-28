@@ -606,5 +606,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		{
 			ex.printStackTrace();
 		} 
+		super.commitChanges();
 	}
 }
