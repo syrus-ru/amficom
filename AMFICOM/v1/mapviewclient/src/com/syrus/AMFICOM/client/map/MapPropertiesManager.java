@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.48 2005/09/25 16:08:01 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.49 2005/09/28 15:12:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.48 $, $Date: 2005/09/25 16:08:01 $
+ * @version $Revision: 1.49 $, $Date: 2005/09/28 15:12:46 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -359,16 +359,12 @@ public final class MapPropertiesManager
 		defaults.put(KEY_VIRTUAL_DISK_PATH, DEFAULT_VIRTUAL_DISK_PATH);		
 	}
 	
-	static
-	{
-		try
-		{
+	static {
+		try {
 			Properties properties = new Properties(defaults);
 			properties.load(new FileInputStream(iniFileName));
 			MapPropertiesManager.setFromIniFile(properties);
-		}
-		catch(java.io.IOException e)
-		{
+		} catch(java.io.IOException e) {
 			MapPropertiesManager.setDefaults();
 		}
 
@@ -437,23 +433,19 @@ public final class MapPropertiesManager
 		return dateFormat;
 	}
 	
-	public static double getZoom()
-	{
+	public static double getZoom() {
 		return lastZoom;
 	}
-	
-	public static void setZoom(double zoom)
-	{
+
+	public static void setZoom(double zoom) {
 		lastZoom = zoom;
 	}
 
-	public static DoublePoint getCenter()
-	{
+	public static DoublePoint getCenter() {
 		return new DoublePoint(lastLong, lastLat);
 	}
 
-	public static void setCenter(DoublePoint center)
-	{
+	public static void setCenter(DoublePoint center) {
 		lastLong = center.getX();
 		lastLat = center.getY();
 	}
@@ -493,8 +485,7 @@ public final class MapPropertiesManager
 	/**
 	 * Установить значения из инициализационного файла.
 	 */
-	protected static void setFromIniFile(Properties properties)
-	{
+	protected static void setFromIniFile(Properties properties) {
 		dataBasePath = properties.getProperty(KEY_DATA_BASE_PATH);
 		dataBaseView = properties.getProperty(KEY_DATA_BASE_VIEW);
 		dataBaseURL = properties.getProperty(KEY_DATA_BASE_URL);
@@ -755,32 +746,30 @@ public final class MapPropertiesManager
 	/**
 	 * установить значения по умолчанию.
 	 */
-	protected static void setDefaults()
-	{
-		dataBasePath = ""; //$NON-NLS-1$
-		dataBaseView = ""; //$NON-NLS-1$
-		dataBaseURL = ""; //$NON-NLS-1$
-		lastDirectory = "."; //$NON-NLS-1$
+	protected static void setDefaults() {
+		dataBasePath = MapEditorResourceKeys.EMPTY_STRING;
+		dataBaseView = MapEditorResourceKeys.EMPTY_STRING;
+		dataBaseURL = MapEditorResourceKeys.EMPTY_STRING;
+		lastDirectory = MapEditorResourceKeys.DOT;
 		descreteNavigation = false;
 		useTopologicalImageCache = false;
 		optimizeLinks = false;
 		moveMouseNavigating = true;
 		topoImageMaxTimeWait = 30000;
 		navigateAreaSize = 0.03;
-		viewerClass = ""; //$NON-NLS-1$
-		connectionClass = "";		 //$NON-NLS-1$
-		rendererClass = ""; //$NON-NLS-1$
+		viewerClass = MapEditorResourceKeys.EMPTY_STRING;
+		connectionClass = MapEditorResourceKeys.EMPTY_STRING;
+		rendererClass = MapEditorResourceKeys.EMPTY_STRING;
 	}
 
 	/**
 	 * Сохранить текущие настройки отображения в файл.
 	 */
-	public static void saveIniFile()
-	{
-		Log.debugMessage("method call MapPropertiesManager.saveIniFile()", Level.FINE); //$NON-NLS-1$
+	public static void saveIniFile() {
+		Log.debugMessage(
+				"method call MapPropertiesManager.saveIniFile()", Level.FINE); //$NON-NLS-1$
 
-		try
-		{
+		try {
 			Properties properties = new Properties(defaults);
 
 			properties.load(new FileInputStream(iniFileName));
@@ -819,9 +808,7 @@ public final class MapPropertiesManager
 			properties.setProperty(KEY_MOUSE_TOLERANCY, Integer.toString(mouseTolerancy));
 
 			properties.store(new FileOutputStream(iniFileName), null);
-		}
-		catch(java.io.IOException e)
-		{
+		} catch(java.io.IOException e) {
 			Log.debugMessage("Params not saved", Level.WARNING); //$NON-NLS-1$
 			Log.debugException(e, Level.WARNING);
 		}
@@ -847,59 +834,47 @@ public final class MapPropertiesManager
 	 */
 	private static Map<Identifier,Image> scaledImages = new HashMap<Identifier,Image>();
 
-	public static void setOriginalImage(Identifier imageId, Image image)
-	{
+	public static void setOriginalImage(Identifier imageId, Image image) {
 		originalImages.put(imageId, image);
 	}
 
-	public static void setScaledImageSize(Identifier imageId, int width, int height)
-	{
+	public static void setScaledImageSize(
+			Identifier imageId,
+			int width,
+			int height) {
 		Image img = MapPropertiesManager.getScaledImage(imageId);
-		if(img.getWidth(null) != width
-			|| img.getHeight(null) != height)
-		{
+		if(img.getWidth(null) != width || img.getHeight(null) != height) {
 			img = MapPropertiesManager.getImage(imageId);
-			img = img.getScaledInstance(
-				width,
-				height,
-				Image.SCALE_SMOOTH);
+			img = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
 			scaledImages.put(imageId, img);
 			MapPropertiesManager.loadImage(img);
 		}
 	}
 
-	public static Image getImage(Identifier imageId)
-	{
+	public static Image getImage(Identifier imageId) {
 		Image img = originalImages.get(imageId);
-		if(img == null)
-		{
-			try
-			{
-				AbstractImageResource ir = StorableObjectPool.getStorableObject(imageId, true);
-				if(ir instanceof FileImageResource)
-				{
-					img = Toolkit.getDefaultToolkit().createImage(((FileImageResource )ir).getFileName());
-				}
-				else
-				{
+		if(img == null) {
+			try {
+				AbstractImageResource ir = 
+					StorableObjectPool.getStorableObject(imageId, true);
+				if(ir instanceof FileImageResource) {
+					img = Toolkit.getDefaultToolkit().createImage(
+							((FileImageResource) ir).getFileName());
+				} else {
 					img = Toolkit.getDefaultToolkit().createImage(ir.getImage());
 				}
 				originalImages.put(imageId, img);
 				MapPropertiesManager.loadImage(img);
-			}
-			catch (ApplicationException e)
-			{
+			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
 		}
 		return img;
 	}
 
-	public static Image getScaledImage(Identifier imageId)
-	{
+	public static Image getScaledImage(Identifier imageId) {
 		Image img = scaledImages.get(imageId);
-		if(img == null)
-		{
+		if(img == null) {
 			img = MapPropertiesManager.getImage(imageId);
 			scaledImages.put(imageId, img);
 		}
@@ -909,328 +884,227 @@ public final class MapPropertiesManager
 	/**
 	 * обеспечивает подгрузку пиктограммы для мгновенного ее отображения.
 	 */
-    private static final void loadImage(Image image) 
-	{
-		synchronized(tracker) 
-		{
-            int id = MapPropertiesManager.getNextID();
+	private static final void loadImage(Image image) {
+		synchronized(tracker) {
+			int id = MapPropertiesManager.getNextID();
 
 			tracker.addImage(image, id);
-			try 
-			{
+			try {
 				tracker.waitForID(id, 0);
-			} 
-			catch (InterruptedException e) 
-			{
+			} catch(InterruptedException e) {
 				System.out.println("INTERRUPTED while loading Image"); //$NON-NLS-1$
 			}
 			tracker.removeImage(image, id);
 		}
-    }
+	}
 
 	/**
 	 * получить идентификатор для подгрузки пиктограммы.
 	 */
-    private static final int getNextID() 
-	{
-        synchronized(tracker) 
-		{
-            return ++mediaTrackerID;
-        }
-    }
+	private static final int getNextID() {
+		synchronized(tracker) {
+			return ++mediaTrackerID;
+		}
+	}
 
 
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 
-	public static void setTextBackground(Color _textBackground)
-	{
+	public static void setTextBackground(Color _textBackground) {
 		textBackground = _textBackground;
 	}
 
-
-	public static Color getTextBackground()
-	{
+	public static Color getTextBackground() {
 		return textBackground;
 	}
 
-
-	public static void setMetric(String _metric)
-	{
+	public static void setMetric(String _metric) {
 		metric = _metric;
 	}
 
-
-	public static String getMetric()
-	{
+	public static String getMetric() {
 		return metric;
 	}
 
-
-	public static void setThickness(int _thickness)
-	{
+	public static void setThickness(int _thickness) {
 		thickness = _thickness;
 	}
 
-
-	public static int getThickness()
-	{
+	public static int getThickness() {
 		return thickness;
 	}
 
-
-	public static void setStyle(String _style)
-	{
+	public static void setStyle(String _style) {
 		style = _style;
 	}
 
-
-	public static String getStyle()
-	{
+	public static String getStyle() {
 		return style;
 	}
 
-
-	public static void setStroke(BasicStroke _stroke)
-	{
+	public static void setStroke(BasicStroke _stroke) {
 		stroke = _stroke;
 	}
 
-
-	public static BasicStroke getStroke()
-	{
+	public static BasicStroke getStroke() {
 		return stroke;
 	}
 
-
-	public static void setColor(Color _color)
-	{
+	public static void setColor(Color _color) {
 		color = _color;
 	}
 
-
-	public static Color getColor()
-	{
+	public static Color getColor() {
 		return color;
 	}
 
-
-	public static void setAlarmedThickness(int _alarmedThickness)
-	{
+	public static void setAlarmedThickness(int _alarmedThickness) {
 		alarmedThickness = _alarmedThickness;
 	}
 
-
-	public static int getAlarmedThickness()
-	{
+	public static int getAlarmedThickness() {
 		return alarmedThickness;
 	}
 
-
-	public static void setAlarmedStyle(String _alarmedStyle)
-	{
+	public static void setAlarmedStyle(String _alarmedStyle) {
 		alarmedStyle = _alarmedStyle;
 	}
 
-
-	public static String getAlarmedStyle()
-	{
+	public static String getAlarmedStyle() {
 		return alarmedStyle;
 	}
 
-
-	public static void setAlarmedStroke(BasicStroke _alarmedStroke)
-	{
+	public static void setAlarmedStroke(BasicStroke _alarmedStroke) {
 		alarmedStroke = _alarmedStroke;
 	}
 
-
-	public static BasicStroke getAlarmedStroke()
-	{
+	public static BasicStroke getAlarmedStroke() {
 		return alarmedStroke;
 	}
 
-
-	public static void setAlarmedColor(Color _alarmedColor)
-	{
+	public static void setAlarmedColor(Color _alarmedColor) {
 		alarmedColor = _alarmedColor;
 	}
 
-
-	public static Color getAlarmedColor()
-	{
+	public static Color getAlarmedColor() {
 		return alarmedColor;
 	}
 
-
-	public static void setAlarmedAnimation(String _alarmedAnimation)
-	{
+	public static void setAlarmedAnimation(String _alarmedAnimation) {
 		alarmedAnimation = _alarmedAnimation;
 	}
 
-
-	public static String getAlarmedAnimation()
-	{
+	public static String getAlarmedAnimation() {
 		return alarmedAnimation;
 	}
 
-
-	public static void setSelectionThickness(int _selectionThickness)
-	{
+	public static void setSelectionThickness(int _selectionThickness) {
 		selectionThickness = _selectionThickness;
 	}
 
-
-	public static int getSelectionThickness()
-	{
+	public static int getSelectionThickness() {
 		return selectionThickness;
 	}
 
-
-	public static void setSelectionStyle(String _selectionStyle)
-	{
+	public static void setSelectionStyle(String _selectionStyle) {
 		selectionStyle = _selectionStyle;
 	}
 
-
-	public static String getSelectionStyle()
-	{
+	public static String getSelectionStyle() {
 		return selectionStyle;
 	}
 
-
-	public static void setSelectionStroke(BasicStroke _selectionStroke)
-	{
+	public static void setSelectionStroke(BasicStroke _selectionStroke) {
 		selectionStroke = _selectionStroke;
 	}
 
-
-	public static BasicStroke getSelectionStroke()
-	{
+	public static BasicStroke getSelectionStroke() {
 		return selectionStroke;
 	}
 
-
-	public static void setSelectionColor(Color _selectionColor)
-	{
+	public static void setSelectionColor(Color _selectionColor) {
 		selectionColor = _selectionColor;
 	}
 
-
-	public static Color getSelectionColor()
-	{
+	public static Color getSelectionColor() {
 		return selectionColor;
 	}
 
-
-	public static void setFirstSelectionColor(Color _firstSelectionColor)
-	{
+	public static void setFirstSelectionColor(Color _firstSelectionColor) {
 		firstSelectionColor = _firstSelectionColor;
 	}
 
-
-	public static Color getFirstSelectionColor()
-	{
+	public static Color getFirstSelectionColor() {
 		return firstSelectionColor;
 	}
 
-
-	public static void setSecondSelectionColor(Color _secondSelectionColor)
-	{
+	public static void setSecondSelectionColor(Color _secondSelectionColor) {
 		secondSelectionColor = _secondSelectionColor;
 	}
 
-
-	public static Color getSecondSelectionColor()
-	{
+	public static Color getSecondSelectionColor() {
 		return secondSelectionColor;
 	}
 
-
-	public static void setFont(Font _font)
-	{
+	public static void setFont(Font _font) {
 		font = _font;
 	}
 
-
-	public static Font getFont()
-	{
+	public static Font getFont() {
 		return font;
 	}
 
-
-	public static void setUnboundLinkColor(Color _unboundLinkColor)
-	{
+	public static void setUnboundLinkColor(Color _unboundLinkColor) {
 		unboundLinkColor = _unboundLinkColor;
 	}
 
-
-	public static Color getUnboundLinkColor()
-	{
+	public static Color getUnboundLinkColor() {
 		return unboundLinkColor;
 	}
 
-
-	public static void setUnboundLinkPositionColor(Color _unboundLinkPositionColor)
-	{
+	public static void setUnboundLinkPositionColor(
+			Color _unboundLinkPositionColor) {
 		unboundLinkPositionColor = _unboundLinkPositionColor;
 	}
 
-
-	public static Color getUnboundLinkPositionColor()
-	{
+	public static Color getUnboundLinkPositionColor() {
 		return unboundLinkPositionColor;
 	}
 
-
-	public static void setUnboundElementColor(Color _unboundElementColor)
-	{
+	public static void setUnboundElementColor(Color _unboundElementColor) {
 		unboundElementColor = _unboundElementColor;
 	}
 
-
-	public static Color getUnboundElementColor()
-	{
+	public static Color getUnboundElementColor() {
 		return unboundElementColor;
 	}
 
-
-	public static void setCanBindColor(Color _canBindColor)
-	{
+	public static void setCanBindColor(Color _canBindColor) {
 		canBindColor = _canBindColor;
 	}
 
-
-	public static Color getCanBindColor()
-	{
+	public static Color getCanBindColor() {
 		return canBindColor;
 	}
 
-
-	public static void setSpareLength(double _spareLength)
-	{
+	public static void setSpareLength(double _spareLength) {
 		spareLength = _spareLength;
 	}
 
-
-	public static double getSpareLength()
-	{
+	public static double getSpareLength() {
 		return spareLength;
 	}
 
-
-	public static void setDrawAlarmed(boolean _drawAlarmed)
-	{
+	public static void setDrawAlarmed(boolean _drawAlarmed) {
 		drawAlarmed = _drawAlarmed;
 	}
 
-
-	public static boolean isDrawAlarmed()
-	{
+	public static boolean isDrawAlarmed() {
 		return drawAlarmed;
 	}
 
@@ -1242,169 +1116,119 @@ public final class MapPropertiesManager
 		showAlarmIndication = _showAlarmIndication;
 	}
 
-	public static void setShowPhysicalNodes(boolean _showPhysicalNodes)
-	{
+	public static void setShowPhysicalNodes(boolean _showPhysicalNodes) {
 		showPhysicalNodes = _showPhysicalNodes;
 	}
 
-
-	public static boolean isShowPhysicalNodes()
-	{
+	public static boolean isShowPhysicalNodes() {
 		return showPhysicalNodes;
 	}
 
-
-	public static void setShowLength(boolean _showLength)
-	{
+	public static void setShowLength(boolean _showLength) {
 		showLength = _showLength;
 	}
 
-
-	public static boolean isShowLength()
-	{
+	public static boolean isShowLength() {
 		return showLength;
 	}
 
-
-	public static void setShowNodesNames(boolean _showNodesNames)
-	{
+	public static void setShowNodesNames(boolean _showNodesNames) {
 		showNodesNames = _showNodesNames;
 	}
 
-
-	public static boolean isShowNodesNames()
-	{
+	public static boolean isShowNodesNames() {
 		return showNodesNames;
 	}
 
-
-	public static void setShowLinkNames(boolean _showLinkNames)
-	{
+	public static void setShowLinkNames(boolean _showLinkNames) {
 		showLinkNames = _showLinkNames;
 	}
 
-
-	public static boolean isShowLinkNames()
-	{
+	public static boolean isShowLinkNames() {
 		return showLinkNames;
 	}
 
-
-	public static void setTextColor(Color _textColor)
-	{
+	public static void setTextColor(Color _textColor) {
 		textColor = _textColor;
 	}
 
-
-	public static Color getTextColor()
-	{
+	public static Color getTextColor() {
 		return textColor;
 	}
 
-
-	public static void setBorderThickness(int _borderThickness)
-	{
+	public static void setBorderThickness(int _borderThickness) {
 		borderThickness = _borderThickness;
 	}
 
-
-	public static int getBorderThickness()
-	{
+	public static int getBorderThickness() {
 		return borderThickness;
 	}
 
-
-	public static void setBorderColor(Color _borderColor)
-	{
+	public static void setBorderColor(Color _borderColor) {
 		borderColor = _borderColor;
 	}
 
-
-	public static Color getBorderColor()
-	{
+	public static Color getBorderColor() {
 		return borderColor;
 	}
 
-
-	public static void setUnboundThickness(int _unboundThickness)
-	{
+	public static void setUnboundThickness(int _unboundThickness) {
 		unboundThickness = _unboundThickness;
 	}
 
-
-	public static int getUnboundThickness()
-	{
+	public static int getUnboundThickness() {
 		return unboundThickness;
 	}
 
-
-	public static void setMouseTolerancy(int _mouseTolerancy)
-	{
+	public static void setMouseTolerancy(int _mouseTolerancy) {
 		mouseTolerancy = _mouseTolerancy;
 	}
 
-	public static int getMouseTolerancy()
-	{
+	public static int getMouseTolerancy() {
 		return mouseTolerancy;
 	}
 
-	public static void setDataBaseURL(String _dataBaseURL)
-	{
+	public static void setDataBaseURL(String _dataBaseURL) {
 		dataBaseURL = _dataBaseURL;
 	}
 
-	public static String getDataBaseURL()
-	{
+	public static String getDataBaseURL() {
 		return dataBaseURL;
 	}
 
-	public static void setDataBasePath(String _dataBasePath)
-	{
+	public static void setDataBasePath(String _dataBasePath) {
 		dataBasePath = _dataBasePath;
 	}
 
-	public static String getDataBasePath()
-	{
+	public static String getDataBasePath() {
 		return dataBasePath;
 	}
 
-	public static void setDataBaseView(String _dataBaseView)
-	{
+	public static void setDataBaseView(String _dataBaseView) {
 		dataBaseView = _dataBaseView;
 	}
 
-	public static String getDataBaseView()
-	{
+	public static String getDataBaseView() {
 		return dataBaseView;
 	}
 
-
-	public static void setLastDirectory(String _lastDirectory)
-	{
+	public static void setLastDirectory(String _lastDirectory) {
 		lastDirectory = _lastDirectory;
 	}
 
-
-	public static String getLastDirectory()
-	{
+	public static String getLastDirectory() {
 		return lastDirectory;
 	}
 
-
-	public static NumberFormat getDistanceFormat()
-	{
+	public static NumberFormat getDistanceFormat() {
 		return distanceFormat;
 	}
 
-
-	public static NumberFormat getCoordinatesFormat()
-	{
+	public static NumberFormat getCoordinatesFormat() {
 		return coordinatesFormat;
 	}
 
-
-	public static NumberFormat getScaleFormat()
-	{
+	public static NumberFormat getScaleFormat() {
 		return scaleFormat;
 	}
 }
