@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.20 2005/09/28 11:37:50 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.21 2005/09/28 13:23:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/09/28 11:37:50 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/28 13:23:57 $
  * @module schemeclient
  */
 
@@ -440,7 +440,12 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			if (this.schemeProtoElement.getSymbol() != null) {
 				symbol = new ImageIcon(this.schemeProtoElement.getSymbol().getImage());
 			}
-			protoEq = this.schemeProtoElement.getProtoEquipment();
+			
+			try {
+				protoEq = this.schemeProtoElement.getProtoEquipment();
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
 
 			try {
 				if (this.schemeProtoElement.getParentSchemeProtoElement() != null) {

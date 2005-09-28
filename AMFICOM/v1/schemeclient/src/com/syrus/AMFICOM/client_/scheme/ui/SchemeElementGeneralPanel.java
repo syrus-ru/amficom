@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.21 2005/09/28 11:37:50 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.22 2005/09/28 13:23:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/09/28 11:37:50 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/28 13:23:57 $
  * @module schemeclient
  */
 
@@ -824,6 +824,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					protoEq = this.schemeElement.getProtoEquipment();
 				} catch (IllegalStateException e) {
 					Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 				
 				try {
@@ -960,8 +962,12 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					}
 				}
 			} else if (eq != null) {
-				this.schemeElement.setEquipment(null);
-				StorableObjectPool.delete(eq.getId());
+				try {
+					this.schemeElement.setEquipment(null);
+					StorableObjectPool.delete(eq.getId());
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
 			}
 
 			if (this.cbKisBox.isSelected()) {

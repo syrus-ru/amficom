@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.40 2005/09/28 11:50:20 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.41 2005/09/28 13:23:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.Port;
@@ -79,7 +78,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.40 $, $Date: 2005/09/28 11:50:20 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/28 13:23:57 $
  * @module schemeclient
  */
 
@@ -154,9 +153,10 @@ public class SchemeObjectsFactory {
 	public static Equipment createEquipment(SchemeElement schemeElement) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
-		Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getProtoEquipment(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
 		
 		try {
+			Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getProtoEquipment().getId(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+			
 			for (Characteristic c : schemeElement.getProtoEquipment().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
 				cloned.setParentCharacterizable(eq, false);
@@ -185,12 +185,12 @@ public class SchemeObjectsFactory {
 			for (SchemeElement se : schemeElement.getSchemeElements(false)) {
 				createEquipment(se);
 			}
+			return eq;
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
 		} catch (CloneNotSupportedException e) {
 			throw new CreateObjectException(e);
 		}
-		return eq;
 	}
 
 	public static KIS createKis() throws CreateObjectException {
