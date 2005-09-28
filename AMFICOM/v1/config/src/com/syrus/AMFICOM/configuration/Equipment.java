@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.131 2005/09/23 11:45:45 bass Exp $
+ * $Id: Equipment.java,v 1.132 2005/09/28 10:01:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
@@ -60,18 +59,16 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/09/23 11:45:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.132 $, $Date: 2005/09/28 10:01:42 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Equipment extends DomainMember
-		implements MonitoredDomainMember, Characterizable,
-		TypedObject<EquipmentType>, XmlBeansTransferable<XmlEquipment> {
+		implements MonitoredDomainMember, Characterizable, XmlBeansTransferable<XmlEquipment> {
+	private static final long serialVersionUID = 2432748205979033898L;
 
-	private static final long serialVersionUID = -6115401698444070841L;
-
-	private EquipmentType type;
+	private Identifier protoEquipmentId;
 	private String name;
 	private String description;
 	private Identifier imageId;
@@ -97,7 +94,7 @@ public final class Equipment extends DomainMember
 			final Identifier creatorId,
 			final StorableObjectVersion version,
 			final Identifier domainId,
-			final EquipmentType type,
+			final Identifier protoEquipmentId,
 			final String name,
 			final String description,
 			final Identifier imageId,
@@ -118,7 +115,7 @@ public final class Equipment extends DomainMember
 				version,
 				domainId);
 
-		this.type = type;
+		this.protoEquipmentId = protoEquipmentId;
 		this.name = name;
 		this.description = description;
 		this.imageId = imageId;
@@ -169,7 +166,7 @@ public final class Equipment extends DomainMember
 	 */
 	public static Equipment createInstance(final Identifier creatorId,
 			final Identifier domainId,
-			final EquipmentType type,
+			final Identifier protoEquipmentId,
 			final String name,
 			final String description,
 			final Identifier imageId,
@@ -184,7 +181,7 @@ public final class Equipment extends DomainMember
 			final String inventoryNumber) throws CreateObjectException {
 		if (creatorId == null
 				|| domainId == null
-				|| type == null
+				|| protoEquipmentId == null
 				|| name == null
 				|| description == null
 				|| imageId == null
@@ -194,15 +191,16 @@ public final class Equipment extends DomainMember
 				|| hwVersion == null
 				|| swSerial == null
 				|| swVersion == null
-				|| inventoryNumber == null)
+				|| inventoryNumber == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					domainId,
-					type,
+					protoEquipmentId,
 					name,
 					description,
 					imageId,
@@ -227,15 +225,15 @@ public final class Equipment extends DomainMember
 	}
 
 	/**
+	 * Create new instance on import/export from XML
 	 * @param creatorId
 	 * @param xmlEquipment
 	 * @param importType
+	 * @return new instance
 	 * @throws CreateObjectException
 	 */
-	public static Equipment createInstance(final Identifier creatorId,
-			final XmlEquipment xmlEquipment,
-			final String importType)
-	throws CreateObjectException {
+	public static Equipment createInstance(final Identifier creatorId, final XmlEquipment xmlEquipment, final String importType)
+			throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -244,18 +242,12 @@ public final class Equipment extends DomainMember
 			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
 			Equipment equipment;
 			if (id.isVoid()) {
-				equipment = new Equipment(xmlId,
-						importType,
-						created,
-						creatorId);
+				equipment = new Equipment(xmlId, importType, created, creatorId);
 			} else {
 				equipment = StorableObjectPool.getStorableObject(id, true);
 				if (equipment == null) {
 					LocalXmlIdentifierPool.remove(xmlId, importType);
-					equipment = new Equipment(xmlId,
-							importType,
-							created,
-							creatorId);
+					equipment = new Equipment(xmlId, importType, created, creatorId);
 				}
 			}
 			equipment.fromXmlTransferable(xmlEquipment, importType);
@@ -272,10 +264,10 @@ public final class Equipment extends DomainMember
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlEquipment et = (IdlEquipment) transferable;
+		final IdlEquipment et = (IdlEquipment) transferable;
 		super.fromTransferable(et, new Identifier(et.domainId));
 
-		this.type = (EquipmentType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
+		this.protoEquipmentId = new Identifier(et.protoEquipmentId);
 
 		this.name = et.name;
 		this.description = et.description;
@@ -297,50 +289,29 @@ public final class Equipment extends DomainMember
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public void fromXmlTransferable(final XmlEquipment equipment,
-			final String importType)
-	throws ApplicationException {
+	public void fromXmlTransferable(final XmlEquipment equipment, final String importType) throws ApplicationException {
 		XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, PRE_IMPORT);
 
 		this.name = equipment.getName();
-		this.description = equipment.isSetDescription()
-				? equipment.getDescription()
-				: "";
-		this.supplier = equipment.isSetSupplier()
-				? equipment.getSupplier()
-				: "";
-		this.supplierCode = equipment.isSetSupplierCode()
-				? equipment.getSupplierCode()
-				: "";
+		this.description = equipment.isSetDescription() ? equipment.getDescription() : "";
+		this.supplier = equipment.isSetSupplier() ? equipment.getSupplier() : "";
+		this.supplierCode = equipment.isSetSupplierCode() ? equipment.getSupplierCode() : "";
 		this.latitude = equipment.getLatitude();
 		this.longitude = equipment.getLongitude();
-		this.hwSerial = equipment.isSetHwSerial()
-				? equipment.getHwSerial()
-				: "";
-		this.hwVersion = equipment.isSetHwVersion()
-				? equipment.getHwVersion()
-				: "";
-		this.swSerial = equipment.isSetSwSerial()
-				? equipment.getSwSerial()
-				: "";
-		this.swVersion = equipment.isSetSwVersion()
-				? equipment.getSwVersion()
-				: "";
-		this.inventoryNumber = equipment.isSetInventoryNumber()
-				? equipment.getInventoryNumber()
-				: "";
+		this.hwSerial = equipment.isSetHwSerial() ? equipment.getHwSerial() : "";
+		this.hwVersion = equipment.isSetHwVersion() ? equipment.getHwVersion() : "";
+		this.swSerial = equipment.isSetSwSerial() ? equipment.getSwSerial() : "";
+		this.swVersion = equipment.isSetSwVersion() ? equipment.getSwVersion() : "";
+		this.inventoryNumber = equipment.isSetInventoryNumber() ? equipment.getInventoryNumber() : "";
 		if (equipment.isSetDomainId()) {
 			super.setDomainId0(Identifier.fromXmlTransferable(equipment.getDomainId(), importType, MODE_THROW_IF_ABSENT));
 		} else {
-			throw new UpdateObjectException("Equipment.fromXmlTransferable() | "
-					+ XML_BEAN_NOT_COMPLETE);
+			throw new UpdateObjectException("Equipment.fromXmlTransferable() | " + XML_BEAN_NOT_COMPLETE);
 		}
-		this.type = StorableObjectPool.getStorableObject(
-				Identifier.fromXmlTransferable(equipment.getEquipmentTypeId(), importType, MODE_THROW_IF_ABSENT),
-				true);
-		this.imageId = equipment.isSetSymbolId()
-				? Identifier.fromXmlTransferable(equipment.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
+		this.protoEquipmentId = Identifier.fromXmlTransferable(equipment.getProtoEquipmentId(), importType, MODE_THROW_IF_ABSENT);
+		this.imageId = equipment.isSetSymbolId() ? Identifier.fromXmlTransferable(equipment.getSymbolId(),
+				importType,
+				MODE_THROW_IF_ABSENT) : VOID_IDENTIFIER;
 		if (equipment.isSetCharacteristics()) {
 			for (final XmlCharacteristic characteristic : equipment.getCharacteristics().getCharacteristicArray()) {
 				Characteristic.createInstance(super.creatorId, characteristic, importType);
@@ -364,7 +335,7 @@ public final class Equipment extends DomainMember
 				super.modifierId.getTransferable(),
 				super.version.longValue(),
 				this.getDomainId().getTransferable(),
-				this.type.getId().getTransferable(),
+				this.protoEquipmentId.getTransferable(),
 				this.name != null ? this.name : "",
 				this.description != null ? this.description : "",
 				this.supplier != null ? this.supplier : "",
@@ -385,10 +356,7 @@ public final class Equipment extends DomainMember
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public void getXmlTransferable(
-			final XmlEquipment equipment,
-			final String importType)
-	throws ApplicationException {
+	public void getXmlTransferable(final XmlEquipment equipment, final String importType) throws ApplicationException {
 		super.id.getXmlTransferable(equipment.addNewId(), importType);
 		equipment.setName(this.name);
 		if (equipment.isSetDescription()) {
@@ -448,7 +416,7 @@ public final class Equipment extends DomainMember
 		if (!domainId.isVoid()) {
 			domainId.getXmlTransferable(equipment.addNewDomainId(), importType);
 		}
-		this.type.getId().getXmlTransferable(equipment.addNewEquipmentTypeId(), importType);
+		this.protoEquipmentId.getXmlTransferable(equipment.addNewProtoEquipmentId(), importType);
 		if (equipment.isSetSymbolId()) {
 			equipment.unsetSymbolId();
 		}
@@ -468,8 +436,8 @@ public final class Equipment extends DomainMember
 		XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, EXPORT);
 	}
 
-	public EquipmentType getType() {
-		return this.type;
+	public Identifier getProtoEquipmentId() {
+		return this.protoEquipmentId;
 	}
 
 	public String getName() {
@@ -495,7 +463,7 @@ public final class Equipment extends DomainMember
 			final Identifier modifierId,
 			final StorableObjectVersion version,
 			final Identifier domainId,
-			final EquipmentType type,
+			final Identifier protoEquipmentId,
 			final String name,
 			final String description,
 			final Identifier imageId,
@@ -509,7 +477,7 @@ public final class Equipment extends DomainMember
 			final String swVersion,
 			final String inventoryNumber) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
-		this.type = type;
+		this.protoEquipmentId = protoEquipmentId;
 		this.name = name;
 		this.description = description;
 		this.imageId = imageId;
@@ -529,7 +497,7 @@ public final class Equipment extends DomainMember
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
-		dependencies.add(this.type);
+		dependencies.add(this.protoEquipmentId);
 		return dependencies;
 	}
 
@@ -623,8 +591,8 @@ public final class Equipment extends DomainMember
 	/**
 	 * @param type The type to set.
 	 */
-	public void setType(final EquipmentType type) {
-		this.type = type;
+	public void setProtoEquipmentId(final Identifier protoEquipmentId) {
+		this.protoEquipmentId = protoEquipmentId;
 		super.markAsChanged();
 	}
 	/**

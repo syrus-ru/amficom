@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.97 2005/09/14 18:42:06 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.98 2005/09/28 10:01:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,19 +15,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/09/14 18:42:06 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/28 10:01:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -54,7 +52,7 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ EquipmentWrapper.COLUMN_PROTO_EQUIPMENT_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ EquipmentWrapper.COLUMN_IMAGE_ID + COMMA
@@ -95,7 +93,7 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final Equipment storableObject) throws IllegalDataException {
 		final String sql = DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getProtoEquipmentId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getImageId()) + COMMA
@@ -116,7 +114,7 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getProtoEquipmentId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getImageId());
@@ -137,7 +135,7 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
-		Equipment equipment = storableObject == null
+		final Equipment equipment = (storableObject == null)
 				? new Equipment(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						null,
 						StorableObjectVersion.ILLEGAL_VERSION,
@@ -158,21 +156,13 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 				: storableObject;
 		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
-		EquipmentType equipmentType;
-		try {
-			equipmentType = (EquipmentType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					StorableObjectWrapper.COLUMN_TYPE_ID),
-					true);
-		} catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
 		equipment.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-				equipmentType,
+				DatabaseIdentifier.getIdentifier(resultSet, EquipmentWrapper.COLUMN_PROTO_EQUIPMENT_ID),
 				(name != null) ? name : "",
 				(description != null) ? description : "",
 				DatabaseIdentifier.getIdentifier(resultSet, EquipmentWrapper.COLUMN_IMAGE_ID),

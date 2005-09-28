@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.23 2005/09/14 18:42:07 arseniy Exp $
+ * $Id: EquipmentWrapper.java,v 1.24 2005/09/28 10:01:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/14 18:42:07 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/28 10:01:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -31,7 +31,8 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 	// image_id Identifier,
 	public static final String COLUMN_IMAGE_ID = "image_id";
 	// name VARCHAR2(64) NOT NULL,
-	// type_id Identifier NOT NULL,
+	// proto_equipment_id Identifier NOT NULL,
+	public static final String COLUMN_PROTO_EQUIPMENT_ID = "proto_equipment_id";
 	// supplier VARCHAR2(128)
 	public static final String COLUMN_SUPPLIER = "supplier";
 	// supplier_code VARCHAR2(128)
@@ -62,7 +63,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_DOMAIN_ID,
-				COLUMN_TYPE_ID,
+				COLUMN_PROTO_EQUIPMENT_ID,
 				COLUMN_IMAGE_ID,
 				COLUMN_LONGITUDE,
 				COLUMN_LATITUDE,
@@ -79,8 +80,9 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 	}
 
 	public static EquipmentWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new EquipmentWrapper();
+		}
 		return instance;
 	}
 
@@ -97,36 +99,50 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 	public Object getValue(final Equipment equipment, final String key) {
 		final Object value = super.getValue(equipment, key);
 		if (value == null && equipment != null) {
-			if (key.equals(COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				return equipment.getDescription();
-			if (key.equals(COLUMN_NAME))
+			}
+			if (key.equals(COLUMN_NAME)) {
 				return equipment.getName();
-			else if (key.equals(COLUMN_DOMAIN_ID)) 
+			} else if (key.equals(COLUMN_DOMAIN_ID)) {
 				return equipment.getDomainId();
-			if (key.equals(COLUMN_TYPE_ID))
-				return equipment.getType();
-			if (key.equals(COLUMN_IMAGE_ID))
+			}
+			if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
+				return equipment.getProtoEquipmentId();
+			}
+			if (key.equals(COLUMN_IMAGE_ID)) {
 				return equipment.getImageId();
-			if (key.equals(COLUMN_LONGITUDE))
+			}
+			if (key.equals(COLUMN_LONGITUDE)) {
 				return new Float(equipment.getLongitude());
-			if (key.equals(COLUMN_LATITUDE))
+			}
+			if (key.equals(COLUMN_LATITUDE)) {
 				return new Float(equipment.getLatitude());
-			if (key.equals(COLUMN_SUPPLIER))
+			}
+			if (key.equals(COLUMN_SUPPLIER)) {
 				return equipment.getSupplier();
-			if (key.equals(COLUMN_SUPPLIER_CODE))
+			}
+			if (key.equals(COLUMN_SUPPLIER_CODE)) {
 				return equipment.getSupplierCode();
-			if (key.equals(COLUMN_HW_SERIAL))
+			}
+			if (key.equals(COLUMN_HW_SERIAL)) {
 				return equipment.getHwSerial();
-			if (key.equals(COLUMN_HW_VERSION))
+			}
+			if (key.equals(COLUMN_HW_VERSION)) {
 				return equipment.getHwVersion();
-			if (key.equals(COLUMN_SW_SERIAL))
+			}
+			if (key.equals(COLUMN_SW_SERIAL)) {
 				return equipment.getSwSerial();
-			if (key.equals(COLUMN_SW_VERSION))
+			}
+			if (key.equals(COLUMN_SW_VERSION)) {
 				return equipment.getSwVersion();
-			if (key.equals(COLUMN_INVENTORY_NUMBER))
+			}
+			if (key.equals(COLUMN_INVENTORY_NUMBER)) {
 				return equipment.getInventoryNumber();
-			if (key.equals(TableNames.EQUIPMENT_ME_LINK))
+			}
+			if (key.equals(TableNames.EQUIPMENT_ME_LINK)) {
 				return equipment.getMonitoredElementIds();
+			}
 		}
 		return value;
 	}
@@ -138,34 +154,35 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 	@Override
 	public void setValue(final Equipment equipment, final String key, final Object value) {
 		if (equipment != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				equipment.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				equipment.setDescription((String) value);
-			else if (key.equals(COLUMN_DOMAIN_ID)) 
+			} else if (key.equals(COLUMN_DOMAIN_ID)) {
 				equipment.setDomainId((Identifier) value);
-			else if (key.equals(COLUMN_TYPE_ID))
-				equipment.setType((EquipmentType)value);
-			else if (key.equals(COLUMN_IMAGE_ID))
+			} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
+				equipment.setProtoEquipmentId((Identifier) value);
+			} else if (key.equals(COLUMN_IMAGE_ID)) {
 				equipment.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_LONGITUDE))
-				equipment.setLongitude(((Float)value).floatValue());
-			else if (key.equals(COLUMN_LATITUDE))
-				equipment.setLatitude(((Float)value).floatValue());
-			else if (key.equals(COLUMN_SUPPLIER))
+			} else if (key.equals(COLUMN_LONGITUDE)) {
+				equipment.setLongitude(((Float) value).floatValue());
+			} else if (key.equals(COLUMN_LATITUDE)) {
+				equipment.setLatitude(((Float) value).floatValue());
+			} else if (key.equals(COLUMN_SUPPLIER)) {
 				equipment.setSupplier((String) value);
-			else if (key.equals(COLUMN_SUPPLIER_CODE))
+			} else if (key.equals(COLUMN_SUPPLIER_CODE)) {
 				equipment.setSupplierCode((String) value);
-			else if (key.equals(COLUMN_HW_SERIAL))
+			} else if (key.equals(COLUMN_HW_SERIAL)) {
 				equipment.setHwSerial((String) value);
-			else if (key.equals(COLUMN_HW_VERSION))
+			} else if (key.equals(COLUMN_HW_VERSION)) {
 				equipment.setHwVersion((String) value);
-			else if (key.equals(COLUMN_SW_SERIAL))
+			} else if (key.equals(COLUMN_SW_SERIAL)) {
 				equipment.setSwSerial((String) value);
-			else if (key.equals(COLUMN_SW_VERSION))
+			} else if (key.equals(COLUMN_SW_VERSION)) {
 				equipment.setSwVersion((String) value);
-			else if (key.equals(COLUMN_INVENTORY_NUMBER))
+			} else if (key.equals(COLUMN_INVENTORY_NUMBER)) {
 				equipment.setInventoryNumber((String) value);
+			}
 		}
 	}
 
@@ -195,10 +212,9 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 				|| key.equals(COLUMN_SW_VERSION)
 				|| key.equals(COLUMN_INVENTORY_NUMBER)) {
 			return String.class;
-		} else if (key.equals(COLUMN_TYPE_ID)) {
-			return EquipmentType.class;
-		} else if (key.equals(COLUMN_IMAGE_ID) ||
-				key.equals(COLUMN_DOMAIN_ID)) {
+		} else if (key.equals(COLUMN_IMAGE_ID)
+				|| key.equals(COLUMN_DOMAIN_ID)
+				|| key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
 			return Identifier.class;
 		} else if (key.equals(COLUMN_LONGITUDE) 
 				|| key.equals(COLUMN_LATITUDE)) {

@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Equipment.xsd,v 1.1 2005/09/11 14:20:46 bass Exp $
+			$Id: Equipment.xsd,v 1.2 2005/09/28 10:03:08 arseniy Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -128,7 +128,7 @@
 					</xsd:element>
 					<xsd:element name = "domainId" type = "general:XmlIdentifier"
 						minOccurs = "0"/>
-					<xsd:element name = "equipmentTypeId" type = "general:XmlIdentifier"/>
+					<xsd:element name = "protoEquipmentId" type = "general:XmlIdentifier"/>
 					<xsd:choice
 						minOccurs = "0">
 						<xsd:element name = "symbolId" type = "general:XmlIdentifier"/>
