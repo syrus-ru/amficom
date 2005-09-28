@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.104 2005/09/27 09:50:48 max Exp $
+ * $Id: Map.java,v 1.105 2005/09/28 06:31:23 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -67,8 +69,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: max $
- * @version $Revision: 1.104 $, $Date: 2005/09/27 09:50:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.105 $, $Date: 2005/09/28 06:31:23 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -863,13 +865,13 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 * @return список линий
 	 */
 	public Set<PhysicalLink> getPhysicalLinksAt(final AbstractNode node) {
-		final HashSet<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
-		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
-			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node))) {
-				returnLinks.add(physicalLink);
-			}
+		LinkedIdsCondition condition = new LinkedIdsCondition(node.getId(), PHYSICALLINK_CODE);
+		try {
+			return StorableObjectPool.getStorableObjectsByCondition(condition, false);
+		} catch(ApplicationException e) {
+			e.printStackTrace();
 		}
-		return returnLinks;
+		return Collections.emptySet();
 	}
 
 	/**
