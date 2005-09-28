@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.39 2005/09/14 18:15:00 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.40 2005/09/28 12:38:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
+import com.syrus.AMFICOM.configuration.ProtoEquipmentDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/14 18:15:00 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/28 12:38:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -69,6 +70,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new LinkTypeDatabase());
 		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
 		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
+		DatabaseContext.registerDatabase(new ProtoEquipmentDatabase());
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
 		DatabaseContext.registerDatabase(new PortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());

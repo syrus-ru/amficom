@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.35 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.36 2005/09/28 12:38:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/28 12:38:52 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -65,6 +65,7 @@ final class DatabaseContextSetup {
 //		DatabaseContext.registerDatabase(new LinkTypeDatabase());
 //		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
 //		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
+//		DatabaseContext.registerDatabase(new ProtoEquipmentDatabase());
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
 		DatabaseContext.registerDatabase(new PortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
