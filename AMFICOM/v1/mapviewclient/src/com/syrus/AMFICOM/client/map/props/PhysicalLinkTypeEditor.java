@@ -28,8 +28,6 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
@@ -333,15 +331,14 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 			LinkTypeController linkTypeController = (LinkTypeController)
 					LinkTypeController.getInstance();
 			Color color = (Color)this.colorComboBox.getSelectedItem();
-			Identifier userId = LoginManager.getUserId();
 			if(! color.equals(linkTypeController.getColor(this.type)))
-				linkTypeController.setColor(userId, this.type, color);
+				linkTypeController.setColor(this.type, color);
 			int size = this.thicknessComboBox.getSelectedValue();
 			if(size != linkTypeController.getLineSize(this.type))
-				linkTypeController.setLineSize(userId, this.type, size);
+				linkTypeController.setLineSize(this.type, size);
 //			String style = (String)this.styleComboBox.getSelectedItem();
 //			if(! style.equals(linkTypeController(this.type)))
-//				linkTypeController(userId, type, style);
+//				linkTypeController(type, style);
 		} 
 		catch (Exception ex) 
 		{
