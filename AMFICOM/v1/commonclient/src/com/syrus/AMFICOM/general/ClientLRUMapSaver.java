@@ -1,5 +1,5 @@
 /*-
-* $Id: ClientLRUMapSaver.java,v 1.6 2005/09/20 08:03:14 bob Exp $
+* $Id: ClientLRUMapSaver.java,v 1.7 2005/09/28 13:54:19 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.LRUMap;
 /**
  * Client LRU Map saver, save only unchanged storable objects
  * 
- * @version $Revision: 1.6 $, $Date: 2005/09/20 08:03:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/09/28 13:54:19 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -54,7 +54,7 @@ final class ClientLRUMapSaver extends AbstractLRUMapSaver {
 				keys.add(storableObject);
 			}
 		}
-		return !keys.isEmpty() ? keys :	null;
+		return keys;
 	}
 	
 }

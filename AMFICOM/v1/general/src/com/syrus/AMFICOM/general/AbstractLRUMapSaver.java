@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractLRUMapSaver.java,v 1.3 2005/09/14 16:31:00 arseniy Exp $
+* $Id: AbstractLRUMapSaver.java,v 1.4 2005/09/28 13:54:12 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/14 16:31:00 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/28 13:54:12 $
  * @author $Author: arseniy $
  * @author Maxim Selivanov
  * @author Vladimir Dolzhenko
@@ -71,10 +71,6 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 			Log.debugMessage("AbstractLRUMapSaver.save | Trying to save LRUMap with " + objectEntityName
 					+ " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
 			final Object keys = this.saving(lruMap);
-			if (keys == null) {
-				Log.debugMessage("AbstractLRUMapSaver.save | LruMap has no elements. Nothing to save.", Log.DEBUGLEVEL10);
-				return;
-			}
 			out.writeObject(objectEntityName);
 			out.writeObject(keys);
 			out.close();

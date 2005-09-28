@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.6 2005/09/14 16:42:21 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.7 2005/09/28 13:54:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/14 16:42:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/28 13:54:12 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
@@ -57,6 +57,6 @@ public class LRUMapSaver extends AbstractLRUMapSaver {
 			final Identifier key = it.next();
 			keys.add(key);
 		}
-		return !keys.isEmpty() ? keys : null;
+		return keys;
 	}	
 }
