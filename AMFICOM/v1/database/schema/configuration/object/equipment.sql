@@ -1,4 +1,4 @@
--- $Id: equipment.sql,v 1.16 2005/06/15 17:03:09 bass Exp $
+-- $Id: equipment.sql,v 1.17 2005/09/28 11:05:40 arseniy Exp $
 
 CREATE TABLE Equipment (
  id NUMBER(19),
@@ -10,8 +10,7 @@ CREATE TABLE Equipment (
 --
  domain_id,
 --
- type_id NOT NULL,
---
+ proto_equipment_id NUMBER(19),
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
 --
@@ -35,10 +34,10 @@ CREATE TABLE Equipment (
  CONSTRAINT eqp_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
- CONSTRAINT eqp_epqtype_fk FOREIGN KEY (type_id)
-  REFERENCES EquipmentType (id) ON DELETE CASCADE,
+ CONSTRAINT eqp_peq_fk FOREIGN KEY (proto_equipment_id)
+  REFERENCES ProtoEquipment (id) ON DELETE CASCADE,
  CONSTRAINT eqp_image_fk FOREIGN KEY (image_id)
   REFERENCES ImageResource (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE equipment_seq ORDER;
+CREATE SEQUENCE Equipment_seq ORDER;
