@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.98 2005/09/28 11:33:20 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.99 2005/09/28 12:21:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
@@ -44,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/09/28 11:33:20 $
+ * @version $Revision: 1.99 $, $Date: 2005/09/28 12:21:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -222,10 +223,7 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 	 * @throws ApplicationException
 	 */
 	@Shitlet
-	public void getXmlTransferable(
-			final XmlEquipmentType equipmentType,
-			final String importType)
-	throws ApplicationException {
+	public void getXmlTransferable(final XmlEquipmentType equipmentType, final String importType) throws ApplicationException {
 		this.id.getXmlTransferable(equipmentType.addNewId(), importType);
 		equipmentType.setName(this.name);
 		equipmentType.setCodename(this.codename);
@@ -235,6 +233,8 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 		if (this.description.length() != 0) {
 			equipmentType.setDescription(this.description);
 		}
+
+		XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, EXPORT);
 	}
 
 	protected synchronized void setAttributes(final Date created,
