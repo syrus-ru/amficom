@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.6 2005/09/27 14:05:04 bob Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.7 2005/09/28 10:22:46 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/27 14:05:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/28 10:22:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -70,8 +70,7 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 				return permissionAttributes.getUserId();
 			}
 			if (key.equals(COLUMN_MODULE_CODE)) {
-				// TODO is Integer need ???
-				return Integer.valueOf(permissionAttributes.getModule().ordinal());
+				return permissionAttributes.getModule();
 			}
 			if (key.equals(COLUMN_PERMISSION_MASK)) {
 				return permissionAttributes.getPermissions();
