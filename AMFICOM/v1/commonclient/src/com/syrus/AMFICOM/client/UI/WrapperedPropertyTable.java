@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedPropertyTable.java,v 1.12 2005/09/13 10:46:13 bob Exp $
+* $Id: WrapperedPropertyTable.java,v 1.13 2005/09/28 09:07:24 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,14 +22,16 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/13 10:46:13 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/28 09:07:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -37,6 +39,7 @@ import com.syrus.util.Wrapper;
 public class WrapperedPropertyTable<T> extends ATable {
 
 	private TableCellEditor		defaultTextFieldEditor;
+	protected TableCellRenderer[][]	cellRenderers;
 	protected TableCellEditor[][]	cellEditors;
 	private FocusListener	editingStopFocusListener;
 	
@@ -64,9 +67,7 @@ public class WrapperedPropertyTable<T> extends ATable {
 		TableColumn col = this.getColumnModel().getColumn(0);
 		TableCellRenderer renderer = StubLabelCellRenderer.getInstance();
 		col.setCellRenderer(renderer);
-
 		for (int mColIndex = 1; mColIndex < model.getColumnCount(); mColIndex++) {
-			renderer = StubLabelCellRenderer.getInstance();
 			col = this.getColumnModel().getColumn(mColIndex);
 			col.setCellRenderer(renderer);
 		}
@@ -80,12 +81,12 @@ public class WrapperedPropertyTable<T> extends ATable {
 	 *                see {@link com.syrus.util.Wrapper#getKeys()}
 	 */
 	public void setRenderer(final TableCellRenderer renderer, final String key) {
-		int rowIndex = this.getModel().getRowIndex(key);
-		final TableColumn col = this.getColumnModel().getColumn(rowIndex);
-		col.setCellRenderer(renderer);		
+		this.cellRenderers[this.getModel().getRowIndex(key)][1] = renderer;
 	}
 
 	public void updateModel() {
+		assert Log.debugMessage("WrapperedPropertyTable.updateModel | ",
+			Log.DEBUGLEVEL09);
 		final WrapperedPropertyTableModel<T> model = this.getModel();
 		for (int mRowIndex = 1; mRowIndex < model.getRowCount(); mRowIndex++) {
 			final Object obj = model.wrapper.getPropertyValue(model.keys[mRowIndex]);
@@ -136,8 +137,13 @@ public class WrapperedPropertyTable<T> extends ATable {
 	}
 
 	private void initialization() {
+		assert Log.debugMessage("WrapperedPropertyTable.initialization | " + this.getModel().getRowCount() + "x" + this.getModel().getColumnCount(),
+			Log.DEBUGLEVEL09);
+
 		this.cellEditors = 
 			new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
+		this.cellRenderers = 
+			new TableCellRenderer[this.getModel().getRowCount()][this.getModel().getColumnCount()];
 		this.updateModel();
 		this.setColumnSelectionAllowed(false);
 		this.setRowSelectionAllowed(true);		
@@ -156,6 +162,33 @@ public class WrapperedPropertyTable<T> extends ATable {
 	}
 	
 	@Override
+	public void tableChanged(TableModelEvent e) {		
+		super.tableChanged(e);
+		assert Log.debugMessage("WrapperedPropertyTable.tableChanged | " + this.getModel() + " > " 
+				+ this.getModel().getRowCount() + "x" + this.getModel().getColumnCount(),
+			Log.DEBUGLEVEL09);
+		if (this.cellRenderers != null && 
+				(this.getModel().getRowCount() > this.cellRenderers.length
+					|| (this.cellRenderers.length > 0 && this.getModel().getColumnCount() > this.cellRenderers[0].length))) {
+			this.cellEditors = 
+				new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
+			this.cellRenderers = 
+				new TableCellRenderer[this.getModel().getRowCount()][this.getModel().getColumnCount()];
+			this.updateModel();
+		}
+	}
+	
+	@Override
+	public TableCellRenderer getCellRenderer(	int row,
+												int column) {		
+		TableCellRenderer tableCellRenderer = this.cellRenderers[row][column];
+		if (tableCellRenderer == null) {
+			return super.getCellRenderer(row, column);
+		}
+		return tableCellRenderer;
+	}
+	
+	@Override
 	public TableCellEditor getCellEditor(final int row, final int column) {
 		TableCellEditor tableCellEditor = this.cellEditors[row][column];
 		if (tableCellEditor == null) {
@@ -168,5 +201,11 @@ public class WrapperedPropertyTable<T> extends ATable {
 		}
 		return tableCellEditor;
 	}
-
+	
+	@SuppressWarnings("unused")
+	private void setCellEditor(final TableCellEditor tableCellEditor,
+	                          final int row, 
+	                          final int column) {
+		this.cellEditors[row][column] = tableCellEditor;
+	}
 }
