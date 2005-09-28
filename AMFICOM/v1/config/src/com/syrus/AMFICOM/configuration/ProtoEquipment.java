@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.2 2005/09/28 11:19:21 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.3 2005/09/28 11:33:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,16 +7,20 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,6 +31,8 @@ import com.syrus.AMFICOM.configuration.corba.IdlProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlProtoEquipmentHelper;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -46,12 +52,12 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/28 11:19:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/09/28 11:33:20 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class ProtoEquipment extends StorableObject implements Namable, TypedObject<EquipmentType>,
+public final class ProtoEquipment extends StorableObject implements Characterizable, Namable, TypedObject<EquipmentType>,
 		XmlBeansTransferable<XmlProtoEquipment> {
 	private static final long serialVersionUID = 3221583036378568005L;
 
@@ -342,4 +348,84 @@ public final class ProtoEquipment extends StorableObject implements Namable, Typ
 		return dependencies;
 	}
 
+	/*-********************************************************************
+	 * Children manipulation: characteristics                             *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 */
+	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+		}
+		return this.characteristicContainerWrappee;
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 */
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param characteristic
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
+	 */
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
+		assert characteristic != null : NON_NULL_EXPECTED;
+		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		characteristic.setParentCharacterizable(this, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
+	 */
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
+		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
+		return this.getCharacteristicContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param characteristics
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
+	 */
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
+		assert characteristics != null : NON_NULL_EXPECTED;
+
+		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);
+
+		final Set<Characteristic> toRemove = new HashSet<Characteristic>(oldCharacteristics);
+		toRemove.removeAll(characteristics);
+		for (final Characteristic characteristic : toRemove) {
+			this.removeCharacteristic(characteristic, usePool);
+		}
+
+		final Set<Characteristic> toAdd = new HashSet<Characteristic>(characteristics);
+		toAdd.removeAll(oldCharacteristics);
+		for (final Characteristic characteristic : toAdd) {
+			this.addCharacteristic(characteristic, usePool);
+		}
+	}
 }
