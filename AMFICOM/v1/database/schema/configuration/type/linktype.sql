@@ -1,4 +1,4 @@
--- $Id: linktype.sql,v 1.13 2005/06/15 17:03:09 bass Exp $
+-- $Id: linktype.sql,v 1.14 2005/09/28 10:34:02 arseniy Exp $
 
 CREATE TABLE LinkType (
  id NUMBER(19),
@@ -17,14 +17,15 @@ CREATE TABLE LinkType (
  manufacturer_code VARCHAR2(32 CHAR),
  image_id,
 --
- CONSTRAINT lkptype_pk PRIMARY KEY (id),
- CONSTRAINT lkptype_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT linktype_pk PRIMARY KEY (id),
+ CONSTRAINT linktype_uniq UNIQUE (codename),
+ CONSTRAINT linktype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT lkptype_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT linktype_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT lkptype_image_fk FOREIGN KEY (image_id)
+ CONSTRAINT linktype_image_fk FOREIGN KEY (image_id)
   REFERENCES ImageResource (id) ON DELETE CASCADE,
- CONSTRAINT lkptype_kind_chk CHECK (
+ CONSTRAINT linktype_kind_chk CHECK (
   kind >= 0 AND kind <= 2)
 );
 

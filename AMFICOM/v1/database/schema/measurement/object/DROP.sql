@@ -1,4 +1,4 @@
--- $Id: DROP.sql,v 1.12 2005/08/28 14:29:24 arseniy Exp $
+-- $Id: DROP.sql,v 1.13 2005/09/28 10:34:02 arseniy Exp $
 
 DROP TABLE ResultParameter;
 DROP TABLE Result;
@@ -6,6 +6,7 @@ DROP TABLE Modeling;
 DROP TABLE Analysis;
 DROP TABLE Measurement;
 DROP TABLE MeasurementSetupTestLink;
+DROP TABLE TestStopLink;
 DROP TABLE Test;
 DROP TABLE PeriodicalTemporalPattern;
 DROP TABLE CronTemporalPattern;

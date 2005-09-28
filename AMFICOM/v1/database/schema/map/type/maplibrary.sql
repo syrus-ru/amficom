@@ -11,12 +11,13 @@ CREATE TABLE MapLibrary (
  description VARCHAR2(256 CHAR),
  parent_map_library_id,
 --
- CONSTRAINT map_lib_pk PRIMARY KEY (id),
- CONSTRAINT map_lib_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT maplib_pk PRIMARY KEY (id),
+ CONSTRAINT maplib_uniq UNIQUE (codename),
+ CONSTRAINT maplib_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT map_lib_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT maplib_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT par_map_lib_fk FOREIGN KEY (parent_map_library_id)
+ CONSTRAINT maplib_parmaplib_fk FOREIGN KEY (parent_map_library_id)
   REFERENCES MapLibrary (id) ON DELETE CASCADE
 );
 CREATE SEQUENCE MapLibrary_Seq;

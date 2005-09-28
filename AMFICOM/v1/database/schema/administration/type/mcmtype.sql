@@ -1,4 +1,4 @@
--- $Id: mcmtype.sql,v 1.7 2005/06/15 17:03:09 bass Exp $
+-- $Id: mcmtype.sql,v 1.8 2005/09/28 10:34:02 arseniy Exp $
 
 CREATE TABLE MCMType (
  id NUMBER(19),
@@ -12,6 +12,7 @@ CREATE TABLE MCMType (
  description VARCHAR2(256 CHAR),
 --
  CONSTRAINT mcmtype_pk PRIMARY KEY (id),
+ CONSTRAINT mcmtype_uniq UNIQUE (codename),
  CONSTRAINT mcmtype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT mcmtype_modifier_fk FOREIGN KEY (modifier_id)

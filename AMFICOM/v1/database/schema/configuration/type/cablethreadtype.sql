@@ -1,4 +1,4 @@
--- $Id: cablethreadtype.sql,v 1.13 2005/06/15 17:03:09 bass Exp $
+-- $Id: cablethreadtype.sql,v 1.14 2005/09/28 10:34:02 arseniy Exp $
 
 CREATE TABLE CableThreadType (
  id NUMBER(19),
@@ -18,6 +18,7 @@ CREATE TABLE CableThreadType (
  cable_link_type_id,
 --
  CONSTRAINT cthtype_pk PRIMARY KEY (id),
+ CONSTRAINT cthtype_uniq UNIQUE (codename),
  CONSTRAINT cthtype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT cthtype_modifier_fk FOREIGN KEY (modifier_id)

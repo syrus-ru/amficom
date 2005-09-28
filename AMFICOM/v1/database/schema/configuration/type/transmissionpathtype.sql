@@ -1,4 +1,4 @@
--- $Id: transmissionpathtype.sql,v 1.8 2005/06/15 17:03:09 bass Exp $
+-- $Id: transmissionpathtype.sql,v 1.9 2005/09/28 10:34:02 arseniy Exp $
 
 CREATE TABLE TransmissionPathType (
  id NUMBER(19),
@@ -14,6 +14,7 @@ CREATE TABLE TransmissionPathType (
  name VARCHAR2(128 CHAR),
  --
  CONSTRAINT tpathtype_pk PRIMARY KEY (id),
+ CONSTRAINT tpathtype_uniq UNIQUE (codename),
  CONSTRAINT tpathtype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT tpathtype_modifier_fk FOREIGN KEY (modifier_id)
