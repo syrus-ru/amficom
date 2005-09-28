@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.3 2005/09/28 11:33:20 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.4 2005/09/28 12:23:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
@@ -47,12 +48,14 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/28 11:33:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/28 12:23:02 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -229,6 +232,11 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 		this.description = protoEquipment.isSetDescription() ? protoEquipment.getDescription() : "";
 		this.manufacturer = protoEquipment.isSetManufacturer() ? protoEquipment.getManufacturer() : "";
 		this.manufacturerCode = protoEquipment.isSetManufacturerCode() ? protoEquipment.getManufacturerCode() : "";
+		if (protoEquipment.isSetCharacteristics()) {
+			for (final XmlCharacteristic characteristic : protoEquipment.getCharacteristics().getCharacteristicArray()) {
+				Characteristic.createInstance(super.creatorId, characteristic, importType);
+			}
+		}
 
 		XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, POST_IMPORT);
 	}
@@ -274,6 +282,18 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 		if (this.manufacturerCode != null && this.manufacturerCode.length() != 0) {
 			protoEquipment.setManufacturerCode(this.manufacturerCode);
 		}
+		if (protoEquipment.isSetCharacteristics()) {
+			protoEquipment.unsetCharacteristics();
+		}
+		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		if (!characteristics.isEmpty()) {
+			final XmlCharacteristicSeq characteristicSeq = protoEquipment.addNewCharacteristics();
+			for (final Characteristic characteristic : characteristics) {
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
+			}
+		}
+
+		XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, EXPORT);
 	}
 
 	public EquipmentType getType() {
