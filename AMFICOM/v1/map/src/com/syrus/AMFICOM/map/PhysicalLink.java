@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.120 2005/09/25 15:50:05 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.121 2005/09/28 14:59:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.120 $, $Date: 2005/09/25 15:50:05 $
+ * @version $Revision: 1.121 $, $Date: 2005/09/28 14:59:24 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -112,11 +112,11 @@ public class PhysicalLink extends StorableObject
 		if(!this.transientFieldsInitialized) {
 			this.nodeLinks = findNodeLinks();
 			this.sortedNodes = new LinkedList<AbstractNode>();
-			try {
-				this.getCharacteristics0(false);
-			} catch (final ApplicationException ae) {
-				Log.debugException(ae, SEVERE);
-			}
+//			try {
+//				this.getCharacteristics0(false);
+//			} catch (final ApplicationException ae) {
+//				Log.debugException(ae, SEVERE);
+//			}
 			this.transientFieldsInitialized = true;
 		}		
 	}
@@ -1046,6 +1046,12 @@ public class PhysicalLink extends StorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
+//	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
+//		if (this.characteristicContainerWrappee == null) {
+//			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
+//		}
+//		return this.characteristicContainerWrappee;
+//	}
 	@Crutch134(notes = "Remove subclassing here.")
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		if (this.characteristicContainerWrappee == null) {
