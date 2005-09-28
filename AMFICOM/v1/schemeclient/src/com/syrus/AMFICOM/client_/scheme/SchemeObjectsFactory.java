@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.39 2005/09/28 11:37:50 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.40 2005/09/28 11:50:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.39 $, $Date: 2005/09/28 11:37:50 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/28 11:50:20 $
  * @module schemeclient
  */
 
@@ -157,7 +157,7 @@ public class SchemeObjectsFactory {
 		Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getProtoEquipment(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
 		
 		try {
-			for (Characteristic c : schemeElement.getEquipmentType().getCharacteristics(true)) {
+			for (Characteristic c : schemeElement.getProtoEquipment().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
 				cloned.setParentCharacterizable(eq, false);
 			}

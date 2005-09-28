@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.12 2005/08/09 06:52:52 stas Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.13 2005/09/28 11:50:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/09 06:52:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/28 11:50:20 $
  * @module schemeclient
  */
 
@@ -63,18 +63,18 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 								eq.getId(), true);
 					super.addCharacteristics(eq.getCharacteristics(true), eq.getId());
 				} else {
-					EquipmentType eqt = null;
+					ProtoEquipment protoEq = null;
 					try {
-						eqt = this.schemeElement.getEquipmentType();
+						protoEq = this.schemeElement.getProtoEquipment();
 					} catch (IllegalStateException e) {
 						Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
 					}
-					if (eqt != null) {
+					if (protoEq != null) {
 						for (int i = 0; i < sorts.length; i++)
 							super.setTypeSortMapping(sorts[i],
-									eqt,
-									eqt.getId(), false);
-						super.addCharacteristics(eqt.getCharacteristics(true), eqt.getId());
+									protoEq,
+									protoEq.getId(), false);
+						super.addCharacteristics(protoEq.getCharacteristics(true), protoEq.getId());
 					}
 				}
 			} catch (ApplicationException e) {
