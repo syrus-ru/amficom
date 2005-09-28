@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.32 2005/09/16 14:53:38 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.33 2005/09/28 15:08:13 krupenn Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $
+ * @version $Revision: 1.33 $
  * @module mapviewclient
  */
 public final class SchemeSampleData {
@@ -66,7 +66,7 @@ public final class SchemeSampleData {
 
 	private static void scheme1(Identifier userId, Identifier domainId) throws ApplicationException
 	{
-		EquipmentType equipmentType = EquipmentType.createInstance(userId, "sample", "desc", "name", "manu", "code");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		EquipmentType equipmentType = EquipmentType.createInstance(userId, "sample", "desc", "name");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		LinkType lt = LinkType.createInstance(userId, "1", "2", "3", LinkTypeSort.LINKTYPESORT_COPPER, "8", "9", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "7", "CTT", 0, lt, clt);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -189,7 +189,7 @@ public final class SchemeSampleData {
 
 	private static void scheme2(Identifier userId, Identifier domainId) throws ApplicationException
 	{
-		EquipmentType equipmentType = EquipmentType.createInstance(userId, "samle2", "desc2", "name2", "manu2", "code2");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		EquipmentType equipmentType = EquipmentType.createInstance(userId, "samle2", "desc2", "name2");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
