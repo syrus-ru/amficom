@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: ProtoEquipment.xsd,v 1.2 2005/09/28 11:33:20 arseniy Exp $
+			$Id: ProtoEquipment.xsd,v 1.3 2005/09/28 11:37:22 arseniy Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -47,7 +47,7 @@
 						</xsd:simpleType>
 					</xsd:element>
 					<xsd:element ref = "general:description" minOccurs = "0"/>
-					<xsd:element name = "manufactorer"
+					<xsd:element name = "manufacturer"
 						minOccurs = "0">
 						<xsd:simpleType>
 							<xsd:restriction base = "xsd:string">
@@ -56,7 +56,7 @@
 							</xsd:restriction>
 						</xsd:simpleType>
 					</xsd:element>
-					<xsd:element name = "manufactorerCode"
+					<xsd:element name = "manufacturerCode"
 						minOccurs = "0">
 						<xsd:simpleType>
 							<xsd:restriction base = "xsd:string">
