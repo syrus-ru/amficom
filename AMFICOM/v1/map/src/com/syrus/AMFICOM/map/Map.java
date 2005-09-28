@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.105 2005/09/28 06:31:23 krupenn Exp $
+ * $Id: Map.java,v 1.106 2005/09/28 15:01:25 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collection;
@@ -37,7 +38,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.105 $, $Date: 2005/09/28 06:31:23 $
+ * @version $Revision: 1.106 $, $Date: 2005/09/28 15:01:25 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -946,14 +946,14 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 *          концевой узел
 	 * @return фрагмент линии
 	 */
-	public NodeLink getNodeLink(final AbstractNode node) {
-		for (final NodeLink nodeLink : this.getNodeLinks()) {
-			if ((nodeLink.getStartNode().equals(node)) || (nodeLink.getEndNode().equals(node))) {
-				return nodeLink;
-			}
-		}
-		return null;
-	}
+//	public NodeLink getNodeLink(final AbstractNode node) {
+//		for (final NodeLink nodeLink : this.getNodeLinks()) {
+//			if ((nodeLink.getStartNode().equals(node)) || (nodeLink.getEndNode().equals(node))) {
+//				return nodeLink;
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Получить фрагмент линии по концевым узлам.
@@ -964,36 +964,36 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 *          другой концевой узел
 	 * @return фрагмент линии
 	 */
-	public NodeLink getNodeLink(final AbstractNode startNode, final AbstractNode endNode) {
-		for (final NodeLink nodeLink : this.getNodeLinks()) {
-			if (((nodeLink.getStartNode().equals(startNode)) && (nodeLink.getEndNode().equals(endNode)))
-					|| ((nodeLink.getStartNode().equals(endNode)) && (nodeLink.getEndNode().equals(startNode)))) {
-				return nodeLink;
-			}
-		}
-		return null;
-	}
+//	public NodeLink getNodeLink(final AbstractNode startNode, final AbstractNode endNode) {
+//		for (final NodeLink nodeLink : this.getNodeLinks()) {
+//			if (((nodeLink.getStartNode().equals(startNode)) && (nodeLink.getEndNode().equals(endNode)))
+//					|| ((nodeLink.getStartNode().equals(endNode)) && (nodeLink.getEndNode().equals(startNode)))) {
+//				return nodeLink;
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Получить список всех топологических элементов карты ({@link MapElement}).
 	 *
 	 * @return список всех элементов
 	 */
-	public List<MapElement> getAllElements() {
-		this.initialize();
-		this.allElements.clear();
-
-		this.allElements.addAll(this.getAllMarks());
-		this.allElements.addAll(this.getAllTopologicalNodes());
-		this.allElements.addAll(this.getAllSiteNodes());
-		this.allElements.addAll(this.getExternalNodes());
-
-		this.allElements.addAll(this.getAllNodeLinks());
-		this.allElements.addAll(this.getAllPhysicalLinks());
-		this.allElements.addAll(this.getAllCollectors());
-
-		return Collections.unmodifiableList(this.allElements);
-	}
+//	public List<MapElement> getAllElements() {
+//		this.initialize();
+//		this.allElements.clear();
+//
+//		this.allElements.addAll(this.getAllMarks());
+//		this.allElements.addAll(this.getAllTopologicalNodes());
+//		this.allElements.addAll(this.getAllSiteNodes());
+//		this.allElements.addAll(this.getExternalNodes());
+//
+//		this.allElements.addAll(this.getAllNodeLinks());
+//		this.allElements.addAll(this.getAllPhysicalLinks());
+//		this.allElements.addAll(this.getAllCollectors());
+//
+//		return Collections.unmodifiableList(this.allElements);
+//	}
 
 	/**
 	 * Получить набор всех выделенных элементов топологической схемы.
@@ -1066,15 +1066,15 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			return null;
 		}
 
-		NodeLink startNodeLink = null;
-		for (final NodeLink nl : this.getNodeLinks()) {
-			if (nodeLink != nl) {
-				startNodeLink = nl;
+		NodeLink otherNodeLink = null;
+		for (final NodeLink bufNodeLink : this.getNodeLinks()) {
+			if (nodeLink != bufNodeLink) {
+				otherNodeLink = bufNodeLink;
 				break;
 			}
 		}
 
-		return startNodeLink;
+		return otherNodeLink;
 	}
 
 	/**
@@ -1127,8 +1127,27 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		final Set<SiteNode> siteNodes2 = this.getSiteNodes();
 		if (!siteNodes2.isEmpty()) {
 			final XmlSiteNodeSeq siteNodeSeq = map.addNewSiteNodes();
+			// list of sitenodes already added to xml siteNodeSeq
+			final Set<SiteNode> addedSiteNodes = new HashSet<SiteNode>();
 			for (final SiteNode siteNode : siteNodes2) {
-				siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
+				final Identifier attachmentSiteNodeId = siteNode.getAttachmentSiteNodeId();
+				// if siteNode has attachment site node the latter should be written
+				// to xml prior to siteNode
+				if(!attachmentSiteNodeId.equals(VOID_IDENTIFIER)) {
+					SiteNode attachmentSiteNode = siteNode.getAttachmentSiteNode();
+					// check if attachmentSiteNode has already been written to xml
+					// as an attachment site node of some other site node
+					if(!addedSiteNodes.contains(attachmentSiteNode)) {
+						attachmentSiteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
+						addedSiteNodes.add(attachmentSiteNode);
+					}
+				}
+				// check if siteNode has already been written to xml
+				// as an attachment site node of some other site node
+				if(!addedSiteNodes.contains(siteNode)) {
+					siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
+					addedSiteNodes.add(siteNode);
+				}
 			}
 		}
 		if (map.isSetPhysicalLinks()) {
