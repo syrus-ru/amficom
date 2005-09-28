@@ -1,5 +1,0 @@
-agent_v1/README
-
-This is an old agent. While still in use, it is deprecated.
-The ``test'' directory contains sources which aren't used any more, but
-probably not yet safe to delete.

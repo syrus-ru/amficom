@@ -1,0 +1,69 @@
+HOME=.
+
+include ..\make.inc
+
+TARGET=$(LIB)\map.jar
+TARGET_SRC=$(LIBSRC)\mapsource.zip
+TARGET_DOC=$(LIBDOC)\mapdoc.zip
+TARGET_MAP_XML=$(LIB)\mapxml.jar
+TARGET_XML_SRC=$(LIBSRC)\mapxmlsource.zip
+
+SERVERCP=$(LIB)\bugs.jar;$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\resource.jar;$(LIB)\admin.jar;$(LIB)\generalxml.jar;$(LIB)\mapxml.jar;$(LIB)\filter.jar
+GENERALXMLCP=$(LIB)\generalxml.jar
+
+CLASSPATH=$(SERVERCP);$(XMLBEANSCP)
+
+.PHONY:	$(TARGET)
+
+$(TARGET):	clean xml corba impl javadoc jar
+
+jar:
+	$(ARCHIVER) -cf $(TARGET) -C $(CLASSES) com
+	$(ARCHIVER) -cf $(TARGET_SRC) -C $(SRC) com
+	$(ARCHIVER) -cf $(TARGET_DOC) -C $(DOCS) .
+	$(ARCHIVER) -cf $(TARGET_XML_SRC) -C $(XMLSRC) com
+
+impl:
+	$(COMPILER) \
+		-d $(CLASSES) \
+		-classpath $(CLASSPATH) \
+		-sourcepath $(SRC) \
+		$(SRC)\com\syrus\AMFICOM\map\*.java
+
+xml:	$(TARGET_MAP_XML)
+
+$(TARGET_MAP_XML):
+	$(XMLGENERATOR) \
+		-src $(XMLSRC) \
+		-d $(XMLCLASSES) \
+		-javasource 1.5 \
+		-cp $(XMLBEANSCP);$(GENERALXMLCP)  \
+		-out $(TARGET_MAP_XML) \
+			$(XML)\Map.xsd \
+			$(XML)\Collector.xsd \
+			$(XML)\NodeLink.xsd \
+			$(XML)\PhysicalLink.xsd \
+			$(XML)\PhysicalLinkType.xsd \
+			$(XML)\SiteNode.xsd \
+			$(XML)\SiteNodeType.xsd \
+			$(XML)\TopologicalNode.xsd \
+			$(XML)\MapLibrary.xsd \
+			$(XML)\map.xsdconfig
+
+corba:
+	$(IDLTRANSLATOR) $(IDL)\map.idl
+	$(COMPILER) \
+		-d $(CLASSES) \
+		-classpath $(CLASSPATH) \
+		-sourcepath $(SRC) \
+			$(SRC)\com\syrus\AMFICOM\map\corba\*.java
+
+
+javadoc:
+	$(JAVADOCGENERATOR) com
+
+clean:
+	rm -rf $(CLASSES)\com
+	rm -rf $(XMLSRC)\com
+	rm -rf $(XMLCLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC) $(TARGET_MAP_XML) $(TARGET_XML_SRC)
