@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.92 2005/09/23 11:45:45 bass Exp $
+ * $Id: TransmissionPath.java,v 1.93 2005/09/28 12:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.92 $, $Date: 2005/09/23 11:45:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.93 $, $Date: 2005/09/28 12:20:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -247,7 +248,7 @@ public final class TransmissionPath extends DomainMember
 	 */
 	public Set<Identifier> getMonitoredElementIds() {
 		//TODO Implement
-		throw new UnsupportedOperationException("Not implemented yet");
+		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
 	/*-********************************************************************

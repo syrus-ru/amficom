@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.134 2005/09/28 11:19:21 bass Exp $
+ * $Id: Equipment.java,v 1.135 2005/09/28 12:20:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_IMPLEMENTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
@@ -59,8 +60,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.134 $, $Date: 2005/09/28 11:19:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.135 $, $Date: 2005/09/28 12:20:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -432,6 +433,7 @@ public final class Equipment extends DomainMember
 				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 			}
 		}
+
 		XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, EXPORT);
 	}
 
@@ -614,7 +616,7 @@ public final class Equipment extends DomainMember
 	 */
 	public Set<Identifier> getMonitoredElementIds() {
 		// TODO Implement
-		throw new UnsupportedOperationException("Not implemented yet");
+		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
 	}
 
 	/**
