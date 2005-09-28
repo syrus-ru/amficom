@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.66 2005/09/26 14:23:07 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.67 2005/09/28 15:09:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.66 $, $Date: 2005/09/26 14:23:07 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/28 15:09:29 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -344,8 +344,10 @@ public final class MapMouseListener implements MouseListener
 	/**
 	 * @param mapState
 	 * @param point
+	 * @throws MapDataException 
+	 * @throws MapConnectionException 
 	 */
-	private boolean checkNodeSizeEdit(MapState mapState, Point point) {
+	private boolean checkNodeSizeEdit(MapState mapState, Point point) throws MapConnectionException, MapDataException {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		boolean proceed = true;
 		if(logicalNetLayer.getCurrentMapElement() != null)
@@ -353,7 +355,7 @@ public final class MapMouseListener implements MouseListener
 				if(mapState.getShowMode() == MapState.SHOW_NODE_LINK)
 			{
 				AbstractNode node = (AbstractNode)logicalNetLayer.getCurrentMapElement();
-				NodeLink nodelink = logicalNetLayer.getEditedNodeLink(point);
+				NodeLink nodelink = logicalNetLayer.getEditedNodeLink(point, this.netMapViewer.getVisibleBounds());
 				if(nodelink != null
 					&& (nodelink.getStartNode().equals(node)
 						|| nodelink.getEndNode().equals(node))
