@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.9 2005/09/28 09:19:46 bob Exp $
+* $Id: PermissionAttributes.java,v 1.10 2005/09/28 10:21:46 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/28 09:19:46 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/28 10:21:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -220,6 +220,8 @@ public class PermissionAttributes extends StorableObject {
 		this.domainId = domainId;
 		this.userId = userId;
 		this.module = module;
+		
+		this.permissions = new BitSet();
 		this.setPermissions0(permissions);
 	}
 
@@ -233,6 +235,9 @@ public class PermissionAttributes extends StorableObject {
 		this.domainId = new Identifier(pat.domainId);
 		this.userId = new Identifier(pat.userId);
 		this.module = Module.valueOf(pat._module);
+		if (this.permissions == null) {
+			this.permissions = new BitSet();
+		}
 		this.setPermissionsByteArray0(pat.permissionMask);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
