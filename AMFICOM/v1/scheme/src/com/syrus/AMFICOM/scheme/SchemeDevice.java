@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.90 2005/09/26 16:40:48 bass Exp $
+ * $Id: SchemeDevice.java,v 1.91 2005/09/28 10:21:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/09/26 16:40:48 $
+ * @version $Revision: 1.91 $, $Date: 2005/09/28 10:21:14 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -809,7 +809,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			if (parentSchemeElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(super.id);
-				return;
 			}
 		} else {
 			/*
