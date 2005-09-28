@@ -1,4 +1,4 @@
--- $Id: kis.sql,v 1.1 2005/08/21 16:40:32 arseniy Exp $
+-- $Id: kis.sql,v 1.2 2005/09/28 05:32:51 arseniy Exp $
 
 CREATE TABLE KIS (
  id NUMBER(19),
@@ -13,7 +13,7 @@ CREATE TABLE KIS (
  description VARCHAR2(256 CHAR),
  hostname VARCHAR2(64 CHAR),
  tcp_port NUMBER(5,0),
- equipment_id NOT NULL,
+ equipment_id,
  mcm_id NOT NULL,
 --
  CONSTRAINT kis_pk PRIMARY KEY (id),
@@ -26,7 +26,7 @@ CREATE TABLE KIS (
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT kis_eqp_fk FOREIGN KEY (equipment_id)
-  REFERENCES Equipment (id) ON DELETE CASCADE,
+  REFERENCES Equipment (id) ON DELETE SET NULL,
  CONSTRAINT kis_mcm_fk FOREIGN KEY (mcm_id)
   REFERENCES MCM (id) ON DELETE CASCADE
 );
