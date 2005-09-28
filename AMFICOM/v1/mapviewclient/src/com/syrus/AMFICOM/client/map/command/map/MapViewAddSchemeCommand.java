@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.22 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.23 2005/09/28 06:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/28 06:39:54 $
  * @module mapviewclient
  */
 public class MapViewAddSchemeCommand extends AbstractCommand {
@@ -103,7 +103,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 				schemes,
 				schemeTableController,
 				schemeTableController.getKeysArray(),
-				true);
+				false);
 
 		if(this.scheme == null) {
 			this.aContext.getDispatcher().firePropertyChange(
