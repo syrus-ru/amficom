@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.23 2005/09/25 15:50:05 krupenn Exp $
+ * $Id: MapElement.java,v 1.24 2005/09/28 14:48:14 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/09/25 15:50:05 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/28 14:48:14 $
  * @module map
  */
 public interface MapElement extends Identifiable, Namable {
@@ -85,9 +85,6 @@ public interface MapElement extends Identifiable, Namable {
 	 * @param removed флаг удаления элемента
 	 */
 	void setRemoved(final boolean removed);
-
-	Set<Characteristic> getCharacteristics(final boolean usePool)
-	throws ApplicationException;
 
 	/**
 	 * TODO think of usen getCharacterizable instead of getCharacteristics in client code
