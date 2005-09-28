@@ -11,12 +11,13 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodenames;
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: UserBeanWrapper.java,v 1.9 2005/09/09 15:36:21 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.10 2005/09/28 14:05:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +25,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/09 15:36:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/28 14:05:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -49,7 +50,8 @@ public class UserBeanWrapper implements Wrapper {
 	private static UserBeanWrapper	instance;
 
 	private List<String>					keys;
-	private Map<String, PermissionCodenames> permissionCodenamesMap;
+	private Map<String, PermissionCodename> permissionCodenamesMap;
+	private Map<String, Module> modulesMap;
 
 	public String getKey(int index) {
 		return this.keys.get(index);
@@ -74,11 +76,22 @@ public class UserBeanWrapper implements Wrapper {
 		
 		final List<String> selfUserKeys = new ArrayList<String>(Arrays.asList(keysArray));
 		
-		this.permissionCodenamesMap = new HashMap<String, PermissionCodenames>();
-		PermissionCodenames[] codenames = PermissionAttributes.PermissionCodenames.values();
-		for(int i = 0; i < codenames.length; i++) {
-			this.permissionCodenamesMap.put(codenames[i].name(), codenames[i]);
-			selfUserKeys.add(codenames[i].name());
+		this.permissionCodenamesMap = new HashMap<String, PermissionCodename>();
+		this.modulesMap = new HashMap<String, Module>();
+		
+		Module prevModule = null; 
+		for(final PermissionCodename codename : PermissionAttributes.PermissionCodename.values()) {
+			if (codename.isEnable()) {
+				this.permissionCodenamesMap.put(codename.name(), codename);				
+				final Module module = codename.getModule();
+				if (prevModule != module) {					
+					final String moduleName = module.name();
+					selfUserKeys.add(moduleName);
+					this.modulesMap.put(moduleName, module);
+					prevModule = module;
+				}
+				selfUserKeys.add(codename.name());
+			}
 		}
 		
 		this.keys = Collections.unmodifiableList(selfUserKeys);
@@ -128,9 +141,14 @@ public class UserBeanWrapper implements Wrapper {
 			return LangModelManager.getString("Entity.User.attributes.Cellular"); 
 		}
 		
-		final PermissionCodenames codename = this.permissionCodenamesMap.get(key);
+		final PermissionCodename codename = this.permissionCodenamesMap.get(key);
 		if (codename != null) {
 			return codename.getDescription();
+		}
+		
+		final Module module = this.modulesMap.get(key);
+		if (module != null) {
+			return "<html><b>" + module.getDescription().replaceAll("\n", "<br>") + "</b></html>";
 		}
 		
 		return null;
@@ -156,6 +174,10 @@ public class UserBeanWrapper implements Wrapper {
 		
 		if (this.permissionCodenamesMap.containsKey(key)) {
 			return Boolean.class;
+		}
+		
+		if (this.modulesMap.containsKey(key)) {
+			return String.class;
 		}
 		
 		return null;
@@ -200,9 +222,12 @@ public class UserBeanWrapper implements Wrapper {
 				} else if (key.equals(USER_CELLULAR)) { 
 					return userBean.getCellular(); 
 				} else {
-					final PermissionCodenames codename = this.permissionCodenamesMap.get(key);
+					final PermissionCodename codename = this.permissionCodenamesMap.get(key);
 					if (codename != null) {
-						return Boolean.valueOf(userBean.getPermissionAttributes().isPermissionEnable(codename));
+						return Boolean.valueOf(userBean.getPermissionAttributes(codename.getModule()).isPermissionEnable(codename));
+					}
+					if (this.modulesMap.containsKey(key)) {
+						return "";
 					}
 				}
 				
@@ -219,8 +244,8 @@ public class UserBeanWrapper implements Wrapper {
 	}
 
 	public boolean isEditable(final String key) {
-		return !key.equals(USER_NATURE);
-	}
+		return !key.equals(USER_NATURE) && !this.modulesMap.containsKey(key);
+	} 
 
 	public void setPropertyValue(	final String key,
 	                             	final Object objectKey,
@@ -264,10 +289,10 @@ public class UserBeanWrapper implements Wrapper {
 				} else if (key.equals(USER_CELLULAR)) { 
 					userBean.setCellular((String) value); 
 				} else {
-					final PermissionCodenames codename = this.permissionCodenamesMap.get(key);
+					final PermissionCodename codename = this.permissionCodenamesMap.get(key);
 					if (codename != null) {
 						Boolean bValue = (Boolean) value;
-						userBean.getPermissionAttributes().setPermissionEnable(codename, bValue.booleanValue());
+						userBean.getPermissionAttributes(codename.getModule()).setPermissionEnable(codename, bValue.booleanValue());
 					}
 				}
 				

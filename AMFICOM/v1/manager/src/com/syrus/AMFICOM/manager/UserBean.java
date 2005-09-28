@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.19 2005/09/09 15:03:32 bob Exp $
+ * $Id: UserBean.java,v 1.20 2005/09/28 14:05:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import org.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/09 15:03:32 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/28 14:05:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -67,7 +68,7 @@ public class UserBean extends Bean implements  ARMItem {
 	private SystemUser	user;
 
 	private Identifier	domainId;
-	private PermissionAttributes	permissionAttributes;
+	private Map<Module, PermissionAttributes>	permissionAttributesMap;
 
 	
 	UserBean(final List<String> names) {
@@ -75,7 +76,8 @@ public class UserBean extends Bean implements  ARMItem {
 		
 		this.propertyName = new HashMap<String, String>();
 		this.domainPermissionTable = new HashMap<Identifier, JTable>();	
-
+		this.permissionAttributesMap = new HashMap<Module, PermissionAttributes>();
+		
 	}
 	
 	@Override
@@ -414,62 +416,70 @@ public class UserBean extends Bean implements  ARMItem {
 			UserBeanWrapper.USER_STREET);
 	}
 
-	public void setDomainId(Identifier oldDomainId,
-							Identifier newDomainId) {
+	public void setDomainId(final Identifier oldDomainId,
+	                        final Identifier newDomainId) {
 		try {
 			Log.debugMessage("UserBean.setDomainId() | " + this.id + ", oldDomainId:" + oldDomainId + ", newDomainId:" + newDomainId, Log.DEBUGLEVEL09);
 			
 			if (oldDomainId.isVoid()) {
-				PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(LoginManager.getUserId(),
-					newDomainId,
-					this.id, 
-					new BigInteger("0"));
-				
-				Log.debugMessage("UserBean.setDomainId() | create new PermissionAttributes: " + attributes.getId(), Log.DEBUGLEVEL10);
-			} else {
-				 Domain oldDomain = 
-					(Domain) StorableObjectPool.getStorableObject(oldDomainId, true); 
-				PermissionAttributes attributes = 
-					oldDomain.getPermissionAttributes(this.id);
-				
-				if (attributes == null) {
-					System.err.println(".applyTargetPort() | permissionAttributes null");
-					return;
+				for(final Module module : Module.getValueList()) {
+					final PermissionAttributes attributes = 
+						PermissionAttributes.createInstance(LoginManager.getUserId(),
+						newDomainId,
+						this.id,
+						module,
+						new BigInteger("0"));
+					Log.debugMessage("UserBean.setDomainId() | create new PermissionAttributes: " + attributes.getId(), Log.DEBUGLEVEL10);
 				}
 				
-				if (newDomainId.isVoid()) {
-					Log.debugMessage("UserBean.setDomainId() | delete " + attributes.getId(), Log.DEBUGLEVEL10);
-					StorableObjectPool.delete(attributes.getId());
-				} else {
-					Log.debugMessage("UserBean.setDomainId() | setDomainId " + newDomainId
-						+ " to "
-						+ attributes.getId(), Log.DEBUGLEVEL10);
-					attributes.setDomainId(newDomainId);
+				
+			} else {
+				final  Domain oldDomain = 
+					(Domain) StorableObjectPool.getStorableObject(oldDomainId, true); 
+				for(final Module module : Module.getValueList()) {
+					final PermissionAttributes attributes = 
+						oldDomain.getPermissionAttributes(this.id, module);
+					
+					if (attributes == null) {
+						System.err.println(".applyTargetPort() | permissionAttributes null");
+						return;
+					}
+					
+					if (newDomainId.isVoid()) {
+						Log.debugMessage("UserBean.setDomainId() | delete " + attributes.getId(), Log.DEBUGLEVEL10);
+						StorableObjectPool.delete(attributes.getId());
+					} else {
+						Log.debugMessage("UserBean.setDomainId() | setDomainId " + newDomainId
+							+ " to "
+							+ attributes.getId(), Log.DEBUGLEVEL10);
+						attributes.setDomainId(newDomainId);
+					}
 				}
 			}
-		} catch (CreateObjectException e) {
+		} catch (final CreateObjectException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	protected PermissionAttributes getPermissionAttributes() throws ApplicationException {
+	protected PermissionAttributes getPermissionAttributes(final Module module) throws ApplicationException {
 		final Perspective perspective = this.graphText.getPerspective();
 		// XXX think and refactor
 		if (perspective instanceof DomainPerpective) {
 			DomainPerpective domainPerpective = (DomainPerpective) perspective;
 			Identifier domainId1 = domainPerpective.getDomainId();
-			if (!domainId1.equals(this.domainId)) {
+			PermissionAttributes permissionAttributes = this.permissionAttributesMap.get(module);
+			if (permissionAttributes == null ||  !domainId1.equals(this.domainId)) {				
 				this.domainId = domainId1;
 				final Domain domain = 
 					(Domain) StorableObjectPool.getStorableObject(domainPerpective.getDomainId(), true);
-				this.permissionAttributes = domain.getPermissionAttributes(this.id);
+				permissionAttributes = domain.getPermissionAttributes(this.id, module);
+				this.permissionAttributesMap.put(module, permissionAttributes);
 			}
-			return this.permissionAttributes;
+			return permissionAttributes;
 		}
 		return null;
 	}

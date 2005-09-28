@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.4 2005/09/12 11:10:16 bob Exp $
+* $Id: DomainPerpective.java,v 1.5 2005/09/28 14:04:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import org.jgraph.graph.Port;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -26,11 +27,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/12 11:10:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/28 14:04:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -94,18 +94,22 @@ public class DomainPerpective implements Perspective {
 				if (storableObject instanceof SystemUser) {
 					SystemUser systemUser = (SystemUser) storableObject;
 					Identifier userId = systemUser.getId();
-					PermissionAttributes permissionAttributes = 
-						this.domainBean.domain.getPermissionAttributes(systemUser.getId());
 					
-					if (permissionAttributes == null) {
-						permissionAttributes = PermissionAttributes.createInstance(
-							LoginManager.getUserId(),
-							this.getDomainId(),
-							userId,
-							new BigInteger("0"));
+					for(final Module module : Module.getValueList()) {
+						PermissionAttributes permissionAttributes = 
+							this.domainBean.domain.getPermissionAttributes(systemUser.getId(), module);
+						
+						if (permissionAttributes == null) {
+							permissionAttributes = PermissionAttributes.createInstance(
+								LoginManager.getUserId(),
+								this.getDomainId(),
+								userId,
+								module,
+								new BigInteger("0"));
+						}
 					}
 				}
-			} catch (ApplicationException e) {
+			} catch (final ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

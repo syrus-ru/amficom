@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.21 2005/09/12 12:06:26 bob Exp $
+* $Id: UserBeanFactory.java,v 1.22 2005/09/28 14:05:25 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/28 14:05:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -82,23 +83,27 @@ public class UserBeanFactory extends TabledBeanFactory {
 		
 		
 		try {			
-			Identifier userId = user.getId();
-			Identifier domainId = domainPerpective.getDomainId();		
+			final Identifier userId = user.getId();
+			final Identifier domainId = domainPerpective.getDomainId();		
 
-			Domain domain = StorableObjectPool.getStorableObject(domainId, true);			
+			final Domain domain = StorableObjectPool.getStorableObject(domainId, true);			
 			
-			PermissionAttributes permissionAttributes = domain.getPermissionAttributes(userId);
-			
-			if (permissionAttributes == null) {
-				permissionAttributes = PermissionAttributes.createInstance(
-					LoginManager.getUserId(),
-					domainId,
-					userId,
-					new BigInteger("0"));
+			for(final Module module : Module.getValueList()) {
+				final PermissionAttributes permissionAttributes = 
+					domain.getPermissionAttributes(userId, module);
+				
+				if (permissionAttributes == null) {
+					PermissionAttributes.createInstance(
+						LoginManager.getUserId(),
+						domainId,
+						userId,
+						module,
+						new BigInteger("0"));
+				}
 			}
 			
 			return this.createBean(user.getId());
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
 			throw new CreateObjectException(e);
 		}
 
