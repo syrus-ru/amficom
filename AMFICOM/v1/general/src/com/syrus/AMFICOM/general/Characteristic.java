@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.67 2005/09/23 11:45:45 bass Exp $
+ * $Id: Characteristic.java,v 1.68 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/09/23 11:45:45 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/28 19:06:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -105,12 +105,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, CHARACTERISTIC_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, CHARACTERISTIC_CODE, created, creatorId);
 	}
 
 	/* (non-Javadoc)

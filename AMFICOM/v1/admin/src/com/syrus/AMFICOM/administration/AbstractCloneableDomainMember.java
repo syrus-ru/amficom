@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableDomainMember.java,v 1.12 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.13 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,14 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/09/14 19:01:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/09/28 19:06:21 $
  * @module administration
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
@@ -33,7 +35,7 @@ public abstract class AbstractCloneableDomainMember extends DomainMember
 	 */
 	protected Map<Identifier, Identifier> clonedIdMap;
 
-	protected AbstractCloneableDomainMember() {
+	protected AbstractCloneableDomainMember(/*IdlAbstractCloneableDomainMember*/) {
 		// super();
 	}
 
@@ -54,6 +56,23 @@ public abstract class AbstractCloneableDomainMember extends DomainMember
 			final StorableObjectVersion version,
 			final Identifier domainId) {
 		super(id, created, modified, creatorId, modifierId, version, domainId);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param entityCode
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	protected AbstractCloneableDomainMember(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
 	}
 
 	/**

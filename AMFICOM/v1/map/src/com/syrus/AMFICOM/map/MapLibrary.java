@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.30 2005/09/20 16:41:21 bass Exp $
+ * $Id: MapLibrary.java,v 1.31 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/09/20 16:41:21 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/28 19:06:22 $
  * @author $Author: bass $
  * @module map
  */
@@ -349,12 +349,7 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, MAPLIBRARY_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, MAPLIBRARY_CODE, created, creatorId);
 		/**
 		 * @todo should be moved to fromXmlTransferable(...) 
 		 */

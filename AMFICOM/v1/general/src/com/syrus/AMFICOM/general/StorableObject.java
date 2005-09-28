@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.104 2005/09/25 15:42:48 bass Exp $
+ * $Id: StorableObject.java,v 1.105 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,11 @@ import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/09/25 15:42:48 $
+ * @version $Revision: 1.105 $, $Date: 2005/09/28 19:06:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -86,7 +87,26 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedModifierId = null;
 		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;
 	}
-	
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param entityCode
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	protected StorableObject(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		this(Identifier.fromXmlTransferable(id, importType, entityCode),
+				created, created, creatorId, creatorId,
+				StorableObjectVersion.createInitial());
+	}
+
 	/**
 	 *
 	 * Will be overridden by descendants.
@@ -559,7 +579,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.104 $, $Date: 2005/09/25 15:42:48 $
+	 * @version $Revision: 1.105 $, $Date: 2005/09/28 19:06:21 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")

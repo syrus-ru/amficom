@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.58 2005/09/28 09:02:21 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.59 2005/09/28 19:06:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,11 +32,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeElement;
 import com.syrus.util.Log;
@@ -47,7 +49,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/09/28 09:02:21 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/28 19:06:24 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -92,18 +94,17 @@ public abstract class AbstractSchemeElement
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
+	 * @param entityCode
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	AbstractSchemeElement(final Identifier id,
-			final Date created,
-			final Identifier creatorId) {
-		super(id,
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+	AbstractSchemeElement(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
 	}
 
 	/**

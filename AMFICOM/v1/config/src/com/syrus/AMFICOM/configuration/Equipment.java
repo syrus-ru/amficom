@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.135 2005/09/28 12:20:56 arseniy Exp $
+ * $Id: Equipment.java,v 1.136 2005/09/28 19:06:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.135 $, $Date: 2005/09/28 12:20:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.136 $, $Date: 2005/09/28 19:06:20 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -145,13 +145,7 @@ public final class Equipment extends DomainMember
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, EQUIPMENT_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null);
+		super(id, importType, EQUIPMENT_CODE, created, creatorId);
 	}
 
 	/**

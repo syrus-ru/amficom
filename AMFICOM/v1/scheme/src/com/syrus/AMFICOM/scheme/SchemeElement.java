@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.123 2005/09/28 12:59:41 bass Exp $
+ * $Id: SchemeElement.java,v 1.124 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.123 $, $Date: 2005/09/28 12:59:41 $
+ * @version $Revision: 1.124 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -198,9 +198,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMEELEMENT_CODE),
-				created,
-				creatorId);
+		super(id, importType, SCHEMEELEMENT_CODE, created, creatorId);
 	}
 
 	/**

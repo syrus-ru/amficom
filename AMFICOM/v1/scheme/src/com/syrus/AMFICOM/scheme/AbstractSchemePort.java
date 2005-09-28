@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.70 2005/09/26 13:11:02 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.71 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,12 +44,14 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
@@ -58,7 +60,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/26 13:11:02 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -139,25 +141,24 @@ public abstract class AbstractSchemePort
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
+	 * @param entityCode
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	AbstractSchemePort(final Identifier id,
-			final Date created,
-			final Identifier creatorId) {
-		super(id,
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+	AbstractSchemePort(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
 	}
 
 	/**
 	 * Will transmute to the constructor from the corresponding
 	 * transferable.
 	 */
-	AbstractSchemePort() {
+	AbstractSchemePort(/*IdlAbstractSchemePort*/) {
 		// super();
 	}
 

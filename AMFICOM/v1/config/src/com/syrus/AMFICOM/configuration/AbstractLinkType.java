@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.22 2005/09/23 11:45:45 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.23 2005/09/28 19:06:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,20 +22,22 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/23 11:45:45 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/28 19:06:20 $
  * @author $Author: bass $
  * @module config
  */
 public abstract class AbstractLinkType extends StorableObjectType implements Namable, Characterizable {
 	private static final long serialVersionUID = 6276017738364160981L;
 
-	public AbstractLinkType() {
-		super();
+	AbstractLinkType(/*IdlAbstractLinkType*/) {
+		// super();
 	}
 
 	protected AbstractLinkType(final Identifier id,
@@ -47,6 +49,23 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 			final String codename,
 			final String description) {
 		super(id, created, modified, creatorId, modifierId, version, codename, description);		
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param entityCode
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	AbstractLinkType(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
 	}
 
 	public abstract Identifier getImageId();

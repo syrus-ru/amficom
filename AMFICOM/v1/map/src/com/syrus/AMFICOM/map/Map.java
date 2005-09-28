@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.106 2005/09/28 15:01:25 krupenn Exp $
+ * $Id: Map.java,v 1.107 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.106 $, $Date: 2005/09/28 15:01:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.107 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1190,22 +1190,14 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 * @param importType
 	 * @param created
 	 * @param creatorId
-	 * @param domainId
 	 * @throws IdentifierGenerationException
 	 */
 	private Map(final XmlIdentifier id,
 			final String importType,
 			final Date created,
-			final Identifier creatorId,
-			@Deprecated final Identifier domainId)
+			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, MAP_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				domainId);
+		super(id, importType, MAP_CODE, created, creatorId);
 	}
 
 	public void fromXmlTransferable(final XmlMap xmlMap, final String importType) throws ApplicationException {
@@ -1292,8 +1284,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				map = new Map(xmlId,
 						importType,
 						created,
-						creatorId,
-						domainId);
+						creatorId);
 			} else {
 				map = StorableObjectPool.getStorableObject(id, true);
 				if (map == null) {
@@ -1301,10 +1292,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 					map = new Map(xmlId,
 							importType,
 							created,
-							creatorId,
-							domainId);
+							creatorId);
 				}
 			}
+			map.setDomainId0(domainId);
 			map.fromXmlTransferable(xmlMap, importType);
 			assert map.isValid() : OBJECT_BADLY_INITIALIZED;
 			map.markAsChanged();

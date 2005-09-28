@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.70 2005/09/20 18:13:35 bass Exp $
+ * $Id: SchemePort.java,v 1.71 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/20 18:13:35 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -108,7 +108,8 @@ public final class SchemePort extends AbstractSchemePort
 				measurementPort,
 				parentSchemeDevice);
 
-		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE;
+		assert portType == null || portType.getKind() == PortTypeKind.PORT_KIND_SIMPLE;
+		assert port == null || port.getType().getKind() == PortTypeKind.PORT_KIND_SIMPLE;
 	}
 
 	/**
@@ -125,9 +126,7 @@ public final class SchemePort extends AbstractSchemePort
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMEPORT_CODE),
-				created,
-				creatorId);
+		super(id, importType, SCHEMEPORT_CODE, created, creatorId);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.52 2005/09/20 16:41:20 bass Exp $
+ * $Id: CharacteristicType.java,v 1.53 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.53 $, $Date: 2005/09/28 19:06:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -88,14 +88,7 @@ public final class CharacteristicType extends StorableObjectType
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, CHARACTERISTIC_TYPE_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null);
+		super(id, importType, CHARACTERISTIC_TYPE_CODE, created, creatorId);
 	}
 
 	/**

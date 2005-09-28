@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.94 2005/09/26 09:45:00 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.95 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2005/09/26 09:45:00 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -345,14 +345,12 @@ public final class PhysicalLinkType extends StorableObjectType
 			@Deprecated final String codename,
 			@Deprecated final String description)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, PHYSICALLINK_TYPE_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				codename,
-				description);
+		super(id, importType, PHYSICALLINK_TYPE_CODE, created, creatorId);
+		/**
+		 * @todo Move to #fromXmlTransferable() or XmlComplementor
+		 */
+		super.codename = codename;
+		super.description = description;
 	}
 
 	public void fromXmlTransferable(

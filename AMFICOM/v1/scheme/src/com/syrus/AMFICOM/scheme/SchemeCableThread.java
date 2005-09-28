@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.86 2005/09/26 13:11:02 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.87 2005/09/28 19:06:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/26 13:11:02 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/28 19:06:24 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -153,12 +153,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMECABLETHREAD_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, SCHEMECABLETHREAD_CODE, created, creatorId);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.72 2005/09/27 06:52:15 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.73 2005/09/28 19:06:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/09/27 06:52:15 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/28 19:06:24 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -126,12 +126,7 @@ public final class SchemeProtoGroup extends StorableObject
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMEPROTOGROUP_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, SCHEMEPROTOGROUP_CODE, created, creatorId);
 	}
 
 	/**

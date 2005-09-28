@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.89 2005/09/28 14:54:14 krupenn Exp $
+ * $Id: Collector.java,v 1.90 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.89 $, $Date: 2005/09/28 14:54:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -388,12 +388,7 @@ public final class Collector extends StorableObject
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, COLLECTOR_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, COLLECTOR_CODE, created, creatorId);
 		this.physicalLinkIds = new HashSet<Identifier>();
 	}
 

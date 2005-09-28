@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.96 2005/09/26 13:11:02 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.97 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/09/26 13:11:02 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -152,9 +152,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMECABLELINK_CODE),
-				created,
-				creatorId);
+		super(id, importType, SCHEMECABLELINK_CODE, created, creatorId);
 	}
 
 	/**

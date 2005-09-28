@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.80 2005/09/28 08:18:01 bass Exp $
+ * $Id: Identifier.java,v 1.81 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.80 $, $Date: 2005/09/28 08:18:01 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/28 19:06:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -390,7 +390,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param entityCode
 	 * @throws IdentifierGenerationException
 	 */
-	public static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
+	static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
 			final String importType,
 			final short entityCode)
 	throws IdentifierGenerationException {
@@ -416,7 +416,10 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 			final XmlConversionMode xmlConversionMode)
 	throws ObjectNotFoundException {
 		try {
-			assert xmlConversionMode != MODE_GENERATE_NEW_IF_ABSENT;
+			if (xmlConversionMode == MODE_GENERATE_NEW_IF_ABSENT) {
+				throw new IllegalArgumentException(
+						"MODE_GENERATE_NEW_IF_ABSENT is used internally and cannot be specified here");
+			}
 			return fromXmlTransferable(xmlId, UNKNOWN_CODE, importType, xmlConversionMode);
 		} catch (final IdentifierGenerationException ige) {
 			/*

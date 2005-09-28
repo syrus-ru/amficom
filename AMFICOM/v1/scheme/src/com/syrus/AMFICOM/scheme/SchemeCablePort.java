@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.69 2005/09/20 18:13:34 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.70 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/09/20 18:13:34 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -107,7 +107,8 @@ public final class SchemeCablePort extends AbstractSchemePort
 				measurementPort,
 				parentSchemeDevice);
 
-		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE;
+		assert portType == null || portType.getKind() == PortTypeKind.PORT_KIND_CABLE;
+		assert port == null || port.getType().getKind() == PortTypeKind.PORT_KIND_CABLE;
 	}
 
 	/**
@@ -124,9 +125,7 @@ public final class SchemeCablePort extends AbstractSchemePort
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMECABLEPORT_CODE),
-				created,
-				creatorId);
+		super(id, importType, SCHEMECABLEPORT_CODE, created, creatorId);
 	}
 
 	/**

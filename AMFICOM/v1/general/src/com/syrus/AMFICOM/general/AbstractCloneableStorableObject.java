@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableStorableObject.java,v 1.10 2005/09/08 18:26:28 bass Exp $
+ * $Id: AbstractCloneableStorableObject.java,v 1.11 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/09/08 18:26:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/28 19:06:21 $
  * @module general
  */
 public abstract class AbstractCloneableStorableObject extends StorableObject
@@ -27,7 +29,7 @@ public abstract class AbstractCloneableStorableObject extends StorableObject
 	 */
 	protected Map<Identifier, Identifier> clonedIdMap;
 
-	protected AbstractCloneableStorableObject() {
+	protected AbstractCloneableStorableObject(/*IdlAbstractCloneableStorableObject*/) {
 		// super();
 	}
 
@@ -46,6 +48,22 @@ public abstract class AbstractCloneableStorableObject extends StorableObject
 			final Identifier modifierId,
 			final StorableObjectVersion version) {
 		super(id, created, modified, creatorId, modifierId, version);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	protected AbstractCloneableStorableObject(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
 	}
 
 	/**

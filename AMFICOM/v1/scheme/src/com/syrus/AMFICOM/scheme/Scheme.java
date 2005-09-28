@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.104 2005/09/26 15:11:51 bass Exp $
+ * $Id: Scheme.java,v 1.105 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.104 $, $Date: 2005/09/26 15:11:51 $
+ * @version $Revision: 1.105 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -199,13 +199,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEME_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null);
+		super(id, importType, SCHEME_CODE, created, creatorId);
 	}
 
 	/**

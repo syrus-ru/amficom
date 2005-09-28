@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.99 2005/09/28 12:21:44 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.100 2005/09/28 19:06:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/09/28 12:21:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.100 $, $Date: 2005/09/28 19:06:20 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -92,14 +92,7 @@ public final class EquipmentType extends StorableObjectType implements Namable, 
 	 */
 	private EquipmentType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
 			throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, EQUIPMENT_TYPE_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null);
+		super(id, importType, EQUIPMENT_TYPE_CODE, created, creatorId);
 	}
 
 	/**

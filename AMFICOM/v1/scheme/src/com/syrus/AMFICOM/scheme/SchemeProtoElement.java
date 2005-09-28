@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.100 2005/09/28 12:59:41 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.101 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/09/28 12:59:41 $
+ * @version $Revision: 1.101 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -179,12 +179,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMEPROTOELEMENT_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, SCHEMEPROTOELEMENT_CODE, created, creatorId);
 	}
 
 	/**

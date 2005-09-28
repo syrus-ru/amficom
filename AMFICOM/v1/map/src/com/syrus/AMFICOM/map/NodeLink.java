@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.102 2005/09/28 14:54:52 krupenn Exp $
+ * $Id: NodeLink.java,v 1.103 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.102 $, $Date: 2005/09/28 14:54:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.103 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -465,12 +465,7 @@ public final class NodeLink extends StorableObject
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, NODELINK_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, NODELINK_CODE, created, creatorId);
 		/**
 		 * @todo Should go to #fromTransferable(...) or
 		 *       the corresponding complementor.

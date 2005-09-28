@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.71 2005/09/20 18:13:35 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.72 2005/09/28 19:06:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/09/20 18:13:35 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/28 19:06:23 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -150,12 +150,7 @@ public final class CableChannelingItem
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, CABLECHANNELINGITEM_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, CABLECHANNELINGITEM_CODE, created, creatorId);
 	}
 
 	/**

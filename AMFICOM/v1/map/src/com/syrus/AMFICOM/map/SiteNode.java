@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.100 2005/09/28 14:58:05 krupenn Exp $
+ * $Id: SiteNode.java,v 1.101 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch147;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -64,8 +65,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.100 $, $Date: 2005/09/28 14:58:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.101 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -373,22 +374,18 @@ public class SiteNode extends AbstractNode
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SITENODE_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				"",
-				"",
-				new DoublePoint(0.0, 0.0));
+		super(id, importType, SITENODE_CODE, created, creatorId);
 		/**
-		 * @todo Should go to #fromTransferable(...) or
+		 * @todo Should go to #fromXmlTransferable(...) or
 		 *       the corresponding complementor.
 		 */
+		this.name = "";
+		this.description = "";
+		this.location = new DoublePoint(.0, .0);
 		this.selected = false;
 	}
 
+	@Crutch147(notes = "attachmentSiteNodeId is incorrectly converted from XML")
 	public final void fromXmlTransferable(final XmlSiteNode xmlSiteNode,
 			final String importType)
 	throws ApplicationException {

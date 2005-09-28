@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.86 2005/09/28 10:22:23 bass Exp $
+ * $Id: SchemeLink.java,v 1.87 2005/09/28 19:06:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/28 10:22:23 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/28 19:06:24 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -168,9 +168,7 @@ public final class SchemeLink extends AbstractSchemeLink
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SCHEMELINK_CODE),
-				created,
-				creatorId);
+		super(id, importType, SCHEMELINK_CODE, created, creatorId);
 	}
 
 	/**

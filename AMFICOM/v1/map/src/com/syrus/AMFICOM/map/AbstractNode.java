@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.43 2005/09/28 14:52:48 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.44 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,11 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
@@ -23,8 +25,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/09/28 14:52:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -76,6 +78,23 @@ public abstract class AbstractNode extends StorableObject
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param entityCode
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	AbstractNode(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
 	}
 
 	@Override

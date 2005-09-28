@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.4 2005/09/28 12:23:02 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.5 2005/09/28 19:06:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/28 12:23:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/09/28 19:06:20 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -111,12 +111,7 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 	 */
 	private ProtoEquipment(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
 			throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, PROTOEQUIPMENT_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, PROTOEQUIPMENT_CODE, created, creatorId);
 	}
 
 	/**

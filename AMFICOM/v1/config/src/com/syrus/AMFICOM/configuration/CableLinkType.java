@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.77 2005/09/20 16:41:21 bass Exp $
+ * $Id: CableLinkType.java,v 1.78 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/09/20 16:41:21 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/28 19:06:21 $
  * @author $Author: bass $
  * @module config
  */
@@ -107,14 +107,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, CABLELINK_TYPE_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null);
+		super(id, importType, CABLELINK_TYPE_CODE, created, creatorId);
 	}
 
 	/**

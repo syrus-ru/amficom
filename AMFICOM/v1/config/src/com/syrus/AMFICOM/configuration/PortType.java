@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.95 2005/09/26 15:24:33 bass Exp $
+ * $Id: PortType.java,v 1.96 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/09/26 15:24:33 $
+ * @version $Revision: 1.96 $, $Date: 2005/09/28 19:06:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -107,14 +107,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, PORT_TYPE_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null);
+		super(id, importType, PORT_TYPE_CODE, created, creatorId);
 	}
 
 	/**

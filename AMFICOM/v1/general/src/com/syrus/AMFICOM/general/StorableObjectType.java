@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.30 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.31 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,10 +11,11 @@ package com.syrus.AMFICOM.general;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/09/28 19:06:21 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -44,10 +45,27 @@ public abstract class StorableObjectType extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected StorableObjectType() {
-		// empty
+	protected StorableObjectType(/*IdlStorableObjectType*/) {
+		// super();
 	}
-	
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param entityCode
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	protected StorableObjectType(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
+	}
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */

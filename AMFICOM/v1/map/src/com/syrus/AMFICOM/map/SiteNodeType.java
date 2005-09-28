@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.94 2005/09/26 09:45:00 bass Exp $
+ * $Id: SiteNodeType.java,v 1.95 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2005/09/26 09:45:00 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -336,14 +336,12 @@ public final class SiteNodeType extends StorableObjectType
 			@Deprecated final String codename,
 			@Deprecated final String description)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, SITENODE_TYPE_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				codename,
-				description);
+		super(id, importType, SITENODE_TYPE_CODE, created, creatorId);
+		/**
+		 * @todo to be moved to #fromXmlTransferable() or XmlComplementor
+		 */
+		this.codename = codename;
+		this.description = description;
 	}
 
 	public void fromXmlTransferable(final XmlSiteNodeType xmlSiteNodeType,

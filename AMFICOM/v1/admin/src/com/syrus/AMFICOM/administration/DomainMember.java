@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.26 2005/09/28 11:24:08 bass Exp $
+ * $Id: DomainMember.java,v 1.27 2005/09/28 19:06:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,15 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/28 11:24:08 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/28 19:06:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -34,7 +36,7 @@ public abstract class DomainMember extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected DomainMember() {
+	protected DomainMember(/*IdlDomainMember*/) {
 		// super();
 	}
 
@@ -50,7 +52,24 @@ public abstract class DomainMember extends StorableObject {
 			final Identifier domainId) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.domainId = domainId;
-	}	
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param entityCode
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	protected DomainMember(final XmlIdentifier id,
+			final String importType, final short entityCode,
+			final Date created, final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(id, importType, entityCode, created, creatorId);
+	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

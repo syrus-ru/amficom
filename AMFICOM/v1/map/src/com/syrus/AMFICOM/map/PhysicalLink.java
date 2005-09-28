@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.121 2005/09/28 14:59:24 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.122 2005/09/28 19:06:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.121 $, $Date: 2005/09/28 14:59:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.122 $, $Date: 2005/09/28 19:06:22 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -942,12 +942,7 @@ public class PhysicalLink extends StorableObject
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		super(Identifier.fromXmlTransferable(id, importType, PHYSICALLINK_CODE),
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial());
+		super(id, importType, PHYSICALLINK_CODE, created, creatorId);
 		/**
 		 * @todo Should go to #fromTransferable(...) or
 		 *       the corresponding complementor.
