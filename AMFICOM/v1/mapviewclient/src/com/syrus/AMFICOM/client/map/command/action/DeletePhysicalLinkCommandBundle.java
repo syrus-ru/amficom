@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.29 2005/09/19 15:37:43 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.30 2005/09/28 15:19:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/09/19 15:37:43 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/28 15:19:22 $
  * @module mapviewclient
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
@@ -75,7 +76,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
 		try {
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
-			List cablePathsToScan = mapView.getCablePaths(this.link);
+			Collection<CablePath> cablePathsToScan = mapView.getCablePaths(this.link);
 			this.link.sortNodes();
 			/// удаляются все топологические узлы линии
 			for(Iterator it = this.link.getSortedNodes().iterator(); it.hasNext();) {
@@ -94,8 +95,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
 			super.removePhysicalLink(this.link);
 			// проверяются все кабельные пути, которые проходили по удаленной линии,
 			// и прохождение по ней заменяется непривязанной связью
-			for(Iterator it = cablePathsToScan.iterator(); it.hasNext();) {
-				CablePath cablePath = (CablePath)it.next();
+			for(CablePath cablePath : cablePathsToScan) {
 				setUndoable(false);
 				
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(

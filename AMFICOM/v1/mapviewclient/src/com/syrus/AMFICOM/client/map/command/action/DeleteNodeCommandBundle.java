@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.44 2005/09/19 15:37:43 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.45 2005/09/28 15:19:22 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/09/19 15:37:43 $
+ * @version $Revision: 1.45 $, $Date: 2005/09/28 15:19:22 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -93,9 +93,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		List<Scheme> schemes = new LinkedList<Scheme>();
 		// если удал€етс€ сетевой узел (не неприв€занный элемент),
 		// необходимо проверить все кабельные пути, включающие его
-		for(Iterator it = mapView.getCablePaths(site).iterator(); it.hasNext();)
-		{
-			CablePath cablePath = (CablePath)it.next();
+		for(CablePath cablePath : mapView.getCablePaths(site)) {
 			
 			setUndoable(false);
 			// если удал€емый узел содержит прив€зку концевого элемента
@@ -412,15 +410,12 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		super.removeNode(unbound);
 
 		// отдельный список дл€ удалени€		
-		List cablePaths = new LinkedList();
-		cablePaths.addAll(mapView.getCablePaths(unbound));
 		List<Scheme> schemes = new LinkedList<Scheme>();
 		
-		for(Iterator it = cablePaths.iterator(); it.hasNext();) {
-			CablePath cpath = (CablePath)it.next();
-			super.removeCablePathLinks(cpath);
-			super.removeCablePath(cpath);
-			schemes.add(cpath.getSchemeCableLink().getParentScheme());
+		for(CablePath cablePath : new LinkedList<CablePath>(mapView.getCablePaths(unbound))) {
+			super.removeCablePathLinks(cablePath);
+			super.removeCablePath(cablePath);
+			schemes.add(cablePath.getSchemeCableLink().getParentScheme());
 			setUndoable(false);
 		}
 		for(Scheme scheme : schemes) {

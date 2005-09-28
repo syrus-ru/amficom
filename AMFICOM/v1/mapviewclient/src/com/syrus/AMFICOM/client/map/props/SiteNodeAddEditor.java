@@ -562,8 +562,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					Scheme scheme = (Scheme )it.next();
 					schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively(true));
 				}
-				List cableElementsTransit = mapView.getCablePaths(siteNode);
-				List cableElementsDropped = new LinkedList();
+				List<CablePath> cableElementsTransit = new LinkedList<CablePath>(mapView.getCablePaths(siteNode));
+				List<CablePath> cableElementsDropped = new LinkedList<CablePath>();
 				for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
 					CablePath cablePath = (CablePath )it.next();
 					if(cablePath.getStartNode().equals(siteNode)
@@ -580,8 +580,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 						if(elementSiteNode != null && elementSiteNode.equals(siteNode)) {
 							elementNode = new DefaultMutableTreeNode(se);
 							this.elementsBranch.add(elementNode);
-							for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();) {
-								CablePath cablePath = (CablePath)it2.next();
+							for(CablePath cablePath : cableElementsDropped) {
 								if(startsAt(cablePath.getSchemeCableLink(), se)) {
 									cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
 									elementNode.add(cableNode);
@@ -592,8 +591,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				}
 				
 				if(cableElementsTransit != null) {
-					for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
-						CablePath cablePath = (CablePath )it.next();
+					for(CablePath cablePath : cableElementsTransit) {
 						cableNode = new DefaultMutableTreeNode(cablePath
 								.getSchemeCableLink());
 						this.cablesBranch.add(cableNode);

@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.32 2005/09/19 15:37:43 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.33 2005/09/28 15:19:22 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 /**
  *   оманда прив€зывани€ неприв€занного элемента к узлу.
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/09/19 15:37:43 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/28 15:19:22 $
  * @module mapviewclient
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle {
@@ -68,10 +68,8 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle {
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
 			// список кабельных путей, включающий прив€зываемый элемент
-			List cablePaths = mapView.getCablePaths(this.unbound);
 			// обновл€ютс€ концевые узлы кабельных путей
-			for(Iterator it = cablePaths.iterator(); it.hasNext();) {
-				CablePath cablePath = (CablePath)it.next();
+			for(CablePath cablePath : mapView.getCablePaths(this.unbound)) {
 				if(cablePath.getEndNode().equals(this.unbound))
 					cablePath.setEndNode(this.site);
 				if(cablePath.getStartNode().equals(this.unbound))

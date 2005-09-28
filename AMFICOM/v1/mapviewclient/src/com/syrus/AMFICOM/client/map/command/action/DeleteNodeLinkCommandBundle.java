@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.36 2005/09/19 15:37:43 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.37 2005/09/28 15:19:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/09/19 15:37:43 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/28 15:19:22 $
  * @module mapviewclient
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -342,9 +342,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			if(physicalLink.getStartNode() instanceof SiteNode
 				&& physicalLink.getEndNode() instanceof SiteNode)
 			{
-				for(Iterator it = mapView.getCablePaths(physicalLink).iterator(); it.hasNext();)
-				{
-					CablePath cablePath = (CablePath)it.next();
+				for(CablePath cablePath : mapView.getCablePaths(physicalLink)) {
 					setUndoable(false);
 					UnboundLink unbound = 
 						super.createUnboundLinkWithNodeLink(
