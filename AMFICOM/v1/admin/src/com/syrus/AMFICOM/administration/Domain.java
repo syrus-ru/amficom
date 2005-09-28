@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.61 2005/09/28 10:21:10 bob Exp $
+ * $Id: Domain.java,v 1.62 2005/09/28 11:01:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/09/28 10:21:10 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/28 11:01:11 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -162,7 +162,7 @@ public final class Domain extends DomainMember implements Characterizable {
 			module,
 			OperationSort.OPERATION_EQUALS,
 			ObjectEntities.PERMATTR_CODE,
-			PermissionAttributesWrapper.COLUMN_MODULE_CODE));
+			PermissionAttributesWrapper.COLUMN_MODULE));
 		
 		final Set<PermissionAttributes> storableObjectsByCondition = 
 			StorableObjectPool.getStorableObjectsByCondition(

@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributesXML.java,v 1.6 2005/09/27 14:05:04 bob Exp $
+* $Id: PermissionAttributesXML.java,v 1.7 2005/09/28 11:00:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.administration;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_USER_ID;
-import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE_CODE;
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
 
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/27 14:05:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/28 11:00:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -43,7 +43,7 @@ public class PermissionAttributesXML extends AbstractStorableObjectXML<Permissio
 		if (keys == null) {
 			final String[] keysArray = new String[] {COLUMN_DOMAIN_ID, 
 					COLUMN_USER_ID, 
-					COLUMN_MODULE_CODE,
+					COLUMN_MODULE,
 					COLUMN_PERMISSION_MASK };
 			keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 		}
@@ -58,7 +58,7 @@ public class PermissionAttributesXML extends AbstractStorableObjectXML<Permissio
 				this.getVersion(objectMap, StorableObjectWrapper.COLUMN_VERSION),
 				this.getIdentifier(objectMap, COLUMN_DOMAIN_ID),
 				this.getIdentifier(objectMap, COLUMN_USER_ID),
-				Module.valueOf(this.getInteger(objectMap, COLUMN_MODULE_CODE)),
+				Module.valueOf(this.getInteger(objectMap, COLUMN_MODULE)),
 				this.getBigInteger(objectMap, COLUMN_PERMISSION_MASK));
 		return permissionAttributes;
 	}

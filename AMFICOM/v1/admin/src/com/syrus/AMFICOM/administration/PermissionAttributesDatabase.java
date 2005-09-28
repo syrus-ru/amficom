@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesDatabase.java,v 1.4 2005/09/27 14:05:04 bob Exp $
+ * $Id: PermissionAttributesDatabase.java,v 1.5 2005/09/28 11:00:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
-import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE_CODE;
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_MODULE;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_USER_ID;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
 
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/27 14:05:04 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/28 11:00:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -48,7 +48,7 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_USER_ID + COMMA
-			+ COLUMN_MODULE_CODE + COMMA
+			+ COLUMN_MODULE + COMMA
 			+ COLUMN_PERMISSION_MASK;
 		}
 		return columns;
@@ -87,7 +87,7 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
-				Module.valueOf(resultSet.getInt(COLUMN_MODULE_CODE)),
+				Module.valueOf(resultSet.getInt(COLUMN_MODULE)),
 				// store without DatabaseString.fromQuerySubString because of contains only numbers
 				new BigInteger(resultSet.getString(COLUMN_PERMISSION_MASK)));
 		return attributes;
