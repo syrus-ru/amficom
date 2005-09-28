@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.8 2005/09/27 14:02:57 bob Exp $
+* $Id: PermissionAttributes.java,v 1.9 2005/09/28 09:19:46 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,16 +9,19 @@
 package com.syrus.AMFICOM.administration;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributes;
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesHelper;
-import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesPackage.ModuleSort;
+import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesPackage.IdlModule;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -34,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/27 14:02:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/28 09:19:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -47,12 +50,28 @@ public class PermissionAttributes extends StorableObject {
 		ADMINSTRATION,
 		SCHEME;
 		
-		public static final Module valueOf(final int ordinal) {
-			return Module.values()[ordinal];
+		private static Module[] values = values();
+		private static List<Module> valueList = 
+			Collections.unmodifiableList(Arrays.asList(values));
+		
+		public static final Module valueOf(final int ordinal) {			
+			return values[ordinal];
 		} 
 		
 		public static final Module valueOf(final Integer ordinal) {
 			return valueOf(ordinal.intValue());
+		}
+
+		public static Module valueOf(final IdlModule idlModule) {
+			return values[idlModule.value()];
+		}
+		
+		public static final List<Module> getValueList() {
+			return valueList;
+		}		
+		
+		public final IdlModule getTransferable() {
+			return IdlModule.from_int(this.ordinal());
 		}
 	}
 	
@@ -213,7 +232,7 @@ public class PermissionAttributes extends StorableObject {
 		super.fromTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);
 		this.userId = new Identifier(pat.userId);
-		this.module = Module.valueOf(pat.moduleSort.value());
+		this.module = Module.valueOf(pat._module);
 		this.setPermissionsByteArray0(pat.permissionMask);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -234,7 +253,7 @@ public class PermissionAttributes extends StorableObject {
 				super.version.longValue(),
 				this.domainId.getTransferable(),
 				this.userId.getTransferable(),
-				ModuleSort.from_int(this.module.ordinal()),
+				this.module.getTransferable(),
 				this.getPermissionByteArray0());
 	}	
 
