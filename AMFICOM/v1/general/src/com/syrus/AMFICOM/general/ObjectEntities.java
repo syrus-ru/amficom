@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.85 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.86 2005/09/28 10:03:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/09/14 18:51:56 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/28 10:03:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -58,6 +58,7 @@ public final class ObjectEntities {
 	public static final String CABLETHREAD_TYPE = "CableThreadType";
 
 	/*	Object */
+	public static final String PROTOEQUIPMENT = "ProtoEquipment";
 	public static final String EQUIPMENT = "Equipment";
 	public static final String PORT = "Port";
 	public static final String TRANSMISSIONPATH = "TransmissionPath";
@@ -226,6 +227,7 @@ public final class ObjectEntities {
 	public static final short LINK_CODE = 0x0184;
 	public static final short CABLETHREAD_CODE = 0x0185;
 	public static final short CABLELINK_CODE = 0x0186;
+	public static final short PROTOEQUIPMENT_CODE = 0x0187;
 
 	public static final short EQUIPMENT_TYPE_CODE = 0x01C1;
 	public static final short PORT_TYPE_CODE = 0x01C2;
@@ -383,6 +385,7 @@ public final class ObjectEntities {
 		registerEntity(SERVERPROCESS_CODE, SERVERPROCESS);
 		registerEntity(PERMATTR_CODE, PERMATTR);
 
+		registerEntity(PROTOEQUIPMENT_CODE, PROTOEQUIPMENT);
 		registerEntity(EQUIPMENT_CODE, EQUIPMENT);
 		registerEntity(PORT_CODE, PORT);
 		registerEntity(TRANSMISSIONPATH_CODE, TRANSMISSIONPATH);
