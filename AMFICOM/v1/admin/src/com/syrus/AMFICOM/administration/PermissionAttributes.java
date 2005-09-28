@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.10 2005/09/28 10:21:46 bob Exp $
+* $Id: PermissionAttributes.java,v 1.11 2005/09/28 12:29:00 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/28 10:21:46 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/28 12:29:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -47,12 +47,20 @@ public class PermissionAttributes extends StorableObject {
 	// TODO generate serialVersionUID when all enum will be made 
 
 	public static enum Module {
-		ADMINSTRATION,
+		ADMINISTRATION,
 		SCHEME;
+		
+		private static final String KEY_ROOT = "Module.Description.";
 		
 		private static Module[] values = values();
 		private static List<Module> valueList = 
 			Collections.unmodifiableList(Arrays.asList(values));
+		
+		private final String codename;
+		
+		private Module(){
+			this.codename = getJavaNamingStyleName(this.name());
+		}
 		
 		public static final Module valueOf(final int ordinal) {			
 			return values[ordinal];
@@ -72,6 +80,14 @@ public class PermissionAttributes extends StorableObject {
 		
 		public final IdlModule getTransferable() {
 			return IdlModule.from_int(this.ordinal());
+		}
+		
+		final String getCodename() {
+			return this.codename;
+		}
+		
+		public final String getDescription() {
+			return LangModelAdministation.getString(KEY_ROOT + this.codename);
 		}
 	}
 	
@@ -100,7 +116,7 @@ public class PermissionAttributes extends StorableObject {
 		}
 		
 		public final Module getModule() {
-			return Module.ADMINSTRATION;
+			return Module.ADMINISTRATION;
 		}
 	}
 	
@@ -145,30 +161,20 @@ public class PermissionAttributes extends StorableObject {
 
 		private PermissionCodename(final SwitchableGroupNumber e) {
 			this.e = (Enum) e;
-			// generate codename as javaNamingStyle from name
-			final String name = this.name();
-			final StringBuffer buffer = new StringBuffer();
-			String[] strings = name.split("_");
-			for(int i = 0; i < strings.length; i++) {
-				if (i == 0) {
-					buffer.append(strings[i].toLowerCase());
-				} else {
-					buffer.append(strings[i].charAt(0));
-					buffer.append(strings[i].substring(1).toLowerCase());
-				}
-			}
-			this.codename = buffer.toString();
+			this.codename = e.getModule().getCodename() 
+				+ '.' 
+				+ getJavaNamingStyleName(this.e.name());			
 		}
 		
 		public final String getDescription() {
 			return LangModelAdministation.getString(KEY_ROOT + this.codename);
 		}
 		
-		public final String getCodename() {
+		final String getCodename() {
 			return this.codename;
 		}
 		
-		public final int getOrderInGroup() {
+		final int getOrderInGroup() {
 			return this.e.ordinal();
 		}
 		
@@ -458,5 +464,21 @@ public class PermissionAttributes extends StorableObject {
 		return this.module;
 	}
 	
+	/**
+	 * generate string  as javaNamingStyle from string
+	 */
+	static String getJavaNamingStyleName(final String string) {
+        final StringBuffer buffer = new StringBuffer();
+		String[] strings = string.split("_");
+		for(int i = 0; i < strings.length; i++) {
+			if (i == 0) {
+				buffer.append(strings[i].toLowerCase());
+			} else {
+				buffer.append(strings[i].charAt(0));
+				buffer.append(strings[i].substring(1).toLowerCase());
+			}
+		}
+		return buffer.toString();
+	}
 }
 
