@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.11 2005/09/19 13:10:28 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.12 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
@@ -88,7 +88,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			// for any other strings return null Manager
 			return null;
 		}
-		if (object instanceof EquipmentType)
+		if (object instanceof ProtoEquipment)
 			return EquipmentTypePropertiesManager.getInstance(aContext);
 		if (object instanceof LinkType)
 			return LinkTypePropertiesManager.getInstance(aContext);
@@ -133,7 +133,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 				createPortTypes(node, contents, PortTypeKind.PORT_KIND_CABLE);
 			}
 			else if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE)) {
-				createEquipmentTypes(node, contents);
+				createProtoEquipments(node, contents);
 			}
 			// else if (s.equals("TransmissionPathType")) {
 			// try {
@@ -253,7 +253,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 		}
 	}
 	
-	private void createEquipmentTypes(Item node, Collection contents) {
+	private void createProtoEquipments(Item node, Collection contents) {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 			Collection<StorableObject> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -264,7 +264,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
-				EquipmentType type = (EquipmentType)it.next();
+				ProtoEquipment type = (ProtoEquipment)it.next();
 				node.addChild(new PopulatableIconedNode(this, type, false));
 			}
 		} 

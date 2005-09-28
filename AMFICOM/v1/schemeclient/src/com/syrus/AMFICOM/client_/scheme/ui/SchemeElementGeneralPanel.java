@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.20 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.21 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,10 +48,13 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
+import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -69,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
@@ -90,9 +93,13 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfLabelText = new JTextField();
 	JButton btSymbolBut = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	JComboBox codenameCombo = new AComboBox();
+	WrapperedComboBox<EquipmentType> eqtCombo = new WrapperedComboBox<EquipmentType>(
+			EquipmentTypeWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_NAME,
+			StorableObjectWrapper.COLUMN_CODENAME);
 	JLabel lbTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox<EquipmentType> cmbTypeCombo = new WrapperedComboBox<EquipmentType>(EquipmentTypeWrapper.getInstance(),
+	WrapperedComboBox<ProtoEquipment> cmbTypeCombo = new WrapperedComboBox<ProtoEquipment>(
+			ProtoEquipmentWrapper.getInstance(),
 			StorableObjectWrapper.COLUMN_NAME,
 			StorableObjectWrapper.COLUMN_ID);
 	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
@@ -271,8 +278,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel3n.weightx = 1;
 		gbcPanel3n.weighty = 0;
 		gbcPanel3n.anchor = GridBagConstraints.NORTH;
-		gbPanel3n.setConstraints(this.codenameCombo, gbcPanel3n);
-		this.pnPanel3n.add(this.codenameCombo);
+		gbPanel3n.setConstraints(this.eqtCombo, gbcPanel3n);
+		this.pnPanel3n.add(this.eqtCombo);
 
 		gbcPanel3n.gridx = 0;
 		gbcPanel3n.gridy = 3;
@@ -669,14 +676,14 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		this.tfManufacturerText.setEnabled(false);
 		this.tfManufacturerCodeText.setEnabled(false);
 
-		this.codenameCombo.addItemListener(new ItemListener() {
+		this.eqtCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(final ItemEvent e) {
-				SchemeElementGeneralPanel.this.codeNameCombo_stateChanged((String) e.getItem());
+				SchemeElementGeneralPanel.this.eqtCombo_stateChanged((EquipmentType)e.getItem());
 			}
 		});
 		this.cmbTypeCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(final ItemEvent e) {
-				SchemeElementGeneralPanel.this.typeCombo_stateChanged((EquipmentType) e.getItem());
+				SchemeElementGeneralPanel.this.typeCombo_stateChanged((ProtoEquipment) e.getItem());
 			}
 		});
 		this.cbInstanceBox.addChangeListener(new ChangeListener() {
@@ -699,7 +706,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.tfNameText);
 		super.addToUndoableListener(this.tfLabelText);
 		super.addToUndoableListener(this.btSymbolBut);
-		super.addToUndoableListener(this.codenameCombo);
+		super.addToUndoableListener(this.eqtCombo);
 		super.addToUndoableListener(this.cmbTypeCombo);
 		super.addToUndoableListener(this.tfManufacturerText);
 		super.addToUndoableListener(this.tfManufacturerCodeText);
@@ -718,10 +725,9 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.tfKisPortText);
 		super.addToUndoableListener(this.taDescrArea);
 
-		for (int i = 0; i < EquipmentTypeCodenames.DEFAULT_CODENAMES.length; i++) {
-			this.codenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());
-		}
-		this.codenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		Set<EquipmentType> eqts = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		this.eqtCombo.addElements(eqts);
 
 		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -739,24 +745,23 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		this.tfKisPortText.setValue(Short.valueOf(kis.getTCPPort()));
 	}
 
-	void codeNameCombo_stateChanged(final String eqtCodename) {
+	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.cmbTypeCombo.removeAllItems();
-		final TypicalCondition condition = new TypicalCondition(eqtCodename,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.EQUIPMENT_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
+		
+		final LinkedIdsCondition condition = new LinkedIdsCondition(eqt.getId(),
+				ObjectEntities.PROTOEQUIPMENT_CODE);
 		try {
-			final Set<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			this.cmbTypeCombo.addElements(equipmentTypes);
+			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			this.cmbTypeCombo.addElements(protoEquipments);
 		} catch (ApplicationException e1) {
 			Log.errorException(e1);
 		}
 	}
 
-	void typeCombo_stateChanged(final EquipmentType eqt) {
-		if (eqt != null) {
-			this.tfManufacturerText.setText(eqt.getManufacturer());
-			this.tfManufacturerCodeText.setText(eqt.getManufacturerCode());
+	void typeCombo_stateChanged(final ProtoEquipment protoEq) {
+		if (protoEq != null) {
+			this.tfManufacturerText.setText(protoEq.getManufacturer());
+			this.tfManufacturerCodeText.setText(protoEq.getManufacturerCode());
 		} else {
 			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
 			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
@@ -794,7 +799,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 
 	public void setObject(final Object or) {
 		this.schemeElement = (SchemeElement) or;
-		EquipmentType eqt = null;
+		ProtoEquipment protoEq = null;
 		Equipment eq = null;
 		KIS kis = null;
 		Icon symbol = null;
@@ -816,7 +821,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			} else {
 				this.cbInstanceBox.setVisible(true);
 				try {
-					eqt = this.schemeElement.getEquipmentType();
+					protoEq = this.schemeElement.getProtoEquipment();
 				} catch (IllegalStateException e) {
 					Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
 				}
@@ -833,16 +838,15 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					// ignore as it means no KIS created
 				}
 				
-				final EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+//				if (protoEq != null) {
+//					this.eqtCombo.setSelectedItem(protoEq.getType());
+//				} else {
+//					eqtCombo_stateChanged((EquipmentType)this.eqtCombo.getSelectedItem());
+//				}
+								
+				final EquivalentCondition condition1 = new EquivalentCondition(ObjectEntities.KIS_CODE);
 				try {
-					final Set<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-					this.cmbTypeCombo.addElements(equipmentTypes);
-				} catch (ApplicationException e) {
-					Log.errorException(e);
-				}
-				condition.setEntityCode(ObjectEntities.KIS_CODE);
-				try {
-					final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 					this.cmbKisCombo.addElements(kiss);
 				} catch (ApplicationException e) {
 					Log.errorException(e);
@@ -855,15 +859,15 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfLabelText.setText(SchemeResourceKeys.EMPTY);
 		}
 		
-		if (eqt != null) {
-			this.codenameCombo.setEnabled(true);
+		if (protoEq != null) {
+			this.eqtCombo.setEnabled(true);
 			this.cmbTypeCombo.setEnabled(true);
-			this.codenameCombo.setSelectedItem(eqt.getCodename());
-			this.codeNameCombo_stateChanged(eqt.getCodename());
-			this.cmbTypeCombo.setSelectedItem(eqt);
-			this.typeCombo_stateChanged(eqt);
+			this.eqtCombo.setSelectedItem(protoEq.getType());
+			this.eqtCombo_stateChanged(protoEq.getType());
+			this.cmbTypeCombo.setSelectedItem(protoEq);
+			this.typeCombo_stateChanged(protoEq);
 		} else {
-			this.codenameCombo.setEnabled(false);
+			this.eqtCombo.setEnabled(false);
 			this.cmbTypeCombo.setEnabled(false);
 			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
 			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
@@ -920,11 +924,11 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					Log.errorException(e);
 				}
 			}
-			final EquipmentType eqt = (EquipmentType) this.cmbTypeCombo.getSelectedItem();
-			if (eqt != null) {
-				this.schemeElement.setEquipmentType(eqt);
-				eqt.setManufacturer(this.tfManufacturerText.getText());
-				eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
+			final ProtoEquipment protoEq = (ProtoEquipment)this.cmbTypeCombo.getSelectedItem();
+			if (protoEq != null) {
+				this.schemeElement.setProtoEquipment(protoEq);
+//				eqt.setManufacturer(this.tfManufacturerText.getText());
+//				eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
 			}
 			Equipment eq = this.schemeElement.getEquipment();
 			if (this.cbInstanceBox.isSelected()) {

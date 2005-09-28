@@ -124,7 +124,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 			}
 		}
 		try {
-			proto.setSchemeLinks(schemeLinks);
+			proto.setSchemeLinks(schemeLinks, false);
 			proto.setSchemeProtoElements(schemeProtoElements);
 
 			// create SchemeImageResource

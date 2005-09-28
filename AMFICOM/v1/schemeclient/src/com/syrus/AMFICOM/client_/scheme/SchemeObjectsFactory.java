@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.38 2005/09/28 07:53:10 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.39 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
@@ -78,7 +79,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.38 $, $Date: 2005/09/28 07:53:10 $
+ * @version $Revision: 1.39 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
@@ -94,11 +95,16 @@ public class SchemeObjectsFactory {
 		return type;
 	}
 	
-	public static EquipmentType createEquipmentType(String name, EquipmentTypeCodename codeName) throws CreateObjectException {
-		Identifier userId = LoginManager.getUserId();
-		EquipmentType eqt = EquipmentType.createInstance(userId, codeName.stringValue(), EMPTY, name, EMPTY, EMPTY);
-		return eqt;
+	public static ProtoEquipment createProtoEquipment(String name, EquipmentType type) throws CreateObjectException {
+		ProtoEquipment protoEqt = ProtoEquipment.createInstance(LoginManager.getUserId(), type, name, EMPTY, EMPTY, EMPTY);
+		return protoEqt;
 	}
+	
+//	public static EquipmentType createEquipmentType(String name, EquipmentTypeCodename codeName) throws CreateObjectException {
+//		Identifier userId = LoginManager.getUserId();
+//		EquipmentType eqt = EquipmentType.createInstance(userId, codeName.stringValue(), EMPTY, name, EMPTY, EMPTY);
+//		return eqt;
+//	}
 	
 //	public static MeasurementType createMeasurementType(String codename) throws CreateObjectException {
 //		Identifier userId = LoginManager.getUserId();
@@ -148,7 +154,7 @@ public class SchemeObjectsFactory {
 	public static Equipment createEquipment(SchemeElement schemeElement) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
-		Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getEquipmentType(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+		Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getProtoEquipment(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
 		
 		try {
 			for (Characteristic c : schemeElement.getEquipmentType().getCharacteristics(true)) {
@@ -318,25 +324,25 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static SchemeElement createSchemeElement(Scheme parentScheme) throws CreateObjectException {
-		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-		EquipmentType eqt = null;
-		try {
-			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if (!eqTypes.isEmpty())
-				eqt = eqTypes.iterator().next();
-		} catch (ApplicationException e2) {
-			throw new CreateObjectException(e2);
-		}
-		if (eqt == null) {
-			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
-			Log.debugMessage(error, Level.WARNING); 
-			throw new CreateObjectException(error);
-		}
+//		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+//		EquipmentType eqt = null;
+//		try {
+//			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+//			if (!eqTypes.isEmpty())
+//				eqt = eqTypes.iterator().next();
+//		} catch (ApplicationException e2) {
+//			throw new CreateObjectException(e2);
+//		}
+//		if (eqt == null) {
+//			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
+//			Log.debugMessage(error, Level.WARNING); 
+//			throw new CreateObjectException(error);
+//		}
 		
 		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(),
 				LangModelScheme.getString("Title.component") + " (" + counter + ")",   //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 				parentScheme);
-		schemeElement.setEquipmentType(eqt);
+//		schemeElement.setEquipmentType(eqt);
 		counter++;
 		return schemeElement;
 	}

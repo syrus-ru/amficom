@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.23 2005/09/27 06:50:45 stas Exp $
+ * $Id: DeleteAction.java,v 1.24 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/09/27 06:50:45 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
@@ -254,8 +254,12 @@ public class DeleteAction extends AbstractAction {
 	
 	static void deleteSchemeProtoElement(SchemeProtoElement element) {
 		objectsToDelete.add(element.getId());
-		for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemeLink)it.next()).getId());
+		try {
+			for (Iterator it = element.getSchemeLinks(false).iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemeLink)it.next()).getId());
+			}
+		} catch (ApplicationException e2) {
+			Log.errorException(e2);
 		}
 		try {
 			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {

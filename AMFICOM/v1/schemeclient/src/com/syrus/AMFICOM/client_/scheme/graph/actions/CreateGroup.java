@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.12 2005/09/27 06:50:45 stas Exp $
+ * $Id: CreateGroup.java,v 1.13 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/27 06:50:45 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
@@ -195,7 +195,7 @@ public class CreateGroup extends AbstractAction {
 		
 		try {
 			proto.setSchemeDevices(childSchemeDevices);
-			proto.setSchemeLinks(childSchemeLinks);
+			proto.setSchemeLinks(childSchemeLinks, false);
 			proto.setSchemeProtoElements(childSchemeProtoElements);
 		} catch (ApplicationException e) {
 			Log.errorException(e);

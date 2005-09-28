@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.13 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.14 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,39 +28,43 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
+import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.14 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
 public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
-	protected EquipmentType eqt;
+	protected ProtoEquipment protoEq;
 
 	JPanel pnPanel0 = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
 	JButton commitButton = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	JComboBox tfCodenameCombo = new AComboBox();
+	WrapperedComboBox<EquipmentType> tfEqtCombo = new WrapperedComboBox<EquipmentType>(
+			EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_CODENAME);
 	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField tfManufacturerText = new JTextField();
 	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
@@ -82,9 +86,9 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.aContext = aContext;
 	}
 
-	protected EquipmentTypeGeneralPanel(final EquipmentType equipmentType) {
+	protected EquipmentTypeGeneralPanel(final ProtoEquipment protoEquipment) {
 		this();
-		this.setObject(equipmentType);
+		this.setObject(protoEquipment);
 	}
 
 	private void jbInit() throws Exception {
@@ -155,8 +159,8 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(this.tfCodenameCombo, gbcGeneralPanel);
-		this.pnGeneralPanel.add(this.tfCodenameCombo);
+		gbGeneralPanel.setConstraints(this.tfEqtCombo, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfEqtCombo);
 
 		this.lbManufacturerLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
@@ -247,13 +251,13 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-		for (int i = 0; i < EquipmentTypeCodenames.DEFAULT_CODENAMES.length; i++) {
-			this.tfCodenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());
-		}
-		this.tfCodenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
+		
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		Set<EquipmentType> eqts = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		this.tfEqtCombo.addElements(eqts);
 
 		addToUndoableListener(this.tfNameText);
-		addToUndoableListener(this.tfCodenameCombo);
+		addToUndoableListener(this.tfEqtCombo);
 		addToUndoableListener(this.tfManufacturerText);
 		addToUndoableListener(this.tfManufacturerCodeText);
 		addToUndoableListener(this.taDescriptionArea);
@@ -274,18 +278,18 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public Object getObject() {
-		return this.eqt;
+		return this.protoEq;
 	}
 
 	public void setObject(final Object or) {
-		this.eqt = (EquipmentType) or;
+		this.protoEq = (ProtoEquipment) or;
 
-		if (this.eqt != null) {
-			this.tfNameText.setText(this.eqt.getName());
-			this.taDescriptionArea.setText(this.eqt.getDescription());
-			this.tfManufacturerText.setText(this.eqt.getManufacturer());
-			this.tfManufacturerCodeText.setText(this.eqt.getManufacturerCode());
-			this.tfCodenameCombo.setSelectedItem(this.eqt.getCodename());
+		if (this.protoEq != null) {
+			this.tfNameText.setText(this.protoEq.getName());
+			this.taDescriptionArea.setText(this.protoEq.getDescription());
+			this.tfManufacturerText.setText(this.protoEq.getManufacturer());
+			this.tfManufacturerCodeText.setText(this.protoEq.getManufacturerCode());
+			this.tfEqtCombo.setSelectedItem(this.protoEq.getType());
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
@@ -298,15 +302,15 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	public void commitChanges() {
 		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
-			if (this.eqt == null) {
+			if (this.protoEq == null) {
 				try {
 					final String name = this.tfNameText.getText();
-					EquipmentTypeCodename codeName = EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()];
-					this.eqt = SchemeObjectsFactory.createEquipmentType(name, codeName);
+					EquipmentType eq = (EquipmentType)this.tfEqtCombo.getSelectedItem();
+					this.protoEq = SchemeObjectsFactory.createProtoEquipment(name, eq);
 					this.apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt.getId(), SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.protoEq.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
-							this.eqt,
+							this.protoEq,
 							EquipmentTypePropertiesManager.getInstance(this.aContext),
 							ObjectSelectedEvent.EQUIPMENT_TYPE));
 				} catch (CreateObjectException e) {
@@ -320,17 +324,17 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	private void apply() {
-		this.eqt.setName(this.tfNameText.getText());
-		this.eqt.setDescription(this.taDescriptionArea.getText());
-		this.eqt.setManufacturer(this.tfManufacturerText.getText());
-		this.eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
-		this.eqt.setCodename(EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()].stringValue());
+		this.protoEq.setName(this.tfNameText.getText());
+		this.protoEq.setDescription(this.taDescriptionArea.getText());
+		this.protoEq.setManufacturer(this.tfManufacturerText.getText());
+		this.protoEq.setManufacturerCode(this.tfManufacturerCodeText.getText());
+		this.protoEq.setType((EquipmentType)this.tfEqtCombo.getSelectedItem());
 
 		try {
-			StorableObjectPool.flush(this.eqt.getId(), LoginManager.getUserId(), true);
+			StorableObjectPool.flush(this.protoEq.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt.getId(), SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.protoEq.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
 }

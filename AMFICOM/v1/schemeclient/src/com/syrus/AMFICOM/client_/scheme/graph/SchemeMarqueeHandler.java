@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.26 2005/09/27 06:50:45 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.27 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/09/27 06:50:45 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
@@ -549,7 +549,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 								else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT)
 									link.setParentSchemeElement(res.getSchemeElement(), false);
 								else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT)
-									link.setParentSchemeProtoElement(res.getSchemeProtoElement());
+									link.setParentSchemeProtoElement(res.getSchemeProtoElement(), false);
 							}
 							
 							DefaultLink cell = SchemeActions.createLink(graph,
@@ -572,7 +572,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 									link.setParentSchemeElement(res.getSchemeElement(), false);
 								} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 									if (res.getSchemeProtoElement() != null)
-										link.setParentSchemeProtoElement(res.getSchemeProtoElement());
+										link.setParentSchemeProtoElement(res.getSchemeProtoElement(), false);
 								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);

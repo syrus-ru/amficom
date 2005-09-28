@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.19 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.20 2005/09/28 11:37:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,9 +43,12 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
+import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -62,8 +65,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2005/09/28 11:37:50 $
  * @module schemeclient
  */
 
@@ -81,11 +84,14 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	JTextField labelText = new JTextField();
 	JButton symbolBut = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	JComboBox codenameCombo = new AComboBox();
-	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox<EquipmentType> typeCombo = new WrapperedComboBox<EquipmentType>(EquipmentTypeWrapper.getInstance(),
+	WrapperedComboBox<EquipmentType> eqtCombo = new WrapperedComboBox<EquipmentType>(
+			EquipmentTypeWrapper.getInstance(),
 			StorableObjectWrapper.COLUMN_NAME,
-			StorableObjectWrapper.COLUMN_ID);
+			StorableObjectWrapper.COLUMN_CODENAME);
+	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
+	WrapperedComboBox<ProtoEquipment> typeCombo = new WrapperedComboBox<ProtoEquipment>(ProtoEquipmentWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_NAME,
+			StorableObjectWrapper.COLUMN_CODENAME);
 	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField manufacturerText = new JTextField();
 	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
@@ -210,8 +216,8 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		gbcgeneralPanel.weightx = 1;
 		gbcgeneralPanel.weighty = 0;
 		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(this.codenameCombo, gbcgeneralPanel);
-		this.generalPanel.add(this.codenameCombo);
+		gbgeneralPanel.setConstraints(this.eqtCombo, gbcgeneralPanel);
+		this.generalPanel.add(this.eqtCombo);
 
 		gbcgeneralPanel.gridx = 0;
 		gbcgeneralPanel.gridy = 3;
@@ -338,14 +344,14 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		// typeCombo.setEnabled(false);
 		// manufacturerText.setEnabled(false);
 		// manufacturerCodeText.setEnabled(false);
-		this.codenameCombo.addItemListener(new ItemListener() {
+		this.eqtCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(final ItemEvent e) {
-				SchemeProtoElementGeneralPanel.this.codeNameCombo_stateChanged((String) e.getItem());
+				SchemeProtoElementGeneralPanel.this.eqtCombo_stateChanged((EquipmentType) e.getItem());
 			}
 		});
 		this.typeCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(final ItemEvent e) {
-				SchemeProtoElementGeneralPanel.this.typeCombo_stateChanged((EquipmentType) e.getItem());
+				SchemeProtoElementGeneralPanel.this.typeCombo_stateChanged((ProtoEquipment) e.getItem());
 			}
 		});
 		this.generalPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
@@ -354,17 +360,16 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		super.addToUndoableListener(this.nameText);
 		super.addToUndoableListener(this.labelText);
 		super.addToUndoableListener(this.symbolBut);
-		super.addToUndoableListener(this.codenameCombo);
+		super.addToUndoableListener(this.eqtCombo);
 		super.addToUndoableListener(this.typeCombo);
 		super.addToUndoableListener(this.manufacturerText);
 		super.addToUndoableListener(this.manufacturerCodeText);
 		super.addToUndoableListener(this.parentCombo);
 		super.addToUndoableListener(this.descrArea);
 
-		for (int i = 0; i < EquipmentTypeCodenames.DEFAULT_CODENAMES.length; i++) {
-			this.codenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());
-		}
-		this.codenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		Set<EquipmentType> eqts = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		this.eqtCombo.addElements(eqts);
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -377,27 +382,23 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		});
 	}
 
-	void codeNameCombo_stateChanged(final String eqtCodename) {
+	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.typeCombo.removeAllItems();
-
-		final TypicalCondition condition = new TypicalCondition(eqtCodename,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.EQUIPMENT_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-		// EquivalentCondition condition = new
-		// EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		
+		final LinkedIdsCondition condition = new LinkedIdsCondition(eqt.getId(),
+				ObjectEntities.PROTOEQUIPMENT_CODE);
 		try {
-			final Set<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			this.typeCombo.addElements(equipmentTypes);
+			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			this.typeCombo.addElements(protoEquipments);
 		} catch (ApplicationException e1) {
 			Log.errorException(e1);
 		}
 	}
 
-	void typeCombo_stateChanged(final EquipmentType eqt) {
-		if (eqt != null) {
-			this.manufacturerText.setText(eqt.getManufacturer());
-			this.manufacturerCodeText.setText(eqt.getManufacturerCode());
+	void typeCombo_stateChanged(final ProtoEquipment protoEq) {
+		if (protoEq != null) {
+			this.manufacturerText.setText(protoEq.getManufacturer());
+			this.manufacturerCodeText.setText(protoEq.getManufacturerCode());
 		} else {
 			this.manufacturerText.setText(SchemeResourceKeys.EMPTY);
 			this.manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
@@ -414,7 +415,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 
 	public void setObject(final Object or) {
 		this.schemeProtoElement = (SchemeProtoElement) or;
-		EquipmentType eqt = null;
+		ProtoEquipment protoEq = null;
 		Icon symbol = null;
 
 		this.parentCombo.removeAllItems();
@@ -439,7 +440,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			if (this.schemeProtoElement.getSymbol() != null) {
 				symbol = new ImageIcon(this.schemeProtoElement.getSymbol().getImage());
 			}
-			eqt = this.schemeProtoElement.getEquipmentType();
+			protoEq = this.schemeProtoElement.getProtoEquipment();
 
 			try {
 				if (this.schemeProtoElement.getParentSchemeProtoElement() != null) {
@@ -465,15 +466,15 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			this.parentCombo.setEnabled(true);
 		}
 
-		if (eqt != null) {
-			this.codenameCombo.setEnabled(true);
+		if (protoEq != null) {
+			this.eqtCombo.setEnabled(true);
 			this.typeCombo.setEnabled(true);
-			this.codenameCombo.setSelectedItem(eqt.getCodename());
-			this.codeNameCombo_stateChanged(eqt.getCodename());
-			this.typeCombo.setSelectedItem(eqt);
-			this.typeCombo_stateChanged(eqt);
+			this.eqtCombo.setSelectedItem(protoEq.getType());
+			this.eqtCombo_stateChanged(protoEq.getType());
+			this.typeCombo.setSelectedItem(protoEq);
+			this.typeCombo_stateChanged(protoEq);
 		} else {
-			this.codenameCombo.setEnabled(false);
+			this.eqtCombo.setEnabled(false);
 			this.typeCombo.setEnabled(false);
 			this.manufacturerText.setText(SchemeResourceKeys.EMPTY);
 			this.manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
@@ -498,9 +499,9 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				}
 			}
 
-			final EquipmentType eqt = (EquipmentType) this.typeCombo.getSelectedItem();
-			if (eqt != null) {
-				this.schemeProtoElement.setEquipmentType(eqt);
+			final ProtoEquipment protoEq = (ProtoEquipment)this.typeCombo.getSelectedItem();
+			if (protoEq != null) {
+				this.schemeProtoElement.setProtoEquipment(protoEq);
 			}
 			final Object parent = this.parentCombo.getSelectedItem();
 			if (parent != null) {
