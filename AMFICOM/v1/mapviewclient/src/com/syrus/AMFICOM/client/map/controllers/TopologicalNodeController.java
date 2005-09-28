@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.22 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.23 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Контроллер топологического узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public class TopologicalNodeController extends AbstractNodeController {
@@ -76,12 +76,12 @@ public class TopologicalNodeController extends AbstractNodeController {
 		return new TopologicalNodeController(netMapViewer);
 	}
 
-	public static void init(final Identifier creatorId) throws ApplicationException {
+	public static void init() throws ApplicationException {
 		if (needInit) {
-			openImageId = NodeTypeController.getImageId(creatorId,
+			openImageId = NodeTypeController.getImageId(
 					TopologicalNodeController.OPEN_NODE,
 					TopologicalNodeController.OPEN_NODE_IMAGE);
-			closedImageId = NodeTypeController.getImageId(creatorId,
+			closedImageId = NodeTypeController.getImageId(
 					TopologicalNodeController.CLOSED_NODE,
 					TopologicalNodeController.CLOSED_NODE_IMAGE);
 

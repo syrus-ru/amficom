@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.41 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.42 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.41 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -141,16 +141,16 @@ public final class MeasurementPathController extends AbstractLinkController {
 			return;
 		}
 
-		final MeasurementPath mpath = (MeasurementPath) mapElement;
+		final MeasurementPath measurementPath = (MeasurementPath) mapElement;
 
-		if (!isElementVisible(mpath, visibleBounds)) {
+		if (!isElementVisible(measurementPath, visibleBounds)) {
 			return;
 		}
 
-		final Stroke stroke = getStroke(mpath);
-		final Color color = getColor(mpath);
+		final Stroke stroke = getStroke(measurementPath.getCharacterizable());
+		final Color color = getColor(measurementPath.getCharacterizable());
 
-		this.paint(mpath, g, visibleBounds, stroke, color, isSelectionVisible(mpath));
+		this.paint(measurementPath, g, visibleBounds, stroke, color, isSelectionVisible(measurementPath));
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.43 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.44 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public abstract class AbstractLinkController extends AbstractMapElementController {
@@ -157,34 +157,6 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	}
 
 	/**
-	 * Найти атрибут элемента карты по типу.
-	 * 
-	 * @param mapElement
-	 *        элемент карты
-	 * @param cType
-	 *        тип атрибута
-	 * @return атрибут
-	 */
-	public static Characteristic getCharacteristic(final MapElement mapElement, final CharacteristicType cType) {
-		try {
-			final long d = System.nanoTime();
-			final Set<Characteristic> characteristics = mapElement.getCharacteristics(false);
-			final long f = System.nanoTime();
-			MapViewController.addTime6(f - d);
-			// Log.debugMessage("mapElement.getCharacteristics() at " + (f - d) + "
-			// ns", Level.INFO);
-			for (final Characteristic ch : characteristics) {
-				if (ch.getType().equals(cType)) {
-					return ch;
-				}
-			}
-		} catch (ApplicationException e) {
-			Log.debugException(e, Level.WARNING);
-		}
-		return null;
-	}
-
-	/**
 	 * @deprecated should be rewritten via StorableObjectCondition 
 	 */
 	@Shitlet
@@ -212,11 +184,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * Установить толщину линии. Толщина определяется
 	 * атрибутом {@link #ATTRIBUTE_THICKNESS}. В случае, если
 	 * такого атрибута у элемента нет, создается новый.
-	 * @param mapElement элемент карты
+	 * @param characterizable элемент карты
 	 * @param size толщина линии
 	 */
-	public void setLineSize(final Characterizable mapElement, final int size) {
-		Characteristic attribute = getCharacteristic(mapElement, this.thicknessCharType);
+	public void setLineSize(final Characterizable characterizable, final int size) {
+		Characteristic attribute = getCharacteristic(characterizable, this.thicknessCharType);
 		if (attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
@@ -224,11 +196,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						LangModelMap.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(size),
-						mapElement,
+						characterizable,
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				mapElement.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -247,13 +219,9 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * Получить толщину линии. Толщина определяется атрибутом
 	 * {@link #ATTRIBUTE_THICKNESS}. В случае, если такого атрибута у элемента
 	 * нет, берется значение по умолчанию ({@link MapPropertiesManager#getThickness()}).
-	 * 
-	 * @param mapElement
-	 *        элемент карты
-	 * @return толщина линии
 	 */
-	public int getLineSize(final MapElement mapElement) {
-		final Characteristic ea = getCharacteristic(mapElement, this.thicknessCharType);
+	public int getLineSize(final Characterizable characterizable) {
+		final Characteristic ea = getCharacteristic(characterizable, this.thicknessCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getThickness();
 		}
@@ -264,11 +232,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * Установить вид линии. Стиль определяется
 	 * атрибутом {@link #ATTRIBUTE_STYLE}. В случае, если
 	 * такого атрибута у элемента нет, создается новый.
-	 * @param mapElement элемент карты
+	 * @param characterizable элемент карты
 	 * @param style стиль
 	 */
-	public void setStyle(final Characterizable mapElement, final String style) {
-		Characteristic attribute = getCharacteristic(mapElement, this.styleCharType);
+	public void setStyle(final Characterizable characterizable, final String style) {
+		Characteristic attribute = getCharacteristic(characterizable, this.styleCharType);
 		if (attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
@@ -276,11 +244,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						LangModelMap.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						style,
-						mapElement,
+						characterizable,
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				mapElement.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -300,12 +268,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * В случае, если такого атрибута у элемента нет, берется значение по
 	 * умолчанию ({@link MapPropertiesManager#getStyle()}).
 	 * 
-	 * @param mapElement
+	 * @param characterizable
 	 *        элемент карты
 	 * @return стиль
 	 */
-	public String getStyle(final MapElement mapElement) {
-		final Characteristic ea = getCharacteristic(mapElement, this.styleCharType);
+	public String getStyle(final Characterizable characterizable) {
+		final Characteristic ea = getCharacteristic(characterizable, this.styleCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getStyle();
 		}
@@ -317,12 +285,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * атрибутом {@link #ATTRIBUTE_STYLE}. В случае, если
 	 * такого атрибута у элемента нет, берется значение по умолчанию
 	 * ({@link MapPropertiesManager#getStroke()}).
-	 * @param mapElement элемент карты
+	 * @param characterizable элемент карты
 	 * @return стиль
 	 */
-	public Stroke getStroke(final MapElement mapElement) {
-		final int thickness = getLineSize(mapElement);
-		final String style = getStyle(mapElement);
+	public Stroke getStroke(final Characterizable characterizable) {
+		final int thickness = getLineSize(characterizable);
+		final String style = getStyle(characterizable);
 		final String key = style + " " + thickness; //$NON-NLS-1$
 		BasicStroke strokeForLink = this.strokes.get(key);
 		if (strokeForLink == null) {
@@ -347,13 +315,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * Установить цвет. Цает определяется атрибутом {@link #ATTRIBUTE_COLOR}. В
 	 * случае, если такого атрибута у элемента нет, создается новый.
 	 * 
-	 * @param mapElement
+	 * @param characterizable
 	 *        элемент карты
 	 * @param color
 	 *        цвет
 	 */
-	public void setColor(final Characterizable mapElement, final Color color) {
-		Characteristic attribute = getCharacteristic(mapElement, this.colorCharType);
+	public void setColor(final Characterizable characterizable, final Color color) {
+		Characteristic attribute = getCharacteristic(characterizable, this.colorCharType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
@@ -362,11 +330,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						LangModelMap.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
-						mapElement,
+						characterizable,
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				mapElement.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute, false);
 			} catch(CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -386,11 +354,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * атрибутом {@link #ATTRIBUTE_COLOR}. В случае, если
 	 * такого атрибута у элемента нет, берется значение по умолчанию
 	 * ({@link MapPropertiesManager#getColor()}).
-	 * @param mapElement элемент карты
+	 * @param characterizable элемент карты
 	 * @return цвет
 	 */
-	public Color getColor(final MapElement mapElement) {
-		final Characteristic ea = getCharacteristic(mapElement, this.colorCharType);
+	public Color getColor(final Characterizable characterizable) {
+		final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getColor();
 		}
@@ -407,11 +375,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * Установить цвет при наличии сигнала тревоги. Цает определяется
 	 * атрибутом {@link #ATTRIBUTE_ALARMED_COLOR}. В случае, если
 	 * такого атрибута у элемента нет, создается новый.
-	 * @param mapElement элемент карты
+	 * @param characterizable элемент карты
 	 * @param color цвет
 	 */
-	public void setAlarmedColor(final Characterizable mapElement, final Color color) {
-		Characteristic attribute = getCharacteristic(mapElement, this.alarmedColorCharType);
+	public void setAlarmedColor(final Characterizable characterizable, final Color color) {
+		Characteristic attribute = getCharacteristic(characterizable, this.alarmedColorCharType);
 		if (attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
@@ -419,11 +387,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						LangModelMap.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
-						mapElement,
+						characterizable,
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				mapElement.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -443,11 +411,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * атрибутом {@link #ATTRIBUTE_ALARMED_COLOR}. В случае, если
 	 * такого атрибута у элемента нет, берется значение по умолчанию
 	 * ({@link MapPropertiesManager#getAlarmedColor()}).
-	 * @param mapElement элемент карты
+	 * @param characterizable элемент карты
 	 * @return цвет
 	 */
-	public Color getAlarmedColor(final MapElement mapElement) {
-		final Characteristic ea = getCharacteristic(mapElement, this.alarmedColorCharType);
+	public Color getAlarmedColor(final Characterizable characterizable) {
+		final Characteristic ea = getCharacteristic(characterizable, this.alarmedColorCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getAlarmedColor();
 		}
@@ -463,11 +431,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * Установить толщину линии при наличи сигнала тревоги. Толщина определяется
 	 * атрибутом {@link #ATTRIBUTE_ALARMED_THICKNESS}. В случае, если
 	 * такого атрибута у элемента нет, создается новый.
-	 * @param mapElement элемент карты
+	 * @param characterizable элемент карты
 	 * @param size толщина линии
 	 */
-	public void setAlarmedLineSize(final Characterizable mapElement, final int size) {
-		Characteristic attribute = getCharacteristic(mapElement, this.alarmedThicknessCharType);
+	public void setAlarmedLineSize(final Characterizable characterizable, final int size) {
+		Characteristic attribute = getCharacteristic(characterizable, this.alarmedThicknessCharType);
 		if (attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
@@ -475,11 +443,11 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						LangModelMap.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(size),
-						mapElement,
+						characterizable,
 						true,
 						true);
 				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
-				mapElement.addCharacteristic(attribute, false);
+				characterizable.addCharacteristic(attribute, false);
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -499,12 +467,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * атрибутом {@link #ATTRIBUTE_ALARMED_THICKNESS}. В случае, если такого
 	 * атрибута у элемента нет, берется значение по умолчанию ({@link MapPropertiesManager#getAlarmedThickness()}).
 	 * 
-	 * @param mapElement
+	 * @param characterizable
 	 *        элемент карты
 	 * @return толщина линии
 	 */
-	public int getAlarmedLineSize(final MapElement mapElement) {
-		final Characteristic ea = getCharacteristic(mapElement, this.alarmedThicknessCharType);
+	public int getAlarmedLineSize(final Characterizable characterizable) {
+		final Characteristic ea = getCharacteristic(characterizable, this.alarmedThicknessCharType);
 		if (ea == null) {
 			return MapPropertiesManager.getAlarmedThickness();
 		}

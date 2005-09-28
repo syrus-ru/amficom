@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarkerController.java,v 1.17 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: EventMarkerController.java,v 1.18 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.mapview.EventMarker;
 /**
  * Контроллер маркера события.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public final class EventMarkerController extends MarkerController {
@@ -51,9 +51,9 @@ public final class EventMarkerController extends MarkerController {
 		return new EventMarkerController(netMapViewer);
 	}
 
-	public static void init(final Identifier creatorId) throws ApplicationException {
+	public static void init() throws ApplicationException {
 		if (needInit) {
-			eventImageId = NodeTypeController.getImageId(creatorId,
+			eventImageId = NodeTypeController.getImageId(
 					EventMarkerController.EVENT_IMAGE_NAME,
 					EventMarkerController.EVENT_IMAGE_PATH);
 

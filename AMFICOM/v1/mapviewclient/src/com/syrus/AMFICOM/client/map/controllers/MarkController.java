@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.21 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: MarkController.java,v 1.22 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контроллер метки.
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public final class MarkController extends AbstractNodeController {
@@ -58,9 +58,9 @@ public final class MarkController extends AbstractNodeController {
 		return new MarkController(netMapViewer);
 	}
 
-	public static void init(final Identifier creatorId) throws ApplicationException {
+	public static void init() throws ApplicationException {
 		if (needInit) {
-			imageId = NodeTypeController.getImageId(creatorId, MarkController.IMAGE_NAME, MarkController.IMAGE_PATH);
+			imageId = NodeTypeController.getImageId(MarkController.IMAGE_NAME, MarkController.IMAGE_PATH);
 			MapPropertiesManager.setOriginalImage(imageId, new ImageIcon(MarkController.IMAGE_PATH).getImage());
 			needInit = false;
 		}

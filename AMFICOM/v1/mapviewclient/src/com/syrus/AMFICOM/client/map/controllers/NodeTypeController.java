@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.51 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.52 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -46,7 +47,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.51 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -143,13 +144,12 @@ public class NodeTypeController extends AbstractNodeController {
 	 * Получить пиктограмму по кодовому имени для предустановленного типа
 	 * сетевого узла. Если пиктограмма не существует, она создается.
 	 * 
-	 * @param userId пользователь
 	 * @param codename кодовое имя
 	 * @param filename файл пиктограммы
 	 * @return Идентификатор пиктограммы ({@link com.syrus.AMFICOM.resource.AbstractImageResource})
 	 * @throws ApplicationException 
 	 */
-	public static Identifier getImageId(final Identifier userId, final String codename, final String filename)
+	public static Identifier getImageId(final String codename, final String filename)
 			throws ApplicationException {
 		StorableObjectCondition condition = new TypicalCondition(
 				codename,
@@ -162,8 +162,8 @@ public class NodeTypeController extends AbstractNodeController {
 			return imageResources.iterator().next().getId();
 		}
 
-		final FileImageResource ir = FileImageResource.createInstance(userId, codename, filename);
-		StorableObjectPool.flush(ir, userId, true);
+		final FileImageResource ir = FileImageResource.createInstance(LoginManager.getUserId(), codename, filename);
+		StorableObjectPool.flush(ir, LoginManager.getUserId(), true);
 		return ir.getId();
 	}
 
@@ -197,8 +197,6 @@ public class NodeTypeController extends AbstractNodeController {
 	 * Получить тип сетевого узла по кодовому имени. В случае, если такого типа
 	 * нет, создается новый.
 	 * 
-	 * @param userId
-	 *        пользователь
 	 * @param codename
 	 *        кодовое имя
 	 * @param isTopological
@@ -208,19 +206,19 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @throws CreateObjectException
 	 */
 	static SiteNodeType getSiteNodeType(final MapLibrary mapLibrary,
-			final Identifier userId,
 			final SiteNodeTypeSort sort,
 			final String codename,
 			final boolean isTopological) throws ApplicationException {
 		SiteNodeType type = getSiteNodeType(codename, true);
 		if (type == null) {
+			final Identifier userId = LoginManager.getUserId();
 			type = SiteNodeType.createInstance(
 					userId,
 					sort,
 					codename,
 					LangModelMap.getString(codename),
 					"", //$NON-NLS-1$
-					NodeTypeController.getImageId(userId, codename, NodeTypeController.getImageFileName(codename)),
+					NodeTypeController.getImageId(codename, NodeTypeController.getImageFileName(codename)),
 					isTopological,
 					mapLibrary.getId());
 
@@ -263,9 +261,8 @@ public class NodeTypeController extends AbstractNodeController {
 		return NodeTypeController.defaultImageId;
 	}
 
-	public static void createDefaults(final Identifier creatorId) throws ApplicationException {
+	public static void createDefaults() throws ApplicationException {
 		NodeTypeController.defaultImageId = getImageId(
-				creatorId,
 				DEFAULT_IMAGE_CODENAME, 
 				DEFAULT_IMAGE_FILENAME);
 	}

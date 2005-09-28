@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.38 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: MarkerController.java,v 1.39 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.38 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.39 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
@@ -73,9 +73,9 @@ public class MarkerController extends AbstractNodeController {
 		return new MarkerController(netMapViewer);
 	}
 
-	public static void init(final Identifier creatorId) throws ApplicationException {
+	public static void init() throws ApplicationException {
 		if (needInit) {
-			imageId = NodeTypeController.getImageId(creatorId, MarkerController.IMAGE_NAME, MarkerController.IMAGE_PATH);
+			imageId = NodeTypeController.getImageId(MarkerController.IMAGE_NAME, MarkerController.IMAGE_PATH);
 			MapPropertiesManager.setOriginalImage(imageId, new ImageIcon(MarkerController.IMAGE_PATH).getImage());
 			needInit = false;
 		}

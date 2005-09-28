@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.18 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.19 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mapview.AlarmMarker;
 /**
  * Контроллер маркера сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public final class AlarmMarkerController extends MarkerController {
@@ -66,12 +66,12 @@ public final class AlarmMarkerController extends MarkerController {
 		return new AlarmMarkerController(netMapViewer);
 	}
 
-	public static void init(final Identifier creatorId) throws ApplicationException {
+	public static void init() throws ApplicationException {
 		if (needInit) {
-			alarm1ImageId = NodeTypeController.getImageId(creatorId,
+			alarm1ImageId = NodeTypeController.getImageId(
 					AlarmMarkerController.ALARM_IMAGE_NAME,
 					AlarmMarkerController.ALARM_IMAGE_PATH);
-			alarm2ImageId = NodeTypeController.getImageId(creatorId,
+			alarm2ImageId = NodeTypeController.getImageId(
 					AlarmMarkerController.ALARM_IMAGE2_NAME,
 					AlarmMarkerController.ALARM_IMAGE2_PATH);
 

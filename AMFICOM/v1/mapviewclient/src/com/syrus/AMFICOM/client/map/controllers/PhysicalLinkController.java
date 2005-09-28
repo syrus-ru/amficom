@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.31 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.32 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -136,16 +137,16 @@ public class PhysicalLinkController extends AbstractLinkController {
 			return;
 		}
 
-		final PhysicalLink link = (PhysicalLink) mapElement;
+		final PhysicalLink physicalLink = (PhysicalLink) mapElement;
 
-		if (!isElementVisible(link, visibleBounds)) {
+		if (!isElementVisible(physicalLink, visibleBounds)) {
 			return;
 		}
 
-		final Stroke strokeForLink = getStroke(link);
-		final Color color = getColor(link);
+		final Stroke strokeForLink = getStroke(physicalLink);
+		final Color color = getColor(physicalLink);
 
-		this.paint(link, g, visibleBounds, strokeForLink, color, isSelectionVisible(link));
+		this.paint(physicalLink, g, visibleBounds, strokeForLink, color, isSelectionVisible(physicalLink));
 	}
 
 	/**
@@ -251,14 +252,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getLineSize(final MapElement mapElement) {
-		if (!(mapElement instanceof PhysicalLink)) {
+	public int getLineSize(final Characterizable characterizable) {
+		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getThickness();
 		}
 
-		final PhysicalLink plink = (PhysicalLink) mapElement;
+		final PhysicalLink plink = (PhysicalLink) characterizable;
 
-		final Characteristic ea = getCharacteristic(mapElement, this.thicknessCharType);
+		final Characteristic ea = getCharacteristic(characterizable, this.thicknessCharType);
 		if (ea != null) {
 			return Integer.parseInt(ea.getValue());
 		}
@@ -271,14 +272,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getStyle(final MapElement mapElement) {
-		if (!(mapElement instanceof PhysicalLink)) {
+	public String getStyle(final Characterizable characterizable) {
+		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getStyle();
 		}
 
-		final PhysicalLink plink = (PhysicalLink) mapElement;
+		final PhysicalLink plink = (PhysicalLink) characterizable;
 
-		final Characteristic ea = getCharacteristic(mapElement, this.styleCharType);
+		final Characteristic ea = getCharacteristic(characterizable, this.styleCharType);
 		if (ea != null) {
 			return ea.getValue();
 		}
@@ -291,14 +292,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Color getColor(final MapElement mapElement) {
-		if (!(mapElement instanceof PhysicalLink)) {
+	public Color getColor(final Characterizable characterizable) {
+		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getColor();
 		}
 
-		final PhysicalLink plink = (PhysicalLink) mapElement;
+		final PhysicalLink physicalLink = (PhysicalLink) characterizable;
 
-		final Characteristic ea = getCharacteristic(mapElement, this.colorCharType);
+		final Characteristic ea = getCharacteristic(characterizable, this.colorCharType);
 		if (ea != null) {
 			Color color = this.colors.get(ea.getValue());
 			if (color == null) {
@@ -308,21 +309,21 @@ public class PhysicalLinkController extends AbstractLinkController {
 			return color;
 		}
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getColor(plink.getType());
+		return ltc.getColor(physicalLink.getType());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Color getAlarmedColor(final MapElement mapElement) {
-		if (!(mapElement instanceof PhysicalLink)) {
+	public Color getAlarmedColor(final Characterizable characterizable) {
+		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getAlarmedColor();
 		}
 
-		final PhysicalLink plink = (PhysicalLink) mapElement;
+		final PhysicalLink plink = (PhysicalLink) characterizable;
 
-		final Characteristic ea = getCharacteristic(mapElement, this.alarmedColorCharType);
+		final Characteristic ea = getCharacteristic(characterizable, this.alarmedColorCharType);
 		if (ea != null) {
 			return new Color(Integer.parseInt(ea.getValue()));
 		}
@@ -335,14 +336,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getAlarmedLineSize(final MapElement mapElement) {
-		if (!(mapElement instanceof PhysicalLink)) {
+	public int getAlarmedLineSize(final Characterizable characterizable) {
+		if (!(characterizable instanceof PhysicalLink)) {
 			return MapPropertiesManager.getAlarmedThickness();
 		}
 
-		final PhysicalLink physicalLink = (PhysicalLink) mapElement;
+		final PhysicalLink physicalLink = (PhysicalLink) characterizable;
 
-		final Characteristic ea = getCharacteristic(mapElement, this.alarmedThicknessCharType);
+		final Characteristic ea = getCharacteristic(characterizable, this.alarmedThicknessCharType);
 		if (ea != null) {
 			return Integer.parseInt(ea.getValue());
 		}

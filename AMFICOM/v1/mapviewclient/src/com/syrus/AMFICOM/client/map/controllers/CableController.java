@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.36 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: CableController.java,v 1.37 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public final class CableController extends AbstractLinkController {
@@ -155,16 +156,16 @@ public final class CableController extends AbstractLinkController {
 			return;
 		}
 
-		final CablePath cpath = (CablePath) me;
+		final CablePath cablePath = (CablePath) me;
 
-		if (!this.isElementVisible(cpath, visibleBounds)) {
+		if (!this.isElementVisible(cablePath, visibleBounds)) {
 			return;
 		}
 
-		final Stroke stroke = getStroke(cpath);
-		final Color color = getColor(cpath);
+		final Stroke stroke = getStroke(cablePath.getCharacterizable());
+		final Color color = getColor(cablePath.getCharacterizable());
 
-		this.paint(cpath, g, visibleBounds, stroke, color, isSelectionVisible(cpath));
+		this.paint(cablePath, g, visibleBounds, stroke, color, isSelectionVisible(cablePath));
 	}
 
 	/**
@@ -313,19 +314,19 @@ public final class CableController extends AbstractLinkController {
 		return this.getDistanceFromStartLt(cpath, pt) * kd;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getLineSize(final MapElement link) {
-		return MapPropertiesManager.getUnboundThickness();
-	}
+//	/**
+//	 * {@inheritDoc}
+//	 */
+//	@Override
+//	public int getLineSize(final Characterizable characterizable) {
+//		return MapPropertiesManager.getUnboundThickness();
+//	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getStyle(final MapElement link) {
+	public String getStyle(final Characterizable characterizable) {
 		return MapPropertiesManager.getStyle();
 	}
 
@@ -333,23 +334,23 @@ public final class CableController extends AbstractLinkController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Stroke getStroke(final MapElement link) {
+	public Stroke getStroke(final Characterizable characterizable) {
 		return MapPropertiesManager.getStroke();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Color getColor(final MapElement link) {
-		return MapPropertiesManager.getUnboundLinkColor();
-	}
+//	/**
+//	 * {@inheritDoc}
+//	 */
+//	@Override
+//	public Color getColor(final Characterizable characterizable) {
+//		return MapPropertiesManager.getUnboundLinkColor();
+//	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Color getAlarmedColor(final MapElement link) {
+	public Color getAlarmedColor(final Characterizable characterizable) {
 		return MapPropertiesManager.getAlarmedColor();
 	}
 
@@ -357,7 +358,7 @@ public final class CableController extends AbstractLinkController {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getAlarmedLineSize(final MapElement link) {
+	public int getAlarmedLineSize(final Characterizable characterizable) {
 		return MapPropertiesManager.getAlarmedThickness();
 	}
 

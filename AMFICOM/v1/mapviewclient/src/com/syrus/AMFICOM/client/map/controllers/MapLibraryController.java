@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryController.java,v 1.10 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: MapLibraryController.java,v 1.11 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public class MapLibraryController {
@@ -95,52 +96,52 @@ public class MapLibraryController {
 	
 	private static MapLibrary defaultLibrary = null;
 
-	public static void createDefaults(Identifier creatorId) throws ApplicationException {
-		defaultLibrary = MapLibraryController.getMapLibrary(creatorId,  DEFAULT_LIBRARY);
+	public static void createDefaults() throws ApplicationException {
+		defaultLibrary = MapLibraryController.getMapLibrary(LoginManager.getUserId(), DEFAULT_LIBRARY);
 
-		NodeTypeController.createDefaults(creatorId);
+		NodeTypeController.createDefaults();
 		
 		SiteNodeType siteNodeType;
 		// make sure SiteNodeType.ATS is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS, true);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS, true);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.BUILDING is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.BUILDING, SiteNodeType.DEFAULT_BUILDING, true);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.BUILDING, SiteNodeType.DEFAULT_BUILDING, true);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.PIQUET is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.PIQUET, SiteNodeType.DEFAULT_PIQUET, true);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.PIQUET, SiteNodeType.DEFAULT_PIQUET, true);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.WELL is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL, true);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL, true);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.CABLE_INLET is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET, false);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET, false);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.UNBOUND is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND, false);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND, false);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.CABLE_INLET is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER, true);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER, true);
 		siteNodeType.setMapLibrary(defaultLibrary);
 
 		PhysicalLinkType physicalLinkType;
 		// make sure PhysicalLinkType.TUNNEL is created
-		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL, true);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL, true);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.COLLECTOR is created
-		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR, true);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR, true);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.INDOOR is created
-		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.INDOOR, PhysicalLinkType.DEFAULT_INDOOR, false);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.INDOOR, PhysicalLinkType.DEFAULT_INDOOR, false);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.SUBMARINE is created
-		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.SUBMARINE, PhysicalLinkType.DEFAULT_SUBMARINE, true);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.SUBMARINE, PhysicalLinkType.DEFAULT_SUBMARINE, true);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.OVERHEAD is created
-		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.OVERHEAD, PhysicalLinkType.DEFAULT_OVERHEAD, true);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.OVERHEAD, PhysicalLinkType.DEFAULT_OVERHEAD, true);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.UNBOUND is created
-		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.UNBOUND, PhysicalLinkType.DEFAULT_UNBOUND, false);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, PhysicalLinkTypeSort.UNBOUND, PhysicalLinkType.DEFAULT_UNBOUND, false);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 	}
 

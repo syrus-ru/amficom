@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.25 2005/09/25 16:08:02 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.26 2005/09/28 15:21:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/28 15:21:02 $
  * @module mapviewclient
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -206,22 +206,17 @@ public final class NodeLinkController extends AbstractLinkController {
 		MapViewController.addTime5(d - f);
 	}
 
-	@Override
-	public Color getColor(final MapElement mapElement) {
-		if (!(mapElement instanceof NodeLink)) {
-			return MapPropertiesManager.getColor();
-		}
-		final NodeLink nodeLink = (NodeLink) mapElement;
+	public Color getAlarmedColor(final NodeLink nodeLink) {
+		final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
+		return plc.getAlarmedColor(nodeLink.getPhysicalLink());
+	}
+
+	public Color getColor(final NodeLink nodeLink) {
 		final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
 		return plc.getColor(nodeLink.getPhysicalLink());
 	}
 
-	@Override
-	public Stroke getStroke(final MapElement mapElement) {
-		if (!(mapElement instanceof NodeLink)) {
-			return MapPropertiesManager.getStroke();
-		}
-		final NodeLink nodeLink = (NodeLink) mapElement;
+	public Stroke getStroke(final NodeLink nodeLink) {
 		final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
 		return plc.getStroke(nodeLink.getPhysicalLink());
 	}
