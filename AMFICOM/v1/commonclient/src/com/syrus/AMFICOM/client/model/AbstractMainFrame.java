@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.20 2005/09/26 07:31:47 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.21 2005/09/28 10:09:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/26 07:31:47 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/28 10:09:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -69,9 +69,9 @@ implements PropertyChangeListener {
 	protected JPanel					statusBarPanel;
 	protected JViewport					viewport;
 	protected WindowArranger			windowArranger;
-	protected final AbstractMainMenuBar	menuBar;
 	
-	private final AbstractMainToolBar	toolBar;
+	protected final AbstractMainMenuBar	menuBar;	
+	protected final AbstractMainToolBar	toolBar;
 
 	public AbstractMainFrame(final ApplicationContext aContext,
 			final String applicationTitle,
