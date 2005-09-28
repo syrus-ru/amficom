@@ -1,5 +1,5 @@
 /*
- * $Id: TestEquipment.java,v 1.4 2005/08/30 19:58:39 arseniy Exp $
+ * $Id: TestEquipment.java,v 1.5 2005/09/28 13:25:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,9 +36,10 @@ public final class TestEquipment extends TestCase {
 	}
 
 	public void testCreateAll() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		final EquipmentType equipmentType = (EquipmentType) it.next();
+		final ProtoEquipment protoEquipment = (ProtoEquipment) it.next();
+		final Identifier protoEquipmentId = protoEquipment.getId();
 
 		ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
@@ -46,7 +47,7 @@ public final class TestEquipment extends TestCase {
 
 		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				domain.getId(),
-				equipmentType,
+				protoEquipmentId,
 				"Рефлектометр 1",
 				EQUIPMENT + SEPARATOR + "1",
 				Identifier.VOID_IDENTIFIER,
@@ -62,7 +63,7 @@ public final class TestEquipment extends TestCase {
 
 		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				domain.getId(),
-				equipmentType,
+				protoEquipmentId,
 				"Рефлектометр 2",
 				EQUIPMENT + SEPARATOR + "2",
 				Identifier.VOID_IDENTIFIER,
@@ -78,7 +79,7 @@ public final class TestEquipment extends TestCase {
 
 		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				domain.getId(),
-				equipmentType,
+				protoEquipmentId,
 				"Рефлектометр 3",
 				EQUIPMENT + SEPARATOR + "3",
 				Identifier.VOID_IDENTIFIER,

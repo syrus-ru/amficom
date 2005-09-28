@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.13 2005/08/30 19:58:39 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.14 2005/09/28 13:25:16 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.configuration.TestEquipment;
 import com.syrus.AMFICOM.configuration.TestEquipmentType;
 import com.syrus.AMFICOM.configuration.TestPort;
 import com.syrus.AMFICOM.configuration.TestPortType;
+import com.syrus.AMFICOM.configuration.TestProtoEquipment;
 import com.syrus.AMFICOM.configuration.TestTransmissionPath;
 import com.syrus.AMFICOM.configuration.TestTransmissionPathType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.measurement.TestModelingType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/30 19:58:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/28 13:25:16 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -80,6 +81,7 @@ public final class TestInitialSetup extends TestCase {
 		databaseCommonTest.addTest(new TestEquipmentType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPathType("testCreateInstance"));
+		databaseCommonTest.addTest(new TestProtoEquipment("testCreateInstance"));
 		databaseCommonTest.addTest(new TestEquipment("testCreateAll"));
 		databaseCommonTest.addTest(new TestPort("testCreateAll"));
 		databaseCommonTest.addTest(new TestTransmissionPath("testCreateAll"));
