@@ -1,4 +1,4 @@
--- $Id: equipmenttype.sql,v 1.13 2005/09/28 05:32:19 arseniy Exp $
+-- $Id: equipmenttype.sql,v 1.14 2005/09/28 11:04:23 arseniy Exp $
 
 CREATE TABLE EquipmentType (
  id NUMBER(19),
@@ -12,8 +12,6 @@ CREATE TABLE EquipmentType (
  description VARCHAR2(256 CHAR),
 --
  name VARCHAR2(128 CHAR),
- manufacturer VARCHAR2(128 CHAR),
- manufacturer_code VARCHAR2(32 CHAR),
 --
  CONSTRAINT eqptype_pk PRIMARY KEY (id),
  CONSTRAINT eqptype_uniq UNIQUE (codename),
@@ -23,4 +21,4 @@ CREATE TABLE EquipmentType (
   REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE equipmenttype_seq ORDER;
+CREATE SEQUENCE EquipmentType_seq ORDER;
