@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.17 2005/09/04 15:13:26 bob Exp $
+ * $Id: AbstractBean.java,v 1.18 2005/09/28 14:03:41 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import org.jgraph.graph.DefaultEdge;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/04 15:13:26 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/28 14:03:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -86,7 +86,7 @@ public abstract class AbstractBean {
 					LoginManager.getUserId(),
 					ObjectEntities.LAYOUT_ITEM_CODE) {
 					@Override
-					public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+					public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
 						return storableObjects.isEmpty();
 					}
 				});
@@ -162,7 +162,7 @@ public abstract class AbstractBean {
 					LoginManager.getUserId(),
 					ObjectEntities.LAYOUT_ITEM_CODE) {
 					@Override
-					public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+					public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
 						return storableObjects.isEmpty();
 					}
 				});
