@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.99 2005/09/28 10:22:23 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.100 2005/09/28 12:59:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -85,7 +86,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/09/28 10:22:23 $
+ * @version $Revision: 1.100 $, $Date: 2005/09/28 12:59:41 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -1667,5 +1668,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			schemePorts.addAll(schemeProtoElement.getSchemePortsRecursively());
 		}
 		return Collections.unmodifiableSet(schemePorts);
+	}
+
+	@SuppressWarnings("unused")
+	public ProtoEquipment getProtoEquipment() throws ApplicationException {
+		throw new UnsupportedOperationException(
+				"SchemeProtoElement#getProtoEquipment() is unsupported");
+	}
+
+	@SuppressWarnings("unused")
+	public void setProtoEquipment(final ProtoEquipment protoEquipment) {
+		throw new UnsupportedOperationException(
+				"SchemeProtoElement#setProtoEquipment(protoEquipment) is unsupported");
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.122 2005/09/28 11:00:32 bass Exp $
+ * $Id: SchemeElement.java,v 1.123 2005/09/28 12:59:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,6 +52,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -90,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.122 $, $Date: 2005/09/28 11:00:32 $
+ * @version $Revision: 1.123 $, $Date: 2005/09/28 12:59:41 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -2189,5 +2190,17 @@ public final class SchemeElement extends AbstractSchemeElement
 			}
 		}
 		return false;
+	}
+
+	@SuppressWarnings("unused")
+	public ProtoEquipment getProtoEquipment() throws ApplicationException {
+		throw new UnsupportedOperationException(
+				"SchemeElement#getProtoEquipment() is unsupported");
+	}
+
+	@SuppressWarnings("unused")
+	public void setProtoEquipment(final ProtoEquipment protoEquipment) {
+		throw new UnsupportedOperationException(
+				"SchemeElement#setProtoEquipment(protoEquipment) is unsupported");
 	}
 }
