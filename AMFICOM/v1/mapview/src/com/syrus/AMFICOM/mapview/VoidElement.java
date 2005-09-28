@@ -1,5 +1,5 @@
 /*-
- * $Id: VoidElement.java,v 1.22 2005/09/25 15:50:54 krupenn Exp $
+ * $Id: VoidElement.java,v 1.23 2005/09/28 15:03:15 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Пустой элемент.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/09/25 15:50:54 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/28 15:03:15 $
  * @module mapview
  */
 public final class VoidElement implements MapElement {
@@ -126,13 +126,6 @@ public final class VoidElement implements MapElement {
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
 	public DoublePoint getLocation() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	public Set<Characteristic> getCharacteristics(final boolean usePool) {
 		throw new UnsupportedOperationException();
 	}
 

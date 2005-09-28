@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.50 2005/09/25 15:50:54 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.51 2005/09/28 15:03:15 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * Элемент пути.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/09/25 15:50:54 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/28 15:03:15 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -131,15 +131,6 @@ public final class MeasurementPath implements MapElement {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		return new MeasurementPath(schemePath, stNode, eNode, mapView);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws ApplicationException
-	 */
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		return this.schemePath.getCharacteristics(usePool);
 	}
 
 	/**

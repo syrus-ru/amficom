@@ -1,5 +1,5 @@
 /*-
- * $Id: CablePath.java,v 1.36 2005/09/25 15:50:53 krupenn Exp $
+ * $Id: CablePath.java,v 1.37 2005/09/28 15:02:47 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/09/25 15:50:53 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/28 15:02:47 $
  * @module mapview
  */
 public final class CablePath implements MapElement {
@@ -166,17 +166,6 @@ public final class CablePath implements MapElement {
 	public void setStartNode(AbstractNode startNode) {
 		this.startNode = startNode;
 		this.nodeLinksSorted = false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
-	 */
-	public Set<Characteristic> getCharacteristics(final boolean usePool)
-			throws ApplicationException {
-		return this.schemeCableLink.getCharacteristics(usePool);
 	}
 
 	/**

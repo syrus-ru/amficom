@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.27 2005/09/25 15:50:54 krupenn Exp $
+ * $Id: Selection.java,v 1.28 2005/09/28 15:03:15 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Набор выбранных элементов.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/25 15:50:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/28 15:03:15 $
  * @module mapview
  */
 public final class Selection extends MapTypedElementsContainer implements MapElement {
@@ -100,13 +100,6 @@ public final class Selection extends MapTypedElementsContainer implements MapEle
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
 	public void setName(final String name) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	public Set<Characteristic> getCharacteristics(final boolean usePool) {
 		throw new UnsupportedOperationException();
 	}
 
