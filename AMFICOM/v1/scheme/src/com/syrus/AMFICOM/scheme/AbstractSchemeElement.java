@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.57 2005/09/26 13:11:02 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.58 2005/09/28 09:02:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/09/26 13:11:02 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/28 09:02:21 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -416,7 +416,7 @@ public abstract class AbstractSchemeElement
 		this.alarmed = alarmed;
 	}
 	
-	void setParentSchemeId(final Identifier parentSchemeId) {
+	final void setParentSchemeId(final Identifier parentSchemeId) {
 //		TODO: inroduce additional sanity checks
 		assert parentSchemeId != null : NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.40 2005/09/20 08:15:58 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.41 2005/09/28 09:02:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/09/20 08:15:58 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/28 09:02:21 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -365,23 +365,23 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
 		super.markAsChanged();
 	}
-	
-	void setAbstractLinkTypeId(final Identifier abstractLinkTypeId) {
+
+	final void setAbstractLinkTypeId(final Identifier abstractLinkTypeId) {
 //		TODO: inroduce additional sanity checks
 		assert abstractLinkTypeId != null : NON_NULL_EXPECTED;
 		assert abstractLinkTypeId.isVoid() || abstractLinkTypeId.getMajor() == LINK_TYPE_CODE || abstractLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
 		this.abstractLinkTypeId = abstractLinkTypeId;
 		super.markAsChanged();
 	}
-	
-	void setAbstractLinkId(final Identifier abstractLinkId) {
+
+	final void setAbstractLinkId(final Identifier abstractLinkId) {
 //		TODO: inroduce additional sanity checks
 		assert abstractLinkId != null : NON_NULL_EXPECTED;
 		assert abstractLinkId.isVoid() || abstractLinkId.getMajor() == LINK_CODE || abstractLinkId.getMajor() == CABLELINK_CODE;
 		this.abstractLinkId = abstractLinkId;
 		super.markAsChanged();
 	}
-	
+
 	/**
 	 * <p>
 	 * A wrapper around {@link #setSourceAbstractSchemePortId(Identifier)}.
