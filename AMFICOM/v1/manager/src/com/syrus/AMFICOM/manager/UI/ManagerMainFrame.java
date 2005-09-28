@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.10 2005/09/13 11:30:16 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.11 2005/09/28 14:02:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,12 @@ import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -41,6 +43,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
 import javax.swing.UIDefaults;
@@ -87,12 +90,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -116,7 +119,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/13 11:30:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/28 14:02:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -235,11 +238,23 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			
 				
 			}
-		}, new AbstractMainToolBar() {
-			// nothing
-		});
+		}, new AbstractMainToolBar() {});
 		
 		final JDesktopPane desktopPane1 = this.desktopPane;
+		
+		{
+			// XXX testing bypass
+			super.toolBar.addSeparator();
+			final AbstractAction enterDomains = new AbstractAction("D") {			
+				public void actionPerformed(ActionEvent e) {
+					ManagerMainFrame.this.windowArranger.arrange();
+					ManagerMainFrame.this.domainsButton.doClick();				
+				}
+			};			
+			enterDomains.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('D'));
+			enterDomains.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_D));
+			super.toolBar.add(enterDomains);
+		}
 		
 		this.setWindowArranger(new WindowArranger(this) {
 
@@ -271,10 +286,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				
 				treeFrame.setVisible(true);
 				graphFrame.setVisible(true);
-				propertiesFrame.setVisible(true);
-				
-				// XXX bypass for local testing
-				ManagerMainFrame.this.domainsButton.doClick();
+				propertiesFrame.setVisible(true);				
 			}
 		});
 
@@ -727,7 +739,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			LoginManager.getUserId(),
 			ObjectEntities.LAYOUT_ITEM_CODE) {
 			@Override
-			public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+			public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
 				return storableObjects.isEmpty();
 			}
 		};
@@ -1306,7 +1318,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 								LoginManager.getUserId(),
 								ObjectEntities.LAYOUT_ITEM_CODE) {
 								@Override
-								public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+								public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
 									return storableObjects.isEmpty();
 								}
 							});
