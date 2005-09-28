@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.1 2005/09/28 10:00:14 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.2 2005/09/28 11:19:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/28 10:00:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/09/28 11:19:21 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -114,7 +114,6 @@ public final class ProtoEquipment extends StorableObject implements Namable, Typ
 	 * Create new instance for client
 	 * 
 	 * @param creatorId
-	 * @param domainId
 	 * @param type
 	 * @param manufacturer
 	 * @param manufacturerCode
