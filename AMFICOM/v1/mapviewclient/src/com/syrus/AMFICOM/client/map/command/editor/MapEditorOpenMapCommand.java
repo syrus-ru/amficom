@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.25 2005/09/25 16:00:12 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.26 2005/09/28 06:39:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,11 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapOpenCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -24,6 +27,8 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -33,7 +38,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.25 $, $Date: 2005/09/25 16:00:12 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/28 06:39:07 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -80,6 +85,26 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 		mapOpenCommand.setCanDelete(true);
 		mapOpenCommand.execute();
 
+		if(this.mapFrame != null) {
+			Map openedMap = this.mapFrame.getMap();
+			try {
+				if(StorableObjectPool.getStorableObject(openedMap.getId(), false) == null) {
+					// current mapFrame map was deleted
+					MapNewCommand cmd = new MapNewCommand(this.mapFrame.getContext());
+					cmd.execute();
+					Map map = cmd.getMap();
+					MapViewNewCommand cmd2 = new MapViewNewCommand(map, this.mapFrame.getContext());
+					cmd2.execute();
+					MapView mapView = cmd2.getMapView();
+					this.mapFrame.setMapView(mapView);
+				}
+			} catch(ApplicationException e) {
+				e.printStackTrace();
+			} catch(MapException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		if(mapOpenCommand.getResult() == Command.RESULT_OK) {
 			this.map = mapOpenCommand.getMap();
 
