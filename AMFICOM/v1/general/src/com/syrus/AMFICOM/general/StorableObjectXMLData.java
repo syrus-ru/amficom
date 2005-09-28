@@ -1,5 +1,5 @@
 /*-
-* $Id: StorableObjectXMLData.java,v 1.3 2005/09/09 14:34:21 bob Exp $
+* $Id: StorableObjectXMLData.java,v 1.4 2005/09/28 11:01:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/09 14:34:21 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/28 11:01:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
@@ -85,6 +85,8 @@ public abstract class StorableObjectXMLData {
 			className = Collection.class.getName();
 		} else if (object instanceof Map) {
 			className = Map.class.getName();
+		} else if (object instanceof Enum) {
+			className = Integer.class.getName();
 		}
 		return className;
 	}
@@ -120,6 +122,8 @@ public abstract class StorableObjectXMLData {
 				buffer.append(s);
 			}
 			value = buffer.toString();
+		} else if (object instanceof Enum) {
+			value = Integer.toString(((Enum)object).ordinal());
 		} else {
 			value = object.toString();
 		}
