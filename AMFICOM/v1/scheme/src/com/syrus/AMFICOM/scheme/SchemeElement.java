@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.121 2005/09/28 10:22:22 bass Exp $
+ * $Id: SchemeElement.java,v 1.122 2005/09/28 11:00:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.121 $, $Date: 2005/09/28 10:22:22 $
+ * @version $Revision: 1.122 $, $Date: 2005/09/28 11:00:32 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -740,7 +740,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		try {
 			return this.getEquipmentId().isVoid()
 					? StorableObjectPool.<EquipmentType>getStorableObject(this.getEquipmentTypeId(), true)
-					: this.getEquipment().getType();
+					: this.getEquipment().getProtoEquipment().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -1139,8 +1139,9 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * @param equipment
+	 * @throws ApplicationException
 	 */
-	public void setEquipment(final Equipment equipment) {
+	public void setEquipment(final Equipment equipment) throws ApplicationException {
 		assert this.assertEquipmentTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newEquipmentId = Identifier.possiblyVoid(equipment);
@@ -1162,7 +1163,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			 * initial object value has already been set (i. e.
 			 * there already is object-type value to preserve).
 			 */
-			this.equipmentTypeId = this.getEquipment().getType().getId();
+			this.equipmentTypeId = this.getEquipment().getProtoEquipment().getType().getId();
 		this.equipmentId = newEquipmentId;
 		super.markAsChanged();
 	}
@@ -1170,12 +1171,12 @@ public final class SchemeElement extends AbstractSchemeElement
 	/**
 	 * @param equipmentType
 	 */
-	public void setEquipmentType(final EquipmentType equipmentType) {
+	public void setEquipmentType(final EquipmentType equipmentType) throws ApplicationException {
 		assert this.assertEquipmentTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 		assert equipmentType != null: NON_NULL_EXPECTED;
 
 		if (!this.equipmentId.isVoid())
-			this.getEquipment().setType(equipmentType);
+			this.getEquipment().getProtoEquipment().setType(equipmentType);
 		else {
 			final Identifier newEquipmentTypeId = equipmentType.getId();
 			if (this.equipmentTypeId.equals(newEquipmentTypeId)) {

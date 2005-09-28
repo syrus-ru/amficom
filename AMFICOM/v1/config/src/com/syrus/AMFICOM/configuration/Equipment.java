@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.132 2005/09/28 10:01:42 arseniy Exp $
+ * $Id: Equipment.java,v 1.133 2005/09/28 11:00:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.132 $, $Date: 2005/09/28 10:01:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.133 $, $Date: 2005/09/28 11:00:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -438,6 +438,15 @@ public final class Equipment extends DomainMember
 
 	public Identifier getProtoEquipmentId() {
 		return this.protoEquipmentId;
+	}
+
+	/**
+	 * A wrapper around {@link #getProtoEquipmentId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	public ProtoEquipment getProtoEquipment() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getProtoEquipmentId(), true);
 	}
 
 	public String getName() {
