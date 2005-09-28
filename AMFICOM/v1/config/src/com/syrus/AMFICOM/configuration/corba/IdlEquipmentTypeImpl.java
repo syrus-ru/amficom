@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEquipmentTypeImpl.java,v 1.4 2005/07/27 15:59:22 bass Exp $
+ * $Id: IdlEquipmentTypeImpl.java,v 1.5 2005/09/28 10:02:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/27 15:59:22 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/09/28 10:02:26 $
  * @module config
  */
 final class IdlEquipmentTypeImpl extends IdlEquipmentType {
-	private static final long serialVersionUID = 1282054745812003624L;
+	private static final long serialVersionUID = 50092866857176815L;
 
 	IdlEquipmentTypeImpl() {
 		// empty
@@ -37,9 +37,7 @@ final class IdlEquipmentTypeImpl extends IdlEquipmentType {
 			final long version,
 			final String codename,
 			final String description,
-			final String name,
-			final String manufacturer,
-			final String manufacturerCode) {
+			final String name) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -49,8 +47,6 @@ final class IdlEquipmentTypeImpl extends IdlEquipmentType {
 		this.codename = codename;
 		this.description = description;
 		this.name = name;
-		this.manufacturer = manufacturer;
-		this.manufacturerCode = manufacturerCode;
 	}
 
 	/**

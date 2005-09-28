@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: EquipmentType.xsd,v 1.7 2005/09/14 19:49:30 bass Exp $
+			$Id: EquipmentType.xsd,v 1.8 2005/09/28 10:03:20 arseniy Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -32,8 +32,6 @@
 			<xsd:extension base = "general:XmlStorableObjectType">
 				<xsd:sequence>
 					<xsd:element name = "name" type = "xsd:string"/>
-					<xsd:element name = "manufacturer" type = "xsd:string" minOccurs = "0"/>
-					<xsd:element name = "manufacturerCode" type = "xsd:string" minOccurs = "0"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

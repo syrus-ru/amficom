@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.96 2005/09/23 11:45:45 bass Exp $
+ * $Id: EquipmentType.java,v 1.97 2005/09/28 10:02:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -41,24 +43,23 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/09/23 11:45:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.97 $, $Date: 2005/09/28 10:02:26 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class EquipmentType extends StorableObjectType implements Characterizable, Namable, XmlBeansTransferable<XmlEquipmentType> {
-	private static final long serialVersionUID = 9157517478787463967L;
+	private static final long serialVersionUID = -728421290623578368L;
 
 	private String name;
-	private String manufacturer;
-	private String manufacturerCode;
 
 	public EquipmentType(final IdlEquipmentType ett) throws CreateObjectException {
 		try {
@@ -73,9 +74,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final String name,
-			final String manufacturer,
-			final String manufacturerCode) {
+			final String name) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -85,8 +84,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 				codename,
 				description);
 		this.name = name;
-		this.manufacturer = manufacturer;
-		this.manufacturerCode = manufacturerCode;
 	}
 
 	/**
@@ -98,11 +95,8 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @param creatorId
 	 * @throws IdentifierGenerationException
 	 */
-	private EquipmentType(final XmlIdentifier id,
-			final String importType,
-			final Date created,
-			final Identifier creatorId)
-	throws IdentifierGenerationException {
+	private EquipmentType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
+			throws IdentifierGenerationException {
 		super(Identifier.fromXmlTransferable(id, importType, EQUIPMENT_TYPE_CODE),
 				created,
 				created,
@@ -114,16 +108,16 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	/**
+	 * Create new instance on import/export from XML
 	 * @param creatorId
 	 * @param importType
 	 * @param xmlEquipmentType
+	 * @return new instance
 	 * @throws CreateObjectException
 	 */
-	public static EquipmentType createInstance(
-			final Identifier creatorId,
+	public static EquipmentType createInstance(final Identifier creatorId,
 			final String importType,
-			final XmlEquipmentType xmlEquipmentType)
-	throws CreateObjectException {
+			final XmlEquipmentType xmlEquipmentType) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
@@ -132,18 +126,12 @@ public final class EquipmentType extends StorableObjectType implements Character
 			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
 			EquipmentType equipmentType;
 			if (id.isVoid()) {
-				equipmentType = new EquipmentType(xmlId,
-						importType,
-						created,
-						creatorId);
+				equipmentType = new EquipmentType(xmlId, importType, created, creatorId);
 			} else {
 				equipmentType = StorableObjectPool.getStorableObject(id, true);
 				if (equipmentType == null) {
 					LocalXmlIdentifierPool.remove(xmlId, importType);
-					equipmentType = new EquipmentType(xmlId,
-							importType,
-							created,
-							creatorId);
+					equipmentType = new EquipmentType(xmlId, importType, created, creatorId);
 				}
 			}
 			equipmentType.fromXmlTransferable(xmlEquipmentType, importType);
@@ -160,6 +148,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 
 	/**
 	 * Create new instance for client
+	 * 
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -168,22 +157,18 @@ public final class EquipmentType extends StorableObjectType implements Character
 	public static EquipmentType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final String name,
-			final String manufacturer,
-			final String manufacturerCode) throws CreateObjectException {
-		if (creatorId == null || codename == null || description == null || name == null
-								|| manufacturer == null || manufacturerCode == null)
+			final String name) throws CreateObjectException {
+		if (creatorId == null || codename == null || description == null || name == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final EquipmentType equipmentType = new EquipmentType(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_TYPE_CODE),
-										creatorId,
-										StorableObjectVersion.createInitial(),
-										codename,
-										description,
-										name,
-										manufacturer,
-										manufacturerCode);
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					codename,
+					description,
+					name);
 
 			assert equipmentType.isValid() : OBJECT_BADLY_INITIALIZED;
 
@@ -200,8 +185,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 		final IdlEquipmentType ett = (IdlEquipmentType) transferable;
 		super.fromTransferable(ett, ett.codename, ett.description);
 		this.name = ett.name;
-		this.manufacturer = ett.manufacturer;
-		this.manufacturerCode = ett.manufacturerCode;
 	}
 
 	/**
@@ -211,20 +194,14 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlEquipmentType equipmentType,
-			final String importType)
-	throws ApplicationException {
+	public void fromXmlTransferable(final XmlEquipmentType equipmentType, final String importType) throws ApplicationException {
+		XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, PRE_IMPORT);
+
 		this.name = equipmentType.getName();
 		this.codename = equipmentType.getCodename();
-		this.description = equipmentType.isSetDescription()
-				? equipmentType.getDescription()
-				: "";
-		this.manufacturer = equipmentType.isSetManufacturer()
-				? equipmentType.getManufacturer()
-				: "";
-		this.manufacturerCode = equipmentType.isSetManufacturerCode()
-				? equipmentType.getManufacturerCode()
-				: "";
+		this.description = equipmentType.isSetDescription() ? equipmentType.getDescription() : "";
+
+		XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, POST_IMPORT);
 	}
 
 	/**
@@ -233,7 +210,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 */
 	@Override
 	public IdlEquipmentType getTransferable(final ORB orb) {
-
 		return IdlEquipmentTypeHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -243,9 +219,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
-				this.name != null ? this.name : "",
-				this.manufacturer != null ? this.manufacturer : "",
-				this.manufacturerCode != null ? this.manufacturerCode : "");
+				this.name != null ? this.name : "");
 	}
 
 	/**
@@ -267,18 +241,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 		if (this.description.length() != 0) {
 			equipmentType.setDescription(this.description);
 		}
-		if (equipmentType.isSetManufacturer()) {
-			equipmentType.unsetManufacturer();
-		}
-		if (this.manufacturer.length() != 0) {
-			equipmentType.setManufacturer(this.manufacturer);
-		}
-		if (equipmentType.isSetManufacturerCode()) {
-			equipmentType.unsetManufacturerCode();
-		}
-		if (this.manufacturerCode.length() != 0) {
-			equipmentType.setManufacturerCode(this.manufacturerCode);
-		}
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -288,13 +250,9 @@ public final class EquipmentType extends StorableObjectType implements Character
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final String name,
-			final String manufacturer,
-			final String manufacturerCode) {
+			final String name) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
-		this.manufacturer = manufacturer;
-		this.manufacturerCode = manufacturerCode;
 	}
 
 	public String getName() {
@@ -309,24 +267,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 	@Override
 	public Set<Identifiable> getDependencies() {
 		return Collections.emptySet();
-	}
-
-	public String getManufacturer() {
-		return this.manufacturer;
-	}
-
-	public void setManufacturer(final String manufacturer) {
-		this.manufacturer = manufacturer;
-		super.markAsChanged();
-	}
-
-	public String getManufacturerCode() {
-		return this.manufacturerCode;
-	}
-
-	public void setManufacturerCode(final String manufacturerCode) {
-		this.manufacturerCode = manufacturerCode;
-		super.markAsChanged();
 	}
 
 	/*-********************************************************************
@@ -351,9 +291,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
 	 */
-	public void addCharacteristic(final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void addCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		characteristic.setParentCharacterizable(this, usePool);
 	}
@@ -362,12 +300,10 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @param characteristic
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic, boolean)
+	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic,
+	 *      boolean)
 	 */
-	public void removeCharacteristic(
-			final Characteristic characteristic,
-			final boolean usePool)
-	throws ApplicationException {
+	public void removeCharacteristic(final Characteristic characteristic, final boolean usePool) throws ApplicationException {
 		assert characteristic != null : NON_NULL_EXPECTED;
 		assert characteristic.getParentCharacterizableId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		characteristic.setParentCharacterizable(this, usePool);
@@ -378,8 +314,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
-	public Set<Characteristic> getCharacteristics(boolean usePool)
-	throws ApplicationException {
+	public Set<Characteristic> getCharacteristics(boolean usePool) throws ApplicationException {
 		return Collections.unmodifiableSet(this.getCharacteristics0(usePool));
 	}
 
@@ -387,8 +322,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	Set<Characteristic> getCharacteristics0(final boolean usePool)
-	throws ApplicationException {
+	Set<Characteristic> getCharacteristics0(final boolean usePool) throws ApplicationException {
 		return this.getCharacteristicContainerWrappee().getContainees(usePool);
 	}
 
@@ -398,9 +332,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set, boolean)
 	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics,
-			final boolean usePool)
-	throws ApplicationException {
+	public void setCharacteristics(final Set<Characteristic> characteristics, final boolean usePool) throws ApplicationException {
 		assert characteristics != null : NON_NULL_EXPECTED;
 
 		final Set<Characteristic> oldCharacteristics = this.getCharacteristics0(usePool);

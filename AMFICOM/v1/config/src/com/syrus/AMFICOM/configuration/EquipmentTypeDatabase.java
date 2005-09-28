@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.57 2005/09/14 18:42:07 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.58 2005/09/28 10:02:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,17 +23,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/09/14 18:42:07 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/28 10:02:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class EquipmentTypeDatabase extends StorableObjectDatabase<EquipmentType> {
-	private static final int SIZE_MANUFACTURER_COLUMN = 64;
-
-	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -47,8 +43,6 @@ public final class EquipmentTypeDatabase extends StorableObjectDatabase<Equipmen
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
 			+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -59,9 +53,7 @@ public final class EquipmentTypeDatabase extends StorableObjectDatabase<Equipmen
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ EquipmentTypeWrapper.COLUMN_MANUFACTURER + COMMA
-				+ EquipmentTypeWrapper.COLUMN_MANUFACTURER_CODE;
+				+ StorableObjectWrapper.COLUMN_NAME;
 		}
 		return columns;
 	}
@@ -70,9 +62,7 @@ public final class EquipmentTypeDatabase extends StorableObjectDatabase<Equipmen
 	protected String getUpdateSingleSQLValuesTmpl(final EquipmentType storableObject) throws IllegalDataException {
 		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN) + APOSTROPHE;
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
@@ -83,20 +73,16 @@ public final class EquipmentTypeDatabase extends StorableObjectDatabase<Equipmen
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getManufacturer(), SIZE_MANUFACTURER_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
 	protected EquipmentType updateEntityFromResultSet(final EquipmentType storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		EquipmentType equipmentType = storableObject == null
+		final EquipmentType equipmentType = (storableObject == null)
 				? new EquipmentType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						null,
 						StorableObjectVersion.ILLEGAL_VERSION,
-						null,
-						null,
 						null,
 						null,
 						null)
@@ -108,9 +94,7 @@ public final class EquipmentTypeDatabase extends StorableObjectDatabase<Equipmen
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_MANUFACTURER)),
-				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_MANUFACTURER_CODE)));
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)));
 
 		return equipmentType;
 	}
