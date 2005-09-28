@@ -20,7 +20,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/22 15:24:57 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/28 12:28:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -93,6 +93,10 @@ public final class CommonUIUtilities {
 	 * @return htmled string
 	 */
 	public static final String convertToHTMLString(final String string) {
+		if (string.startsWith("<html>")) {
+			return string;
+		}
+		
 		final StringBuffer buffer = new StringBuffer("<html>");
 		String s = string.replaceAll("<", "&lt;").replaceAll("<", "&lt;");
 		buffer.append(s.replaceAll("\n", "<br>"));			
