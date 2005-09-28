@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.24 2005/09/04 11:55:28 bass Exp $
+ * $Id: ErrorMessages.java,v 1.25 2005/09/28 12:18:50 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/09/04 11:55:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/09/28 12:18:50 $
  * @module general
  */
 public interface ErrorMessages {
@@ -42,6 +42,7 @@ public interface ErrorMessages {
 	String ILLEGAL_GROUP_CODE = "Illegal group code";
 	String GROUP_POOL_NOT_REGISTERED = "Group pool not registered";
 	String ENTITY_POOL_NOT_REGISTERED = "Entity pool not registered";
+	String NOT_IMPLEMENTED = "Not implemented";
 	String OPERATION_IS_OPTIONAL = "The operation is optional, and not implemented here";
 	String XML_BEAN_NOT_COMPLETE = "The xml bean is incomplete and thus not usable when updating a storable object";
 	String \u0425\u0423\u041b\u0418_\u041f\u0423\u0421\u0422\u041e\u0419 = "\u0425\u0443\u043b\u0438 \u043f\u0443\u0441\u0442\u043e\u0439-\u0442\u043e, \u0430?";
