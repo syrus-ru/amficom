@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.9 2005/09/07 07:08:02 bob Exp $
+* $Id: Manager.java,v 1.10 2005/09/28 14:03:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/07 07:08:02 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/28 14:03:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,7 +44,6 @@ public class Manager extends AbstractApplication {
 	
 	@Override
 	protected void init() {
-		super.init();
 		super.aContext.setApplicationModel(new ManagerModel(super.aContext));
 		
 		try {
