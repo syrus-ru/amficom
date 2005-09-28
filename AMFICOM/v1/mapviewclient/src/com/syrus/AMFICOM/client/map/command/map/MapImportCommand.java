@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.52 2005/09/25 17:27:08 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.53 2005/09/28 15:11:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,6 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -59,7 +58,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.52 $, $Date: 2005/09/25 17:27:08 $
+ * @version $Revision: 1.53 $, $Date: 2005/09/28 15:11:37 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
