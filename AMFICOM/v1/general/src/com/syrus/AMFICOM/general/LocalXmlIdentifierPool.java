@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.11 2005/09/27 15:17:01 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.12 2005/09/28 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,14 @@
 
 package com.syrus.AMFICOM.general;
 
+import static java.util.logging.Level.INFO;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.HashCodeGenerator;
@@ -21,7 +24,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/28 08:19:02 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -149,18 +152,19 @@ public final class LocalXmlIdentifierPool {
 
 		final XmlIdentifier xmlId = FORWARD_MAP.get(new Key(id, importType));
 		if (xmlId == null) {
-			/**
-			 * @bug The check is turned off: REVERSE_MAP shouldn't
-			 * contain a value, which has a key with the same
-			 * importType. 
-			 */
-//			if (REVERSE_MAP.containsValue(id)) {
-//				throw new IllegalStateException(
-//						"Forward map contains no key while reverse map contains a value: id = Identifier(``"
-//						+ id.getIdentifierString()
-//						+ "''), importType = ``"
-//						+ importType + "''");
-//			}
+			final long nanos = System.nanoTime();
+			for (final Entry<XmlKey, Identifier> entry : REVERSE_MAP.entrySet()) {
+				if (entry.getKey().getImportType().equals(importType)
+						&& entry.getValue().equals(id)) {
+					throw new IllegalStateException(
+							"Forward map contains no key while reverse map contains a value: id = Identifier(``"
+							+ id.getIdentifierString()
+							+ "''), importType = ``"
+							+ importType + "''");
+				}
+			}
+			registerDebugOverhead(System.nanoTime() - nanos);
+
 			return false;
 		}
 		final Identifier id2 = REVERSE_MAP.get(new XmlKey(xmlId, importType));
@@ -192,18 +196,19 @@ public final class LocalXmlIdentifierPool {
 		final Identifier id = REVERSE_MAP.get(new XmlKey(xmlId, importType));
 		final String xmlIdStringValue = xmlId.getStringValue();
 		if (id == null) {
-			/**
-			 * @bug The check is turned off: FORWARD_MAP shouldn't
-			 * contain a value, which has a key with the same
-			 * importType. 
-			 */
-//			if (FORWARD_MAP.containsValue(xmlId)) {
-//				throw new IllegalStateException(
-//						"Reverse map contains no key while forward map contains a valuexmlId = XmlIdentifier(``"
-//						+ xmlIdStringValue
-//						+ "''), importType = ``"
-//						+ importType + "''");
-//			}
+			final long nanos = System.nanoTime();
+			for (final Entry<Key, XmlIdentifier> entry : FORWARD_MAP.entrySet()) {
+				if (entry.getKey().getImportType().equals(importType)
+						&& entry.getValue().getStringValue().equals(xmlId.getStringValue())) {
+					throw new IllegalStateException(
+							"Reverse map contains no key while forward map contains a valuexmlId = XmlIdentifier(``"
+							+ xmlIdStringValue
+							+ "''), importType = ``"
+							+ importType + "''");
+				}
+			}
+			registerDebugOverhead(System.nanoTime() - nanos);
+
 			return false;
 		}
 		final XmlIdentifier xmlId2 = FORWARD_MAP.get(new Key(id, importType));
@@ -339,10 +344,28 @@ public final class LocalXmlIdentifierPool {
 		XML_KEYS_TO_DELETE.clear();
 	}
 
+	static volatile long totalDebugOverheadNanos;
+
+	static {
+		Runtime.getRuntime().addShutdownHook(new Thread("LocalXmlIdentifierPool -- debug overhead meter") {
+			@Override
+			public void run() {
+				Log.debugMessage("LocalXmlIdentifierPool | additional sanity checks took "
+								+ totalDebugOverheadNanos
+								+ " nanosecond(s) in total",
+						INFO);
+			}
+		});
+	}
+
+	private static void registerDebugOverhead(final long nanos) {
+		totalDebugOverheadNanos += nanos;
+	}
+
 	/**
 	 * @author Maxim Selivanov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
+	 * @version $Revision: 1.12 $, $Date: 2005/09/28 08:19:02 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -360,7 +383,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
+	 * @version $Revision: 1.12 $, $Date: 2005/09/28 08:19:02 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -435,7 +458,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.11 $, $Date: 2005/09/27 15:17:01 $
+	 * @version $Revision: 1.12 $, $Date: 2005/09/28 08:19:02 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {
