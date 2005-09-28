@@ -10,6 +10,7 @@ IdlCableLinkType.java
 IdlCableThread.java
 IdlCableThreadType.java
 IdlEquipment.java
+IdlProtoEquipment.java
 IdlEquipmentType.java
 IdlLink.java
 IdlLinkType.java
