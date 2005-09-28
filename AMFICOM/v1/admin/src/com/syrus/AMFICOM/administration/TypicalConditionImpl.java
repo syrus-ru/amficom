@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.22 2005/09/22 15:16:39 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.23 2005/09/28 10:22:12 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,26 @@ import com.syrus.util.Shitlet;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/22 15:16:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/09/28 10:22:12 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 final class TypicalConditionImpl extends TypicalCondition {
 	private static final long serialVersionUID = -182818603007872200L;
 
+	@SuppressWarnings("unused")
+	private TypicalConditionImpl(final Enum e,
+			final OperationSort operation,
+			final Short entityCode,
+			final String key) {
+		this.value = e;
+		this.type = TypicalSort._TYPE_ENUM;
+		this.operation = operation.value();
+		this.entityCode = entityCode;
+		this.key = key;
+	}
+	
 	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
@@ -140,6 +152,10 @@ final class TypicalConditionImpl extends TypicalCondition {
 			final ServerProcess serverProcess = (ServerProcess) storableObject;
 			final Wrapper<ServerProcess> wrapper = ServerProcessWrapper.getInstance();
 			return super.parseCondition(wrapper.getValue(serverProcess, this.key));
+		} else if (storableObject instanceof PermissionAttributes) {
+			final PermissionAttributes permissionAttributes = (PermissionAttributes) storableObject;
+			final Wrapper<PermissionAttributes> wrapper = PermissionAttributesWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(permissionAttributes, this.key));
 		} else {
 			throw new IllegalObjectEntityException(ERROR_ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
