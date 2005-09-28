@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.66 2005/09/20 07:50:22 bass Exp $
+* $Id: MapView.java,v 1.67 2005/09/28 15:05:01 krupenn Exp $
 *
 * Copyright њ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,12 +9,13 @@
 package com.syrus.AMFICOM.mapview;
 
 
-import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -38,7 +39,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.corba.IdlMapView;
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/20 07:50:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.67 $, $Date: 2005/09/28 15:05:01 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -183,7 +183,7 @@ public final class MapView extends DomainMember implements Describable {
 		}
 
 		try {
-			this.schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
+			this.schemes = new HashSet(StorableObjectPool.getStorableObjects(schemeIds, true));
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
@@ -455,7 +455,10 @@ public final class MapView extends DomainMember implements Describable {
 			for (final Scheme scheme : this.getSchemes()) {
 				if (isSchemePathTopological(scheme, schemePath)) {
 					final SchemeElement se = 
-						getTopologicalSchemeElement(scheme, getTopLevelSchemeElement(schemePath.getStartSchemeElement()));
+						getTopologicalSchemeElement(
+								scheme, 
+								getTopLevelSchemeElement(
+										schemePath.getStartSchemeElement()));
 					return findElement(se);
 				}
 			}
@@ -479,7 +482,10 @@ public final class MapView extends DomainMember implements Describable {
 			for (final Scheme scheme : this.getSchemes()) {
 				if (isSchemePathTopological(scheme, schemePath)) {
 					final SchemeElement se = 
-						getTopologicalSchemeElement(scheme, getTopLevelSchemeElement(schemePath.getEndSchemeElement()));
+						getTopologicalSchemeElement(
+								scheme, 
+								getTopLevelSchemeElement(
+										schemePath.getEndSchemeElement()));
 					return findElement(se);
 				}
 			}
@@ -505,7 +511,7 @@ public final class MapView extends DomainMember implements Describable {
 					return siteNode;
 				}
 			}
-			if (schemeElement.getSiteNode() != null && schemeElement.getSiteNode().equals(siteNode)) {
+			if (siteNode.equals(schemeElement.getSiteNode())) {
 				return siteNode;
 			}
 		}
@@ -571,12 +577,15 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param physicalLink лини€
 	 * @return список топологических кабелей
 	 */
-	public List<CablePath> getCablePaths(final PhysicalLink physicalLink) {
-		final LinkedList<CablePath> returnVector = new LinkedList<CablePath>();
-		for (final CablePath cablePath : this.getCablePaths()) {
-			if (cablePath.getLinks().contains(physicalLink)) {
-				returnVector.add(cablePath);
-			}
+	public Set<CablePath> getCablePaths(final PhysicalLink physicalLink) {
+		if(physicalLink instanceof UnboundLink) {
+			return Collections.<CablePath>singleton(
+					((UnboundLink)physicalLink).getCablePath());
+		}
+		final Set<CablePath> returnVector = new HashSet<CablePath>();
+		for(Iterator iterator = physicalLink.getBinding().getBindObjects().iterator(); iterator.hasNext();) {
+			CablePath cablePath = (CablePath) iterator.next();
+			returnVector.add(cablePath);
 		}
 		return returnVector;
 	}
@@ -586,30 +595,10 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param node узел
 	 * @return список топологических кабелей
 	 */
-	public List<CablePath> getCablePaths(final AbstractNode node) {
-		final LinkedList<CablePath> returnVector = new LinkedList<CablePath>();
-		for (final CablePath cablePath : this.getCablePaths()) {
-			cablePath.sortNodes();
-			if (cablePath.getSortedNodes().contains(node)) {
-				returnVector.add(cablePath);
-			}
-		}
-		return returnVector;
-	}
-
-	/**
-	 * ѕолучить список топологических кабелей, проход€щих через указанный
-	 * фрагмент линии.
-	 * @param nodeLink фрагмент линии
-	 * @return список топологических кабелей
-	 */
-	public List<CablePath> getCablePaths(final NodeLink nodeLink) {
-		final LinkedList<CablePath> returnVector = new LinkedList<CablePath>();
-		for (final CablePath cablePath : this.getCablePaths()) {
-			cablePath.sortNodeLinks();
-			if (cablePath.getSortedNodeLinks().contains(nodeLink)) {
-				returnVector.add(cablePath);
-			}
+	public Set<CablePath> getCablePaths(final AbstractNode node) {
+		final Set<CablePath> returnVector = new HashSet<CablePath>();
+		for(PhysicalLink physicalLink : this.map.getPhysicalLinksAt(node)) {
+			returnVector.addAll(this.getCablePaths(physicalLink));
 		}
 		return returnVector;
 	}
@@ -656,24 +645,6 @@ public final class MapView extends DomainMember implements Describable {
 	}
 
 	/**
-	 * ѕолучить список топологических путей, проход€щих через указанную линию.
-	 * @param physicalLink лини€
-	 * @return список топологических путей
-	 */
-	public List<MeasurementPath> getMeasurementPaths(final PhysicalLink physicalLink) {
-		final LinkedList<MeasurementPath> returnVector = new LinkedList<MeasurementPath>();
-		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
-			for (final CablePath cablePath : measurementPath.getSortedCablePaths()) {
-				if (cablePath.getLinks().contains(physicalLink)) {
-					returnVector.add(measurementPath);
-					break;
-				}
-			}
-		}
-		return returnVector;
-	}
-
-	/**
 	 * ѕолучить список топологических путей, проход€щих через указанный узел.
 	 * 
 	 * @param abstractNode
@@ -686,28 +657,6 @@ public final class MapView extends DomainMember implements Describable {
 			for (final CablePath cablePath : measurementPath.getSortedCablePaths()) {
 				cablePath.sortNodes();
 				if (cablePath.getSortedNodes().contains(abstractNode)) {
-					returnVector.add(measurementPath);
-					break;
-				}
-			}
-		}
-		return returnVector;
-	}
-
-	/**
-	 * ѕолучить список топологических путей, проход€щих через указанный фрагмент
-	 * линии.
-	 * 
-	 * @param nodeLink
-	 *        фрагмент линии
-	 * @return список топологических путей
-	 */
-	public List<MeasurementPath> getMeasurementPaths(final NodeLink nodeLink) {
-		final LinkedList<MeasurementPath> returnVector = new LinkedList<MeasurementPath>();
-		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
-			for (final CablePath cablePath : measurementPath.getSortedCablePaths()) {
-				cablePath.sortNodeLinks();
-				if (cablePath.getSortedNodeLinks().contains(nodeLink)) {
 					returnVector.add(measurementPath);
 					break;
 				}
