@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.98 2005/09/26 16:40:48 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.99 2005/09/28 10:22:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/09/26 16:40:48 $
+ * @version $Revision: 1.99 $, $Date: 2005/09/28 10:22:23 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -454,14 +454,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param schemeLink cannot be <code>null</code>.
-	 */
-	public void addSchemeLink(final SchemeLink schemeLink) {
-		assert schemeLink != null: NON_NULL_EXPECTED;
-		schemeLink.setParentSchemeProtoElement(this);
-	}
-
-	/**
 	 * @param schemeProtoElement can be neither <code>null</code> nor
 	 *        <code>this</code>.
 	 */
@@ -514,10 +506,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				clone.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
 				clone.addSchemeDevice(schemeDeviceClone);
 			}
-			for (final SchemeLink schemeLink : this.getSchemeLinks0()) {
+			for (final SchemeLink schemeLink : this.getSchemeLinks0(usePool)) {
 				final SchemeLink schemeLinkClone = schemeLink.clone();
 				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
-				clone.addSchemeLink(schemeLinkClone);
+				clone.addSchemeLink(schemeLinkClone, usePool);
 			}
 			for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements0()) {
 				final SchemeProtoElement schemeProtoElementClone = schemeProtoElement.clone();
@@ -528,7 +520,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			/*-
 			 * Port references remapping.
 			 */
-			for (final SchemeLink schemeLink : clone.getSchemeLinks0()) {
+			for (final SchemeLink schemeLink : clone.getSchemeLinks0(usePool)) {
 				final Identifier sourceSchemePortId = clone.clonedIdMap.get(schemeLink.sourceAbstractSchemePortId);
 				final Identifier targetSchemePortId = clone.clonedIdMap.get(schemeLink.targetAbstractSchemePortId);
 				schemeLink.setSourceAbstractSchemePortId((sourceSchemePortId == null) ? VOID_IDENTIFIER : sourceSchemePortId);
@@ -583,7 +575,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeDevices0()) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeLinks0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeLinks0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0()) {
@@ -756,22 +748,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @return an immutable set.
 	 */
-	public Set<SchemeLink> getSchemeLinks() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeLinks0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
-	}
-
-	/**
-	 * @return an immutable set.
-	 */
 	public Set<SchemeProtoElement> getSchemeProtoElements() {
 		try {
 			return Collections.unmodifiableSet(this.getSchemeProtoElements0());
@@ -934,7 +910,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (schemeProtoElement.isSetSchemeLinks()) {
 			schemeProtoElement.unsetSchemeLinks();
 		}
-		final Set<SchemeLink> schemeLinks = this.getSchemeLinks0();
+		final Set<SchemeLink> schemeLinks = this.getSchemeLinks0(usePool);
 		if (!schemeLinks.isEmpty()) {
 			final XmlSchemeLinkSeq schemeLinkSeq = schemeProtoElement.addNewSchemeLinks();
 			for (final SchemeLink schemeLink : schemeLinks) {
@@ -983,18 +959,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert schemeDevice != null: NON_NULL_EXPECTED;
 		assert schemeDevice.getParentSchemeProtoElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeDevice.setParentSchemeProtoElement(null);
-	}
-
-	/**
-	 * The <code>SchemeLink</code> must belong to this
-	 * <code>SchemeElement</code>, or crap will meet the fan.
-	 *
-	 * @param schemeLink
-	 */
-	public void removeSchemeLink(final SchemeLink schemeLink) {
-		assert schemeLink != null: NON_NULL_EXPECTED;
-		assert schemeLink.getParentSchemeProtoElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeLink.setParentSchemeProtoElement(null);
 	}
 
 	/**
@@ -1286,26 +1250,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param schemeLinks
-	 * @throws ApplicationException 
-	 */
-	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) throws ApplicationException {
-		assert schemeLinks != null: NON_NULL_EXPECTED;
-		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
-		/*
-		 * Check is made to prevent SchemeLinks from
-		 * permanently losing their parents.
-		 */
-		oldSchemeLinks.removeAll(schemeLinks);
-		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
-			this.removeSchemeLink(oldSchemeLink);
-		}
-		for (final SchemeLink schemeLink : schemeLinks) {
-			this.addSchemeLink(schemeLink);
-		}
-	}
-
-	/**
 	 * @param schemeProtoElements
 	 * @throws ApplicationException 
 	 */
@@ -1587,6 +1531,78 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE);
 		}
 		return this.schemeLinkContainerWrappee;
+	}
+
+	/**
+	 * @param schemeLink cannot be <code>null</code>.
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void addSchemeLink(final SchemeLink schemeLink,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeLink != null: NON_NULL_EXPECTED;
+		schemeLink.setParentSchemeProtoElement(this, usePool);
+	}
+
+	/**
+	 * The <code>SchemeLink</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeLink
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void removeSchemeLink(final SchemeLink schemeLink,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeLink != null: NON_NULL_EXPECTED;
+		assert schemeLink.getParentSchemeProtoElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeLink.setParentSchemeProtoElement(null, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @return an immutable set.
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeLink> getSchemeLinks(final boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getSchemeLinks0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<SchemeLink> getSchemeLinks0(final boolean usePool)
+	throws ApplicationException {
+		return this.getSchemeLinkContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * @param schemeLinks
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setSchemeLinks(final Set<SchemeLink> schemeLinks,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeLinks != null: NON_NULL_EXPECTED;
+
+		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0(usePool);
+
+		final Set<SchemeLink> toRemove = new HashSet<SchemeLink>(oldSchemeLinks);
+		toRemove.removeAll(schemeLinks);
+		for (final SchemeLink schemeLink : toRemove) {
+			this.removeSchemeLink(schemeLink, usePool);
+		}
+
+		final Set<SchemeLink> toAdd = new HashSet<SchemeLink>(schemeLinks);
+		toAdd.removeAll(oldSchemeLinks);
+		for (final SchemeLink schemeLink : toAdd) {
+			this.addSchemeLink(schemeLink, usePool);
+		}
 	}
 
 	/*-********************************************************************
