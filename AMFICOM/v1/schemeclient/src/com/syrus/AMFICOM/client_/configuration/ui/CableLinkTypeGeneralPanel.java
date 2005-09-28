@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.16 2005/09/14 10:20:04 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.17 2005/09/28 07:53:10 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/28 07:53:10 $
  * @module schemeclient
  */
 
@@ -372,7 +372,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
 		gbThreadPanel.setConstraints(this.cmbTColorCombo, gbcThreadPanel);
 		this.pnThreadPanel.add(this.cmbTColorCombo);
-
+/*
 		gbcThreadPanel.gridx = 0;
 		gbcThreadPanel.gridy = 3;
 		gbcThreadPanel.gridwidth = 2;
@@ -394,7 +394,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
 		gbThreadPanel.setConstraints(this.tfTMarkText, gbcThreadPanel);
 		this.pnThreadPanel.add(this.tfTMarkText);
-		
+		*/
 		gbcThreadPanel.gridx = 0;
 		gbcThreadPanel.gridy = 4;
 		gbcThreadPanel.gridwidth = 4;
@@ -620,9 +620,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				}
 				
 				// FIXME check name creation: need codename - number; name - "fiberX"
+				String s1 = this.linkType.getId().getIdentifierString() + ":";
 				for (int i = oldSize; i < newSize; i++) {
 					this.sortedTheradTypes.add(SchemeObjectsFactory.createCableThreadType(
-							Integer.toString(i + 1),
+							s1 + Integer.toString(i + 1),
 							LangModelScheme.getString(SchemeResourceKeys.THREAD) + (i + 1), 
 							tlType, this.linkType));
 				}

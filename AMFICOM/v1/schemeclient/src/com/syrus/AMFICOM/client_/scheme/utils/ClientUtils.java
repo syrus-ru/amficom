@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.4 2005/09/26 14:13:46 stas Exp $
+ * $Id: ClientUtils.java,v 1.5 2005/09/28 07:53:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ public class ClientUtils {
 	public static List<CableThreadType> getSortedThreadTypes(CableLinkType type) {
 		List<CableThreadType> threads = new ArrayList<CableThreadType>(type.getCableThreadTypes(false));
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_CODENAME));
+				StorableObjectWrapper.COLUMN_NAME));
 		return threads;
 	}
 	

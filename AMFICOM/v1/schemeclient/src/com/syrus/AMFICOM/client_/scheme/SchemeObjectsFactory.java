@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.37 2005/09/28 07:31:39 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.38 2005/09/28 07:53:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.37 $, $Date: 2005/09/28 07:31:39 $
+ * @version $Revision: 1.38 $, $Date: 2005/09/28 07:53:10 $
  * @module schemeclient
  */
 
@@ -89,8 +89,9 @@ public class SchemeObjectsFactory {
 	
 	public static CharacteristicType createCharacteristicType(String name, CharacteristicTypeSort sort) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		CharacteristicType cht = CharacteristicType.createInstance(userId, name, EMPTY, name, DataType.STRING, sort);
-		return cht;
+		CharacteristicType type = CharacteristicType.createInstance(userId, name, EMPTY, name, DataType.STRING, sort);
+		type.setCodename(type.getId().getIdentifierString());
+		return type;
 	}
 	
 	public static EquipmentType createEquipmentType(String name, EquipmentTypeCodename codeName) throws CreateObjectException {
@@ -112,25 +113,29 @@ public class SchemeObjectsFactory {
 
 	public static MeasurementPortType createMeasurementPortType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		MeasurementPortType type = MeasurementPortType.createInstance(userId, codename, EMPTY, EMPTY, EnumSet.noneOf(MeasurementType.class));
+		MeasurementPortType type = MeasurementPortType.createInstance(userId, codename, EMPTY, codename, EnumSet.noneOf(MeasurementType.class));
+		type.setCodename(type.getId().getIdentifierString());
 		return type;
 	}
 	
 	public static PortType createPortType(String codename, PortTypeKind kind) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		PortType type = PortType.createInstance(userId, codename, EMPTY, EMPTY, PortTypeSort.PORTTYPESORT_OPTICAL, kind);
+		PortType type = PortType.createInstance(userId, codename, EMPTY, codename, PortTypeSort.PORTTYPESORT_OPTICAL, kind);
+		type.setCodename(type.getId().getIdentifierString());
 		return type;
 	}
 	
 	public static LinkType createLinkType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		LinkType type = LinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
+		type.setCodename(type.getId().getIdentifierString());
 		return type;
 	}
 	
 	public static CableLinkType createCableLinkType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		CableLinkType type = CableLinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
+		type.setCodename(type.getId().getIdentifierString());
 		return type;
 	}
 	

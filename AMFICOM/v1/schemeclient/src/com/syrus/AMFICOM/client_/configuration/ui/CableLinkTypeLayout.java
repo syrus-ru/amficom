@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.13 2005/09/14 10:20:04 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.14 2005/09/28 07:53:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/28 07:53:10 $
  * @module schemeclient
  */
 
@@ -177,7 +177,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 
 	private void addThreadCell(SchemeGraph graph, CableThreadType threadType,
 			Rectangle bounds, Color color) {
-		String name = threadType.getCodename();
+		String name = ClientUtils.parseNumberedName(threadType.getName());
 
 //		try {
 //			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(threadType.getName()));
