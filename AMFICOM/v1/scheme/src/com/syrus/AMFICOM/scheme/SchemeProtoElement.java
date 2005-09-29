@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.102 2005/09/29 12:50:56 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.103 2005/09/29 14:07:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.102 $, $Date: 2005/09/29 12:50:56 $
+ * @version $Revision: 1.103 $, $Date: 2005/09/29 14:07:58 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -111,12 +111,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	Identifier parentSchemeProtoGroupId;
 
 	Identifier parentSchemeProtoElementId;
-
-	/**
-	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
-	 * drag&apos;n&apos;drop. 
-	 */
-	private boolean parentSet = false;
 
 	/**
 	 * @param id
@@ -191,23 +185,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, BitmapImageResource, SchemeImageResource, SchemeImageResource)}.
-	 * This method breaks some assertions, so clients should consider using
-	 * other ones to create a new instance.
-	 *
-	 * @param creatorId cannot be <code>null</code>.
-	 * @param name cannot be <code>null</code>.
-	 * @throws CreateObjectException
-	 */
-	public static SchemeProtoElement createInstance(
-			final Identifier creatorId, final String name)
-			throws CreateObjectException {
-		return createInstance(creatorId, name, "", "", null, null, null,
-				null);
-	}
-
-	/**
-	 * A shorthand for
 	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoElement)}.
 	 *
 	 * @param creatorId
@@ -238,57 +215,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", "", null, null, null,
 				null, parentSchemeProtoGroup);
-	}
-
-	/**
-	 * This method breaks some assertions, so clients should consider using
-	 * other ones to create a new instance.
-	 *
-	 * @param creatorId cannot be <code>null</code>.
-	 * @param name can be neither <code>null</code> nor empty.
-	 * @param description cannot be <code>null</code>, but can be empty.
-	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param protoEquipment may be <code>null</code>.
-	 * @param symbol may be <code>null</code>.
-	 * @param ugoCell may be <code>null</code>.
-	 * @param schemeCell may be <code>null</code>.
-	 * @throws CreateObjectException
-	 */
-	public static SchemeProtoElement createInstance(final Identifier creatorId,
-			final String name,
-			final String description,
-			final String label,
-			final ProtoEquipment protoEquipment,
-			final BitmapImageResource symbol,
-			final SchemeImageResource ugoCell,
-			final SchemeImageResource schemeCell) throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		assert description != null : NON_NULL_EXPECTED;
-		assert label != null : NON_NULL_EXPECTED;
-
-		try {
-			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(IdentifierPool.getGeneratedIdentifier(SCHEMEPROTOELEMENT_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					name,
-					description,
-					label,
-					protoEquipment,
-					symbol,
-					ugoCell,
-					schemeCell,
-					null,
-					null);
-			schemeProtoElement.markAsChanged();
-			return schemeProtoElement;
-		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
-		}
 	}
 
 	/**
@@ -336,7 +262,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					null,
 					parentSchemeProtoElement);
 			schemeProtoElement.markAsChanged();
-			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
@@ -388,7 +313,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					parentSchemeProtoGroup,
 					null);
 			schemeProtoElement.markAsChanged();
-			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
@@ -628,10 +552,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	Identifier getParentSchemeProtoElementId() {
-		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-		if (!this.assertParentSetStrict()) {
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-		}
+		assert this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()) : OBJECT_BADLY_INITIALIZED;
+
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (parentSchemeProtoElementIdVoid) {
@@ -657,10 +581,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	Identifier getParentSchemeProtoGroupId() {
-		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-		if (!this.assertParentSetStrict()) {
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-		}
+		assert this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()) : OBJECT_BADLY_INITIALIZED;
+
 		final boolean parentSchemeProtoGroupIdVoid = this.parentSchemeProtoGroupId.isVoid();
 		assert parentSchemeProtoGroupIdVoid || this.parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
 		if (parentSchemeProtoGroupIdVoid) {
@@ -1011,8 +935,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.schemeCellId = schemeCellId;
 			this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
 			this.parentSchemeProtoElementId = parentSchemeProtoElementId;
-	
-			this.parentSet = true;
 		}
 	}
 
@@ -1081,7 +1003,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoElementId
 	 */
 	void setParentSchemeProtoElementId(final Identifier parentSchemeProtoElementId) {
-		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		assert this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()) : OBJECT_BADLY_INITIALIZED;
 		assert !parentSchemeProtoElementId.equals(this) : CIRCULAR_DEPS_PROHIBITED;
 		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 
@@ -1137,7 +1061,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroupId
 	 */
 	void setParentSchemeProtoGroupId(final Identifier parentSchemeProtoGroupId) {
-		assert this.assertParentSetNonStrict() : OBJECT_BADLY_INITIALIZED;
+		assert this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()) : OBJECT_BADLY_INITIALIZED;
 		assert parentSchemeProtoGroupId.isVoid() || parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
@@ -1321,8 +1247,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
 			this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
 			this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
-
-			this.parentSet = true;
 		}
 	}
 
@@ -1394,8 +1318,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				SchemeLink.createInstance(super.creatorId, schemeLink, importType);
 			}
 		}
-
-		this.parentSet = true;
 
 		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, POST_IMPORT);
 	}
@@ -1590,30 +1512,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
-
-	/**
-	 * Invoked by modifier methods.
-	 */
-	private boolean assertParentSetNonStrict() {
-		if (this.parentSet) {
-			return this.assertParentSetStrict();
-		}
-		this.parentSet = true;
-		return this.parentSchemeProtoGroupId != null
-				&& this.parentSchemeProtoElementId != null
-				&& this.parentSchemeProtoGroupId.isVoid()
-				&& this.parentSchemeProtoElementId.isVoid();
-	}
-
-	/**
-	 * Invoked by accessor methods (it is assumed that object is already
-	 * initialized).
-	 */
-	private boolean assertParentSetStrict() {
-		return this.parentSchemeProtoGroupId != null
-				&& this.parentSchemeProtoElementId != null
-				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid());
-	}
 
 	/**
 	 * Returns <code>SchemeCablePort</code>s (as an unmodifiable set) for

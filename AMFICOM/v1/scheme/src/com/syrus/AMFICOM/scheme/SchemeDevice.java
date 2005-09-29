@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.92 2005/09/28 19:06:23 bass Exp $
+ * $Id: SchemeDevice.java,v 1.93 2005/09/29 14:07:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/09/28 19:06:23 $
+ * @version $Revision: 1.93 $, $Date: 2005/09/29 14:07:58 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -95,12 +95,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	Identifier parentSchemeElementId;
 
 	Identifier parentSchemeProtoElementId;
-
-	/**
-	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
-	 * drag&apos;n&apos;drop. 
-	 */
-	private boolean parentSet = false;
 
 	/**
 	 * @param id
@@ -159,20 +153,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * A shorthand for {@link #createInstance(Identifier, String, String)}.
-	 * This method breaks some assertions, so clients should consider using
-	 * other ones to create a new instance.
-	 *
-	 * @param creatorId
-	 * @param name
-	 * @throws CreateObjectException
-	 */
-	public static SchemeDevice createInstance(final Identifier creatorId,
-			final String name) throws CreateObjectException {
-		return createInstance(creatorId, name, "");
-	}
-
-	/**
 	 * A shorthand for
 	 * {@link #createInstance(Identifier, String, String, SchemeProtoElement)}.
 	 *
@@ -206,40 +186,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * This method breaks some assertions, so clients should consider using
-	 * other ones to create a new instance.
-	 *
-	 * @param creatorId
-	 * @param name can be neither <code>null</code> nor empty.
-	 * @param description cannot be <code>null</code>, but can be empty.
-	 * @throws CreateObjectException
-	 */
-	public static SchemeDevice createInstance(final Identifier creatorId, final String name, final String description)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		assert description != null : NON_NULL_EXPECTED;
-
-		try {
-			final Date created = new Date();
-			final SchemeDevice schemeDevice = new SchemeDevice(IdentifierPool.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					name,
-					description,
-					null,
-					null);
-			schemeDevice.markAsChanged();
-			return schemeDevice;
-		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
-		}
-	}
-
-	/**
 	 * @param creatorId
 	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
@@ -268,7 +214,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					parentSchemeProtoElement,
 					null);
 			schemeDevice.markAsChanged();
-			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
@@ -304,7 +249,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					null,
 					parentSchemeElement);
 			schemeDevice.markAsChanged();
-			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
@@ -484,14 +428,11 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		return this.name;
 	}
 
-	/**
-	 * @throws IllegalStateException
-	 */
 	Identifier getParentSchemeElementId() {
-		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-		if (!this.assertParentSetStrict()) {
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-		}
+		assert this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()): OBJECT_BADLY_INITIALIZED;
+
 		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 		if (parentSchemeElementIdVoid) {
@@ -503,8 +444,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	/**
 	 * A wrapper around {@link #getParentSchemeElementId()}.
-	 *
-	 * @throws IllegalStateException
 	 */
 	public SchemeElement getParentSchemeElement() {
 		try {
@@ -515,14 +454,11 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 	}
 
-	/**
-	 * @throws IllegalStateException
-	 */
 	Identifier getParentSchemeProtoElementId() {
-		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-		if (!this.assertParentSetStrict()) {
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-		}
+		assert this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()): OBJECT_BADLY_INITIALIZED;
+
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (parentSchemeProtoElementIdVoid) {
@@ -534,8 +470,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	/**
 	 * A wrapper around {@link #getParentSchemeProtoElementId()}.
-	 *
-	 * @throws IllegalStateException
 	 */
 	public SchemeProtoElement getParentSchemeProtoElement() {
 		try {
@@ -720,8 +654,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			this.description = description;
 			this.parentSchemeProtoElementId = parentSchemeProtoElementId;
 			this.parentSchemeElementId = parentSchemeElementId;
-
-			this.parentSet = true;
 		}
 	}
 
@@ -777,12 +709,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param parentSchemeElement
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @todo skip check if parentless.
 	 */
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {
-		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		assert this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()): OBJECT_BADLY_INITIALIZED;
 
 		final boolean parentSchemeElementNull = (parentSchemeElement == null);
 
@@ -825,11 +758,10 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
-	/**
-	 * @todo skip check if parentless.
-	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		assert this.parentSchemeElementId != null
+				&& this.parentSchemeProtoElementId != null
+				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()): OBJECT_BADLY_INITIALIZED;
 
 		Identifier newParentSchemeProtoElementId;
 		if (this.parentSchemeElementId.isVoid()) {
@@ -913,8 +845,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			this.description = schemeDevice.description;
 			this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
 			this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
-	
-			this.parentSet = true;
 		}
 	}
 
@@ -967,8 +897,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 				SchemeCablePort.createInstance(super.creatorId, schemeCablePort, importType);
 			}
 		}
-
-		this.parentSet = true;
 
 		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, POST_IMPORT);
 	}
@@ -1065,30 +993,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
-
-	/**
-	 * Invoked by modifier methods.
-	 */
-	private boolean assertParentSetNonStrict() {
-		if (this.parentSet) {
-			return this.assertParentSetStrict();
-		}
-		this.parentSet = true;
-		return this.parentSchemeElementId != null
-				&& this.parentSchemeProtoElementId != null
-				&& this.parentSchemeElementId.isVoid()
-				&& this.parentSchemeProtoElementId.isVoid();
-	}
-
-	/**
-	 * Invoked by accessor methods (it is assumed that object is already
-	 * initialized).
-	 */
-	private boolean assertParentSetStrict() {
-		return this.parentSchemeElementId != null
-				&& this.parentSchemeProtoElementId != null
-				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid());
-	}
 
 	void setParentSchemeProtoElementId(Identifier parentSchemeProtoElementId) {
 		//TODO: inroduce additional sanity checks
