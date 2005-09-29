@@ -11,7 +11,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -164,7 +164,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 				if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 					final SchemeElement se = pathElement.getSchemeElement();
 					// if muff - paint only small box and dashed line
-					if (se.getEquipmentType().getCodename().equals(EquipmentTypeCodename.MUFF.toString())) {
+					if (se.getEquipment().getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
 						g.fill3DRect(start1 - 1, 6, 2, 8, true);
 						((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
 						g.drawLine(start1, 6, start1, getHeight());
