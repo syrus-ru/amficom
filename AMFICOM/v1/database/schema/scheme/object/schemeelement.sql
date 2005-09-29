@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.14 2005/09/26 10:30:16 bass Exp $
+-- $Id: schemeelement.sql,v 1.15 2005/09/29 13:05:10 bass Exp $
 
 CREATE TABLE SchemeElement (
 	id NUMBER(19) NOT NULL,
@@ -14,7 +14,7 @@ CREATE TABLE SchemeElement (
 --
 	kind NUMBER(1) NOT NULL,
 	label VARCHAR2(64 CHAR),
-	equipment_type_id,
+	proto_equipment_id,
 	equipment_id,
 	kis_id,
 	site_node_id,
@@ -31,8 +31,8 @@ CREATE TABLE SchemeElement (
 	CONSTRAINT schemeelement_modifier_fk FOREIGN KEY(modifier_id)
 		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
-	CONSTRAINT schemeelement_equipmnt_type_fk FOREIGN KEY(equipment_type_id)
-		REFERENCES EquipmentType(id) ON DELETE CASCADE,
+	CONSTRAINT schemeelement_protoequipmnt_fk FOREIGN KEY(proto_equipment_id)
+		REFERENCES ProtoEquipment(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_equipmnt_fk FOREIGN KEY(equipment_id)
 		REFERENCES Equipment(id) ON DELETE CASCADE,
 	CONSTRAINT schemeelement_kis_fk FOREIGN KEY(kis_id)
@@ -50,9 +50,10 @@ CREATE TABLE SchemeElement (
 	CONSTRAINT schemeelement_prnt_schmlmnt_fk FOREIGN KEY(parent_scheme_element_id)
 		REFERENCES SchemeElement(id) ON DELETE CASCADE,
 --
-	-- Boolean OR: equipment_type_id and equipment_id may be both nulls.
+	-- Boolean OR: proto_equipment_id and equipment_id may be both nulls.
+	-- see bug #136
 	CONSTRAINT schemeelement_equipmnt_chk CHECK
-		((equipment_type_id IS NULL)
+		((proto_equipment_id IS NULL)
 		OR (equipment_id IS NULL)),
 	-- Boolean XOR: only one of parent_scheme_id and
 	-- parent_scheme_element_id may be defined, and only one may be null.
@@ -63,7 +64,7 @@ CREATE TABLE SchemeElement (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.14 2005/09/26 10:30:16 bass Exp $';
+COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.15 2005/09/29 13:05:10 bass Exp $';
 
 ALTER TABLE Scheme ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)
