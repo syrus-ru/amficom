@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.12 2005/09/28 11:37:50 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.13 2005/09/29 05:58:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,16 +13,15 @@ import java.util.Iterator;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -32,7 +31,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -42,7 +40,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/28 11:37:50 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/29 05:58:59 $
  * @module schemeclient
  */
 
@@ -66,7 +64,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 		return this.root;
 	}
 	
-	@SuppressWarnings("unqualified-field-access")
+	@SuppressWarnings("unqualified-field-access") //$NON-NLS-1$
 	public VisualManager getVisualManager(Item node) {
 		Object object = node.getObject();
 		if (object instanceof String) {
@@ -79,8 +77,8 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 				return PortTypePropertiesManager.getInstance(this.aContext, PortTypeKind.PORT_KIND_SIMPLE);
 			if (s.equals(SchemeResourceKeys.CABLE_PORT_TYPE))
 				return PortTypePropertiesManager.getInstance(this.aContext, PortTypeKind.PORT_KIND_CABLE);
-			if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE))
-				return EquipmentTypePropertiesManager.getInstance(this.aContext);
+			if (s.equals(SchemeResourceKeys.PROTO_EQUIPMENT))
+				return ProtoEquipmentPropertiesManager.getInstance(this.aContext);
 			if (s.equals(SchemeResourceKeys.MEASUREMENT_PORT_TYPES))
 				return MeasurementPortTypePropertiesManager.getInstance(this.aContext);
 			if (s.equals(SchemeResourceKeys.MEASUREMENT_TYPES))
@@ -89,7 +87,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			return null;
 		}
 		if (object instanceof ProtoEquipment)
-			return EquipmentTypePropertiesManager.getInstance(aContext);
+			return ProtoEquipmentPropertiesManager.getInstance(aContext);
 		if (object instanceof LinkType)
 			return LinkTypePropertiesManager.getInstance(aContext);
 		if (object instanceof CableLinkType)
@@ -132,7 +130,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			else if (s.equals(SchemeResourceKeys.CABLE_PORT_TYPE)) {
 				createPortTypes(node, contents, PortTypeKind.PORT_KIND_CABLE);
 			}
-			else if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE)) {
+			else if (s.equals(SchemeResourceKeys.PROTO_EQUIPMENT)) {
 				createProtoEquipments(node, contents);
 			}
 			// else if (s.equals("TransmissionPathType")) {
@@ -177,8 +175,8 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 			node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.PORT_TYPE, LangModelScheme.getString(SchemeResourceKeys.PORT_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 		if (!contents.contains(SchemeResourceKeys.CABLE_PORT_TYPE))
 			node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.CABLE_PORT_TYPE, LangModelScheme.getString(SchemeResourceKeys.CABLE_PORT_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-		if (!contents.contains(SchemeResourceKeys.EQUIPMENT_TYPE))
-			node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.EQUIPMENT_TYPE, LangModelScheme.getString(SchemeResourceKeys.EQUIPMENT_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+		if (!contents.contains(SchemeResourceKeys.PROTO_EQUIPMENT))
+			node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.PROTO_EQUIPMENT, LangModelScheme.getString(SchemeResourceKeys.PROTO_EQUIPMENT), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 	}
 	
 	private void createMonitoringDirectory(Item node, Collection contents) {
@@ -190,7 +188,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 		// LangModelConfig.getString("menuJDirPathText"), true));
 	}
 	
-	private void createLinkTypes(Item node, Collection contents) {
+	private void createLinkTypes(Item node, Collection<Object> contents) {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 			Collection<StorableObject> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -210,7 +208,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 		}
 	}
 	
-	private void createCableLinkTypes(Item node, Collection contents) {
+	private void createCableLinkTypes(Item node, Collection<Object> contents) {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
 			Collection<StorableObject> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -231,7 +229,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 	}
 
 
-	private void createPortTypes(Item node, Collection contents, PortTypeKind kind) {
+	private void createPortTypes(Item node, Collection<Object> contents, PortTypeKind kind) {
 		try {
 			TypicalCondition condition = new TypicalCondition(kind.value(), 0, OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
@@ -253,13 +251,13 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 		}
 	}
 	
-	private void createProtoEquipments(Item node, Collection contents) {
+	private void createProtoEquipments(Item node, Collection<Object> contents) {
 		try {
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-			Collection<StorableObject> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE);
+			Collection<StorableObject> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
-			Collection toAdd = super.getObjectsToAdd(equipmentTypes, contents);
-			Collection<Item> toRemove = super.getItemsToRemove(equipmentTypes, node.getChildren());
+			Collection toAdd = super.getObjectsToAdd(protoEquipments, contents);
+			Collection<Item> toRemove = super.getItemsToRemove(protoEquipments, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);
 			}
@@ -273,7 +271,7 @@ public class ConfigurationTreeModel extends AbstractChildrenFactory  implements 
 		}
 	}
 	
-	private void createMeasurementPortTypes(Item node, Collection contents) {
+	private void createMeasurementPortTypes(Item node, Collection<Object> contents) {
 		try {
 			EquivalentCondition condition = new EquivalentCondition(
 					ObjectEntities.MEASUREMENTPORT_TYPE_CODE);

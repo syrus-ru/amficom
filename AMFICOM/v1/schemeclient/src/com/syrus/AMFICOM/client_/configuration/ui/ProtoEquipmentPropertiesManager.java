@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypePropertiesManager.java,v 1.6 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: ProtoEquipmentPropertiesManager.java,v 1.1 2005/09/29 05:58:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,35 +16,35 @@ import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.1 $, $Date: 2005/09/29 05:58:59 $
  * @module schemeclient
  */
 
-public class EquipmentTypePropertiesManager implements VisualManager {
-	private static EquipmentTypePropertiesManager instance;
-	private EquipmentTypeGeneralPanel generalPanel;
-	private EquipmentTypeCharacteristicsPanel charPanel;
+public class ProtoEquipmentPropertiesManager implements VisualManager {
+	private static ProtoEquipmentPropertiesManager instance;
+	private ProtoEquipmentGeneralPanel generalPanel;
+	private ProtoEquipmentCharacteristicsPanel charPanel;
 	private EmptyStorableObjectEditor emptyPanel;
 	
-	private EquipmentTypePropertiesManager() {
+	private ProtoEquipmentPropertiesManager() {
 		// empty
 	}
 	
-	public static EquipmentTypePropertiesManager getInstance(ApplicationContext aContext) {
+	public static ProtoEquipmentPropertiesManager getInstance(ApplicationContext aContext) {
 		if (instance == null) 
-			instance = new EquipmentTypePropertiesManager();
+			instance = new ProtoEquipmentPropertiesManager();
 		instance.setContext(aContext);
 		return instance;
 	}
 	
 	public void setContext(ApplicationContext aContext) {
 		if (this.generalPanel == null) {
-			this.generalPanel = new EquipmentTypeGeneralPanel();
+			this.generalPanel = new ProtoEquipmentGeneralPanel();
 		}
 		this.generalPanel.setContext(aContext);
 		if (this.charPanel == null) {
-			this.charPanel = new EquipmentTypeCharacteristicsPanel();
+			this.charPanel = new ProtoEquipmentCharacteristicsPanel();
 		}
 		this.charPanel.setContext(aContext);
 		if (this.emptyPanel == null) {

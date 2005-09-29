@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.14 2005/09/28 11:37:50 stas Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.1 2005/09/29 05:58:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,11 +50,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/09/28 11:37:50 $
+ * @version $Revision: 1.1 $, $Date: 2005/09/29 05:58:59 $
  * @module schemeclient
  */
 
-public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
+public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected ProtoEquipment protoEq;
 
@@ -73,7 +73,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JTextArea taDescriptionArea = new JTextArea(2, 10);
 	JPanel pnGeneralPanel = new JPanel();
 
-	protected EquipmentTypeGeneralPanel() {
+	protected ProtoEquipmentGeneralPanel() {
 		super();
 		try {
 			this.jbInit();
@@ -86,7 +86,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.aContext = aContext;
 	}
 
-	protected EquipmentTypeGeneralPanel(final ProtoEquipment protoEquipment) {
+	protected ProtoEquipmentGeneralPanel(final ProtoEquipment protoEquipment) {
 		this();
 		this.setObject(protoEquipment);
 	}
@@ -268,7 +268,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.commitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
-				EquipmentTypeGeneralPanel.this.commitChanges();
+				ProtoEquipmentGeneralPanel.this.commitChanges();
 			}
 		});
 	}
@@ -311,8 +311,8 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.protoEq.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
 							this.protoEq,
-							EquipmentTypePropertiesManager.getInstance(this.aContext),
-							ObjectSelectedEvent.EQUIPMENT_TYPE));
+							ProtoEquipmentPropertiesManager.getInstance(this.aContext),
+							ObjectSelectedEvent.PROTO_EQUIPMENT));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;

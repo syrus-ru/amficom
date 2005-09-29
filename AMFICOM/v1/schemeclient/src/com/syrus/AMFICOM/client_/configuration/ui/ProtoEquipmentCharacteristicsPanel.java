@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeCharacteristicsPanel.java,v 1.12 2005/09/28 11:37:50 stas Exp $
+ * $Id: ProtoEquipmentCharacteristicsPanel.java,v 1.1 2005/09/29 05:58:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,25 +9,24 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/28 11:37:50 $
+ * @version $Revision: 1.1 $, $Date: 2005/09/29 05:58:59 $
  * @module schemeclient
  */
 
-public class EquipmentTypeCharacteristicsPanel extends CharacteristicsPanel {
+public class ProtoEquipmentCharacteristicsPanel extends CharacteristicsPanel {
 	protected ProtoEquipment type;
 
-	protected EquipmentTypeCharacteristicsPanel() {
+	protected ProtoEquipmentCharacteristicsPanel() {
 		super();
 	}
 
-	protected EquipmentTypeCharacteristicsPanel(final ProtoEquipment protoEq) {
+	protected ProtoEquipmentCharacteristicsPanel(final ProtoEquipment protoEq) {
 		this();
 		this.setObject(protoEq);
 	}
