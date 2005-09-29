@@ -42,8 +42,8 @@ import com.syrus.impexp.ImportExportException;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/11 17:08:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/09/29 15:29:22 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
@@ -79,7 +79,9 @@ public class UniCableMapDialog extends JFrame
 	private JButton browseESFButton = new JButton();
 	private JLabel statusLabel = new JLabel();
 	private JButton importMapButton = new JButton();
+	private JButton importMapLibraryButton = new JButton();
 	private JButton importSchemeButton = new JButton();
+	JPanel buttonsPanel = new JPanel();
 
 	private JPanel surveyPanel = new JPanel();
 	private JList surveyTypes = new JList();
@@ -190,7 +192,7 @@ public class UniCableMapDialog extends JFrame
 					browseESF();
 				}
 			});
-		this.importMapButton.setText("ImportMap");
+		this.importMapButton.setText("Map");
 		this.importMapButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -200,7 +202,17 @@ public class UniCableMapDialog extends JFrame
 			});
 		this.importMapButton.setPreferredSize(this.browseESFButton.getPreferredSize());
 
-		this.importSchemeButton.setText("ImportScheme");
+		this.importMapLibraryButton.setText("MapLibrary");
+		this.importMapLibraryButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					importMapLibrary();
+				}
+			});
+		this.importMapLibraryButton.setPreferredSize(this.browseESFButton.getPreferredSize());
+
+		this.importSchemeButton.setText("Scheme");
 		this.importSchemeButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -400,6 +412,47 @@ public class UniCableMapDialog extends JFrame
 		constraints.ipady = 0;
 		this.connectionPanel.add(this.connectionButtonsPanel, constraints);
 
+		this.buttonsPanel.setLayout(new GridBagLayout());
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.3;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.importMapButton, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.3;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.importMapLibraryButton, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.3;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.importSchemeButton, constraints);
+
 		this.importPanel.setLayout(new GridBagLayout());
 
 		constraints.gridx = 0;
@@ -443,29 +496,16 @@ public class UniCableMapDialog extends JFrame
 
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = new Insets(0, 5, 0, 5);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.importPanel.add(this.importMapButton, constraints);
-
-		constraints.gridx = 1;
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = new Insets(0, 5, 0, 5);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.importPanel.add(this.importSchemeButton, constraints);
+		this.importPanel.add(this.buttonsPanel, constraints);
 
 		constraints.gridx = 2;
 		constraints.gridy = 1;
@@ -612,6 +652,7 @@ public class UniCableMapDialog extends JFrame
 
 		this.connectButton.setEnabled(true);
 		this.importMapButton.setEnabled(false);
+		this.importMapLibraryButton.setEnabled(false);
 		this.importSchemeButton.setEnabled(false);
 		this.surveyButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
@@ -629,6 +670,7 @@ public class UniCableMapDialog extends JFrame
 			this.statusLabel.setText("Connected!");
 			this.connectButton.setEnabled(false);
 			this.importMapButton.setEnabled(true);
+			this.importMapLibraryButton.setEnabled(true);
 			this.importSchemeButton.setEnabled(true);
 			this.surveyButton.setEnabled(true);
 			this.disconnectButton.setEnabled(true);
@@ -641,6 +683,7 @@ public class UniCableMapDialog extends JFrame
 			this.statusLabel.setText(ex.getMessage());
 			this.connectButton.setEnabled(true);
 			this.importMapButton.setEnabled(false);
+			this.importMapLibraryButton.setEnabled(false);
 			this.surveyButton.setEnabled(false);
 			this.disconnectButton.setEnabled(false);
 		}
@@ -653,6 +696,7 @@ public class UniCableMapDialog extends JFrame
 		this.statusLabel.setText("Disconnected!");
 		this.connectButton.setEnabled(true);
 		this.importMapButton.setEnabled(false);
+		this.importMapLibraryButton.setEnabled(false);
 		this.importSchemeButton.setEnabled(false);
 		this.surveyButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
@@ -661,6 +705,15 @@ public class UniCableMapDialog extends JFrame
 	void importMap()
 	{
 		UniCableMapExportCommand command = new UniCableMapExportCommand(
+			this.ucmDatabase, 
+			this.exportFileField.getText());
+		command.execute();
+		this.statusLabel.setText("OK!");
+	}
+
+	void importMapLibrary()
+	{
+		UniCableMapLibraryExportCommand command = new UniCableMapLibraryExportCommand(
 			this.ucmDatabase, 
 			this.exportFileField.getText());
 		command.execute();
