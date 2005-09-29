@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.78 2005/09/28 19:06:21 bass Exp $
+ * $Id: CableLinkType.java,v 1.79 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,10 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -39,6 +42,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -46,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/09/28 19:06:21 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/29 10:53:11 $
  * @author $Author: bass $
  * @module config
  */
@@ -124,23 +128,78 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlCableLinkType.getCodename();
+			final Set<CableLinkType> cableLinkTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, CABLELINK_TYPE_CODE, COLUMN_CODENAME),
+					true);
+
+			assert cableLinkTypes.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlCableLinkType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			CableLinkType cableLinkType;
-			if (id.isVoid()) {
-				cableLinkType = new CableLinkType(xmlId,
-						importType,
-						created,
-						creatorId);
-			} else {
-				cableLinkType = StorableObjectPool.getStorableObject(id, true);
-				if (cableLinkType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (cableLinkTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					cableLinkType = new CableLinkType(xmlId,
 							importType,
 							created,
 							creatorId);
+				} else {
+					cableLinkType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (cableLinkType == null) {
+						Log.debugMessage("CableLinkType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						cableLinkType = new CableLinkType(xmlId,
+								importType,
+								created,
+								creatorId);
+					} else {
+						final String oldCodename = cableLinkType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("CableLinkType.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				cableLinkType = cableLinkTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					cableLinkType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = cableLinkType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("CableLinkType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						cableLinkType.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			cableLinkType.fromXmlTransferable(xmlCableLinkType, importType);

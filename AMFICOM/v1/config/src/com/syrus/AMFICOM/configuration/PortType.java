@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.96 2005/09/28 19:06:21 bass Exp $
+ * $Id: PortType.java,v 1.97 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,14 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -44,6 +48,7 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -51,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/09/28 19:06:21 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/29 10:53:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -124,23 +129,78 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlPortType.getCodename();
+			final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, PORT_TYPE_CODE, COLUMN_CODENAME),
+					true);
+
+			assert portTypes.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlPortType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			PortType portType;
-			if (id.isVoid()) {
-				portType = new PortType(xmlId,
-						importType,
-						created,
-						creatorId);
-			} else {
-				portType = StorableObjectPool.getStorableObject(id, true);
-				if (portType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (portTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					portType = new PortType(xmlId,
 							importType,
 							created,
 							creatorId);
+				} else {
+					portType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (portType == null) {
+						Log.debugMessage("PortType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						portType = new PortType(xmlId,
+								importType,
+								created,
+								creatorId);
+					} else {
+						final String oldCodename = portType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("PortType.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				portType = portTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					portType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = portType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("PortType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						portType.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			portType.fromXmlTransferable(xmlPortType, importType);

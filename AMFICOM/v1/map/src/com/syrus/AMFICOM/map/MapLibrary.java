@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.32 2005/09/29 10:05:27 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.33 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,10 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -40,6 +43,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
@@ -56,8 +60,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/09/29 10:05:27 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2005/09/29 10:53:11 $
+ * @author $Author: bass $
  * @module map
  */
 public final class MapLibrary extends StorableObject implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
@@ -396,23 +400,78 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlMapLibrary.getCodename();
+			final Set<MapLibrary> mapLibraries = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, MAPLIBRARY_CODE, COLUMN_CODENAME),
+					true);
+
+			assert mapLibraries.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlMapLibrary.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			MapLibrary mapLibrary;
-			if (id.isVoid()) {
-				mapLibrary = new MapLibrary(xmlId,
-						importType,
-						created,
-						creatorId);
-			} else {
-				mapLibrary = StorableObjectPool.getStorableObject(id, true);
-				if (mapLibrary == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (mapLibraries.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					mapLibrary = new MapLibrary(xmlId,
 							importType,
 							created,
 							creatorId);
+				} else {
+					mapLibrary = StorableObjectPool.getStorableObject(expectedId, true);
+					if (mapLibrary == null) {
+						Log.debugMessage("MapLibrary.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						mapLibrary = new MapLibrary(xmlId,
+								importType,
+								created,
+								creatorId);
+					} else {
+						final String oldCodename = mapLibrary.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("MapLibrary.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				mapLibrary = mapLibraries.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					mapLibrary.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = mapLibrary.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("MapLibrary.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						mapLibrary.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			mapLibrary.fromXmlTransferable(xmlMapLibrary, importType);

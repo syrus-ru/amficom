@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.84 2005/09/28 19:06:20 bass Exp $
+ * $Id: LinkType.java,v 1.85 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -35,6 +38,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -42,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/09/28 19:06:20 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/29 10:53:11 $
  * @author $Author: bass $
  * @module config
  */
@@ -124,23 +128,78 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlLinkType.getCodename();
+			final Set<LinkType> linkTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, LINK_TYPE_CODE, COLUMN_CODENAME),
+					true);
+
+			assert linkTypes.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlLinkType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			LinkType linkType;
-			if (id.isVoid()) {
-				linkType = new LinkType(xmlId,
-						importType,
-						created,
-						creatorId);
-			} else {
-				linkType = StorableObjectPool.getStorableObject(id, true);
-				if (linkType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (linkTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					linkType = new LinkType(xmlId,
 							importType,
 							created,
 							creatorId);
+				} else {
+					linkType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (linkType == null) {
+						Log.debugMessage("LinkType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						linkType = new LinkType(xmlId,
+								importType,
+								created,
+								creatorId);
+					} else {
+						final String oldCodename = linkType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("LinkType.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				linkType = linkTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					linkType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = linkType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("LinkType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						linkType.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			linkType.fromXmlTransferable(xmlLinkType, importType);

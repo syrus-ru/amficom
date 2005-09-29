@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.53 2005/09/28 19:06:21 bass Exp $
+ * $Id: CharacteristicType.java,v 1.54 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,13 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -29,7 +33,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/09/28 19:06:21 $
+ * @version $Revision: 1.54 $, $Date: 2005/09/29 10:53:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -173,23 +177,78 @@ public final class CharacteristicType extends StorableObjectType
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlCharacteristicType.getCodename();
+			final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, CHARACTERISTIC_TYPE_CODE, COLUMN_CODENAME),
+					true);
+
+			assert characteristicTypes.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlCharacteristicType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			CharacteristicType characteristicType;
-			if (id.isVoid()) {
-				characteristicType = new CharacteristicType(xmlId,
-						importType,
-						created,
-						creatorId);
-			} else {
-				characteristicType = StorableObjectPool.getStorableObject(id, true);
-				if (characteristicType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (characteristicTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					characteristicType = new CharacteristicType(xmlId,
 							importType,
 							created,
 							creatorId);
+				} else {
+					characteristicType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (characteristicType == null) {
+						Log.debugMessage("CharacteristicType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						characteristicType = new CharacteristicType(xmlId,
+								importType,
+								created,
+								creatorId);
+					} else {
+						final String oldCodename = characteristicType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("CharacteristicType.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				characteristicType = characteristicTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					characteristicType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = characteristicType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("CharacteristicType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						characteristicType.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			characteristicType.fromXmlTransferable(xmlCharacteristicType, importType);

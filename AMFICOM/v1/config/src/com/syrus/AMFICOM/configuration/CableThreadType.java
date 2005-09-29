@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.71 2005/09/28 19:06:20 bass Exp $
+ * $Id: CableThreadType.java,v 1.72 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,16 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -39,6 +43,7 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -51,7 +56,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.71 $, $Date: 2005/09/28 19:06:20 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/29 10:53:11 $
  * @author $Author: bass $
  * @module config
  */
@@ -131,23 +136,78 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlCableThreadType.getCodename();
+			final Set<CableThreadType> cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, CABLETHREAD_TYPE_CODE, COLUMN_CODENAME),
+					true);
+
+			assert cableThreadTypes.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlCableThreadType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			CableThreadType cableThreadType;
-			if (id.isVoid()) {
-				cableThreadType = new CableThreadType(xmlId,
-						importType,
-						created,
-						creatorId);
-			} else {
-				cableThreadType = StorableObjectPool.getStorableObject(id, true);
-				if (cableThreadType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (cableThreadTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					cableThreadType = new CableThreadType(xmlId,
 							importType,
 							created,
 							creatorId);
+				} else {
+					cableThreadType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (cableThreadType == null) {
+						Log.debugMessage("CableThreadType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						cableThreadType = new CableThreadType(xmlId,
+								importType,
+								created,
+								creatorId);
+					} else {
+						final String oldCodename = cableThreadType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("CableThreadType.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				cableThreadType = cableThreadTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					cableThreadType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = cableThreadType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("CableThreadType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						cableThreadType.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			cableThreadType.fromXmlTransferable(xmlCableThreadType, importType);

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.96 2005/09/29 10:05:27 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.97 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,14 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.math.BigInteger;
 import java.util.Collections;
@@ -38,6 +42,7 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
@@ -56,8 +61,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.96 $, $Date: 2005/09/29 10:05:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.97 $, $Date: 2005/09/29 10:53:11 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -397,27 +402,82 @@ public final class PhysicalLinkType extends StorableObjectType
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlPhysicalLinkType.getCodename();
+			final Set<PhysicalLinkType> physicalLinkTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, PHYSICALLINK_TYPE_CODE, COLUMN_CODENAME),
+					true);
+
+			assert physicalLinkTypes.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlPhysicalLinkType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			PhysicalLinkType physicalLinkType;
-			if (id.isVoid()) {
-				physicalLinkType = new PhysicalLinkType(xmlId,
-						importType,
-						created,
-						creatorId,
-						xmlPhysicalLinkType.getCodename(),
-						xmlPhysicalLinkType.getDescription());
-			} else {
-				physicalLinkType = StorableObjectPool.getStorableObject(id, true);
-				if (physicalLinkType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (physicalLinkTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					physicalLinkType = new PhysicalLinkType(xmlId,
 							importType,
 							created,
 							creatorId,
 							xmlPhysicalLinkType.getCodename(),
 							xmlPhysicalLinkType.getDescription());
+				} else {
+					physicalLinkType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (physicalLinkType == null) {
+						Log.debugMessage("PhysicalLinkType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						physicalLinkType = new PhysicalLinkType(xmlId,
+								importType,
+								created,
+								creatorId,
+								xmlPhysicalLinkType.getCodename(),
+								xmlPhysicalLinkType.getDescription());
+					} else {
+						final String oldCodename = physicalLinkType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("PhysicalLinkType.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				physicalLinkType = physicalLinkTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					physicalLinkType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = physicalLinkType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("PhysicalLinkType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						physicalLinkType.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			physicalLinkType.fromXmlTransferable(xmlPhysicalLinkType, importType);

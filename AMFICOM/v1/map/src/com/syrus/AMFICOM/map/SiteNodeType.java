@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.97 2005/09/29 10:49:17 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.98 2005/09/29 10:53:11 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,15 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,8 +76,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: krupenn $
- * @version $Revision: 1.97 $, $Date: 2005/09/29 10:49:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.98 $, $Date: 2005/09/29 10:53:11 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -395,27 +399,82 @@ public final class SiteNodeType extends StorableObjectType
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String newCodename = xmlSiteNodeType.getCodename();
+			final Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(newCodename, OPERATION_EQUALS, SITENODE_TYPE_CODE, COLUMN_CODENAME),
+					true);
+
+			assert siteNodeTypes.size() <= 1;
+
 			final XmlIdentifier xmlId = xmlSiteNodeType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			final Identifier expectedId = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+
 			SiteNodeType siteNodeType;
-			if (id.isVoid()) {
-				siteNodeType = new SiteNodeType(xmlId,
-						importType,
-						created,
-						creatorId,
-						xmlSiteNodeType.getCodename(),
-						xmlSiteNodeType.getDescription());
-			} else {
-				siteNodeType = StorableObjectPool.getStorableObject(id, true);
-				if (siteNodeType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
+			if (siteNodeTypes.isEmpty()) {
+				/*
+				 * No objects found with the specified codename.
+				 * Continue normally.
+				 */
+				final Date created = new Date();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
 					siteNodeType = new SiteNodeType(xmlId,
 							importType,
 							created,
 							creatorId,
 							xmlSiteNodeType.getCodename(),
 							xmlSiteNodeType.getDescription());
+				} else {
+					siteNodeType = StorableObjectPool.getStorableObject(expectedId, true);
+					if (siteNodeType == null) {
+						Log.debugMessage("SiteNodeType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + VOID_IDENTIFIER
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						siteNodeType = new SiteNodeType(xmlId,
+								importType,
+								created,
+								creatorId,
+								xmlSiteNodeType.getCodename(),
+								xmlSiteNodeType.getDescription());
+					} else {
+						final String oldCodename = siteNodeType.getCodename();
+						if (!oldCodename.equals(newCodename)) {
+							Log.debugMessage("SiteNodeType.createInstance() | WARNING: "
+									+ expectedId + " will change its codename from ``"
+									+ oldCodename + "'' to ``"
+									+ newCodename + "''",
+									WARNING);
+						}
+					}
+				}
+			} else {
+				siteNodeType = siteNodeTypes.iterator().next();
+				if (expectedId.isVoid()) {
+					/*
+					 * First import.
+					 */
+					siteNodeType.insertXmlMapping(xmlId, importType);
+				} else {
+					final Identifier actualId = siteNodeType.getId();
+					if (!actualId.equals(expectedId)) {
+						/*
+						 * Arghhh, no match.
+						 */
+						Log.debugMessage("SiteNodeType.createInstance() | WARNING: expected counterpart ("
+								+ expectedId
+								+ ") for XML identifier: " + xmlId.getStringValue()
+								+ " and actual one (" + actualId
+								+ ") do not match; expected one will be deleted",
+								WARNING);
+						LocalXmlIdentifierPool.remove(xmlId, importType);
+						siteNodeType.insertXmlMapping(xmlId, importType);
+					}
 				}
 			}
 			siteNodeType.fromXmlTransferable(xmlSiteNodeType, importType);
