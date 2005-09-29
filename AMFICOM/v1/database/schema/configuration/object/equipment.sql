@@ -1,4 +1,4 @@
--- $Id: equipment.sql,v 1.17 2005/09/28 11:05:40 arseniy Exp $
+-- $Id: equipment.sql,v 1.18 2005/09/29 09:04:00 arseniy Exp $
 
 CREATE TABLE Equipment (
  id NUMBER(19),
@@ -10,7 +10,7 @@ CREATE TABLE Equipment (
 --
  domain_id,
 --
- proto_equipment_id NUMBER(19),
+ proto_equipment_id NUMBER(19) NOT NULL,
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
 --
