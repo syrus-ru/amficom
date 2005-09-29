@@ -1,0 +1,9 @@
+.old
+*.jar
+*.jpr*
+*.jpx*
+*.trc
+*.tar
+*.gz
+*.swp
+*.log
