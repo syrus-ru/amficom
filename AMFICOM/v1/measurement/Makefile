@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.71 2005/09/12 20:53:21 arseniy Exp $
+# $Id: Makefile,v 1.72 2005/09/29 08:24:24 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -30,10 +30,14 @@ JPUB_FLAGS = \
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
 
+
+LIBNAME_GENERALXML=generalxml.jar
 
 APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
@@ -50,7 +54,7 @@ $(LIBNAME): .mach
 
 .mach: .corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(EXTCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -74,7 +78,7 @@ corba: .corba
 
 .corba: $(CLASSDIR) .idl .ora
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(JDBCCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java 
 	touch $@
