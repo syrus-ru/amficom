@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.63 2005/09/25 15:50:05 krupenn Exp $
+ * $Id: Mark.java,v 1.64 2005/09/29 10:47:34 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: krupenn $
- * @version $Revision: 1.63 $, $Date: 2005/09/25 15:50:05 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/29 10:47:34 $
  * @module map
  */
 public final class Mark extends AbstractNode {
@@ -58,9 +58,9 @@ public final class Mark extends AbstractNode {
 	private String street;
 	private String building;
 
-	protected transient double sizeInDoubleLt;
-	protected transient NodeLink nodeLink;
-	protected transient AbstractNode startNode;
+	private transient double sizeInDoubleLt;
+	private transient NodeLink nodeLink;
+	private transient AbstractNode startNode;
 
 	public Mark(final IdlMark mt) throws CreateObjectException {
 		super(mt);
