@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.52 2005/09/29 11:01:31 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.53 2005/09/29 11:34:11 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,24 +39,24 @@ import com.syrus.util.Log;
  *
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.52 $, $Date: 2005/09/29 11:01:31 $
+ * @version $Revision: 1.53 $, $Date: 2005/09/29 11:34:11 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
 	/**
 	 * Флаг выделения.
 	 */
-	protected transient boolean selected = false;
+	private transient boolean selected = false;
 
 	/**
 	 * Флаг наличия сигнала тревоги.
 	 */
-	protected transient boolean alarmState = false;
+	private transient boolean alarmState = false;
 
 	/**
 	 * Флаг удаления.
 	 */
-	protected transient boolean removed = false;
+	private transient boolean removed = false;
 
 	/**
 	 * Узел карты, к которому привязан начальный узел кабеля.
@@ -71,38 +71,38 @@ public final class MeasurementPath implements MapElement {
 	/**
 	 * Схемный путь.
 	 */
-	protected SchemePath schemePath;
+	private SchemePath schemePath;
 
 	/**
 	 * Вид карты.
 	 */
-	protected MapView mapView;
+	private MapView mapView;
 
 	/**
 	 * Сортированный список кабельных путей, из которых строится
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List<CablePath> sortedCablePaths = new LinkedList<CablePath>();
+	private List<CablePath> sortedCablePaths = new LinkedList<CablePath>();
 	/**
 	 * Сортированный список фрагментов линий, из которых строится
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
+	private List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
 	/**
 	 * Сортированный список узлов, по которым проходит
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
+	private List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
 
 	/**
 	 * Конструктор.
 	 * @param schemePath схемный путь
 	 * @param mapView вид
 	 */
-	protected MeasurementPath(final SchemePath schemePath,
+	private MeasurementPath(final SchemePath schemePath,
 			final AbstractNode stNode,
 			final AbstractNode eNode,
 			final MapView mapView) {
@@ -198,7 +198,7 @@ public final class MeasurementPath implements MapElement {
 		return this.alarmState;
 	}
 
-	protected DoublePoint location = new DoublePoint(0.0, 0.0);
+	private DoublePoint location = new DoublePoint(0.0, 0.0);
 
 	/**
 	 * {@inheritDoc}
@@ -334,14 +334,14 @@ public final class MeasurementPath implements MapElement {
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List<CablePath> unsortedCablePaths = new LinkedList<CablePath>();
+	private List<CablePath> unsortedCablePaths = new LinkedList<CablePath>();
 
 	/**
 	 * Получить список топологических кабелей, которые входят в состав пути.
 	 * Список строится динамически.
 	 * @return список кабельных путей
 	 */
-	protected List<CablePath> getCablePaths() throws ApplicationException {
+	private List<CablePath> getCablePaths() throws ApplicationException {
 		synchronized (this.unsortedCablePaths) {
 			final Scheme scheme = this.schemePath.getParentSchemeMonitoringSolution().getParentScheme();
 

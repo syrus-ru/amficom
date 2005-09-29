@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundNode.java,v 1.32 2005/09/29 11:01:32 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.33 2005/09/29 11:34:11 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  *
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.32 $, $Date: 2005/09/29 11:01:32 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/29 11:34:11 $
  * @module mapview
  */
 public final class UnboundNode extends SiteNode {
@@ -44,7 +44,7 @@ public final class UnboundNode extends SiteNode {
 	/**
 	 * элемент схемы.
 	 */
-	protected SchemeElement schemeElement;
+	private SchemeElement schemeElement;
 	
 	/**
 	 * Флаг того, что непривязанный элемент может быть привязан к элементу
@@ -55,7 +55,7 @@ public final class UnboundNode extends SiteNode {
 	 * При перемещении мыши за пределы элемента топологической карты
 	 * флаг опять принимает значение <code>false</code>.
 	 */
-	protected boolean canBind = false;
+	private boolean canBind = false;
 
 	/**
 	 * Конструктор.
@@ -64,7 +64,7 @@ public final class UnboundNode extends SiteNode {
 	 * @param location географические координаты непривязанного элемента
 	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#DEFAULT_UNBOUND})
 	 */
-	protected UnboundNode(final Identifier id,
+	private UnboundNode(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
 			final SchemeElement schemeElement,

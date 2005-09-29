@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundLink.java,v 1.28 2005/09/29 11:01:32 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.29 2005/09/29 11:34:11 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * 
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.28 $, $Date: 2005/09/29 11:01:32 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/29 11:34:11 $
  * @module mapview
  */
 public final class UnboundLink extends PhysicalLink {
@@ -43,7 +43,7 @@ public final class UnboundLink extends PhysicalLink {
 	/**
 	 * Кабельный путь, в который входит непривязанная линия.
 	 */
-	protected CablePath cablePath;
+	private CablePath cablePath;
 	
 	/**
 	 * Конструктор.
@@ -53,7 +53,7 @@ public final class UnboundLink extends PhysicalLink {
 	 * @param eNode конечный узел
 	 * @param type тип (должен быть {@link PhysicalLinkType#DEFAULT_UNBOUND})
 	 */
-	protected UnboundLink(final Identifier id,
+	private UnboundLink(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
 			final AbstractNode stNode,

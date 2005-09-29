@@ -1,5 +1,5 @@
 /*-
- * $Id: VoidElement.java,v 1.24 2005/09/29 11:01:32 krupenn Exp $
+ * $Id: VoidElement.java,v 1.25 2005/09/29 11:34:11 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,24 +19,24 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.24 $, $Date: 2005/09/29 11:01:32 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/29 11:34:11 $
  * @module mapview
  */
 public final class VoidElement implements MapElement {
 	/**
 	 * Вид карты.
 	 */
-	protected MapView mapView;
+	private MapView mapView;
 
 	/**
 	 * Instance.
 	 */
-	protected static VoidElement singleton = new VoidElement();
+	private static VoidElement singleton = new VoidElement();
 
 	/**
 	 * Protected constructor.
 	 */
-	protected VoidElement() {
+	private VoidElement() {
 		// empty
 	}
 

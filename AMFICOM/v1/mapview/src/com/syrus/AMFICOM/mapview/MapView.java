@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.68 2005/09/29 11:01:31 krupenn Exp $
+* $Id: MapView.java,v 1.69 2005/09/29 11:34:11 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.corba.IdlMapView;
@@ -60,7 +59,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.68 $, $Date: 2005/09/29 11:01:31 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/29 11:34:11 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -88,18 +87,13 @@ public final class MapView extends DomainMember implements Describable {
 	private Set<Scheme> schemes;
 
 	/** Список кабелей. */
-	protected transient Set<CablePath> cablePaths = new HashSet<CablePath>();
+	private transient Set<CablePath> cablePaths = new HashSet<CablePath>();
 	
 	/** Список измерительных путей. */
-	protected transient Set<MeasurementPath> measurementPaths = new HashSet<MeasurementPath>();
+	private transient Set<MeasurementPath> measurementPaths = new HashSet<MeasurementPath>();
 	
 	/** Список маркеров. */
-	protected transient Set<Marker> markers = new HashSet<Marker>();
-
-	/**
-	 * Сортированный список всех элементов топологической схемы
-	 */
-	protected transient List<MapElement> allElements;
+	private transient Set<Marker> markers = new HashSet<Marker>();
 
 	public MapView(final IdlMapView mvt) throws CreateObjectException {
 		try {
@@ -129,7 +123,6 @@ public final class MapView extends DomainMember implements Describable {
 		this.map = map;
 
 		this.schemes = new HashSet<Scheme>();
-		this.allElements = new LinkedList<MapElement>();
 	}
 	
 	public static MapView createInstance(final Identifier creatorId,
@@ -189,8 +182,6 @@ public final class MapView extends DomainMember implements Describable {
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
-
-		this.allElements = new LinkedList<MapElement>();
 	}
 
 	@Override
@@ -716,22 +707,6 @@ public final class MapView extends DomainMember implements Describable {
 		}
 		return null;
 	}
-
-	/**
-	 * Получить список всех олементов контекста карты.
-	 * @return список всех топологических элементов
-	 */
-//	public List<MapElement> getAllElements() {
-//		return this.getMap().getAllElements();
-////		this.allElements.clear();
-////
-////		this.allElements.addAll(this.getMap().getAllElements());
-////		this.allElements.addAll(this.getCablePaths());
-////		this.allElements.addAll(this.getMeasurementPaths());
-////		this.allElements.addAll(this.markers);
-////
-////		return Collections.unmodifiableList(this.allElements);
-//	}
 
 	/**
 	 * Remove all temporary objects on mapview when mapview was edited and closed
