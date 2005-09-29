@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.42 2005/09/29 05:59:38 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.43 2005/09/29 14:27:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.42 $, $Date: 2005/09/29 05:59:38 $
+ * @version $Revision: 1.43 $, $Date: 2005/09/29 14:27:58 $
  * @module schemeclient
  */
 
@@ -86,6 +86,9 @@ public class SchemeObjectsFactory {
 	private static int counter = 1;
 	private static int schemeCounter = 1;
 	private static final String EMPTY = "";  //$NON-NLS-1$
+	
+	private static SchemeProtoElement stubProtoElement;
+	private static String stubName = "should not see me";
 	
 	public static CharacteristicType createCharacteristicType(String name, CharacteristicTypeSort sort) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
@@ -301,8 +304,13 @@ public class SchemeObjectsFactory {
 			throw new CreateObjectException(error);
 		}
 		
-		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(LoginManager.getUserId(), 
-				LangModelScheme.getString("Title.component") + " (" + counter + ")" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+		Identifier userId = LoginManager.getUserId();
+		if (stubProtoElement == null) {
+			stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, SchemeProtoGroup.createInstance(userId, stubName));
+		}
+		
+		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(userId, 
+				LangModelScheme.getString("Title.component") + " (" + counter + ")", stubProtoElement);  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		protoElement.setProtoEquipment(protoEq);
 		counter++;
 		return protoElement;
@@ -356,7 +364,12 @@ public class SchemeObjectsFactory {
 	}
 
 	public static SchemeDevice createSchemeDevice(String name) throws CreateObjectException {
-		SchemeDevice schemeDevice = SchemeDevice.createInstance(LoginManager.getUserId(), name, SchemeProtoElement.createInstance(LoginManager.getUserId(), name));
+		Identifier userId = LoginManager.getUserId();
+		if (stubProtoElement == null) {
+			stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, SchemeProtoGroup.createInstance(userId, stubName));
+		}
+
+		SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, name, stubProtoElement);
 		return schemeDevice;
 	}
 	
@@ -372,7 +385,10 @@ public class SchemeObjectsFactory {
 	
 	public static SchemeLink createSchemeLink(String name) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		SchemeLink schemeLink = SchemeLink.createInstance(userId, name);
+		if (stubProtoElement == null) {
+			stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, SchemeProtoGroup.createInstance(userId, stubName));
+		}
+		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, stubProtoElement);
 		return schemeLink;
 	}
 	
