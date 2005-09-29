@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentWrapper.java,v 1.1 2005/09/28 10:00:14 arseniy Exp $
+ * $Id: ProtoEquipmentWrapper.java,v 1.2 2005/09/29 08:18:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/28 10:00:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/29 08:18:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -33,7 +33,7 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 
 	private ProtoEquipmentWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_TYPE_ID,
+		final String[] keysArray = new String[] { COLUMN_TYPE_CODE,
 				COLUMN_NAME,
 				COLUMN_DESCRIPTION,
 				COLUMN_MANUFACTURER,
@@ -62,7 +62,7 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 	public Object getValue(final ProtoEquipment equipmentType, final String key) {
 		final Object value = super.getValue(equipmentType, key);
 		if (value == null && equipmentType != null) {
-			if (key.equals(COLUMN_TYPE_ID)) {
+			if (key.equals(COLUMN_TYPE_CODE)) {
 				return equipmentType.getType();
 			}
 			if (key.equals(COLUMN_NAME)) {
@@ -86,22 +86,22 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 	}
 
 	@Override
-	public void setValue(final ProtoEquipment equipmentType, final String key, final Object value) {
-		if (equipmentType != null) {
-			if (key.equals(COLUMN_TYPE_ID)) {
-				equipmentType.setType((EquipmentType) value);
+	public void setValue(final ProtoEquipment protoEquipment, final String key, final Object value) {
+		if (protoEquipment != null) {
+			if (key.equals(COLUMN_TYPE_CODE)) {
+				protoEquipment.setType((EquipmentType) value);
 			}
 			if (key.equals(COLUMN_NAME)) {
-				equipmentType.setName((String) value);
+				protoEquipment.setName((String) value);
 			}
 			else if (key.equals(COLUMN_DESCRIPTION)) {
-				equipmentType.setDescription((String) value);
+				protoEquipment.setDescription((String) value);
 			}
 			else if (key.equals(COLUMN_MANUFACTURER)) {
-				equipmentType.setManufacturer((String) value);
+				protoEquipment.setManufacturer((String) value);
 			}
 			else if (key.equals(COLUMN_MANUFACTURER_CODE)) {
-				equipmentType.setManufacturerCode((String) value);
+				protoEquipment.setManufacturerCode((String) value);
 			}
 		}
 	}
@@ -121,8 +121,8 @@ public final class ProtoEquipmentWrapper extends StorableObjectWrapper<ProtoEqui
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_TYPE_ID)) {
-			return ProtoEquipment.class;
+		if (key.equals(COLUMN_TYPE_CODE)) {
+			return EquipmentType.class;
 		}
 		if (key.equals(COLUMN_NAME)
 				|| key.equals(COLUMN_DESCRIPTION)

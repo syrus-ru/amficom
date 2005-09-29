@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentDatabase.java,v 1.1 2005/09/28 10:00:14 arseniy Exp $
+ * $Id: ProtoEquipmentDatabase.java,v 1.2 2005/09/29 08:18:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,19 +13,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/28 10:00:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/29 08:18:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -57,7 +55,7 @@ public final class ProtoEquipmentDatabase extends StorableObjectDatabase<ProtoEq
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ ProtoEquipmentWrapper.COLUMN_MANUFACTURER + COMMA
@@ -68,7 +66,7 @@ public final class ProtoEquipmentDatabase extends StorableObjectDatabase<ProtoEq
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final ProtoEquipment storableObject) throws IllegalDataException {
-		final String sql = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+		final String sql = Integer.toString(storableObject.getType().getCode()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTROPHE + COMMA
@@ -80,7 +78,7 @@ public final class ProtoEquipmentDatabase extends StorableObjectDatabase<ProtoEq
 	protected int setEntityForPreparedStatementTmpl(final ProtoEquipment storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getType().getCode());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getManufacturer(), SIZE_MANUFACTURER_COLUMN);
@@ -106,19 +104,12 @@ public final class ProtoEquipmentDatabase extends StorableObjectDatabase<ProtoEq
 				
 		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
-		EquipmentType equipmentType;
-		try {
-			equipmentType = (EquipmentType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					StorableObjectWrapper.COLUMN_TYPE_ID), true);
-		} catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
 		protoEquipment.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				equipmentType,
+				EquipmentType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
 				(name != null) ? name : "",
 				(description != null) ? description : "",
 				DatabaseString.fromQuerySubString(resultSet.getString(ProtoEquipmentWrapper.COLUMN_MANUFACTURER)),

@@ -1,258 +1,147 @@
 /*-
- * $Id: EquipmentType.java,v 1.100 2005/09/28 19:06:20 bass Exp $
+ * $Id: EquipmentType.java,v 1.101 2005/09/29 08:18:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
-import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
-import static java.util.logging.Level.SEVERE;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashSet;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
-import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XmlBeansTransferable;
-import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.Log;
-import com.syrus.util.Shitlet;
+import com.syrus.AMFICOM.general.TransferableObject;
+import com.syrus.util.Codeable;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/09/28 19:06:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.101 $, $Date: 2005/09/29 08:18:07 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
+public enum EquipmentType implements Namable, Codeable, TransferableObject {
+	REFLECTOMETER("reflectometer"),
+	OPTICAL_SWITCH("optical_switch"),
+	MUFF("muff"),
+	CABLE_PANEL("cable_panel"),
+	TRANSMITTER("transmitter"),
+	RECEIVER("receiver"),
+	MULTIPLEXOR("multiplexor"),
+	CROSS("cross"),
+	FILTER("filter"),
+	OTHER("other");
 
-public final class EquipmentType extends StorableObjectType implements Namable, XmlBeansTransferable<XmlEquipmentType> {
-	private static final long serialVersionUID = -728421290623578368L;
+	private static final String KEY_ROOT = "EquipmentType.Description.";
 
-	private String name;
+	private String codename;
+	private String description;
 
-	public EquipmentType(final IdlEquipmentType ett) throws CreateObjectException {
-		try {
-			this.fromTransferable(ett);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
+	private EquipmentType(final String codename) {
+		this.codename = codename;
+		this.description = LangModelConfiguration.getString(KEY_ROOT + this.codename);
+	}
+
+	public static EquipmentType fromInt(final int code) {
+		switch (code) {
+			case IdlEquipmentType._REFLECTOMETER:
+				return REFLECTOMETER;
+			case IdlEquipmentType._OPTICAL_SWITCH:
+				return OPTICAL_SWITCH;
+			case IdlEquipmentType._MUFF:
+				return MUFF;
+			case IdlEquipmentType._CABLE_PANEL:
+				return CABLE_PANEL;
+			case IdlEquipmentType._TRANSMITTER:
+				return TRANSMITTER;
+			case IdlEquipmentType._RECEIVER:
+				return RECEIVER;
+			case IdlEquipmentType._MULTIPLEXOR:
+				return MULTIPLEXOR;
+			case IdlEquipmentType._CROSS:
+				return CROSS;
+			case IdlEquipmentType._FILTER:
+				return FILTER;
+			case IdlEquipmentType._OTHER:
+				return OTHER;
+			default:
+				throw new IllegalArgumentException("Illegal code: " + code);
 		}
 	}
 
-	EquipmentType(final Identifier id,
-			final Identifier creatorId,
-			final StorableObjectVersion version,
-			final String codename,
-			final String description,
-			final String name) {
-		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				version,
-				codename,
-				description);
-		this.name = name;
+	public static EquipmentType fromTransferable(final IdlEquipmentType idlEquipmentType) {
+		return fromInt(idlEquipmentType.value());
 	}
 
-	/**
-	 * Minimalistic constructor used when importing from XML.
-	 *
-	 * @param id
-	 * @param importType
-	 * @param created
-	 * @param creatorId
-	 * @throws IdentifierGenerationException
-	 */
-	private EquipmentType(final XmlIdentifier id, final String importType, final Date created, final Identifier creatorId)
-			throws IdentifierGenerationException {
-		super(id, importType, EQUIPMENT_TYPE_CODE, created, creatorId);
+	public static EquipmentType fromXmlTransferable(final XmlEquipmentType.Enum xmlEquipmentType) {
+		return fromInt(xmlEquipmentType.intValue() - 1);
 	}
 
-	/**
-	 * Create new instance on import/export from XML
-	 * @param creatorId
-	 * @param importType
-	 * @param xmlEquipmentType
-	 * @return new instance
-	 * @throws CreateObjectException
-	 */
-	public static EquipmentType createInstance(final Identifier creatorId,
-			final String importType,
-			final XmlEquipmentType xmlEquipmentType) throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
-
-		try {
-			final XmlIdentifier xmlId = xmlEquipmentType.getId();
-			final Date created = new Date();
-			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
-			EquipmentType equipmentType;
-			if (id.isVoid()) {
-				equipmentType = new EquipmentType(xmlId, importType, created, creatorId);
-			} else {
-				equipmentType = StorableObjectPool.getStorableObject(id, true);
-				if (equipmentType == null) {
-					LocalXmlIdentifierPool.remove(xmlId, importType);
-					equipmentType = new EquipmentType(xmlId, importType, created, creatorId);
-				}
-			}
-			equipmentType.fromXmlTransferable(xmlEquipmentType, importType);
-			assert equipmentType.isValid() : OBJECT_BADLY_INITIALIZED;
-			equipmentType.markAsChanged();
-			return equipmentType;
-		} catch (final CreateObjectException coe) {
-			throw coe;
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			throw new CreateObjectException(ae);
-		}
+	public int getCode() {
+		return this.ordinal();
 	}
 
-	/**
-	 * Create new instance for client
-	 * 
-	 * @param creatorId
-	 * @param codename
-	 * @param description
-	 * @throws CreateObjectException
-	 */
-	public static EquipmentType createInstance(final Identifier creatorId,
-			final String codename,
-			final String description,
-			final String name) throws CreateObjectException {
-		if (creatorId == null || codename == null || description == null || name == null) {
-			throw new IllegalArgumentException("Argument is 'null'");
-		}
-
-		try {
-			final EquipmentType equipmentType = new EquipmentType(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_TYPE_CODE),
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					codename,
-					description,
-					name);
-
-			assert equipmentType.isValid() : OBJECT_BADLY_INITIALIZED;
-
-			equipmentType.markAsChanged();
-
-			return equipmentType;
-		} catch (IdentifierGenerationException ige) {
-			throw new CreateObjectException("Cannot generate identifier ", ige);
-		}
+	public String getCodename() {
+		return this.codename;
 	}
 
-	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlEquipmentType ett = (IdlEquipmentType) transferable;
-		super.fromTransferable(ett, ett.codename, ett.description);
-		this.name = ett.name;
-	}
-
-	/**
-	 * @param equipmentType
-	 * @param importType
-	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
-	 */
-	@Shitlet
-	public void fromXmlTransferable(final XmlEquipmentType equipmentType, final String importType) throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, PRE_IMPORT);
-
-		this.name = equipmentType.getName();
-		this.codename = equipmentType.getCodename();
-		this.description = equipmentType.isSetDescription() ? equipmentType.getDescription() : "";
-
-		XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, POST_IMPORT);
-	}
-
-	/**
-	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
-	 */
-	@Override
-	public IdlEquipmentType getTransferable(final ORB orb) {
-		return IdlEquipmentTypeHelper.init(orb,
-				super.id.getTransferable(),
-				super.created.getTime(),
-				super.modified.getTime(),
-				super.creatorId.getTransferable(),
-				super.modifierId.getTransferable(),
-				super.version.longValue(),
-				super.codename,
-				super.description != null ? super.description : "",
-				this.name != null ? this.name : "");
-	}
-
-	/**
-	 * @param equipmentType
-	 * @param importType
-	 * @throws ApplicationException
-	 */
-	@Shitlet
-	public void getXmlTransferable(final XmlEquipmentType equipmentType, final String importType) throws ApplicationException {
-		this.id.getXmlTransferable(equipmentType.addNewId(), importType);
-		equipmentType.setName(this.name);
-		equipmentType.setCodename(this.codename);
-		if (equipmentType.isSetDescription()) {
-			equipmentType.unsetDescription();
-		}
-		if (this.description.length() != 0) {
-			equipmentType.setDescription(this.description);
-		}
-
-		XmlComplementorRegistry.complementStorableObject(equipmentType, EQUIPMENT_TYPE_CODE, importType, EXPORT);
-	}
-
-	protected synchronized void setAttributes(final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final String codename,
-			final String description,
-			final String name) {
-		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
-		this.name = name;
+	public String getDescription() {
+		return this.description;
 	}
 
 	public String getName() {
-		return this.name;
+		return this.description;
 	}
 
 	public void setName(final String name) {
-		this.name = name;
-		super.markAsChanged();
+		throw new UnsupportedOperationException(ErrorMessages.METHOD_NOT_NEEDED);
+	}
+
+	public IdlEquipmentType getTransferable(final ORB orb) {
+		try {
+			return IdlEquipmentType.from_int(this.getCode());
+		} catch (org.omg.CORBA.BAD_PARAM bp) {
+			throw new IllegalArgumentException("Illegal code: " + this.getCode());
+		}
+	}
+	
+	public XmlEquipmentType.Enum getXmlTransferable() {
+		return XmlEquipmentType.Enum.forInt(this.getCode() + 1);
+	}
+
+	public static IdlEquipmentType[] createTransferables(final EnumSet<EquipmentType> equipmentTypes, final ORB orb) {
+		assert equipmentTypes != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		final IdlEquipmentType[] idlEquipmentTypes = new IdlEquipmentType[equipmentTypes.size()];
+		int i = 0;
+		synchronized (equipmentTypes) {
+			for (final EquipmentType equipmentType : equipmentTypes) {
+				idlEquipmentTypes[i++] = equipmentType.getTransferable(orb);
+			}
+		}
+		return idlEquipmentTypes;
+	}
+
+	public static EnumSet<EquipmentType> fromTransferables(final IdlEquipmentType[] idlEquipmentTypes) {
+		assert idlEquipmentTypes != null: NON_NULL_EXPECTED;
+
+		final Collection<EquipmentType> equipmentTypes = new HashSet<EquipmentType>(idlEquipmentTypes.length);
+		for (final IdlEquipmentType idlEquipmentType : idlEquipmentTypes) {
+			equipmentTypes.add(EquipmentType.fromTransferable(idlEquipmentType));
+		}
+		return EnumSet.copyOf(equipmentTypes);
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {
-		return Collections.emptySet();
+	public String toString() {
+		return this.getCodename() + " " + this.getCode();
 	}
 }

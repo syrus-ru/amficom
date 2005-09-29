@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsConditionImpl.java,v 1.2 2005/08/28 15:43:15 arseniy Exp $
+* $Id: XMLLinkedIdsConditionImpl.java,v 1.3 2005/09/29 08:18:31 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
@@ -29,6 +28,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
@@ -50,7 +50,7 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/28 15:43:15 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/29 08:18:31 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
@@ -77,13 +77,13 @@ public class XMLLinkedIdsConditionImpl extends XMLLinkedIdsCondition {
 					case MCM_CODE:
 
 					/* Configuration */
-					case EQUIPMENT_TYPE_CODE:
 					case PORT_TYPE_CODE:
 					case MEASUREMENTPORT_TYPE_CODE:
 					case TRANSPATH_TYPE_CODE:
 					case LINK_TYPE_CODE:
 					case CABLELINK_TYPE_CODE:
 					case CABLETHREAD_TYPE_CODE:
+					case PROTOEQUIPMENT_CODE:
 					case EQUIPMENT_CODE:
 					case PORT_CODE:
 					case MEASUREMENTPORT_CODE:

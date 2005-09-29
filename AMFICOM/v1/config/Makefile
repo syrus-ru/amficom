@@ -67,7 +67,6 @@ $(LIBNAME_CONFIGURATIONXML):
 		$(XMLDIR)/CableLinkType.xsd \
 		$(XMLDIR)/CableThreadType.xsd \
 		$(XMLDIR)/ConfigurationLibrary.xsd \
-		$(XMLDIR)/EquipmentType.xsd \
 		$(XMLDIR)/ProtoEquipment.xsd \
 		$(XMLDIR)/Equipment.xsd \
 		$(XMLDIR)/LinkType.xsd \

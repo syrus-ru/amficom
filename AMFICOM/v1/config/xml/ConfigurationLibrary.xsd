@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: ConfigurationLibrary.xsd,v 1.9 2005/09/28 14:09:16 arseniy Exp $
+			$Id: ConfigurationLibrary.xsd,v 1.10 2005/09/29 08:18:07 arseniy Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -20,7 +20,6 @@
 		namespace = "http://syrus.com/AMFICOM/general/xml"
 		schemaLocation = "../../general/xml/StorableObject.xsd"/>
 	<xsd:include schemaLocation = "CableLinkType.xsd"/>
-	<xsd:include schemaLocation = "EquipmentType.xsd"/>
 	<xsd:include schemaLocation = "PortType.xsd"/>
 
 	<xsd:element name = "library" type = "configuration:XmlConfigurationLibrary"/>
@@ -35,7 +34,6 @@
 					<xsd:element name = "linkTypes" type = "configuration:XmlLinkTypeSeq" minOccurs = "0"/>
 					<xsd:element name = "cableLinkTypes" type = "configuration:XmlCableLinkTypeSeq" minOccurs = "0"/>
 					<xsd:element name = "portTypes" type = "configuration:XmlPortTypeSeq" minOccurs = "0"/>
-					<xsd:element name = "equipmentTypes" type = "configuration:XmlEquipmentTypeSeq" minOccurs = "0"/>
 					<xsd:element name = "protoEquipments" type = "configuration:XmlProtoEquipmentSeq" minOccurs = "0"/>
 					<xsd:element name = "equipments" type = "configuration:XmlEquipmentSeq" minOccurs = "0"/>
 				</xsd:sequence>

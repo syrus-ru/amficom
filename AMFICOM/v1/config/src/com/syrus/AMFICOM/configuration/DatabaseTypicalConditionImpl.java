@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.19 2005/08/30 16:35:08 bass Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.20 2005/09/29 08:18:07 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/30 16:35:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/09/29 08:18:07 $
+ * @author $Author: arseniy $
  * @module config
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -42,9 +42,9 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return PortTypeWrapper.COLUMN_KIND;
 				}
 				break;
-			case EQUIPMENT_TYPE_CODE:
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
-					return StorableObjectWrapper.COLUMN_CODENAME;
+			case PROTOEQUIPMENT_CODE:
+				if (this.condition.getKey().equals(ProtoEquipmentWrapper.COLUMN_MANUFACTURER_CODE)) {
+					return ProtoEquipmentWrapper.COLUMN_MANUFACTURER_CODE;
 				}
 				break;
 			case MONITOREDELEMENT_CODE:

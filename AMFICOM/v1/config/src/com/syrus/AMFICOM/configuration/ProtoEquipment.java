@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.5 2005/09/28 19:06:20 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.6 2005/09/29 08:18:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
-import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
@@ -44,7 +43,6 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -55,12 +53,12 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/28 19:06:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/09/29 08:18:07 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class ProtoEquipment extends StorableObject implements Characterizable, Namable, TypedObject<EquipmentType>,
+public final class ProtoEquipment extends StorableObject implements Characterizable, Namable,
 		XmlBeansTransferable<XmlProtoEquipment> {
 	private static final long serialVersionUID = 3221583036378568005L;
 
@@ -203,7 +201,7 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlProtoEquipment pet = (IdlProtoEquipment) transferable;
 		super.fromTransferable(pet);
-		this.type = (EquipmentType) StorableObjectPool.getStorableObject(new Identifier(pet._typeId), true);
+		this.type = EquipmentType.fromTransferable(pet.type);
 		this.name = pet.name;
 		this.description = pet.description;
 		this.manufacturer = pet.manufacturer;
@@ -220,9 +218,8 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 	public void fromXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType) throws ApplicationException {
 		XmlComplementorRegistry.complementStorableObject(protoEquipment, PROTOEQUIPMENT_CODE, importType, PRE_IMPORT);
 
-		this.type = StorableObjectPool.getStorableObject(Identifier.fromXmlTransferable(protoEquipment.getEquipmentTypeId(),
-				importType,
-				MODE_THROW_IF_ABSENT), true);
+		this.type = EquipmentType.fromXmlTransferable(protoEquipment.getXmlEquipmentType());
+
 		this.name = protoEquipment.getName();
 		this.description = protoEquipment.isSetDescription() ? protoEquipment.getDescription() : "";
 		this.manufacturer = protoEquipment.isSetManufacturer() ? protoEquipment.getManufacturer() : "";
@@ -248,7 +245,7 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
 				super.version.longValue(),
-				this.type.getId().getTransferable(),
+				this.type.getTransferable(orb),
 				this.name != null ? this.name : "",
 				this.description != null ? this.description : "",
 				this.manufacturer,
@@ -257,7 +254,9 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 
 	public void getXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType) throws ApplicationException {
 		super.id.getXmlTransferable(protoEquipment.addNewId(), importType);
-		this.type.getId().getXmlTransferable(protoEquipment.addNewEquipmentTypeId(), importType);
+
+		protoEquipment.setXmlEquipmentType(this.type.getXmlTransferable());
+
 		protoEquipment.setName(this.name);
 		if (protoEquipment.isSetDescription()) {
 			protoEquipment.unsetDescription();
@@ -358,9 +357,7 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
-		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
-		dependencies.add(this.type);
-		return dependencies;
+		return Collections.emptySet();
 	}
 
 	/*-********************************************************************
