@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.40 2005/09/22 15:17:35 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.41 2005/09/29 08:00:56 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/09/22 15:17:35 $
+ * @author $Author: max $
+ * @version $Revision: 1.41 $, $Date: 2005/09/29 08:00:56 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -104,7 +104,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(protoElement.parentSchemeProtoElementId);
 				case SCHEMEPROTOGROUP_CODE:
 					return super.conditionTest(protoElement.parentSchemeProtoGroupId);
-				case EQUIPMENT_TYPE_CODE:
+				case PROTOEQUIPMENT_CODE:
 					return super.conditionTest(protoElement.equipmentTypeId);
 				default:
 					throw newIllegalObjectEntityException();
