@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.14 2005/09/28 13:25:16 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.15 2005/09/29 08:28:27 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.TestModelingType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/28 13:25:16 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/29 08:28:27 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -59,6 +59,7 @@ public final class TestInitialSetup extends TestCase {
 		sqlCommonTest.addTest(new TestDataType("testCreateAll"));
 		sqlCommonTest.addTest(new TestMeasurementUnit("testCreateAll"));
 		sqlCommonTest.addTest(new TestParameterType("testCreateAll"));
+		sqlCommonTest.addTest(new TestEquipmentType("testCreateAll"));
 		sqlCommonTest.addTest(new TestMeasurementType("testCreateAll"));
 		sqlCommonTest.addTest(new TestAnalysisType("testCreateAll"));
 		sqlCommonTest.addTest(new TestModelingType("testCreateAll"));
@@ -78,7 +79,6 @@ public final class TestInitialSetup extends TestCase {
 		databaseCommonTest.addTest(new TestMCM("testCreateInstance"));
 
 		//-6. Create configuration objects.
-		databaseCommonTest.addTest(new TestEquipmentType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPathType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestProtoEquipment("testCreateInstance"));

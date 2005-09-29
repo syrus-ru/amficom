@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.10 2005/09/28 13:25:16 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.11 2005/09/29 08:28:27 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/28 13:25:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/29 08:28:27 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -147,7 +147,7 @@ public class TestIdentifier extends TestCase {
 	}
 
 	public void testGetLongValue() {
-		final Identifier identifier = new Identifier("EquipmentType_1092");
+		final Identifier identifier = new Identifier("ParameterSet_24");
 		final long identifierCode = identifier.getIdentifierCode();
 		System.out.println("Identifier: '" + identifier + "', code: " + identifierCode);
 	}
