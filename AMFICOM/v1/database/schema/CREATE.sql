@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.11 2005/08/21 15:11:08 arseniy Exp $
+-- $Id: CREATE.sql,v 1.12 2005/09/29 11:56:17 max Exp $
 
 REM user
 @@./user/CREATE;
@@ -32,3 +32,6 @@ REM mapview
 
 REM security
 @@./security/CREATE;
+
+REM report
+@@./report/CREATE;
