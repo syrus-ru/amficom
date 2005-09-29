@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.102 2005/09/29 12:36:28 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.103 2005/09/29 14:37:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.util.Codeable;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/09/29 12:36:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.103 $, $Date: 2005/09/29 14:37:32 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -42,7 +42,7 @@ public enum EquipmentType implements Namable, Codeable, TransferableObject {
 	OTHER("other"),
 
 	@Crutch136(notes = "Stub for SchemeElement without Equipment")
-	פבעבכבמ136("bug136");
+	BUG_136("bug136");
 
 	private static final String KEY_ROOT = "EquipmentType.Description.";
 
@@ -77,8 +77,8 @@ public enum EquipmentType implements Namable, Codeable, TransferableObject {
 			case IdlEquipmentType._OTHER:
 				return OTHER;
 
-			case IdlEquipmentType._BUG136:
-				return פבעבכבמ136;
+			case IdlEquipmentType._BUG_136:
+				return BUG_136;
 			default:
 				throw new IllegalArgumentException("Illegal code: " + code);
 		}
