@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.9 2005/09/19 13:10:28 stas Exp $
+ * $Id: CreateUgo.java,v 1.10 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.jgraph.graph.DefaultGraphCell;
-import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
@@ -42,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 

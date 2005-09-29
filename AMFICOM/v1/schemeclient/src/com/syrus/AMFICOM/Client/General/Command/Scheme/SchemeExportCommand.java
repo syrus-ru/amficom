@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.3 2005/09/20 19:47:52 stas Exp $
+ * $Id: SchemeExportCommand.java,v 1.4 2005/09/29 13:20:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,19 +21,19 @@ import org.apache.xmlbeans.XmlOptions;
 
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentSeq;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlPortType;
 import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSeq;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipmentSeq;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -99,12 +99,12 @@ public class SchemeExportCommand extends ImportExportCommand {
 				portType.getXmlTransferable(xmlPortType, AMFICOM_IMPORT);
 				xmlPortTypes.add(xmlPortType);
 			}
-			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE); 
-			Collection<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
-			Set<XmlEquipmentType> xmlEquipmentTypes = new HashSet<XmlEquipmentType>();
-			for (EquipmentType eqType : equipmentTypes) {
-				XmlEquipmentType xmlEquipmentType = XmlEquipmentType.Factory.newInstance();
-				eqType.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT);
+			condition2 = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE); 
+			Collection<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+			Set<XmlProtoEquipment> xmlEquipmentTypes = new HashSet<XmlProtoEquipment>();
+			for (ProtoEquipment protoEq : protoEquipments) {
+				XmlProtoEquipment xmlEquipmentType = XmlProtoEquipment.Factory.newInstance();
+				protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT);
 				xmlEquipmentTypes.add(xmlEquipmentType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE); 
@@ -155,7 +155,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 			Set<XmlLinkType> xmlLinkTypes, 
 			Set<XmlCableLinkType> xmlCableLinkTypes,
 			Set<XmlPortType> xmlPortTypes,
-			Set<XmlEquipmentType> xmlEquipmentTypes, 
+			Set<XmlProtoEquipment> xmlProtoEquipments, 
 			Set<XmlEquipment> xmlEquipments) {
 		System.out.println("Start saving config XML");
 		
@@ -182,8 +182,8 @@ public class SchemeExportCommand extends ImportExportCommand {
 		XmlPortTypeSeq xmlPortTypeSeq = doc.addNewPortTypes();
 		xmlPortTypeSeq.setPortTypeArray(xmlPortTypes.toArray(new XmlPortType[xmlPortTypes.size()]));
 		
-		XmlEquipmentTypeSeq xmlEquipmentTypeSeq = doc.addNewEquipmentTypes();
-		xmlEquipmentTypeSeq.setEquipmentTypeArray(xmlEquipmentTypes.toArray(new XmlEquipmentType[xmlEquipmentTypes.size()]));
+		XmlProtoEquipmentSeq xmlEquipmentTypeSeq = doc.addNewProtoEquipments();
+		xmlEquipmentTypeSeq.setProtoEquipmentArray(xmlProtoEquipments.toArray(new XmlProtoEquipment[xmlProtoEquipments.size()]));
 		
 		XmlEquipmentSeq xmlEquipmentSeq = doc.addNewEquipments();
 		xmlEquipmentSeq.setEquipmentArray(xmlEquipments.toArray(new XmlEquipment[xmlEquipments.size()]));

@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.5 2005/09/29 05:59:38 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.6 2005/09/29 13:20:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
@@ -43,21 +43,22 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.IdentifiableCell;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlComplementor;
@@ -79,6 +80,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String USER_DIR = "user.dir";
 	protected static final String UCM_SPLIT_MUFF = "UCM.codename.split_muff";
 	protected static final String UCM_STRAIGHT_MUFF = "UCM.codename.straight_muff";
+	protected static final String UCM_SCHEMED_EQT = "UCM_SCHEMED";
 	
 	protected static final String separator = "/";
 	protected static final String id_prefix = "id";
@@ -114,7 +116,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 			}
 		});
 
-		XmlComplementorRegistry.registerComplementor(EQUIPMENT_TYPE_CODE, new XmlComplementor() {
+		XmlComplementorRegistry.registerComplementor(PROTOEQUIPMENT_CODE, new XmlComplementor() {
 			public void complementStorableObject(
 					final XmlStorableObject storableObject,
 					final String importType,
@@ -123,13 +125,13 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				switch (mode) {
 				case PRE_IMPORT:
 					if (importType.equals(UCM_IMPORT)) {
-						final XmlEquipmentType equipmentType = (XmlEquipmentType) storableObject;
-						final String codename = equipmentType.getCodename();
-						if (codename.equals(LangModelScheme.getString(UCM_SPLIT_MUFF))) {
-							equipmentType.setCodename(EquipmentTypeCodename.MUFF.stringValue());
-						} else if (codename.equals(LangModelScheme.getString(UCM_STRAIGHT_MUFF))) {
+						final XmlProtoEquipment equipmentType = (XmlProtoEquipment) storableObject;
+						final String name = equipmentType.getName();
+						if (name.equals(LangModelScheme.getString(UCM_SPLIT_MUFF))) {
+							equipmentType.setXmlEquipmentType(XmlEquipmentType.MUFF);
+						} else if (name.equals(LangModelScheme.getString(UCM_STRAIGHT_MUFF))) {
 							// TODO create split and straight Eqts
-							equipmentType.setCodename(EquipmentTypeCodename.MUFF.stringValue());
+							equipmentType.setXmlEquipmentType(XmlEquipmentType.MUFF);
 						}
 					}
 					break;
@@ -140,6 +142,23 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				}
 			}
 		});
+		
+		ProtoEquipment stubProtoEquipment1 = null;
+		try {
+			final TypicalCondition condition = new TypicalCondition(EquipmentType.OTHER.getCodename(), 
+					OperationSort.OPERATION_EQUALS, 
+					ObjectEntities.PROTOEQUIPMENT_CODE, 
+					StorableObjectWrapper.COLUMN_CODENAME);
+			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (protoEquipments.isEmpty()) {
+				stubProtoEquipment1 = SchemeObjectsFactory.createProtoEquipment("stub", EquipmentType.OTHER);
+			} else {
+				stubProtoEquipment1 = protoEquipments.iterator().next();
+			}
+		} catch (ApplicationException e1) {
+			Log.errorException(e1);
+		}
+		final ProtoEquipment stubProtoEquipment = stubProtoEquipment1;
 		
 		XmlComplementorRegistry.registerComplementor(EQUIPMENT_CODE, new XmlComplementor() {
 			public void complementStorableObject(
@@ -156,24 +175,13 @@ public abstract class ImportExportCommand extends AbstractCommand {
 					LoginManager.getDomainId().getXmlTransferable(equipment.addNewDomainId(), importType);
 					
 					if (importType.equals(UCM_IMPORT)) {
-						try {
-							XmlIdentifier protoEquipmentId = equipment.getProtoEquipmentId();
-							// in case of ucm - it's really equipmentTypeId
-							Identifier eqtId = Identifier.fromXmlTransferable(protoEquipmentId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
-							LinkedIdsCondition condition = new LinkedIdsCondition(eqtId, ObjectEntities.PROTOEQUIPMENT_CODE);
-							Set<ProtoEquipment> protoEqs = StorableObjectPool.getStorableObjectsByCondition(condition, false);
-							
-							if (protoEqs.isEmpty()) {
-								throw new UpdateObjectException("No ProtoEquipment found");
-							}
+						XmlIdentifier protoEquipmentId = equipment.getProtoEquipmentId();
 
+						// in case of ucm_scheme - change protoEquipmentId to stub
+						if (protoEquipmentId.getStringValue().equals(UCM_SCHEMED_EQT)) {
 							XmlIdentifier realProtoId = XmlIdentifier.Factory.newInstance();
-							realProtoId.setStringValue(protoEqs.iterator().next().getId().getIdentifierString());
-							equipment.setProtoEquipmentId(realProtoId);
-						} catch (ObjectNotFoundException e) {
-							throw new UpdateObjectException(e); 
-						} catch (ApplicationException e) {
-							throw new UpdateObjectException(e);
+							realProtoId.setStringValue(stubProtoEquipment.getId().getIdentifierString());
+							equipment.setProtoEquipmentId(realProtoId);								
 						}
 					}
 					break;

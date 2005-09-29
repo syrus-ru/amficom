@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentPropertiesManager.java,v 1.1 2005/09/29 05:58:59 stas Exp $
+ * $Id: ProtoEquipmentPropertiesManager.java,v 1.2 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.ui.EmptyStorableObjectEditor;
-import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
+import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/09/29 05:58:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 
@@ -73,7 +73,7 @@ public class ProtoEquipmentPropertiesManager implements VisualManager {
 	 * @see VisualManager#getController()
 	 */
 	public StorableObjectWrapper getController() {
-		return EquipmentTypeWrapper.getInstance();
+		return ProtoEquipmentWrapper.getInstance();
 	}
 
 	/**

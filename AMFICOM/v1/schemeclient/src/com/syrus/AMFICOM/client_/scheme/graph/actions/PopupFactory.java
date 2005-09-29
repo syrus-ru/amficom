@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.12 2005/09/26 14:13:46 stas Exp $
+ * $Id: PopupFactory.java,v 1.13 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -292,16 +292,16 @@ public class PopupFactory {
 	private static JMenuItem createMuffMenuItem(final ApplicationContext aContext, final SchemeGraph graph, final DefaultCableLink cell) {
 		JMenu menu = new JMenu(LangModelScheme.getString("Menu.path.insert_muff")); //$NON-NLS-1$
 		try {
-			TypicalCondition condition1 = new TypicalCondition(EquipmentTypeCodename.MUFF.stringValue(), OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-			Set<Identifier> eqtIds = new HashSet<Identifier>(); 
-			for (EquipmentType eqt : eqTypes) {
-				eqtIds.add(eqt.getId());
+			TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF.getCodename(), OperationSort.OPERATION_EQUALS, ObjectEntities.PROTOEQUIPMENT_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			Set<ProtoEquipment> protoEqs = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+			Set<Identifier> protoEqIds = new HashSet<Identifier>(); 
+			for (ProtoEquipment protoEq : protoEqs) {
+				protoEqIds.add(protoEq.getId());
 			}
-			if (eqtIds.isEmpty()) {
+			if (protoEqIds.isEmpty()) {
 				return null;
 			}
-			LinkedIdsCondition condition2 = new LinkedIdsCondition(eqtIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
+			LinkedIdsCondition condition2 = new LinkedIdsCondition(protoEqIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 			Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			final SchemeCableLink cableLink = cell.getSchemeCableLink();
 			final Scheme parentScheme = cableLink.getParentScheme();

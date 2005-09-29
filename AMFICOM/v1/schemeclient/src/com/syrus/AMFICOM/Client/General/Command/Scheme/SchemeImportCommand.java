@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.24 2005/09/29 05:59:38 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.25 2005/09/29 13:20:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -49,8 +48,6 @@ import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentSeq;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlPortType;
@@ -113,7 +110,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 
 		if(ext.equals(".xml")) {
 			try {
-				if (f.getName().startsWith("proto")) {
+				if (f.getName().contains("proto")) {
 					try {
 						loadProtosXML(fileName);
 					} catch (CreateObjectException e) {
@@ -127,7 +124,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 					ApplicationModel aModel = this.pane.getContext().getApplicationModel();
 					aModel.setEnabled("menuSchemeImportCommit", true);
 					aModel.fireModelChanged();
-				} else if (f.getName().startsWith("config")) {
+				} else if (f.getName().contains("config")) {
 					try {
 						loadConfigXML(fileName);
 					} catch (CreateObjectException e) {
@@ -142,7 +139,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 					ApplicationModel aModel = this.pane.getContext().getApplicationModel();
 					aModel.setEnabled("menuSchemeImportCommit", true);
 					aModel.fireModelChanged();
-				} else if (f.getName().startsWith("scheme")) {
+				} else if (f.getName().contains("scheme")) {
 					Scheme scheme;
 					try {
 						scheme = loadSchemeXML(fileName);
@@ -297,16 +294,10 @@ public class SchemeImportCommand extends ImportExportCommand {
 				throw new CreateObjectException("incorrect input data");
 			}
 		}
-		XmlEquipmentTypeSeq xmlEquipmentTypes = doc.getEquipmentTypes();
-		if (xmlEquipmentTypes != null) {
-			for(XmlEquipmentType xmlEquipmentType : xmlEquipmentTypes.getEquipmentTypeArray()) {
-				EquipmentType.createInstance(this.userId, importType, xmlEquipmentType);
-			}
-		}
 		XmlProtoEquipmentSeq xmlProtoEquipments = doc.getProtoEquipments();
 		if (xmlProtoEquipments != null) {
-			for(XmlProtoEquipment xmlProtoEquipment : xmlProtoEquipments.getProtoEquipmentArray()) {
-				ProtoEquipment.createInstance(this.userId, xmlProtoEquipment, importType);
+			for(XmlProtoEquipment xmlEquipmentType : xmlProtoEquipments.getProtoEquipmentArray()) {
+				ProtoEquipment.createInstance(this.userId, xmlEquipmentType, importType);
 			}
 		}
 		XmlEquipmentSeq xmlEquipments = doc.getEquipments();

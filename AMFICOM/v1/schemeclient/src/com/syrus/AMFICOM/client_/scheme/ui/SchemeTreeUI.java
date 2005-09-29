@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.20 2005/09/28 07:31:39 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.21 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/09/28 07:31:39 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 
@@ -135,18 +136,18 @@ public class SchemeTreeUI extends IconedTreeUI {
 									Log.errorException(e1);
 								}
 							}
-						} else if (object instanceof EquipmentType) {
-							EquipmentType eqt = (EquipmentType)object;
+						} else if (object instanceof ProtoEquipment) {
+							ProtoEquipment protoEq = (ProtoEquipment)object;
 							try {
-								LinkedIdsCondition condition1 = new LinkedIdsCondition(eqt.getId(), ObjectEntities.SCHEMEPROTOELEMENT_CODE);
+								LinkedIdsCondition condition1 = new LinkedIdsCondition(protoEq.getId(), ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 								Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 								if (protos.isEmpty()) {
-									LinkedIdsCondition condition2 = new LinkedIdsCondition(eqt.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
+									LinkedIdsCondition condition2 = new LinkedIdsCondition(protoEq.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
 									//TODO condition
 //									Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 //									if (schemeElements.isEmpty()) {
-										StorableObjectPool.delete(eqt.getId());
-										StorableObjectPool.flush(eqt, LoginManager.getUserId(), false);
+										StorableObjectPool.delete(protoEq.getId());
+										StorableObjectPool.flush(protoEq, LoginManager.getUserId(), false);
 //										
 //										TreePath parentPath = selectedPath.getParentPath();
 //										SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
@@ -155,7 +156,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 //										Log.debugMessage("Can not delete EquipmetType as there are SchemeElements with such type", Level.WARNING);
 //									}
 								} else {
-									Log.debugMessage("Can not delete EquipmetType as there are PropoElements with such type", Level.WARNING);
+									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);

@@ -91,13 +91,13 @@ public class ComponentSaveCommand extends AbstractCommand {
 			proto = groups[0].getProtoElement();
 		}
 
-		if (proto.getEquipmentType() == null) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					LangModelScheme.getString("Message.error.component_type_not_set"),  //$NON-NLS-1$
-					LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
-					JOptionPane.OK_OPTION);
-			return;
-		}
+//		if (proto.getProtoEquipment() == null) {
+//			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+//					LangModelScheme.getString("Message.error.component_type_not_set"),  //$NON-NLS-1$
+//					LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
+//					JOptionPane.OK_OPTION);
+//			return;
+//		}
 		
 		try {
 			proto.getParentSchemeProtoGroup();

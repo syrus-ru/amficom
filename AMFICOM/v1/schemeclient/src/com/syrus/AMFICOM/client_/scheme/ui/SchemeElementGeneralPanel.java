@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.22 2005/09/28 13:23:57 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.23 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -40,6 +39,7 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.NameableComboBoxRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -47,14 +47,12 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -63,7 +61,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.KISWrapper;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -72,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/09/28 13:23:57 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 
@@ -93,10 +90,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfLabelText = new JTextField();
 	JButton btSymbolBut = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	WrapperedComboBox<EquipmentType> eqtCombo = new WrapperedComboBox<EquipmentType>(
-			EquipmentTypeWrapper.getInstance(),
-			StorableObjectWrapper.COLUMN_NAME,
-			StorableObjectWrapper.COLUMN_CODENAME);
+	AComboBox eqtCombo = new AComboBox(EquipmentType.values());
 	JLabel lbTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox<ProtoEquipment> cmbTypeCombo = new WrapperedComboBox<ProtoEquipment>(
 			ProtoEquipmentWrapper.getInstance(),
@@ -725,9 +719,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.tfKisPortText);
 		super.addToUndoableListener(this.taDescrArea);
 
-		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-		Set<EquipmentType> eqts = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		this.eqtCombo.addElements(eqts);
+		this.eqtCombo.setRenderer(new NameableComboBoxRenderer());
 
 		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -748,8 +740,10 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.cmbTypeCombo.removeAllItems();
 		
-		final LinkedIdsCondition condition = new LinkedIdsCondition(eqt.getId(),
-				ObjectEntities.PROTOEQUIPMENT_CODE);
+		final TypicalCondition condition = new TypicalCondition(eqt.getCodename(), 
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.PROTOEQUIPMENT_CODE, 
+				StorableObjectWrapper.COLUMN_CODENAME);
 		try {
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.cmbTypeCombo.addElements(protoEquipments);
@@ -962,12 +956,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					}
 				}
 			} else if (eq != null) {
-				try {
-					this.schemeElement.setEquipment(null);
-					StorableObjectPool.delete(eq.getId());
-				} catch (ApplicationException e) {
-					Log.errorException(e);
-				}
+				this.schemeElement.setEquipment(null);
+				StorableObjectPool.delete(eq.getId());
 			}
 
 			if (this.cbKisBox.isSelected()) {

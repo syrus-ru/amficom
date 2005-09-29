@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.2 2005/09/28 07:31:39 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.3 2005/09/29 13:20:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			StorableObjectPool.flush(ObjectEntities.PORT_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.LINK_CODE, userId, false);
 			
-			StorableObjectPool.flush(ObjectEntities.EQUIPMENT_TYPE_CODE, userId, false);
+			StorableObjectPool.flush(ObjectEntities.PROTOEQUIPMENT_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.CABLELINK_TYPE_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.LINK_TYPE_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.PORT_TYPE_CODE, userId, false);

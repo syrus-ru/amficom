@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.4 2005/09/29 05:59:38 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.5 2005/09/29 13:20:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -79,7 +78,7 @@ public class ImportUCMConverter {
 	private Map<Integer, SchemeProtoElement> inVrms;
 	private Map<Integer, SchemeProtoElement> outVrms;
 	private Set<Identifier> placedObjectIds;
-	private Set<EquipmentType> muffTypes;
+	private Set<ProtoEquipment> muffProtoTypes;
 	private Map<SchemeCablePort, Set<SchemeCableThread>> portThreadsCount = new HashMap<SchemeCablePort, Set<SchemeCableThread>>();
 
 	private Identifier userId;
@@ -476,11 +475,15 @@ public class ImportUCMConverter {
 	}
 	
 	private void initMuffs() throws ApplicationException {
-		TypicalCondition condition1 = new TypicalCondition(EquipmentTypeCodename.MUFF.stringValue(), OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-		this.muffTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+		TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF.getCodename(),
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.PROTOEQUIPMENT_CODE, 
+				StorableObjectWrapper.COLUMN_CODENAME);
+		
+		this.muffProtoTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 		Set<Identifier> muffTypeIds = new HashSet<Identifier>();
-		for (EquipmentType eqt : this.muffTypes) {
-			muffTypeIds.add(eqt.getId());
+		for (ProtoEquipment protoEq : this.muffProtoTypes) {
+			muffTypeIds.add(protoEq.getId());
 		}
 		LinkedIdsCondition condition2 = new LinkedIdsCondition(muffTypeIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 		Set<SchemeProtoElement> muffs = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
@@ -506,11 +509,15 @@ public class ImportUCMConverter {
 	}
 	
 	private void initVrms() throws ApplicationException {
-		TypicalCondition condition1 = new TypicalCondition(EquipmentTypeCodename.CABLE_PANEL.stringValue(), OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-		Set<EquipmentType> vrmTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+		TypicalCondition condition1 = new TypicalCondition(EquipmentType.CABLE_PANEL.getCodename(),
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.PROTOEQUIPMENT_CODE, 
+				StorableObjectWrapper.COLUMN_CODENAME);
+		
+		Set<ProtoEquipment> vrmTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 		Set<Identifier> vrmTypeIds = new HashSet<Identifier>();
-		for (EquipmentType eqt : vrmTypes) {
-			vrmTypeIds.add(eqt.getId());
+		for (ProtoEquipment protoEq : vrmTypes) {
+			vrmTypeIds.add(protoEq.getId());
 		}
 		LinkedIdsCondition condition2 = new LinkedIdsCondition(vrmTypeIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 		Set<SchemeProtoElement> vrms = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
@@ -519,7 +526,7 @@ public class ImportUCMConverter {
 			return;
 		}
 
-		// put <number of ports, muff>
+		// put <number of ports, vrm>
 		this.inVrms = new HashMap<Integer, SchemeProtoElement>();
 		this.outVrms = new HashMap<Integer, SchemeProtoElement>();
 		for (SchemeProtoElement vrm : vrms) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.21 2005/09/28 13:23:57 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.22 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,25 +36,23 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.NameableComboBoxRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
-import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
@@ -66,7 +63,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/09/28 13:23:57 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 
@@ -84,10 +81,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	JTextField labelText = new JTextField();
 	JButton symbolBut = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	WrapperedComboBox<EquipmentType> eqtCombo = new WrapperedComboBox<EquipmentType>(
-			EquipmentTypeWrapper.getInstance(),
-			StorableObjectWrapper.COLUMN_NAME,
-			StorableObjectWrapper.COLUMN_CODENAME);
+	AComboBox eqtCombo = new AComboBox(EquipmentType.values());
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox<ProtoEquipment> typeCombo = new WrapperedComboBox<ProtoEquipment>(ProtoEquipmentWrapper.getInstance(),
 			StorableObjectWrapper.COLUMN_NAME,
@@ -367,9 +361,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		super.addToUndoableListener(this.parentCombo);
 		super.addToUndoableListener(this.descrArea);
 
-		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-		Set<EquipmentType> eqts = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		this.eqtCombo.addElements(eqts);
+		this.eqtCombo.setRenderer(new NameableComboBoxRenderer());
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -385,8 +377,10 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.typeCombo.removeAllItems();
 		
-		final LinkedIdsCondition condition = new LinkedIdsCondition(eqt.getId(),
-				ObjectEntities.PROTOEQUIPMENT_CODE);
+		final TypicalCondition condition = new TypicalCondition(eqt.getCodename(), 
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.PROTOEQUIPMENT_CODE, 
+				StorableObjectWrapper.COLUMN_CODENAME);
 		try {
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.typeCombo.addElements(protoEquipments);

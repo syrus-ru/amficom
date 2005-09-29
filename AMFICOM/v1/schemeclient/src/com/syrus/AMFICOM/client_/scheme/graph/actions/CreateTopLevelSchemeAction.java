@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.20 2005/09/19 13:10:28 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.21 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 
@@ -175,17 +175,25 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		SchemeGraph invisibleGraph = pane.getGraph();
 		if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 			SchemeProtoElement pe = (SchemeProtoElement)cellContainer;
-			if (pe.getEquipmentType().getCodename().equals(EquipmentTypeCodename.MUFF.stringValue())) {
-				CreateUgo.createMuffUgo(pe, invisibleGraph, icon, label, blockports_in, blockports_out);
-			} else {
-				CreateUgo.createProtoUgo((SchemeProtoElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
+			try {
+				if (pe.getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
+					CreateUgo.createMuffUgo(pe, invisibleGraph, icon, label, blockports_in, blockports_out);
+				} else {
+					CreateUgo.createProtoUgo((SchemeProtoElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 			SchemeElement se = (SchemeElement)cellContainer;
-			if (se.getEquipmentType().getCodename().equals(EquipmentTypeCodename.MUFF.stringValue())) {
-				CreateUgo.createMuffUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
-			} else {
-				CreateUgo.createElementUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
+			try {
+				if (se.getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
+					CreateUgo.createMuffUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
+				} else {
+					CreateUgo.createElementUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) {
 			//FIXME когда создается УГО для схемы SchemeDevice никуда не добавляется ибо SE не создается, поэтому после выхода он пропадает

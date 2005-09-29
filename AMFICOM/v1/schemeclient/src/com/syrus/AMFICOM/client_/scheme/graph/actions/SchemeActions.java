@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.35 2005/09/28 07:31:39 stas Exp $
+ * $Id: SchemeActions.java,v 1.36 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
-import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2005/09/28 07:31:39 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 
@@ -817,15 +817,19 @@ public class SchemeActions {
 			SchemePath path = pe.getParentPathOwner();
 			PathElement lastPE = path.getPreviousPathElement(pe);
 			SchemeElement lastSE = lastPE.getSchemeElement();
-			if (!lastSE.getEquipmentType().getCodename().equals(EquipmentTypeCodename.SWITCH.toString())) {
-				if (is_source) {
-					pe.setParentPathOwner(null, true);
-				} else {
-					PathElement nextPE = path.getNextPathElement(pe);
-					if (nextPE != null) {
-						nextPE.setParentPathOwner(null, true);
+			try {
+				if (!lastSE.getProtoEquipment().getType().equals(EquipmentType.OPTICAL_SWITCH)) {
+					if (is_source) {
+						pe.setParentPathOwner(null, true);
+					} else {
+						PathElement nextPE = path.getNextPathElement(pe);
+						if (nextPE != null) {
+							nextPE.setParentPathOwner(null, true);
+						}
 					}
 				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 

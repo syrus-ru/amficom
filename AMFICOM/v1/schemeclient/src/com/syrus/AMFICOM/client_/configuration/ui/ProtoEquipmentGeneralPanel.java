@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.1 2005/09/29 05:58:59 stas Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.2 2005/09/29 13:20:49 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -28,29 +27,26 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.UI.NameableComboBoxRenderer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/09/29 05:58:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/29 13:20:49 $
  * @module schemeclient
  */
 
@@ -63,8 +59,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfNameText = new JTextField();
 	JButton commitButton = new JButton();
 	JLabel lbCodenameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	WrapperedComboBox<EquipmentType> tfEqtCombo = new WrapperedComboBox<EquipmentType>(
-			EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_CODENAME);
+	AComboBox tfEqtCombo = new AComboBox(EquipmentType.values());
 	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField tfManufacturerText = new JTextField();
 	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
@@ -252,10 +247,8 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-		Set<EquipmentType> eqts = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		this.tfEqtCombo.addElements(eqts);
-
+		this.tfEqtCombo.setRenderer(new NameableComboBoxRenderer());
+		
 		addToUndoableListener(this.tfNameText);
 		addToUndoableListener(this.tfEqtCombo);
 		addToUndoableListener(this.tfManufacturerText);
