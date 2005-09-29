@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.49 2005/09/28 15:12:46 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.50 2005/09/29 12:48:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.49 $, $Date: 2005/09/28 15:12:46 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/29 12:48:00 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -815,8 +815,9 @@ public final class MapPropertiesManager
 	}
 
 	/** объекты, необходимые для отрисовки пиктограмм. */
-
-    private static Component component = new Component() {/*empty*/};
+    private static Component component = new Component() {
+		private static final long serialVersionUID = 1L;
+	};
     private static MediaTracker tracker = new MediaTracker(component);
     private static int mediaTrackerID = 0;
 

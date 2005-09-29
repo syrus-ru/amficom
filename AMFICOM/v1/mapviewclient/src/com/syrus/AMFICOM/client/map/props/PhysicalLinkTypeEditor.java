@@ -318,9 +318,10 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
-		if(MiscUtil.validName(name))
+		if(MiscUtil.validName(name)) {
 		try 
 		{
 			if(!name.equals(this.type.getName()))
@@ -343,6 +344,8 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		catch (Exception ex) 
 		{
 			ex.printStackTrace();
-		} 
+		}
+		}
+		super.commitChanges();
 	}
 }

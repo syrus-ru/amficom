@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -1057,7 +1057,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
-		// nothing to commit - all actions are autocommitted
+		super.commitChanges();
 	}
 }

@@ -584,6 +584,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		int m = Integer.parseInt(this.mTextField.getText());
 		int n = Integer.parseInt(this.nTextField.getText());
@@ -592,5 +593,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			this.tunnelLayout.setDimension(m, n);
 			this.tunnelLayout.updateElements();
 		}
+		super.commitChanges();
 	}
 }

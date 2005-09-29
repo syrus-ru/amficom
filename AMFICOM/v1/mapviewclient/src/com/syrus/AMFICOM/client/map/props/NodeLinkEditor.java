@@ -216,7 +216,8 @@ public class NodeLinkEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
-		// empty - nothing to commit
+		super.commitChanges();
 	}
 }

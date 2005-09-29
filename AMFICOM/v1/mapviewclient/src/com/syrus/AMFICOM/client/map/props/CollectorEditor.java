@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -96,11 +96,6 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.commitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Object obj = CollectorEditor.this.getObject();
-//				if (obj != null)
-//					for (Iterator it = CollectorEditor.this.getChangeListeners().iterator(); it.hasNext();) {
-//						((ChangeListener)it.next()).stateChanged(new ChangeEvent(obj));
-//					}
 				commitChanges();
 			}
 		});
@@ -295,6 +290,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name))
@@ -308,5 +304,6 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		{
 			ex.printStackTrace();
 		} 
+		super.commitChanges();
 	}
 }

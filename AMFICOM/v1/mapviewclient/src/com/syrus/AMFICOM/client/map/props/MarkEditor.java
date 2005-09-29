@@ -247,9 +247,10 @@ public class MarkEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
-		if(MiscUtil.validName(name))
+		if(MiscUtil.validName(name)) {
 			try {
 				this.mark.setName(name);
 			} catch(NumberFormatException ex) {
@@ -257,5 +258,7 @@ public class MarkEditor extends DefaultStorableObjectEditor {
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
+		}
+		super.commitChanges();
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.59 2005/09/28 15:21:02 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.60 2005/09/29 12:48:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.59 $, $Date: 2005/09/28 15:21:02 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/29 12:48:00 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -241,12 +241,8 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Установить цвет типа линии при наличии сигнала тревоги. Цает определяется
 	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_ALARMED_COLOR}. В
 	 * случае, если такого атрибута у элемента нет, создается новый.
-	 * 
-	 * @param linkType
-	 *        тип линии
-	 * @param color
-	 *        цвет
 	 */
+	@Override
 	public void setAlarmedColor(final Characterizable characterizable, final Color color) {
 		super.setAlarmedColor(characterizable, color);
 		alarmedColorsHolder.put(characterizable.getId(), color);
@@ -259,11 +255,8 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * При первом вызове метода для объекта <code>linkType</code> полученный
 	 * цвет помещается в хэш-таблицу {@link #alarmedColorsHolder} и при повторных
 	 * вызовах берется из нее.
-	 * 
-	 * @param characterizable
-	 *        тип линии
-	 * @return цвет
 	 */
+	@Override
 	public Color getAlarmedColor(final Characterizable characterizable) {
 		Color color = alarmedColorsHolder.get(characterizable.getId());
 		if (color == null) {
@@ -313,8 +306,6 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Получить тип линии по кодовому имени. В случае, если такого типа нет,
 	 * создается новый.
 	 * 
-	 * @param userId
-	 *        пользователь
 	 * @param codename
 	 *        кодовое имя
 	 * @return тип линии

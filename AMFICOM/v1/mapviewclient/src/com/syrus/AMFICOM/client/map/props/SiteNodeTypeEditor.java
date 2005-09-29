@@ -320,6 +320,7 @@ public final class SiteNodeTypeEditor
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		try {
 			this.type.setName(this.nameTextField.getText());
@@ -329,5 +330,6 @@ public final class SiteNodeTypeEditor
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		super.commitChanges();
 	}
 }

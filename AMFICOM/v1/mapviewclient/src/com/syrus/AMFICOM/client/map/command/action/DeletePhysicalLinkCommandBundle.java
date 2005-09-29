@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.30 2005/09/28 15:19:22 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.31 2005/09/29 12:48:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -37,7 +36,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/09/28 15:19:22 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/29 12:48:00 $
  * @module mapviewclient
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {

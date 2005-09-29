@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -344,6 +344,7 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		try {
 			this.cablePath.setDescription(this.descTextArea.getText());
@@ -361,5 +362,6 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		super.commitChanges();
 	}
 }

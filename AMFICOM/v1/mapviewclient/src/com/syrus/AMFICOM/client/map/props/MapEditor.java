@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -238,6 +238,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name))
@@ -248,5 +249,6 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		catch (Exception ex) {
 			ex.printStackTrace();
 		} 
+		super.commitChanges();
 	}
 }

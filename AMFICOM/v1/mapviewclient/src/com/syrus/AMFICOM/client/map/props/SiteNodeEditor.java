@@ -445,9 +445,10 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
-		if(MiscUtil.validName(name))
+		if(MiscUtil.validName(name)) {
 		try {
 			this.site.setName(name);
 			this.site.setType((SiteNodeType )this.typeComboBox
@@ -468,6 +469,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 			this.site.setBuilding(this.buildingTextField.getText());
 		} catch(Exception ex) {
 			ex.printStackTrace();
+		}
 		}
 		super.commitChanges();
 	}

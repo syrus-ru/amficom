@@ -310,6 +310,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		try {
 			double distance = Double.parseDouble(this.distanceTextField.getText());
@@ -320,5 +321,6 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-	}
+		super.commitChanges();
+}
 }

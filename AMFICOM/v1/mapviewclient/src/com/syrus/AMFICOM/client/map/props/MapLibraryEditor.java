@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -224,14 +224,17 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
-		if(MiscUtil.validName(name))
+		if(MiscUtil.validName(name)) {
 			try {
 				this.mapLibrary.setName(name);
 				this.mapLibrary.setDescription(this.descTextArea.getText());
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
+		}
+		super.commitChanges();
 	}
 }

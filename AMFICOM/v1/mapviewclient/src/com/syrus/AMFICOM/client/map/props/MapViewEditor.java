@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -443,9 +443,10 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
-		if(MiscUtil.validName(name))
+		if(MiscUtil.validName(name)) {
 			try {
 				this.mapView.setName(name);
 				this.mapView.setDescription(this.descTextArea.getText());
@@ -466,5 +467,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
+		}
+		super.commitChanges();
 	}
 }

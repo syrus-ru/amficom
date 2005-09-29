@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.26 2005/09/28 06:39:07 krupenn Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.27 2005/09/29 12:48:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,6 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
@@ -38,7 +36,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.26 $, $Date: 2005/09/28 06:39:07 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/29 12:48:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -92,11 +90,11 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 					// current mapFrame map was deleted
 					MapNewCommand cmd = new MapNewCommand(this.mapFrame.getContext());
 					cmd.execute();
-					Map map = cmd.getMap();
-					MapViewNewCommand cmd2 = new MapViewNewCommand(map, this.mapFrame.getContext());
+					Map emptyMap = cmd.getMap();
+					MapViewNewCommand cmd2 = new MapViewNewCommand(emptyMap, this.mapFrame.getContext());
 					cmd2.execute();
-					MapView mapView = cmd2.getMapView();
-					this.mapFrame.setMapView(mapView);
+					MapView emptyMapView = cmd2.getMapView();
+					this.mapFrame.setMapView(emptyMapView);
 				}
 			} catch(ApplicationException e) {
 				e.printStackTrace();

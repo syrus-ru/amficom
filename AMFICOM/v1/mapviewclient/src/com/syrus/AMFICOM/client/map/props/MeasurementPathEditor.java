@@ -338,13 +338,16 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
-		if(MiscUtil.validName(this.nameTextField.getText()))
+		if(MiscUtil.validName(this.nameTextField.getText())) {
 			try {
 				this.measurementPath.setName(this.nameTextField.getText());
 				this.measurementPath.setDescription(this.descTextArea.getText());
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
+		}
+		super.commitChanges();
 	}
 }

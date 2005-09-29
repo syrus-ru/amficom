@@ -221,6 +221,7 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		try {
 			double x = Double.parseDouble(this.longTextField.getText());
@@ -232,5 +233,6 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		super.commitChanges();
 	}
 }

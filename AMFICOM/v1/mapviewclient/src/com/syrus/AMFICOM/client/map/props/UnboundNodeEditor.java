@@ -283,6 +283,7 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		try {
 			double x = Double.parseDouble(this.longTextField.getText());
@@ -294,5 +295,6 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
+		super.commitChanges();
 	}
 }

@@ -640,7 +640,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
-		// nothing to commit
+		super.commitChanges();
 	}
 }

@@ -247,6 +247,7 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		return this.jPanel;
 	}
 
+	@Override
 	public void commitChanges() {
 		try {
 			double x = Double.parseDouble(this.longTextField.getText());
@@ -269,5 +270,6 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		} catch(NumberFormatException ex) {
 			System.out.println(ex.getMessage());
 		}
+		super.commitChanges();
 	}
 }

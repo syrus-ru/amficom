@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.55 2005/09/25 16:08:01 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.56 2005/09/29 12:48:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.55 $, $Date: 2005/09/25 16:08:01 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/29 12:48:00 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -340,13 +340,12 @@ public abstract class NetMapViewer {
 	 * @param doublePoint географическая координата мыши
 	 */	
 	public void showLatLong(DoublePoint doublePoint) {
-		LogicalNetLayer logicalNetLayer = this.getLogicalNetLayer();
-		if(logicalNetLayer.aContext == null)
+		if(this.logicalNetLayer.aContext == null)
 			return;
-		Dispatcher disp = logicalNetLayer.aContext.getDispatcher();
+		Dispatcher disp = this.logicalNetLayer.aContext.getDispatcher();
 		if(disp == null)
 			return;
-		disp.firePropertyChange(new MapEvent(logicalNetLayer, MapEvent.MAP_VIEW_CENTER_CHANGED, doublePoint));
+		disp.firePropertyChange(new MapEvent(this.logicalNetLayer, MapEvent.MAP_VIEW_CENTER_CHANGED, doublePoint));
 	}
 
 	/**
@@ -689,7 +688,7 @@ public abstract class NetMapViewer {
 					siteNodeType.getSort(), 
 					"codename",  //$NON-NLS-1$
 					LangModelMap.getString(MapEditorResourceKeys.COPY_OF) 
-						+ " " + siteNodeType.getName(),
+						+ " " + siteNodeType.getName(), //$NON-NLS-1$
 					siteNodeType.getDescription(), 
 					siteNodeType.getImageId(), 
 					true, 
@@ -721,7 +720,7 @@ public abstract class NetMapViewer {
 					physicalLinkType.getSort(), 
 					"codename",  //$NON-NLS-1$
 					LangModelMap.getString(MapEditorResourceKeys.COPY_OF) 
-						+ " " + physicalLinkType.getName(),
+						+ " " + physicalLinkType.getName(), //$NON-NLS-1$
 					physicalLinkType.getDescription(), 
 					physicalLinkType.getBindingDimension(), 
 					true, 
