@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.41 2005/09/28 13:23:57 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.42 2005/09/29 05:59:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.41 $, $Date: 2005/09/28 13:23:57 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/29 05:59:38 $
  * @module schemeclient
  */
 
@@ -286,16 +286,16 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static SchemeProtoElement createSchemeProtoElement() throws CreateObjectException {
-		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-		EquipmentType eqt = null;
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE);
+		ProtoEquipment protoEq = null;
 		try {
-			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if (!eqTypes.isEmpty())
-				eqt = eqTypes.iterator().next();
+			Set<ProtoEquipment> protoEqs = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (!protoEqs.isEmpty())
+				protoEq = protoEqs.iterator().next();
 		} catch (ApplicationException e2) {
 			throw new CreateObjectException(e2);
 		}
-		if (eqt == null) {
+		if (protoEq == null) {
 			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
 			Log.debugMessage(error, Level.WARNING); 
 			throw new CreateObjectException(error);
@@ -303,7 +303,7 @@ public class SchemeObjectsFactory {
 		
 		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(LoginManager.getUserId(), 
 				LangModelScheme.getString("Title.component") + " (" + counter + ")" );  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-		protoElement.setEquipmentType(eqt);
+		protoElement.setProtoEquipment(protoEq);
 		counter++;
 		return protoElement;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.4 2005/09/28 13:23:57 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.5 2005/09/29 05:59:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -164,7 +163,13 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							LinkedIdsCondition condition = new LinkedIdsCondition(eqtId, ObjectEntities.PROTOEQUIPMENT_CODE);
 							Set<ProtoEquipment> protoEqs = StorableObjectPool.getStorableObjectsByCondition(condition, false);
 							
+							if (protoEqs.isEmpty()) {
+								throw new UpdateObjectException("No ProtoEquipment found");
+							}
 
+							XmlIdentifier realProtoId = XmlIdentifier.Factory.newInstance();
+							realProtoId.setStringValue(protoEqs.iterator().next().getId().getIdentifierString());
+							equipment.setProtoEquipmentId(realProtoId);
 						} catch (ObjectNotFoundException e) {
 							throw new UpdateObjectException(e); 
 						} catch (ApplicationException e) {
@@ -270,7 +275,6 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							final Map<Identifier, XmlIdentifier> schemeIdsSeq = cashedSchemeIdentifiers.get(proto);
 							if (schemeCell1 != null && schemeIdsSeq != null) {
 								final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
-								List<Object> oldSerializable = schemeCell1.getData();
 								Object[] cells = (Object[])schemeCell1.getData().get(0);
 								for (Object cell : SchemeGraph.getDescendants1(cells)) {
 									if (cell instanceof IdentifiableCell) {

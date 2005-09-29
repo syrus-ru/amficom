@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.10 2005/09/26 14:13:46 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.11 2005/09/29 05:59:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/26 14:13:46 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/29 05:59:38 $
  * @module schemeclient
  */
-
 public interface SchemeResourceKeys extends ResourceKeys {
+
 	Color[] DEFAULT_COLOR_SET = new Color[] { Color.WHITE, Color.BLUE,
 			Color.GREEN, Color.RED, Color.GRAY, Color.CYAN, Color.MAGENTA,
 			Color.ORANGE, Color.PINK, Color.YELLOW, Color.BLACK };
@@ -76,7 +76,8 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String CABLE_LINK_TYPE = "cable_link_type"; //$NON-NLS-1$
 	String PORT_TYPE = "port_type"; //$NON-NLS-1$
 	String CABLE_PORT_TYPE = "cable_port_type"; //$NON-NLS-1$
-	String EQUIPMENT_TYPE = "equipment_type"; //$NON-NLS-1$
+//	String EQUIPMENT_TYPE = "equipment_type"; //$NON-NLS-1$
+	String PROTO_EQUIPMENT = "equipment_type"; //$NON-NLS-1$
 	String MEASUREMENT_TYPE = "measurement_type"; //$NON-NLS-1$
 	String MEASUREMENTPORT_TYPE = "measurement_port_type"; //$NON-NLS-1$
 	String SCHEME = "scheme"; //$NON-NLS-1$

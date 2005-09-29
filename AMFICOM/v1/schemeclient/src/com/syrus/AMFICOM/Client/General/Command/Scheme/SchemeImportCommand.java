@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.23 2005/09/28 07:31:39 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.24 2005/09/29 05:59:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
@@ -54,6 +55,8 @@ import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlPortType;
 import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSeq;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipmentSeq;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -298,6 +301,12 @@ public class SchemeImportCommand extends ImportExportCommand {
 		if (xmlEquipmentTypes != null) {
 			for(XmlEquipmentType xmlEquipmentType : xmlEquipmentTypes.getEquipmentTypeArray()) {
 				EquipmentType.createInstance(this.userId, importType, xmlEquipmentType);
+			}
+		}
+		XmlProtoEquipmentSeq xmlProtoEquipments = doc.getProtoEquipments();
+		if (xmlProtoEquipments != null) {
+			for(XmlProtoEquipment xmlProtoEquipment : xmlProtoEquipments.getProtoEquipmentArray()) {
+				ProtoEquipment.createInstance(this.userId, xmlProtoEquipment, importType);
 			}
 		}
 		XmlEquipmentSeq xmlEquipments = doc.getEquipments();

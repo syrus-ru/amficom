@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.10 2005/09/11 16:17:22 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.11 2005/09/29 05:59:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.Visualizable;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.logic.Item;
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/29 05:59:38 $
  * @module schemeclient
  */
 
@@ -101,8 +101,8 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			type = ObjectSelectedEvent.LINK_TYPE; 
 		else if (object instanceof CableLinkType)
 			type = ObjectSelectedEvent.CABLELINK_TYPE;
-		else if (object instanceof EquipmentType)
-			type = ObjectSelectedEvent.EQUIPMENT_TYPE;
+		else if (object instanceof ProtoEquipment)
+			type = ObjectSelectedEvent.PROTO_EQUIPMENT;
 		else if (object instanceof SchemeProtoGroup)
 			type = ObjectSelectedEvent.SCHEME_PROTOGROUP;
 		else if (object instanceof SchemeProtoElement)

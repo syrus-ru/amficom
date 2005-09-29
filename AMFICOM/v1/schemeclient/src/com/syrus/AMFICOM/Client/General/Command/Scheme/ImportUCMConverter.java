@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.3 2005/09/28 07:31:39 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.4 2005/09/29 05:59:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -241,7 +242,10 @@ public class ImportUCMConverter {
 						schemeElement.setUgoCell(internalScheme.getUgoCell().clone());
 					}
 				} else if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
-					Log.debugMessage("No real eqt for " + schemeElement.getName(), Level.FINEST);
+					
+					ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
+					
+					
 					Set<SchemeCablePort> existingCablePorts = schemeElement.getSchemeCablePortsRecursively(false);
 					if (existingCablePorts.size() < 3) { // straight muff
 						// count how many threads in connected fibers

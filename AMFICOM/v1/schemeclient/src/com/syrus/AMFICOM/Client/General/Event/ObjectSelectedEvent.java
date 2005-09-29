@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.7 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.8 2005/09/29 05:59:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.beans.PropertyChangeEvent;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/09/29 05:59:38 $
  * @module schemeclient
  */
 
@@ -27,7 +27,7 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	public static final long MEASUREMENT_TYPE = 		0x00000004;
 	public static final long LINK_TYPE = 						0x00000008;
 	public static final long CABLELINK_TYPE = 			0x00000010;
-	public static final long EQUIPMENT_TYPE = 			0x00000020;
+	public static final long PROTO_EQUIPMENT = 			0x00000020;
 	
 	public static final long SCHEME_PROTOELEMENT =	0x00000100;
 	public static final long SCHEME_PROTOGROUP =		0x00000200;
