@@ -1,5 +1,5 @@
 /**
- * $Id: Site.java,v 1.5 2005/09/12 06:53:15 krupenn Exp $
+ * $Id: Site.java,v 1.6 2005/09/29 15:29:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -203,6 +203,14 @@ public class Site {
 		}
 		site.setId(id);
 		site.setSiteNodeTypeCodename(proto);
+		if(ucmObject.typ.text.equals(UniCableMapType.UCM_WELL)) {
+			for(UniCableMapLink ucmLink : ucmDatabase.getParents(ucmObject)) {
+				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_KIND_HAS_KIND))
+					if(ucmLink.parent.typ.text.equals(UniCableMapType.UCM_WELL_TYPE)) {
+						site.setSiteNodeTypeCodename(String.valueOf(ucmLink.parent.un));
+					}
+			}
+		}
 
 		return site;
 	}
