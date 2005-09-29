@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementReport.java,v 1.4 2005/09/23 12:10:03 peskovsky Exp $
+ * $Id: SchemeElementReport.java,v 1.5 2005/09/29 05:52:38 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -93,11 +93,11 @@ class SchemeElementTableModel extends AbstractTableModel {
 			int vertDivisionsCount) throws ApplicationException {
 		this.vertDivisionsCount = vertDivisionsCount;
 		
-		EquipmentType eqType = schemeElement.getEquipmentType();
+		ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
 		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
 		this.propertyValuesColumn.add(schemeElement.getName());
 		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
-		this.propertyValuesColumn.add(eqType.getName());
+		this.propertyValuesColumn.add(protoEquipment.getName());
 		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(schemeElement.getDescription());
 
@@ -123,7 +123,7 @@ class SchemeElementTableModel extends AbstractTableModel {
 		
 		this.originalRowCount += 2;
 
-		Set<Characteristic> typeChars = eqType.getCharacteristics(true);
+		Set<Characteristic> typeChars = protoEquipment.getCharacteristics(true);
 		
 		for (Characteristic characteristic : typeChars) {
 			this.propertyNamesColumn.add(characteristic.getName());
@@ -141,9 +141,9 @@ class SchemeElementTableModel extends AbstractTableModel {
 			this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
 			this.propertyValuesColumn.add(equipment.getInventoryNumber());
 			this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
-			this.propertyValuesColumn.add(eqType.getManufacturer());
+			this.propertyValuesColumn.add(protoEquipment.getManufacturer());
 			this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
-			this.propertyValuesColumn.add(eqType.getManufacturerCode());
+			this.propertyValuesColumn.add(protoEquipment.getManufacturerCode());
 			this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER));
 			this.propertyValuesColumn.add(equipment.getSupplier());
 			this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER_CODE));
