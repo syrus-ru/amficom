@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.21 2005/09/12 20:51:47 arseniy Exp $
+# $Id: Makefile,v 1.22 2005/09/29 08:18:48 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -16,10 +16,14 @@ SERVICE_NAME = mongol
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
 
+
+LIBNAME_GENERALXML=generalxml.jar
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java)
@@ -34,7 +38,7 @@ $(LIBNAME): .mach
 
 .mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -49,7 +53,7 @@ corba: .corba
 
 .corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/administration/corba/*.java
 	touch $@
