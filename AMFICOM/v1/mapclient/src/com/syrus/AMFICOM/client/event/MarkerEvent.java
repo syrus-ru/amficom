@@ -1,5 +1,5 @@
 /*-
- * $Id: MarkerEvent.java,v 1.3 2005/09/29 10:58:28 krupenn Exp $
+ * $Id: MarkerEvent.java,v 1.4 2005/09/29 11:32:36 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * Событие выделения/снятия выделения элемента(-ов) карты
  *
- * @version $Revision: 1.3 $, $Date: 2005/09/29 10:58:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/29 11:32:36 $
  * @module mapclient
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
@@ -96,7 +96,7 @@ public class MarkerEvent extends PropertyChangeEvent {
 	protected Object schemePath = null;
 
 	/** Управление элементами на карте. */
-	public static final String MARKER_EVENT_TYPE = "markerevent";
+	public static final String MARKER_EVENT_TYPE = "markerevent"; //$NON-NLS-1$
 
 	public MarkerEvent(Object source, int markerEventType) {
 		super(source, MarkerEvent.MARKER_EVENT_TYPE, null, null);
