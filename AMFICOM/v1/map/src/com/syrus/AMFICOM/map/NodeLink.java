@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.103 2005/09/28 19:06:22 bass Exp $
+ * $Id: NodeLink.java,v 1.104 2005/09/29 10:48:08 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/09/28 19:06:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.104 $, $Date: 2005/09/29 10:48:08 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -147,7 +147,6 @@ public final class NodeLink extends StorableObject
 		this.physicalLinkId = new Identifier(nlt.physicalLinkId);
 		this.startNodeId = new Identifier(nlt.startNodeId);
 		this.endNodeId = new Identifier(nlt.endNodeId);
-//		this.getPhysicalLink().addNodeLink(this);
 	}
 
 	/**
