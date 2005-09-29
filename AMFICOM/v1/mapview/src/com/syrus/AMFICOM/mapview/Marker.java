@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.39 2005/09/29 11:01:31 krupenn Exp $
+ * $Id: Marker.java,v 1.40 2005/09/29 11:19:54 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *         и окно рефлектограммы инициализирует маркер такой            *
  *         информацией, после чего опять используется Lo.               *
  *
- * @version $Revision: 1.39 $, $Date: 2005/09/29 11:01:31 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/29 11:19:54 $
  * @module mapview
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
@@ -162,6 +162,7 @@ public class Marker extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
+			// TODO: use separate entity code for markers!
 			final Identifier ide = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
 			return new Marker(ide, creatorId, mapView, startNode, endNode, nodeLink, path, monitoredElementId, dpoint);
 		} catch (IdentifierGenerationException e) {
