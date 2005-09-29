@@ -1,13 +1,11 @@
-/**
- * $Id: LangModelMap.java,v 1.2 2005/06/06 13:32:52 krupenn Exp $
+/*-
+ * $Id: LangModelMap.java,v 1.3 2005/09/29 10:58:28 krupenn Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ - система Автоматизированного Многофункционального
- * 			Интеллектуального Контроля и Объектного Мониторинга
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.resource;
 
 import java.util.MissingResourceException;
@@ -15,44 +13,35 @@ import java.util.ResourceBundle;
 
 /**
  * модуль организации многоязыковой поддержки для модуля Редактор топологических
- * схем клиентской части ПО АМФИКОМ 
+ * схем клиентской части ПО АМФИКОМ
  * 
- * 
- * 
- * @version $Revision: 1.2 $, $Date: 2005/06/06 13:32:52 $
- * @module mapclient_v2
+ * @version $Revision: 1.3 $, $Date: 2005/09/29 10:58:28 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapclient
  */
-public final class LangModelMap
-{
-	private static final String BUNDLE_NAME = 
-			"com.syrus.AMFICOM.client.resource.map";
+public final class LangModelMap {
+	private static final String BUNDLE_NAME = "com.syrus.AMFICOM.client.resource.map";
 	private static final ResourceBundle RESOURCE_BUNDLE = 
 			ResourceBundle.getBundle(BUNDLE_NAME);
 
-	private LangModelMap()
-	{//empty
+	private LangModelMap() {
+		// empty
 	}
 
-	public static String getString(String keyName) 
-	{
+	public static String getString(String keyName) {
 		String searchKey = keyName.replaceAll(" ", "_");
 		String string = "";
-		try 
-		{
+		try {
 			string = RESOURCE_BUNDLE.getString(searchKey);
-		} 
-		catch (MissingResourceException e) 
-		{
+		} catch(MissingResourceException e) {
 			string = "!" + searchKey + "!";
 
-			try 
-			{
+			try {
 				String s = "key '" + searchKey + "' not found";
 				throw new Exception(s);
-			} catch (Exception exc) 
-			{
-//				System.out.println(exc.getMessage());
+			} catch(Exception exc) {
+				// System.out.println(exc.getMessage());
 				exc.printStackTrace();
 			}
 		}

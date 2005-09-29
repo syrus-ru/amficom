@@ -1,12 +1,10 @@
-/**
- * $Id: MapEvent.java,v 1.12 2005/09/08 15:53:10 krupenn Exp $
+/*-
+ * $Id: MapEvent.java,v 1.13 2005/09/29 10:58:28 krupenn Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.event;
 
@@ -15,11 +13,10 @@ import java.beans.PropertyChangeEvent;
 /**
  * Событие карты
  * 
- * 
- * 
- * @version $Revision: 1.12 $, $Date: 2005/09/08 15:53:10 $
- * @module mapclient_v2
+ * @version $Revision: 1.13 $, $Date: 2005/09/29 10:58:28 $
+ * @module mapclient
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  */
 public class MapEvent extends PropertyChangeEvent {
 	private static final long serialVersionUID = -837303529240341674L;

@@ -1,12 +1,19 @@
-/**
- * $Id: MapEditorResourceKeys.java,v 1.3 2005/09/28 11:46:19 krupenn Exp $
+/*-
+ * $Id: MapEditorResourceKeys.java,v 1.4 2005/09/29 10:58:28 krupenn Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.resource;
 
+/**
+ * @version $Revision: 1.4 $, $Date: 2005/09/29 10:58:28 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapclient
+ */
 public interface MapEditorResourceKeys extends ResourceKeys {
 	String ICON_CATALOG = "icon.catalog"; //$NON-NLS-1$
 
