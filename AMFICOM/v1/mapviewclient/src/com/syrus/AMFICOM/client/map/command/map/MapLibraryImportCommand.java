@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryImportCommand.java,v 1.13 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapLibraryImportCommand.java,v 1.14 2005/09/29 14:49:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 
@@ -28,10 +29,12 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.ImportCommand;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -39,12 +42,19 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.XmlComplementor;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
+import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.xml.MapLibraryDocument;
 import com.syrus.AMFICOM.map.xml.XmlMapLibrary;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSort.Enum;
+import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.util.Log;
 
 /**
@@ -54,7 +64,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/29 14:49:06 $
  * @module mapviewclient
  */
 public class MapLibraryImportCommand extends ImportCommand {
@@ -66,6 +76,40 @@ public class MapLibraryImportCommand extends ImportCommand {
 	 * окно карты
 	 */
 	MapFrame mapFrame;
+	
+	static {
+		XmlComplementorRegistry.registerComplementor(SITENODE_TYPE_CODE, new XmlComplementor() {
+			public void complementStorableObject(
+					final XmlStorableObject storableObject,
+					final String importType,
+					final ComplementationMode mode)
+			throws CreateObjectException, UpdateObjectException {
+				switch (mode) {
+				case PRE_IMPORT:
+					final XmlSiteNodeType xmlSiteNodeType = (XmlSiteNodeType) storableObject;
+					if (!xmlSiteNodeType.isSetImage()) {
+						final Enum sort = xmlSiteNodeType.getSort();
+						MapLibrary defaultMapLibrary = MapLibraryController.getDefaultMapLibrary();
+						for(SiteNodeType siteNodeType : defaultMapLibrary.getSiteNodeTypes()) {
+							if(siteNodeType.getSort().value() == sort.intValue() - 1) {
+								try {
+									final AbstractBitmapImageResource abstractBitmapImageResource = StorableObjectPool.getStorableObject(siteNodeType.getImageId(), true);
+									xmlSiteNodeType.setImage(abstractBitmapImageResource.getCodename());
+								} catch(ApplicationException e) {
+									throw new CreateObjectException("Cannot get default image resource!", e); 
+								}
+							}
+						}
+					}
+					break;
+				case POST_IMPORT:
+					break;
+				case EXPORT:
+					break;
+				}
+			}
+		});
+	}
 
 	public MapLibraryImportCommand(JDesktopPane desktop, ApplicationContext aContext) {
 		super();
