@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.126 2005/09/28 15:18:14 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.127 2005/09/29 08:53:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.126 $, $Date: 2005/09/28 15:18:14 $
+ * @version $Revision: 1.127 $, $Date: 2005/09/29 08:53:47 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -980,7 +980,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.126 $, $Date: 2005/09/28 15:18:14 $
+	 * @version $Revision: 1.127 $, $Date: 2005/09/29 08:53:47 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1378,7 +1378,7 @@ public final class LogicalNetLayer {
 				final long t1 = System.currentTimeMillis();
 				if (linkBetween != null) {
 					if (pullAttributesFromController) {
-						visualMapElement = new VisualMapElement(incomingLink);
+						visualMapElement = new VisualMapElement(linkBetween);
 //						final NodeLinkController controller = (NodeLinkController) this.getMapViewController().getController(linkBetween);
 //						visualMapElement = new VisualMapElement(linkBetween,
 //								controller.getColor(linkBetween),
