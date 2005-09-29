@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.101 2005/09/28 19:06:22 bass Exp $
+ * $Id: SiteNode.java,v 1.102 2005/09/29 07:33:21 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch147;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -65,8 +64,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/09/28 19:06:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.102 $, $Date: 2005/09/29 07:33:21 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -385,7 +384,6 @@ public class SiteNode extends AbstractNode
 		this.selected = false;
 	}
 
-	@Crutch147(notes = "attachmentSiteNodeId is incorrectly converted from XML")
 	public final void fromXmlTransferable(final XmlSiteNode xmlSiteNode,
 			final String importType)
 	throws ApplicationException {
@@ -396,6 +394,13 @@ public class SiteNode extends AbstractNode
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
+			// NOTE: this call to Identifier.fromXmlTransferable may result in
+			// ObjectNotFoundException if this siteNode is being imported prior
+			// to it's attachment site node.
+			// to avoid the exception make sure imported site node are correctly
+			// sorted. This is done by sorting site nodes at export time
+			// (exporting from AMFICOM - see Map#getXmlTransferable,
+			// exporting from UniCableMap - see module 'importUCM').
 			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, MODE_THROW_IF_ABSENT); 
 		} else {
 			this.attachmentSiteNodeId = VOID_IDENTIFIER;
