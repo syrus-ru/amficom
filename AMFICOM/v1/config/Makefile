@@ -18,7 +18,7 @@ $(call checkenve,SCOMPFLAGS)
 LIBNAME_GENERALXML = generalxml.jar
 LIBNAME_CONFIGURATIONXML = $(MODULE_NAME)xml.jar
 
-APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar:$(LIBDIR)/bugs.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_CONFIGURATIONXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
