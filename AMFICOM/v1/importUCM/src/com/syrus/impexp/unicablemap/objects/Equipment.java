@@ -1,5 +1,5 @@
 /*-
- * $Id: Equipment.java,v 1.2 2005/09/11 17:08:11 stas Exp $
+ * $Id: Equipment.java,v 1.3 2005/09/29 15:28:59 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,11 +55,11 @@ public class Equipment {
 			System.out.println("Type id is null for " + this.name);
 			this.typeId = "VOID";
 		}
-		XmlIdentifier eqtid = xmlEq.addNewEquipmentTypeId();
+		XmlIdentifier eqtid = xmlEq.addNewProtoEquipmentId();
 		eqtid.setStringValue(this.typeId);
-		xmlEq.setEquipmentTypeId(eqtid);
+		xmlEq.setProtoEquipmentId(eqtid);
 		
-		double[] d = Site.UTMtoGeo(latitude, longitude);
+		double[] d = Site.UTMtoGeo(this.latitude, this.longitude);
 		
 		xmlEq.setName(this.name);
 		xmlEq.setLatitude((float)d[0]);
