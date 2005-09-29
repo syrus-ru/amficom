@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.107 2005/09/29 08:19:10 arseniy Exp $
+ * $Id: configuration.idl,v 1.108 2005/09/29 12:36:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,9 @@ module configuration {
 			MULTIPLEXOR,
 			CROSS,
 			FILTER,
-			OTHER
+			OTHER,
+
+			BUG136
 		};
 		typedef sequence <IdlEquipmentType> IdlEquipmentTypeSeq;
 

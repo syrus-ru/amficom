@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.101 2005/09/29 08:18:07 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.102 2005/09/29 12:36:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.HashSet;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch136;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.util.Codeable;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/09/29 08:18:07 $
+ * @version $Revision: 1.102 $, $Date: 2005/09/29 12:36:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -38,7 +39,10 @@ public enum EquipmentType implements Namable, Codeable, TransferableObject {
 	MULTIPLEXOR("multiplexor"),
 	CROSS("cross"),
 	FILTER("filter"),
-	OTHER("other");
+	OTHER("other"),
+
+	@Crutch136(notes = "Stub for SchemeElement without Equipment")
+	פבעבכבמ136("bug136");
 
 	private static final String KEY_ROOT = "EquipmentType.Description.";
 
@@ -72,6 +76,9 @@ public enum EquipmentType implements Namable, Codeable, TransferableObject {
 				return FILTER;
 			case IdlEquipmentType._OTHER:
 				return OTHER;
+
+			case IdlEquipmentType._BUG136:
+				return פבעבכבמ136;
 			default:
 				throw new IllegalArgumentException("Illegal code: " + code);
 		}
