@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundLink.java,v 1.27 2005/09/25 15:50:54 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.28 2005/09/29 11:01:32 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,10 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
+ * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/25 15:50:54 $
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.28 $, $Date: 2005/09/29 11:01:32 $
  * @module mapview
  */
 public final class UnboundLink extends PhysicalLink {

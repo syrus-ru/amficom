@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.28 2005/09/28 15:03:15 krupenn Exp $
+ * $Id: Selection.java,v 1.29 2005/09/29 11:01:32 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,6 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.Set;
-
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.MapElement;
@@ -21,7 +18,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Набор выбранных элементов.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/28 15:03:15 $
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.29 $, $Date: 2005/09/29 11:01:32 $
  * @module mapview
  */
 public final class Selection extends MapTypedElementsContainer implements MapElement {

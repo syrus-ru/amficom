@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundNode.java,v 1.31 2005/09/25 15:50:54 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.32 2005/09/29 11:01:32 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/25 15:50:54 $
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.32 $, $Date: 2005/09/29 11:01:32 $
  * @module mapview
  */
 public final class UnboundNode extends SiteNode {

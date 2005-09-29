@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.67 2005/09/28 15:05:01 krupenn Exp $
+* $Id: MapView.java,v 1.68 2005/09/29 11:01:31 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,8 +57,10 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
+ * 
  * @author $Author: krupenn $
- * @version $Revision: 1.67 $, $Date: 2005/09/28 15:05:01 $
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.68 $, $Date: 2005/09/29 11:01:31 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {

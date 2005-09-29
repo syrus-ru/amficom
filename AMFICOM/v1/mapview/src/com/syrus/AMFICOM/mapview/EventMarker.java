@@ -1,5 +1,5 @@
 /*-
- * $Id: EventMarker.java,v 1.11 2005/08/24 15:00:30 bass Exp $
+ * $Id: EventMarker.java,v 1.12 2005/09/29 11:01:32 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,10 @@ import com.syrus.AMFICOM.general.Identifier;
 
 /**
  * Стационарный маркер собития на пути.
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/08/24 15:00:30 $
+ * 
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.12 $, $Date: 2005/09/29 11:01:32 $
  * @module mapview
  * @todo EventMarker functionality
  */

@@ -1,5 +1,5 @@
 /*-
- * $Id: CablePath.java,v 1.37 2005/09/28 15:02:47 krupenn Exp $
+ * $Id: CablePath.java,v 1.38 2005/09/29 11:01:32 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 import java.util.SortedSet;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -35,7 +32,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/09/28 15:02:47 $
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.38 $, $Date: 2005/09/29 11:01:32 $
  * @module mapview
  */
 public final class CablePath implements MapElement {

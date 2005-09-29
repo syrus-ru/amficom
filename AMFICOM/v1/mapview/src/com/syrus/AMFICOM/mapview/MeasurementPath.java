@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.51 2005/09/28 15:03:15 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.52 2005/09/29 11:01:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -40,7 +38,8 @@ import com.syrus.util.Log;
  * Элемент пути.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.51 $, $Date: 2005/09/28 15:03:15 $
+ * @author Andrei Kroupennikov
+ * @version $Revision: 1.52 $, $Date: 2005/09/29 11:01:31 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
