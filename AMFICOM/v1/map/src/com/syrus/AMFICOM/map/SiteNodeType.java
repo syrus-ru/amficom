@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.96 2005/09/29 10:05:27 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.97 2005/09/29 10:49:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: krupenn $
- * @version $Revision: 1.96 $, $Date: 2005/09/29 10:05:27 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/29 10:49:17 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -305,17 +305,25 @@ public final class SiteNodeType extends StorableObjectType
 			siteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));
 			siteNodeType.setTopological(this.isTopological());
 			final AbstractBitmapImageResource abstractBitmapImageResource = StorableObjectPool.getStorableObject(this.getImageId(), true);
-			final String imageCodename = abstractBitmapImageResource.getCodename();
+			String imageCodename = abstractBitmapImageResource.getCodename();
+			String imageCodenameToWrite;
+			byte[] image;
 			if (abstractBitmapImageResource instanceof FileImageResource) {
 				final FileImageResource fileImageResource = (FileImageResource) abstractBitmapImageResource;
-				@SuppressWarnings("unused") String filename = fileImageResource.getFileName();
-				// TODO write image to file
+				imageCodenameToWrite = new File(fileImageResource.getFileName()).getName();
+				image = fileImageResource.getImage();
 			} else if (abstractBitmapImageResource instanceof BitmapImageResource) {
-				FileOutputStream out = new FileOutputStream(new File(imageCodename));
-				out.write(((BitmapImageResource) abstractBitmapImageResource).getImage());
-				out.flush();
-				out.close();
+				imageCodenameToWrite = imageCodename;
+				image = ((BitmapImageResource) abstractBitmapImageResource).getImage();
+			} else {
+				throw new ApplicationException("Invalid imsge resource type for \'" 
+						+ abstractBitmapImageResource.getCodename()
+						+ "'\'");
 			}
+			FileOutputStream out = new FileOutputStream(new File(imageCodenameToWrite));
+			out.write(image);
+			out.flush();
+			out.close();
 			siteNodeType.setImage(imageCodename);
 		} catch (final IOException ioe) {
 			throw new ApplicationException(ioe);
