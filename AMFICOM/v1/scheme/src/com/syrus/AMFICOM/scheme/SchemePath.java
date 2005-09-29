@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.92 2005/09/26 13:11:02 bass Exp $
+ * $Id: SchemePath.java,v 1.93 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
+import static com.syrus.AMFICOM.configuration.EquipmentType.MUFF;
 import static com.syrus.AMFICOM.general.ErrorMessages.CHILDREN_ALIEN;
 import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/09/26 13:11:02 $
+ * @version $Revision: 1.93 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -652,9 +652,10 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
+	 * @throws ApplicationException
 	 */
 	@Shitlet
-	public PathElement getNextNode(final PathElement pathElement) {
+	public PathElement getNextNode(final PathElement pathElement) throws ApplicationException {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		final Iterator<PathElement> pathElementIterator = this.getPathMembers().tailSet(pathElement).iterator();
@@ -664,7 +665,7 @@ public final class SchemePath extends StorableObject
 		while (pathElementIterator.hasNext()) {
 			final PathElement pathElement1 = pathElementIterator.next();
 			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT
-					&& !pathElement1.getSchemeElement().getEquipmentType().getCodename().equals(MUFF.stringValue())) {
+					&& pathElement1.getSchemeElement().getProtoEquipment().getType() != MUFF) {
 				return pathElement1;
 			}
 		}
@@ -825,15 +826,16 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
+	 * @throws ApplicationException
 	 */
 	@Shitlet
-	public PathElement getPreviousNode(final PathElement pathElement) {
+	public PathElement getPreviousNode(final PathElement pathElement) throws ApplicationException {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		PathElement previousNode = null;
 		for (final PathElement pathElement1 : getPathMembers().headSet(pathElement)) {
 			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT && 
-					!pathElement1.getSchemeElement().getEquipmentType().getCodename().equals(MUFF.stringValue())) {
+					pathElement1.getSchemeElement().getProtoEquipment().getType() != MUFF) {
 				previousNode = pathElement1;
 			}
 		}

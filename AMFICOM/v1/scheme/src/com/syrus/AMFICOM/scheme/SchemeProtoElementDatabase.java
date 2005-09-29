@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.18 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.19 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_EQUIPMENT_TYPE_ID;
+import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_PROTO_EQUIPMENT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_LABEL;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID;
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 public final class SchemeProtoElementDatabase extends StorableObjectDatabase<SchemeProtoElement> {
@@ -56,7 +56,7 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase<Sch
 			columns = COLUMN_NAME + COMMA
 					+ COLUMN_DESCRIPTION + COMMA
 					+ COLUMN_LABEL + COMMA
-					+ COLUMN_EQUIPMENT_TYPE_ID + COMMA
+					+ COLUMN_PROTO_EQUIPMENT_ID + COMMA
 					+ COLUMN_SYMBOL_ID + COMMA
 					+ COLUMN_UGO_CELL_ID + COMMA
 					+ COLUMN_SCHEME_CELL_ID + COMMA
@@ -97,7 +97,7 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase<Sch
 		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getProtoEquipmentId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getSymbolId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getUgoCellId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeCellId()) + COMMA
@@ -119,7 +119,7 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase<Sch
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLabel(), SIZE_LABEL_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEquipmentTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getProtoEquipmentId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSymbolId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getUgoCellId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSchemeCellId());
@@ -163,7 +163,7 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase<Sch
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LABEL)),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PROTO_EQUIPMENT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SYMBOL_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_UGO_CELL_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SCHEME_CELL_ID),

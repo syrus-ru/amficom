@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.23 2005/09/26 16:40:48 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.24 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/09/26 16:40:48 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -514,7 +514,7 @@ public final class SchemePathTestCase extends TestCase {
 		System.out.println("\t\t" + schemeProtoElement0.getName());
 		System.out.println("\t\t" + schemeProtoElement0.getDescription());
 		System.out.println("\t\t" + schemeProtoElement0.getLabel());
-		System.out.println("\t\t" + schemeProtoElement0.getEquipmentTypeId());
+		System.out.println("\t\t" + schemeProtoElement0.getProtoEquipmentId());
 		System.out.println("\t\t" + schemeProtoElement0.getSymbolId());
 		System.out.println("\t\t" + schemeProtoElement0.getUgoCellId());
 		System.out.println("\t\t" + schemeProtoElement0.getSchemeCellId());
@@ -528,7 +528,7 @@ public final class SchemePathTestCase extends TestCase {
 		System.out.println("\t\t" + schemeProtoElement2.getName());
 		System.out.println("\t\t" + schemeProtoElement2.getDescription());
 		System.out.println("\t\t" + schemeProtoElement2.getLabel());
-		System.out.println("\t\t" + schemeProtoElement2.getEquipmentTypeId());
+		System.out.println("\t\t" + schemeProtoElement2.getProtoEquipmentId());
 		System.out.println("\t\t" + schemeProtoElement2.getSymbolId());		
 		System.out.println("\t\t" + schemeProtoElement2.getUgoCellId());
 		System.out.println("\t\t" + schemeProtoElement2.getSchemeCellId());

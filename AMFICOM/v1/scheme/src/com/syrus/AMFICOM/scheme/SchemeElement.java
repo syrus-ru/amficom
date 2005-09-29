@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.124 2005/09/28 19:06:23 bass Exp $
+ * $Id: SchemeElement.java,v 1.125 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,9 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
@@ -51,7 +51,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -91,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.124 $, $Date: 2005/09/28 19:06:23 $
+ * @version $Revision: 1.125 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -103,7 +102,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	
 	private Identifier equipmentId;
 
-	private Identifier equipmentTypeId;
+	private Identifier protoEquipmentId;
 
 	private Identifier kisId;
 
@@ -125,7 +124,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	private Identifier ugoCellId;
 
-	private boolean equipmentTypeSet = false;
+	private boolean protoEquipmentSet = false;
 
 	/**
 	 * @param id
@@ -137,7 +136,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param name
 	 * @param description
 	 * @param label
-	 * @param equipmentType
+	 * @param protoEquipment
 	 * @param equipment
 	 * @param kis
 	 * @param siteNode
@@ -157,7 +156,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final String name,
 			final String description,
 			final String label,
-			final EquipmentType equipmentType,
+			final ProtoEquipment protoEquipment,
 			final Equipment equipment,
 			final KIS kis,
 			final SiteNode siteNode,
@@ -170,8 +169,8 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.kind = (kind == null) ? 0 : kind.value();
 		this.label = label;
 
-		assert equipmentType == null || equipment == null;
-		this.equipmentTypeId = Identifier.possiblyVoid(equipmentType);
+		assert protoEquipment == null || equipment == null;
+		this.protoEquipmentId = Identifier.possiblyVoid(protoEquipment);
 		this.equipmentId = Identifier.possiblyVoid(equipment);
 
 		this.kisId = Identifier.possiblyVoid(kis);
@@ -211,7 +210,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, Scheme)}.
+	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, Scheme)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -227,7 +226,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
+	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -329,7 +328,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, Scheme)}
+	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, Scheme)}
 	 *
 	 * @param creatorId
 	 * @param schemeProtoElement
@@ -345,7 +344,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					schemeProtoElement.getName(),
 					schemeProtoElement.getDescription(),
 					schemeProtoElement.getLabel(),
-					schemeProtoElement.getEquipmentType0(),
+					schemeProtoElement.getProtoEquipment(),
 					null,
 					null,
 					null,
@@ -365,7 +364,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
+	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
 	 *
 	 * @param creatorId
 	 * @param schemeProtoElement
@@ -381,7 +380,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					schemeProtoElement.getName(),
 					schemeProtoElement.getDescription(),
 					schemeProtoElement.getLabel(),
-					schemeProtoElement.getEquipmentType0(),
+					schemeProtoElement.getProtoEquipment(),
 					null,
 					null,
 					null,
@@ -404,7 +403,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param equipmentType
+	 * @param protoEquipment
 	 * @param equipment
 	 * @param kis
 	 * @param siteNode
@@ -418,7 +417,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final String name,
 			final String description,
 			final String label,
-			final EquipmentType equipmentType,
+			final ProtoEquipment protoEquipment,
 			final Equipment equipment,
 			final KIS kis,
 			final SiteNode siteNode,
@@ -444,7 +443,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					name,
 					description,
 					label,
-					equipmentType,
+					protoEquipment,
 					equipment,
 					kis,
 					siteNode,
@@ -454,8 +453,8 @@ public final class SchemeElement extends AbstractSchemeElement
 					parentScheme,
 					null);
 			schemeElement.markAsChanged();
-			if (equipment != null || equipmentType != null)
-				schemeElement.equipmentTypeSet = true;
+			if (equipment != null || protoEquipment != null)
+				schemeElement.protoEquipmentSet = true;
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
@@ -467,7 +466,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param equipmentType
+	 * @param protoEquipment
 	 * @param equipment
 	 * @param kis
 	 * @param siteNode
@@ -481,7 +480,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final String name,
 			final String description,
 			final String label,
-			final EquipmentType equipmentType,
+			final ProtoEquipment protoEquipment,
 			final Equipment equipment,
 			final KIS kis,
 			final SiteNode siteNode,
@@ -507,7 +506,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					name,
 					description,
 					label,
-					equipmentType,
+					protoEquipment,
 					equipment,
 					kis,
 					siteNode,
@@ -517,8 +516,8 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentSchemeElement);
 			schemeElement.markAsChanged();
-			if (equipment != null || equipmentType != null)
-				schemeElement.equipmentTypeSet = true;
+			if (equipment != null || protoEquipment != null)
+				schemeElement.protoEquipmentSet = true;
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
@@ -647,7 +646,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.equipmentId != null && this.equipmentTypeId != null
+		assert this.equipmentId != null && this.protoEquipmentId != null
 				&& this.kisId != null
 				&& this.parentSchemeElementId != null
 				&& this.schemeCellId != null
@@ -656,7 +655,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(super.getDependencies());
 		dependencies.add(this.equipmentId);
-		dependencies.add(this.equipmentTypeId);
+		dependencies.add(this.protoEquipmentId);
 		dependencies.add(this.kisId);
 		dependencies.add(this.parentSchemeElementId);
 		dependencies.add(this.schemeCellId);
@@ -700,8 +699,8 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	Identifier getEquipmentId() {
 		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
-			assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
-			if (!this.assertEquipmentTypeSetStrict()) {
+			assert true || this.assertProtoEquipmentSetStrict() : OBJECT_BADLY_INITIALIZED;
+			if (!this.assertProtoEquipmentSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 			}
 			assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
@@ -721,29 +720,26 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
-	Identifier getEquipmentTypeId() {
+	Identifier getProtoEquipmentId() {
 		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
-			assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-			if (!this.assertEquipmentTypeSetStrict()) {
+			assert true || this.assertProtoEquipmentSetStrict(): OBJECT_BADLY_INITIALIZED;
+			if (!this.assertProtoEquipmentSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 			}
-			assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
+			assert this.protoEquipmentId.isVoid() || this.protoEquipmentId.getMajor() == PROTOEQUIPMENT_CODE;
 		}
-		return this.equipmentTypeId;
+		return this.protoEquipmentId;
 	}
 
 	/**
-	 * A wrapper around {@link #getEquipmentTypeId()}. 
+	 * A wrapper around {@link #getProtoEquipmentId()}.
+	 * 
+	 * @throws ApplicationException
 	 */
-	public EquipmentType getEquipmentType() {
-		try {
-			return this.getEquipmentId().isVoid()
-					? StorableObjectPool.<EquipmentType>getStorableObject(this.getEquipmentTypeId(), true)
-					: this.getEquipment().getProtoEquipment().getType();
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
+	public ProtoEquipment getProtoEquipment() throws ApplicationException {
+		return this.getEquipmentId().isVoid()
+				? StorableObjectPool.<ProtoEquipment>getStorableObject(this.getProtoEquipmentId(), true)
+				: this.getEquipment().getProtoEquipment();
 	}
 
 	Identifier getKisId() {
@@ -906,7 +902,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				super.getDescription(),
 				this.label,
 				this.getKind(),
-				this.getEquipmentTypeId().getTransferable(),
+				this.getProtoEquipmentId().getTransferable(),
 				this.getEquipmentId().getTransferable(),
 				this.getKisId().getTransferable(),
 				this.getSiteNodeId().getTransferable(),
@@ -938,11 +934,11 @@ public final class SchemeElement extends AbstractSchemeElement
 			schemeElement.setLabel(this.label);
 		}
 		schemeElement.setKind(XmlSchemeElement.Kind.Enum.forInt(this.getKind().value() + 1));
-		if (schemeElement.isSetEquipmentTypeId()) {
-			schemeElement.unsetEquipmentTypeId();
+		if (schemeElement.isSetProtoEquipmentId()) {
+			schemeElement.unsetProtoEquipmentId();
 		}
-		if (!this.equipmentTypeId.isVoid()) {
-			this.equipmentTypeId.getXmlTransferable(schemeElement.addNewEquipmentTypeId(), importType);
+		if (!this.protoEquipmentId.isVoid()) {
+			this.protoEquipmentId.getXmlTransferable(schemeElement.addNewProtoEquipmentId(), importType);
 		}
 		if (schemeElement.isSetEquipmentId()) {
 			schemeElement.unsetEquipmentId();
@@ -1073,7 +1069,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param name
 	 * @param description
 	 * @param label
-	 * @param equipmentTypeId
+	 * @param protoEquipmentId
 	 * @param equipmentId
 	 * @param kisId
 	 * @param siteNodeId
@@ -1092,7 +1088,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final String name,
 			final String description,
 			final String label,
-			final Identifier equipmentTypeId,
+			final Identifier protoEquipmentId,
 			final Identifier equipmentId,
 			final Identifier kisId,
 			final Identifier siteNodeId,
@@ -1107,11 +1103,11 @@ public final class SchemeElement extends AbstractSchemeElement
 		
 		assert label != null : NON_NULL_EXPECTED;
 
-		assert equipmentTypeId != null : NON_NULL_EXPECTED;
+		assert protoEquipmentId != null : NON_NULL_EXPECTED;
 		assert equipmentId != null : NON_NULL_EXPECTED;
 		assert kind == SCHEME_ELEMENT_CONTAINER
-				? (equipmentTypeId.isVoid() ^ equipmentId.isVoid())
-				: (equipmentTypeId.isVoid() && equipmentId.isVoid()) : OBJECT_BADLY_INITIALIZED;
+				? (protoEquipmentId.isVoid() ^ equipmentId.isVoid())
+				: (protoEquipmentId.isVoid() && equipmentId.isVoid()) : OBJECT_BADLY_INITIALIZED;
 		
 		assert kisId != null : NON_NULL_EXPECTED;
 		assert siteNodeId != null : NON_NULL_EXPECTED;
@@ -1124,7 +1120,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		this.kind = kind.value();
 		this.label = label;
-		this.equipmentTypeId = equipmentTypeId;
+		this.protoEquipmentId = protoEquipmentId;
 		this.equipmentId = equipmentId;
 		this.kisId = kisId;
 		this.siteNodeId = siteNodeId;
@@ -1133,15 +1129,14 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.schemeCellId = schemeCellId;
 		this.parentSchemeElementId = parentSchemeElementId;
 
-		this.equipmentTypeSet = true;
+		this.protoEquipmentSet = true;
 	}
 
 	/**
 	 * @param equipment
-	 * @throws ApplicationException
 	 */
-	public void setEquipment(final Equipment equipment) throws ApplicationException {
-		assert this.assertEquipmentTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+	public void setEquipment(final Equipment equipment) {
+		assert this.assertProtoEquipmentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newEquipmentId = Identifier.possiblyVoid(equipment);
 		if (this.equipmentId.equals(newEquipmentId)) {
@@ -1154,7 +1149,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			 * Erasing old object-type value, setting new object
 			 * value.
 			 */
-			this.equipmentTypeId = VOID_IDENTIFIER;
+			this.protoEquipmentId = VOID_IDENTIFIER;
 		else if (newEquipmentId.isVoid())
 			/*
 			 * Erasing old object value, preserving old object-type
@@ -1162,27 +1157,27 @@ public final class SchemeElement extends AbstractSchemeElement
 			 * initial object value has already been set (i. e.
 			 * there already is object-type value to preserve).
 			 */
-			this.equipmentTypeId = this.getEquipment().getProtoEquipment().getType().getId();
+			this.protoEquipmentId = this.getEquipment().getProtoEquipmentId();
 		this.equipmentId = newEquipmentId;
 		super.markAsChanged();
 	}
 
 	/**
-	 * @param equipmentType
+	 * @param protoEquipment
 	 */
-	public void setEquipmentType(final EquipmentType equipmentType) throws ApplicationException {
-		assert this.assertEquipmentTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
-		assert equipmentType != null: NON_NULL_EXPECTED;
+	public void setProtoEquipment(final ProtoEquipment protoEquipment) {
+		assert this.assertProtoEquipmentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		assert protoEquipment != null: NON_NULL_EXPECTED;
 
 		if (!this.equipmentId.isVoid())
-			this.getEquipment().getProtoEquipment().setType(equipmentType);
+			this.getEquipment().setProtoEquipment(protoEquipment);
 		else {
-			final Identifier newEquipmentTypeId = equipmentType.getId();
-			if (this.equipmentTypeId.equals(newEquipmentTypeId)) {
+			final Identifier newProtoEquipmentId = protoEquipment.getId();
+			if (this.protoEquipmentId.equals(newProtoEquipmentId)) {
 				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
-			this.equipmentTypeId = newEquipmentTypeId;
+			this.protoEquipmentId = newProtoEquipmentId;
 			super.markAsChanged();
 		}
 	}
@@ -1409,7 +1404,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			super.fromTransferable(schemeElement);
 			this.label = schemeElement.label;
 			this.kind = schemeElement.kind.value();
-			this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
+			this.protoEquipmentId = new Identifier(schemeElement.protoEquipmentId);
 			this.equipmentId = new Identifier(schemeElement.equipmentId);
 			this.kisId = new Identifier(schemeElement.kisId);
 			this.siteNodeId = new Identifier(schemeElement.siteNodeId);
@@ -1418,7 +1413,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			this.schemeCellId = new Identifier(schemeElement.schemeCellId);
 			this.parentSchemeElementId = new Identifier(schemeElement.parentSchemeElementId);
 	
-			this.equipmentTypeSet = true;
+			this.protoEquipmentSet = true;
 		}
 	}
 
@@ -1441,17 +1436,17 @@ public final class SchemeElement extends AbstractSchemeElement
 				: "";
 		this.kind = schemeElement.getKind().intValue() - 1;
 
-		final boolean setEquipmentTypeId = schemeElement.isSetEquipmentTypeId();
+		final boolean setProtoEquipmentId = schemeElement.isSetProtoEquipmentId();
 		final boolean setEquipmentId = schemeElement.isSetEquipmentId();		
-		if (setEquipmentTypeId) {
+		if (setProtoEquipmentId) {
 			assert !setEquipmentId : OBJECT_STATE_ILLEGAL;
 
-			this.equipmentTypeId = Identifier.fromXmlTransferable(schemeElement.getEquipmentTypeId(), importType, MODE_THROW_IF_ABSENT);
+			this.protoEquipmentId = Identifier.fromXmlTransferable(schemeElement.getProtoEquipmentId(), importType, MODE_THROW_IF_ABSENT);
 			this.equipmentId = VOID_IDENTIFIER;
 		} else if (setEquipmentId) {
-			assert !setEquipmentTypeId : OBJECT_STATE_ILLEGAL;
+			assert !setProtoEquipmentId : OBJECT_STATE_ILLEGAL;
 
-			this.equipmentTypeId = VOID_IDENTIFIER;
+			this.protoEquipmentId = VOID_IDENTIFIER;
 			this.equipmentId = Identifier.fromXmlTransferable(schemeElement.getEquipmentId(), importType, MODE_THROW_IF_ABSENT);
 		} else {
 			throw new UpdateObjectException(
@@ -1514,7 +1509,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			}
 		}
 
-		this.equipmentTypeSet = true;
+		this.protoEquipmentSet = true;
 
 		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType, POST_IMPORT);
 	}
@@ -1874,24 +1869,24 @@ public final class SchemeElement extends AbstractSchemeElement
 	/**
 	 * Invoked by modifier methods.
 	 */
-	private boolean assertEquipmentTypeSetNonStrict() {
-		if (this.equipmentTypeSet)
-			return this.assertEquipmentTypeSetStrict();
-		this.equipmentTypeSet = true;
+	private boolean assertProtoEquipmentSetNonStrict() {
+		if (this.protoEquipmentSet)
+			return this.assertProtoEquipmentSetStrict();
+		this.protoEquipmentSet = true;
 		return this.equipmentId != null
-				&& this.equipmentTypeId != null
+				&& this.protoEquipmentId != null
 				&& this.equipmentId.isVoid()
-				&& this.equipmentTypeId.isVoid();
+				&& this.protoEquipmentId.isVoid();
 	}
 
 	/**
 	 * Invoked by accessor methods (it is assumed that object is already
 	 * initialized).
 	 */
-	private boolean assertEquipmentTypeSetStrict() {
+	private boolean assertProtoEquipmentSetStrict() {
 		return this.equipmentId != null
-				&& this.equipmentTypeId != null
-				&& (this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid());
+				&& this.protoEquipmentId != null
+				&& (this.equipmentId.isVoid() ^ this.protoEquipmentId.isVoid());
 	}
 
 	/**
@@ -2055,11 +2050,11 @@ public final class SchemeElement extends AbstractSchemeElement
 		super.markAsChanged();
 	}
 
-	void setEquipmentTypeId(Identifier equipmentTypeId) {
+	void setProtoEquipmentId(Identifier protoEquipmentId) {
 //		TODO: inroduce additional sanity checks
-		assert equipmentTypeId != null : NON_NULL_EXPECTED;
-		assert equipmentTypeId.isVoid() || equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
-		this.equipmentTypeId = equipmentTypeId;
+		assert protoEquipmentId != null : NON_NULL_EXPECTED;
+		assert protoEquipmentId.isVoid() || protoEquipmentId.getMajor() == PROTOEQUIPMENT_CODE;
+		this.protoEquipmentId = protoEquipmentId;
 		super.markAsChanged();
 	}
 
@@ -2188,17 +2183,5 @@ public final class SchemeElement extends AbstractSchemeElement
 			}
 		}
 		return false;
-	}
-
-	@SuppressWarnings("unused")
-	public ProtoEquipment getProtoEquipment() throws ApplicationException {
-		throw new UnsupportedOperationException(
-				"SchemeElement#getProtoEquipment() is unsupported");
-	}
-
-	@SuppressWarnings("unused")
-	public void setProtoEquipment(final ProtoEquipment protoEquipment) {
-		throw new UnsupportedOperationException(
-				"SchemeElement#setProtoEquipment(protoEquipment) is unsupported");
 	}
 }

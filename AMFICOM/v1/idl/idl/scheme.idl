@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.38 2005/09/07 18:30:21 bass Exp $
+ * $Id: scheme.idl,v 1.39 2005/09/29 12:50:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ module scheme {
 			public general::corba::WString256 description;
 			public general::corba::WString64 label;
 
-			public general::corba::IdlIdentifier equipmentTypeId;
+			public general::corba::IdlIdentifier protoEquipmentId;
 			public general::corba::IdlIdentifier symbolId;
 			public general::corba::IdlIdentifier ugoCellId;
 			public general::corba::IdlIdentifier schemeCellId;
@@ -70,7 +70,7 @@ module scheme {
 					in general::corba::WString32 name,
 					in general::corba::WString256 description,
 					in general::corba::WString64 label,
-					in general::corba::IdlIdentifier equipmentTypeId,
+					in general::corba::IdlIdentifier protoEquipmentId,
 					in general::corba::IdlIdentifier symbolId,
 					in general::corba::IdlIdentifier ugoCellId,
 					in general::corba::IdlIdentifier schemeCellId,
@@ -150,7 +150,7 @@ module scheme {
 			public general::corba::WString64 label;
 			public IdlSchemeElementKind kind;
 
-			public general::corba::IdlIdentifier equipmentTypeId;
+			public general::corba::IdlIdentifier protoEquipmentId;
 			public general::corba::IdlIdentifier equipmentId;
 			public general::corba::IdlIdentifier kisId;
 			public general::corba::IdlIdentifier siteNodeId;
@@ -169,7 +169,7 @@ module scheme {
 					in general::corba::WString256 description,
 					in general::corba::WString64 label,
 					in IdlSchemeElementKind kind,
-					in general::corba::IdlIdentifier equipmentTypeId,
+					in general::corba::IdlIdentifier protoEquipmentId,
 					in general::corba::IdlIdentifier equipmentId,
 					in general::corba::IdlIdentifier kisId,
 					in general::corba::IdlIdentifier siteNodeId,

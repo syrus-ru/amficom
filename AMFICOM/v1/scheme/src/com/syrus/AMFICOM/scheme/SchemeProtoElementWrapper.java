@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.11 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.12 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/05 11:20:03 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/29 12:50:56 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -28,7 +28,7 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 //	description VARCHAR2(256 CHAR),
 //--
 //	label VARCHAR2(64 CHAR),
-//	equipment_type_id VARCHAR2(32 CHAR),
+//	proto_equipment_id VARCHAR2(32 CHAR),
 //	symbol_id VARCHAR2(32 CHAR),
 //	ugo_cell_id VARCHAR2(32 CHAR),
 //	scheme_cell_id VARCHAR2(32 CHAR),
@@ -37,7 +37,7 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 
 	public static final String COLUMN_LABEL = "label";
 	public static final int	SIZE_LABEL_COLUMN	= 64;
-	public static final String COLUMN_EQUIPMENT_TYPE_ID = "equipment_type_id";
+	public static final String COLUMN_PROTO_EQUIPMENT_ID = "proto_equipment_id";
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";
 	public static final String COLUMN_UGO_CELL_ID = "ugo_cell_id";
 	public static final String COLUMN_SCHEME_CELL_ID = "scheme_cell_id";
@@ -53,7 +53,7 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 				COLUMN_NAME,
 				COLUMN_DESCRIPTION,
 				COLUMN_LABEL,
-				COLUMN_EQUIPMENT_TYPE_ID,
+				COLUMN_PROTO_EQUIPMENT_ID,
 				COLUMN_SYMBOL_ID,
 				COLUMN_UGO_CELL_ID,
 				COLUMN_SCHEME_CELL_ID,
@@ -79,7 +79,7 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 				|| key.equals(COLUMN_DESCRIPTION)
 				|| key.equals(COLUMN_LABEL)) {
 			return String.class;
-		} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)
+		} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)
 				|| key.equals(COLUMN_SYMBOL_ID)
 				|| key.equals(COLUMN_UGO_CELL_ID)
 				|| key.equals(COLUMN_SCHEME_CELL_ID)
@@ -111,8 +111,8 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 				return schemeProtoElement.getDescription();
 			} else if (key.equals(COLUMN_LABEL)) {
 				return schemeProtoElement.getLabel();
-			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
-				return schemeProtoElement.getEquipmentTypeId();
+			} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
+				return schemeProtoElement.getProtoEquipmentId();
 			} else if (key.equals(COLUMN_SYMBOL_ID)) {
 				return schemeProtoElement.getSymbolId();
 			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
@@ -141,8 +141,8 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 				schemeProtoElement.setDescription((String) value);
 			} else if (key.equals(COLUMN_LABEL)) {
 				schemeProtoElement.setLabel((String) value);
-			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
-				schemeProtoElement.setEquipmentTypeId((Identifier) value);
+			} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
+				schemeProtoElement.setProtoEquipmentId((Identifier) value);
 			} else if (key.equals(COLUMN_SYMBOL_ID)) {
 				schemeProtoElement.setSymbolId((Identifier) value);
 			} else if (key.equals(COLUMN_UGO_CELL_ID)) {

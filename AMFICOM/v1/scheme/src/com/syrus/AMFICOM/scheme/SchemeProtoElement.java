@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.101 2005/09/28 19:06:23 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.102 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
@@ -46,7 +46,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -86,7 +85,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/09/28 19:06:23 $
+ * @version $Revision: 1.102 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -101,7 +100,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	private String label;
 
-	Identifier equipmentTypeId;
+	Identifier protoEquipmentId;
 
 	Identifier symbolId;
 
@@ -129,7 +128,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param name
 	 * @param description
 	 * @param label
-	 * @param equipmentType
+	 * @param protoEquipment
 	 * @param symbol
 	 * @param ugoCell
 	 * @param schemeCell
@@ -145,7 +144,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final String name,
 			final String description,
 			final String label,
-			final EquipmentType equipmentType,
+			final ProtoEquipment protoEquipment,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
@@ -155,7 +154,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.name = name;
 		this.description = description;
 		this.label = label;
-		this.equipmentTypeId = Identifier.possiblyVoid(equipmentType);
+		this.protoEquipmentId = Identifier.possiblyVoid(protoEquipment);
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
@@ -192,7 +191,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource)}.
+	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, BitmapImageResource, SchemeImageResource, SchemeImageResource)}.
 	 * This method breaks some assertions, so clients should consider using
 	 * other ones to create a new instance.
 	 *
@@ -209,7 +208,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoElement)}.
+	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoElement)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -226,7 +225,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoGroup)}.
+	 * {@link #createInstance(Identifier, String, String, String, ProtoEquipment, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeProtoGroup)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -249,7 +248,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param equipmentType may be <code>null</code>.
+	 * @param protoEquipment may be <code>null</code>.
 	 * @param symbol may be <code>null</code>.
 	 * @param ugoCell may be <code>null</code>.
 	 * @param schemeCell may be <code>null</code>.
@@ -259,7 +258,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final String name,
 			final String description,
 			final String label,
-			final EquipmentType equipmentType,
+			final ProtoEquipment protoEquipment,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell) throws CreateObjectException {
@@ -279,7 +278,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					name,
 					description,
 					label,
-					equipmentType,
+					protoEquipment,
 					symbol,
 					ugoCell,
 					schemeCell,
@@ -297,7 +296,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param name cannot be <code>null</code>.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param equipmentType may be <code>null</code>.
+	 * @param protoEquipment may be <code>null</code>.
 	 * @param symbol may be <code>null</code>.
 	 * @param ugoCell may be <code>null</code>.
 	 * @param schemeCell may be <code>null</code>.
@@ -308,7 +307,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final String name,
 			final String description,
 			final String label,
-			final EquipmentType equipmentType,
+			final ProtoEquipment protoEquipment,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
@@ -330,7 +329,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					name,
 					description,
 					label,
-					equipmentType,
+					protoEquipment,
 					symbol,
 					ugoCell,
 					schemeCell,
@@ -349,7 +348,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param name cannot be <code>null</code>.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param equipmentType may be <code>null</code>.
+	 * @param protoEquipment may be <code>null</code>.
 	 * @param symbol may be <code>null</code>.
 	 * @param ugoCell may be <code>null</code>.
 	 * @param schemeCell may be <code>null</code>.
@@ -360,7 +359,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final String name,
 			final String description,
 			final String label,
-			final EquipmentType equipmentType,
+			final ProtoEquipment protoEquipment,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
@@ -382,7 +381,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					name,
 					description,
 					label,
-					equipmentType,
+					protoEquipment,
 					symbol,
 					ugoCell,
 					schemeCell,
@@ -536,7 +535,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.equipmentTypeId != null
+		assert this.protoEquipmentId != null
 				&& this.symbolId != null
 				&& this.ugoCellId != null
 				&& this.schemeCellId != null
@@ -545,7 +544,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.equipmentTypeId);
+		dependencies.add(this.protoEquipmentId);
 		dependencies.add(this.symbolId);
 		dependencies.add(this.ugoCellId);
 		dependencies.add(this.schemeCellId);
@@ -590,35 +589,22 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		return this.description;
 	}
 
-	Identifier getEquipmentTypeId() {
-		assert this.equipmentTypeId != null: OBJECT_NOT_INITIALIZED;
-		assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
-		return this.equipmentTypeId;
+	Identifier getProtoEquipmentId() {
+		assert this.protoEquipmentId != null: OBJECT_NOT_INITIALIZED;
+		assert this.protoEquipmentId.isVoid() || this.protoEquipmentId.getMajor() == PROTOEQUIPMENT_CODE;
+		return this.protoEquipmentId;
 	}
 
 	/**
-	 * A wrapper around {@link #getEquipmentType0()}.
+	 * A wrapper around {@link #getProtoEquipmentId()}.
 	 *
-	 * @return <code>equipmentType</code> associated with this
+	 * @return <code>protoEquipment</code> associated with this
 	 *         <code>schemeProtoElement</code>, or <code>null</code> if
 	 *         none.
-	 */
-	public EquipmentType getEquipmentType() {
-		try {
-			return this.getEquipmentType0();
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
-	}
-
-	/**
-	 * A wrapper around {@link #getEquipmentTypeId()}.
-	 *
 	 * @throws ApplicationException
 	 */
-	EquipmentType getEquipmentType0() throws ApplicationException {
-		return StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true);
+	public ProtoEquipment getProtoEquipment() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getProtoEquipmentId(), true);
 	}
 
 	/**
@@ -802,7 +788,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				this.name,
 				this.description,
 				this.label,
-				this.equipmentTypeId.getTransferable(),
+				this.protoEquipmentId.getTransferable(),
 				this.symbolId.getTransferable(),
 				this.ugoCellId.getTransferable(),
 				this.schemeCellId.getTransferable(),
@@ -837,11 +823,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		if (this.label.length() != 0) {
 			schemeProtoElement.setLabel(this.label);
 		}
-		if (schemeProtoElement.isSetEquipmentTypeId()) {
-			schemeProtoElement.unsetEquipmentTypeId();
+		if (schemeProtoElement.isSetProtoEquipmentId()) {
+			schemeProtoElement.unsetProtoEquipmentId();
 		}
-		if (!this.equipmentTypeId.isVoid()) {
-			this.equipmentTypeId.getXmlTransferable(schemeProtoElement.addNewEquipmentTypeId(), importType);
+		if (!this.protoEquipmentId.isVoid()) {
+			this.protoEquipmentId.getXmlTransferable(schemeProtoElement.addNewProtoEquipmentId(), importType);
 		}
 		if (schemeProtoElement.isSetSymbolId()) {
 			schemeProtoElement.unsetSymbolId();
@@ -979,7 +965,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param description cannot be <code>null</code>. For this purpose,
 	 *        supply an empty string as an argument.
 	 * @param label
-	 * @param equipmentTypeId
+	 * @param protoEquipmentId
 	 * @param symbolId cannot be <code>null</code>. For this purpose,
 	 *        supply {@link Identifier#VOID_IDENTIFIER} as an argument.
 	 * @param ugoCellId
@@ -995,7 +981,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final String name,
 			final String description,
 			final String label,
-			final Identifier equipmentTypeId,
+			final Identifier protoEquipmentId,
 			final Identifier symbolId,
 			final Identifier ugoCellId,
 			final Identifier schemeCellId,
@@ -1007,7 +993,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 			assert description != null : NON_NULL_EXPECTED;
 			assert label != null : NON_NULL_EXPECTED;
-			assert equipmentTypeId != null : NON_NULL_EXPECTED;
+			assert protoEquipmentId != null : NON_NULL_EXPECTED;
 			assert symbolId != null : NON_NULL_EXPECTED;
 			assert ugoCellId != null : NON_NULL_EXPECTED;
 			assert schemeCellId != null : NON_NULL_EXPECTED;
@@ -1019,7 +1005,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.name = name;
 			this.description = description;
 			this.label = label;
-			this.equipmentTypeId = equipmentTypeId;
+			this.protoEquipmentId = protoEquipmentId;
 			this.symbolId = symbolId;
 			this.ugoCellId = ugoCellId;
 			this.schemeCellId = schemeCellId;
@@ -1044,24 +1030,24 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param equipmentTypeId
+	 * @param protoEquipmentId
 	 */
-	void setEquipmentTypeId(final Identifier equipmentTypeId) {
-		assert equipmentTypeId.isVoid() || equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
-		if (this.equipmentTypeId.equals(equipmentTypeId)) {
+	void setProtoEquipmentId(final Identifier protoEquipmentId) {
+		assert protoEquipmentId.isVoid() || protoEquipmentId.getMajor() == PROTOEQUIPMENT_CODE;
+		if (this.protoEquipmentId.equals(protoEquipmentId)) {
 			return;
 		}
-		this.equipmentTypeId = equipmentTypeId;
+		this.protoEquipmentId = protoEquipmentId;
 		super.markAsChanged();
 	}
 
 	/**
-	 * A wrapper around {@link #setEquipmentTypeId(Identifier)}.
+	 * A wrapper around {@link #setProtoEquipmentId(Identifier)}.
 	 *
-	 * @param equipmentType can be <code>null</code>.
+	 * @param protoEquipment can be <code>null</code>.
 	 */
-	public void setEquipmentType(final EquipmentType equipmentType) {
-		this.setEquipmentTypeId(Identifier.possiblyVoid(equipmentType));
+	public void setProtoEquipment(final ProtoEquipment protoEquipment) {
+		this.setProtoEquipmentId(Identifier.possiblyVoid(protoEquipment));
 	}
 
 	/**
@@ -1329,7 +1315,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.name = schemeProtoElement.name;
 			this.description = schemeProtoElement.description;
 			this.label = schemeProtoElement.label;
-			this.equipmentTypeId = new Identifier(schemeProtoElement.equipmentTypeId);
+			this.protoEquipmentId = new Identifier(schemeProtoElement.protoEquipmentId);
 			this.symbolId = new Identifier(schemeProtoElement.symbolId);
 			this.ugoCellId = new Identifier(schemeProtoElement.ugoCellId);
 			this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
@@ -1359,8 +1345,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.label = schemeProtoElement.isSetLabel()
 				? schemeProtoElement.getLabel()
 				: "";
-		this.equipmentTypeId = schemeProtoElement.isSetEquipmentTypeId()
-				? Identifier.fromXmlTransferable(schemeProtoElement.getEquipmentTypeId(), importType, MODE_THROW_IF_ABSENT)
+		this.protoEquipmentId = schemeProtoElement.isSetProtoEquipmentId()
+				? Identifier.fromXmlTransferable(schemeProtoElement.getProtoEquipmentId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.symbolId = schemeProtoElement.isSetSymbolId()
 				? Identifier.fromXmlTransferable(schemeProtoElement.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
@@ -1663,17 +1649,5 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			schemePorts.addAll(schemeProtoElement.getSchemePortsRecursively());
 		}
 		return Collections.unmodifiableSet(schemePorts);
-	}
-
-	@SuppressWarnings("unused")
-	public ProtoEquipment getProtoEquipment() throws ApplicationException {
-		throw new UnsupportedOperationException(
-				"SchemeProtoElement#getProtoEquipment() is unsupported");
-	}
-
-	@SuppressWarnings("unused")
-	public void setProtoEquipment(final ProtoEquipment protoEquipment) {
-		throw new UnsupportedOperationException(
-				"SchemeProtoElement#setProtoEquipment(protoEquipment) is unsupported");
 	}
 }

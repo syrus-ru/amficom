@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.39 2005/09/29 08:00:56 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.40 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.39 $, $Date: 2005/09/29 08:00:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -75,7 +75,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				case SCHEMEPROTOGROUP_CODE:
 					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 				case PROTOEQUIPMENT_CODE:
-					return super.getQuery(SchemeProtoElementWrapper.COLUMN_EQUIPMENT_TYPE_ID);
+					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PROTO_EQUIPMENT_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}

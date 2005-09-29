@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.136 2005/09/28 19:06:20 bass Exp $
+ * $Id: Equipment.java,v 1.137 2005/09/29 12:50:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.136 $, $Date: 2005/09/28 19:06:20 $
+ * @version $Revision: 1.137 $, $Date: 2005/09/29 12:50:55 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -597,6 +597,11 @@ public final class Equipment extends DomainMember
 		this.protoEquipmentId = protoEquipmentId;
 		super.markAsChanged();
 	}
+
+	public void setProtoEquipment(final ProtoEquipment protoEquipment) {
+		this.setProtoEquipmentId(Identifier.possiblyVoid(protoEquipment));
+	}
+
 	/**
 	 * @param imageId The imageId to set.
 	 */

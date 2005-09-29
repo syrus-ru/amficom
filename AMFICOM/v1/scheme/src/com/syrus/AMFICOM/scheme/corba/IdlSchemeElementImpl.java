@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeElementImpl.java,v 1.6 2005/09/07 18:30:20 bass Exp $
+ * $Id: IdlSchemeElementImpl.java,v 1.7 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/09/07 18:30:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 final class IdlSchemeElementImpl extends IdlSchemeElement {
@@ -40,7 +40,7 @@ final class IdlSchemeElementImpl extends IdlSchemeElement {
 			final String description,
 			final String label,
 			final IdlSchemeElementKind kind,
-			final IdlIdentifier equipmentTypeId,
+			final IdlIdentifier protoEquipmentId,
 			final IdlIdentifier equipmentId,
 			final IdlIdentifier kisId,
 			final IdlIdentifier siteNodeId,
@@ -59,7 +59,7 @@ final class IdlSchemeElementImpl extends IdlSchemeElement {
 		this.description = description;
 		this.label = label;
 		this.kind = kind;
-		this.equipmentTypeId = equipmentTypeId;
+		this.protoEquipmentId = protoEquipmentId;
 		this.equipmentId = equipmentId;
 		this.kisId = kisId;
 		this.siteNodeId = siteNodeId;

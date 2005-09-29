@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeProtoElementImpl.java,v 1.4 2005/07/24 17:08:16 bass Exp $
+ * $Id: IdlSchemeProtoElementImpl.java,v 1.5 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/24 17:08:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 final class IdlSchemeProtoElementImpl extends IdlSchemeProtoElement {
@@ -38,7 +38,7 @@ final class IdlSchemeProtoElementImpl extends IdlSchemeProtoElement {
 			final String name,
 			final String description,
 			final String label,
-			final IdlIdentifier equipmentTypeId,
+			final IdlIdentifier protoEquipmentId,
 			final IdlIdentifier symbolId,
 			final IdlIdentifier ugoCellId,
 			final IdlIdentifier schemeCellId,
@@ -53,7 +53,7 @@ final class IdlSchemeProtoElementImpl extends IdlSchemeProtoElement {
 		this.name = name;
 		this.description = description;
 		this.label = label;
-		this.equipmentTypeId = equipmentTypeId;
+		this.protoEquipmentId = protoEquipmentId;
 		this.symbolId = symbolId;
 		this.ugoCellId = ugoCellId;
 		this.schemeCellId = schemeCellId;

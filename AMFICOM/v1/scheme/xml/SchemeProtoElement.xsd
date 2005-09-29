@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeProtoElement.xsd,v 1.6 2005/09/12 13:12:53 bass Exp $
+			$Id: SchemeProtoElement.xsd,v 1.7 2005/09/29 12:50:56 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -38,7 +38,7 @@
 						minOccurs = "0"/>
 					<xsd:element ref = "general:label"
 						minOccurs = "0"/>
-					<xsd:element name = "equipmentTypeId" type = "general:XmlIdentifier"
+					<xsd:element name = "protoEquipmentId" type = "general:XmlIdentifier"
 						minOccurs = "0"/>
 					<xsd:choice
 						minOccurs = "0">

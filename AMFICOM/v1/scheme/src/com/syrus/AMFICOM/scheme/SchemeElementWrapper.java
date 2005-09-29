@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.13 2005/09/26 13:12:15 bass Exp $
+ * $Id: SchemeElementWrapper.java,v 1.14 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/26 13:12:15 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/29 12:50:56 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -31,7 +31,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 //--
 //  kind NUMBER(1),
 //	label VARCHAR2(64 CHAR),
-//	equipment_type_id VARCHAR2(32 CHAR),
+//	proto_equipment_id VARCHAR2(32 CHAR),
 //	equipment_id VARCHAR2(32 CHAR),
 //	rtu_id VARCHAR2(32 CHAR),
 //	site_id VARCHAR2(32 CHAR),
@@ -44,7 +44,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 	public static final String COLUMN_KIND = "kind";
 	public static final String COLUMN_LABEL = "label";
 	public static final int	SIZE_LABEL_COLUMN	= 64;
-	public static final String COLUMN_EQUIPMENT_TYPE_ID = "equipment_type_id";
+	public static final String COLUMN_PROTO_EQUIPMENT_ID = "proto_equipment_id";
 	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";
 	public static final String COLUMN_KIS_ID = "kis_id";
 	public static final String COLUMN_SITE_NODE_ID = "site_node_id";
@@ -64,7 +64,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 				COLUMN_DESCRIPTION,
 				COLUMN_KIND,
 				COLUMN_LABEL,
-				COLUMN_EQUIPMENT_TYPE_ID,
+				COLUMN_PROTO_EQUIPMENT_ID,
 				COLUMN_EQUIPMENT_ID,
 				COLUMN_KIS_ID,
 				COLUMN_SITE_NODE_ID,
@@ -96,7 +96,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 			return String.class;
 		} else if (key.equals(COLUMN_KIND)) {
 			return Integer.class;
-		} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)
+		} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)
 				|| key.equals(COLUMN_EQUIPMENT_ID)
 				|| key.equals(COLUMN_KIS_ID)
 				|| key.equals(COLUMN_SITE_NODE_ID)
@@ -134,8 +134,8 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 				return Integer.valueOf(schemeElement.getKind().value());
 			} else if (key.equals(COLUMN_LABEL)) {
 				return schemeElement.getLabel();
-			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
-				return schemeElement.getEquipmentTypeId();
+			} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
+				return schemeElement.getProtoEquipmentId();
 			} else if (key.equals(COLUMN_EQUIPMENT_ID)) {
 				return schemeElement.getEquipmentId();
 			} else if (key.equals(COLUMN_KIS_ID)) {
@@ -178,8 +178,8 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 					//nothing to do 
 				} else if (key.equals(COLUMN_LABEL)) {
 					schemeElement.setLabel((String) value);
-				} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
-					schemeElement.setEquipmentTypeId((Identifier) value);
+				} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
+					schemeElement.setProtoEquipmentId((Identifier) value);
 				} else if (key.equals(COLUMN_EQUIPMENT_ID)) {
 					schemeElement.setEquipmentId((Identifier) value);
 				} else if (key.equals(COLUMN_KIS_ID)) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.19 2005/09/07 18:30:20 bass Exp $
+ * $Id: SchemeElementDatabase.java,v 1.20 2005/09/29 12:50:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_KIND;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_EQUIPMENT_ID;
-import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_EQUIPMENT_TYPE_ID;
+import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_PROTO_EQUIPMENT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_KIS_ID;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_LABEL;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID;
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/09/07 18:30:20 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/29 12:50:56 $
  * @module scheme
  */
 public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeElement> {
@@ -62,7 +62,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 					+ COLUMN_NAME + COMMA
 					+ COLUMN_DESCRIPTION + COMMA
 					+ COLUMN_LABEL + COMMA
-					+ COLUMN_EQUIPMENT_TYPE_ID + COMMA
+					+ COLUMN_PROTO_EQUIPMENT_ID + COMMA
 					+ COLUMN_EQUIPMENT_ID + COMMA
 					+ COLUMN_KIS_ID + COMMA
 					+ COLUMN_SITE_NODE_ID + COMMA
@@ -112,7 +112,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getProtoEquipmentId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getKisId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getSiteNodeId()) + COMMA
@@ -140,7 +140,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLabel(), SIZE_LABEL_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEquipmentTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getProtoEquipmentId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEquipmentId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getKisId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSiteNodeId());
@@ -193,7 +193,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LABEL)),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PROTO_EQUIPMENT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_KIS_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SITE_NODE_ID),
