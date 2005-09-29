@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.98 2005/09/29 10:53:11 bass Exp $
+ * $Id: SiteNodeType.java,v 1.99 2005/09/29 14:47:31 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
 import static java.util.logging.Level.SEVERE;
@@ -51,6 +52,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.logic.Library;
@@ -76,8 +78,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/09/29 10:53:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.99 $, $Date: 2005/09/29 14:47:31 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -328,7 +330,7 @@ public final class SiteNodeType extends StorableObjectType
 			out.write(image);
 			out.flush();
 			out.close();
-			siteNodeType.setImage(imageCodename);
+			siteNodeType.setImage(imageCodenameToWrite);
 		} catch (final IOException ioe) {
 			throw new ApplicationException(ioe);
 		}
@@ -363,6 +365,8 @@ public final class SiteNodeType extends StorableObjectType
 	public void fromXmlTransferable(final XmlSiteNodeType xmlSiteNodeType,
 			final String importType)
 	throws ApplicationException {
+		XmlComplementorRegistry.complementStorableObject(xmlSiteNodeType, SITENODE_TYPE_CODE, importType, PRE_IMPORT);
+
 		this.name = xmlSiteNodeType.getName();
 		if(xmlSiteNodeType.isSetDescription()) {
 			this.description = xmlSiteNodeType.getDescription();
