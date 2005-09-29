@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.101 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.102 2005/09/29 06:30:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.102 $, $Date: 2005/09/29 06:30:29 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -122,8 +122,8 @@ public enum MeasurementType implements ActionType {
 		assert idlMeasurementTypes != null: NON_NULL_EXPECTED;
 
 		final Collection<MeasurementType> measurementTypes = new HashSet<MeasurementType>(idlMeasurementTypes.length);
-		for (final IdlMeasurementType idlParameterType : idlMeasurementTypes) {
-			measurementTypes.add(MeasurementType.fromTransferable(idlParameterType));
+		for (final IdlMeasurementType idlMeasurementType : idlMeasurementTypes) {
+			measurementTypes.add(MeasurementType.fromTransferable(idlMeasurementType));
 		}
 		return EnumSet.copyOf(measurementTypes);
 	}
