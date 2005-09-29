@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.6 2005/09/29 08:18:07 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.7 2005/09/29 09:18:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,14 +53,14 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/29 08:18:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/29 09:18:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class ProtoEquipment extends StorableObject implements Characterizable, Namable,
 		XmlBeansTransferable<XmlProtoEquipment> {
-	private static final long serialVersionUID = 3221583036378568005L;
+	private static final long serialVersionUID = 7066410483749919904L;
 
 	private EquipmentType type;
 
