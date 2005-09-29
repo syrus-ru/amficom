@@ -17,7 +17,7 @@ CREATE TABLE ReportTemplate (
  CONSTRAINT reporttemplate_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT reporttemplate_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES SystemUser (id) ON DELETE CASCADE,
+  REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE ReportTemplate_Seq ORDER;

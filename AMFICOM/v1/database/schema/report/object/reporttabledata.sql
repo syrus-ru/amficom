@@ -22,7 +22,7 @@ CREATE TABLE ReportTableData (
  CONSTRAINT reporttabledata_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT reporttabledata_reptempl_fk FOREIGN KEY (report_template_id)
-  REFERENCES ReportType (id) ON DELETE CASCADE
+  REFERENCES ReportTemplate (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE ReportTableData_Seq ORDER;

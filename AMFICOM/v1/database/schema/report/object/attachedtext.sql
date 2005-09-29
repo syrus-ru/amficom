@@ -12,7 +12,7 @@ CREATE TABLE AttachedText (
  height					NUMBER(10)			NOT NULL,
  report_template_id,
 --
- text 					VARCHAR2 			NOT NULL,
+ text 					VARCHAR2(4000)		NOT NULL,
  distance_x				NUMBER(10) 			NOT NULL,
  distance_y				NUMBER(10) 			NOT NULL,
  font_name 				VARCHAR2(64 CHAR) 	NOT NULL,
@@ -20,8 +20,8 @@ CREATE TABLE AttachedText (
  font_size 				NUMBER(10) 			NOT NULL,
  vertical_attach_type 	NUMBER(3) 			NOT NULL,
  horizontal_attach_type NUMBER(3) 			NOT NULL,
- vertical_attacher_id,
- horizontal_attacher_id,
+ vertical_attacher_id	NUMBER(19),
+ horizontal_attacher_id NUMBER(19),
 --
  CONSTRAINT attachedtext_pk PRIMARY KEY (id),
  CONSTRAINT attachedtext_creator_fk FOREIGN KEY (creator_id)
@@ -29,7 +29,7 @@ CREATE TABLE AttachedText (
  CONSTRAINT attachedtext_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT attachedtext_reptempl_fk FOREIGN KEY (report_template_id)
-  REFERENCES ReportType (id) ON DELETE CASCADE
+  REFERENCES ReportTemplate (id) ON DELETE CASCADE
 --  ,
 -- CONSTRAINT vertical_att_id_fk FOREIGN KEY (vertical_attacher_id)
 --  REFERENCES ReportData (id) ON DELETE CASCADE,

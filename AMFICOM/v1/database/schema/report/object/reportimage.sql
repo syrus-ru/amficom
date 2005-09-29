@@ -22,7 +22,7 @@ CREATE TABLE ReportImage (
  CONSTRAINT reportimage_img_fk FOREIGN KEY (bitmap_image_res_id)
   REFERENCES ImageResource (id) ON DELETE CASCADE,
  CONSTRAINT reportimage_reptempl_fk FOREIGN KEY (report_template_id)
-  REFERENCES ReportType (id) ON DELETE CASCADE
+  REFERENCES ReportTemplate (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE ReportImage_Seq ORDER;
