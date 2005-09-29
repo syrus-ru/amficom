@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.25 2005/09/28 19:15:23 bass Exp $
+ * $Id: MapElement.java,v 1.26 2005/09/29 10:46:56 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *  Интерфейс для всех элементов карты. Нужен для определения координат
  *  элемента, его стратегии, выбора, передвижения, отображения и т.д.
  *
- *
- *
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/09/28 19:15:23 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/09/29 10:46:56 $
  * @module map
  */
 public interface MapElement extends Identifiable, Namable {
@@ -82,8 +80,5 @@ public interface MapElement extends Identifiable, Namable {
 	 */
 	void setRemoved(final boolean removed);
 
-	/**
-	 * TODO think of usen getCharacterizable instead of getCharacteristics in client code
-	 */
 	Characterizable getCharacterizable();
 }
