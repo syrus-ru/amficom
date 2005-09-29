@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.66 2005/09/12 20:53:18 arseniy Exp $
+# $Id: Makefile,v 1.67 2005/09/29 09:36:31 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,6 +19,10 @@ TRANSCEIVER_DIR := ./transceiver
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
+
+
+LIBNAME_GENERALXML=generalxml.jar
 
 JAVAH := javah
 JAVAH_FLAGS := \
@@ -28,6 +32,7 @@ JAVAH_FLAGS := \
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mcm/*.java) \
@@ -60,7 +65,7 @@ $(LIBNAME_INTERFACE):	.corba
 
 .mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -74,7 +79,7 @@ corba: .corba
 
 .corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/corba/*.java
 	touch $@
