@@ -4,12 +4,14 @@
 
 #TEST_CLASS=TestInitialSetup
 #TEST_PACKAGE=com.syrus.AMFICOM.setup
-TEST_CLASS=TestIdentifier
-TEST_PACKAGE=com.syrus.AMFICOM.general
+#TEST_CLASS=TestIdentifier
+#TEST_PACKAGE=com.syrus.AMFICOM.general
 #TEST_CLASS=TestKIS
 #TEST_PACKAGE=com.syrus.AMFICOM.measurement
 #TEST_CLASS=TestSystemUser
 #TEST_PACKAGE=com.syrus.AMFICOM.administration
+TEST_CLASS=TestEquipmentType
+TEST_PACKAGE=com.syrus.AMFICOM.configuration
 
 JUNITCLASSPATH=$ECLIPSE_HOME/plugins/org.junit_3.8.1/junit.jar
 JDBCCLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/orai18n.jar
