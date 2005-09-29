@@ -92,8 +92,6 @@ public class TunnelLayout implements PropertyChangeListener {
 					}
 
 				}
-				// TODO нужна ли эта ботва?
-				// this.panel.getGraph().setGraphChanged(true);
 			}
 			else
 				if(ev.isSelected(ObjectSelectedEvent.ALL_DESELECTED)) {
