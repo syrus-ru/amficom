@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.107 2005/09/28 19:06:22 bass Exp $
+ * $Id: Map.java,v 1.108 2005/09/29 10:05:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.107 $, $Date: 2005/09/28 19:06:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.108 $, $Date: 2005/09/29 10:05:27 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1110,7 +1110,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	throws ApplicationException {
 		this.id.getXmlTransferable(map.addNewId(), importType);
 		map.setName(this.name);
-		map.setDescription(this.description);
+		if(this.description != null && this.description.length() != 0) {
+			map.setDescription(this.description);
+		}
+
 		if (map.isSetTopologicalNodes()) {
 			map.unsetTopologicalNodes();
 		}
@@ -1202,7 +1205,12 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public void fromXmlTransferable(final XmlMap xmlMap, final String importType) throws ApplicationException {
 		this.name = xmlMap.getName();
-		this.description = xmlMap.getDescription();
+		if(xmlMap.isSetDescription()) {
+			this.description = xmlMap.getDescription();
+		}
+		else {
+			this.description = "";
+		}
 
 		this.siteNodeIds = new HashSet<Identifier>();
 		this.topologicalNodeIds = new HashSet<Identifier>();

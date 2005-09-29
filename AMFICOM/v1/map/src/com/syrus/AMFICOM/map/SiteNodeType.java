@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.95 2005/09/28 19:06:22 bass Exp $
+ * $Id: SiteNodeType.java,v 1.96 2005/09/29 10:05:27 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/09/28 19:06:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.96 $, $Date: 2005/09/29 10:05:27 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -297,7 +297,11 @@ public final class SiteNodeType extends StorableObjectType
 		try {
 			this.id.getXmlTransferable(siteNodeType.addNewId(), importType);
 			siteNodeType.setName(this.name);
-			siteNodeType.setDescription(this.description);
+			if(this.description != null && this.description.length() != 0) {
+				siteNodeType.setDescription(this.description);
+			}
+			// NOTE: '+ 1' is obligatory since enumerations in idl and xsd
+			// have different indexing
 			siteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));
 			siteNodeType.setTopological(this.isTopological());
 			final AbstractBitmapImageResource abstractBitmapImageResource = StorableObjectPool.getStorableObject(this.getImageId(), true);
@@ -348,7 +352,14 @@ public final class SiteNodeType extends StorableObjectType
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlSiteNodeType.getName();
-		this.description = xmlSiteNodeType.getDescription();
+		if(xmlSiteNodeType.isSetDescription()) {
+			this.description = xmlSiteNodeType.getDescription();
+		}
+		else {
+			this.description = "";
+		}
+		// NOTE: '- 1' is obligatory since enumerations in idl and xsd
+		// have different indexing
 		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue() - 1);
 		this.topological = xmlSiteNodeType.getTopological();
 

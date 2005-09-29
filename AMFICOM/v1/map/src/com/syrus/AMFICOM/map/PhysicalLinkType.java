@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.95 2005/09/28 19:06:22 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.96 2005/09/29 10:05:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/09/28 19:06:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.96 $, $Date: 2005/09/29 10:05:27 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -320,7 +320,11 @@ public final class PhysicalLinkType extends StorableObjectType
 	throws ApplicationException {
 		this.id.getXmlTransferable(physicalLinkType.addNewId(), importType);
 		physicalLinkType.setName(this.name);
-		physicalLinkType.setDescription(this.description);
+		if(this.description != null && this.description.length() != 0) {
+			physicalLinkType.setDescription(this.description);
+		}
+		// NOTE: '+ 1' is obligatory since enumerations in idl and xsd
+		// have different indexing
 		physicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
 		
 		physicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
@@ -358,10 +362,23 @@ public final class PhysicalLinkType extends StorableObjectType
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlPhysicalLinkType.getName();
-		this.description = xmlPhysicalLinkType.getDescription();
 		this.codename = xmlPhysicalLinkType.getCodename();
-		this.bindingDimension = new IntDimension(xmlPhysicalLinkType.getDimensionX().intValue(),
+		if(xmlPhysicalLinkType.isSetDescription()) {
+			this.description = xmlPhysicalLinkType.getDescription();
+		}
+		else {
+			this.description = "";
+		}
+		if(xmlPhysicalLinkType.isSetDimensionX()
+				&& xmlPhysicalLinkType.isSetDimensionY()) {
+			this.bindingDimension = new IntDimension(xmlPhysicalLinkType.getDimensionX().intValue(),
 				xmlPhysicalLinkType.getDimensionY().intValue());
+		}
+		else {
+			this.bindingDimension = new IntDimension(1, 1);
+		}
+		// NOTE: '- 1' is obligatory since enumerations in idl and xsd
+		// have different indexing
 		this.sort = PhysicalLinkTypeSort.from_int(xmlPhysicalLinkType.getSort().intValue() - 1);
 		this.topological = true;
 	}

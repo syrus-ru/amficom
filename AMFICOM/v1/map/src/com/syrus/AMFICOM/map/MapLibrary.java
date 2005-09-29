@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.31 2005/09/28 19:06:22 bass Exp $
+ * $Id: MapLibrary.java,v 1.32 2005/09/29 10:05:27 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/09/28 19:06:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/09/29 10:05:27 $
+ * @author $Author: krupenn $
  * @module map
  */
 public final class MapLibrary extends StorableObject implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
@@ -309,9 +309,12 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 	public void getXmlTransferable(final XmlMapLibrary mapLibrary,
 			final String importType)
 	throws ApplicationException {
-		mapLibrary.setCodename(this.codename);
 		mapLibrary.setName(this.name);
-		mapLibrary.setDescription(this.description);
+		mapLibrary.setCodename(this.codename);
+		if(this.description != null && this.description.length() != 0) {
+			mapLibrary.setDescription(this.description);
+		}
+
 		if (mapLibrary.isSetPhysicalLinkTypes()) {
 			mapLibrary.unsetPhysicalLinkTypes();
 		}
@@ -358,15 +361,24 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 
 	public void fromXmlTransferable(final XmlMapLibrary xmlMapLibrary, final String importType) throws ApplicationException {
 		this.name = xmlMapLibrary.getName();
-		this.description = xmlMapLibrary.getDescription();
 		this.codename = xmlMapLibrary.getCodename();
-
-		for (final XmlPhysicalLinkType xmlPhysicalLinkType : xmlMapLibrary.getPhysicalLinkTypes().getPhysicalLinkTypeArray()) {
-			this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType));
+		if(xmlMapLibrary.isSetDescription()) {
+			this.description = xmlMapLibrary.getDescription();
+		}
+		else {
+			this.description = "";
 		}
 
-		for (final XmlSiteNodeType xmlSiteNodeType : xmlMapLibrary.getSiteNodeTypes().getSiteNodeTypeArray()) {
-			this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType));
+		if(xmlMapLibrary.isSetPhysicalLinkTypes()) {
+			for (final XmlPhysicalLinkType xmlPhysicalLinkType : xmlMapLibrary.getPhysicalLinkTypes().getPhysicalLinkTypeArray()) {
+				this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType));
+			}
+		}
+
+		if(xmlMapLibrary.isSetSiteNodeTypes()) {
+			for (final XmlSiteNodeType xmlSiteNodeType : xmlMapLibrary.getSiteNodeTypes().getSiteNodeTypeArray()) {
+				this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType));
+			}
 		}
 	}
 

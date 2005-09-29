@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.122 2005/09/28 19:06:22 bass Exp $
+ * $Id: PhysicalLink.java,v 1.123 2005/09/29 10:05:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.122 $, $Date: 2005/09/28 19:06:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.123 $, $Date: 2005/09/29 10:05:27 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -919,13 +919,21 @@ public class PhysicalLink extends StorableObject
 	throws ApplicationException {
 		this.id.getXmlTransferable(physicalLink.addNewId(), importType);
 		physicalLink.setName(this.name);
-		physicalLink.setDescription(this.description);
+		if(this.description != null && this.description.length() != 0) {
+			physicalLink.setDescription(this.description);
+		}
 		physicalLink.setPhysicalLinkTypeCodename(this.getType().getCodename());
 		this.startNodeId.getXmlTransferable(physicalLink.addNewStartNodeId(), importType);
 		this.endNodeId.getXmlTransferable(physicalLink.addNewEndNodeId(), importType);
-		physicalLink.setCity(this.city);
-		physicalLink.setStreet(this.street);
-		physicalLink.setBuilding(this.building);
+		if(this.city != null && this.city.length() != 0) {
+			physicalLink.setCity(this.city);
+		}
+		if(this.street != null && this.street.length() != 0) {
+			physicalLink.setStreet(this.street);
+		}
+		if(this.building != null && this.building.length() != 0) {
+			physicalLink.setBuilding(this.building);
+		}
 	}
 
 	/**
@@ -955,10 +963,30 @@ public class PhysicalLink extends StorableObject
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlPhysicalLink.getName();
-		this.description = xmlPhysicalLink.getDescription();
-		this.city = xmlPhysicalLink.getCity();
-		this.street = xmlPhysicalLink.getStreet();
-		this.building = xmlPhysicalLink.getBuilding();
+		if(xmlPhysicalLink.isSetDescription()) {
+			this.description = xmlPhysicalLink.getDescription();
+		}
+		else {
+			this.description = "";
+		}
+		if(xmlPhysicalLink.isSetCity()) {
+			this.city = xmlPhysicalLink.getCity();
+		}
+		else {
+			this.city = "";
+		}
+		if(xmlPhysicalLink.isSetStreet()) {
+			this.street = xmlPhysicalLink.getStreet();
+		}
+		else {
+			this.street = "";
+		}
+		if(xmlPhysicalLink.isSetBuilding()) {
+			this.building = xmlPhysicalLink.getBuilding();
+		}
+		else {
+			this.building = "";
+		}
 
 		this.startNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), importType, MODE_THROW_IF_ABSENT);
 		this.endNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), importType, MODE_THROW_IF_ABSENT);

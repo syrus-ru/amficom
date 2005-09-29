@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.90 2005/09/28 19:06:22 bass Exp $
+ * $Id: Collector.java,v 1.91 2005/09/29 10:05:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/09/28 19:06:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.91 $, $Date: 2005/09/29 10:05:27 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -360,7 +360,9 @@ public final class Collector extends StorableObject
 	throws ApplicationException {
 		this.id.getXmlTransferable(collector.addNewId(), importType);
 		collector.setName(this.name);
-		collector.setDescription(this.description);		
+		if(this.description != null && this.description.length() != 0) {
+			collector.setDescription(this.description);		
+		}
 		
 		if (collector.isSetPhysicalLinkIds()) {
 			collector.unsetPhysicalLinkIds();
@@ -394,10 +396,17 @@ public final class Collector extends StorableObject
 
 	public void fromXmlTransferable(final XmlCollector xmlCollector, final String importType) throws ApplicationException {
 		this.name = xmlCollector.getName();
-		this.description = xmlCollector.getDescription();
+		if(xmlCollector.isSetDescription()) {
+			this.description = xmlCollector.getDescription();
+		}
+		else {
+			this.description = "";
+		}
 
-		for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
-			this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType, MODE_THROW_IF_ABSENT));
+		if(xmlCollector.isSetPhysicalLinkIds()) {
+			for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
+				this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType, MODE_THROW_IF_ABSENT));
+			}
 		}
 	}
 

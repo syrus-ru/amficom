@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.102 2005/09/29 07:33:21 krupenn Exp $
+ * $Id: SiteNode.java,v 1.103 2005/09/29 10:05:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.102 $, $Date: 2005/09/29 07:33:21 $
+ * @version $Revision: 1.103 $, $Date: 2005/09/29 10:05:27 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -347,13 +347,21 @@ public class SiteNode extends AbstractNode
 	throws ApplicationException {
 		this.id.getXmlTransferable(siteNode.addNewId(), importType);
 		siteNode.setName(this.name);
-		siteNode.setDescription(this.description);
+		if(this.description != null && this.description.length() != 0) {
+			siteNode.setDescription(this.description);
+		}
 		siteNode.setSiteNodeTypeCodename(this.getType().getCodename());
 		siteNode.setX(this.location.getX());
 		siteNode.setY(this.location.getY());
-		siteNode.setCity(this.city);
-		siteNode.setStreet(this.street);
-		siteNode.setBuilding(this.building);
+		if(this.city != null && this.city.length() != 0) {
+			siteNode.setCity(this.city);
+		}
+		if(this.street != null && this.street.length() != 0) {
+			siteNode.setStreet(this.street);
+		}
+		if(this.building != null && this.building.length() != 0) {
+			siteNode.setBuilding(this.building);
+		}
 		if (!this.attachmentSiteNodeId.isVoid()) {
 			this.attachmentSiteNodeId.getXmlTransferable(siteNode.addNewAttachmentSiteNodeId(), importType);
 		}
@@ -388,10 +396,31 @@ public class SiteNode extends AbstractNode
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlSiteNode.getName();
-		this.description = xmlSiteNode.getDescription();
-		this.city = xmlSiteNode.getCity();
-		this.street = xmlSiteNode.getStreet();
-		this.building = xmlSiteNode.getBuilding();
+		if(xmlSiteNode.isSetDescription()) {
+			this.description = xmlSiteNode.getDescription();
+		}
+		else {
+			this.description = "";
+		}
+		if(xmlSiteNode.isSetCity()) {
+			this.city = xmlSiteNode.getCity();
+		}
+		else {
+			this.city = "";
+		}
+		if(xmlSiteNode.isSetStreet()) {
+			this.street = xmlSiteNode.getStreet();
+		}
+		else {
+			this.street = "";
+		}
+		if(xmlSiteNode.isSetBuilding()) {
+			this.building = xmlSiteNode.getBuilding();
+		}
+		else {
+			this.building = "";
+		}
+
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
 			// NOTE: this call to Identifier.fromXmlTransferable may result in
