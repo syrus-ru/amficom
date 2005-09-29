@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.20 2005/09/29 08:18:07 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.21 2005/09/29 08:55:56 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/29 08:18:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/09/29 08:55:56 $
+ * @author $Author: max $
  * @module config
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -45,6 +45,8 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 			case PROTOEQUIPMENT_CODE:
 				if (this.condition.getKey().equals(ProtoEquipmentWrapper.COLUMN_MANUFACTURER_CODE)) {
 					return ProtoEquipmentWrapper.COLUMN_MANUFACTURER_CODE;
+				} else if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_TYPE_CODE)) {
+					return StorableObjectWrapper.COLUMN_TYPE_CODE;
 				}
 				break;
 			case MONITOREDELEMENT_CODE:
