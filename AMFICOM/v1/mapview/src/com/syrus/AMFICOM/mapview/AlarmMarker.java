@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmMarker.java,v 1.12 2005/09/29 11:01:31 krupenn Exp $
+ * $Id: AlarmMarker.java,v 1.13 2005/09/29 11:33:28 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,15 +15,13 @@ import com.syrus.AMFICOM.general.Identifier;
  * 
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.12 $, $Date: 2005/09/29 11:01:31 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/29 11:33:28 $
  * @module mapview
  * @todo AlarmMarker functionality
  */
 public final class AlarmMarker extends Marker {
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
-	private static final long serialVersionUID = 1L;
+
+	private static final long serialVersionUID = 2321715276526266339L;
 
 	public AlarmMarker(
 			Identifier id,
