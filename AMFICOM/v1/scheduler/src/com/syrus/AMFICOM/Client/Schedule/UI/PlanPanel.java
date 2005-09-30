@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.55 2005/09/23 11:17:18 bob Exp $
+ * $Id: PlanPanel.java,v 1.56 2005/09/30 12:40:33 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/09/23 11:17:18 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/30 12:40:33 $
  * @author $Author: bob $
  * @module scheduler
  */
