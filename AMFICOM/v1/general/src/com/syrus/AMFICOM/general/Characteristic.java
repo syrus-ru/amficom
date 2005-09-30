@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.68 2005/09/28 19:06:21 bass Exp $
+ * $Id: Characteristic.java,v 1.69 2005/09/30 16:19:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/09/28 19:06:21 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/30 16:19:23 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -496,7 +496,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		return dependencies;
 	}
 
-	public Set<Identifiable> getReverseDependencies() {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
 		return Collections.<Identifiable>singleton(super.id);
 	}
 

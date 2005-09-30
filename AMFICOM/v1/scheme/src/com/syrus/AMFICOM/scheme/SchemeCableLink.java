@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.97 2005/09/28 19:06:23 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.98 2005/09/30 16:19:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/09/28 19:06:23 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/30 16:19:23 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -818,22 +818,19 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
-	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
-		final boolean usePool = true;
-
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCableThreads0()) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

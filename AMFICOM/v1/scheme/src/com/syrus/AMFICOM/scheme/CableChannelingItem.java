@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.72 2005/09/28 19:06:23 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.73 2005/09/30 16:19:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/09/28 19:06:23 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/30 16:19:23 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -298,9 +298,9 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies() {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
 		return Collections.<Identifiable>singleton(super.id);
 	}
 

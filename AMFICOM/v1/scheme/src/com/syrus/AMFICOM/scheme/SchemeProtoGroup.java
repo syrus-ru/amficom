@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.75 2005/09/30 15:54:25 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.76 2005/09/30 16:19:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/09/30 15:54:25 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/30 16:19:23 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -263,16 +263,13 @@ public final class SchemeProtoGroup extends StorableObject
 	 * child {@code SchemeProtoGroup}s along with their dependencies are not
 	 * included since they are saved and deleted separately.
 	 *
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
-	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
-		final boolean usePool = false;
-
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);

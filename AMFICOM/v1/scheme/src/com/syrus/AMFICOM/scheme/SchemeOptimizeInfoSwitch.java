@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.22 2005/09/20 10:42:00 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.23 2005/09/30 16:19:23 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/30 16:19:23 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch extends StorableObject
@@ -148,9 +148,9 @@ public final class SchemeOptimizeInfoSwitch extends StorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	public Set<Identifiable> getReverseDependencies() {
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) {
 		return Collections.<Identifiable>singleton(super.id);
 	}
 

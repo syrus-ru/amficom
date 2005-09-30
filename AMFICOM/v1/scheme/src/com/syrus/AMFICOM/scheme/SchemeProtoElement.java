@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.106 2005/09/30 15:54:25 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.107 2005/09/30 16:19:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/09/30 15:54:25 $
+ * @version $Revision: 1.107 $, $Date: 2005/09/30 16:19:23 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -461,25 +461,22 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies(boolean)
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
-	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
-		final boolean usePool = false;
-
+	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeDevices0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeLinks0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0(usePool)) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
