@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.35 2005/09/29 08:18:31 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.36 2005/09/30 12:38:33 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/09/29 08:18:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/09/30 12:38:33 $
+ * @author $Author: max $
  * @author Selivanov Maksim Fedorovich
  * @module general
  */
@@ -33,6 +33,7 @@ public final class ObjectGroupEntities {
 	public static final String MAP_GROUP = "MapGroup";
 	public static final String RESOURCE_GROUP = "ResourceGroup";
 	public static final String MAPVIEW_GROUP = "MapViewGroup";
+	public static final String REPORT_GROUP = "MapViewGroup";
 
 	//  Group Codes
 	/**
@@ -48,6 +49,7 @@ public final class ObjectGroupEntities {
 	public static final short MAP_GROUP_CODE = 0x0007;
 	public static final short RESOURCE_GROUP_CODE = 0x0008;
 	public static final short MAPVIEW_GROUP_CODE = 0x0009;
+	public static final short REPORT_GROUP_CODE = 0x000A;
 
 	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();
 	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
@@ -126,6 +128,11 @@ public final class ObjectGroupEntities {
 				MAPLIBRARY_CODE });
 		registerGroup(RESOURCE_GROUP_CODE, RESOURCE_GROUP, new short[] { IMAGERESOURCE_CODE, LAYOUT_ITEM_CODE });
 		registerGroup(MAPVIEW_GROUP_CODE, MAPVIEW_GROUP, new short[] { MAPVIEW_CODE });
+		registerGroup(REPORT_GROUP_CODE, REPORT_GROUP, new short[] { ATTACHEDTEXT_CODE,
+				REPORTIMAGE_CODE,
+				REPORTDATA_CODE,
+				REPORTTABLEDATA_CODE,
+				REPORTTEMPLATE_CODE });
 	}
 
 	private static void registerGroup(final short groupCode, final String group, final short[] entityCodes) {
@@ -241,6 +248,15 @@ public final class ObjectGroupEntities {
 	public static boolean isInMapViewGroup(final String entityName) {
 		return isInMapViewGroup(ObjectEntities.stringToCode(entityName));
 	}
+	
+	public static boolean isInReportGroup(final short entityCode) {
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		return entityCode >= ObjectEntities.REPORT_MIN_CODE && entityCode <= ObjectEntities.REPORT_MAX_CODE;
+	}
+	
+	public static boolean isInReportGroup(final String entityName) {
+		return isInReportGroup(ObjectEntities.stringToCode(entityName));
+	}
 
 	public static short getGroupCode(final Short entityCode) {
 		return getGroupCode(entityCode.shortValue());
@@ -273,6 +289,9 @@ public final class ObjectGroupEntities {
 		}
 		else if (isInMapViewGroup(entityCode)) {
 			return MAPVIEW_GROUP_CODE;
+		}
+		else if (isInReportGroup(entityCode)) {
+			return REPORT_GROUP_CODE;
 		}
 		return UNKNOWN_GROUP_CODE;
 	}
