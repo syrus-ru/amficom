@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.109 2005/09/29 14:37:32 bass Exp $
+ * $Id: configuration.idl,v 1.110 2005/09/30 06:40:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ module configuration {
 			CROSS,
 			FILTER,
 			OTHER,
+			UNKNOWN,
 
 			BUG_136
 		};

@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: ProtoEquipment.xsd,v 1.5 2005/09/29 14:37:32 bass Exp $
+			$Id: ProtoEquipment.xsd,v 1.6 2005/09/30 06:40:49 arseniy Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -44,6 +44,7 @@
 								<xsd:enumeration value = "cross"/>
 								<xsd:enumeration value = "filter"/>
 								<xsd:enumeration value = "other"/>
+								<xsd:enumeration value = "unknown"/>
 								<xsd:enumeration value = "bug136"/>
 							</xsd:restriction>
 						</xsd:simpleType>

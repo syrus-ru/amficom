@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.103 2005/09/29 14:37:32 bass Exp $
+ * $Id: EquipmentType.java,v 1.104 2005/09/30 06:40:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.util.Codeable;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/09/29 14:37:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.104 $, $Date: 2005/09/30 06:40:49 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -40,6 +40,7 @@ public enum EquipmentType implements Namable, Codeable, TransferableObject {
 	CROSS("cross"),
 	FILTER("filter"),
 	OTHER("other"),
+	UNKNOWN("unknown"),
 
 	@Crutch136(notes = "Stub for SchemeElement without Equipment")
 	BUG_136("bug136");
@@ -76,6 +77,8 @@ public enum EquipmentType implements Namable, Codeable, TransferableObject {
 				return FILTER;
 			case IdlEquipmentType._OTHER:
 				return OTHER;
+			case IdlEquipmentType._UNKNOWN:
+				return UNKNOWN;
 
 			case IdlEquipmentType._BUG_136:
 				return BUG_136;
