@@ -1,12 +1,10 @@
-/**
- * $Id: AbstractMapStrategy.java,v 1.11 2005/09/16 14:53:36 krupenn Exp $
+/*-
+ * $$Id: AbstractMapStrategy.java,v 1.12 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.strategy;
 
@@ -31,8 +29,9 @@ import com.syrus.util.Log;
  * режимом работы пользователя с картой, режимом отображения, состоянием
  * или изменением состояния мыши и клавиатуры.
  * 
+ * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/09/16 14:53:36 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 abstract class AbstractMapStrategy implements MapStrategy

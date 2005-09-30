@@ -1,3 +1,11 @@
+/*-
+ * $$Id: SelectionPopupMenu.java,v 1.32 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.popup;
 
 import java.awt.event.ActionEvent;
@@ -27,6 +35,12 @@ import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
+/**
+ * @version $Revision: 1.32 $, $Date: 2005/09/30 16:08:40 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public final class SelectionPopupMenu extends MapPopupMenu {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem insertSiteMenuItem = new JMenuItem();

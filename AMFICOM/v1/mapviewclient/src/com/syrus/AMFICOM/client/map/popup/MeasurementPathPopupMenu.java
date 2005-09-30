@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MeasurementPathPopupMenu.java,v 1.18 2005/09/30 16:08:39 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.popup;
 
 import java.awt.event.ActionEvent;
@@ -12,6 +20,12 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 
+/**
+ * @version $Revision: 1.18 $, $Date: 2005/09/30 16:08:39 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public final class MeasurementPathPopupMenu extends MapPopupMenu {
 
 	private JMenuItem addMarkerMenuItem = new JMenuItem();

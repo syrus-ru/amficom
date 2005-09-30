@@ -1,10 +1,11 @@
-/**
- * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.10 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.11 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.util.Collection;
@@ -28,6 +29,12 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
+/**
+ * @version $Revision: 1.11 $, $Date: 2005/09/30 16:08:37 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 
 	private final JDesktopPane desktop;

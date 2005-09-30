@@ -1,18 +1,20 @@
-/**
- * $Id: LayerVisibility.java,v 1.1 2005/06/09 11:30:46 krupenn Exp $
+/*-
+ * $$Id: LayerVisibility.java,v 1.2 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/09 11:30:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-class LayerVisibility {
+public class LayerVisibility {
 	Object type;
 	Boolean visible;
 	Boolean labelVisible;

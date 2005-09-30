@@ -1,10 +1,11 @@
-/*
- * $Id: ImagesPanel.java,v 1.12 2005/09/25 16:08:01 krupenn Exp $
+/*-
+ * $$Id: ImagesPanel.java,v 1.13 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.UI;
 
 import java.awt.BorderLayout;
@@ -45,9 +46,10 @@ import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $
- * @module commonclient_v1
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class ImagesPanel extends JPanel
 		implements PropertyChangeListener {

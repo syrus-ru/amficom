@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MarkerEditor.java,v 1.15 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
@@ -27,6 +35,12 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.Marker;
 
+/**
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:40 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MarkerEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 

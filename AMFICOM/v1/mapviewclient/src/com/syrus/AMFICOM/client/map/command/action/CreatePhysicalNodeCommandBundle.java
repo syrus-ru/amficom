@@ -1,11 +1,9 @@
-/**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.28 2005/09/16 14:53:32 krupenn Exp $
+/*-
+ * $$Id: CreatePhysicalNodeCommandBundle.java,v 1.29 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -29,9 +27,10 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:32 $
- * @module mapviewclient
+ * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle {
 	/**

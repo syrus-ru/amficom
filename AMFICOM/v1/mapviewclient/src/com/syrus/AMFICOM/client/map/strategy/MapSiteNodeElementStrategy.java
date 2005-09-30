@@ -1,12 +1,9 @@
-/**
- * $Id: MapSiteNodeElementStrategy.java,v 1.27 2005/08/24 08:19:59 krupenn Exp $
+/*-
+ * $$Id: MapSiteNodeElementStrategy.java,v 1.28 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.strategy;
@@ -27,8 +24,10 @@ import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * Стратегия управления узлом.
+ * 
+ * @version $Revision: 1.28 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/08/24 08:19:59 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapSiteNodeElementStrategy extends AbstractMapStrategy 

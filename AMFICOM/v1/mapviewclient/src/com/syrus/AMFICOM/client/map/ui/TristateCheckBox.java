@@ -1,9 +1,11 @@
-/**
- * $Id: TristateCheckBox.java,v 1.6 2005/09/16 14:53:38 krupenn Exp $ 
- * Syrus Systems 
- * Научно-технический центр 
- * Проект: АМФИКОМ
+/*-
+ * $$Id: TristateCheckBox.java,v 1.7 2005/09/30 16:08:42 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.event.ActionEvent;
@@ -26,20 +28,10 @@ import javax.swing.plaf.ActionMapUIResource;
 /**
  * http://www.javaspecialists.co.za/archive/Issue082.html
  * 
- *  Maintenance tip - There were some tricks to getting this code
- *  working:
- *  
- *  1. You have to overwite addMouseListener() to do nothing
- *  2. You have to add a mouse event on mousePressed by calling
- *  super.addMouseListener()
- *  3. You have to replace the UIActionMap for the keyboard event
- *  &quot;pressed&quot; with your own one.
- *  4. You have to remove the UIActionMap for the keyboard event
- *  &quot;released&quot;.
- *  5. You have to grab focus when the next state is entered,
- *  otherwise clicking on the component won't get the focus.
- *  6. You have to make a TristateDecorator as a button model that
- *  wraps the original button model and does state management.
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class TristateCheckBox extends JCheckBox {
 	/** This is a type-safe enumerated type */

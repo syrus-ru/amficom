@@ -1,12 +1,9 @@
-/**
- * $Id: MapNodeLinkSizeField.java,v 1.14 2005/09/16 14:53:36 krupenn Exp $
+/*-
+ * $$Id: MapNodeLinkSizeField.java,v 1.15 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -27,27 +24,24 @@ import com.syrus.util.Log;
 
 /**
  * Поле редактирования длины фрагмента линии. При отображении компонент
- * помещается на родительский компонент. При удачном редактировании 
- * (пользователь нажал ENTER) меняет фрагмент линии в карте.
- * При завершении редактирования  сам убирает себя из родительского компонента
+ * помещается на родительский компонент. При удачном редактировании
+ * (пользователь нажал ENTER) меняет фрагмент линии в карте. При завершении
+ * редактирования сам убирает себя из родительского компонента
  * 
- * 
- * 
- * @version $Revision: 1.14 $, $Date: 2005/09/16 14:53:36 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class MapNodeLinkSizeField extends JTextField 
-{
+public final class MapNodeLinkSizeField extends JTextField {
 	LogicalNetLayer logicalNetLayer;
 	NodeLink nodeLink;
 	AbstractNode node;
-	
+
 	public MapNodeLinkSizeField(
 			LogicalNetLayer logicalNetLayer,
 			NodeLink nodeLink,
-			AbstractNode node)
-	{
+			AbstractNode node) {
 		super();
 		this.logicalNetLayer = logicalNetLayer;
 		this.nodeLink = nodeLink;
@@ -56,88 +50,88 @@ public final class MapNodeLinkSizeField extends JTextField
 		grabFocus();
 	}
 
-	public void jbInit()
-	{
+	public void jbInit() {
 		this.setFont(MapPropertiesManager.getFont());
 		this.setBackground(MapPropertiesManager.getTextBackground());
 		this.setForeground(MapPropertiesManager.getTextColor());
 
-		addKeyListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldKeyAdapter(this));
-		addFocusListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldFocusAdapter(this));
+		addKeyListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldKeyAdapter(
+				this));
+		addFocusListener(new MapNodeLinkSizeField.MapNodeLinkSizeFieldFocusAdapter(
+				this));
 	}
 
-	class MapNodeLinkSizeFieldFocusAdapter extends FocusAdapter
-	{
+	class MapNodeLinkSizeFieldFocusAdapter extends FocusAdapter {
 		MapNodeLinkSizeField adaptee;
 
-		MapNodeLinkSizeFieldFocusAdapter(MapNodeLinkSizeField adaptee)
-		{
+		MapNodeLinkSizeFieldFocusAdapter(MapNodeLinkSizeField adaptee) {
 			this.adaptee = adaptee;
 		}
 
 		@Override
-		public void focusGained(FocusEvent e)
-		{//empty
+		public void focusGained(FocusEvent e) {
+			// empty
 		}
-		
+
 		@Override
-		public void focusLost(FocusEvent e)
-		{
+		public void focusLost(FocusEvent e) {
 			this.adaptee.setVisible(false);
 			if(this.adaptee.getParent() != null)
 				this.adaptee.getParent().remove(this.adaptee);
 			this.adaptee.removeFocusListener(this);
 		}
 	}
-	
-	class MapNodeLinkSizeFieldKeyAdapter extends java.awt.event.KeyAdapter
-	{
+
+	class MapNodeLinkSizeFieldKeyAdapter extends java.awt.event.KeyAdapter {
 		MapNodeLinkSizeField adaptee;
 
-		MapNodeLinkSizeFieldKeyAdapter(MapNodeLinkSizeField adaptee)
-		{
+		MapNodeLinkSizeFieldKeyAdapter(MapNodeLinkSizeField adaptee) {
 			this.adaptee = adaptee;
 		}
 
 		@Override
-		public void keyPressed(KeyEvent e) 
-		{
+		public void keyPressed(KeyEvent e) {
 			int code = e.getKeyCode();
 
-			if (code == KeyEvent.VK_ESCAPE)
-			{
+			if(code == KeyEvent.VK_ESCAPE) {
 				this.adaptee.setVisible(false);
 				if(this.adaptee.getParent() != null)
 					this.adaptee.getParent().remove(this.adaptee);
 				this.adaptee.removeKeyListener(this);
 			}
 
-			if (code == KeyEvent.VK_ENTER)
-			{
-				try
-				{
+			if(code == KeyEvent.VK_ENTER) {
+				try {
 					double dist = Double.parseDouble(this.adaptee.getText());
-					this.adaptee.logicalNetLayer.setNodeLinkSizeFrom(this.adaptee.nodeLink, this.adaptee.node, dist);
+					this.adaptee.logicalNetLayer.setNodeLinkSizeFrom(
+							this.adaptee.nodeLink,
+							this.adaptee.node,
+							dist);
 					this.adaptee.setVisible(false);
 					if(this.adaptee.getParent() != null)
 						this.adaptee.getParent().remove(this.adaptee);
 					this.adaptee.removeKeyListener(this);
 
-					if(this.adaptee.logicalNetLayer != null)
-					{
-						this.adaptee.logicalNetLayer.sendMapEvent(MapEvent.NEED_REPAINT);
+					if(this.adaptee.logicalNetLayer != null) {
+						this.adaptee.logicalNetLayer
+								.sendMapEvent(MapEvent.NEED_REPAINT);
 					}
-				}
-				catch(Exception ex)
-				{
+				} catch(Exception ex) {
 					Log.debugMessage("Illegal distance", Level.INFO); //$NON-NLS-1$
 				}
 			}
 		}
+
 		@Override
-		public void keyReleased(KeyEvent e) {/*empty*/}
+		public void keyReleased(KeyEvent e) {
+			// empty
+		}
+		}
+
 		@Override
-		public void keyTyped(KeyEvent e) {/*empty*/}
+		public void keyTyped(KeyEvent e) {
+			// empty
+		}
 	}
-	
+
 }

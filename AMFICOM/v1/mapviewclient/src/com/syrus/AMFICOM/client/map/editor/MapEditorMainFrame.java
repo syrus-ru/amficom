@@ -1,9 +1,9 @@
-/**
- * $Id: MapEditorMainFrame.java,v 1.62 2005/09/27 07:11:41 krupenn Exp $
+/*-
+ * $$Id: MapEditorMainFrame.java,v 1.63 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.editor;
@@ -72,11 +72,10 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * 
- * 
- * @version $Revision: 1.62 $, $Date: 2005/09/27 07:11:41 $
- * @module mapviewclient
+ * @version $Revision: 1.63 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public final class MapEditorMainFrame extends AbstractMainFrame {
 	private static final long serialVersionUID = 3420855179151985089L;

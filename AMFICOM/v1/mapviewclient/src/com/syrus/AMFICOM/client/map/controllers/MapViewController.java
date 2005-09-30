@@ -1,10 +1,10 @@
-/**
- * $Id: MapViewController.java,v 1.59 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapViewController.java,v 1.60 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.controllers;
 
@@ -60,8 +60,10 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
+ * 
+ * @version $Revision: 1.60 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
- * @version $Revision: 1.59 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapViewController {

@@ -1,10 +1,11 @@
-/**
- * $Id: MapStrategy.java,v 1.11 2005/06/16 10:57:21 krupenn Exp $
+/*-
+ * $$Id: MapStrategy.java,v 1.12 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.strategy;
 
 import java.awt.event.MouseEvent;
@@ -15,8 +16,9 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.MapElement;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public interface MapStrategy {

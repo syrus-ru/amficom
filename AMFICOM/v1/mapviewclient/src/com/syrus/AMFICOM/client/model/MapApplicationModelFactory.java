@@ -1,31 +1,28 @@
-/**
- * $Id: MapApplicationModelFactory.java,v 1.3 2005/08/11 12:43:32 arseniy Exp $
+/*-
+ * $$Id: MapApplicationModelFactory.java,v 1.4 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.model;
 
-
 /**
  * Фабричный класс создания модели приложения для работы с картой.
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/11 12:43:32 $
+ * 
+ * @version $Revision: 1.4 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapApplicationModelFactory
-{
+public class MapApplicationModelFactory {
 	/**
 	 * Создать объект модели приложения.
+	 * 
 	 * @return модель
 	 */
-	public ApplicationModel create()
-	{
+	public ApplicationModel create() {
 		ApplicationModel aModel = new MapApplicationModel();
 		return aModel;
 	}

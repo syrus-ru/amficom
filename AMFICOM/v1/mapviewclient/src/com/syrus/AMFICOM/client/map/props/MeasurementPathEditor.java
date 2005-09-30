@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MeasurementPathEditor.java,v 1.13 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
@@ -24,6 +32,12 @@ import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 
+/**
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:40 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 
 	private JPanel jPanel = new JPanel();

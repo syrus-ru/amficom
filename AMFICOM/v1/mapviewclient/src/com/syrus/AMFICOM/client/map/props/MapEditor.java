@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MapEditor.java,v 1.19 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
@@ -31,8 +39,9 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/30 16:08:40 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapEditor extends DefaultStorableObjectEditor {

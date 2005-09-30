@@ -1,12 +1,9 @@
-/**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.31 2005/09/20 08:25:55 krupenn Exp $
+/*-
+ * $$Id: MapUnboundNodeElementStrategy.java,v 1.32 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.strategy;
@@ -29,8 +26,10 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
  * Стратегия управления непривязанным узлом.
+ * 
+ * @version $Revision: 1.32 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/20 08:25:55 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 

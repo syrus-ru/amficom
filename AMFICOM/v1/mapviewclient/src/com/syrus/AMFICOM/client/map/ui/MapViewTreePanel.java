@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MapViewTreePanel.java,v 1.32 2005/09/30 16:08:42 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.BorderLayout;
@@ -12,6 +20,12 @@ import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 
+/**
+ * @version $Revision: 1.32 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public final class MapViewTreePanel extends JPanel {
 
 	ApplicationContext aContext;

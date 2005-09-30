@@ -1,12 +1,9 @@
-/**
- * $Id: MapMarkElementStrategy.java,v 1.32 2005/09/02 16:50:06 krupenn Exp $
+/*-
+ * $$Id: MapMarkElementStrategy.java,v 1.33 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.strategy;
@@ -29,8 +26,10 @@ import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * Стратегия управления метки на физической линии.
+ * 
+ * @version $Revision: 1.33 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/09/02 16:50:06 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapMarkElementStrategy extends AbstractMapStrategy 

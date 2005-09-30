@@ -1,10 +1,11 @@
-/**
- * $Id: StandAloneNetMapViewGenerator.java,v 1.1 2005/09/16 08:18:33 krupenn Exp $
+/*-
+ * $$Id: StandAloneNetMapViewGenerator.java,v 1.2 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map;
 
 import java.awt.Dimension;
@@ -20,6 +21,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2005/09/30 16:08:36 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class StandAloneNetMapViewGenerator {
 
 	private static NetMapViewer netMapViewer;

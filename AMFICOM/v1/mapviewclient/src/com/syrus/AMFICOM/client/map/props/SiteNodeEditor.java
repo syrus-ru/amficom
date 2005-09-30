@@ -1,3 +1,11 @@
+/*-
+ * $$Id: SiteNodeEditor.java,v 1.23 2005/09/30 16:08:41 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
@@ -36,6 +44,12 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
+/**
+ * @version $Revision: 1.23 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class SiteNodeEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 

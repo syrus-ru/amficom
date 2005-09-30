@@ -1,27 +1,23 @@
-/**
- * $Id: MapApplicationModel.java,v 1.9 2005/09/16 14:53:38 krupenn Exp $
+/*-
+ * $$Id: MapApplicationModel.java,v 1.10 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.model;
 
 /**
- * Модель приложения определяет функциональные элементы, досступные при работе
- * с картой.
- *  
+ * Модель приложения определяет функциональные элементы, досступные при работе с
+ * картой.
  * 
+ * @version $Revision: 1.10 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.9 $, $Date: 2005/09/16 14:53:38 $
  * @module mapviewclient
  */
-public class MapApplicationModel extends ApplicationModel
-{
+public class MapApplicationModel extends ApplicationModel {
 	public static final String ACTION_SAVE_MAP = "savemap"; //$NON-NLS-1$
 	public static final String ACTION_SAVE_MAP_VIEW = "savemapview"; //$NON-NLS-1$
 	public static final String ACTION_EDIT_MAP = "editmap"; //$NON-NLS-1$
@@ -49,8 +45,7 @@ public class MapApplicationModel extends ApplicationModel
 	public static final String OPERATION_MEASURE_DISTANCE = "mapActionMeasureDistance"; //$NON-NLS-1$
 	public static final String OPERATION_MOVE_FIXED = "mapActionMoveFixed"; //$NON-NLS-1$
 
-	public MapApplicationModel()
-	{
+	public MapApplicationModel() {
 		super.add(ACTION_SAVE_MAP);
 		super.add(ACTION_SAVE_MAP_VIEW);
 		super.add(ACTION_EDIT_MAP);
@@ -59,7 +54,7 @@ public class MapApplicationModel extends ApplicationModel
 		super.add(ACTION_USE_MARKER);
 		super.add(ACTION_INDICATION);
 		super.add(ACTION_EDIT_PROPERTIES);
-		
+
 		super.add(MODE_NODE_LINK);
 		super.add(MODE_LINK);
 		super.add(MODE_CABLE_PATH);
@@ -81,8 +76,7 @@ public class MapApplicationModel extends ApplicationModel
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return getClass().getName();
 	}
 }

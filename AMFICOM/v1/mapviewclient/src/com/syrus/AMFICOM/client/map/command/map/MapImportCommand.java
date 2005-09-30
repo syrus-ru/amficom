@@ -1,12 +1,10 @@
-/*
- * $Id: MapImportCommand.java,v 1.53 2005/09/28 15:11:37 krupenn Exp $
+/*-
+ * $$Id: MapImportCommand.java,v 1.54 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.command.map;
 
@@ -57,8 +55,9 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
+ * @version $Revision: 1.54 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.53 $, $Date: 2005/09/28 15:11:37 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {

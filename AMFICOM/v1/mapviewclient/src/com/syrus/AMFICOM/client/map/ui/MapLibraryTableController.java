@@ -1,10 +1,11 @@
-/**
- * $Id: MapLibraryTableController.java,v 1.4 2005/09/25 16:08:03 krupenn Exp $
+/*-
+ * $$Id: MapLibraryTableController.java,v 1.5 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.util.ArrayList;
@@ -21,6 +22,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.util.Wrapper;
 
+/**
+ * @version $Revision: 1.5 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MapLibraryTableController implements Wrapper {
 
 	static MapLibraryTableController instance = null;

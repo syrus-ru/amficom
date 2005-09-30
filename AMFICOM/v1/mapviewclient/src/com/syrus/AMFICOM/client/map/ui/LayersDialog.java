@@ -1,10 +1,11 @@
-/**
- * $Id: LayersDialog.java,v 1.12 2005/09/25 16:08:03 krupenn Exp $
+/*-
+ * $$Id: LayersDialog.java,v 1.13 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.BorderLayout;
@@ -35,6 +36,12 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
+/**
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class LayersDialog extends JDialog {
 
 	private static final String LABEL = MapEditorResourceKeys.LABEL_LABEL;

@@ -1,7 +1,7 @@
-/*
- * $Id: ImagesDialog.java,v 1.6 2005/09/25 16:08:01 krupenn Exp $
+/*-
+ * $$Id: ImagesDialog.java,v 1.7 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -24,9 +24,10 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
 /**
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $
- * @module commonclient_v1
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class ImagesDialog {
 	public static Object showImageDialog() {

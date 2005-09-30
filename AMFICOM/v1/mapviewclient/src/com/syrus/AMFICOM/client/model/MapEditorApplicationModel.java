@@ -1,12 +1,9 @@
-/**
- * $Id: MapEditorApplicationModel.java,v 1.16 2005/09/25 16:08:03 krupenn Exp $
+/*-
+ * $$Id: MapEditorApplicationModel.java,v 1.17 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.model;
@@ -22,9 +19,10 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * @version $Revision: 1.16 $, $Date: 2005/09/25 16:08:03 $
- * @module mapviewclient
+ * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:42 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties"; //$NON-NLS-1$

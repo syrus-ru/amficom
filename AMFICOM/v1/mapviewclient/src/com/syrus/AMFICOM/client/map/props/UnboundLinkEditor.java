@@ -1,3 +1,11 @@
+/*-
+ * $$Id: UnboundLinkEditor.java,v 1.15 2005/09/30 16:08:41 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
@@ -19,6 +27,12 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
+/**
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 	UnboundLink link;
 

@@ -1,10 +1,11 @@
-/*
- * $Id: ImagesPanelLabel.java,v 1.4 2005/09/16 14:53:32 krupenn Exp $
+/*-
+ * $$Id: ImagesPanelLabel.java,v 1.5 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
@@ -22,9 +23,10 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 
 /**
+ * @version $Revision: 1.5 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $
- * @module commonclient_v1
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class ImagesPanelLabel extends JLabel
 		implements PropertyChangeListener {
@@ -93,11 +95,6 @@ public class ImagesPanelLabel extends JLabel
 //			    this.setBorder(new EtchedBorder( EtchedBorder.LOWERED, Color.gray, Color.gray ) );
 				this.setBorder(new EtchedBorder( EtchedBorder.LOWERED, Color.white, Color.white ) );
 			}
-	}
-
-	@Override
-	public String getToolTipText() {
-		return "";//ir.description(); //$NON-NLS-1$
 	}
 
 }

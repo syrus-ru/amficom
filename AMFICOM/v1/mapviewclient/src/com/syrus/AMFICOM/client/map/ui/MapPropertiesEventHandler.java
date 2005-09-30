@@ -1,7 +1,7 @@
 /*-
- * $Id: MapPropertiesEventHandler.java,v 1.7 2005/09/16 14:53:36 krupenn Exp $
+ * $$Id: MapPropertiesEventHandler.java,v 1.8 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -39,9 +39,10 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
+ * @version $Revision: 1.8 $, $Date: 2005/09/30 16:08:42 $
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/09/16 14:53:36 $
- * @module schemeclient
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 
 public class MapPropertiesEventHandler extends AbstractEventHandler implements ChangeListener {

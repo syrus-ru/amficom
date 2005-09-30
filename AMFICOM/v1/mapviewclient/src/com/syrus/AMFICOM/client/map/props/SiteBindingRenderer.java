@@ -1,3 +1,11 @@
+/*-
+ * $$Id: SiteBindingRenderer.java,v 1.9 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.Component;
@@ -10,6 +18,12 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
+/**
+ * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:40 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 class SiteBindingRenderer extends DefaultTreeCellRenderer {
 	SiteNode site;
 

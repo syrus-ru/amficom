@@ -1,7 +1,7 @@
 /*-
- * $Id: MapStrategyManager.java,v 1.15 2005/09/29 11:39:40 krupenn Exp $
+ * $$Id: MapStrategyManager.java,v 1.16 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * 
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.15 $, $Date: 2005/09/29 11:39:40 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:41 $
  * @module mapviewclient
  */
 public final class MapStrategyManager {

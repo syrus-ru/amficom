@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MapPopupMenuManager.java,v 1.17 2005/09/30 16:08:39 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.popup;
 
 import java.util.HashMap;
@@ -16,6 +24,12 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
+/**
+ * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:39 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public final class MapPopupMenuManager {
 	private MapPopupMenuManager() {
 		// empty

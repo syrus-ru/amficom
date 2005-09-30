@@ -1,12 +1,9 @@
-/**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.28 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.29 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -28,8 +25,9 @@ import com.syrus.util.Log;
  * создание топологического узла, внесение его в пул и на карту - атомарное
  * действие
  * 
+ * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {

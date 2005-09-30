@@ -1,10 +1,9 @@
-/**
- * $Id: MapViewOpenCommand.java,v 1.31 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapViewOpenCommand.java,v 1.32 2005/09/30 16:08:38 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.map;
@@ -40,9 +39,11 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * открыть вид 
+ * открыть вид
+ *  
+ * @version $Revision: 1.32 $, $Date: 2005/09/30 16:08:38 $
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapViewOpenCommand extends AbstractCommand {

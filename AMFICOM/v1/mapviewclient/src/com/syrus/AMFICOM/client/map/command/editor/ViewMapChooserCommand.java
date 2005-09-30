@@ -1,10 +1,10 @@
-/*
- * $Id: ViewMapChooserCommand.java,v 1.8 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: ViewMapChooserCommand.java,v 1.9 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.command.editor;
 
@@ -33,10 +33,10 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.8 $, $Date: 2005/09/25 16:08:02 $
- * @module map_v2
+ * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @see MapSaveAsCommand
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class ViewMapChooserCommand extends AbstractCommand {
 	JDesktopPane desktop;

@@ -1,12 +1,9 @@
-/**
- * $Id: MapState.java,v 1.14 2005/09/16 14:53:32 krupenn Exp $
+/*-
+ * $$Id: MapState.java,v 1.15 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map;
@@ -22,8 +19,9 @@ import com.syrus.util.Log;
  * (mouseMode) - включенный режим (operationMode) - действие над элементами в
  * нулевом режиме (actionMode) -режим отображения линий (showMode)
  * 
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/09/16 14:53:32 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapState {

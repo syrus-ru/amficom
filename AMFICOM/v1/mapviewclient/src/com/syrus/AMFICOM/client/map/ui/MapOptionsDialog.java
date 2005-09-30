@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MapOptionsDialog.java,v 1.16 2005/09/30 16:08:42 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Color;
@@ -26,6 +34,12 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
+/**
+ * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MapOptionsDialog extends JDialog 
 {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();

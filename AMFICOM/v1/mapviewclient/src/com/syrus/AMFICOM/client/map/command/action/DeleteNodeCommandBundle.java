@@ -1,12 +1,9 @@
-/**
- * $Id: DeleteNodeCommandBundle.java,v 1.45 2005/09/28 15:19:22 krupenn Exp $
+/*-
+ * $$Id: DeleteNodeCommandBundle.java,v 1.46 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -40,8 +37,10 @@ import com.syrus.util.Log;
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
+ * 
+ * @version $Revision: 1.46 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/09/28 15:19:22 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle

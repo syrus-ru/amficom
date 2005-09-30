@@ -1,3 +1,11 @@
+/*-
+ * $$Id: UnboundLinkPopupMenu.java,v 1.22 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.popup;
 
 import java.awt.event.ActionEvent;
@@ -13,6 +21,12 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
+/**
+ * @version $Revision: 1.22 $, $Date: 2005/09/30 16:08:40 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class UnboundLinkPopupMenu extends MapPopupMenu {
 	private JMenuItem bindMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();

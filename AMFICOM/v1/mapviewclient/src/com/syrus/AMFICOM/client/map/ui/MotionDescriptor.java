@@ -1,12 +1,9 @@
-/**
- * $Id: MotionDescriptor.java,v 1.5 2005/08/11 12:43:32 arseniy Exp $
+/*-
+ * $$Id: MotionDescriptor.java,v 1.6 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -21,7 +18,7 @@ import java.awt.Point;
  * перемещением маркер должен переместиться вдоль nodeLink.
  * Рисование о пределение координат маркера происходит путм проецирования 
  * координат курсора мыши на линию, на которой маркер находится
- * 
+ * <pre>
  * 
  *                                           *(endPoint)
  *  
@@ -31,17 +28,16 @@ import java.awt.Point;
  *  
  *  
  *     *(startPoint)
- * 
+ * </pre>
  * 	B - угол наклона вектора (startPoint, endPoint)
  *  A - угол медлу векторами (startPoint, endPoint) и  (thisPoint, mousePoint)
  * 
- * 
- * @version $Revision: 1.5 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MotionDescriptor 
-{
+public class MotionDescriptor  {
 	/**
 	 * косинус угла наклона фрагмента линии в экранной плоскости
 	 */
@@ -70,29 +66,12 @@ public class MotionDescriptor
 	 * длина фрагмента в экранных координатах
 	 */
 	public double nodeLinkLength;
-/*
-	private MotionDescriptor(
-			double cb, 
-			double sb, 
-			double lt, 
-			double ca, 
-			double lf, 
-			double nl)
-	{
-		cosB = cb;
-		sinB = sb;
-		lengthThisToMousePoint = lt;
-		cosA = ca;
-		lengthFromStartNode = lf;
-		nodeLinkLength = nl;
-	}
-*/
+
 	public MotionDescriptor(
 		Point startPoint,
 		Point endPoint,
 		Point thisPoint,
-		Point mousePoint)
-	{
+		Point mousePoint) {
 
 		this.nodeLinkLength = Math.sqrt( 
 			(endPoint.x - startPoint.x) * (endPoint.x - startPoint.x) +

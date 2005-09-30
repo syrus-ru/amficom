@@ -1,12 +1,9 @@
-/**
- * $Id: MapViewVisualManagerFactory.java,v 1.6 2005/09/16 14:53:35 krupenn Exp $
+/*-
+ * $$Id: MapViewVisualManagerFactory.java,v 1.7 2005/09/30 16:08:40 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.props;
@@ -24,9 +21,11 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
+
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/16 14:53:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:40 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapViewVisualManagerFactory

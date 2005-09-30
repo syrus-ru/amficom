@@ -1,12 +1,10 @@
-/**
- * $Id: LogicalNetLayer.java,v 1.128 2005/09/29 11:40:09 krupenn Exp $
+/*-
+ * $$Id: LogicalNetLayer.java,v 1.129 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map;
 
@@ -77,11 +75,10 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * 
- * 
+ * @version $Revision: 1.129 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.128 $, $Date: 2005/09/29 11:40:09 $
- * @module mapviewclient_v2
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public final class LogicalNetLayer {
 	protected CommandList commandList = new CommandList(20);
@@ -977,7 +974,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.128 $, $Date: 2005/09/29 11:40:09 $
+	 * @version $Revision: 1.129 $, $Date: 2005/09/30 16:08:36 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {

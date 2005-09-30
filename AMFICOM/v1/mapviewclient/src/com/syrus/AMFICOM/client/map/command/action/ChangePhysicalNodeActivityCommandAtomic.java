@@ -1,12 +1,9 @@
-/**
- * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.15 2005/09/16 14:53:32 krupenn Exp $
+/*-
+ * $$Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.16 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -21,8 +18,10 @@ import com.syrus.util.Log;
 
 /**
  * Изменение активности топологического узла - атомарное действие
+ * 
+ * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/09/16 14:53:32 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand {

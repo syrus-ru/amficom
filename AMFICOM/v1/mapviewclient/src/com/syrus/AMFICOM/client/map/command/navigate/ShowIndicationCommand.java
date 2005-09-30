@@ -1,10 +1,9 @@
-/**
- * $Id: ShowIndicationCommand.java,v 1.5 2005/09/16 14:53:34 krupenn Exp $
+/*-
+ * $$Id: ShowIndicationCommand.java,v 1.6 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.navigate;
@@ -19,9 +18,11 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 
 /**
- * Команда включения/выключения режима отображения топологических узлов на карте 
+ * Команда включения/выключения режима отображения топологических узлов на карте
+ *  
+ * @version $Revision: 1.6 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/09/16 14:53:34 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class ShowIndicationCommand extends MapNavigateCommand {

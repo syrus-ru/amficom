@@ -1,10 +1,11 @@
-/**
- * $Id: TopologyTreeModel.java,v 1.14 2005/09/25 16:08:03 krupenn Exp $
+/*-
+ * $$Id: TopologyTreeModel.java,v 1.15 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Image;
@@ -39,6 +40,12 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
+/**
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class TopologyTreeModel implements ChildrenFactory {
 
 	public static final String TOPOLOGY_BRANCH = MapEditorResourceKeys.TREE_TOPOLOGY;

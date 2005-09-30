@@ -1,5 +1,5 @@
-/**
- * $$Id: MapVoidElementStrategy.java,v 1.35 2005/09/28 15:11:03 krupenn Exp $$
+/*-
+ * $$Id: MapVoidElementStrategy.java,v 1.36 2005/09/30 16:08:41 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client.map.strategy;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -34,8 +33,9 @@ import com.syrus.util.Log;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * 
+ * @version $Revision: 1.36 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/09/28 15:11:03 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy {

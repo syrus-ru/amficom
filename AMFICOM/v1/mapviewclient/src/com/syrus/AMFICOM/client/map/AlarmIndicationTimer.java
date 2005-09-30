@@ -1,10 +1,11 @@
-/**
- * $Id: AlarmIndicationTimer.java,v 1.2 2005/08/05 07:37:56 krupenn Exp $
+/*-
+ * $$Id: AlarmIndicationTimer.java,v 1.3 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map;
 
 import java.awt.event.ActionEvent;
@@ -21,13 +22,19 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapTypedElementsContainer;
 import com.syrus.util.Log;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2005/09/30 16:08:36 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class AlarmIndicationTimer {
 
 	ActionListener timerActionListener = new ActionListener() {
 
 		public void actionPerformed(ActionEvent e) {
 			if(!MapPropertiesManager.isShowAlarmIndication()) {
-				// Indication ist ausgeschalten
+				// Indikation ist ausgeschalten
 				return;
 			}
 			try {

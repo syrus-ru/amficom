@@ -1,10 +1,11 @@
-/**
- * $Id: MapVisualManager.java,v 1.8 2005/08/08 10:19:07 krupenn Exp $
+/*-
+ * $$Id: MapVisualManager.java,v 1.9 2005/09/30 16:08:40 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.util.HashMap;
@@ -34,8 +35,9 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/08 10:19:07 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:40 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapVisualManager implements VisualManager {

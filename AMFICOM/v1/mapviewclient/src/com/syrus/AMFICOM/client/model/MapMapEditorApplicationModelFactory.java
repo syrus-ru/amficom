@@ -1,34 +1,31 @@
-/**
- * $Id: MapMapEditorApplicationModelFactory.java,v 1.4 2005/08/17 14:14:21 arseniy Exp $
+/*-
+ * $$Id: MapMapEditorApplicationModelFactory.java,v 1.5 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.model;
 
-
 /**
- * Фабричный класс создания модели приложения для работы с картой 
- * в модуле "Редактор топологических схем".
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/17 14:14:21 $
+ * Фабричный класс создания модели приложения для работы с картой в модуле
+ * "Редактор топологических схем".
+ * 
+ * @version $Revision: 1.5 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapMapEditorApplicationModelFactory
-		extends MapApplicationModelFactory 
-{
+public class MapMapEditorApplicationModelFactory extends
+		MapApplicationModelFactory {
 	@Override
-	public ApplicationModel create()
-	{
+	public ApplicationModel create() {
 		ApplicationModel aModel = super.create();
 
-//		aModel.setUsable(MapApplicationModel.ACTION_INDICATION, false);
-//		aModel.setUsable(MapApplicationModel.ACTION_USE_MARKER, false);
+		//uncomment for test purposes
+		// aModel.setUsable(MapApplicationModel.ACTION_INDICATION, false);
+		// aModel.setUsable(MapApplicationModel.ACTION_USE_MARKER, false);
 
 		return aModel;
 	}

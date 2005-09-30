@@ -1,12 +1,9 @@
-/**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.29 2005/09/19 15:37:43 krupenn Exp $
+/*-
+ * $$Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.30 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -29,11 +26,10 @@ import com.syrus.util.Log;
  *  команда привязывания непривязанной линии к тоннелю. концевые узлы
  *  неправязанной линии и тоннеля должны совпадать
  * 
- * 
- * 
+ * @version $Revision: 1.30 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/09/19 15:37:43 $
- * @module mapviewclient 
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends
 		MapActionCommandBundle {

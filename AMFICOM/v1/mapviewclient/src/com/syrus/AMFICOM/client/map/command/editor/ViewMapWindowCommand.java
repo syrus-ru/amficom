@@ -1,10 +1,9 @@
-/**
- * $Id: ViewMapWindowCommand.java,v 1.34 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: ViewMapWindowCommand.java,v 1.35 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
@@ -35,9 +34,11 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * Команда отображает окно карты 
+ * Команда отображает окно карты
+ *  
+ * @version $Revision: 1.35 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class ViewMapWindowCommand extends AbstractCommand {

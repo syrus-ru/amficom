@@ -1,3 +1,11 @@
+/*-
+ * $$Id: SiteCrossingPanel.java,v 1.19 2005/09/30 16:08:41 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.BasicStroke;
@@ -26,6 +34,12 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
+/**
+ * @version $Revision: 1.19 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class SiteCrossingPanel extends JPanel {
 	SiteNode site;
 

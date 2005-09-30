@@ -1,10 +1,11 @@
-/**
- * $Id: MapImageRendererFactory.java,v 1.6 2005/09/16 14:53:32 krupenn Exp $
+/*-
+ * $$Id: MapImageRendererFactory.java,v 1.7 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map;
 
 import java.lang.reflect.Constructor;
@@ -14,8 +15,9 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapImageRendererFactory {
@@ -47,8 +49,6 @@ public final class MapImageRendererFactory {
 					return (MapImageRenderer) constructor.newInstance(initArgs);
 				}
 			}
-			// MapImageRenderer renderer = (MapImageRenderer
-			// )Class.forName(className).newInstance();
 		} catch (ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 			throw new MapDataException(

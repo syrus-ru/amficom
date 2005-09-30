@@ -1,7 +1,9 @@
-/**
- * $Id: MapCoordinatesConverter.java,v 1.12 2005/08/12 14:49:41 arseniy Exp $
- * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
- * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
+/*-
+ * $$Id: MapCoordinatesConverter.java,v 1.13 2005/09/30 16:08:36 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map;
@@ -13,14 +15,14 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Конвертер географических и экранных координат для отображения элементов карты
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/12 14:49:41 $
- * @module maviewclient_v1
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:36 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
-public interface MapCoordinatesConverter
-{
+public interface MapCoordinatesConverter {
 	public abstract MapConnection getMapConnection()
-		throws MapConnectionException;
+			throws MapConnectionException;
 
 	/**
 	 * Перевести географические координаты в экранные.
@@ -29,7 +31,7 @@ public interface MapCoordinatesConverter
 	 * @return экранные координаты
 	 */
 	Point convertMapToScreen(DoublePoint point)
-		throws MapConnectionException, MapDataException;
+			throws MapConnectionException, MapDataException;
 
 	/**
 	 * Перевести экранные координаты в географические.
@@ -38,7 +40,7 @@ public interface MapCoordinatesConverter
 	 * @return географические координаты
 	 */
 	DoublePoint convertScreenToMap(Point point)
-		throws MapConnectionException, MapDataException;
+			throws MapConnectionException, MapDataException;
 
 	/**
 	 * Получить точку на линии (startPoint, endPoint), отлежащий от точки
@@ -52,8 +54,7 @@ public interface MapCoordinatesConverter
 	DoublePoint pointAtDistance(
 			DoublePoint startPoint,
 			DoublePoint endPoint,
-			double dist) 
-		throws MapConnectionException, MapDataException;
+			double dist) throws MapConnectionException, MapDataException;
 
 	/**
 	 * Найти расстояние между двумя точками в географической системе координат.
@@ -63,24 +64,6 @@ public interface MapCoordinatesConverter
 	 * @return расстояние между точками
 	 */
 	double distance(DoublePoint from, DoublePoint to)
-		throws MapConnectionException, MapDataException;
-
-	/**
-	 * Перевести экранную дистанцию в географическую.
-	 * 
-	 * @param screenDistance экранная дистанция
-	 * @return географическая дистанция
-	 */
-//	double convertScreenToMap(double screenDistance)
-//		throws MapConnectionException, MapDataException;
-
-	/**
-	 * Перевести географическую дистанцию в экранную.
-	 * 
-	 * @param topologicalDistance географическая дистанция
-	 * @return экранная дистанция
-	 */
-//	double convertMapToScreen(double topologicalDistance)
-//		throws MapConnectionException, MapDataException;
+			throws MapConnectionException, MapDataException;
 
 }

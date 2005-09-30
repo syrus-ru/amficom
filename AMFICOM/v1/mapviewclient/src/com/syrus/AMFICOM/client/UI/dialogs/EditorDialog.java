@@ -1,8 +1,9 @@
-/**
- * $Id: EditorDialog.java,v 1.9 2005/09/25 16:08:01 krupenn Exp $
- * Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $$Id: EditorDialog.java,v 1.10 2005/09/30 16:08:36 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.UI.dialogs;
@@ -21,12 +22,12 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @module commonclient_v1
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
-public class EditorDialog
-{
+public class EditorDialog {
 	public static boolean showEditorDialog(
 			String title,
 			Object object,

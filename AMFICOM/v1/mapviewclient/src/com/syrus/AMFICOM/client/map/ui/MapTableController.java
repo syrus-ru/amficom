@@ -1,3 +1,11 @@
+/*-
+ * $$Id: MapTableController.java,v 1.15 2005/09/30 16:08:42 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.util.Arrays;
@@ -14,6 +22,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.util.Wrapper;
 
+/**
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public final class MapTableController implements Wrapper {
 	public static final String KEY_NAME = MapEditorResourceKeys.LABEL_NAME;
 

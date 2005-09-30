@@ -1,10 +1,11 @@
-/*
- * $Id: MapEditorWindowArranger.java,v 1.21 2005/09/16 14:53:35 krupenn Exp $
+/*-
+ * $$Id: MapEditorWindowArranger.java,v 1.22 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.editor;
 
 import java.beans.PropertyChangeEvent;
@@ -21,8 +22,9 @@ import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 /**
+ * @version $Revision: 1.22 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:35 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 

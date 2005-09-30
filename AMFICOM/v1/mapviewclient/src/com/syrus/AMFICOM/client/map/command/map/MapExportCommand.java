@@ -1,7 +1,7 @@
 /*-
- * $Id: MapExportCommand.java,v 1.28 2005/09/25 16:08:02 krupenn Exp $
+ * $$Id: MapExportCommand.java,v 1.29 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Copyright њ 2004-2005 Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -44,8 +44,9 @@ import com.syrus.util.Log;
  * отображаетс€ информаци€ о том, что активной карты нет, и карта центрируетс€
  * по умолчанию
  * 
+ * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {

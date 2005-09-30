@@ -1,10 +1,9 @@
-/**
- * $Id: MapViewNewCommand.java,v 1.34 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapViewNewCommand.java,v 1.35 2005/09/30 16:08:38 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.map;
@@ -30,9 +29,11 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * создать новый вид 
+ * создать новый вид
+ *  
+ * @version $Revision: 1.35 $, $Date: 2005/09/30 16:08:38 $
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapViewNewCommand extends AbstractCommand {

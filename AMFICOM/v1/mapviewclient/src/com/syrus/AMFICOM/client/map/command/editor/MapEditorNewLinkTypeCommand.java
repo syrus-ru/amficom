@@ -1,10 +1,11 @@
-/**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.12 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapEditorNewLinkTypeCommand.java,v 1.13 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
@@ -28,6 +29,12 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
 
+/**
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:37 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 
 	private final JDesktopPane desktop;

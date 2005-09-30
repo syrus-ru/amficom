@@ -1,6 +1,9 @@
-/*
- * $Id: MapEditorSaveViewCommand.java,v 1.13 2005/09/16 14:53:33 krupenn Exp $
- * Syrus Systems Научно-технический центр Проект: АМФИКОМ
+/*-
+ * $$Id: MapEditorSaveViewCommand.java,v 1.14 2005/09/30 16:08:37 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
@@ -22,8 +25,9 @@ import com.syrus.util.Log;
  * схемы в модуле "Редактор топологических схем". Использует команду
  * MapSaveCommand
  * 
+ * @version $Revision: 1.14 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/09/16 14:53:33 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  * @see MapViewSaveCommand
  */

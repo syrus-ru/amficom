@@ -1,10 +1,9 @@
-/**
- * $Id: ZoomToPointCommand.java,v 1.14 2005/08/17 14:14:19 arseniy Exp $
+/*-
+ * $$Id: ZoomToPointCommand.java,v 1.15 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.navigate;
@@ -19,8 +18,10 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 
 /**
  * Команда включения/выкллючения режима приближения точки
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/17 14:14:19 $
+ * 
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:39 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class ZoomToPointCommand extends MapNavigateCommand {

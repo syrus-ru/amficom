@@ -1,12 +1,9 @@
-/**
- * $Id: MoveNodeCommand.java,v 1.20 2005/09/16 14:53:33 krupenn Exp $
+/*-
+ * $$Id: MoveNodeCommand.java,v 1.21 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -22,8 +19,9 @@ import com.syrus.util.Log;
 /**
  * Перемещение узла.
  * 
+ * @version $Revision: 1.21 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/09/16 14:53:33 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MoveNodeCommand extends MapActionCommand {

@@ -1,10 +1,11 @@
-/**
- * $Id: TreePopupMenu.java,v 1.3 2005/09/25 16:08:03 krupenn Exp $
+/*-
+ * $$Id: TreePopupMenu.java,v 1.4 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.event.ActionEvent;
@@ -18,6 +19,12 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
+/**
+ * @version $Revision: 1.4 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class TreePopupMenu extends JPopupMenu {
 
 	private JMenuItem copyMenuItem = new JMenuItem();

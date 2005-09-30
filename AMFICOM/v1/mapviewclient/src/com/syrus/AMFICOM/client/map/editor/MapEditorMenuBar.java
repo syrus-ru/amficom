@@ -1,10 +1,9 @@
-/**
- * $Id: MapEditorMenuBar.java,v 1.28 2005/09/29 12:48:00 krupenn Exp $
+/*-
+ * $$Id: MapEditorMenuBar.java,v 1.29 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.editor;
@@ -20,9 +19,11 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.28 $, $Date: 2005/09/29 12:48:00 $
- * @module mapviewclient
+ * 
+ * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class MapEditorMenuBar extends AbstractMainMenuBar {
 

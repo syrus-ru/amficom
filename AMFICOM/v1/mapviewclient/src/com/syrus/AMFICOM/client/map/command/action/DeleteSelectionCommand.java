@@ -1,12 +1,9 @@
-/**
- * $Id: DeleteSelectionCommand.java,v 1.33 2005/09/19 15:37:43 krupenn Exp $
+/*-
+ * $$Id: DeleteSelectionCommand.java,v 1.34 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -33,8 +30,9 @@ import com.syrus.util.Log;
  * Удалить выбранные элементы карты. Команда является пучком команд
  * (CommandBundle), удаляющих отдельные элементы.
  * 
+ * @version $Revision: 1.34 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/09/19 15:37:43 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle {

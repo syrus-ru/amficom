@@ -1,12 +1,10 @@
-/**
- * $Id: NetMapViewer.java,v 1.56 2005/09/29 12:48:00 krupenn Exp $
+/*-
+ * $$Id: NetMapViewer.java,v 1.57 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map;
 
@@ -84,8 +82,10 @@ import com.syrus.util.Log;
  * картографии, следует вызвать метод {@link #getVisualComponent()}
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
+ * 
+ * @version $Revision: 1.57 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.56 $, $Date: 2005/09/29 12:48:00 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -749,35 +749,30 @@ public abstract class NetMapViewer {
 	 */
 	private void updateSelectedElements() {
 		Set selectedElements = this.logicalNetLayer.getMapView().getMap().getSelectedElements();
-		if(selectedElements.size() > 1)
-		{
+		if(selectedElements.size() > 1) {
 			Selection sel;
-			if(! (this.logicalNetLayer.getCurrentMapElement() instanceof Selection))
-			{
+			if(!(this.logicalNetLayer.getCurrentMapElement() instanceof Selection)) {
 				sel = new Selection();
 				this.logicalNetLayer.setCurrentMapElement(sel);
+			} else {
+				sel = (Selection) this.logicalNetLayer.getCurrentMapElement();
 			}
-			else
-				sel = (Selection)this.logicalNetLayer.getCurrentMapElement();
 
 			sel.clear();
 			sel.addAll(selectedElements);
-		}
-		else
-		if(selectedElements.size() == 1)
-		{
-			MapElement me = (MapElement)selectedElements.iterator().next();
+		} else if(selectedElements.size() == 1) {
+			MapElement me = (MapElement) selectedElements.iterator().next();
 			this.logicalNetLayer.setCurrentMapElement(me);
-		}
-		else
-		//selectedElements.size() == 0
-		{
-			this.logicalNetLayer.setCurrentMapElement(VoidElement.getInstance(this.logicalNetLayer.getMapView()));
+		} else {
+			// selectedElements.size() == 0
+			this.logicalNetLayer.setCurrentMapElement(
+					VoidElement.getInstance(this.logicalNetLayer.getMapView()));
 		}
 	}
 
 	/**
 	 * Создает объект вьюера.
+	 * 
 	 * @param viewerClass класс вьюера
 	 * @return объект вьюера
 	 */

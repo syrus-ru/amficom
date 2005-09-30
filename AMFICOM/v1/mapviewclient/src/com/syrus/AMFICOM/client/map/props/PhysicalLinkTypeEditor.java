@@ -1,3 +1,11 @@
+/*-
+ * $$Id: PhysicalLinkTypeEditor.java,v 1.9 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.Color;
@@ -31,6 +39,12 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
+/**
+ * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:40 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 	PhysicalLinkType type;
 

@@ -1,9 +1,11 @@
-/**
- * $Id: NamedObjectWrapper.java,v 1.5 2005/09/25 16:08:01 krupenn Exp $
- * Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $$Id: NamedObjectWrapper.java,v 1.6 2005/09/30 16:08:36 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.UI.dialogs;
 
 import java.lang.reflect.Field;
@@ -19,9 +21,10 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @module commonclient_v1
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class NamedObjectWrapper implements Wrapper {
 	public static final String KEY_NAME = MapEditorResourceKeys.LABEL_NAME; //$NON-NLS-1$

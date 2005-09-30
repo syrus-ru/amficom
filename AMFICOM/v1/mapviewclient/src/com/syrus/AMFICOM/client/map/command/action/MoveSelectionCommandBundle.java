@@ -1,12 +1,9 @@
-/**
- * $Id: MoveSelectionCommandBundle.java,v 1.22 2005/09/16 14:53:33 krupenn Exp $
+/*-
+ * $$Id: MoveSelectionCommandBundle.java,v 1.23 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -26,8 +23,10 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
+ * 
+ * @version $Revision: 1.23 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:33 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle

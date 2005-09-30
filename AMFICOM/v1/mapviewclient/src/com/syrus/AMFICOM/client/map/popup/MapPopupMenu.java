@@ -1,10 +1,11 @@
-/**
- * $Id: MapPopupMenu.java,v 1.58 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapPopupMenu.java,v 1.59 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.popup;
 
 import java.awt.Point;
@@ -59,8 +60,10 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Контекстное меню элемента карты
+ * 
+ * @version $Revision: 1.59 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
- * @version $Revision: 1.58 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -79,27 +82,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	public Point getPoint() {
 		return this.point;
 	}
-/*
-	public void showProperties(Object me) {
-		StorableObjectEditor prop = MapVisualManager.getVisualManager(me).getGeneralPropertiesPanel();
-		if(prop == null)
-			return;
-//		MapElementState mes = me.getState();
-		if(EditorDialog.showEditorDialog(
-				LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES),
-				me,
-				prop)) {
-// MapElementState mes2 = me.getState();
-//			if(! mes.equals(mes2))
-			{
-				Dispatcher disp = this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher();
-				if(disp != null)
-					disp.firePropertyChange(new MapEvent(this, MapEvent.MAP_CHANGED));
-			}
-			
-		}
-	}
-*/
+
 	public abstract void setElement(Object object);
 
 	protected Collector selectCollector() {

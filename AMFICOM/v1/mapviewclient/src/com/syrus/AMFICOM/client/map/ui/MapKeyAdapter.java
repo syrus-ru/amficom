@@ -1,12 +1,9 @@
-/**
- * $Id: MapKeyAdapter.java,v 1.16 2005/09/16 14:53:36 krupenn Exp $
+/*-
+ * $$Id: MapKeyAdapter.java,v 1.17 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -24,86 +21,85 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.NodeLink;
 
 /**
- * обработчик событий клавиатуры в окне карты. Используется для изменения 
- * режима обработки действий (SHIFT, ALT, CTRL) и для удаления выбранных 
- * элементов (DEL)
- * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:36 $
+ * обработчик событий клавиатуры в окне карты. Используется для изменения режима
+ * обработки действий (SHIFT, ALT, CTRL) и для удаления выбранных элементов
+ * (DEL)
+ * 
+ * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class MapKeyAdapter extends KeyAdapter 
-{
+public final class MapKeyAdapter extends KeyAdapter {
 	private final NetMapViewer viewer;
 
-	public MapKeyAdapter(NetMapViewer viewer)
-	{
+	public MapKeyAdapter(NetMapViewer viewer) {
 		this.viewer = viewer;
 	}
 
 	@Override
-	public void keyPressed(KeyEvent ke)
-	{
+	public void keyPressed(KeyEvent ke) {
 		int code = ke.getKeyCode();
 
 		LogicalNetLayer logicalNetLayer = this.viewer.getLogicalNetLayer();
-		if (ke.isAltDown())
-		{
+		if(ke.isAltDown()) {
 			if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
-				logicalNetLayer.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
+				logicalNetLayer.getMapState().setActionMode(
+						MapState.ALT_LINK_ACTION_MODE);
 		}
 
-//		if (ke.isShiftDown() && ke.isControlDown())
-//		{
-//			lnl.getMapState().setActionMode(MapState.FIXDIST_ACTION_MODE);
-//		}
-//		else
-//		{
-			if (ke.isShiftDown())
-			{
-				if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
-					logicalNetLayer.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
-			}
-			if(ke.isControlDown())
-			{
-				if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
-					logicalNetLayer.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
-			}
-//		}
+		// if (ke.isShiftDown() && ke.isControlDown())
+		// {
+		// lnl.getMapState().setActionMode(MapState.FIXDIST_ACTION_MODE);
+		// }
+		// else
+		// {
+		if(ke.isShiftDown()) {
+			if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
+				logicalNetLayer.getMapState().setActionMode(
+						MapState.SELECT_ACTION_MODE);
+		}
+		if(ke.isControlDown()) {
+			if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
+				logicalNetLayer.getMapState().setActionMode(
+						MapState.MOVE_ACTION_MODE);
+		}
+		// }
 
 		try {
-			if (code == KeyEvent.VK_ESCAPE)
-			{
+			if(code == KeyEvent.VK_ESCAPE) {
 				this.viewer.cancelMode();
 			}
-			if (code == KeyEvent.VK_DELETE)
-			{
+			if(code == KeyEvent.VK_DELETE) {
 				this.viewer.delete();
 			}
-			if(ke.isControlDown() && code == KeyEvent.VK_Z)
-			{
+			if(ke.isControlDown() && code == KeyEvent.VK_Z) {
 				logicalNetLayer.undo();
 			}
-			if(ke.isControlDown() && code == KeyEvent.VK_Y)
-			{
+			if(ke.isControlDown() && code == KeyEvent.VK_Y) {
 				logicalNetLayer.redo();
 			}
-			if(ke.isControlDown() && code == KeyEvent.VK_1)
-			{
-				Rectangle2D.Double visibleBounds = this.viewer.getVisibleBounds();
+			if(ke.isControlDown() && code == KeyEvent.VK_1) {
+				Rectangle2D.Double visibleBounds = this.viewer
+						.getVisibleBounds();
 				long f;
 				long d;
 				f = System.currentTimeMillis();
-				java.util.Collection nodeLinks = logicalNetLayer.getMapView().getMap().getNodeLinks();
+				java.util.Collection nodeLinks = logicalNetLayer.getMapView()
+						.getMap().getNodeLinks();
 				d = System.currentTimeMillis();
-				System.out.println("get node links in " + String.valueOf(d - f) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
+				System.out
+						.println("get node links in " + String.valueOf(d - f) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
 				f = System.currentTimeMillis();
 
 				for(Iterator iter = nodeLinks.iterator(); iter.hasNext();) {
-					NodeLink nodeLink = (NodeLink )iter.next();
-					logicalNetLayer.getMapViewController().getController(nodeLink).isElementVisible(nodeLink, visibleBounds);
+					NodeLink nodeLink = (NodeLink) iter.next();
+					logicalNetLayer.getMapViewController().getController(
+							nodeLink).isElementVisible(nodeLink, visibleBounds);
 				}
 				d = System.currentTimeMillis();
-				System.out.println("node links::isVisible performed in " + String.valueOf(d - f) + " ms (total) with average of " + String.valueOf((d - f) / nodeLinks.size() + " ms")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				System.out
+						.println("node links::isVisible performed in " + String.valueOf(d - f) + " ms (total) with average of " + String.valueOf((d - f) / nodeLinks.size() + " ms")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
@@ -115,14 +111,13 @@ public final class MapKeyAdapter extends KeyAdapter
 	}
 
 	@Override
-	public void keyReleased(KeyEvent ke)
-	{
+	public void keyReleased(KeyEvent ke) {
 		if(this.viewer.getLogicalNetLayer().getMapState().getMouseMode() == MapState.MOUSE_NONE)
-			this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.NULL_ACTION_MODE);
+			this.viewer.getLogicalNetLayer().getMapState().setActionMode(
+					MapState.NULL_ACTION_MODE);
 	}
 
 	@Override
-	public void keyTyped(KeyEvent ke)
-	{//empty
+	public void keyTyped(KeyEvent ke) {// empty
 	}
 }

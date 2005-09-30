@@ -1,12 +1,9 @@
-/**
- * $Id: MapPropertiesManager.java,v 1.50 2005/09/29 12:48:00 krupenn Exp $
+/*-
+ * $$Id: MapPropertiesManager.java,v 1.51 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map;
@@ -54,12 +51,12 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
+ * @version $Revision: 1.51 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/09/29 12:48:00 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class MapPropertiesManager 
-{
+public final class MapPropertiesManager {
 	private static final String FONT_DELIMITER = " "; //$NON-NLS-1$
 
 	/**

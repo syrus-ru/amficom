@@ -1,10 +1,11 @@
-/**
- * $Id: MapViewTreeMouseListener.java,v 1.5 2005/09/09 17:27:17 krupenn Exp $
+/*-
+ * $$Id: MapViewTreeMouseListener.java,v 1.6 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.event.MouseAdapter;
@@ -23,6 +24,12 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
+/**
+ * @version $Revision: 1.6 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public final class MapViewTreeMouseListener extends MouseAdapter {
 	private final ApplicationContext aContext;
 	private final JTree tree;

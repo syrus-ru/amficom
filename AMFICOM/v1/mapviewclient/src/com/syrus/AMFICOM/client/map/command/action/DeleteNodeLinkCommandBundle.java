@@ -1,12 +1,9 @@
-/**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.38 2005/09/29 12:48:00 krupenn Exp $
+/*-
+ * $$Id: DeleteNodeLinkCommandBundle.java,v 1.39 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -33,8 +30,10 @@ import com.syrus.util.Log;
  * от того, какие конечные точки на концах происходит операция удаления 
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
+ * 
+ * @version $Revision: 1.39 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.38 $, $Date: 2005/09/29 12:48:00 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle

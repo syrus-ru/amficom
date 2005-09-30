@@ -1,12 +1,10 @@
-/**
- * $Id: CreateMarkerCommandAtomic.java,v 1.37 2005/09/25 15:58:18 krupenn Exp $
+/*-
+ * $$Id: CreateMarkerCommandAtomic.java,v 1.38 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.command.action;
 
@@ -36,8 +34,9 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
+ * @version $Revision: 1.38 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/09/25 15:58:18 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand {

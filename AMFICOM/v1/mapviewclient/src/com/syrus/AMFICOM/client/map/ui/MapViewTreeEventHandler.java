@@ -1,10 +1,11 @@
-/**
- * $Id: MapViewTreeEventHandler.java,v 1.15 2005/09/25 16:07:26 krupenn Exp $
+/*-
+ * $$Id: MapViewTreeEventHandler.java,v 1.16 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.beans.PropertyChangeEvent;
@@ -42,6 +43,12 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
+/**
+ * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:42 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyChangeListener, TreeWillExpandListener {
 
 	private boolean performProcessing = true;

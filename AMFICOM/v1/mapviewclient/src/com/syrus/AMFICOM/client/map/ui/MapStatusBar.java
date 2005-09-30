@@ -1,10 +1,11 @@
-/*
- * $Id: MapStatusBar.java,v 1.21 2005/09/25 16:08:03 krupenn Exp $
+/*-
+ * $$Id: MapStatusBar.java,v 1.22 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Dimension;
@@ -28,8 +29,9 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
+ * @version $Revision: 1.22 $, $Date: 2005/09/30 16:08:42 $
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/09/25 16:08:03 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapStatusBar extends JPanel {

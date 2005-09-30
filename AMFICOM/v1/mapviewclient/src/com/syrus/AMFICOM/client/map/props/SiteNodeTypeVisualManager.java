@@ -1,16 +1,23 @@
-/**
- * $Id: SiteNodeTypeVisualManager.java,v 1.1 2005/08/08 09:59:41 krupenn Exp $
+/*-
+ * $$Id: SiteNodeTypeVisualManager.java,v 1.2 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class SiteNodeTypeVisualManager implements VisualManager {
 
 	private static SiteNodeTypeVisualManager instance;

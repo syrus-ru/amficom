@@ -1,7 +1,7 @@
-/*
- * $Id: MapElementCharacteristicsEditor.java,v 1.20 2005/09/25 16:05:46 krupenn Exp $
+/*-
+ * $$Id: MapElementCharacteristicsEditor.java,v 1.21 2005/09/30 16:08:40 krupenn Exp $$
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -18,8 +18,9 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.util.Log;
 
 /**
+ * @version $Revision: 1.21 $, $Date: 2005/09/30 16:08:40 $
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/09/25 16:05:46 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 

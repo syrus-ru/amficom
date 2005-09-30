@@ -1,7 +1,7 @@
-/*
- * $Id: SchemeSampleData.java,v 1.34 2005/09/30 06:35:47 krupenn Exp $
+/*-
+ * $$Id: SchemeSampleData.java,v 1.35 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -24,8 +24,10 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
+ * 
+ * @version $Revision: 1.35 $, $Date: 2005/09/30 16:08:42 $
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class SchemeSampleData {

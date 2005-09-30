@@ -1,21 +1,20 @@
-/**
- * $Id: MapEditorRun.java,v 1.11 2005/08/11 12:43:31 arseniy Exp $
+/*-
+ * $$Id: MapEditorRun.java,v 1.12 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.editor;
 
 /**
  * Запуск приложения "Редактор топологических схем" 
  * 
- * 
- * 
- * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:31 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:39 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
- * @author $Author: arseniy $
  */
 public class MapEditorRun {
 	private MapEditorRun() {

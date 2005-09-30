@@ -1,10 +1,11 @@
-/**
- * $Id: LayersTableCellRenderer.java,v 1.4 2005/07/13 14:57:26 krupenn Exp $
+/*-
+ * $$Id: LayersTableCellRenderer.java,v 1.5 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Component;
@@ -13,6 +14,12 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.TableCellRenderer;
 
+/**
+ * @version $Revision: 1.5 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class LayersTableCellRenderer extends TristateCheckBox implements TableCellRenderer {
 
 	private static LayersTableCellRenderer	instance;

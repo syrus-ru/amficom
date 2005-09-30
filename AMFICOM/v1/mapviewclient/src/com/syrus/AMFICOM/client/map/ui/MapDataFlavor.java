@@ -1,10 +1,9 @@
-/**
- * $Id: MapDataFlavor.java,v 1.6 2005/09/16 14:53:36 krupenn Exp $
+/*-
+ * $$Id: MapDataFlavor.java,v 1.7 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -13,23 +12,22 @@ import java.awt.datatransfer.DataFlavor;
 
 /**
  * Формат данных для переноса элементов карты для операций drag / drop
- * @version $Revision: 1.6 $, $Date: 2005/09/16 14:53:36 $
+ * 
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapDataFlavor extends DataFlavor
-{
+public class MapDataFlavor extends DataFlavor {
 	public static final String MAP_PROTO_LABEL = "ElementLabel"; //$NON-NLS-1$
 
-    public MapDataFlavor(Class representationClass, String humanPresentableName)
-	{
+	public MapDataFlavor(Class representationClass, String humanPresentableName) {
 		super(representationClass, humanPresentableName);
 	}
-	
-    @Override
-		public boolean isFlavorSerializedObjectType() 
-	{
-        return false;
-    }
+
+	@Override
+	public boolean isFlavorSerializedObjectType() {
+		return false;
+	}
 
 }

@@ -1,12 +1,9 @@
-/**
- * $Id: MapAbstractPropertiesFrame.java,v 1.14 2005/08/18 14:16:59 krupenn Exp $
+/*-
+ * $$Id: MapAbstractPropertiesFrame.java,v 1.15 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -17,8 +14,9 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 /**
  * Окно отображения свойств элемента карты
  * 
- * @version $Revision: 1.14 $, $Date: 2005/08/18 14:16:59 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public abstract class MapAbstractPropertiesFrame extends

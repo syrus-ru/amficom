@@ -1,13 +1,11 @@
-/**
- * $Id: SpatialLayer.java,v 1.10 2005/08/11 12:43:29 arseniy Exp $
+/*-
+ * $$Id: SpatialLayer.java,v 1.11 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map;
 
 import java.awt.Component;
@@ -15,13 +13,14 @@ import java.awt.Component;
 /**
  * Слой географической карты. Реализация пренадлежит используемой системе ГИС.
  * Текущее использование - управление отображением слоев
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:29 $
+ * 
+ * @version $Revision: 1.11 $, $Date: 2005/09/30 16:08:36 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  * @see com.syrus.AMFICOM.client.map.operations.LayersPanel
  */
-public interface SpatialLayer 
-{
+public interface SpatialLayer {
 	/**
 	 * Возвращает флаг видимости слоя на карте при текущих настройках клиента.
 	 * @return флаг видимости

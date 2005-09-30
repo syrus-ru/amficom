@@ -1,3 +1,11 @@
+/*-
+ * $$Id: SiteNodeTypeEditor.java,v 1.18 2005/09/30 16:08:41 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.BorderLayout;
@@ -33,6 +41,12 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 
+/**
+ * @version $Revision: 1.18 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public final class SiteNodeTypeEditor
 		extends DefaultStorableObjectEditor {
 	SiteNodeType type;

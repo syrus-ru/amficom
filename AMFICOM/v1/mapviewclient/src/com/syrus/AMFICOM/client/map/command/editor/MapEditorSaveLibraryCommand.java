@@ -1,10 +1,11 @@
-/**
- * $Id: MapEditorSaveLibraryCommand.java,v 1.6 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapEditorSaveLibraryCommand.java,v 1.7 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.util.Iterator;
@@ -26,6 +27,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
+/**
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:37 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class MapEditorSaveLibraryCommand extends AbstractCommand {
 
 	private final JDesktopPane desktop;

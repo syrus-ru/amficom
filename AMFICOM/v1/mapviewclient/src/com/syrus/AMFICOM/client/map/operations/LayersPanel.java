@@ -1,9 +1,9 @@
-/*
- * Название: $Id: LayersPanel.java,v 1.19 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: LayersPanel.java,v 1.20 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.operations;
@@ -44,8 +44,9 @@ import com.syrus.util.Log;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.19 $, $Date: 2005/09/25 16:08:02 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class LayersPanel extends JPanel {

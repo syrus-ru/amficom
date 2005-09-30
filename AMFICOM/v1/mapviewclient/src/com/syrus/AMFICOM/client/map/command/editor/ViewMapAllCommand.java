@@ -1,8 +1,9 @@
-/**
- * $Id: ViewMapAllCommand.java,v 1.19 2005/08/25 11:28:59 krupenn Exp $ Syrus
- * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
- * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
- * Платформа: java 1.4.1
+/*-
+ * $$Id: ViewMapAllCommand.java,v 1.20 2005/09/30 16:08:37 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
@@ -20,8 +21,9 @@ import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 /**
  * отобразить стандартный набор окон модуля "Редактор топологических схем"
  * 
+ * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/25 11:28:59 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class ViewMapAllCommand extends AbstractCommand {

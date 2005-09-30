@@ -1,10 +1,9 @@
-/**
- * $Id: UnboundLinkController.java,v 1.11 2005/08/11 13:57:33 arseniy Exp $
+/*-
+ * $$Id: UnboundLinkController.java,v 1.12 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.controllers;
@@ -22,9 +21,11 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * Контроллер элемента непривязанной линии (участка непривязанного кабеля). 
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 13:57:33 $
+ * Контроллер элемента непривязанной линии (участка непривязанного кабеля).
+ *  
+ * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:39 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class UnboundLinkController extends PhysicalLinkController {

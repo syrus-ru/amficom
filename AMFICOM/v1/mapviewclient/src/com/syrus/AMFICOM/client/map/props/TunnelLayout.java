@@ -1,3 +1,11 @@
+/*-
+ * $$Id: TunnelLayout.java,v 1.26 2005/09/30 16:08:41 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.Color;
@@ -18,6 +26,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.resource.IntPoint;
 
+/**
+ * @version $Revision: 1.26 $, $Date: 2005/09/30 16:08:41 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class TunnelLayout implements PropertyChangeListener {
 	private ApplicationContext internalContext = new ApplicationContext();
 	private UgoTabbedPane ugoTabbedPane;

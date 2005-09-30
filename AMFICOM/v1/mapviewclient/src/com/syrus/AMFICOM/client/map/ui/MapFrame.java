@@ -1,12 +1,10 @@
-/**
- * $Id: MapFrame.java,v 1.77 2005/09/26 14:22:41 krupenn Exp $
+/*-
+ * $$Id: MapFrame.java,v 1.78 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.ui;
 
@@ -206,10 +204,9 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * 
- * 
- * @version $Revision: 1.77 $, $Date: 2005/09/26 14:22:41 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapFrame extends JInternalFrame implements PropertyChangeListener {

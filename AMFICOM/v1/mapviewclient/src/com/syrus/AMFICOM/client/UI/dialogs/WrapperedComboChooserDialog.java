@@ -1,10 +1,11 @@
-/**
- * $Id: WrapperedComboChooserDialog.java,v 1.6 2005/09/25 16:08:01 krupenn Exp $
+/*-
+ * $$Id: WrapperedComboChooserDialog.java,v 1.7 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.UI.dialogs;
 
 import java.awt.BorderLayout;
@@ -23,9 +24,10 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $
- * @module commonclient_v1
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  */
 public class WrapperedComboChooserDialog {
 	public static Object showChooserDialog(Collection contents) {

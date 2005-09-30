@@ -1,10 +1,11 @@
-/*
- * $Id: TopologicalImageCache.java,v 1.19 2005/09/25 16:08:01 krupenn Exp $
+/*-
+ * $Id: TopologicalImageCache.java,v 1.20 2005/09/30 16:08:36 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.cache;
 
 import java.awt.Dimension;
@@ -34,12 +35,12 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
+ * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/09/25 16:08:01 $
- * @module mapinfo_v1
+ * @author Peter Peskovsky
+ * @module mapviewclient
  */
-public class TopologicalImageCache implements MapImageRenderer
-{
+public class TopologicalImageCache implements MapImageRenderer {
 	/**
 	 * Величина габарита активной области в процентах от габарита окна карты
 	 */

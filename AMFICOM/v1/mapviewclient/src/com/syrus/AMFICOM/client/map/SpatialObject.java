@@ -1,12 +1,9 @@
-/**
- * $Id: SpatialObject.java,v 1.11 2005/09/25 16:08:01 krupenn Exp $
+/*-
+ * $$Id: SpatialObject.java,v 1.12 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map;
@@ -16,8 +13,9 @@ package com.syrus.AMFICOM.client.map;
  * текущее использование класса - в списке найденных по строковому шаблону
  * графических объектов.
  * 
+ * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:36 $
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/09/25 16:08:01 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public abstract class SpatialObject implements Comparable<SpatialObject> {

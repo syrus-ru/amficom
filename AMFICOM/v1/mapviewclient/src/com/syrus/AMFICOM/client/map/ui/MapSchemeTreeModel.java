@@ -1,10 +1,9 @@
-/**
- * $Id: MapSchemeTreeModel.java,v 1.38 2005/09/27 07:07:50 krupenn Exp $
+/*-
+ * $$Id: MapSchemeTreeModel.java,v 1.39 2005/09/30 16:08:42 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -87,8 +86,10 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.38 $, $Date: 2005/09/27 07:07:50 $
+ * 
+ * @version $Revision: 1.39 $, $Date: 2005/09/30 16:08:42 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapSchemeTreeModel 

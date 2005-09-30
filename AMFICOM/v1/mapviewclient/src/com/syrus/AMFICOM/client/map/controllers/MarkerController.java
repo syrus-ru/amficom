@@ -1,10 +1,9 @@
-/**
- * $Id: MarkerController.java,v 1.39 2005/09/28 15:21:02 krupenn Exp $
+/*-
+ * $$Id: MarkerController.java,v 1.40 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.controllers;
@@ -42,8 +41,10 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * Контроллер маркера.
+ * 
+ * @version $Revision: 1.40 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/09/28 15:21:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {

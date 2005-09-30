@@ -1,10 +1,9 @@
-/**
- * $Id: MapElementController.java,v 1.12 2005/09/16 08:19:17 krupenn Exp $
+/*-
+ * $$Id: MapElementController.java,v 1.13 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.controllers;
@@ -21,8 +20,10 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Интерфейс контроллера элемента карты. Позволяет управлять отображением
  * элементов карты.
+ * 
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/09/16 08:19:17 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public interface MapElementController {

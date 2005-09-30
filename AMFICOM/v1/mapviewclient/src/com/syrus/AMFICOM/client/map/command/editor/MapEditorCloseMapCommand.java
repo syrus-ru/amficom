@@ -1,12 +1,10 @@
-/*
- * $Id: MapEditorCloseMapCommand.java,v 1.15 2005/08/17 14:14:17 arseniy Exp $
+/*-
+ * $$Id: MapEditorCloseMapCommand.java,v 1.16 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.command.editor;
 
@@ -29,9 +27,10 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.15 $, $Date: 2005/08/17 14:14:17 $
- * @module map_v2
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:37 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
  * @see MapCloseCommand
  */
 public class MapEditorCloseMapCommand extends AbstractCommand

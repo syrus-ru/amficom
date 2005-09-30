@@ -1,3 +1,11 @@
+/*-
+ * $$Id: SelectionEditor.java,v 1.16 2005/09/30 16:08:40 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.Dimension;
@@ -28,6 +36,12 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
+/**
+ * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:40 $
+ * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
+ * @module mapviewclient
+ */
 public class SelectionEditor extends DefaultStorableObjectEditor {
 	Selection selection;
 	double origX = 0.0D;

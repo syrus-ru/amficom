@@ -1,10 +1,11 @@
-/**
- * $Id: LoadingThread.java,v 1.14 2005/09/16 14:53:32 krupenn Exp $
+/*-
+ * $$Id: LoadingThread.java,v 1.15 2005/09/30 16:08:36 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.client.map.cache;
 
 import java.awt.Image;
@@ -22,6 +23,12 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
+/**
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:36 $
+ * @author $Author: krupenn $
+ * @author Peter Peskovsky
+ * @module mapviewclient
+ */
 public class LoadingThread extends Thread {
     private MapImageLoader mapImageLoader = null;
 
@@ -91,7 +98,7 @@ public class LoadingThread extends Thread {
     }
 
     @Override
-		public void run() {
+	public void run() {
         while (!this.toCancelLoading) {
             // Задержка - для пустой очереди
             try {
@@ -101,11 +108,9 @@ public class LoadingThread extends Thread {
             }
 
             synchronized (this.state) {
-                Iterator rqIt = this.requestQueue.iterator();
-                if (rqIt.hasNext())
-                {
-                    this.requestCurrentlyProcessed = (TopologicalImageQuery) rqIt
-                            .next();
+                Iterator<TopologicalImageQuery> rqIt = this.requestQueue.iterator();
+                if (rqIt.hasNext()) {
+                    this.requestCurrentlyProcessed = rqIt.next();
                     rqIt.remove();
                     this.state.setValue(State.STATE_RENDERING);
                 }

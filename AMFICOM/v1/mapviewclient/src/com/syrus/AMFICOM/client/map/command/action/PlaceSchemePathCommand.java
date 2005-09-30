@@ -1,11 +1,9 @@
-/**
- * $Id: PlaceSchemePathCommand.java,v 1.44 2005/09/19 15:37:44 krupenn Exp $
+/*-
+ * $$Id: PlaceSchemePathCommand.java,v 1.45 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
@@ -23,8 +21,9 @@ import com.syrus.util.Log;
  * Разместить элемент типа mpe на карте. используется при переносе (drag/drop),
  * в точке point (в экранных координатах)
  * 
+ * @version $Revision: 1.45 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/09/19 15:37:44 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle {

@@ -1,10 +1,10 @@
-/*
- * $Id: MapViewSaveCommand.java,v 1.30 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapViewSaveCommand.java,v 1.31 2005/09/30 16:08:39 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
-*/
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.map.command.map;
 
@@ -34,8 +34,10 @@ import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
+ * 
+ * @version $Revision: 1.31 $, $Date: 2005/09/30 16:08:39 $
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapViewSaveCommand extends AbstractCommand

@@ -1,8 +1,9 @@
-/**
- * $Id: MapEditorTreeModel.java,v 1.9 2005/09/25 16:08:03 krupenn Exp $ Syrus
- * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
- * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
- * Платформа: java 1.4.1
+/*-
+ * $$Id: MapEditorTreeModel.java,v 1.10 2005/09/30 16:08:41 krupenn Exp $$
+ *
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -22,8 +23,9 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/25 16:08:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public final class MapEditorTreeModel extends AbstractChildrenFactory {

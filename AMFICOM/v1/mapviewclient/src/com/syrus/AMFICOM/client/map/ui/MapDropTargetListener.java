@@ -1,12 +1,9 @@
-/**
- * $Id: MapDropTargetListener.java,v 1.41 2005/09/25 16:08:03 krupenn Exp $
+/*-
+ * $$Id: MapDropTargetListener.java,v 1.42 2005/09/30 16:08:41 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.ui;
@@ -49,89 +46,86 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
- * Обработчик событий drag/drop в окне карты 
+ * Обработчик событий drag/drop в окне карты
  * 
- * 
- * 
- * @version $Revision: 1.41 $, $Date: 2005/09/25 16:08:03 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/30 16:08:41 $
  * @author $Author: krupenn $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public final class MapDropTargetListener implements DropTargetListener
-{
+public final class MapDropTargetListener implements DropTargetListener {
 	NetMapViewer netMapViewer;
 
-	public MapDropTargetListener(NetMapViewer netMapViewer)
-	{
+	public MapDropTargetListener(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
 	}
 
-	//Здесь мы получаем объект который пользователь переносит с панели
-	public void drop(DropTargetDropEvent dtde)
-	{
-		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+	// Здесь мы получаем объект который пользователь переносит с панели
+	public void drop(DropTargetDropEvent dtde) {
+		LogicalNetLayer logicalNetLayer = this.netMapViewer
+				.getLogicalNetLayer();
 		Object or = null;
 
 		Point point = dtde.getLocation();
 
-		if ( logicalNetLayer.getMapView() != null)
-		{
+		if(logicalNetLayer.getMapView() != null) {
 			DataFlavor[] df = dtde.getCurrentDataFlavors();
 			Transferable transferable = dtde.getTransferable();
 			for(int i = 0; i < df.length; i++) {
-				try
-				{
-					if (df[i].getHumanPresentableName().equals("ElementLabel")) //$NON-NLS-1$
+				try {
+					if(df[i].getHumanPresentableName().equals("ElementLabel")) //$NON-NLS-1$
 					{
-						Identifier id = (Identifier )transferable.getTransferData(df[(i)]);
-						SiteNodeType mpe = StorableObjectPool.getStorableObject(id, false);
-	
+						Identifier id = (Identifier) transferable
+								.getTransferData(df[(i)]);
+						SiteNodeType mpe = StorableObjectPool
+								.getStorableObject(id, false);
+
 						mapElementDropped(mpe, point);
-					}
-					else
-					if (df[i].getHumanPresentableName().equals("IconedTreeUI.object")) //$NON-NLS-1$
+					} else if(df[i].getHumanPresentableName().equals(
+							"IconedTreeUI.object")) //$NON-NLS-1$
 					{
-						ArrayList items = (ArrayList)transferable.getTransferData(df[i]);
+						ArrayList items = (ArrayList) transferable
+								.getTransferData(df[i]);
 						for(Iterator iter = items.iterator(); iter.hasNext();) {
 							or = iter.next();
-							
+
 							if(or instanceof SiteNodeType) {
-								SiteNodeType snt = (SiteNodeType)or;
+								SiteNodeType snt = (SiteNodeType) or;
 								Identifier id = snt.getId();
-								SiteNodeType mpe = StorableObjectPool.getStorableObject(id, true);
+								SiteNodeType mpe = StorableObjectPool
+										.getStorableObject(id, true);
 								mapElementDropped(mpe, point);
-							} if(or instanceof SchemeElement) {
-								SchemeElement se = (SchemeElement )or;
+							}
+							if(or instanceof SchemeElement) {
+								SchemeElement se = (SchemeElement) or;
 								Identifier id = se.getId();
-								SchemeElement sereal = StorableObjectPool.getStorableObject(id, true);
+								SchemeElement sereal = StorableObjectPool
+										.getStorableObject(id, true);
 								schemeElementDropped(sereal, point);
-							}
-							else if(or instanceof SchemeCableLink) {
-								SchemeCableLink scl = (SchemeCableLink )or;
+							} else if(or instanceof SchemeCableLink) {
+								SchemeCableLink scl = (SchemeCableLink) or;
 								Identifier id = scl.getId();
-								SchemeCableLink sclreal = StorableObjectPool.getStorableObject(id, true);
+								SchemeCableLink sclreal = StorableObjectPool
+										.getStorableObject(id, true);
 								schemeCableLinkDropped(sclreal);
-							}
-							else if(or instanceof Scheme) {
-								Scheme sc = (Scheme )or;
+							} else if(or instanceof Scheme) {
+								Scheme sc = (Scheme) or;
 								Identifier id = sc.getId();
-								Scheme screal = StorableObjectPool.getStorableObject(id, true);
-								SchemeElement sereal = screal.getParentSchemeElement();
+								Scheme screal = StorableObjectPool
+										.getStorableObject(id, true);
+								SchemeElement sereal = screal
+										.getParentSchemeElement();
 								schemeElementDropped(sereal, point);
 							}
 						}
-					}
-					else
-					{
+					} else {
 						dtde.rejectDrop();
 						return;
 					}
-	
+
 					dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 					dtde.getDropTargetContext().dropComplete(true);
-				}
-				catch(Exception e)
-				{
+				} catch(Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -139,33 +133,37 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	}
 
-	protected void mapElementDropped(SiteNodeType nodeType, Point point)
-	{
-		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
-		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(nodeType, point);
+	protected void mapElementDropped(SiteNodeType nodeType, Point point) {
+		LogicalNetLayer logicalNetLayer = this.netMapViewer
+				.getLogicalNetLayer();
+		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(
+				nodeType,
+				point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		logicalNetLayer.getCommandList().add(cmd);
 		logicalNetLayer.getCommandList().execute();
 		logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
-	protected void schemeElementDropped(SchemeElement schemeElement, Point point)
-	{
-		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+	protected void schemeElementDropped(SchemeElement schemeElement, Point point) {
+		LogicalNetLayer logicalNetLayer = this.netMapViewer
+				.getLogicalNetLayer();
 		MapView mapView = logicalNetLayer.getMapView();
 		Map map = mapView.getMap();
 		SiteNode site = mapView.findElement(schemeElement);
-		if(site != null)
-		{
-			if(site instanceof UnboundNode)
-			{
+		if(site != null) {
+			if(site instanceof UnboundNode) {
 				try {
 					logicalNetLayer.deselectAll();
 					map.setSelected(site, true);
-					Point pt = logicalNetLayer.getConverter().convertMapToScreen(site.getLocation());
-					MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
+					Point pt = logicalNetLayer.getConverter()
+							.convertMapToScreen(site.getLocation());
+					MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(
+							pt);
 					cmd.setNetMapViewer(this.netMapViewer);
-					cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
+					cmd.setParameter(
+							MoveSelectionCommandBundle.END_POINT,
+							point);
 					logicalNetLayer.getCommandList().add(cmd);
 					logicalNetLayer.getCommandList().execute();
 					logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
@@ -176,85 +174,80 @@ public final class MapDropTargetListener implements DropTargetListener
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			else
-			{
+			} else {
 				map.setSelected(site, true);
 				logicalNetLayer.sendSelectionChangeEvent();
 			}
-		}
-		else
-		{
-			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(schemeElement, point);
+		} else {
+			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(
+					schemeElement,
+					point);
 			cmd.setNetMapViewer(this.netMapViewer);
 			logicalNetLayer.getCommandList().add(cmd);
 			logicalNetLayer.getCommandList().execute();
 			logicalNetLayer.getCommandList().flush();
 			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 
-			logicalNetLayer.getMapViewController().scanCables(schemeElement.getParentScheme());
+			logicalNetLayer.getMapViewController().scanCables(
+					schemeElement.getParentScheme());
 		}
 	}
 
-	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink)
-	{
-		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink) {
+		LogicalNetLayer logicalNetLayer = this.netMapViewer
+				.getLogicalNetLayer();
 		MapView mapView = logicalNetLayer.getMapView();
 		Map map = mapView.getMap();
 		CablePath cablePath = mapView.findCablePath(schemeCableLink);
-		if(cablePath != null)
-		{
+		if(cablePath != null) {
 			map.setSelected(cablePath, true);
 			logicalNetLayer.sendSelectionChangeEvent();
-		}
-		else
-		{
-			SiteNode startNode = logicalNetLayer.getMapView().getStartNode(schemeCableLink);
-			SiteNode endNode = logicalNetLayer.getMapView().getEndNode(schemeCableLink);
-	
-			if(startNode == null || endNode == null)
-			{
-				JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(), 
-					LangModelMap.getString(MapEditorResourceKeys.ERROR_CABLE_END_ELEMENTS_NOT_PLACED),
-					LangModelMap.getString(MapEditorResourceKeys.MESSAGE_UNABLE_TO_PLACE_CABLE),
-					JOptionPane.ERROR_MESSAGE);
+		} else {
+			SiteNode startNode = logicalNetLayer.getMapView().getStartNode(
+					schemeCableLink);
+			SiteNode endNode = logicalNetLayer.getMapView().getEndNode(
+					schemeCableLink);
+
+			if(startNode == null || endNode == null) {
+				JOptionPane
+						.showMessageDialog(
+								Environment.getActiveWindow(),
+								LangModelMap
+										.getString(MapEditorResourceKeys.ERROR_CABLE_END_ELEMENTS_NOT_PLACED),
+								LangModelMap
+										.getString(MapEditorResourceKeys.MESSAGE_UNABLE_TO_PLACE_CABLE),
+								JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
-			PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(schemeCableLink);
+			PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(
+					schemeCableLink);
 			cmd.setNetMapViewer(this.netMapViewer);
 			logicalNetLayer.getCommandList().add(cmd);
 			logicalNetLayer.getCommandList().execute();
 			logicalNetLayer.getCommandList().execute();
 			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 
-			logicalNetLayer.getMapViewController().scanPaths(schemeCableLink.getParentScheme());
+			logicalNetLayer.getMapViewController().scanPaths(
+					schemeCableLink.getParentScheme());
 		}
 	}
-/*					
-		else
-		if(or instanceof SchemePath)
-		{
-			SchemePath sp = (SchemePath )or;
-			logicalNetLayer.getMapView().placeElement(sp);
-		}
-*/
 
-	public void dragEnter(DropTargetDragEvent dtde)
-	{//empty
+	/*
+	 * else if(or instanceof SchemePath) { SchemePath sp = (SchemePath )or;
+	 * logicalNetLayer.getMapView().placeElement(sp); }
+	 */
+
+	public void dragEnter(DropTargetDragEvent dtde) {// empty
 	}
 
-	public void dragExit(DropTargetEvent dte)
-	{//empty
+	public void dragExit(DropTargetEvent dte) {// empty
 	}
 
-	public void dragOver(DropTargetDragEvent dtde)
-	{//empty
+	public void dragOver(DropTargetDragEvent dtde) {// empty
 	}
 
-	public void dropActionChanged(DropTargetDragEvent dtde)
-	{//empty
+	public void dropActionChanged(DropTargetDragEvent dtde) {// empty
 	}
 
 }

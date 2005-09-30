@@ -1,10 +1,9 @@
-/**
- * $Id: MapRemoveMapCommand.java,v 1.12 2005/09/25 16:08:02 krupenn Exp $
+/*-
+ * $$Id: MapRemoveMapCommand.java,v 1.13 2005/09/30 16:08:37 krupenn Exp $$
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.map;
@@ -27,9 +26,11 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * убрать из вида выбранную схему 
+ * убрать из вида выбранную схему
+ *  
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:37 $
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/09/25 16:08:02 $
+ * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapRemoveMapCommand extends AbstractCommand {
