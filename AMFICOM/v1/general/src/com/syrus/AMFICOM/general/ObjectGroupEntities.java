@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.36 2005/09/30 12:38:33 max Exp $
+ * $Id: ObjectGroupEntities.java,v 1.37 2005/09/30 13:07:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/09/30 12:38:33 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2005/09/30 13:07:21 $
+ * @author $Author: arseniy $
  * @author Selivanov Maksim Fedorovich
  * @module general
  */
@@ -33,7 +33,7 @@ public final class ObjectGroupEntities {
 	public static final String MAP_GROUP = "MapGroup";
 	public static final String RESOURCE_GROUP = "ResourceGroup";
 	public static final String MAPVIEW_GROUP = "MapViewGroup";
-	public static final String REPORT_GROUP = "MapViewGroup";
+	public static final String REPORT_GROUP = "ReportGroup";
 
 	//  Group Codes
 	/**
