@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.124 2005/09/30 07:39:24 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.125 2005/09/30 08:16:49 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.124 $, $Date: 2005/09/30 07:39:24 $
+ * @version $Revision: 1.125 $, $Date: 2005/09/30 08:16:49 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -456,6 +456,10 @@ public class PhysicalLink extends StorableObject
 	public void setLeftToRight(final boolean leftToRight) {
 		this.setLeftToRight0(leftToRight);
 		super.markAsChanged();
+	}
+
+	public String getName0() {
+		return this.name;
 	}
 
 	public String getName() {

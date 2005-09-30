@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.36 2005/09/27 07:45:16 krupenn Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.37 2005/09/30 08:16:49 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/09/27 07:45:16 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/30 08:16:49 $
  * @author $Author: krupenn $
  * @module map
  */
@@ -83,7 +83,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 	protected int setEntityForPreparedStatementTmpl(final PhysicalLink storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName0(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
@@ -99,7 +99,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 	
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final PhysicalLink storableObject) throws IllegalDataException {
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName0(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
 			+ DatabaseString.toQuerySubString(storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
