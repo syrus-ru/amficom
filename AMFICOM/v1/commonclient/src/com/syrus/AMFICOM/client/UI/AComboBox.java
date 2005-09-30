@@ -15,53 +15,43 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/09 18:54:27 $
- * @author $Author: arseniy $
- * @author Vladimir Dolzhenko
+ * @version $Revision: 1.4 $, $Date: 2005/09/30 07:34:49 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class AComboBox extends JComboBox {
 	private static final long serialVersionUID = -4432933469351433936L;
 
-	class ComboBoxRenderer extends JLabel implements ListCellRenderer {
-		private static final long serialVersionUID = -7138467780868027135L;
-
-		Font	font;
+	private class ComboBoxRenderer implements ListCellRenderer {
+		
+		private JLabel label; 
 
 		public ComboBoxRenderer() {
-			super.setOpaque(true);
-			this.font = UIManager.getFont("Combobox.font");
-		}
-
-		@Override
-		public Font getFont() {
-			return this.font;
+			this.label = new JLabel();
+			this.label.setOpaque(true);
+			this.label.setFont(UIManager.getFont("Combobox.font"));
 		}
 
 		/*
 		 * This method finds the image and text corresponding to the selected
 		 * value and returns the label, set up to display the text and image.
 		 */
-		public Component getListCellRendererComponent(	JList list,
-														Object value,
-														int index,
-														boolean isSelected,
-														boolean cellHasFocus) {
+		public Component getListCellRendererComponent(	final JList list,
+				final Object value,
+		        final int index,
+		        final boolean isSelected,
+		        final boolean cellHasFocus) {
 			// Get the selected index. (The index param isn't
 			// always valid, so just use the value.)
 
-			this.setFont(this.font);
-
-			if (isSelected) {
-				setBackground(list.getSelectionBackground());
-				setForeground(list.getSelectionForeground());
-			} else {
-				setBackground(list.getBackground());
-				setForeground(list.getForeground());
-			}
-
-			setText(value.toString());
-			return this;
+			this.label.setBackground(isSelected ? 
+					list.getSelectionBackground() : 
+					list.getBackground());
+			this.label.setForeground(isSelected ? 
+					list.getSelectionForeground() : 
+					list.getForeground());
+			this.label.setText(value.toString());
+			return this.label;
 		}
 	}
 
@@ -78,9 +68,9 @@ public class AComboBox extends JComboBox {
 		this.actualResize();
 	}
 
-	public AComboBox(int fontsize) {
+	public AComboBox(final int fontsize) {
 		super();
-		setFontSize(fontsize);
+		this.setFontSize(fontsize);
 	}
 
 	public AComboBox(final Object items[]) {
@@ -100,7 +90,7 @@ public class AComboBox extends JComboBox {
 	}
 
 	public void setFontSize(int fontsize) {
-		Font font = getFont();
+		final Font font = getFont();
 		this.setFont(new Font(font.getName(), Font.PLAIN, fontsize));
 		this.actualResize();
 	}
@@ -112,28 +102,21 @@ public class AComboBox extends JComboBox {
 	}
 
 	private void actualResize() {
-		ComboBoxRenderer renderer1 = null;
-		if (this.getRenderer() instanceof ComboBoxRenderer)
-			renderer1 = ((ComboBoxRenderer) this.getRenderer());
-		Font font = (renderer1 == null ? this.getFont() : renderer1.getFont());
-		if (font != null) {
-			// System.out.println("font:" + font.toString());
-			FontMetrics fm = this.getFontMetrics(font);
-			if (fm != null) {
-				int height = fm.getHeight();
-				int width = 0;
-				ComboBoxModel model = this.getModel();
-				for (int i = 0; i < model.getSize(); i++) {
-					String value = model.getElementAt(i).toString();
-					int w = fm.stringWidth(value);
-					// System.out.println("value:" + value + "\tw:" + w);
-					width = (width > w) ? width : w;
-				}
-				width += fm.stringWidth("--");
-				Dimension d = new Dimension(width, height + 2);
-				// this.setMinimumSize(d);
-				this.setPreferredSize(d);
+		final FontMetrics fm = this.getFontMetrics(UIManager.getFont("Combobox.font"));
+		if (fm != null) {
+			final int height = fm.getHeight();
+			int width = 0;
+			final ComboBoxModel model = this.getModel();
+			for (int i = 0; i < model.getSize(); i++) {
+				String value = model.getElementAt(i).toString();
+				int w = fm.stringWidth(value);
+				// System.out.println("value:" + value + "\tw:" + w);
+				width = (width > w) ? width : w;
 			}
+			width += fm.stringWidth("--");
+			final Dimension d = new Dimension(width, height + 2);
+			// this.setMinimumSize(d);
+			this.setPreferredSize(d);
 		}
 	}
 }
