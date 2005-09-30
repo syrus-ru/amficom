@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.9 2005/09/30 12:34:07 max Exp $
+ * $Id: ReportTemplate.java,v 1.10 2005/09/30 16:22:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
  * отчёт </p>
  * 
  * @author $Author: max $
- * @version $Revision: 1.9 $, $Date: 2005/09/30 12:34:07 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/30 16:22:15 $
  * @module generalclient_v1
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable {
@@ -98,7 +98,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	/**
 	 * Список всех элементов шаблона
 	 */
-	private Set<Identifier> dataStorableElementIds = new HashSet<Identifier>();
+//	private Set<Identifier> dataStorableElementIds = new HashSet<Identifier>();
 //	//Это хранимое поле	
 //	/**
 //	 * Список фильтров использующихся в шаблоне
@@ -108,14 +108,14 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	/**
 	 * Список надписей из шаблона
 	 */
-	private Set<Identifier> textStorableElementIds = new HashSet<Identifier>();
+//	private Set<Identifier> textStorableElementIds = new HashSet<Identifier>();
 	//Это хранимое поле
 	/**
 	 * Список картинок из шаблона
 	 */
-	private Set<Identifier> imageStorableElementIds = new HashSet<Identifier>();
+//	private Set<Identifier> imageStorableElementIds = new HashSet<Identifier>();
 
-	private ReportTemplate(final Identifier id,
+	ReportTemplate(final Identifier id,
 			final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -197,6 +197,26 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 				IdlOrientation.from_int(this.orientation.ordinal()),
 				this.marginSize,
 				this.destinationModule);
+	}
+	
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final SheetSize size,
+			final Orientation orientation,
+			final int marginSize,
+			final String destinationModule) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.size = size;
+		this.orientation = orientation;
+		this.marginSize = marginSize;
+		this.destinationModule = destinationModule;
 	}
 	
 	/**
@@ -390,5 +410,9 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	public Set<Identifiable> getDependencies() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	SheetSize getSheetSize() {
+		return this.size
 	}
 }
