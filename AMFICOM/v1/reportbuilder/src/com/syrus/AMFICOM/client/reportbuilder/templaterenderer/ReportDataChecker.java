@@ -1,5 +1,5 @@
 /*
- * $Id: ReportDataChecker.java,v 1.2 2005/09/22 14:48:33 peskovsky Exp $
+ * $Id: ReportDataChecker.java,v 1.3 2005/09/30 08:14:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
@@ -83,7 +84,7 @@ public class ReportDataChecker {
 					SchedulerReportModel.TEST_PARAMETERS);
 		}
 		//Для сиюминутных отчётов по анализу
-		else if (	(objectToInstall instanceof Result)) {
+		else if (	(objectToInstall instanceof Measurement)) {
 			attributes = new HashMap<String,String>();			
 			attributes.put(
 					MODEL_CLASS_NAME,

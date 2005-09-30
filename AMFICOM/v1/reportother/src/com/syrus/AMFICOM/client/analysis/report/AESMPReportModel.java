@@ -3,6 +3,8 @@ package com.syrus.AMFICOM.client.analysis.report;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -22,8 +24,14 @@ import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.TableModelVerticalDivider;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.IntDimension;
@@ -101,10 +109,21 @@ public abstract class AESMPReportModel extends ReportModel
 						modelClassName,							
 						CreateReportException.WRONG_DATA_TO_INSTALL);
 			
-			Identifier resultId = (Identifier)data;
+			Identifier measurementId = (Identifier)data;
 			try {
-				Result measurementResult = 
-					StorableObjectPool.getStorableObject(resultId,true);
+				Result measurementResult = null;
+				StorableObjectCondition condition2 = new LinkedIdsCondition(measurementId, ObjectEntities.RESULT_CODE);
+				Set<Result> resultSet = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+				Iterator<Result> resultsIterator = resultSet.iterator();
+				if (resultsIterator.hasNext())
+					measurementResult = resultsIterator.next();
+				
+				if (measurementResult == null)
+					throw new CreateReportException(
+							reportName,
+							modelClassName,							
+							CreateReportException.ERROR_GETTING_FROM_POOL);
+				
 				BellcoreStructure bStructure =
 					AnalysisUtil.getBellcoreStructureFromResult(
 							measurementResult);
