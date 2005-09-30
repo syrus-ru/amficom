@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.107 2005/09/30 09:21:49 bass Exp $
+ * $Id: StorableObject.java,v 1.108 2005/09/30 11:45:13 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/09/30 09:21:49 $
+ * @version $Revision: 1.108 $, $Date: 2005/09/30 11:45:13 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -204,6 +204,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *         should never be squeezed out of the pool. 
 	 */
 	final boolean isPersistent() {
+		assert this.cachedTimes >= 0;
 		return this.cachedTimes > 0;
 	}
 
@@ -244,6 +245,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * Is invoked solely by caching facilities.
 	 */
 	final void cleanupPersistence() {
+		assert this.isPersistent();
 		this.cachedTimes--;
 	}
 
@@ -626,7 +628,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.107 $, $Date: 2005/09/30 09:21:49 $
+	 * @version $Revision: 1.108 $, $Date: 2005/09/30 11:45:13 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -660,13 +662,17 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		public final void addToCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
-				containee.markAsPersistent();
-				this.containees.add(containee);
+				if (!this.containees.contains(containee)) {
+					containee.markAsPersistent();
+					this.containees.add(containee);
+				}
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
-				containee.markAsPersistent();
-				this.containees.add(containee);
+				if (!this.containees.contains(containee)) {
+					containee.markAsPersistent();
+					this.containees.add(containee);
+				}
 			}
 		}
 
@@ -679,13 +685,17 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		public final void removeFromCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
-				containee.cleanupPersistence();
-				this.containees.remove(containee);
+				if (this.containees.contains(containee)) {
+					containee.cleanupPersistence();
+					this.containees.remove(containee);
+				}
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
-				containee.cleanupPersistence();
-				this.containees.remove(containee);
+				if (this.containees.contains(containee)) {
+					containee.cleanupPersistence();
+					this.containees.remove(containee);
+				}
 			}
 		}
 
