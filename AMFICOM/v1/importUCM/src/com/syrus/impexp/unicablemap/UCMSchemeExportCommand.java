@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.8 2005/09/12 06:11:57 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.9 2005/09/30 08:33:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,10 @@ import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentSeq;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSeq;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipmentSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
@@ -51,12 +51,15 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/09/12 06:11:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/30 08:33:18 $
  * @module importUCM
  */
 
 public class UCMSchemeExportCommand {
 	UniCableMapDatabase ucmDatabase;
+	String filename;
+	static final String configFileName = "_configUCM.xml"; 
+	static final String schemeFileName = "_schemeUCM.xml";
 	
 	HashMap<Integer, CableType> cabletypes = new HashMap<Integer, CableType>();
 	HashMap<Integer, LinkType> linktypes = new HashMap<Integer, LinkType>();
@@ -68,8 +71,9 @@ public class UCMSchemeExportCommand {
 	
 	String defaultEqtId;
 	
-	public UCMSchemeExportCommand(UniCableMapDatabase ucmDatabase) {
+	public UCMSchemeExportCommand(UniCableMapDatabase ucmDatabase, String filename) {
 		this.ucmDatabase = ucmDatabase;
+		this.filename = filename;
 	}
 	
 	public void processTypeObjects() {
@@ -134,7 +138,7 @@ public class UCMSchemeExportCommand {
 					 cable.setCodenameId(Integer.valueOf(ucmLink.parent.un));
 				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_START_STARTS)) {
 					UniCableMapObject startObj = ucmLink.parent;
-					cable.setStartPortId(getFreePort(cable, DirectionType.IN, startObj));
+					cable.setStartPortId(getFreePort(cable, DirectionType.OUT, startObj));
 					
 					//add first CCI
 					if (startObj.typ.text.equals(UniCableMapType.UCM_CABLE_INLET)) {
@@ -143,7 +147,7 @@ public class UCMSchemeExportCommand {
 					}
 				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
 					UniCableMapObject endObj = ucmLink.parent;
-					cable.setEndPortId(getFreePort(cable, DirectionType.OUT, endObj));
+					cable.setEndPortId(getFreePort(cable, DirectionType.IN, endObj));
 					
 					// set last CCI
 					if (endObj.typ.text.equals(UniCableMapType.UCM_CABLE_INLET)) {
@@ -374,9 +378,9 @@ public class UCMSchemeExportCommand {
 
 			for(UniCableMapLink ucmLink : this.ucmDatabase.getChildren(ucmObject)) {
 				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_START_STARTS)) {
-					 muf.addInputPort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
-				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
 					 muf.addOutputPort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
+				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
+					 muf.addInputPort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
 				}
 			}
 		}
@@ -389,7 +393,7 @@ public class UCMSchemeExportCommand {
 			eq.setName(plan.text);
 			eq.setLatitude((float)plan.x0);
 			eq.setLongitude((float)plan.y0);
-			eq.setTypeId(this.defaultEqtId);
+			eq.setTypeId("UCM_SCHEMED");
 			building.setEquipment(eq);
 			this.equipments.add(eq);
 			
@@ -488,7 +492,7 @@ public class UCMSchemeExportCommand {
 
 		XmlLinkTypeSeq xmlLinkTypes = doc.addNewLinkTypes();
 		XmlCableLinkTypeSeq xmlCableLinkTypes = doc.addNewCableLinkTypes();
-		XmlEquipmentTypeSeq xmlEquipmentTypes = doc.addNewEquipmentTypes();
+		XmlProtoEquipmentSeq xmlProtoEquipments = doc.addNewProtoEquipments();
 		XmlEquipmentSeq xmlEquipments = doc.addNewEquipments();
 
 		Collection<XmlLinkType> lts1 = new ArrayList<XmlLinkType>(this.linktypes.size());
@@ -503,11 +507,11 @@ public class UCMSchemeExportCommand {
 		}
 		xmlCableLinkTypes.setCableLinkTypeArray(lts.toArray(new XmlCableLinkType[lts.size()]));
 		
-		Collection<XmlEquipmentType> eqts = new ArrayList<XmlEquipmentType>(this.eqtypes.size());
+		Collection<XmlProtoEquipment> eqts = new ArrayList<XmlProtoEquipment>(this.eqtypes.size());
 		for (MuffType eqType : this.eqtypes.values()) {
 			eqts.add(eqType.toXMLObject());
 		}
-		xmlEquipmentTypes.setEquipmentTypeArray(eqts.toArray(new XmlEquipmentType[eqts.size()]));
+		xmlProtoEquipments.setProtoEquipmentArray(eqts.toArray(new XmlProtoEquipment[eqts.size()]));
 		
 		Collection<XmlEquipment> eqs = new ArrayList<XmlEquipment>(this.equipments.size());
 		for (Equipment eq : this.equipments) {
@@ -518,7 +522,8 @@ public class UCMSchemeExportCommand {
 		System.out.println("Check if XML valid...");
 		boolean isXmlValid = UCMParser.validateXml(doc);
 		if(isXmlValid) {
-			File f = new File(fileName);
+			System.out.println("Done successfully");
+			File f = new File(fileName + configFileName);
 
 			try {
 				// Writing the XML Instance to a file.
@@ -526,9 +531,7 @@ public class UCMSchemeExportCommand {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("\nXML Instance Document saved at : "
-					+ f.getPath());
-			System.out.println("Done successfully");
+			System.out.println("\nXML Instance Document saved at : " + f.getPath());
 		} else {
 			System.out.println("Done with errors");
 		}
@@ -591,20 +594,20 @@ public class UCMSchemeExportCommand {
 		}
 		xmlSchemeCableLinks.setSchemeCableLinkArray(cls.toArray(new XmlSchemeCableLink[cls.size()]));
 		
-		File f = new File(fileName);
-
-		try {
-			// Writing the XML Instance to a file.
-			doc.save(f, xmlOptions);
-			System.out.println("\nXML Instance Document saved at : " + f.getPath());
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
 		
 		System.out.println("Check if XML valid...");
 		boolean isXmlValid = UCMParser.validateXml(doc);
 		if(isXmlValid) {
-			System.out.println("Done successfully");			
+			System.out.println("Done successfully");
+			File f = new File(fileName + schemeFileName);
+
+			try {
+				// Writing the XML Instance to a file.
+				doc.save(f, xmlOptions);
+				System.out.println("\nXML Instance Document saved at : " + f.getPath());
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		} else {
 			System.out.println("Done with errors");
 		}
@@ -614,8 +617,13 @@ public class UCMSchemeExportCommand {
 		try {
 			processTypeObjects();
 			processSchemeObjects(Integer.MAX_VALUE);
-			saveConfigXML("\\export\\config.xml");
-			saveSchemeXML("\\export\\scheme.xml", Integer.MAX_VALUE);
+			
+			int pos = this.filename.lastIndexOf(".");
+			if (pos != -1) {
+				this.filename = this.filename.substring(0, pos);
+			}
+			saveConfigXML(this.filename);
+			saveSchemeXML(this.filename, Integer.MAX_VALUE);
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}

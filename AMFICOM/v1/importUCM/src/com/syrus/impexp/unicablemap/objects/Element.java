@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.7 2005/09/12 06:11:57 stas Exp $
+ * $Id: Element.java,v 1.8 2005/09/30 08:33:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -118,6 +118,7 @@ public class Element {
 		uid.setStringValue(String.valueOf(this.id));
 		
 		if (this.name.length() > 32) {
+			System.out.println("element name (" + this.name + ") length greater then 32 symbols. cuting... ");
 			this.name = this.name.substring(0, 31);
 		}
 		

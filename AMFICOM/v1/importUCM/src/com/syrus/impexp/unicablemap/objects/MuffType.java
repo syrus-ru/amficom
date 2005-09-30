@@ -1,5 +1,5 @@
 /*-
- * $Id: MuffType.java,v 1.3 2005/09/11 15:25:58 stas Exp $
+ * $Id: MuffType.java,v 1.4 2005/09/30 08:33:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,8 @@
 
 package com.syrus.impexp.unicablemap.objects;
 
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
+import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment.XmlEquipmentType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
@@ -23,7 +24,6 @@ public class MuffType {
 	
 	public MuffType(int id) {
 		this.id = id;
-		this.codename = "EQT" + Integer.toString(id); 
 	}
 
 	public void setCablePortsNum(int cablePortsNum) {
@@ -42,14 +42,19 @@ public class MuffType {
 		this.name = name;
 	}
 	
-	public XmlEquipmentType toXMLObject() {
-		XmlEquipmentType xmlEQT = XmlEquipmentType.Factory.newInstance();
+	public XmlProtoEquipment toXMLObject() {
+		XmlProtoEquipment xmlEQT = XmlProtoEquipment.Factory.newInstance();
+		
+		if (this.name.length() > 32) {
+			System.out.println("equipmenttype name (" + this.name + ") length greater then 32 symbols. cuting... ");
+			this.name = this.name.substring(0, 31);
+		}
 		
 		XmlIdentifier uid = xmlEQT.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
 		
 		xmlEQT.setName(this.name);
-		xmlEQT.setCodename(this.codename);
+		xmlEQT.setXmlEquipmentType(XmlEquipmentType.MUFF);
 		
 		return xmlEQT;
 	}

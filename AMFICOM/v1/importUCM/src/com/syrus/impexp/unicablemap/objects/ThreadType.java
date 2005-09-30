@@ -1,5 +1,5 @@
 /*-
- * $Id: ThreadType.java,v 1.4 2005/09/11 20:24:19 stas Exp $
+ * $Id: ThreadType.java,v 1.5 2005/09/30 08:33:18 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ public class ThreadType {
 		
 		XmlIdentifier uid = xmlCTT.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
-		xmlCTT.setName(this.codename);
-		xmlCTT.setCodename(this.codename);
+		xmlCTT.setName("волокно" + this.codename);
+		xmlCTT.setCodename(String.valueOf(this.id));
 		
 		XmlIdentifier ltuid = xmlCTT.addNewLinkTypeId();
 		ltuid.setStringValue(this.linkTypeId.toString());

@@ -42,8 +42,8 @@ import com.syrus.impexp.ImportExportException;
 
 /**
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/09/29 15:29:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/09/30 08:33:18 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
@@ -722,7 +722,7 @@ public class UniCableMapDialog extends JFrame
 
 	void importScheme()
 	{
-		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase);
+		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase, this.exportFileField.getText());
 		command.execute();
 		this.statusLabel.setText("OK!");
 	}

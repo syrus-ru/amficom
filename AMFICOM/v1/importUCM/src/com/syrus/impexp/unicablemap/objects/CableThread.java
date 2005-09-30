@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThread.java,v 1.4 2005/09/12 06:11:57 stas Exp $
+ * $Id: CableThread.java,v 1.5 2005/09/30 08:33:18 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,6 @@ public class CableThread {
 
 	public CableThread(String id) {
 		this.id = id;
-		if (id.length() > 32) {
-			System.out.println("thread" + id);
-		}
 	}
 
 	public void setSourcePortId(Integer sourcePortId) {
@@ -53,11 +50,7 @@ public class CableThread {
 		XmlIdentifier uid = xmlCT.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
 		
-		if (this.name.length() > 32) {
-			System.err.println("thread");
-		}
-		
-		xmlCT.setName(this.name);
+		xmlCT.setName("волокно" + this.name);
 //		xmlCT.setDescription("");
 		
 		if (this.linkTypeId == null) {

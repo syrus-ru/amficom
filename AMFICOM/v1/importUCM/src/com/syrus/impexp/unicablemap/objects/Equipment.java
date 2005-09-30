@@ -1,5 +1,5 @@
 /*-
- * $Id: Equipment.java,v 1.3 2005/09/29 15:28:59 krupenn Exp $
+ * $Id: Equipment.java,v 1.4 2005/09/30 08:33:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,6 +46,11 @@ public class Equipment {
 	
 	public XmlEquipment toXMLObject() {
 		XmlEquipment xmlEq = XmlEquipment.Factory.newInstance();
+		
+		if (this.name.length() > 32) {
+			System.out.println("equipment name (" + this.name + ") length greater then 32 symbols. cuting... ");
+			this.name = this.name.substring(0, 31);
+		}
 		
 		XmlIdentifier uid = xmlEq.addNewId();
 		uid.setStringValue(String.valueOf(this.id));

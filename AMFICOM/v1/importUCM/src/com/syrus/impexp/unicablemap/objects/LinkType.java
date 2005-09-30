@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.2 2005/09/11 15:25:58 stas Exp $
+ * $Id: LinkType.java,v 1.3 2005/09/30 08:33:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,11 @@ public class LinkType {
 	
 	public XmlLinkType toXMLObject() {
 		XmlLinkType xmlLT = XmlLinkType.Factory.newInstance();
+		
+		if (this.name.length() > 32) {
+			System.out.println("linktype name (" + this.name + ") length greater then 32 symbols. cuting... ");
+			this.name = this.name.substring(0, 31);
+		}
 		
 		XmlIdentifier uid = xmlLT.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
