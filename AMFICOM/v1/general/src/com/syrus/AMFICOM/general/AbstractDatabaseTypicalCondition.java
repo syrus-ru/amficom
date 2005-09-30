@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.17 2005/09/26 15:06:22 max Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.18 2005/09/30 07:45:10 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_LIKE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_PATTERN_CHARACTERS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FUNCTION_UPPER;
 
 import java.util.Date;
 
@@ -36,7 +37,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/26 15:06:22 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/30 07:45:10 $
  * @author $Author: max $
  * @module general
  */
@@ -254,8 +255,16 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				break;
 			case TypicalSort._TYPE_STRING:
 				final String v = this.condition.getValue().toString();
-				buffer.append(this.getColumnName());
-				switch (this.condition.getOperation().value()) {
+				int operation = this.condition.getOperation().value();
+				if(operation == OperationSort._OPERATION_SUBSTRING) {
+					buffer.append(SQL_FUNCTION_UPPER);
+					buffer.append(OPEN_BRACKET);
+					buffer.append(this.getColumnName());
+					buffer.append(CLOSE_BRACKET);
+				} else {
+					buffer.append(this.getColumnName());
+				}
+				switch (operation) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(EQUALS);
 						buffer.append(APOSTROPHE);
@@ -270,11 +279,14 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
 						buffer.append(SQL_LIKE);
+						buffer.append(SQL_FUNCTION_UPPER);
+						buffer.append(OPEN_BRACKET);
 						buffer.append(APOSTROPHE);
 						buffer.append(SQL_PATTERN_CHARACTERS);
 						buffer.append(DatabaseString.toQuerySubString(v));
 						buffer.append(SQL_PATTERN_CHARACTERS);
 						buffer.append(APOSTROPHE);
+						buffer.append(CLOSE_BRACKET);
 						break;
 					case OperationSort._OPERATION_REGEXP:
 						/* TODO isn't implement */

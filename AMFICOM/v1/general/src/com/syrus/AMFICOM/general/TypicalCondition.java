@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.54 2005/09/22 15:16:33 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.55 2005/09/30 07:50:08 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,8 +127,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.54 $, $Date: 2005/09/22 15:16:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/09/30 07:50:08 $
+ * @author $Author: max $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -1335,7 +1335,9 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = !v.equals(o);
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
-						result = o.indexOf(v) > -1;
+						final String vLowerCase = v.toLowerCase();
+						final String oLowerCase = o.toLowerCase();
+						result = oLowerCase.indexOf(vLowerCase) > -1;
 						break;
 					case OperationSort._OPERATION_REGEXP:
 						result = o.matches(v);
