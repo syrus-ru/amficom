@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.8 2005/09/30 08:33:18 stas Exp $
+ * $Id: Element.java,v 1.9 2005/09/30 08:36:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -131,14 +131,14 @@ public class Element {
 			xmlSE.setEquipmentId(eqid);
 		}
 		else if (this.equipmentTypeId != null) {
-			XmlIdentifier eqtid = xmlSE.addNewEquipmentTypeId();
+			XmlIdentifier eqtid = xmlSE.addNewProtoEquipmentId();
 			eqtid.setStringValue(this.equipmentTypeId);
-			xmlSE.setEquipmentTypeId(eqtid);
+			xmlSE.setProtoEquipmentId(eqtid);
 		} else {
 			this.equipmentTypeId = "VOID";
-			XmlIdentifier eqtid = xmlSE.addNewEquipmentTypeId();
+			XmlIdentifier eqtid = xmlSE.addNewProtoEquipmentId();
 			eqtid.setStringValue(this.equipmentTypeId);
-			xmlSE.setEquipmentTypeId(eqtid);
+			xmlSE.setProtoEquipmentId(eqtid);
 		}
 		
 		xmlSE.setLabel(this.label);
