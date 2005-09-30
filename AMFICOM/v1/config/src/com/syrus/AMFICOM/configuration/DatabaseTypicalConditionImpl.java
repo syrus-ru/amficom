@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.22 2005/09/30 06:26:36 max Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.23 2005/09/30 07:26:43 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/30 06:26:36 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/30 07:26:43 $
  * @author $Author: max $
  * @module config
  */
@@ -58,6 +58,7 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME)) {
 					return StorableObjectWrapper.COLUMN_NAME;
 				}
+				break;
 			case CABLELINK_TYPE_CODE:
 			case LINK_TYPE_CODE:
 			case CABLETHREAD_TYPE_CODE:
