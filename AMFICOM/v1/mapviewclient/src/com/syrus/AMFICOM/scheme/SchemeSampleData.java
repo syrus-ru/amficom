@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.33 2005/09/28 15:08:13 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.34 2005/09/30 06:35:47 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $
+ * @version $Revision: 1.34 $
  * @module mapviewclient
  */
 public final class SchemeSampleData {
@@ -66,7 +67,7 @@ public final class SchemeSampleData {
 
 	private static void scheme1(Identifier userId, Identifier domainId) throws ApplicationException
 	{
-		EquipmentType equipmentType = EquipmentType.createInstance(userId, "sample", "desc", "name");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		ProtoEquipment protoEquipment = ProtoEquipment.createInstance(userId, EquipmentType.CABLE_PANEL, "sample", "desc", "manu", "manucode");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		LinkType lt = LinkType.createInstance(userId, "1", "2", "3", LinkTypeSort.LINKTYPESORT_COPPER, "8", "9", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "7", "CTT", 0, lt, clt);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -74,23 +75,23 @@ public final class SchemeSampleData {
 		scheme1 = Scheme.createInstance(userId, "Схемка (бол)", IdlKind.NETWORK, domainId); //$NON-NLS-1$
 		scheme1element0 = SchemeElement.createInstance(userId, "Один элемент", scheme1); //$NON-NLS-1$
 		scheme1element0.setDescription("Описалово"); //$NON-NLS-1$
-		scheme1element0.setEquipmentType(equipmentType);
+		scheme1element0.setProtoEquipment(protoEquipment);
 
 		scheme1element1 = SchemeElement.createInstance(userId, "Другой элемент", scheme1); //$NON-NLS-1$
 		scheme1element1.setDescription("Описалово"); //$NON-NLS-1$
-		scheme1element1.setEquipmentType(equipmentType);
+		scheme1element1.setProtoEquipment(protoEquipment);
 
 		scheme1element2 = SchemeElement.createInstance(userId, "Третий элемент", scheme1); //$NON-NLS-1$
 		scheme1element2.setDescription("Описалово"); //$NON-NLS-1$
-		scheme1element2.setEquipmentType(equipmentType);
+		scheme1element2.setProtoEquipment(protoEquipment);
 
 		scheme1element3 = SchemeElement.createInstance(userId, "Опять элемент", scheme1); //$NON-NLS-1$
 		scheme1element3.setDescription("Описалово"); //$NON-NLS-1$
-		scheme1element3.setEquipmentType(equipmentType);
+		scheme1element3.setProtoEquipment(protoEquipment);
 
 		scheme1element4 = SchemeElement.createInstance(userId, "Совсем элемент", scheme1); //$NON-NLS-1$
 		scheme1element4.setDescription("Описалово"); //$NON-NLS-1$
-		scheme1element4.setEquipmentType(equipmentType);
+		scheme1element4.setProtoEquipment(protoEquipment);
 
 		SchemeDevice scheme1dev00 = SchemeDevice.createInstance(userId, "Девайс1", scheme1element0); //$NON-NLS-1$
 		SchemeDevice scheme1dev10 = SchemeDevice.createInstance(userId, "Девайс2", scheme1element1); //$NON-NLS-1$
@@ -189,7 +190,7 @@ public final class SchemeSampleData {
 
 	private static void scheme2(Identifier userId, Identifier domainId) throws ApplicationException
 	{
-		EquipmentType equipmentType = EquipmentType.createInstance(userId, "samle2", "desc2", "name2");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		ProtoEquipment protoEquipment = ProtoEquipment.createInstance(userId, EquipmentType.CABLE_PANEL, "samle2", "desc2", "manu", "manucode");  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt);  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -197,11 +198,11 @@ public final class SchemeSampleData {
 		scheme2 = Scheme.createInstance(userId, "Схемочка (мал)", IdlKind.NETWORK, domainId); //$NON-NLS-1$
 		SchemeElement scheme2el0 = SchemeElement.createInstance(userId, "Один элемент", scheme2); //$NON-NLS-1$
 		scheme2el0.setDescription("Описалово"); //$NON-NLS-1$
-		scheme2el0.setEquipmentType(equipmentType);
+		scheme2el0.setProtoEquipment(protoEquipment);
 
 		scheme2element1 = SchemeElement.createInstance(userId, "Другой элемент", scheme2); //$NON-NLS-1$
 		scheme2element1.setDescription("Описалово"); //$NON-NLS-1$
-		scheme2element1.setEquipmentType(equipmentType);
+		scheme2element1.setProtoEquipment(protoEquipment);
 
 		SchemeDevice scheme2dev00 = SchemeDevice.createInstance(userId, "Девайс1", scheme2el0); //$NON-NLS-1$
 		SchemeDevice scheme2dev10 = SchemeDevice.createInstance(userId, "Девайс2", scheme2element1); //$NON-NLS-1$
@@ -212,7 +213,7 @@ public final class SchemeSampleData {
 		SchemeCablePort scheme2dev00cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", IdlDirectionType._IN, scheme2dev00); //$NON-NLS-1$
 		SchemeCablePort scheme2dev10cport10 = SchemeCablePort.createInstance(userId, "Каборт два", IdlDirectionType._OUT, scheme2dev10); //$NON-NLS-1$
 
-		scheme2link0 = SchemeLink.createInstance(userId, "Патчкорд"); //$NON-NLS-1$
+		scheme2link0 = SchemeLink.createInstance(userId, "Патчкорд", scheme2); //$NON-NLS-1$
 		scheme2link0.setOpticalLength(1000.0D);
 		scheme2link0.setPhysicalLength(1000.0D);
 		scheme2link0.setSourceAbstractSchemePort(scheme2dev10port10);
