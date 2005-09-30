@@ -1,3 +1,5 @@
+-- $Id: attachedtext.sql,v 1.3 2005/09/30 06:44:03 arseniy Exp $
+
 CREATE TABLE AttachedText (
  id NUMBER(19),
  created DATE NOT NULL,
