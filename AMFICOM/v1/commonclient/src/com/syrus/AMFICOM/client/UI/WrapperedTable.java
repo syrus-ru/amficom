@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.17 2005/09/23 13:53:02 bob Exp $
+* $Id: WrapperedTable.java,v 1.18 2005/09/30 10:03:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/23 13:53:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/30 10:03:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -329,7 +329,6 @@ public final class WrapperedTable<T> extends ATable {
 		
 		private final int	size;
 		private final boolean	ascend;
-		private final int	size32;
 		
 		protected static final Arrow ARROW_ASCEND = new Arrow(true, 10);
 		protected static final Arrow ARROW_DESCEND = new Arrow(false, 10);
@@ -338,9 +337,6 @@ public final class WrapperedTable<T> extends ATable {
 			final int size){
 			this.ascend = ascend;
 			this.size = size;
-			this.size32 = (int) (this.size * Math.sqrt(0.75) + 0.5);
-			
-//			this.polygon = new Polygon();
 		}
 		
 		/* (non-Javadoc)
@@ -365,10 +361,11 @@ public final class WrapperedTable<T> extends ATable {
 		                      	final int x,
 		                      	final int y) {
 			Graphics2D g2d = (Graphics2D) g;
-			g2d.setColor(Color.GRAY);
-			final int y1 = y + (this.ascend ? 0 : this.size32) + 2;
-			g2d.fillPolygon(new int[] {x, x + this.size, x + this.size/2}, 
-				new int[] {y1, y1, y + 2 + (this.ascend ? this.size32 : 0) },
+			g2d.setColor(Color.DARK_GRAY);
+			final int y1 = (this.ascend ? 0 : 1 + this.size/2);
+			final int y2 = this.size/3 + 1;
+			g2d.fillPolygon(new int[] {x, x + this.size + (this.ascend ? -1 : 0), x + this.size/2+ (this.ascend ? -1 : 0)}, 
+				new int[] { y + y1 + y2 , y + y1  + y2 , y + (this.ascend ? 0 + this.size/2 : 0) + y2 },
 				3);
 		}
 	}
