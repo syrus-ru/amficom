@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.106 2005/09/29 10:53:11 bass Exp $
+ * $Id: StorableObject.java,v 1.107 2005/09/30 09:21:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/09/29 10:53:11 $
+ * @version $Revision: 1.107 $, $Date: 2005/09/30 09:21:49 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -47,6 +47,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	private boolean changed;
 
+	private volatile int cachedTimes;
+
 	private Date savedModified;
 	private Identifier savedModifierId;
 	private StorableObjectVersion savedVersion;
@@ -54,8 +56,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected StorableObject() {
+	protected StorableObject(/*IdlStorableObject*/) {
 		this.changed = false;
+		this.cachedTimes = 0;
 	}
 
 	/**
@@ -82,6 +85,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.version = version;
 
 		this.changed = false;
+		this.cachedTimes = 0;
 
 		this.savedModified = null;
 		this.savedModifierId = null;
@@ -195,6 +199,15 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	}
 
 	/**
+	 * @return {@code true} if not only pool holds a reference to this
+	 *         object, but also some external chache, and the object thus
+	 *         should never be squeezed out of the pool. 
+	 */
+	final boolean isPersistent() {
+		return this.cachedTimes > 0;
+	}
+
+	/**
 	 * This method is called in:
 	 * 1) all setters of a StorableObject
 	 * 2) static method createInstance of StorableObject
@@ -207,10 +220,31 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			this.changed = true;
 			try {
 				StorableObjectPool.putStorableObject(this);
-			} catch (IllegalObjectEntityException ioee) {
+			} catch (final IllegalObjectEntityException ioee) {
 				assert false : ioee.getMessage();
 			}
 		}
+	}
+
+	/**
+	 * Is invoked solely by caching facilities.
+	 */
+	final void markAsPersistent() {
+		if (!this.isPersistent()) {
+			try {
+				StorableObjectPool.putStorableObject(this);
+			} catch (final IllegalObjectEntityException ioee) {
+				assert false : ioee.getMessage();
+			}
+		}
+		this.cachedTimes++;
+	}
+
+	/**
+	 * Is invoked solely by caching facilities.
+	 */
+	final void cleanupPersistence() {
+		this.cachedTimes--;
 	}
 
 	protected final void setUpdated(final Identifier modifierId) {
@@ -311,8 +345,12 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * objects.
 		 */
 		clone.version = StorableObjectVersion.createInitial();
+
 		clone.changed = false;
 		clone.markAsChanged();
+
+		clone.cachedTimes = 0;
+
 		return clone;
 	}
 
@@ -588,7 +626,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.106 $, $Date: 2005/09/29 10:53:11 $
+	 * @version $Revision: 1.107 $, $Date: 2005/09/30 09:21:49 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -622,9 +660,12 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		public final void addToCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
+				containee.markAsPersistent();
 				this.containees.add(containee);
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
+
+				containee.markAsPersistent();
 				this.containees.add(containee);
 			}
 		}
@@ -638,9 +679,12 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		public final void removeFromCache(final T containee, final boolean usePool)
 		throws ApplicationException {
 			if (this.cacheBuilt) {
+				containee.cleanupPersistence();
 				this.containees.remove(containee);
 			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
+
+				containee.cleanupPersistence();
 				this.containees.remove(containee);
 			}
 		}

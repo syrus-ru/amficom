@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.12 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.13 2005/09/30 09:21:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 09:21:49 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -40,7 +40,7 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 		assert (value != null) : ErrorMessages.NON_NULL_EXPECTED;
 
 		final StorableObject thrownObject = super.put(key, value);
-		if (thrownObject == null || !thrownObject.isChanged()) {
+		if (!shouldBeRetained(thrownObject)) {
 			return thrownObject;
 		}
 
@@ -49,7 +49,7 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 
 		for (int i = super.array.length - 1; i >= 0; i--) {
 			final StorableObject storableObject = super.array[i].getValue();
-			if (!storableObject.isChanged()) {
+			if (!shouldBeRetained(storableObject)) {
 				for (int j = i; j < super.array.length - 1; j++) {
 					super.array[j] = super.array[j + 1];
 				}
@@ -106,7 +106,7 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 					retainedEntries.add(entry);
 				else {
 					final StorableObject value = entry.getValue();
-					if (value != null && value.isChanged()) {
+					if (shouldBeRetained(value)) {
 						retainedEntries.add(entry);
 					}
 				}
@@ -120,5 +120,13 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 			super.array[i] = entry;
 		}
 		super.entityCount = size;
+	}
+
+	/**
+	 * @param storableObject
+	 */
+	private boolean shouldBeRetained(final StorableObject storableObject) {
+		return storableObject != null
+				&& (storableObject.isChanged() || storableObject.isPersistent());
 	}
 }
