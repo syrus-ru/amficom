@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.123 2005/09/29 10:05:27 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.124 2005/09/30 07:39:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.123 $, $Date: 2005/09/29 10:05:27 $
+ * @version $Revision: 1.124 $, $Date: 2005/09/30 07:39:24 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -96,17 +96,17 @@ public class PhysicalLink extends StorableObject
 
 	protected PhysicalLinkBinding binding = null;
 
-	protected List<NodeLink> nodeLinks;
-	protected List<AbstractNode> sortedNodes;
-	protected AbstractNode startNode = null;
-	protected AbstractNode endNode = null;
+	protected transient List<NodeLink> nodeLinks;
+	protected transient List<AbstractNode> sortedNodes;
+	protected transient AbstractNode startNode = null;
+	protected transient AbstractNode endNode = null;
 
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
 	protected transient boolean nodeLinksSorted = false;
 
-	private boolean transientFieldsInitialized = false;
+	private transient boolean transientFieldsInitialized = false;
 	
 	private void initialize() {
 		if(!this.transientFieldsInitialized) {

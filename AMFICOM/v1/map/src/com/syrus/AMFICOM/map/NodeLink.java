@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.104 2005/09/29 10:48:08 krupenn Exp $
+ * $Id: NodeLink.java,v 1.105 2005/09/30 07:39:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.104 $, $Date: 2005/09/29 10:48:08 $
+ * @version $Revision: 1.105 $, $Date: 2005/09/30 07:39:24 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -63,9 +63,9 @@ public final class NodeLink extends StorableObject
 	private Identifier endNodeId;
 	private double length;
 
-	private AbstractNode startNode = null;
-	private AbstractNode endNode = null;
-	private PhysicalLink physicalLink = null;
+	private transient AbstractNode startNode = null;
+	private transient AbstractNode endNode = null;
+	private transient PhysicalLink physicalLink = null;
 
 	private transient boolean selected = false;
 	private transient boolean removed = false;

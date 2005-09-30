@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.108 2005/09/29 10:05:27 krupenn Exp $
+ * $Id: Map.java,v 1.109 2005/09/30 07:39:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.108 $, $Date: 2005/09/29 10:05:27 $
+ * @version $Revision: 1.109 $, $Date: 2005/09/30 07:39:24 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -94,16 +94,16 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	private Set<Identifier> externalNodeIds;
 	private Set<Identifier> mapLibraryIds;
 
-	private Set<SiteNode> siteNodes;
-	private Set<TopologicalNode> topologicalNodes;
-	private Set<NodeLink> nodeLinks;
-	private Set<PhysicalLink> physicalLinks;
-	private Set<Mark> marks;
-	private Set<Collector> collectors;
+	private transient Set<SiteNode> siteNodes;
+	private transient Set<TopologicalNode> topologicalNodes;
+	private transient Set<NodeLink> nodeLinks;
+	private transient Set<PhysicalLink> physicalLinks;
+	private transient Set<Mark> marks;
+	private transient Set<Collector> collectors;
 
-	private Set<Map> maps;
-	private Set<SiteNode> externalNodes;
-	private Set<MapLibrary> mapLibrarys;
+	private transient Set<Map> maps;
+	private transient Set<SiteNode> externalNodes;
+	private transient Set<MapLibrary> mapLibrarys;
 
 	/**
 	 * Сортированный список всех элементов топологической схемы
@@ -112,7 +112,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	private transient Set<AbstractNode> nodeElements;
 	private transient Set<MapElement> selectedElements;
 
-	private boolean transientFieldsInitialized = false;
+	private transient boolean transientFieldsInitialized = false;
 	
 	private void initialize() {
 		if(this.allElements == null) {
