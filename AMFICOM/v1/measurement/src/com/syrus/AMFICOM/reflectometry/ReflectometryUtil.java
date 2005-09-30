@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.2 2005/09/02 14:04:28 bob Exp $
+ * $Id: ReflectometryUtil.java,v 1.3 2005/09/30 14:10:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.reflectometry;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/09/02 14:04:28 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/09/30 14:10:28 $
  * @module
  */
 public final class ReflectometryUtil {
@@ -18,7 +18,12 @@ public final class ReflectometryUtil {
 	private ReflectometryUtil() {
 		assert false;
 	}
-	
+
+	/**
+	 * Оценка сверху для времени обработки непосредственно на агенте
+	 * и передачи между КИС и агентом.
+	 * Секунды.
+	 */
 	private static final double UPPER_AGENT_TIME = 30.0;
 
 	/**
@@ -51,13 +56,25 @@ public final class ReflectometryUtil {
 	}
 
 	/**
-	 * Оценивает сверху время проведения измерения на агенте.
-	 * XXX: не знает, какой рефлектометр установлен,
-	 * поэтому использует данные по QP1640A
-	 * @return время проведения измерения, оцененное сверху.
+	 * Оценивает сверху время проведения измерения агентом, включающее:
+	 * <ul>
+	 * <li> время обработки агентом перед отправкой
+	 * <li> время передачи от агента к КИС
+	 * <li> время измерения на КИС
+	 * <li> время передачи от КИС к агенту
+	 * <li> время обработки результата на агенте
+	 * </li>
+	 * <p> Оценка довольно грубая, "как бы сверху", полагаясь на быструю
+	 * передачу по сети. Основана на пробных замерах.
+	 * <p> Типично выдает значение, завышенное на 10-20 сек.
+	 * <p> XXX: не знает, какой рефлектометр установлен,
+	 * поэтому использует данные по QP1640A.
+	 * @return время проведения измерения, оцененное сверху, выраженное в секундах
 	 */
 	public static double getUpperEstimatedAgentTestTime(
 			final ReflectometryMeasurementParameters rmp) {
+		// складываем время собственно измерения
+		// и время программной обработки и сетевой передачи
 		return getEstimatedQP1640ATestTime(rmp, true) + UPPER_AGENT_TIME;
 	}
 }
