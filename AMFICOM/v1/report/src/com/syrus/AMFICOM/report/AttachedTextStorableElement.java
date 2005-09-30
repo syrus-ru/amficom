@@ -1,10 +1,31 @@
 package com.syrus.AMFICOM.report;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
+
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.io.IOException;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import org.omg.CORBA.ORB;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.report.corba.IdlAttachedText;
+import com.syrus.AMFICOM.report.corba.IdlAttachedTextHelper;
+import com.syrus.AMFICOM.report.corba.IdlAttachedTextPackage.IdlFont;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 
@@ -21,41 +42,197 @@ public final class AttachedTextStorableElement extends StorableElement
 {
 	private static final long serialVersionUID = 276389622206172004L;
 	
-	private String text = "";
+	private String text;
 	/**
 	 * Элемент шаблона, к которому осуществлена привязка по вертикали
 	 */
-	private DataStorableElement vertAttacher = null;
+	private Identifier verticalAttacherId;
 	/**
 	 * Элемент шаблона, к которому осуществлена привязка по горизонтали
 	 */
-	private DataStorableElement horizAttacher = null;
+	private Identifier horizontalAttacherId;
 	/**
 	 * Шрифт надписи
 	 */
-	private Font font = null;
+	private Font font;
 	/**
 	 * Тип привязки по вертикали
 	 */
-	private String verticalAttachType = TextAttachingType.TO_FIELDS_TOP;
+	private TextAttachingType verticalAttachType;
 	/**
 	 * Тип привязки по горизонтали
 	 */
-	private String horizontalAttachType = TextAttachingType.TO_FIELDS_LEFT;
+	private TextAttachingType horizontalAttachType;
 	/**
 	 * Разница между x надписи и x объекта, к которому она привязана.
 	 */
-	private int distanceX = 0;
+	private int distanceX;
 	/**
 	 * Разница между y надписи и y объекта, к которому она привязана.
 	 */
-	private int distanceY = 0;
-
-	public AttachedTextStorableElement (IntPoint location)
-	{
-		this.setLocation(location);
+	private int distanceY;
+	
+	AttachedTextStorableElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final IntPoint location,
+			final IntDimension size,
+			final Identifier reportTemplateId,
+			final String text,
+			final Identifier verticalAttacherId,
+			final Identifier horizontalAttacherId,
+			final Font font,
+			final TextAttachingType horizontalAttachType,
+			final TextAttachingType verticalAttachType,
+			final int distanceX,
+			final int distanceY) {
+		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId);
+		this.text = text;
+		this.verticalAttacherId = verticalAttacherId;
+		this.horizontalAttacherId = horizontalAttacherId;
+		this.font = font;
+		this.horizontalAttachType = horizontalAttachType;
+		this.verticalAttachType = verticalAttachType;
+		this.distanceX = distanceX;
+		this.distanceY = distanceY;
+		
 	}
 	
+	public static AttachedTextStorableElement createInstance(Identifier creatorId, IntPoint location) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert location != null : NON_NULL_EXPECTED;
+		try {
+			final Date created = new Date();
+			final AttachedTextStorableElement atse = new AttachedTextStorableElement(IdentifierPool.getGeneratedIdentifier(ATTACHEDTEXT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					location,
+					new IntDimension(),
+					VOID_IDENTIFIER,
+					"",
+					VOID_IDENTIFIER,
+					VOID_IDENTIFIER,
+					// TODO: use real font
+					new Font("qwe", 0, 0),
+					TextAttachingType.TO_FIELDS_LEFT,
+					TextAttachingType.TO_FIELDS_TOP,
+					0,
+					0);
+			atse.markAsChanged();
+			return atse;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"AttachedTextStorableElement.createInstance() | cannot generate identifier ", ige);
+		}
+	}
+	
+	public AttachedTextStorableElement(IdlAttachedText transferable) {
+		this.fromTransferable(transferable);
+	}
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+		IdlAttachedText iat = (IdlAttachedText) transferable;
+		try {
+			super.fromTransferable(transferable);
+		} catch (ApplicationException e) {
+			// this shit cann't happen
+			assert false;
+		}
+		this.text = iat.text;
+		this.verticalAttacherId = new Identifier(iat.verticalAttacherId);
+		this.horizontalAttacherId = new Identifier(iat.horizontalAttacherId);
+		this.font = new Font(iat.font.name, iat.font.style, iat.font.size);
+		this.verticalAttachType = TextAttachingType.fromInt(iat.verticalAttachType);
+		this.horizontalAttachType = TextAttachingType.fromInt(iat.horizontalAttachType);
+		this.distanceX = iat.distanceX;
+		this.distanceY = iat.distanceY;
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObject#getTransferable(org.omg.CORBA.ORB)
+	 */
+	@Override
+	public IdlStorableObject getTransferable(ORB orb) {
+		return IdlAttachedTextHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version.longValue(),
+				this.location.getX(),
+				this.location.getY(),
+				this.size.getWidth(),
+				this.size.getHeight(),
+				this.reportTemplateId.getTransferable(),
+				this.text,
+				this.verticalAttacherId.getTransferable(),
+				this.horizontalAttacherId.getTransferable(),
+				this.distanceX,
+				this.distanceY,
+				new IdlFont(this.font.getName(), this.font.getStyle(), this.font.getSize()),
+				this.verticalAttachType.intValue(),
+				this.horizontalAttachType.intValue());
+	}
+	
+	@Override
+	public Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.addAll(super.getDependencies());
+		dependencies.add(this.horizontalAttacherId);
+		dependencies.add(this.verticalAttacherId);
+		dependencies.remove(null);
+		dependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
+	}
+	
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final int locationX,
+			final int locationY,
+			final int width,
+			final int height,
+			final Identifier reportTemplateId,
+			final String text,
+			final Identifier verticalAttacherId,
+			final Identifier horizontalAttacherId,
+			final int distanceX,
+			final int distanceY,
+			final Font font,
+			final TextAttachingType vType,
+			final TextAttachingType hType) {
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				locationX,
+				locationY,
+				width,
+				height,
+				reportTemplateId);
+		this.text = text;
+		this.verticalAttacherId = verticalAttacherId;
+		this.horizontalAttacherId = horizontalAttacherId;
+		this.distanceX = distanceX;
+		this.distanceY = distanceY;
+		this.font = font;
+		this.verticalAttachType = vType;
+		this.horizontalAttachType = hType;
+	}
+			
+
 	/**
 	 * Задаёт привязку.
 	 * @param attacher объект, к которому осуществляется привязка
@@ -63,16 +240,15 @@ public final class AttachedTextStorableElement extends StorableElement
 	 */
 	public void setAttachment(
 			DataStorableElement attacher,
-			String attachmentType)
+			TextAttachingType attachmentType)
 	{
-		if (attachmentType == null)
-			throw new AssertionError("AttachedTextRenderingElement.setAttachment | attachmentType can't be null!");
+		assert attacher != null : NON_NULL_EXPECTED;
 		
 		if (	attachmentType.equals(TextAttachingType.TO_FIELDS_LEFT)		
 			||	attachmentType.equals(TextAttachingType.TO_LEFT)
 			||	attachmentType.equals(TextAttachingType.TO_WIDTH_CENTER)			
 			||	attachmentType.equals(TextAttachingType.TO_RIGHT)){
-			this.horizAttacher = attacher;
+			this.horizontalAttacherId = attacher.getId();
 			this.horizontalAttachType = attachmentType;
 			//Фиксируем расстояние до соответсвующего края объекта, к которому
 			//осуществлена привязка
@@ -88,7 +264,7 @@ public final class AttachedTextStorableElement extends StorableElement
 		else if (	attachmentType.equals(TextAttachingType.TO_FIELDS_TOP)		
 				||	attachmentType.equals(TextAttachingType.TO_TOP)
 				||	attachmentType.equals(TextAttachingType.TO_BOTTOM)){
-				this.vertAttacher = attacher;
+				this.verticalAttacherId = attacher.getId();
 				this.verticalAttachType = attachmentType;
 				//Фиксируем расстояние до соответсвующего края объекта, к которому
 				//осуществлена привязка
@@ -109,62 +285,28 @@ public final class AttachedTextStorableElement extends StorableElement
 		this.font = font;
 	}
 
-	public DataStorableElement getHorizontalAttacher() {
-		return this.horizAttacher;
+	Identifier getHorizontalAttacherId() {
+		return this.horizontalAttacherId;
+	}
+	
+	public DataStorableElement getHorizontalAttacher() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.horizontalAttacherId, true);
 	}
 
-	public String getHorizontalAttachType() {
+	public TextAttachingType getHorizontalAttachType() {
 		return this.horizontalAttachType;
 	}
 
-	public DataStorableElement getVerticalAttacher() {
-		return this.vertAttacher;
+	Identifier getVerticalAttacherId() {
+		return this.verticalAttacherId;
+	}
+	
+	public DataStorableElement getVerticalAttacher() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.verticalAttacherId, true);
 	}
 
-	public String getVerticalAttachType() {
+	public TextAttachingType getVerticalAttachType() {
 		return this.verticalAttachType;
-	}
-
-	/**
-	 * Данный класс НЕ выполняет интерфейс Serializable, поскольку при чтении из потока
-	 * ему необходим список DataRenderingElement'ов для установки attacher'ов. Данные
-	 * функции вынесены сюда просто для удобства.
-	 */
-	public void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(this.getSize());
-		out.writeObject(this.getLocation());		
-		out.writeObject(this.text);
-		out.writeObject(this.font);
-
-		out.writeObject(this.verticalAttachType);
-		if (!this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
-			out.writeObject(this.vertAttacher.getId());
-
-		out.writeObject(this.horizontalAttachType);
-		if (!this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
-			out.writeObject(this.horizAttacher.getId());
-	}
-
-	public void readObject(java.io.ObjectInputStream in, ReportTemplate rt) throws IOException, ClassNotFoundException {
-		this.setSize((IntDimension)in.readObject());
-		this.setLocation((IntPoint)in.readObject());
-		
-		this.text = (String)in.readObject();
-		this.font = (Font)in.readObject();		
-
-		this.verticalAttachType = (String)in.readObject();		
-		if (!this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
-		{
-			Identifier vaId = (Identifier)in.readObject();
-			this.vertAttacher = rt.getDataRElement(vaId);
-		}
-
-		this.horizontalAttachType = (String)in.readObject();		
-		if (!this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
-		{
-			Identifier haId = (Identifier)in.readObject();
-			this.horizAttacher = rt.getDataRElement(haId);
-		}
 	}
 
 	public String getText() {
@@ -182,24 +324,22 @@ public final class AttachedTextStorableElement extends StorableElement
 		this.text = text;
 	}
 
-	public AttachedTextStorableElement() {
-	}
-	
 	/**
 	 * Метод используется, чтобы изменить местоположение элемента с надписью
 	 * так, чтобы он находился на заданном при привязке расстоянии от
 	 * элемента отображения данных, к которому он привязан.
+	 * @throws ApplicationException 
 	 */
 	//Если элемент выходит за границы шаблона - не двигаемся и возвращаем на
 	//исходную позицию Attacher
-	public void suiteAttachingDistances(Rectangle templateBounds) {
+	public void suiteAttachingDistances(Rectangle templateBounds) throws ApplicationException {
 		int newX = 0;
 		int newY = 0;
-
+		DataStorableElement horizontalAttacher = this.getHorizontalAttacher();
 		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
 			newX = this.getX();
 		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
-			newX = this.horizAttacher.getX() + this.distanceX;
+			newX = horizontalAttacher.getX() + this.distanceX;
 //			//Если выходит за границы шаблона - не двигаемся и возвращаем на
 //			//исходную позицию Attacher
 //			if (newX < templateBounds.x) {
@@ -216,7 +356,7 @@ public final class AttachedTextStorableElement extends StorableElement
 //			}
 		}
 		else if (this.horizontalAttachType.equals(TextAttachingType.TO_WIDTH_CENTER)) {
-			newX = this.horizAttacher.getX() + this.horizAttacher.getWidth() / 2  + this.distanceX;
+			newX = horizontalAttacher.getX() + horizontalAttacher.getWidth() / 2  + this.distanceX;
 //			//Если выходит за границы шаблона - не двигаемся и возвращаем на
 //			//исходную позицию Attacher
 //			if (newX < templateBounds.x) {
@@ -233,7 +373,7 @@ public final class AttachedTextStorableElement extends StorableElement
 //			}
 		}
 		else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT)) {
-			newX = this.horizAttacher.getX() + this.horizAttacher.getWidth() + this.distanceX;
+			newX = horizontalAttacher.getX() + horizontalAttacher.getWidth() + this.distanceX;
 //			//Если выходит за границы шаблона - не двигаемся и возвращаем на
 //			//исходную позицию Attacher
 //			if (newX < templateBounds.x) {
@@ -253,7 +393,7 @@ public final class AttachedTextStorableElement extends StorableElement
 		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
 			newY = this.getY();
 		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
-			newY = this.vertAttacher.getY() + this.distanceY;
+			newY = horizontalAttacher.getY() + this.distanceY;
 //			//Если выходит за границы шаблона - не двигаемся и возвращаем на
 //			//исходную позицию Attacher
 //			if (newY < templateBounds.y) {
@@ -270,7 +410,7 @@ public final class AttachedTextStorableElement extends StorableElement
 //			}
 		}
 		else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM)) {
-			newY = this.vertAttacher.getY() + this.vertAttacher.getHeight() + this.distanceY;
+			newY = horizontalAttacher.getY() + horizontalAttacher.getHeight() + this.distanceY;
 //			//Если выходит за границы шаблона - не двигаемся и возвращаем на
 //			//исходную позицию Attacher
 //			if (newY < templateBounds.y) {
@@ -304,26 +444,37 @@ public final class AttachedTextStorableElement extends StorableElement
 	 * Метод используется, чтобы изменить местоположение элемента с надписью
 	 * так, чтобы он находился на заданном при привязке расстоянии от
 	 * элемента отображения данных, к которому он привязан.
+	 * @throws ApplicationException 
 	 */
-	public void refreshAttachingDistances()
-	{
-		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
+	public void refreshAttachingDistances() throws ApplicationException {
+		DataStorableElement horizontalAttacher = this.getHorizontalAttacher();
+		DataStorableElement verticalAttacher = this.getVerticalAttacher();
+		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT)) {
 			this.distanceX = this.getX();
-		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT))
-			this.distanceX = this.getX() - this.horizAttacher.getX();
-		else if (this.horizontalAttachType.equals(TextAttachingType.TO_WIDTH_CENTER))
-			this.distanceX = this.getX() - this.horizAttacher.getX()
-				- this.horizAttacher.getWidth() / 2;			
-		else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT))
-			this.distanceX = this.getX() - this.horizAttacher.getX()
-				- this.horizAttacher.getWidth();			
-		
-		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
-			this.distanceY = this.getY();			
-		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP))
-			this.distanceY = this.getY() - this.vertAttacher.getY();
-		else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM))
-			this.distanceY = this.getY() - this.vertAttacher.getY()
-				- this.vertAttacher.getHeight();
+		} else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
+			this.distanceX = this.getX() - horizontalAttacher.getX();
+		} else if (this.horizontalAttachType.equals(TextAttachingType.TO_WIDTH_CENTER)) {
+			this.distanceX = this.getX() - horizontalAttacher.getX()
+				- horizontalAttacher.getWidth() / 2;
+		} else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT)) {
+			this.distanceX = this.getX() - horizontalAttacher.getX()
+				- horizontalAttacher.getWidth();			
+		}		
+		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP)) {
+			this.distanceY = this.getY();
+		} else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
+			this.distanceY = this.getY() - verticalAttacher.getY();
+		} else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM)) {
+			this.distanceY = this.getY() - verticalAttacher.getY()
+				- verticalAttacher.getHeight();
+		}
+	}
+	
+	public int getDistanceX() {
+		return this.distanceX;
+	}
+	
+	public int getDistanceY() {
+		return this.distanceY;
 	}
 }

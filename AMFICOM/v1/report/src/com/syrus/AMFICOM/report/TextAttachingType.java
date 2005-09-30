@@ -1,5 +1,5 @@
 /*
- * $Id: TextAttachingType.java,v 1.3 2005/09/07 08:43:27 peskovsky Exp $
+ * $Id: TextAttachingType.java,v 1.4 2005/09/30 12:34:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,38 +8,57 @@
 package com.syrus.AMFICOM.report;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/09/07 08:43:27 $
+ * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/09/30 12:34:07 $
  * @module report_v1
  */
-public class TextAttachingType {
+public enum TextAttachingType {
 
 	/**
 	 * Привязка по вертикали к верхнему краю поля шаблона
 	 */
-	public static final String TO_FIELDS_TOP = "report.TextAttachingType.toFieldsTop";
+	TO_FIELDS_TOP("report.TextAttachingType.toFieldsTop"),
 	/**
 	 * Привязка по вертикали к верхнему краю элемента шаблона
 	 */
-	public static final String TO_TOP = "report.TextAttachingType.toTop";
+	TO_TOP("report.TextAttachingType.toTop"),
 	/**
 	 * Привязка по вертикали к нижнему краю элемента шаблона
 	 */
-	public static final String TO_BOTTOM = "report.TextAttachingType.toBottom";
+	TO_BOTTOM("report.TextAttachingType.toBottom"),
 	/**
 	 * Привязка по горизонтали к левому краю поля шаблона
 	 */
-	public static final String TO_FIELDS_LEFT = "report.TextAttachingType.toFieldsLeft";
+	TO_FIELDS_LEFT("report.TextAttachingType.toFieldsLeft"),
 	/**
 	 * Привязка по горизонтали к левому краю элемента шаблона
 	 */
-	public static final String TO_LEFT = "report.TextAttachingType.toLeft";
+	TO_LEFT("report.TextAttachingType.toLeft"),
 	/**
 	 * Привязка по горизонтали к правому краю элемента шаблона
 	 */
-	public static final String TO_RIGHT = "report.TextAttachingType.toRight";
+	TO_RIGHT("report.TextAttachingType.toRight"),
 	/**
 	 * Привязка по горизонтали по центру элемента шаблона
 	 */
-	public static final String TO_WIDTH_CENTER = "report.TextAttachingType.toWidthCenter";
+	TO_WIDTH_CENTER("report.TextAttachingType.toWidthCenter");
+	
+	private final String type;
+	
+	TextAttachingType(String type) {
+		this.type = type;
+	}
+	
+	public String stringValue() {
+		return this.type;
+	}
+	
+	public int intValue() {
+		return this.ordinal();
+	}
+	
+	public static TextAttachingType fromInt(int i) {
+		TextAttachingType[] types = TextAttachingType.values();
+		return types[i];
+	}
 }

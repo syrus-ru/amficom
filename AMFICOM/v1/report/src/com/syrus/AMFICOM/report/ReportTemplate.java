@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.8 2005/09/14 14:37:53 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.9 2005/09/30 12:34:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,35 @@
 
 package com.syrus.AMFICOM.report;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
+
 import java.awt.Rectangle;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.report.corba.IdlReportTemplate;
+import com.syrus.AMFICOM.report.corba.IdlReportTemplateHelper;
+import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlOrientation;
+import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlSheetSize;
+import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.Orientation;
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
@@ -28,21 +47,20 @@ import com.syrus.AMFICOM.resource.IntDimension;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.8 $, $Date: 2005/09/14 14:37:53 $
+ * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/09/30 12:34:07 $
  * @module generalclient_v1
  */
-public class ReportTemplate extends StorableObject
-{
+public class ReportTemplate extends StorableObject implements Namable, Describable {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
-	public static final IntDimension A0 = new IntDimension (3360, 4760);
-	public static final IntDimension A1 = new IntDimension (3360, 2380);
-	public static final IntDimension A2 = new IntDimension (1680, 2380);
-	public static final IntDimension A3 = new IntDimension (1680, 1190);
-	public static final IntDimension A4 = new IntDimension (840, 1190);
+//	public static final IntDimension A0 = new IntDimension (3360, 4760);
+//	public static final IntDimension A1 = new IntDimension (3360, 2380);
+//	public static final IntDimension A2 = new IntDimension (1680, 2380);
+//	public static final IntDimension A3 = new IntDimension (1680, 1190);
+//	public static final IntDimension A4 = new IntDimension (840, 1190);
 
-	public enum ORIENTATION {PORTRAIT,LANDSCAPE}
+	public enum Orientation {PORTRAIT,LANDSCAPE}
 	
 	public static final int STANDART_MARGIN_SIZE = 60;
 
@@ -55,11 +73,11 @@ public class ReportTemplate extends StorableObject
 	/**
 	 * Размер шаблона (его ширина)
 	 */
-	private IntDimension size = A4;
+	private SheetSize size = SheetSize.A4;
 	/**
 	 * Размер шаблона (его ширина)
 	 */
-	private ORIENTATION orientation = ORIENTATION.PORTRAIT;
+	private Orientation orientation = Orientation.PORTRAIT;
 	//Это хранимое поле
 	/**
 	 * Размер шаблона (его ширина)
@@ -80,7 +98,7 @@ public class ReportTemplate extends StorableObject
 	/**
 	 * Список всех элементов шаблона
 	 */
-	private List<DataStorableElement> dataStorableElements = new ArrayList<DataStorableElement>();
+	private Set<Identifier> dataStorableElementIds = new HashSet<Identifier>();
 //	//Это хранимое поле	
 //	/**
 //	 * Список фильтров использующихся в шаблоне
@@ -90,154 +108,97 @@ public class ReportTemplate extends StorableObject
 	/**
 	 * Список надписей из шаблона
 	 */
-	private List<AttachedTextStorableElement> textStorableElements = new ArrayList<AttachedTextStorableElement>();
-	//Это хранимое поле	
+	private Set<Identifier> textStorableElementIds = new HashSet<Identifier>();
+	//Это хранимое поле
 	/**
 	 * Список картинок из шаблона
 	 */
-	private List<ImageStorableElement> imageStorableElements = new ArrayList<ImageStorableElement>();
+	private Set<Identifier> imageStorableElementIds = new HashSet<Identifier>();
 
-	public boolean isModified()	{
-		Date modifiedDate = this.getModified();
-		if (modifiedDate == null)
-			return true;
-		
-		long templateModified = this.getModified().getTime();
-		
-		for (StorableElement element : this.dataStorableElements)
-			if (element.getModified() > templateModified)
-				return true;
-		for (StorableElement element : this.textStorableElements)
-			if (element.getModified() > templateModified)
-				return true;
-		for (StorableElement element : this.imageStorableElements)
-			if (element.getModified() > templateModified)
-				return true;
-		
-		return false;
-	}
-
-	public void refreshModified() {
-		Date modifiedDate = this.getModified();
-		if (modifiedDate == null)
-			return;
-		
-		long templateModified = modifiedDate.getTime();		
-		for (StorableElement element : this.dataStorableElements)
-			element.setModified(templateModified);
-		for (StorableElement element : this.textStorableElements)
-			element.setModified(templateModified);
-		for (StorableElement element : this.imageStorableElements)
-			element.setModified(templateModified);		
+	private ReportTemplate(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final SheetSize size,
+			final Orientation orientation,
+			final int marginSize,
+			final String destinationModule) {
+		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+		this.size = size;
+		this.orientation = orientation;
+		this.marginSize = marginSize;
+		this.destinationModule = destinationModule;
 	}
 	
-	private void writeObject(java.io.ObjectOutputStream out)
-			throws IOException
-	{
-		out.writeObject(this.id);
-		out.writeObject(this.name);
-		out.writeObject(this.description);
-		out.writeObject(this.destinationModule);
-		out.writeObject(this.size);
-		out.writeObject(this.orientation);		
-		out.writeInt(this.marginSize);		
-
-		// Перекачиваем элементы отображения данных
-		out.writeInt(this.dataStorableElements.size());
-		for (DataStorableElement curRO : this.dataStorableElements)
-		{
-			//TODO просто проверить.
-			out.writeObject(curRO);
+	public static ReportTemplate createInstance(Identifier creatorId) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		try {
+			final Date created = new Date();
+			final ReportTemplate reportTemplate = new ReportTemplate(
+					IdentifierPool.getGeneratedIdentifier(ATTACHEDTEXT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					"",
+					"",
+					SheetSize.A4,
+					Orientation.PORTRAIT,
+					STANDART_MARGIN_SIZE,
+					DestinationModules.UNKNOWN_MODULE);
+			reportTemplate.markAsChanged();
+			return reportTemplate;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"AttachedTextStorableElement.createInstance() | cannot generate identifier ", ige);
 		}
-
-		// Перекачиваем элементы отображения надписей
-		out.writeInt(this.textStorableElements.size());
-		for (AttachedTextStorableElement curLabel : this.textStorableElements)
-			curLabel.writeObject(out);
-
-		// Перекачиваем элементы отображения изображений
-		out.writeInt(this.imageStorableElements.size());
-		for (ImageStorableElement curImage : this.imageStorableElements)
-			out.writeObject(curImage);
-
-//		// Перекачиваем фильтры
-//		int filtersCount = this.objectResourceFilters.size();		
-//		out.writeInt(filtersCount);
-//		for (int i = 0; i < filtersCount; i++)
-//		{
-//			ObjectResourceFilter curFilter =
-//				(ObjectResourceFilter) this.objectResourceFilters.get(i);
-//
-//			out.writeObject(curFilter.resource_typ);
-//			out.writeObject(curFilter.logicScheme);
-//		}
 	}
-
-	private void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException
-	{
-		this.id = (Identifier) in.readObject();
-		this.name = (String)in.readObject();
-		this.description = (String)in.readObject();
-		this.destinationModule = (String)in.readObject();
-		this.size = (IntDimension)in.readObject();
-		this.orientation = (ORIENTATION)in.readObject();		
-		this.marginSize = in.readInt();
-
-		// Перекачиваем объекты
-		this.dataStorableElements.clear();
-
-		int orCount = in.readInt();
-		for (int i = 0; i < orCount; i++)
-		{
-			DataStorableElement curRO = (DataStorableElement)in.readObject();
-			this.dataStorableElements.add(curRO);
-		}
-
-		// Перекачиваем надписи
-		this.textStorableElements.clear();
-
-		int labelCount = in.readInt();
-		for (int i = 0; i < labelCount; i++)
-		{
-			AttachedTextStorableElement curLabel = new AttachedTextStorableElement();
-			curLabel.readObject(in,this);
-			this.textStorableElements.add(curLabel);
-		}
-
-		// Перекачиваем картинки
-		this.imageStorableElements.clear();
-
-		int imagesCount = in.readInt();
-		for (int i = 0; i < imagesCount; i++)
-		{
-			ImageStorableElement curImage = (ImageStorableElement)in.readObject();
-			this.imageStorableElements.add(curImage);
-		}
-
-//		// Перекачиваем фильтры
-//		this.objectResourceFilters = new ArrayList();
-//
-//		int filtersCount = in.readInt();
-//		for (int i = 0; i < filtersCount; i++)
-//		{
-//			String resource_typ = (String) in.readObject();
-//			try
-//			{
-//				ObjectResourceFilter curFilter =
-//					(ObjectResourceFilter) Class.forName(resource_typ).newInstance();
-//
-//				curFilter.logicScheme.readObject(in);
-//
-//				this.objectResourceFilters.add(curFilter);
-//			}
-//			catch (Exception exc)
-//			{
-//				System.out.println("Error recreating Filter object!!!");
-//			}
-//		}
+	
+	public ReportTemplate(IdlReportTemplate transferable) {
+		fromTransferable(transferable);
 	}
-
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+		IdlReportTemplate irt = (IdlReportTemplate) transferable;
+		try {
+			super.fromTransferable(transferable);
+		} catch (ApplicationException e) {
+			// this shit cann't happen
+			assert false;
+		}
+		this.name = irt.name;
+		this.description = irt.description;
+		this.size = SheetSize.values()[irt.sheetSize.value()];
+		this.orientation = Orientation.values()[irt.idlOrientation.value()];
+		this.marginSize = irt.marginSize;
+		this.destinationModule = irt.destinationModule;
+	}
+	
+	@Override
+	public IdlStorableObject getTransferable(ORB orb) {
+		return IdlReportTemplateHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version.longValue(),
+				this.name,
+				this.description,
+				IdlSheetSize.from_int(this.size.ordinal()),
+				IdlOrientation.from_int(this.orientation.ordinal()),
+				this.marginSize,
+				this.destinationModule);
+	}
+	
 	/**
 	 * @param rteName искомое имя
 	 * @return элемент шаблона, отображающий искомый отчёт
@@ -375,9 +336,6 @@ public class ReportTemplate extends StorableObject
 		return this.destinationModule;
 	}
 	
-	public ReportTemplate() {
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -402,11 +360,11 @@ public class ReportTemplate extends StorableObject
 		this.size = size;
 	}
 
-	public ORIENTATION getOrientation() {
+	public Orientation getOrientation() {
 		return this.orientation;
 	}
 
-	public void setOrientation(ORIENTATION orientation) {
+	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
 	}
 	

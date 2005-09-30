@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.2 2005/09/03 12:42:19 peskovsky Exp $
+ * $Id: StorableElement.java,v 1.3 2005/09/30 12:34:07 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,26 +7,34 @@
  */
 package com.syrus.AMFICOM.report;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+
+import java.awt.Dimension;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.report.corba.IdlAbstractReportElement;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 
-public abstract class StorableElement{
+public abstract class StorableElement extends StorableObject {
 
-	IntPoint location = new IntPoint();
-	IntDimension size = new IntDimension();
+	protected IntPoint location;
+	protected IntDimension size;
+	protected Identifier reportTemplateId;
 	/**
 	 * Время последнего изменения объекта
 	 */
-	private long modified = 0L;
-
-	public long getModified() {
-		return this.modified;
-	}
-
-	public void setModified(long modified) {
-		this.modified = modified;
-	}
-	
 	public IntPoint getLocation()
 	{
 		return this.location;
@@ -47,12 +55,6 @@ public abstract class StorableElement{
 		this.size = newSize;
 	}
 	
-	public StorableElement(IntPoint location, IntDimension size)
-	{
-		this.location = location;
-		this.size = size;
-	}
-
 	public int getX(){
 		return this.location.x;
 	}
@@ -89,7 +91,84 @@ public abstract class StorableElement{
 		return false;
 	}
 	
-	public StorableElement(){
+	public StorableElement() {
+		//Empty constructor for serialization
+	}
+
+	/**
+	 * @param id
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 */
+	public StorableElement(final Identifier id, 
+			final Date created, 
+			final Date modified,
+			final Identifier creatorId, 
+			final Identifier modifierId, 
+			final StorableObjectVersion version,
+			final IntPoint location,
+			final IntDimension size,
+			final Identifier reportTemplateId) {
+		super(id, created, modified, creatorId, modifierId, version);
+		assert location != null : NON_NULL_EXPECTED;
+		assert size != null : NON_NULL_EXPECTED;
+		assert reportTemplateId != null : NON_NULL_EXPECTED;
+		this.location = location;
+		this.size = size;
+		this.reportTemplateId = reportTemplateId;
+	}
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+		
+		IdlAbstractReportElement iare = (IdlAbstractReportElement) transferable;
+		try {
+			super.fromTransferable(transferable);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		this.location = new IntPoint(iare.locationX, iare.locationY);
+		this.size = new IntDimension(iare.width, iare.height);
+		this.reportTemplateId  = new Identifier(iare.idlReportTemplateId);
+	}
+	
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final int locationX,
+			final int locationY,
+			final int width,
+			final int height,
+			final Identifier reportTemplateId) {
+		
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+			this.location = new IntPoint(locationX, locationY);
+			this.size = new IntDimension(width, height);
+			this.reportTemplateId = reportTemplateId;
+	}
+
+	Identifier getReportTemplateId() {
+		return this.reportTemplateId;
+	}
+
+	void setReportTemplateId(Identifier reportTemplateId) {
+		this.reportTemplateId = reportTemplateId;
+	}
+	
+	@Override
+	public Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.reportTemplateId);
+		dependencies.remove(null);
+		dependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 	
 }

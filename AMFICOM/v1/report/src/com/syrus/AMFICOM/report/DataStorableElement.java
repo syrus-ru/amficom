@@ -1,9 +1,23 @@
 package com.syrus.AMFICOM.report;
 
-import java.io.IOException;
-import java.io.Serializable;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.report.corba.IdlData;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 
@@ -17,75 +31,110 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * @version 1.0
  */
 
-public class DataStorableElement extends StorableElement implements Serializable 
-{
+public class DataStorableElement extends StorableElement {
+	private static final long	serialVersionUID	= 3501681877580290043L;
+
 	/**
 	 * Название отображаемого отчёта.
 	 * По этому имени он будет отображаться Renderer'ом с помощью ReportModel.
 	 */
-	protected String reportName = null;
+	private String reportName;
 
 	/**
 	 * Полное имя класса модели, которая "знает" как строить этот отчёт.
 	 */
-	protected String modelClassName = null;
+	private String modelClassName;
 	
-	/**
-	 * Несмотря на то, что объекты этого класса сохраняются только в рамках
-	 * шаблона отчёта, им нужны идентификаторы, поскольку на них ссылаются
-	 * привязанные надписи
-	 */
-	protected Identifier id = Identifier.VOID_IDENTIFIER;
-	/**
-	 * Идентификаотр объекта, по которому строится отчёт.
-	 */
-	protected Identifier reportObjectId = null;
-
+	DataStorableElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final IntPoint location,
+			final IntDimension size,
+			final Identifier reportTemplateId,
+			final String reportName,
+			final String modelClassName) {
+		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId);
+		this.reportName = reportName;
+		this.modelClassName = modelClassName;
+	}
+	
+	public DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert reportName != null : NON_NULL_EXPECTED;
+		assert modelClassName != null: NON_NULL_EXPECTED;
+		try {
+			final Date created = new Date();
+			return new DataStorableElement(
+					IdentifierPool.getGeneratedIdentifier(REPORTDATA_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					new IntPoint(),
+					new IntDimension(),
+					VOID_IDENTIFIER,
+					reportName,
+					modelClassName);
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"DataStorableElement.createInstance() | cannot generate identifier ", ige);
+		}
+	}
+	
+	public DataStorableElement(IdlData transferable) {
+		fromTransferable(transferable);
+	}
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+		IdlData idlData = (IdlData) transferable;
+		try {
+			super.fromTransferable(idlData);
+		} catch (ApplicationException e) {
+			// Never can happen
+			assert false;
+		}
+		this.reportName = idlData.reportName;
+		this.modelClassName = idlData.modelClassName;		
+	}
+	
+	synchronized void setAttributes(Date created, 
+			Date modified, 
+			Identifier creatorId, 
+			Identifier modifierId, 
+			StorableObjectVersion version,
+			final int locationX, 
+			final int locationY, 
+			final int width, 
+			final int height,
+			final Identifier reportTemplateId,
+			final String reportName,
+			final String moduleClassName) {
+		super.setAttributes(created, modified, creatorId, modifierId, version,
+				locationX, locationY, width, height, reportTemplateId);
+		this.reportName = reportName;
+		this.modelClassName = moduleClassName;
+	}
+	
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
+	}
+	
 	public String getReportName() {
 		return this.reportName;
-	}
-
-	public Identifier getId() {
-		return this.id;
 	}
 
 	public String getModelClassName() {
 		return this.modelClassName;
 	}
 
-	public DataStorableElement(String reportName, String modelClassName)
-	{
+	public DataStorableElement(String reportName, String modelClassName) {
 		this.reportName = reportName;
-		this.modelClassName = modelClassName;
-		//TODO Здесь должно быть получение ID
-		this.id = Identifier.VOID_IDENTIFIER;
-	}
-	
-	public void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(this.getSize());
-		out.writeObject(this.getLocation());		
-
-		out.writeObject(this.getId());		
-		out.writeObject(this.getReportName());		
-		out.writeObject(this.getModelClassName());
-		out.writeObject(this.getReportObjectId());		
-	}
-
-	public void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-		this.setSize((IntDimension)in.readObject());
-		this.setLocation((IntPoint)in.readObject());
-
-		this.id = (Identifier)in.readObject();
-		this.reportName = (String)in.readObject();
-		this.modelClassName = (String)in.readObject();
-		this.reportObjectId = (Identifier)in.readObject();
-	}
-
-	public Identifier getReportObjectId() {
-		return this.reportObjectId;
-	}
-
-	public void setReportObjectId(Identifier reportObjectId) {
-		this.reportObjectId = reportObjectId;
+		this.modelClassName = modelClassName;		
 	}
 }
