@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.map.xml.MapsDocument;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
 import com.syrus.AMFICOM.map.xml.XmlCollectorSeq;
 import com.syrus.AMFICOM.map.xml.XmlMap;
+import com.syrus.AMFICOM.map.xml.XmlMapLibraryEntrySeq;
 import com.syrus.AMFICOM.map.xml.XmlMapSeq;
 import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 import com.syrus.AMFICOM.map.xml.XmlNodeLinkSeq;
@@ -30,7 +31,7 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/09/22 10:32:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 09:34:37 $
  * @module mapviewclient_v1
  */
 public class UniCableMapExportCommand 
@@ -94,6 +95,8 @@ public class UniCableMapExportCommand
 		xmlMap.setDescription("");
 		xmlMap.setImportType("ucm");
 
+		XmlMapLibraryEntrySeq xmlMapLibraryEntries = xmlMap.addNewMapLibraryEntries();
+		xmlMapLibraryEntries.addMapLibraryEntry("UCM");
 		XmlTopologicalNodeSeq xmlTopologicalNodes = xmlMap.addNewTopologicalNodes();
 		XmlSiteNodeSeq xmlSiteNodes = xmlMap.addNewSiteNodes();
 		XmlPhysicalLinkSeq xmlPhysicalLinks = xmlMap.addNewPhysicalLinks();
