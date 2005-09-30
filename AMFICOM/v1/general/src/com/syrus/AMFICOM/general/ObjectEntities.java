@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.87 2005/09/29 08:18:31 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.88 2005/09/30 12:38:12 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/09/29 08:18:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.88 $, $Date: 2005/09/30 12:38:12 $
+ * @author $Author: max $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -153,6 +153,15 @@ public final class ObjectEntities {
 
 	/*	Object */
 	public static final String MAPVIEW = "MapView";
+	
+	/*	##################################### Report ##################################### */
+
+	/*	Object */
+	public static final String ATTACHEDTEXT = "AttachedText";
+	public static final String REPORTIMAGE = "ReportImage";
+	public static final String REPORTDATA = "ReportData";
+	public static final String REPORTTABLEDATA = "ReportTableData";
+	public static final String REPORTTEMPLATE = "ReportTemplate";
 
 
 	/*	##################################### Updike ##################################### */
@@ -329,8 +338,25 @@ public final class ObjectEntities {
 	public static final short MAPVIEW_CODE = MAPVIEW_MIN_CODE;
 	
 	public static final short MAPVIEW_MAX_CODE = 0x0480;
-
-
+	
+	/*
+	 * Report:        1152-1232(0x0481-0x04C0)
+	 * Report Types:  1233-1280(0x04C1-0x0500)
+	 */
+	public static final short REPORT_MIN_CODE = 0x0481;
+	
+	public static final short ATTACHEDTEXT_CODE = 0x0481;
+	
+	public static final short REPORTIMAGE_CODE = 0x0482;
+	
+	public static final short REPORTDATA_CODE = 0x0483;
+	
+	public static final short REPORTTABLEDATA_CODE = 0x0484;
+	
+	public static final short REPORTTEMPLATE_CODE = 0x0485;
+	
+	public static final short REPORT_MAX_CODE = 0x0500;
+	
 	/*
 	 * Updike: 32767 (0x7FFF)
 	 */
@@ -435,7 +461,13 @@ public final class ObjectEntities {
 		registerEntity(LAYOUT_ITEM_CODE, LAYOUT_ITEM);
 
 		registerEntity(MAPVIEW_CODE, MAPVIEW);
-
+		
+		registerEntity(ATTACHEDTEXT_CODE, ATTACHEDTEXT);
+		registerEntity(REPORTIMAGE_CODE, REPORTIMAGE);
+		registerEntity(REPORTDATA_CODE, REPORTDATA);
+		registerEntity(REPORTTABLEDATA_CODE, REPORTTABLEDATA);
+		registerEntity(REPORTTEMPLATE_CODE, REPORTTEMPLATE);
+		
 		registerEntity(UPDIKE_CODE, UPDIKE);
 	}
 
