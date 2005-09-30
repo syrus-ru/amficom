@@ -381,7 +381,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 					this.schedulerModel.getSelectedTest().getAnalysisType() == AnalysisType.UNKNOWN) {
 				this.useAnalysisSetupsCheckBox.doClick();
 			}
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -444,8 +444,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 			wrapperedListModel.setElements(this.msList);
 		}
 
-		this.testSetups.setEnabled(true);
-		this.useAnalysisSetupsCheckBox.setEnabled(true);
+//		this.testSetups.setEnabled(true);
+//		this.useAnalysisSetupsCheckBox.setEnabled(true);
 
 		this.selectAnalysisType(this.analysisComboBox, (AnalysisType) this.analysisComboBox.getSelectedItem(), true);
 		
@@ -502,6 +502,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			this.switchPanel.add(this.parametersTestPanel, "");
 			this.patternPanel.revalidate();
 			this.parametersTestPanel.setEnableEditing(!this.useSetupsCheckBox.isSelected());
+			this.setEnableEditing(this.useSetupsCheckBox.isSelected());
 		}
 	}
 
