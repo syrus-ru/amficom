@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.110 2005/09/26 05:53:08 bob Exp $
+ * $Id: SchedulerModel.java,v 1.111 2005/09/30 14:12:11 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/09/26 05:53:08 $
+ * @version $Revision: 1.111 $, $Date: 2005/09/30 14:12:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -637,7 +637,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				null,
 				null,
 				description,				
-				1000 * 60 * 10, // TODO add calculation from ReflectometyUtil ? 
+				1000L, // TODO add calculation from ReflectometyUtil ? 
 				Collections.singleton(this.monitoredElement.getId()),
 				EnumSet.of(this.measurementType));
 		if (this.measurementSetupIdMap != null) {
@@ -673,7 +673,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 								Identifier.VOID_IDENTIFIER,
 								this.monitoredElement,
 								this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
-								measurementSetupIds);
+								measurementSetupIds);						
 					} catch (final CreateObjectException e) {
 						throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
 					}
