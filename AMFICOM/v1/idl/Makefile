@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.29 2005/09/12 20:52:45 arseniy Exp $
+# $Id: Makefile,v 1.30 2005/09/30 10:23:21 max Exp $
 #
 # vim:ft=make:
 #
@@ -16,6 +16,7 @@ idlclean:
 	$(MAKE) -C ../event $@
 	$(MAKE) -C ../general $@
 	$(MAKE) -C ../resource $@
+	$(MAKE) -C ../report $@
 	$(MAKE) -C ../admin $@
 	$(MAKE) -C ../config $@
 	$(MAKE) -C ../measurement $@
