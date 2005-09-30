@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.74 2005/09/30 13:58:58 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.75 2005/09/30 15:54:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/09/30 13:58:58 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/30 15:54:25 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -231,14 +231,6 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @param schemeProtoElement cannot be <code>null</code>.
-	 */
-	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
-		assert schemeProtoElement != null: NON_NULL_EXPECTED;
-		schemeProtoElement.setParentSchemeProtoGroup(this);
-	}
-
-	/**
 	 * @param schemeProtoGroup can be neither <code>null</code> nor
 	 *        <code>this</code>.
 	 * @bug provide a check to disallow addition of higher-level objects as
@@ -273,10 +265,13 @@ public final class SchemeProtoGroup extends StorableObject
 	 *
 	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);
@@ -320,22 +315,6 @@ public final class SchemeProtoGroup extends StorableObject
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
-	}
-
-	/**
-	 * @return an immutable set.
-	 */
-	public Set<SchemeProtoElement> getSchemeProtoElements() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeProtoElements0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	private Set<SchemeProtoElement> getSchemeProtoElements0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true);
 	}
 
 	/**
@@ -399,10 +378,13 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public void getXmlTransferable(
 			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType)
 	throws ApplicationException {
+		final boolean usePool = false;
+
 		super.id.getXmlTransferable(schemeProtoGroup.addNewId(), importType);
 		schemeProtoGroup.setName(this.name);
 		if (schemeProtoGroup.isSetDescription()) {
@@ -436,7 +418,7 @@ public final class SchemeProtoGroup extends StorableObject
 		if (schemeProtoGroup.isSetSchemeProtoElements()) {
 			schemeProtoGroup.unsetSchemeProtoElements();
 		}
-		final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0();
+		final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0(usePool);
 		if (!schemeProtoElements.isEmpty()) {
 			final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoGroup.addNewSchemeProtoElements();
 			for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
@@ -445,22 +427,6 @@ public final class SchemeProtoGroup extends StorableObject
 		}
 		schemeProtoGroup.setImportType(importType);
 		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, EXPORT);
-	}
-
-	/**
-	 * The <code>SchemeProtoElement</code> must belong to this
-	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
-	 *
-	 * @param schemeProtoElement
-	 * @todo Decide how removal should be interpreted: setting a parent of
-	 *       <code>null</code> (which is impossible for a
-	 *       <code>schemeProtoElement</code>) or physical removal (which is
-	 *       done so far).
-	 */
-	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
-		assert schemeProtoElement != null: NON_NULL_EXPECTED;
-		assert schemeProtoElement.getParentSchemeProtoGroupId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeProtoElement.setParentSchemeProtoGroup(null);
 	}
 
 	/**
@@ -558,37 +524,6 @@ public final class SchemeProtoGroup extends StorableObject
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
 		this.setParentSchemeProtoGroupId(Identifier.possiblyVoid(parentSchemeProtoGroup));
-	}
-
-	/**
-	 * To make a slight alteration of <code>schemeProtoElements</code> for
-	 * this <code>schemeProtoGroup</code>, use
-	 * {@link #addSchemeProtoElement(SchemeProtoElement)} and/or
-	 * {@link #removeSchemeProtoElement(SchemeProtoElement)}. This method
-	 * will completely overwrite old <code>schemeProtoElements</code> with
-	 * the new ones (i. e. remove old and add new ones). Since
-	 * <em>removal</em> of a <code>schemeProtoElement</code> means its
-	 * <em>physical removal</em>, the collection of new ones <em>must
-	 * not</em> contain any <code>schemeProtoElement</code> from old ones,
-	 * or crap will meet the fan.
-	 *
-	 * @param schemeProtoElements
-	 * @throws ApplicationException 
-	 */
-	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) throws ApplicationException {
-		assert schemeProtoElements != null: NON_NULL_EXPECTED;
-		final Set<SchemeProtoElement> oldSchemeProtoElements = this.getSchemeProtoElements0();
-		/*
-		 * Check is made to prevent SchemeProtoElements from
-		 * permanently losing their parents.
-		 */
-		oldSchemeProtoElements.removeAll(schemeProtoElements);
-		for (final SchemeProtoElement oldSchemeProtoElement : oldSchemeProtoElements) {
-			this.removeSchemeProtoElement(oldSchemeProtoElement);
-		}
-		for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
-			this.addSchemeProtoElement(schemeProtoElement);
-		}
 	}
 
 	/**
@@ -707,4 +642,96 @@ public final class SchemeProtoGroup extends StorableObject
 		}
 		return this.schemeProtoElementContainerWrappee;
 	}	
+
+	/**
+	 * @param schemeProtoElement cannot be <code>null</code>.
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void addSchemeProtoElement(
+			final SchemeProtoElement schemeProtoElement,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeProtoElement != null: NON_NULL_EXPECTED;
+		schemeProtoElement.setParentSchemeProtoGroup(this, usePool);
+	}
+
+	/**
+	 * The <code>SchemeProtoElement</code> must belong to this
+	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
+	 *
+	 * @param schemeProtoElement
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @todo Decide how removal should be interpreted: setting a parent of
+	 *       <code>null</code> (which is impossible for a
+	 *       <code>schemeProtoElement</code>) or physical removal (which is
+	 *       done so far).
+	 */
+	public void removeSchemeProtoElement(
+			final SchemeProtoElement schemeProtoElement,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeProtoElement != null: NON_NULL_EXPECTED;
+		assert schemeProtoElement.getParentSchemeProtoGroupId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeProtoElement.setParentSchemeProtoGroup(null, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @return an immutable set.
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeProtoElement> getSchemeProtoElements(
+			final boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getSchemeProtoElements0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	private Set<SchemeProtoElement> getSchemeProtoElements0(
+			final boolean usePool)
+	throws ApplicationException {
+		return this.getSchemeProtoElementContainerWrappee().getContainees(usePool);
+	}
+
+	/**
+	 * To make a slight alteration of <code>schemeProtoElements</code> for
+	 * this <code>schemeProtoGroup</code>, use
+	 * {@link #addSchemeProtoElement(SchemeProtoElement, boolean)} and/or
+	 * {@link #removeSchemeProtoElement(SchemeProtoElement, boolean)}. This method
+	 * will completely overwrite old <code>schemeProtoElements</code> with
+	 * the new ones (i. e. remove old and add new ones). Since
+	 * <em>removal</em> of a <code>schemeProtoElement</code> means its
+	 * <em>physical removal</em>, the collection of new ones <em>must
+	 * not</em> contain any <code>schemeProtoElement</code> from old ones,
+	 * or crap will meet the fan.
+	 *
+	 * @param schemeProtoElements
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setSchemeProtoElements(
+			final Set<SchemeProtoElement> schemeProtoElements,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeProtoElements != null: NON_NULL_EXPECTED;
+
+		final Set<SchemeProtoElement> oldSchemeProtoElements = this.getSchemeProtoElements0(usePool);
+
+		final Set<SchemeProtoElement> toRemove = new HashSet<SchemeProtoElement>(oldSchemeProtoElements);
+		toRemove.removeAll(schemeProtoElements);
+		for (final SchemeProtoElement schemeProtoElement : toRemove) {
+			this.removeSchemeProtoElement(schemeProtoElement, usePool);
+		}
+
+		final Set<SchemeProtoElement> toAdd = new HashSet<SchemeProtoElement>(schemeProtoElements);
+		toAdd.removeAll(oldSchemeProtoElements);
+		for (final SchemeProtoElement schemeProtoElement : toAdd) {
+			this.addSchemeProtoElement(schemeProtoElement, usePool);
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.105 2005/09/30 13:58:58 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.106 2005/09/30 15:54:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/09/30 13:58:58 $
+ * @version $Revision: 1.106 $, $Date: 2005/09/30 15:54:25 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -1015,45 +1015,29 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeProtoGroup(SchemeProtoGroup, boolean)}.
+	 *
 	 * @param parentSchemeProtoGroupId
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
-	void setParentSchemeProtoGroupId(final Identifier parentSchemeProtoGroupId) {
-		assert this.parentSchemeProtoGroupId != null
-				&& this.parentSchemeProtoElementId != null
-				&& (this.parentSchemeProtoGroupId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()) : OBJECT_BADLY_INITIALIZED;
+	void setParentSchemeProtoGroupId(
+			final Identifier parentSchemeProtoGroupId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeProtoGroupId != null : NON_NULL_EXPECTED;
 		assert parentSchemeProtoGroupId.isVoid() || parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
 
-		if (this.parentSchemeProtoElementId.isVoid()) {
-			/*
-			 * Moving from a group to another group.
-			 */
-			if (parentSchemeProtoGroupId.isVoid()) {
-				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(super.id);
-				return;
-			}
-			if (this.parentSchemeProtoGroupId.equals(parentSchemeProtoGroupId)) {
-				return;
-			}
-		} else {
-			/*
-			 * Moving from an element to a group.
-			 */
-			if (parentSchemeProtoGroupId.isVoid()) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-				return;
-			}
-			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+		if (this.parentSchemeProtoGroupId.equals(parentSchemeProtoGroupId)) {
+			return;
 		}
-		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
-		super.markAsChanged();
+
+		this.setParentSchemeProtoGroup(
+				StorableObjectPool.<SchemeProtoGroup>getStorableObject(parentSchemeProtoGroupId, true),
+				usePool);
 	}
 
 	/**
-	 * <p>
-	 * A wrapper around {@link #setParentSchemeProtoGroupId(Identifier)}.
-	 * </p>
-	 *
 	 * <p>
 	 * If this <code>SchemeProtoElement</code> is initially inside another
 	 * <code>SchemeProtoElement</code>, and
@@ -1067,9 +1051,57 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * </p>
 	 *
 	 * @param parentSchemeProtoGroup
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
-	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
-		this.setParentSchemeProtoGroupId(Identifier.possiblyVoid(parentSchemeProtoGroup));
+	public void setParentSchemeProtoGroup(
+			final SchemeProtoGroup parentSchemeProtoGroup,
+			final boolean usePool)
+	throws ApplicationException {
+		assert this.parentSchemeProtoGroupId != null
+				&& this.parentSchemeProtoElementId != null : OBJECT_BADLY_INITIALIZED;
+		final boolean thisParentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
+		assert this.parentSchemeProtoGroupId.isVoid() ^ thisParentSchemeProtoElementIdVoid : EXACTLY_ONE_PARENT_REQUIRED;
+
+		final boolean parentSchemeProtoGroupNull = (parentSchemeProtoGroup == null);
+
+		final Identifier newParentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
+		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId)) {
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			return;
+		}
+
+		if (thisParentSchemeProtoElementIdVoid) {
+			/*
+			 * Moving from a protogroup to another protogroup.
+			 * At this point, newParentSchemeProtoGroupId may be void.
+			 */
+			final SchemeProtoGroup oldParentSchemeProtoGroup = this.getParentSchemeProtoGroup();
+			assert oldParentSchemeProtoGroup != null : NON_NULL_EXPECTED;
+			oldParentSchemeProtoGroup.getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
+
+			if (parentSchemeProtoGroupNull) {
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				StorableObjectPool.delete(super.id);
+			}
+		} else {
+			/*
+			 * Moving from a protoelement to a protogroup. At this
+			 * point, newParentSchemeProtoGroupId is non-void.
+			 */
+			final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
+			assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
+			oldParentSchemeProtoElement.getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
+
+			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+		}
+
+		if (!parentSchemeProtoGroupNull) {
+			parentSchemeProtoGroup.getSchemeProtoElementContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
+		super.markAsChanged();
 	}
 
 	/**
