@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/09/21 16:18:49 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/30 14:06:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -803,7 +803,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		try {
 			final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(measurementSetup);
 			final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
-			measurementSetup.setMeasurementDuration((long) ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters));
+			measurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
+			assert Log.debugMessage("ReflectometryTestPanel.getMeasurementSetup | " + measurementSetup.getMeasurementDuration()/1000 + " sec",
+				Log.DEBUGLEVEL09);
 		} catch (final DataFormatException e) {
 			// TODO
 			throw new CreateObjectException(e);
