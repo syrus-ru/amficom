@@ -15,45 +15,12 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/30 07:38:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/30 07:49:39 $
  * @author $Author: bob $
  * @module commonclient
  */
 public class AComboBox extends JComboBox {
 	private static final long serialVersionUID = -4432933469351433936L;
-
-	class ComboBoxRenderer implements ListCellRenderer {
-		
-		private JLabel label; 
-
-		public ComboBoxRenderer() {
-			this.label = new JLabel();
-			this.label.setOpaque(true);
-			this.label.setFont(UIManager.getFont("Combobox.font"));
-		}
-
-		/*
-		 * This method finds the image and text corresponding to the selected
-		 * value and returns the label, set up to display the text and image.
-		 */
-		public Component getListCellRendererComponent(	final JList list,
-				final Object value,
-		        final int index,
-		        final boolean isSelected,
-		        final boolean cellHasFocus) {
-			// Get the selected index. (The index param isn't
-			// always valid, so just use the value.)
-
-			this.label.setBackground(isSelected ? 
-					list.getSelectionBackground() : 
-					list.getBackground());
-			this.label.setForeground(isSelected ? 
-					list.getSelectionForeground() : 
-					list.getForeground());
-			this.label.setText(value.toString());
-			return this.label;
-		}
-	}
 
 	public static final int	SMALL_FONT	= 10;
 
