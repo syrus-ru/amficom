@@ -62,9 +62,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 	ApplicationContext		aContext;
 	SchedulerModel			schedulerModel;
-
 	
-
 	JPanel					switchPanel;
 	List<MeasurementSetup>	msList;
 	List<MeasurementSetup>	msListAnalysisOnly;
@@ -184,7 +182,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.useAnalysisSetupsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				final JCheckBox checkBox = (JCheckBox) e.getSource();
-				WrapperedListModel<MeasurementSetup> wrapperedListModel = TestParametersPanel.this.testSetups.getModel();
+		
+				final WrapperedListModel<MeasurementSetup> wrapperedListModel = TestParametersPanel.this.testSetups.getModel();
 				Object selectedValue = null;
 				if (!TestParametersPanel.this.measurementSetupId.isVoid()) {
 					try {
@@ -377,10 +376,10 @@ final class TestParametersPanel implements PropertyChangeListener {
 			measurementSetup.getEtalon() != null &&
 			measurementSetup.getThresholdSet() != null;
 
-		if (analysisSetupsSelected && 
-			!measurementSetupWithAnalysis) {
-			this.useAnalysisSetupsCheckBox.doClick();
-		}
+//		if (analysisSetupsSelected && 
+//			!measurementSetupWithAnalysis) {
+//			this.useAnalysisSetupsCheckBox.doClick();
+//		}
 		
 		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
 			this.testSetups.getModel();
