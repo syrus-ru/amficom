@@ -54,6 +54,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.Log;
 
 final class TestLine extends TimeLine {
 
@@ -604,9 +605,12 @@ final class TestLine extends TimeLine {
 							testTimeLine.date = testTime;
 							testTimeLine.title = title;
 							testTimeLine.startTime = time;
-							testTimeLine.duration = test.getEndTime() != null ? 
-									test.getEndTime().getTime() - testTimeLine.startTime :
+							testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime +
 									measurementSetup.getMeasurementDuration();
+							
+							assert Log.debugMessage("TestLine.acquireTests | " + testTimeLine.duration,
+								Log.DEBUGLEVEL09);
+							
 							testTimeLine.color = color;
 							testTimeLine.selectedColor = selectedColor;
 						}
