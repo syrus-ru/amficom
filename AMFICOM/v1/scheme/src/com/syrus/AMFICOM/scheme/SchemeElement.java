@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.127 2005/09/30 11:56:26 bass Exp $
+ * $Id: SchemeElement.java,v 1.128 2005/09/30 13:58:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.127 $, $Date: 2005/09/30 11:56:26 $
+ * @version $Revision: 1.128 $, $Date: 2005/09/30 13:58:58 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1324,6 +1324,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert super.parentSchemeId.isVoid() ^ thisParentSchemeElementIdVoid: EXACTLY_ONE_PARENT_REQUIRED;
+		assert !parentSchemeElement.equals(this) : CIRCULAR_DEPS_PROHIBITED;
 
 		final boolean parentSchemeElementNull = (parentSchemeElement == null);
 
@@ -2028,7 +2029,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				this.addSchemeLink(schemeLinkClone, usePool);
 			}
 			
-			for (SchemeProtoElement proto : schemeProtoElement.getSchemeProtoElements()) {
+			for (SchemeProtoElement proto : schemeProtoElement.getSchemeProtoElements(usePool)) {
 				final SchemeElement schemeElement = SchemeElement.createInstance(super.creatorId, proto, this);
 				super.clonedIdMap.putAll(schemeElement.getClonedIdMap());
 				this.addSchemeElement(schemeElement, usePool);

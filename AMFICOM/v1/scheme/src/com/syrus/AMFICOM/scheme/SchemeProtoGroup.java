@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.73 2005/09/28 19:06:24 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.74 2005/09/30 13:58:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/09/28 19:06:24 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/30 13:58:58 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -694,4 +694,17 @@ public final class SchemeProtoGroup extends StorableObject
 
 		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, POST_IMPORT);
 	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme protoelements                        *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeProtoElement> getSchemeProtoElementContainerWrappee() {
+		if (this.schemeProtoElementContainerWrappee == null) {
+			this.schemeProtoElementContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoElement>(this, SCHEMEPROTOELEMENT_CODE);
+		}
+		return this.schemeProtoElementContainerWrappee;
+	}	
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.12 2005/09/29 12:50:56 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.13 2005/09/30 13:58:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/29 12:50:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/30 13:58:58 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -133,27 +135,36 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper<Schem
 	}
 
 	@Override
-	public void setValue(final SchemeProtoElement schemeProtoElement, final String key, final Object value) {
-		if (schemeProtoElement != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeProtoElement.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeProtoElement.setDescription((String) value);
-			} else if (key.equals(COLUMN_LABEL)) {
-				schemeProtoElement.setLabel((String) value);
-			} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
-				schemeProtoElement.setProtoEquipmentId((Identifier) value);
-			} else if (key.equals(COLUMN_SYMBOL_ID)) {
-				schemeProtoElement.setSymbolId((Identifier) value);
-			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
-				schemeProtoElement.setUgoCellId((Identifier) value);
-			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
-				schemeProtoElement.setSchemeCellId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
-				schemeProtoElement.setParentSchemeProtoGroupId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
-				schemeProtoElement.setParentSchemeProtoElementId((Identifier) value);
+	public void setValue(final SchemeProtoElement schemeProtoElement,
+			final String key,
+			final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeProtoElement != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeProtoElement.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeProtoElement.setDescription((String) value);
+				} else if (key.equals(COLUMN_LABEL)) {
+					schemeProtoElement.setLabel((String) value);
+				} else if (key.equals(COLUMN_PROTO_EQUIPMENT_ID)) {
+					schemeProtoElement.setProtoEquipmentId((Identifier) value);
+				} else if (key.equals(COLUMN_SYMBOL_ID)) {
+					schemeProtoElement.setSymbolId((Identifier) value);
+				} else if (key.equals(COLUMN_UGO_CELL_ID)) {
+					schemeProtoElement.setUgoCellId((Identifier) value);
+				} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
+					schemeProtoElement.setSchemeCellId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
+					schemeProtoElement.setParentSchemeProtoGroupId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+					schemeProtoElement.setParentSchemeProtoElementId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

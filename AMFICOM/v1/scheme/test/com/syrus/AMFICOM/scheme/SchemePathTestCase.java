@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.24 2005/09/29 12:50:56 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.25 2005/09/30 13:58:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/09/29 12:50:56 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/30 13:58:58 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -494,10 +494,12 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	/**
-	 * @throws CreateObjectException 
+	 * @throws ApplicationException
 	 * @see SchemeProtoElement#clone()
 	 */
-	public void testSchemeProtoElementClone() throws CreateObjectException, CloneNotSupportedException {
+	public void testSchemeProtoElementClone() throws ApplicationException, CloneNotSupportedException {
+		final boolean usePool = false;
+
 		final Identifier userId = new Identifier("User_0");
 		final SchemeProtoGroup schemeProtoGroup = SchemeProtoGroup.createInstance(userId, "a scheme proto group");
 		final SchemeProtoElement schemeProtoElement0 = SchemeProtoElement.createInstance(userId, "parent scheme proto element", schemeProtoGroup);
@@ -520,7 +522,7 @@ public final class SchemePathTestCase extends TestCase {
 		System.out.println("\t\t" + schemeProtoElement0.getSchemeCellId());
 		System.out.println("\t\t" + schemeProtoElement0.getParentSchemeProtoGroupId());
 		System.out.println("\t\t" + schemeProtoElement0.getParentSchemeProtoElementId());
-		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement0.getSchemeProtoElements()) {
+		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement0.getSchemeProtoElements(usePool)) {
 			assertTrue(schemeProtoElement.getClonedIdMap().isEmpty());
 			System.out.println("\t\t" + schemeProtoElement.getId() + ": " + schemeProtoElement.getName());
 		}
@@ -534,7 +536,7 @@ public final class SchemePathTestCase extends TestCase {
 		System.out.println("\t\t" + schemeProtoElement2.getSchemeCellId());
 		System.out.println("\t\t" + schemeProtoElement2.getParentSchemeProtoGroupId());
 		System.out.println("\t\t" + schemeProtoElement2.getParentSchemeProtoElementId());
-		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement2.getSchemeProtoElements()) {
+		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement2.getSchemeProtoElements(usePool)) {
 			System.out.println("\t\t" + schemeProtoElement.getId() + ": " + schemeProtoElement.getName());
 		}
 		assertTrue(schemeProtoElement0.getClonedIdMap().isEmpty());
