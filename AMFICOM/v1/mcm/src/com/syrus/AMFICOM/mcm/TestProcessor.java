@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.79 2005/09/30 13:11:01 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.80 2005/09/30 14:37:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/09/30 13:11:01 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/30 14:37:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -339,6 +339,9 @@ abstract class TestProcessor extends SleepButWorkThread {
 		mesg.append("\n");
 		mesg.append("\t numberOfMResults: ");
 		mesg.append(this.numberOfMResults);
+		mesg.append("\n");
+		mesg.append("\t startTime: ");
+		mesg.append(this.test.getStartTime());
 		mesg.append("\n");
 		if (this.lastMeasurementAcquisition) {
 			mesg.append("\t last measurement acquisition");
