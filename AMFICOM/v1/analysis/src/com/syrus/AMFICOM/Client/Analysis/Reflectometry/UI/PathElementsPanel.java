@@ -7,11 +7,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -111,20 +111,24 @@ public final class PathElementsPanel extends AnalysisPanel {
 		if (this.setting_active_pe) {
 			final double d = ((this.currpos.x - this.startpos.x) / this.scaleX * this.deltaX);
 			if (Math.abs(d) > this.deltaX) {
-				PathElement lastNode = this.path.getPreviousNode(this.activePathElement);
-				PathElement nextNode = this.path.getNextNode(this.activePathElement);
+				try {
+					PathElement lastNode = this.path.getPreviousNode(this.activePathElement);
+					PathElement nextNode = this.path.getNextNode(this.activePathElement);
 
-				if (lastNode == null) {
-					lastNode = this.path.getPreviousPathElement(this.activePathElement);
-				}
-				if (nextNode == null) {
-					nextNode = this.path.getNextPathElement(this.activePathElement);
-				}
-				if (lastNode != null) {
-					this.path.changeOpticalLength(lastNode, this.activePathElement, d);
-				}
-				if (nextNode != null) {
-					this.path.changeOpticalLength(this.activePathElement, nextNode, -d);
+					if (lastNode == null) {
+						lastNode = this.path.getPreviousPathElement(this.activePathElement);
+					}
+					if (nextNode == null) {
+						nextNode = this.path.getNextPathElement(this.activePathElement);
+					}
+					if (lastNode != null) {
+						this.path.changeOpticalLength(lastNode, this.activePathElement, d);
+					}
+					if (nextNode != null) {
+						this.path.changeOpticalLength(this.activePathElement, nextNode, -d);
+					}
+				} catch (ApplicationException e1) {
+					Log.errorException(e1);
 				}
 			}
 
@@ -144,8 +148,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 			if (this.startPathElement == null || this.endPathElement == null)
 				this.setGraphBounds(this.start, this.end);
 
-			for (final Iterator pathElementIterator = this.path.getPathMembers().tailSet(this.startPathElement).iterator(); pathElementIterator.hasNext();) {
-				final PathElement pathElement = (PathElement) pathElementIterator.next();
+			for (final PathElement pathElement : this.path.getPathMembers().tailSet(this.startPathElement)) {
 
 				if (pathElement == this.activePathElement) {
 					g.setColor(Color.RED);
@@ -164,7 +167,15 @@ public final class PathElementsPanel extends AnalysisPanel {
 				if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 					final SchemeElement se = pathElement.getSchemeElement();
 					// if muff - paint only small box and dashed line
-					if (se.getEquipment().getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
+
+					EquipmentType type;
+					try {
+						type = se.getProtoEquipment().getType();
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+						type = EquipmentType.OTHER;
+					}
+					if (type.equals(EquipmentType.MUFF)) {
 						g.fill3DRect(start1 - 1, 6, 2, 8, true);
 						((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
 						g.drawLine(start1, 6, start1, getHeight());
