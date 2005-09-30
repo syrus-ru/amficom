@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedPropertyTable.java,v 1.14 2005/09/28 10:09:20 bob Exp $
+* $Id: WrapperedPropertyTable.java,v 1.15 2005/09/30 07:31:43 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/28 10:09:20 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/30 07:31:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -85,7 +85,7 @@ public class WrapperedPropertyTable<T> extends ATable {
 
 	public void updateModel() {
 		final WrapperedPropertyTableModel<T> model = this.getModel();
-		for (int mRowIndex = 1; mRowIndex < model.getRowCount(); mRowIndex++) {
+		for (int mRowIndex = 0; mRowIndex < model.getRowCount(); mRowIndex++) {
 			final Object obj = model.wrapper.getPropertyValue(model.keys[mRowIndex]);
 			if (obj instanceof Map) {
 				final Map map = (Map) obj;
