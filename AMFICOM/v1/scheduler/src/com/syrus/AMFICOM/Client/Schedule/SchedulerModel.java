@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.111 2005/09/30 14:12:11 bob Exp $
+ * $Id: SchedulerModel.java,v 1.112 2005/09/30 15:42:37 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/09/30 14:12:11 $
+ * @version $Revision: 1.112 $, $Date: 2005/09/30 15:42:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -657,11 +657,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final Set<Identifier> measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
 
 			final Date startTime = this.testTimeStamps.getStartTime();
-			final Date endTime = this.testTimeStamps.getEndTime();
+			final Date endTime = this.testTimeStamps.getEndTime() != null ?
+					this.testTimeStamps.getEndTime() : this.testTimeStamps.getStartTime();
+					
 			final TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
 			final AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
-				if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
+				if (this.isValid(startTime, new Date(endTime.getTime() + this.measurementSetup.getMeasurementDuration()), this.monitoredElement.getId())) {
 					try {
 						test = Test.createInstance(LoginManager.getUserId(),
 								startTime,
@@ -699,7 +701,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				} 
 				
 			} else {
-				if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
+				if (this.isValid(startTime, new Date(endTime.getTime() + this.measurementSetup.getMeasurementDuration()), this.monitoredElement.getId())) {
 					test.setAttributes(test.getCreated(),
 							new Date(System.currentTimeMillis()),
 							test.getCreatorId(),
@@ -766,7 +768,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					if (newEndDate != null) {
 						newEndDate = new Date(newEndDate.getTime() + offset);
 					}
-					correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
+					final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(selectedTest.getMainMeasurementSetupId(), true);
+					correct = this.isValid(newStartDate, new Date(newEndDate.getTime() + measurementSetup.getMeasurementDuration()), selectedTest.getMonitoredElement().getId());
 					if (!correct) {
 						throw new ApplicationException(LangModelSchedule.getString("Error.CannotMoveTests"));
 					}
@@ -969,9 +972,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				
 				Date endTime = test.getEndTime();				
 				endTime = stoppingMap.isEmpty() ? 
-						new Date((endTime != null ? 
-								endTime.getTime() + measurementDuration : 
-								startTime.getTime() + measurementDuration)) : 
+						new Date(endTime.getTime() + measurementDuration) : 
 						stoppingMap.lastKey();
 				
 				assert startTime != null;
