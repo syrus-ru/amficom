@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.125 2005/09/29 12:50:56 bass Exp $
+ * $Id: SchemeElement.java,v 1.126 2005/09/30 10:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,10 @@ import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_CONTAINER;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind._SCHEME_CONTAINER;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind._SCHEME_ELEMENT_CONTAINER;
+import static com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind.INT_SCHEME_CONTAINER;
+import static com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind.INT_SCHEME_ELEMENT_CONTAINER;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -50,6 +54,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch136;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -83,6 +88,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeElementSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeLinkSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind.Enum;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
@@ -90,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2005/09/29 12:50:56 $
+ * @version $Revision: 1.126 $, $Date: 2005/09/30 10:51:41 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -399,12 +405,19 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
+	 * Creates a new instance of kind
+	 * {@link IdlSchemeElementKind#SCHEME_ELEMENT_CONTAINER SCHEME_ELEMENT_CONTAINER}
+	 * with either a {@link ProtoEquipment} or an {@link Equipment} set
+	 * and returns the newly created instance.
+	 *
 	 * @param creatorId
 	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param protoEquipment
-	 * @param equipment
+	 * @param protoEquipment can be {@code null} if and only if
+	 *        {@code equipment} is {@code null}.
+	 * @param equipment can be {@code null} if anf only if
+	 *        {@code protoEquipment} is {@code null}.
 	 * @param kis
 	 * @param siteNode
 	 * @param symbol
@@ -453,8 +466,9 @@ public final class SchemeElement extends AbstractSchemeElement
 					parentScheme,
 					null);
 			schemeElement.markAsChanged();
-			if (equipment != null || protoEquipment != null)
+			if (equipment != null || protoEquipment != null) {
 				schemeElement.protoEquipmentSet = true;
+			}
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
@@ -462,12 +476,19 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
+	 * Creates a new instance of kind
+	 * {@link IdlSchemeElementKind#SCHEME_ELEMENT_CONTAINER SCHEME_ELEMENT_CONTAINER}
+	 * with either a {@link ProtoEquipment} or an {@link Equipment} set
+	 * and returns the newly created instance.
+	 *
 	 * @param creatorId
 	 * @param name can be neither <code>null</code> nor empty.
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @param label cannot be <code>null</code>, but can be empty.
-	 * @param protoEquipment
-	 * @param equipment
+	 * @param protoEquipment can be {@code null} if and only if
+	 *        {@code equipment} is {@code null}.
+	 * @param equipment can be {@code null} if anf only if
+	 *        {@code protoEquipment} is {@code null}.
 	 * @param kis
 	 * @param siteNode
 	 * @param symbol
@@ -516,8 +537,9 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentSchemeElement);
 			schemeElement.markAsChanged();
-			if (equipment != null || protoEquipment != null)
+			if (equipment != null || protoEquipment != null) {
 				schemeElement.protoEquipmentSet = true;
+			}
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
@@ -697,14 +719,20 @@ public final class SchemeElement extends AbstractSchemeElement
 		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
+	@Crutch136(notes = "SCHEME_CONTAINER should contain no equipmentId, and no check should be performed")
 	Identifier getEquipmentId() {
-		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
+		switch (this.getKind().value()) {
+		case _SCHEME_ELEMENT_CONTAINER:
 			assert true || this.assertProtoEquipmentSetStrict() : OBJECT_BADLY_INITIALIZED;
 			if (!this.assertProtoEquipmentSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 			}
-			assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
+			break;
+		case _SCHEME_CONTAINER:
+			assert this.protoEquipmentId.isVoid();
+			break;
 		}
+		assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
 		return this.equipmentId;
 	}
 	
@@ -720,14 +748,20 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
+	@Crutch136(notes = "SCHEME_CONTAINER should contain no equipmentId, and no check should be performed")
 	Identifier getProtoEquipmentId() {
-		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
+		switch (this.getKind().value()) {
+		case _SCHEME_ELEMENT_CONTAINER:
 			assert true || this.assertProtoEquipmentSetStrict(): OBJECT_BADLY_INITIALIZED;
 			if (!this.assertProtoEquipmentSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 			}
-			assert this.protoEquipmentId.isVoid() || this.protoEquipmentId.getMajor() == PROTOEQUIPMENT_CODE;
+			break;
+		case _SCHEME_CONTAINER:
+			assert this.protoEquipmentId.isVoid();
+			break;
 		}
+		assert this.protoEquipmentId.isVoid() || this.protoEquipmentId.getMajor() == PROTOEQUIPMENT_CODE;
 		return this.protoEquipmentId;
 	}
 
@@ -1079,6 +1113,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param parentSchemeId
 	 * @param parentSchemeElementId
 	 */
+	@Crutch136(notes = "SCHEME_CONTAINER should contain no equipmentId, and no check should be performed")
 	synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -1105,10 +1140,19 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		assert protoEquipmentId != null : NON_NULL_EXPECTED;
 		assert equipmentId != null : NON_NULL_EXPECTED;
-		assert kind == SCHEME_ELEMENT_CONTAINER
-				? (protoEquipmentId.isVoid() ^ equipmentId.isVoid())
-				: (protoEquipmentId.isVoid() && equipmentId.isVoid()) : OBJECT_BADLY_INITIALIZED;
-		
+
+		switch (kind.value()) {
+		case _SCHEME_ELEMENT_CONTAINER:
+			assert protoEquipmentId.isVoid() ^ equipmentId.isVoid() : OBJECT_BADLY_INITIALIZED;
+			break;
+		case _SCHEME_CONTAINER:
+			/*
+			 * And I don't care what equipmentId holds.
+			 */
+			assert protoEquipmentId.isVoid() : OBJECT_BADLY_INITIALIZED;
+			break;
+		}
+
 		assert kisId != null : NON_NULL_EXPECTED;
 		assert siteNodeId != null : NON_NULL_EXPECTED;
 		assert symbolId != null : NON_NULL_EXPECTED;
@@ -1135,29 +1179,42 @@ public final class SchemeElement extends AbstractSchemeElement
 	/**
 	 * @param equipment
 	 */
+	@Crutch136(notes = "SCHEME_CONTAINER should have no equipment at all")
 	public void setEquipment(final Equipment equipment) {
-		assert this.assertProtoEquipmentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
-
 		final Identifier newEquipmentId = Identifier.possiblyVoid(equipment);
-		if (this.equipmentId.equals(newEquipmentId)) {
-			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-			return;
+
+		switch (this.getKind().value()) {
+		case _SCHEME_ELEMENT_CONTAINER:
+			assert this.assertProtoEquipmentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+
+			if (this.equipmentId.equals(newEquipmentId)) {
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				return;
+			}
+
+			if (this.equipmentId.isVoid()) {
+				/*
+				 * Erasing old object-type value, setting new object
+				 * value.
+				 */
+				this.protoEquipmentId = VOID_IDENTIFIER;
+			} else if (newEquipmentId.isVoid()) {
+				/*
+				 * Erasing old object value, preserving old object-type
+				 * value. This point is not assumed to be reached unless
+				 * initial object value has already been set (i. e.
+				 * there already is object-type value to preserve).
+				 */
+				this.protoEquipmentId = this.getEquipment().getProtoEquipmentId();
+			}
+			break;
+		case _SCHEME_CONTAINER:
+			/*
+			 * No check here.
+			 */
+			break;
 		}
 
-		if (this.equipmentId.isVoid())
-			/*
-			 * Erasing old object-type value, setting new object
-			 * value.
-			 */
-			this.protoEquipmentId = VOID_IDENTIFIER;
-		else if (newEquipmentId.isVoid())
-			/*
-			 * Erasing old object value, preserving old object-type
-			 * value. This point is not assumed to be reached unless
-			 * initial object value has already been set (i. e.
-			 * there already is object-type value to preserve).
-			 */
-			this.protoEquipmentId = this.getEquipment().getProtoEquipmentId();
 		this.equipmentId = newEquipmentId;
 		super.markAsChanged();
 	}
@@ -1423,6 +1480,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
+	@Crutch136(notes = "update the XML model")
 	public void fromXmlTransferable(
 			final XmlSchemeElement schemeElement,
 			final String importType)
@@ -1434,24 +1492,36 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.label = schemeElement.isSetLabel()
 				? schemeElement.getLabel()
 				: "";
-		this.kind = schemeElement.getKind().intValue() - 1;
+		final Enum xmlKind = schemeElement.getKind();
+		this.kind = xmlKind.intValue() - 1;
 
 		final boolean setProtoEquipmentId = schemeElement.isSetProtoEquipmentId();
-		final boolean setEquipmentId = schemeElement.isSetEquipmentId();		
-		if (setProtoEquipmentId) {
-			assert !setEquipmentId : OBJECT_STATE_ILLEGAL;
+		final boolean setEquipmentId = schemeElement.isSetEquipmentId();
+		switch (xmlKind.intValue()) {
+		case INT_SCHEME_ELEMENT_CONTAINER:
+			if (setProtoEquipmentId) {
+				assert !setEquipmentId : OBJECT_STATE_ILLEGAL;
 
-			this.protoEquipmentId = Identifier.fromXmlTransferable(schemeElement.getProtoEquipmentId(), importType, MODE_THROW_IF_ABSENT);
-			this.equipmentId = VOID_IDENTIFIER;
-		} else if (setEquipmentId) {
+				this.protoEquipmentId = Identifier.fromXmlTransferable(schemeElement.getProtoEquipmentId(), importType, MODE_THROW_IF_ABSENT);
+				this.equipmentId = VOID_IDENTIFIER;
+			} else if (setEquipmentId) {
+				assert !setProtoEquipmentId : OBJECT_STATE_ILLEGAL;
+
+				this.protoEquipmentId = VOID_IDENTIFIER;
+				this.equipmentId = Identifier.fromXmlTransferable(schemeElement.getEquipmentId(), importType, MODE_THROW_IF_ABSENT);
+			} else {
+				throw new UpdateObjectException(
+						"SchemeElement.fromXmlTransferable() | "
+						+ XML_BEAN_NOT_COMPLETE);
+			}
+			break;
+		case INT_SCHEME_CONTAINER:
 			assert !setProtoEquipmentId : OBJECT_STATE_ILLEGAL;
-
 			this.protoEquipmentId = VOID_IDENTIFIER;
-			this.equipmentId = Identifier.fromXmlTransferable(schemeElement.getEquipmentId(), importType, MODE_THROW_IF_ABSENT);
-		} else {
-			throw new UpdateObjectException(
-					"SchemeElement.fromXmlTransferable() | "
-					+ XML_BEAN_NOT_COMPLETE);
+			this.equipmentId = setEquipmentId
+					? Identifier.fromXmlTransferable(schemeElement.getEquipmentId(), importType, MODE_THROW_IF_ABSENT)
+					: VOID_IDENTIFIER;
+			break;
 		}
 
 		this.kisId = schemeElement.isSetKisId()
@@ -1469,7 +1539,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.schemeCellId = schemeElement.isSetSchemeCellId()
 				? Identifier.fromXmlTransferable(schemeElement.getSchemeCellId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
-		
+
 		final boolean setParentSchemeId = schemeElement.isSetParentSchemeId();
 		final boolean setParentSchemeElementId = schemeElement.isSetParentSchemeElementId();
 		if (setParentSchemeId) {
@@ -1745,11 +1815,16 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
+	@Crutch136(notes = "SCHEME_CONTAINER should contain no #getSchemeElements() method")
 	Set<SchemeElement> getSchemeElements0(final boolean usePool)
 	throws ApplicationException {
-		return this.getKind() == SCHEME_ELEMENT_CONTAINER
-				? this.getSchemeElementContainerWrappee().getContainees(usePool)
-				: Collections.<SchemeElement>emptySet();
+		switch (this.getKind().value()) {
+		case _SCHEME_ELEMENT_CONTAINER:
+			return this.getSchemeElementContainerWrappee().getContainees(usePool);
+		case _SCHEME_CONTAINER:
+		default:
+			return Collections.emptySet();	
+		}
 	}
 
 	/**
@@ -1829,11 +1904,16 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
+	@Crutch136(notes = "SCHEME_ELEMENT_CONTAINER should have no #getSchemes() method")
 	Set<Scheme> getSchemes0(final boolean usePool)
 	throws ApplicationException {
-		return this.getKind() == SCHEME_CONTAINER
-				? this.getSchemeContainerWrappee().getContainees(usePool)
-				: Collections.<Scheme>emptySet();
+		switch (this.getKind().value()) {
+		case _SCHEME_CONTAINER:
+			return this.getSchemeContainerWrappee().getContainees(usePool);
+		case _SCHEME_ELEMENT_CONTAINER:
+		default:
+			return Collections.emptySet();
+		}
 	}
 
 	/**

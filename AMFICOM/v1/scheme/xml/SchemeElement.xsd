@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeElement.xsd,v 1.8 2005/09/29 12:50:56 bass Exp $
+			$Id: SchemeElement.xsd,v 1.9 2005/09/30 10:51:41 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -47,10 +47,16 @@
 							</xsd:restriction>
 						</xsd:simpleType>
 					</xsd:element>
-					<xsd:choice>
+					<!--xsd:choice>
 						<xsd:element name = "protoEquipmentId" type = "general:XmlIdentifier"/>
 						<xsd:element name = "equipmentId" type = "general:XmlIdentifier"/>
-					</xsd:choice>
+					</xsd:choice-->
+					<xsd:element name = "protoEquipmentId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element name = "equipmentId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<!-- See bug #136 -->
+
 					<xsd:element name = "kisId" type = "general:XmlIdentifier"
 						minOccurs = "0"/>
 					<xsd:element name = "siteNodeId" type = "general:XmlIdentifier"
