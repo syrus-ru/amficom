@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.4 2005/09/13 14:19:20 peskovsky Exp $
+ * $Id: HTMLReportEncoder.java,v 1.5 2005/09/30 11:08:54 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -171,8 +171,14 @@ public class HTMLReportEncoder {
 					buffer += endOfTDTag;
 					out.write(buffer.getBytes());					
 					
-					if (component instanceof AttachedTextComponent)
-						this.encodeTextComponent((AttachedTextComponent)component,out);
+					if (component instanceof AttachedTextComponent) {
+						AttachedTextComponent textComponent =
+							(AttachedTextComponent) component;
+						this.encodeText(
+								textComponent.getText(),
+								textComponent.getFont(),
+								out);
+					}
 					else if (component instanceof ImageRenderingComponent) {
 						ImageRenderingComponent irComponent =
 							(ImageRenderingComponent)component;
@@ -211,48 +217,51 @@ public class HTMLReportEncoder {
 		return fileShortName;
 	}
 	
-	private void encodeTextComponent(
-			AttachedTextComponent component,
+	private void encodeText(
+			String text,
+			Font font,
 			FileOutputStream out) throws IOException {
-		Font labelFont = component.getFont();
-		String fontName = labelFont.getName();
-
-		String labelText = new String(component.getText());
+		String labelText = new String(text);
 		//TODO Проверить работу replaceAll
 		labelText.replaceAll("[ ]","&nbsp");
 		labelText.replaceAll("[\n]","<br>");		
 
+		out.write(this.getHTMLFontText(text,font).getBytes());
+	}
+
+	private String getHTMLFontText(String text,Font font) {
 		String italicTagStart = "";
 		String italicTagEnd = "";
-		if (labelFont.isItalic()) {
+		if (font.isItalic()) {
 			italicTagStart = "<i>";
 			italicTagEnd = "</i>";
 		}
 		String boldTagStart = "";
 		String boldTagEnd = "";
-		if (labelFont.isBold()) {
+		if (font.isBold()) {
 			boldTagStart = "<b>";
 			boldTagEnd = "</b>";
 		}
 
 		String result = 
-		 	"<font face=\"" + fontName + "\">"
+		 	"<font face=\"" + font.getName() + "\">"
 			+ boldTagStart + italicTagStart
-			+ labelText
+			+ text
 			+ italicTagEnd + boldTagEnd
 			+ "</font>";
-
-		out.write(result.getBytes());
+		return result;
 	}
-
+	
 	private void encodeTableComponent(
 			TableDataRenderingComponent component,
 			FileOutputStream out) throws IOException {
 		JTable table = component.getTable();
+		Font tableFont = table.getFont();
 		String buffer = "\n<table frame=\"box\" border=\"1\" width=\""
 			+ table.getWidth()
 			+ "\""
-			+ " style=\"font-size: 13";
+			+ " style=\"font-size: "
+			+ tableFont.getSize();
 		
 		buffer += "px";
 		buffer += ";\">\n\n";
@@ -271,10 +280,13 @@ public class HTMLReportEncoder {
 						+ (new Integer(columnWidth)).toString() + "\"";
 				buffer += ">";
 	
-				if (table.getValueAt(i, j) != "")
-					buffer += table.getValueAt(i, j);
-				else
-					buffer += "&nbsp";
+				if (table.getValueAt(i, j) instanceof String) {
+					String stringValue = (String) table.getValueAt(i, j);
+					if (!stringValue.equals(""))
+						buffer += this.getHTMLFontText(stringValue,tableFont);
+					else
+						buffer += "&nbsp";
+				}
 				buffer += "</td>\n";
 			}
 			buffer += "</tr>\n";
