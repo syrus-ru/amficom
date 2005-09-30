@@ -374,12 +374,17 @@ final class TestParametersPanel implements PropertyChangeListener {
 		final boolean measurementSetupWithAnalysis = 
 			measurementSetup.getCriteriaSet() != null &&
 			measurementSetup.getEtalon() != null &&
-			measurementSetup.getThresholdSet() != null;
-
-//		if (analysisSetupsSelected && 
-//			!measurementSetupWithAnalysis) {
-//			this.useAnalysisSetupsCheckBox.doClick();
-//		}
+			measurementSetup.getThresholdSet() != null;		 
+		
+		try {
+			if (analysisSetupsSelected && 
+					this.schedulerModel.getSelectedTest().getAnalysisType() == AnalysisType.UNKNOWN) {
+				this.useAnalysisSetupsCheckBox.doClick();
+			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
 			this.testSetups.getModel();
