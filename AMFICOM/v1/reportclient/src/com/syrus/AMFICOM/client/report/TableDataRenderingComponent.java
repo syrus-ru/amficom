@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataRenderingComponent.java,v 1.4 2005/09/23 13:20:25 peskovsky Exp $
+ * $Id: TableDataRenderingComponent.java,v 1.5 2005/09/30 08:13:22 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.client.report;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.util.List;
 
 import javax.swing.JScrollPane;
@@ -16,6 +17,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer.ObjectRenderer;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 
 public final class TableDataRenderingComponent extends DataRenderingComponent {
@@ -24,6 +26,7 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 	private ATable table = null;
 	private TableModel tableModel = null;
 	private List<Integer> tableColumnWidths = null;
+	private TableDataStorableElement trdElement = null;
 	
 	public TableDataRenderingComponent(
 			TableDataStorableElement trde,
@@ -33,6 +36,7 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 		
 		this.tableModel = tableModel;
 		this.tableColumnWidths = tableColumnWidths;
+		this.trdElement = trde;
 		
 		jbinit();
 	}
@@ -44,10 +48,14 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 		this.setLayout(layout);
 		
 		this.table = new ATable(this.tableModel);
+		Font tableFont = this.trdElement.getFont();
+		this.table.setFont(tableFont);
+		this.table.setRowHeight(tableFont.getSize() + 2);
 		for (int i = 0; i < this.table.getColumnCount(); i++) {
 			TableColumn tableColumn = this.table.getColumnModel().getColumn(i);
 			tableColumn.setWidth(this.tableColumnWidths.get(i));
-			tableColumn.setPreferredWidth(this.tableColumnWidths.get(i));			
+			tableColumn.setPreferredWidth(this.tableColumnWidths.get(i));
+			tableColumn.setCellRenderer(new ObjectRenderer());
 		}
 		JScrollPane scrollPane = new JScrollPane(this.table);
 		scrollPane.setVerticalScrollBarPolicy(

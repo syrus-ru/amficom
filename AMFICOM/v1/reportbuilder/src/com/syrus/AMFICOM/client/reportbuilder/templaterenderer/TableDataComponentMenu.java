@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataComponentMenu.java,v 1.1 2005/09/23 08:14:12 peskovsky Exp $
+ * $Id: TableDataComponentMenu.java,v 1.2 2005/09/30 08:13:22 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ public class TableDataComponentMenu extends JPopupMenu {
 		this.tableDataElement = tableDataElement;
 		this.applicationContext = aContext;
 		
-		//Установка шрифта надписи
+		//Установка числа вертикальных разбиений
 		JMenuItem setVertDivisionsCountMenuItem = new JMenuItem();
 		setVertDivisionsCountMenuItem.setText(LangModelReport.getString(
 				"report.UI.TableComponentMenu.title"));
@@ -61,6 +61,27 @@ public class TableDataComponentMenu extends JPopupMenu {
 				element.setModified(System.currentTimeMillis());				
 			}
 		});
+		
+		//Установка шрифта таблицы
+		JMenuItem setFontMenuItem = new JMenuItem();
+		setFontMenuItem.setText(LangModelReport.getString("report.UI.FontChooserDialog.font"));
+		setFontMenuItem.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent el) {
+				TableDataStorableElement element =
+					TableDataComponentMenu.this.tableDataElement;
+				
+				FontChooserDialog fcDialog = FontChooserDialog.getInstance(element.getFont());
+				TableDataComponentMenu.this.setVisible(false);				
+				fcDialog.setVisible(true);
+				if (FontChooserDialog.selectedFont == null)
+					return;
+
+				element.setFont(FontChooserDialog.selectedFont);
+				element.setModified(System.currentTimeMillis());				
+			}
+		});
+		
 		this.add(setVertDivisionsCountMenuItem);
+		this.add(setFontMenuItem);		
 	}
 }
