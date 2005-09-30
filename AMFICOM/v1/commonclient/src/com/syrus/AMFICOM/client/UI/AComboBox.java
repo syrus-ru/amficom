@@ -15,14 +15,14 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/30 07:34:49 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/30 07:38:02 $
  * @author $Author: bob $
  * @module commonclient
  */
 public class AComboBox extends JComboBox {
 	private static final long serialVersionUID = -4432933469351433936L;
 
-	private class ComboBoxRenderer implements ListCellRenderer {
+	class ComboBoxRenderer implements ListCellRenderer {
 		
 		private JLabel label; 
 
