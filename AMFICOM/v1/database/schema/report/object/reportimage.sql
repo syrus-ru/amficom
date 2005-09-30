@@ -1,3 +1,5 @@
+$Id: reportimage.sql,v 1.3 2005/09/30 07:05:45 max Exp $
+
 CREATE TABLE ReportImage (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -24,5 +26,7 @@ CREATE TABLE ReportImage (
  CONSTRAINT reportimage_reptempl_fk FOREIGN KEY (report_template_id)
   REFERENCES ReportTemplate (id) ON DELETE CASCADE
 );
+
+COMMENT ON TABLE ReportImage IS '$Id: reportimage.sql,v 1.3 2005/09/30 07:05:45 max Exp $';
 
 CREATE SEQUENCE ReportImage_Seq ORDER;

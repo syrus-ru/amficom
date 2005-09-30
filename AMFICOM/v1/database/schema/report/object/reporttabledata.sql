@@ -1,3 +1,5 @@
+--$Id: reporttabledata.sql,v 1.3 2005/09/30 07:05:45 max Exp $
+
 CREATE TABLE ReportTableData (
  id NUMBER(19),
  created DATE NOT NULL,
@@ -24,5 +26,7 @@ CREATE TABLE ReportTableData (
  CONSTRAINT reporttabledata_reptempl_fk FOREIGN KEY (report_template_id)
   REFERENCES ReportTemplate (id) ON DELETE CASCADE
 );
+
+COMMENT ON TABLE ReportTableData IS '$Id: reporttabledata.sql,v 1.3 2005/09/30 07:05:45 max Exp $';
 
 CREATE SEQUENCE ReportTableData_Seq ORDER;
