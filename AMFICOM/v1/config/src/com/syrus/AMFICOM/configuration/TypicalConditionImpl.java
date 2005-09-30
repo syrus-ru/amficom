@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.24 2005/09/29 13:58:35 max Exp $
+ * $Id: TypicalConditionImpl.java,v 1.25 2005/09/30 06:26:36 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Date;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -20,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/29 13:58:35 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/30 06:26:36 $
  * @author $Author: max $
  * @module config
  */
@@ -134,6 +136,12 @@ final class TypicalConditionImpl extends TypicalCondition {
 			wrapper = PortTypeWrapper.getInstance();
 		} else if (storableObject instanceof ProtoEquipment) {
 			wrapper = ProtoEquipmentWrapper.getInstance();
+		} else if (storableObject instanceof CableLinkType) {
+			wrapper = CableLinkTypeWrapper.getInstance();
+		} else if (storableObject instanceof LinkType) {
+			wrapper = LinkTypeWrapper.getInstance();
+		} else if (storableObject instanceof CableThreadType) {
+			wrapper = CableThreadTypeWrapper.getInstance();
 		} else {
 			throw new IllegalObjectEntityException(ERROR_ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);

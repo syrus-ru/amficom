@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.21 2005/09/29 08:55:56 max Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.22 2005/09/30 06:26:36 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,6 +11,9 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -20,7 +23,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/29 08:55:56 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/30 06:26:36 $
  * @author $Author: max $
  * @module config
  */
@@ -40,6 +43,8 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return PortTypeWrapper.COLUMN_SORT;
 				} else if (this.condition.getKey().equals(PortTypeWrapper.COLUMN_KIND)) {
 					return PortTypeWrapper.COLUMN_KIND;
+				} else if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
 			case PROTOEQUIPMENT_CODE:
@@ -52,6 +57,12 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 			case MONITOREDELEMENT_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME)) {
 					return StorableObjectWrapper.COLUMN_NAME;
+				}
+			case CABLELINK_TYPE_CODE:
+			case LINK_TYPE_CODE:
+			case CABLETHREAD_TYPE_CODE:
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
 			default:
