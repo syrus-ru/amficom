@@ -2,19 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/mapview"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/trove"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/cmserver_interface.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/leserver_interface.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mscharserver_interface.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
