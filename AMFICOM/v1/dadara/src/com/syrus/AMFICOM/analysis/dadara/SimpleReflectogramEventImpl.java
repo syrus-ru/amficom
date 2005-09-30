@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.10 2005/07/22 06:39:51 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.11 2005/09/30 12:56:22 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,26 +11,30 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.io.SignatureMismatchException;
+
 /**
  * Just am implementation of SimpleReflectogramEvent
  * with protected-visibility streaming support.
  * <p>
  * <b>NB:</b> Support two *different* ways of streaming:
  * <ul>
- * <li> one-event (see writeBaseToDOS, no compression)
- * <li> array-of-events (writeArrayBaseToDOS, uses compression).
+ * <li> one-event (see {@link #writeBaseToDOS}, no compression, no signatures)
+ * <li> array-of-events ({@link #writeArrayBaseToDOS}, uses both signature
+ *   and compression).
  * </ul>
  * <p>
  * Today, both ways are coded within protected visibility because
  * there is no need of streaming this (super-)class itself by now.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/30 12:56:22 $
  * @module
  */
 public class SimpleReflectogramEventImpl
-implements SimpleReflectogramEvent
-{
+implements SimpleReflectogramEvent {
+	private static final short SIGNATURE_SHORT_ARRAY = 12500;
+
 	private int begin;
 	private int end;
 	private int eventType;
@@ -64,7 +68,7 @@ implements SimpleReflectogramEvent
 	/**
 	 * writes to stream base object state
 	 */
-	protected void writeBaseToDOS(DataOutputStream dos)
+	private void writeBaseToDOS(DataOutputStream dos)
 	throws IOException
 	{
 		dos.writeInt(begin);
@@ -75,7 +79,7 @@ implements SimpleReflectogramEvent
 	/**
 	 * reads from stream base object state
 	 */
-	protected void readBaseFromDIS(DataInputStream dis)
+	private void readBaseFromDIS(DataInputStream dis)
 	throws IOException
 	{
 		this.begin = dis.readInt();
@@ -91,6 +95,7 @@ implements SimpleReflectogramEvent
 	protected static void writeArrayBaseToDOS(
 			SimpleReflectogramEventImpl[] se,
 			DataOutputStream dos) throws IOException {
+		dos.writeShort(SIGNATURE_SHORT_ARRAY);
 		for (int i = 0; i < se.length; i++) {
 			if (i > 0 && se[i].begin == se[i - 1].end
 					&& (se[i].eventType & ~0xff) == 0) {
@@ -116,10 +121,16 @@ implements SimpleReflectogramEvent
 	/**
 	 * reads from stream base state of objects of a pre-allocated array.
 	 * Uses decompression.
+	 * @throws SignatureMismatchException
+	 * @throws IOException
 	 */
 	protected static void readArrayBaseFromDIS(
 			SimpleReflectogramEventImpl[] se,
-			DataInputStream dis) throws IOException {
+			DataInputStream dis)
+	throws IOException, SignatureMismatchException {
+		if (dis.readShort() != SIGNATURE_SHORT_ARRAY) {
+			throw new SignatureMismatchException();
+		}
 		for (int i = 0; i < se.length; i++) {
 			int type = dis.readByte();
 			//System.out.println("["+type+"]");
@@ -134,7 +145,7 @@ implements SimpleReflectogramEvent
 				} else if (type == 0x3) {
 					se[i].end = se[i].begin + (dis.readByte() & 0xff);
 				} else {
-					throw new InternalError("Unexpected code");
+					throw new SignatureMismatchException("Unexpected code");
 				}
 				se[i].eventType = dis.readByte() & 0xff;
 			}

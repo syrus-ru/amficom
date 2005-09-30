@@ -61,10 +61,12 @@ import com.syrus.io.SignatureMismatchException;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/30 12:56:22 $
  * @module dadara
  */
 public class ReflectogramMismatch {
+	private static final long SIGNATURE = 5490879050929171200L;
+
 	// Alarm levels. Must be comparable with >; >=
 	public static final int SEVERITY_NONE = 0; // just a convenience level, not a real alarm
 	public static final int SEVERITY_SOFT = 1; // soft alarm ('warning')
@@ -212,8 +214,10 @@ public class ReflectogramMismatch {
 	}
 
 	public static ReflectogramMismatch createFromDIS(DataInputStream dis)
-	throws IOException, SignatureMismatchException
-	{
+	throws IOException, SignatureMismatchException {
+		if (dis.readLong() != SIGNATURE) {
+			throw new SignatureMismatchException();
+		}
 		ReflectogramMismatch ret = new ReflectogramMismatch();
 		ret.severity = dis.readInt();
 		ret.setCoord(dis.readInt());
@@ -228,8 +232,8 @@ public class ReflectogramMismatch {
 			ret.maxMismatch = 0.0;
 		}
 		if(dis.readBoolean()) {
-			ret.ref1Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
-			ret.ref2Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
+			ret.ref1Id = SOAnchor.createFromDIS(dis);
+			ret.ref2Id = SOAnchor.createFromDIS(dis);
 			ret.ref1Coord = dis.readInt();
 			ret.ref2Coord = dis.readInt();
 		} else {
@@ -244,7 +248,8 @@ public class ReflectogramMismatch {
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException
 	{
-		// ориентировочно, занимает суммарно от 26 до 66 байт
+		// ориентировочно, занимает суммарно от 34 до 74 байт
+		dos.writeLong(SIGNATURE);
 		dos.writeInt(this.severity);
 		dos.writeInt(this.getCoord());
 		dos.writeInt(this.getEndCoord());

@@ -27,13 +27,15 @@ import com.syrus.io.SignatureMismatchException;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.32 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/30 12:56:22 $
  * @author $Author: saa $
  * @author saa
  * @module dadara
  */
 
 public class ModelFunction {
+	private static final short SIGNATURE_MF_SHORT = 11360;
+
 	private int shapeID; // тип кривой (внутренний идентификатор native-кода)
 	private double[] pars; // параметры кривой
 
@@ -434,6 +436,7 @@ public class ModelFunction {
 	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {
+		dos.writeShort(SIGNATURE_MF_SHORT);
 		dos.writeInt(this.shapeID);
 		boolean useNativeStreaming = nIsNativeStreamingPossible(this.shapeID);
 		dos.writeBoolean(useNativeStreaming);
@@ -472,7 +475,11 @@ public class ModelFunction {
 		return mf;
 	}
 
-	private void readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException {
+	private void readFromDIS(DataInputStream dis)
+	throws IOException, SignatureMismatchException {
+		if (dis.readShort() != SIGNATURE_MF_SHORT) {
+			throw new SignatureMismatchException();
+		}
 		this.shapeID = dis.readInt();
 		boolean useNativeStreaming = dis.readBoolean();
 		if (useNativeStreaming) {

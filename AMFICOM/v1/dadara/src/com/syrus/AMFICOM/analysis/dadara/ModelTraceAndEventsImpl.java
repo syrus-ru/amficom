@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.22 2005/09/01 12:07:45 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.23 2005/09/30 12:56:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,13 @@ import com.syrus.io.SignatureMismatchException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/30 12:56:22 $
  * @module
  */
 public class ModelTraceAndEventsImpl
 implements ReliabilityModelTraceAndEvents, DataStreamable {
-	protected static final long SIGNATURE_EVENTS = 3353520050119193102L;
+	protected static final long SIGNATURE_MTAE =  6205542050930132000L;
+	protected static final short SIGNATURE_CINFO_SHORT = 11500;
 	protected static final double CINFO_DEVIATION_PREC = 1e-4;
 
 	protected ReliabilitySimpleReflectogramEventImpl[] rse; // not null
@@ -156,7 +157,11 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 			}
 		}
 
-		protected ComplexInfo(DataInputStream dis) throws IOException {
+		protected ComplexInfo(DataInputStream dis)
+		throws IOException, SignatureMismatchException {
+			if (dis.readShort() != SIGNATURE_CINFO_SHORT) {
+				throw new SignatureMismatchException();
+			}
 			this.yTop = dis.readDouble();
 			allocateArrays();
 			for (int i = 0; i < ModelTraceAndEventsImpl.this.rse.length; i++) {
@@ -176,6 +181,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		}
 
 		public void writeToDOS(DataOutputStream dos) throws IOException {
+			dos.writeShort(SIGNATURE_CINFO_SHORT);
 			dos.writeDouble(this.yTop);
 			for (int i = 0; i < ModelTraceAndEventsImpl.this.rse.length; i++) {
 				if (eventNeedsEdzAdzPo(i)) {
@@ -377,20 +383,20 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 
 	public void writeToDOS(DataOutputStream dos) throws IOException
 	{
-		int pos1 = dos.size();
-		dos.writeLong(SIGNATURE_EVENTS);
-		getMF().writeToDOS(dos);
+		dos.writeLong(SIGNATURE_MTAE);
+//		int pos1 = dos.size();
+		this.mf.writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
-		int pos2 = dos.size();
+//		int pos2 = dos.size();
 		ReliabilitySimpleReflectogramEventImpl.writeArrayToDOS(this.rse, dos);
-		int pos3 = dos.size();
+//		int pos3 = dos.size();
 		this.cinfo.writeToDOS(dos);
-		int pos4 = dos.size();
-		System.out.println("MTAEI: writeToDOS:"
-				+ " MT " + (pos2-pos1)     // 66-72% of total
-				+ ", rse " + (pos3-pos2)   // 15-17% of total
-				+ ", cinfo " + (pos4-pos3) // 13-17% of total
-				+ ", total " + (pos4-pos1));
+//		int pos4 = dos.size();
+//		System.out.println("MTAEI: writeToDOS:"
+//				+ " MT " + (pos2-pos1)     // 66-72% of total
+//				+ ", rse " + (pos3-pos2)   // 15-17% of total
+//				+ ", cinfo " + (pos4-pos3) // 13-17% of total
+//				+ ", total " + (pos4-pos1));
 	}
 
 	public static DataStreamable.Reader getReader()
@@ -401,7 +407,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 			throws IOException, SignatureMismatchException
 			{
 				long signature = dis.readLong();
-				if (signature != SIGNATURE_EVENTS)
+				if (signature != SIGNATURE_MTAE)
 					throw new SignatureMismatchException();
 				ModelFunction mf = ModelFunction.createFromDIS(dis);
 				double deltaX = dis.readDouble();

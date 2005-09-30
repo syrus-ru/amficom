@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.7 2005/08/30 11:51:10 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.8 2005/09/30 12:56:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.io.SignatureMismatchException;
+
 /**
  * ’ранилище набора параметров анализа, не реализующее контрол€ допустимости.
  * –екомендуетс€ использовать {@link AnalysisParameters},
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/08/30 11:51:10 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/30 12:56:22 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -47,6 +49,7 @@ implements DataStreamable, Cloneable
 
 	// еще дополнительный параметр
 	private double scaleFactor = 1.65;
+	private static final long SIGNATURE = 8679213050930145800L;
 
 	/**
 	 * ”станавливает все свои свойства так же, как и у другого экземпл€р€
@@ -216,7 +219,10 @@ implements DataStreamable, Cloneable
 	}
 
 	public AnalysisParametersStorage(DataInputStream dis)
-	throws IOException {
+	throws IOException, SignatureMismatchException {
+		if (dis.readLong() != SIGNATURE) {
+			throw new SignatureMismatchException();
+		}
 		this.param = new double[5];
 		this.param[0] = dis.readDouble();
 		this.param[1] = dis.readDouble();
@@ -282,6 +288,7 @@ implements DataStreamable, Cloneable
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
+		dos.writeLong(SIGNATURE);
 		dos.writeDouble(this.param[0]);
 		dos.writeDouble(this.param[1]);
 		dos.writeDouble(this.param[2]);

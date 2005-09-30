@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEvent.java,v 1.4 2005/09/01 12:07:45 saa Exp $
+ * $Id: DetailedEvent.java,v 1.5 2005/09/30 12:56:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,13 @@ import com.syrus.io.SignatureMismatchException;
  * {@link #begin}, {@link #end} {@link #eventType} - см.
  * описание {@link SimpleReflectogramEvent}
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/30 12:56:22 $
  * @module
  */
 public abstract class DetailedEvent
 implements SimpleReflectogramEvent, DataStreamable {
 	private static DataStreamable.Reader dsReader = null;
+	private static final short SIGNATURE_SHORT = 21375;
 
 	protected int begin;
 	protected int end;
@@ -63,6 +64,7 @@ implements SimpleReflectogramEvent, DataStreamable {
 	throws IOException;//, SignatureMismatchException;
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {
+		dos.writeShort(SIGNATURE_SHORT);
 		dos.writeInt(begin);
 		dos.writeInt(end);
 		dos.writeInt(eventType);
@@ -88,6 +90,9 @@ implements SimpleReflectogramEvent, DataStreamable {
 			dsReader = new DataStreamable.Reader() {
 				public DataStreamable readFromDIS(DataInputStream dis)
 				throws IOException, SignatureMismatchException {
+					if (dis.readShort() != SIGNATURE_SHORT) {
+						throw new SignatureMismatchException();
+					}
 					int begin = dis.readInt();
 					int end = dis.readInt();
 					int eventType = dis.readInt();

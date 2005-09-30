@@ -1,5 +1,5 @@
 /*-
- * $Id: Etalon.java,v 1.5 2005/09/01 12:07:45 saa Exp $
+ * $Id: Etalon.java,v 1.6 2005/09/30 12:56:21 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.io.SignatureMismatchException;
  * <li> EventAnchorer anc - Идентификаторов для привязки к схеме, может быть null
  * </ol>
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/30 12:56:21 $
  * @module
  */
 public class Etalon implements DataStreamable {
@@ -35,6 +35,8 @@ public class Etalon implements DataStreamable {
 	private ModelTraceManager mtm; // not null
 	private EventAnchorer anc; // maybe null, maybe not
 
+	private static final long SIGNATURE = 6685629050929163900L;
+
 	public Etalon(ModelTraceManager mtm, double minTraceLevel, EventAnchorer anc) {
 		this.mtm = mtm;
 		this.minTraceLevel = minTraceLevel;
@@ -43,6 +45,9 @@ public class Etalon implements DataStreamable {
 
 	protected Etalon(DataInputStream dis)
 	throws IOException, SignatureMismatchException {
+		if (dis.readLong() != SIGNATURE) {
+			throw new SignatureMismatchException();
+		}
 		this.minTraceLevel = dis.readDouble();
 		this.mtm = (ModelTraceManager) ModelTraceManager.getReader().readFromDIS(dis);
 		if (dis.readBoolean()) {
@@ -73,6 +78,7 @@ public class Etalon implements DataStreamable {
 		return this.anc;
 	}
 	public void writeToDOS(DataOutputStream dos) throws IOException {
+		dos.writeLong(SIGNATURE);
 		dos.writeDouble(this.minTraceLevel);
 		this.mtm.writeToDOS(dos);
 		dos.writeBoolean(this.anc != null);

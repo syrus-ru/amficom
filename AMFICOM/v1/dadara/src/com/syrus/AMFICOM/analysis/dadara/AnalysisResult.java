@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResult.java,v 1.3 2005/09/01 12:07:45 saa Exp $
+ * $Id: AnalysisResult.java,v 1.4 2005/09/30 12:56:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.io.SignatureMismatchException;
  * поля результатов сравнения модифицируемы и изначально null.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/30 12:56:22 $
  * @module dadara
  */
 public class AnalysisResult implements DataStreamable {
@@ -48,6 +48,8 @@ public class AnalysisResult implements DataStreamable {
 
 	// результаты сравнения (все поля могут быть null)
 	private EventAnchorer anchorer = null;
+
+	private static final long SIGNATURE = 7990616050929170500L;
 
 	public AnalysisResult(int dataLength, int traceLength,
 			ModelTraceAndEventsImpl mtae) {
@@ -78,6 +80,7 @@ public class AnalysisResult implements DataStreamable {
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
+		dos.writeLong(SIGNATURE);
 		dos.writeInt(dataLength);
 		dos.writeInt(traceLength);
 		mtae.writeToDOS(dos);
@@ -89,6 +92,9 @@ public class AnalysisResult implements DataStreamable {
 
 	protected void readFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException {
+		if (dis.readLong() != SIGNATURE) {
+			throw new SignatureMismatchException();
+		}
 		dataLength = dis.readInt();
 		traceLength = dis.readInt();
 		mtae = (ModelTraceAndEventsImpl)

@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.20 2005/09/01 12:07:45 saa Exp $
+ * $Id: Thresh.java,v 1.21 2005/09/30 12:56:22 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,15 @@ import com.syrus.io.SignatureMismatchException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/30 12:56:22 $
  * @module
  */
 
 // пол€ измен€ютс€ также через JNI-методы ModelFunction
 public abstract class Thresh
-implements Cloneable
-{
+implements Cloneable {
+	private static final long SIGNATURE_ARRAY = 7871746050929165800L;
+
 	protected static final boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false };
 	protected static final boolean[] IS_KEY_HARD = new boolean[] { false, true, false, true };
 	protected static final int[] CONJ_KEY = new int[] { 2, 3, 0, 1 }; // upper <-> lower - парный key дл€ данного
@@ -65,7 +66,7 @@ implements Cloneable
 		return super.clone();
 	}
 
-	public static Thresh readFromDIS(DataInputStream dis)
+	private static Thresh readFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException
 	{
 		Thresh ret = null;
@@ -94,7 +95,7 @@ implements Cloneable
 	protected abstract void writeSpecificToDOS(DataOutputStream dos)
 	throws IOException;
 
-	public void writeToDOS(DataOutputStream dos)
+	private void writeToDOS(DataOutputStream dos)
 	throws IOException
 	{
 		if (this instanceof ThreshDX)
@@ -113,6 +114,9 @@ implements Cloneable
 	public static Thresh[] readArrayFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException
 	{
+		if (dis.readLong() != SIGNATURE_ARRAY) {
+			throw new SignatureMismatchException();
+		}
 		int len = dis.readInt();
 		Thresh[] ret = new Thresh[len];
 		for (int i = 0; i < len; i++)
@@ -122,6 +126,7 @@ implements Cloneable
 	public static void writeArrayToDOS(Thresh[] th, DataOutputStream dos)
 	throws IOException
 	{
+		dos.writeLong(SIGNATURE_ARRAY);
 		dos.writeInt(th.length);
 		for (int i = 0; i < th.length; i++)
 		{

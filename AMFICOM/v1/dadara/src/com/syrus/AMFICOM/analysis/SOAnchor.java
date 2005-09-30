@@ -1,5 +1,5 @@
 /*-
- * $Id: SOAnchor.java,v 1.6 2005/09/01 12:07:45 saa Exp $
+ * $Id: SOAnchor.java,v 1.7 2005/09/30 12:56:21 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.syrus.AMFICOM.analysis.dadara.DataStreamable;
 import com.syrus.io.SignatureMismatchException;
 
 /**
@@ -22,39 +21,33 @@ import com.syrus.io.SignatureMismatchException;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.6 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 12:56:21 $
  * @module
  */
-public class SOAnchor implements DataStreamable {
-	private static DataStreamable.Reader reader = null;
+public class SOAnchor {
 	private static final long voidCode = 0x7FFF000000000000L; // FIXME: 'untied' value for SOAnchor
 	public static final SOAnchor VOID_ANCHOR = new SOAnchor(voidCode);
+	private static final byte SIGNATURE_BYTE_0 = 0; // format version number
 
 	private long value;
 
 	public SOAnchor(long value) {
 		this.value = value;
 	}
-	public SOAnchor(DataInputStream dis) throws IOException {
-		this(dis.readLong());
+	public static SOAnchor createFromDIS(DataInputStream dis)
+	throws IOException, SignatureMismatchException {
+		if (dis.readByte() != SIGNATURE_BYTE_0) {
+			throw new SignatureMismatchException();
+		}
+		return new SOAnchor(dis.readLong());
 	}
 
 	public long getValue() {
 		return this.value;
 	}
 	public void writeToDOS(DataOutputStream dos) throws IOException {
+		dos.writeByte(SIGNATURE_BYTE_0);
 		dos.writeLong(this.value);
-	}
-	public static DataStreamable.Reader getDSReader () {
-		if (reader == null) {
-			reader = new DataStreamable.Reader() {
-				public DataStreamable readFromDIS(DataInputStream dis)
-				throws IOException, SignatureMismatchException {
-					return new SOAnchor(dis);
-				}
-			};
-		}
-		return reader;
 	}
 	@Override
 	public String toString() {

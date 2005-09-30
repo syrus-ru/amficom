@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.17 2005/09/01 12:07:45 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.18 2005/09/30 12:56:21 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.io.SignatureMismatchException;
  * Если нужно изменить сразу несколько аргументов - используйте методы
  * {@link #getStorageClone()} и {@link #setAllFrom(AnalysisParametersStorage)}
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/30 12:56:21 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -54,7 +54,8 @@ implements DataStreamable, Cloneable
 	}
 
 	public AnalysisParameters(DataInputStream dis)
-	throws IOException, InvalidAnalysisParametersException {
+	throws IOException, InvalidAnalysisParametersException,
+			SignatureMismatchException {
 		this.storage = new AnalysisParametersStorage(dis);
 		checkStorage(this.storage);
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.9 2005/07/22 06:39:51 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.10 2005/09/30 12:56:22 saa Exp $
  * 
  * Copyright c 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,17 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.io.SignatureMismatchException;
+
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/30 12:56:22 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
 extends SimpleReflectogramEventImpl
 implements ReliabilitySimpleReflectogramEvent {
+	private static final short SIGNATURE_SHORT_ARRAY = 10100;
 	// точность представления nSigma
 	protected static final double SIGMA_PREC = 0.1;
 	protected static final int NSIGMA_MAX = 100; // must be <= 127
@@ -59,6 +62,7 @@ implements ReliabilitySimpleReflectogramEvent {
 	public static void writeArrayToDOS(
 			ReliabilitySimpleReflectogramEventImpl[] se,
 			DataOutputStream dos) throws IOException {
+		dos.writeShort(SIGNATURE_SHORT_ARRAY);
 		dos.writeInt(se.length);
 		writeArrayBaseToDOS(se, dos);
 		for (int i = 0; i < se.length; i++) {
@@ -67,7 +71,10 @@ implements ReliabilitySimpleReflectogramEvent {
 	}
 
 	public static ReliabilitySimpleReflectogramEventImpl[]readArrayFromDIS(
-			DataInputStream dis) throws IOException {
+			DataInputStream dis) throws IOException, SignatureMismatchException {
+		if (dis.readShort() != SIGNATURE_SHORT_ARRAY) {
+			throw new SignatureMismatchException();
+		}
 		int len = dis.readInt();
 		ReliabilitySimpleReflectogramEventImpl[] se =
 			new ReliabilitySimpleReflectogramEventImpl[len];

@@ -1,5 +1,5 @@
 /*-
- * $Id: EventAnchorer.java,v 1.4 2005/09/01 12:07:45 saa Exp $
+ * $Id: EventAnchorer.java,v 1.5 2005/09/30 12:56:21 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.analysis.dadara.DataStreamable;
 import com.syrus.io.SignatureMismatchException;
 
 public class EventAnchorer implements DataStreamable {
+	private static final long SIGNATURE = 2567555050929170200L;
+
 	// DIS reader singleton object
 	private static DataStreamable.Reader dsReader = null;
 
@@ -38,6 +40,7 @@ public class EventAnchorer implements DataStreamable {
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
+		dos.writeLong(SIGNATURE);
 		dos.writeInt(anchorArray.length);
 		for (int i = 0; i < anchorArray.length; i++) {
 			anchorArray[i].writeToDOS(dos);
@@ -57,11 +60,14 @@ public class EventAnchorer implements DataStreamable {
 	}
 
 	protected EventAnchorer(DataInputStream dis)
-	throws IOException {
+	throws IOException, SignatureMismatchException {
+		if (dis.readLong() != SIGNATURE) {
+			throw new SignatureMismatchException();
+		}
 		int len = dis.readInt();
 		SOAnchor[] anchors = new SOAnchor[len];
 		for (int i = 0; i < anchors.length; i++) {
-			anchors[i] = new SOAnchor(dis);
+			anchors[i] = SOAnchor.createFromDIS(dis);
 		}
 	}
 }
