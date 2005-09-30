@@ -1,7 +1,6 @@
 
 package com.syrus.AMFICOM.client.UI;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -9,13 +8,10 @@ import java.util.Vector;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/30 07:49:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 07:50:01 $
  * @author $Author: bob $
  * @module commonclient
  */
