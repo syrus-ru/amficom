@@ -1,5 +1,5 @@
 /*-
- * $Id: ColorChooserComboBox.java,v 1.6 2005/09/22 10:54:17 bob Exp $
+ * $Id: ColorChooserComboBox.java,v 1.7 2005/09/30 09:11:44 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/09/22 10:54:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 09:11:44 $
  * @module commonclient
  */
 
@@ -41,7 +42,7 @@ public class ColorChooserComboBox extends AComboBox {
 	
 	public ColorChooserComboBox() {
 		this(DEFAULT_COLOR_SET);
-		setFontSize(SMALL_FONT);
+		this.setFont(UIManager.getFont("ComboBox.font"));
 	}
 	
 	public ColorChooserComboBox(Color[] colors) {
