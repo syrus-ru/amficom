@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.17 2005/09/21 16:22:26 bob Exp $
+ * $Id: AbstractApplication.java,v 1.18 2005/09/30 09:12:18 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/21 16:22:26 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/30 09:12:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -336,9 +336,6 @@ public abstract class AbstractApplication {
 		defaults.put("Table.gridColor", Color.BLACK);
 		defaults.put("Viewport.background", Color.WHITE);
 
-		// Font font = new Font("Dialog", Font.PLAIN, 10);
-
-		
 		{
 			Font font = defaults.getFont("TextField.font");
 			font = new Font(font.getFamily(), font.getStyle(), 12);
@@ -350,9 +347,9 @@ public abstract class AbstractApplication {
 //			Font font = UIManager.getFont("Table.font");
 //			font = new Font(font.getName(), Font.BOLD, font.getSize());
 //			defaults.put("Table.selectedFont", font);
-//		}
-
-		// defaults.put("ComboBox.font", font);
+//		}		
+		
+		defaults.put("ComboBox.font", new Font("Dialog", Font.PLAIN, 10));		
 		defaults.put("ComboBox.background", defaults.get("window"));
 		defaults.put("ComboBox.disabledBackground", defaults.get("window"));
 
