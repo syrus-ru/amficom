@@ -17,10 +17,9 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
- * Abstract class for JLabel and simple Component (witch extends JLabel)
- * rendering at JTable
+ * Abstract implementation for TableCellRenderer 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/09/18 13:16:03 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/30 07:32:29 $
  * @author $Author: bob $
  * @module commonclient
  */

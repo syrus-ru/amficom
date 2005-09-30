@@ -1,5 +1,5 @@
 /*-
-* $Id: LabelCheckBoxRenderer.java,v 1.6 2005/09/18 14:53:26 bob Exp $
+* $Id: LabelCheckBoxRenderer.java,v 1.7 2005/09/30 07:32:15 bob Exp $
 *
 * Copyright © 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import javax.swing.border.EmptyBorder;
 import com.syrus.util.Wrapper;
 
 /**
- * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.6 $, $Date: 2005/09/18 14:53:26 $
+ * Renderer for JCheckBox items 
+ * @version $Revision: 1.7 $, $Date: 2005/09/30 07:32:15 $
  * @author $Author: bob $
  * @module commonclient
  */
