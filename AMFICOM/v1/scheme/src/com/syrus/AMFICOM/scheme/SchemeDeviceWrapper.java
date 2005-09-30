@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceWrapper.java,v 1.9 2005/09/26 16:40:48 bass Exp $
+ * $Id: SchemeDeviceWrapper.java,v 1.10 2005/09/30 11:56:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/26 16:40:48 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/30 11:56:26 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -115,7 +115,7 @@ public final class SchemeDeviceWrapper extends StorableObjectWrapper<SchemeDevic
 				} else if (key.equals(COLUMN_DESCRIPTION)) {
 					schemeDevice.setDescription((String) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
-					schemeDevice.setParentSchemeProtoElementId((Identifier) value);
+					schemeDevice.setParentSchemeProtoElementId((Identifier) value, usePool);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
 					schemeDevice.setParentSchemeElementId((Identifier) value, usePool);
 				}

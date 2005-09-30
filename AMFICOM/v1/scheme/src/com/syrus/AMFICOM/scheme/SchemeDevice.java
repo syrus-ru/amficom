@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.93 2005/09/29 14:07:58 bass Exp $
+ * $Id: SchemeDevice.java,v 1.94 2005/09/30 11:56:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/09/29 14:07:58 $
+ * @version $Revision: 1.94 $, $Date: 2005/09/30 11:56:26 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -758,36 +758,78 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
-	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
+	/**
+	 * A wrapper around {@link #setParentSchemeProtoElement(SchemeProtoElement, boolean)}.
+	 *
+	 * @param parentSchemeProtoElementId
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	void setParentSchemeProtoElementId(final Identifier parentSchemeProtoElementId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
+
+		if (this.parentSchemeProtoElementId.equals(parentSchemeProtoElementId)) {
+			return;
+		}
+
+		this.setParentSchemeProtoElement(
+				StorableObjectPool.<SchemeProtoElement>getStorableObject(parentSchemeProtoElementId, true),
+				usePool);
+	}
+
+	/**
+	 * @param parentSchemeProtoElement
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement,
+			final boolean usePool)
+	throws ApplicationException {
 		assert this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
 				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid()): OBJECT_BADLY_INITIALIZED;
 
-		Identifier newParentSchemeProtoElementId;
+		final boolean parentSchemeProtoElementNull = (parentSchemeProtoElement == null);
+
+		final Identifier newParentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
+		if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			return;
+		}
+
 		if (this.parentSchemeElementId.isVoid()) {
 			/*
 			 * Moving from a protoelement to another protoelement.
+			 * At this point, newParentSchemeProtoElementId may be
+			 * void.
 			 */
-			if (parentSchemeProtoElement == null) {
+			final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
+			assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
+			oldParentSchemeProtoElement.getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+
+			if (parentSchemeProtoElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(super.id);
-				return;
-			}
-			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
-			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
-				return;
 			}
 		} else {
 			/*
-			 * Moving from an element to a protoelement.
+			 * Moving from an element to a protoelement. At this
+			 * point, newParentSchemeProtoElementId is non-void.
 			 */
-			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-				return;
-			}
-			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
+			final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
+			assert oldParentSchemeElement != null : NON_NULL_EXPECTED;
+			oldParentSchemeElement.getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+
 			this.parentSchemeElementId = VOID_IDENTIFIER;
 		}
+
+		if (!parentSchemeProtoElementNull) {
+			parentSchemeProtoElement.getSchemeDeviceContainerWrappee().addToCache(this, usePool);
+		}
+
 		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
 		super.markAsChanged();
 	}
@@ -988,17 +1030,5 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
 		}
-	}
-
-	/*-********************************************************************
-	 * Non-model members.                                                 *
-	 **********************************************************************/
-
-	void setParentSchemeProtoElementId(Identifier parentSchemeProtoElementId) {
-		//TODO: inroduce additional sanity checks
-		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
-		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
-		super.markAsChanged();
 	}
 }

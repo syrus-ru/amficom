@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.126 2005/09/30 10:51:41 bass Exp $
+ * $Id: SchemeElement.java,v 1.127 2005/09/30 11:56:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.126 $, $Date: 2005/09/30 10:51:41 $
+ * @version $Revision: 1.127 $, $Date: 2005/09/30 11:56:26 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -2017,7 +2017,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				super.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				this.addCharacteristic(characteristicClone, usePool);
 			}
-			for (final SchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices0()) {
+			for (final SchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices0(usePool)) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
 				super.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
 				this.addSchemeDevice(schemeDeviceClone, usePool);
