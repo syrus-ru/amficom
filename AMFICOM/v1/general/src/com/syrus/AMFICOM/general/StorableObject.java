@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.109 2005/10/01 09:27:27 bass Exp $
+ * $Id: StorableObject.java,v 1.110 2005/10/01 09:31:26 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/10/01 09:27:27 $
+ * @version $Revision: 1.110 $, $Date: 2005/10/01 09:31:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -546,7 +546,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	
 	@Override
 	public final String toString() {
-		return '{' + this.id.toString() + '}';
+		return '{' + this.id.toString()
+				+ "; changed: " + this.isChanged()
+				+ "; persistent: " + this.isPersistent() + '}';
 	}
 
 	/**
@@ -630,7 +632,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.109 $, $Date: 2005/10/01 09:27:27 $
+	 * @version $Revision: 1.110 $, $Date: 2005/10/01 09:31:26 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
