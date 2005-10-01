@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.110 2005/10/01 09:31:26 bass Exp $
+ * $Id: StorableObject.java,v 1.111 2005/10/01 10:14:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/10/01 09:31:26 $
+ * @version $Revision: 1.111 $, $Date: 2005/10/01 10:14:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -231,7 +231,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * Is invoked solely by caching facilities.
 	 */
-	final void markAsPersistent() {
+	@Crutch134(notes = "Narrow visivility from public to default")
+	public final void markAsPersistent() {
 		if (!this.isPersistent()) {
 			try {
 				StorableObjectPool.putStorableObject(this);
@@ -245,7 +246,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * Is invoked solely by caching facilities.
 	 */
-	final void cleanupPersistence() {
+	@Crutch134(notes = "Narrow visivility from public to default")
+	public final void cleanupPersistence() {
 		assert this.isPersistent() : PERSISTENCE_COUNTER_NEGATIVE + this
 				+ "; cached " + (this.cachedTimes - 1) + " time(s)";
 		this.cachedTimes--;
@@ -632,7 +634,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.110 $, $Date: 2005/10/01 09:31:26 $
+	 * @version $Revision: 1.111 $, $Date: 2005/10/01 10:14:02 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -721,14 +723,22 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		@Crutch134(notes = "Narrow visibility from protected to private.")
 		protected void ensureCacheBuilt(final boolean usePool)
 		throws ApplicationException {
-			if (!this.cacheBuilt || usePool) {
-				if (this.containees == null) {
-					this.containees = new HashSet<T>();
-				} else {
-					this.containees.clear();
+			synchronized (this) {
+				if (!this.cacheBuilt || usePool) {
+					if (this.containees == null) {
+						this.containees = new HashSet<T>();
+					} else {
+						for (final T containee : this.containees) {
+							containee.cleanupPersistence();
+						}
+						this.containees.clear();
+					}
+					for (final T containee : StorableObjectPool.<T>getStorableObjectsByCondition(this.condition, true)) {
+						containee.markAsPersistent();
+						this.containees.add(containee);
+					}
+					this.cacheBuilt = true;
 				}
-				this.containees.addAll(StorableObjectPool.<T>getStorableObjectsByCondition(this.condition, true));
-				this.cacheBuilt = true;
 			}
 		}
 

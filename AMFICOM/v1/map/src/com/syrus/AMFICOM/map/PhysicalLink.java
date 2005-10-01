@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.125 2005/09/30 08:16:49 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.126 2005/10/01 10:14:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.125 $, $Date: 2005/09/30 08:16:49 $
+ * @author $Author: bass $
+ * @version $Revision: 1.126 $, $Date: 2005/10/01 10:14:02 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1088,14 +1088,22 @@ public class PhysicalLink extends StorableObject
 				@Override
 				protected void ensureCacheBuilt(final boolean usePool)
 				throws ApplicationException {
-					if (!this.cacheBuilt || usePool) {
-						if (this.containees == null) {
-							this.containees = new HashSet<Characteristic>();
-						} else {
-							this.containees.clear();
+					synchronized (this) {
+						if (!this.cacheBuilt || usePool) {
+							if (this.containees == null) {
+								this.containees = new HashSet<Characteristic>();
+							} else {
+								for (final Characteristic containee : this.containees) {
+									containee.cleanupPersistence();
+								}
+								this.containees.clear();
+							}
+							for (final Characteristic containee : StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, true)) {
+								containee.markAsPersistent();
+								this.containees.add(containee);
+							}
+							this.cacheBuilt = true;
 						}
-						this.containees.addAll(StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false));
-						this.cacheBuilt = true;
 					}
 				}
 			};
