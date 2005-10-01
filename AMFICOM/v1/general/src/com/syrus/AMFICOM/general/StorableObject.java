@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.108 2005/09/30 11:45:13 bass Exp $
+ * $Id: StorableObject.java,v 1.109 2005/10/01 09:27:27 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.PERSISTENCE_COUNTER_NEGATIVE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static java.util.logging.Level.INFO;
 
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/09/30 11:45:13 $
+ * @version $Revision: 1.109 $, $Date: 2005/10/01 09:27:27 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -245,7 +246,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * Is invoked solely by caching facilities.
 	 */
 	final void cleanupPersistence() {
-		assert this.isPersistent();
+		assert this.isPersistent() : PERSISTENCE_COUNTER_NEGATIVE + this
+				+ "; cached " + (this.cachedTimes - 1) + " time(s)";
 		this.cachedTimes--;
 	}
 
@@ -628,7 +630,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.108 $, $Date: 2005/09/30 11:45:13 $
+	 * @version $Revision: 1.109 $, $Date: 2005/10/01 09:27:27 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
