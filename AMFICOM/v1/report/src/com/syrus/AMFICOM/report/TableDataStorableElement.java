@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.5 2005/09/30 12:34:07 max Exp $
+ * $Id: TableDataStorableElement.java,v 1.6 2005/10/01 10:08:35 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.report;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/09/30 12:34:07 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/01 10:08:35 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
@@ -36,7 +37,7 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 	 */
 	private int verticalDivisionsCount;
 	
-	private TableDataStorableElement (final Identifier id,
+	TableDataStorableElement (final Identifier id,
 			final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -44,10 +45,11 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 			final StorableObjectVersion version,
 			final IntPoint location,
 			final IntDimension size,
+			final Identifier reportTemplateId,
 			final String reportName,
 			final String modelClassName,
 			final int verticalDivisionsCount) {
-		super(id, created, modified, creatorId, modifierId, version, location, size, reportName, modelClassName);
+		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId, reportName, modelClassName);
 		this.verticalDivisionsCount = verticalDivisionsCount;
 	}
 	
@@ -66,6 +68,7 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 					StorableObjectVersion.createInitial(),
 					new IntPoint(),
 					new IntDimension(),
+					VOID_IDENTIFIER,
 					reportName,
 					modelClassName,
 					verticalDivisionsCount);
@@ -78,6 +81,24 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 	public TableDataStorableElement(IdlTableData transferable) {
 		super(transferable);
 		this.verticalDivisionsCount = transferable.verticalDivisionCount;
+	}
+	
+	synchronized void setAttributes(Date created, 
+			Date modified, 
+			Identifier creatorId, 
+			Identifier modifierId, 
+			StorableObjectVersion version,
+			final int locationX, 
+			final int locationY, 
+			final int width, 
+			final int height,
+			final Identifier reportTemplateId,
+			final String reportName,
+			final String moduleClassName,
+			final int verticalDivisionCount) {
+		super.setAttributes(created, modified, creatorId, modifierId, version,
+				locationX, locationY, width, height, reportTemplateId, reportName, moduleClassName);
+		this.verticalDivisionsCount = verticalDivisionCount;
 	}
 	
 	public int getVerticalDivisionsCount() {
