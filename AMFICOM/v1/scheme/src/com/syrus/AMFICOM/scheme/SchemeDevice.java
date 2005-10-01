@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.95 2005/09/30 16:19:23 bass Exp $
+ * $Id: SchemeDevice.java,v 1.96 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/09/30 16:19:23 $
+ * @version $Revision: 1.96 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -531,16 +531,15 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/**
 	 * @param schemeDevice
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public void getXmlTransferable(
 			final XmlSchemeDevice schemeDevice,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		final boolean usePool = false;
-
 		super.id.getXmlTransferable(schemeDevice.addNewId(), importType);
 		schemeDevice.setName(this.name);
 		if (schemeDevice.isSetDescription()) {
@@ -568,7 +567,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = schemeDevice.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
 			}
 		}
 		if (schemeDevice.isSetSchemePorts()) {
@@ -578,7 +577,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (!schemePorts.isEmpty()) {
 			final XmlSchemePortSeq schemePortSeq = schemeDevice.addNewSchemePorts();
 			for (final SchemePort schemePort : schemePorts) {
-				schemePort.getXmlTransferable(schemePortSeq.addNewSchemePort(), importType);
+				schemePort.getXmlTransferable(schemePortSeq.addNewSchemePort(), importType, usePool);
 			}
 		}
 		if (schemeDevice.isSetSchemeCablePorts()) {
@@ -588,7 +587,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (!schemeCablePorts.isEmpty()) {
 			final XmlSchemeCablePortSeq schemeCablePortSeq = schemeDevice.addNewSchemeCablePorts();
 			for (final SchemeCablePort schemeCablePort : schemeCablePorts) {
-				schemeCablePort.getXmlTransferable(schemeCablePortSeq.addNewSchemeCablePort(), importType);
+				schemeCablePort.getXmlTransferable(schemeCablePortSeq.addNewSchemeCablePort(), importType, usePool);
 			}
 		}
 		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, EXPORT);

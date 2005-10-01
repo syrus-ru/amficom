@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.91 2005/09/29 10:05:27 krupenn Exp $
+ * $Id: Collector.java,v 1.92 2005/10/01 15:13:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.91 $, $Date: 2005/09/29 10:05:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2005/10/01 15:13:18 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -352,11 +352,13 @@ public final class Collector extends StorableObject
 	/**
 	 * @param collector
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlCollector collector,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		this.id.getXmlTransferable(collector.addNewId(), importType);
 		collector.setName(this.name);

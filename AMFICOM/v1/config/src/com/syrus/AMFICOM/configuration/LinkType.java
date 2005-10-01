@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.85 2005/09/29 10:53:11 bass Exp $
+ * $Id: LinkType.java,v 1.86 2005/10/01 15:13:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/09/29 10:53:11 $
+ * @version $Revision: 1.86 $, $Date: 2005/10/01 15:13:17 $
  * @author $Author: bass $
  * @module config
  */
@@ -320,12 +320,14 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	/**
 	 * @param linkType
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	@Shitlet
 	public void getXmlTransferable(final XmlLinkType linkType,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		this.id.getXmlTransferable(linkType.addNewId(), importType);
 		linkType.setName(this.name);

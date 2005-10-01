@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.33 2005/09/29 10:53:11 bass Exp $
+ * $Id: MapLibrary.java,v 1.34 2005/10/01 15:13:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/09/29 10:53:11 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/01 15:13:18 $
  * @author $Author: bass $
  * @module map
  */
@@ -307,11 +307,13 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 	/**
 	 * @param mapLibrary
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlMapLibrary mapLibrary,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		mapLibrary.setName(this.name);
 		mapLibrary.setCodename(this.codename);
@@ -326,7 +328,7 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 		if (!physicalLinkTypes.isEmpty()) {
 			final XmlPhysicalLinkTypeSeq physicalLinkTypeSeq = mapLibrary.addNewPhysicalLinkTypes();
 			for (final PhysicalLinkType physicalLinkType : physicalLinkTypes) {
-				physicalLinkType.getXmlTransferable(physicalLinkTypeSeq.addNewPhysicalLinkType(), importType);
+				physicalLinkType.getXmlTransferable(physicalLinkTypeSeq.addNewPhysicalLinkType(), importType, usePool);
 			}
 		}
 		if (mapLibrary.isSetSiteNodeTypes()) {
@@ -336,7 +338,7 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 		if (!siteNodeTypes.isEmpty()) {
 			final XmlSiteNodeTypeSeq siteNodeTypeSeq = mapLibrary.addNewSiteNodeTypes();
 			for (final SiteNodeType siteNodeType : siteNodeTypes) {
-				siteNodeType.getXmlTransferable(siteNodeTypeSeq.addNewSiteNodeType(), importType);
+				siteNodeType.getXmlTransferable(siteNodeTypeSeq.addNewSiteNodeType(), importType, usePool);
 			}
 		}
 		mapLibrary.setImportType(importType);

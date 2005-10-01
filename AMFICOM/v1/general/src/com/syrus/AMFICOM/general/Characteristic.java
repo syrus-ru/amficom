@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.69 2005/09/30 16:19:23 bass Exp $
+ * $Id: Characteristic.java,v 1.70 2005/10/01 15:13:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/09/30 16:19:23 $
+ * @version $Revision: 1.70 $, $Date: 2005/10/01 15:13:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -269,12 +269,14 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	/**
 	 * @param characteristic
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlCharacteristic characteristic,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}

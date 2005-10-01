@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlBeansTransferable.java,v 1.6 2005/09/20 10:42:00 bass Exp $
+ * $Id: XmlBeansTransferable.java,v 1.7 2005/10/01 15:13:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,15 @@ package com.syrus.AMFICOM.general;
 import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/01 15:13:21 $
  * @author $Author: bass $
  * @module general
  */
 public interface XmlBeansTransferable<T extends XmlStorableObject> {
-	void fromXmlTransferable(final T storableObject, final String importType) throws ApplicationException;
+	void fromXmlTransferable(final T storableObject, final String importType)
+	throws ApplicationException;
 
-	void getXmlTransferable(final T storableObject, final String importType) throws ApplicationException;
+	void getXmlTransferable(final T storableObject, final String importType,
+			final boolean usePool)
+	throws ApplicationException;
 }

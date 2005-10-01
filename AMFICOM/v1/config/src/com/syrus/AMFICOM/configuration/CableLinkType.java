@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.79 2005/09/29 10:53:11 bass Exp $
+ * $Id: CableLinkType.java,v 1.80 2005/10/01 15:13:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/09/29 10:53:11 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/01 15:13:17 $
  * @author $Author: bass $
  * @module config
  */
@@ -325,13 +325,15 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	/**
 	 * @param cableLinkType
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	@Shitlet
 	public void getXmlTransferable(
 			final XmlCableLinkType cableLinkType,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		super.id.getXmlTransferable(cableLinkType.addNewId(), importType);
 		cableLinkType.setName(this.name);
@@ -364,7 +366,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 		if (!cableThreadTypes.isEmpty()) {
 			final XmlCableThreadTypeSeq cableThreadTypeSeq = cableLinkType.addNewCableThreadTypes();
 			for (final CableThreadType cableThreadType : cableThreadTypes) {
-				cableThreadType.getXmlTransferable(cableThreadTypeSeq.addNewCableThreadType(), importType);
+				cableThreadType.getXmlTransferable(cableThreadTypeSeq.addNewCableThreadType(), importType, usePool);
 			}
 		}
 	}

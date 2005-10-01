@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.99 2005/09/29 14:47:31 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.100 2005/10/01 15:13:18 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: krupenn $
- * @version $Revision: 1.99 $, $Date: 2005/09/29 14:47:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.100 $, $Date: 2005/10/01 15:13:18 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -293,12 +293,14 @@ public final class SiteNodeType extends StorableObjectType
 	/**
 	 * @param siteNodeType
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSiteNodeType siteNodeType,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		try {
 			this.id.getXmlTransferable(siteNodeType.addNewId(), importType);

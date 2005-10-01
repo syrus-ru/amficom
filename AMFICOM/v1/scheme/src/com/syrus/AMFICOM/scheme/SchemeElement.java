@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.130 2005/10/01 09:22:03 bass Exp $
+ * $Id: SchemeElement.java,v 1.131 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.130 $, $Date: 2005/10/01 09:22:03 $
+ * @version $Revision: 1.131 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -341,10 +341,13 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeElement createInstance(final Identifier creatorId,
 			final SchemeProtoElement schemeProtoElement,
 			final Scheme parentScheme)
 	throws CreateObjectException {
+		final boolean usePool = false;
+
 		try {
 			final SchemeElement schemeElement = createInstance(creatorId,
 					schemeProtoElement.getName(),
@@ -359,7 +362,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentScheme);
 
-			schemeElement.fillProperties(schemeProtoElement);
+			schemeElement.fillProperties(schemeProtoElement, usePool);
 			return schemeElement;
 		} catch (final CreateObjectException coe) {
 			throw coe;
@@ -377,10 +380,13 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param parentSchemeElement
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeElement createInstance(final Identifier creatorId,
 			final SchemeProtoElement schemeProtoElement,
 			final SchemeElement parentSchemeElement)
 	throws CreateObjectException {
+		final boolean usePool = false;
+
 		try {
 			final SchemeElement schemeElement = createInstance(creatorId,
 					schemeProtoElement.getName(),
@@ -395,7 +401,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentSchemeElement);
 
-			schemeElement.fillProperties(schemeProtoElement);
+			schemeElement.fillProperties(schemeProtoElement, usePool);
 			return schemeElement;
 		} catch (final CreateObjectException coe) {
 			throw coe;
@@ -947,17 +953,16 @@ public final class SchemeElement extends AbstractSchemeElement
 	/**
 	 * @param schemeElement
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public void getXmlTransferable(
 			final XmlSchemeElement schemeElement,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		final boolean usePool = false;
-
-		super.getXmlTransferable(schemeElement, importType);
+		super.getXmlTransferable(schemeElement, importType, usePool);
 		if (schemeElement.isSetLabel()) {
 			schemeElement.unsetLabel();
 		}
@@ -1026,7 +1031,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		if (!schemeDevices.isEmpty()) {
 			final XmlSchemeDeviceSeq schemeDeviceSeq = schemeElement.addNewSchemeDevices();
 			for (final SchemeDevice schemeDevice : schemeDevices) {
-				schemeDevice.getXmlTransferable(schemeDeviceSeq.addNewSchemeDevice(), importType);
+				schemeDevice.getXmlTransferable(schemeDeviceSeq.addNewSchemeDevice(), importType, usePool);
 			}
 		}
 		if (schemeElement.isSetSchemes()) {
@@ -1036,7 +1041,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		if (!schemes.isEmpty()) {
 			final XmlSchemeSeq schemeSeq = schemeElement.addNewSchemes();
 			for (final Scheme scheme : schemes) {
-				scheme.getXmlTransferable(schemeSeq.addNewScheme(), importType);
+				scheme.getXmlTransferable(schemeSeq.addNewScheme(), importType, usePool);
 			}
 		}
 		if (schemeElement.isSetSchemeElements()) {
@@ -1046,7 +1051,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		if (!schemeElements.isEmpty()) {
 			final XmlSchemeElementSeq schemeElementSeq = schemeElement.addNewSchemeElements();
 			for (final SchemeElement schemeElement2 : schemeElements) {
-				schemeElement2.getXmlTransferable(schemeElementSeq.addNewSchemeElement(), importType);
+				schemeElement2.getXmlTransferable(schemeElementSeq.addNewSchemeElement(), importType, usePool);
 			}
 		}
 		if (schemeElement.isSetSchemeLinks()) {
@@ -1056,7 +1061,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		if (!schemeLinks.isEmpty()) {
 			final XmlSchemeLinkSeq schemeLinkSeq = schemeElement.addNewSchemeLinks();
 			for (final SchemeLink schemeLink : schemeLinks) {
-				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType);
+				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType, usePool);
 			}
 		}
 		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType, EXPORT);
@@ -1975,14 +1980,12 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Actions taken are similar to those in {@link SchemeProtoElement#clone()}.
 	 *
 	 * @param schemeProtoElement
+	 * @param usePool
 	 * @throws ApplicationException
 	 * @see SchemeProtoElement#clone()
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
-	private void fillProperties(final SchemeProtoElement schemeProtoElement)
+	private void fillProperties(final SchemeProtoElement schemeProtoElement, final boolean usePool)
 	throws ApplicationException {
-		final boolean usePool = true;
-
 		try {
 			if (super.clonedIdMap == null) {
 				super.clonedIdMap = new HashMap<Identifier, Identifier>();

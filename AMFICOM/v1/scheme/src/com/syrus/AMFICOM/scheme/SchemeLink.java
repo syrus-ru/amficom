@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.89 2005/09/30 16:19:23 bass Exp $
+ * $Id: SchemeLink.java,v 1.90 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/30 16:19:23 $
+ * @version $Revision: 1.90 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -733,14 +733,16 @@ public final class SchemeLink extends AbstractSchemeLink
 	/**
 	 * @param schemeLink
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeLink schemeLink,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		super.getXmlTransferable(schemeLink, importType);
+		super.getXmlTransferable(schemeLink, importType, usePool);
 		if (schemeLink.isSetLinkTypeId()) {
 			schemeLink.unsetLinkTypeId();
 		}

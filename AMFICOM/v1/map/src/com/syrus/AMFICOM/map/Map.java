@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.109 2005/09/30 07:39:24 krupenn Exp $
+ * $Id: Map.java,v 1.110 2005/10/01 15:13:17 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.109 $, $Date: 2005/09/30 07:39:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.110 $, $Date: 2005/10/01 15:13:17 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1102,11 +1102,13 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	/**
 	 * @param map
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlMap map,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		this.id.getXmlTransferable(map.addNewId(), importType);
 		map.setName(this.name);
@@ -1121,7 +1123,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		if (!topologicalNodes2.isEmpty()) {
 			final XmlTopologicalNodeSeq topologicalNodeSeq = map.addNewTopologicalNodes();
 			for (final TopologicalNode topologicalNode : topologicalNodes2) {
-				topologicalNode.getXmlTransferable(topologicalNodeSeq.addNewTopologicalNode(), importType);
+				topologicalNode.getXmlTransferable(topologicalNodeSeq.addNewTopologicalNode(), importType, usePool);
 			}
 		}
 		if (map.isSetSiteNodes()) {
@@ -1141,14 +1143,14 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 					// check if attachmentSiteNode has already been written to xml
 					// as an attachment site node of some other site node
 					if(!addedSiteNodes.contains(attachmentSiteNode)) {
-						attachmentSiteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
+						attachmentSiteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType, usePool);
 						addedSiteNodes.add(attachmentSiteNode);
 					}
 				}
 				// check if siteNode has already been written to xml
 				// as an attachment site node of some other site node
 				if(!addedSiteNodes.contains(siteNode)) {
-					siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
+					siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType, usePool);
 					addedSiteNodes.add(siteNode);
 				}
 			}
@@ -1160,7 +1162,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		if (!physicalLinks2.isEmpty()) {
 			final XmlPhysicalLinkSeq physicalLinkSeq = map.addNewPhysicalLinks();
 			for (final PhysicalLink physicalLink : physicalLinks2) {
-				physicalLink.getXmlTransferable(physicalLinkSeq.addNewPhysicalLink(), importType);
+				physicalLink.getXmlTransferable(physicalLinkSeq.addNewPhysicalLink(), importType, usePool);
 			}
 		}
 		if (map.isSetNodeLinks()) {
@@ -1170,7 +1172,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		if (!nodeLinks2.isEmpty()) {
 			final XmlNodeLinkSeq nodeLinkSeq = map.addNewNodeLinks();
 			for (final NodeLink nodeLink : nodeLinks2) {
-				nodeLink.getXmlTransferable(nodeLinkSeq.addNewNodeLink(), importType);
+				nodeLink.getXmlTransferable(nodeLinkSeq.addNewNodeLink(), importType, usePool);
 			}
 		}
 		if (map.isSetCollectors()) {
@@ -1180,7 +1182,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		if (!collectors2.isEmpty()) {
 			final XmlCollectorSeq collectorSeq = map.addNewCollectors();
 			for (final Collector collector : collectors2) {
-				collector.getXmlTransferable(collectorSeq.addNewCollector(), importType);
+				collector.getXmlTransferable(collectorSeq.addNewCollector(), importType, usePool);
 			}
 		}
 		map.setImportType(importType);

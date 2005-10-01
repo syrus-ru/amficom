@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.98 2005/09/30 16:19:23 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.99 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/09/30 16:19:23 $
+ * @version $Revision: 1.99 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -502,14 +502,16 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	/**
 	 * @param schemeCableLink
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeCableLink schemeCableLink,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		super.getXmlTransferable(schemeCableLink, importType);
+		super.getXmlTransferable(schemeCableLink, importType, usePool);
 		if (schemeCableLink.isSetCableLinkTypeId()) {
 			schemeCableLink.unsetCableLinkTypeId();
 		}
@@ -542,7 +544,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		if (!schemeCableThreads.isEmpty()) {
 			final XmlSchemeCableThreadSeq schemeCableThreadSeq = schemeCableLink.addNewSchemeCableThreads();
 			for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
-				schemeCableThread.getXmlTransferable(schemeCableThreadSeq.addNewSchemeCableThread(), importType);
+				schemeCableThread.getXmlTransferable(schemeCableThreadSeq.addNewSchemeCableThread(), importType, usePool);
 			}
 		}
 		if (schemeCableLink.isSetCableChannelingItems()) {
@@ -552,7 +554,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		if (!cableChannelingItems.isEmpty()) {
 			final XmlCableChannelingItemSeq cableChannelingItemSeq = schemeCableLink.addNewCableChannelingItems();
 			for (final CableChannelingItem cableChannelingItem : cableChannelingItems) {
-				cableChannelingItem.getXmlTransferable(cableChannelingItemSeq.addNewCableChannelingItem(), importType);
+				cableChannelingItem.getXmlTransferable(cableChannelingItemSeq.addNewCableChannelingItem(), importType, usePool);
 			}
 		}
 		XmlComplementorRegistry.complementStorableObject(schemeCableLink, SCHEMECABLELINK_CODE, importType, EXPORT);

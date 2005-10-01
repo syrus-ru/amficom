@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.88 2005/09/30 16:19:23 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.89 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/30 16:19:23 $
+ * @version $Revision: 1.89 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -532,16 +532,15 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @param schemeCableThread
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public void getXmlTransferable(
 			final XmlSchemeCableThread schemeCableThread,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		final boolean usePool = false;
-
 		super.id.getXmlTransferable(schemeCableThread.addNewId(), importType);
 		schemeCableThread.setName(this.name);
 		if (schemeCableThread.isSetDescription()) {
@@ -581,7 +580,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = schemeCableThread.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
 			}
 		}
 		XmlComplementorRegistry.complementStorableObject(schemeCableThread, SCHEMECABLETHREAD_CODE, importType, EXPORT);

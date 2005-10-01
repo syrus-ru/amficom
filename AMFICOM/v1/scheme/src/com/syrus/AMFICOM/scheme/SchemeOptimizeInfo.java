@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.66 2005/09/30 16:19:22 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.67 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/30 16:19:22 $
+ * @version $Revision: 1.67 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -446,12 +446,14 @@ public final class SchemeOptimizeInfo extends StorableObject
 	/**
 	 * @param schemeOptimizeInfo
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfo schemeOptimizeInfo,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}

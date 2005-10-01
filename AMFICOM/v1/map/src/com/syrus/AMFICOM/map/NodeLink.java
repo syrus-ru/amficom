@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.105 2005/09/30 07:39:24 krupenn Exp $
+ * $Id: NodeLink.java,v 1.106 2005/10/01 15:13:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.105 $, $Date: 2005/09/30 07:39:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.106 $, $Date: 2005/10/01 15:13:18 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -437,11 +437,13 @@ public final class NodeLink extends StorableObject
 	/**
 	 * @param nodeLink
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlNodeLink nodeLink,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		this.id.getXmlTransferable(nodeLink.addNewId(), importType);
 		nodeLink.setLength(this.length);

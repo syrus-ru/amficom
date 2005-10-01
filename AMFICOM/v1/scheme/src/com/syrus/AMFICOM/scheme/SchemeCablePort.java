@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.70 2005/09/28 19:06:23 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.71 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/28 19:06:23 $
+ * @version $Revision: 1.71 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -306,14 +306,16 @@ public final class SchemeCablePort extends AbstractSchemePort
 	/**
 	 * @param schemeCablePort
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlSchemeCablePort schemeCablePort,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		super.getXmlTransferable(schemeCablePort, importType);
+		super.getXmlTransferable(schemeCablePort, importType, usePool);
 		if (schemeCablePort.isSetCablePortTypeId()) {
 			schemeCablePort.unsetCablePortTypeId();
 		}

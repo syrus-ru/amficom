@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.76 2005/09/30 16:19:23 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.77 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/09/30 16:19:23 $
+ * @version $Revision: 1.77 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -372,16 +372,15 @@ public final class SchemeProtoGroup extends StorableObject
 	/**
 	 * @param schemeProtoGroup
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	public void getXmlTransferable(
 			final XmlSchemeProtoGroup schemeProtoGroup,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		final boolean usePool = false;
-
 		super.id.getXmlTransferable(schemeProtoGroup.addNewId(), importType);
 		schemeProtoGroup.setName(this.name);
 		if (schemeProtoGroup.isSetDescription()) {
@@ -409,7 +408,7 @@ public final class SchemeProtoGroup extends StorableObject
 		if (!schemeProtoGroups.isEmpty()) {
 			final XmlSchemeProtoGroupSeq schemeProtoGroupSeq = schemeProtoGroup.addNewSchemeProtoGroups();
 			for (final SchemeProtoGroup schemeProtoGroup2 : schemeProtoGroups) {
-				schemeProtoGroup2.getXmlTransferable(schemeProtoGroupSeq.addNewSchemeProtoGroup(), importType);
+				schemeProtoGroup2.getXmlTransferable(schemeProtoGroupSeq.addNewSchemeProtoGroup(), importType, usePool);
 			}
 		}
 		if (schemeProtoGroup.isSetSchemeProtoElements()) {
@@ -419,7 +418,7 @@ public final class SchemeProtoGroup extends StorableObject
 		if (!schemeProtoElements.isEmpty()) {
 			final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoGroup.addNewSchemeProtoElements();
 			for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
-				schemeProtoElement.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType);
+				schemeProtoElement.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType, usePool);
 			}
 		}
 		schemeProtoGroup.setImportType(importType);

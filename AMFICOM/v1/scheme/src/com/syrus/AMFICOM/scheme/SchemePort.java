@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.71 2005/09/28 19:06:23 bass Exp $
+ * $Id: SchemePort.java,v 1.72 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/09/28 19:06:23 $
+ * @version $Revision: 1.72 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -320,13 +320,15 @@ public final class SchemePort extends AbstractSchemePort
 	/**
 	 * @param schemePort
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlSchemePort schemePort,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
-		super.getXmlTransferable(schemePort, importType);
+		super.getXmlTransferable(schemePort, importType, usePool);
 		if (schemePort.isSetPortTypeId()) {
 			schemePort.unsetPortTypeId();
 		}

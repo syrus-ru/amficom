@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.106 2005/09/30 16:19:22 bass Exp $
+ * $Id: Scheme.java,v 1.107 2005/10/01 15:13:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/09/30 16:19:22 $
+ * @version $Revision: 1.107 $, $Date: 2005/10/01 15:13:19 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -793,11 +793,13 @@ public final class Scheme extends AbstractCloneableDomainMember
 	/**
 	 * @param scheme
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(final XmlScheme scheme,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		super.id.getXmlTransferable(scheme.addNewId(), importType);
 		scheme.setName(this.name);
@@ -857,7 +859,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		if (!schemeElements.isEmpty()) {
 			final XmlSchemeElementSeq schemeElementSeq = scheme.addNewSchemeElements();
 			for (final SchemeElement schemeElement : schemeElements) {
-				schemeElement.getXmlTransferable(schemeElementSeq.addNewSchemeElement(), importType);
+				schemeElement.getXmlTransferable(schemeElementSeq.addNewSchemeElement(), importType, usePool);
 			}
 		}
 		if (scheme.isSetSchemeLinks()) {
@@ -867,7 +869,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		if (!schemeLinks.isEmpty()) {
 			final XmlSchemeLinkSeq schemeLinkSeq = scheme.addNewSchemeLinks(); 
 			for (final SchemeLink schemeLink : schemeLinks) {
-				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType);
+				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType, usePool);
 			}
 		}
 		if (scheme.isSetSchemeCableLinks()) {
@@ -877,7 +879,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		if (!schemeCableLinks.isEmpty()) {
 			final XmlSchemeCableLinkSeq schemeCableLinkSeq = scheme.addNewSchemeCableLinks();
 			for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
-				schemeCableLink.getXmlTransferable(schemeCableLinkSeq.addNewSchemeCableLink(), importType);
+				schemeCableLink.getXmlTransferable(schemeCableLinkSeq.addNewSchemeCableLink(), importType, usePool);
 			}
 		}
 		if (scheme.isSetSchemeOptimizeInfos()) {
@@ -887,7 +889,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		if (!schemeOptimizeInfos.isEmpty()) {
 			final XmlSchemeOptimizeInfoSeq schemeOptimizeInfoSeq = scheme.addNewSchemeOptimizeInfos();
 			for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
-				schemeOptimizeInfo.getXmlTransferable(schemeOptimizeInfoSeq.addNewSchemeOptimizeInfo(), importType);
+				schemeOptimizeInfo.getXmlTransferable(schemeOptimizeInfoSeq.addNewSchemeOptimizeInfo(), importType, usePool);
 			}
 		}
 		if (scheme.isSetSchemeMonitoringSolutions()) {
@@ -897,7 +899,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		if (!schemeMonitoringSolutions.isEmpty()) {
 			final XmlSchemeMonitoringSolutionSeq schemeMonitoringSolutionSeq = scheme.addNewSchemeMonitoringSolutions();
 			for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
-				schemeMonitoringSolution.getXmlTransferable(schemeMonitoringSolutionSeq.addNewSchemeMonitoringSolution(), importType);
+				schemeMonitoringSolution.getXmlTransferable(schemeMonitoringSolutionSeq.addNewSchemeMonitoringSolution(), importType, usePool);
 			}
 		}
 		scheme.setImportType(importType);

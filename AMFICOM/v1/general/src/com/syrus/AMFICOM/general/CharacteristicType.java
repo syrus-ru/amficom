@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.54 2005/09/29 10:53:11 bass Exp $
+ * $Id: CharacteristicType.java,v 1.55 2005/10/01 15:13:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/09/29 10:53:11 $
+ * @version $Revision: 1.55 $, $Date: 2005/10/01 15:13:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -286,12 +286,14 @@ public final class CharacteristicType extends StorableObjectType
 	/**
 	 * @param characteristicType
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlCharacteristicType characteristicType,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}

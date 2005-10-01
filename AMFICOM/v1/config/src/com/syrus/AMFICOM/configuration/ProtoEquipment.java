@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.7 2005/09/29 09:18:27 arseniy Exp $
+ * $Id: ProtoEquipment.java,v 1.8 2005/10/01 15:13:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/29 09:18:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/10/01 15:13:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -252,7 +252,17 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 				this.manufacturerCode);
 	}
 
-	public void getXmlTransferable(final XmlProtoEquipment protoEquipment, final String importType) throws ApplicationException {
+	/**
+	 * @param protoEquipment
+	 * @param importType
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
+	 */
+	public void getXmlTransferable(final XmlProtoEquipment protoEquipment,
+			final String importType,
+			final boolean usePool)
+	throws ApplicationException {
 		super.id.getXmlTransferable(protoEquipment.addNewId(), importType);
 
 		protoEquipment.setXmlEquipmentType(this.type.getXmlTransferable());
@@ -283,7 +293,7 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = protoEquipment.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
 			}
 		}
 

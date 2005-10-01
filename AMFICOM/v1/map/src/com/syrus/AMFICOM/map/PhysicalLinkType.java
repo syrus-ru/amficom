@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.97 2005/09/29 10:53:11 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.98 2005/10/01 15:13:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/09/29 10:53:11 $
+ * @version $Revision: 1.98 $, $Date: 2005/10/01 15:13:18 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -316,12 +316,14 @@ public final class PhysicalLinkType extends StorableObjectType
 	/**
 	 * @param physicalLinkType
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
 	public void getXmlTransferable(
 			final XmlPhysicalLinkType physicalLinkType,
-			final String importType)
+			final String importType,
+			final boolean usePool)
 	throws ApplicationException {
 		this.id.getXmlTransferable(physicalLinkType.addNewId(), importType);
 		physicalLinkType.setName(this.name);

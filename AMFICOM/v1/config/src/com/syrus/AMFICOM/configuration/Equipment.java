@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.137 2005/09/29 12:50:55 bass Exp $
+ * $Id: Equipment.java,v 1.138 2005/10/01 15:13:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.137 $, $Date: 2005/09/29 12:50:55 $
+ * @version $Revision: 1.138 $, $Date: 2005/10/01 15:13:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -347,10 +347,14 @@ public final class Equipment extends DomainMember
 	/**
 	 * @param equipment
 	 * @param importType
+	 * @param usePool
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String, boolean)
 	 */
-	public void getXmlTransferable(final XmlEquipment equipment, final String importType) throws ApplicationException {
+	public void getXmlTransferable(final XmlEquipment equipment,
+			final String importType,
+			final boolean usePool)
+	throws ApplicationException {
 		super.id.getXmlTransferable(equipment.addNewId(), importType);
 		equipment.setName(this.name);
 		if (equipment.isSetDescription()) {
@@ -424,7 +428,7 @@ public final class Equipment extends DomainMember
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = equipment.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
-				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);
 			}
 		}
 
