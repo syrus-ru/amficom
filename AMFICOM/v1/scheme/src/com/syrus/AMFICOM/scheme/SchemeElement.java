@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.129 2005/09/30 16:19:23 bass Exp $
+ * $Id: SchemeElement.java,v 1.130 2005/10/01 09:22:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.129 $, $Date: 2005/09/30 16:19:23 $
+ * @version $Revision: 1.130 $, $Date: 2005/10/01 09:22:03 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1321,7 +1321,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert super.parentSchemeId.isVoid() ^ thisParentSchemeElementIdVoid: EXACTLY_ONE_PARENT_REQUIRED;
-		assert !parentSchemeElement.equals(this) : CIRCULAR_DEPS_PROHIBITED;
+		assert parentSchemeElement == null || !parentSchemeElement.equals(this) : CIRCULAR_DEPS_PROHIBITED;
 
 		final boolean parentSchemeElementNull = (parentSchemeElement == null);
 
