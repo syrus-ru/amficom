@@ -125,7 +125,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 		}
 		try {
 			proto.setSchemeLinks(schemeLinks, false);
-			proto.setSchemeProtoElements(schemeProtoElements);
+			proto.setSchemeProtoElements(schemeProtoElements, false);
 
 			// create SchemeImageResource
 			SchemeImageResource schemeIr = proto.getSchemeCell();
@@ -137,7 +137,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 
 			Identifier userId = LoginManager.getUserId();
 			StorableObjectPool.flush(proto.getId(), userId, false);
-			for (Identifiable identifiable : proto.getReverseDependencies()) {
+			for (Identifiable identifiable : proto.getReverseDependencies(false)) {
 				StorableObjectPool.flush(identifiable, userId, false);
 			}
 			this.cellPane.setGraphChanged(false);

@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.5 2005/09/29 13:20:56 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.6 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -475,10 +475,10 @@ public class ImportUCMConverter {
 	}
 	
 	private void initMuffs() throws ApplicationException {
-		TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF.getCodename(),
+		final TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF, 
 				OperationSort.OPERATION_EQUALS, 
 				ObjectEntities.PROTOEQUIPMENT_CODE, 
-				StorableObjectWrapper.COLUMN_CODENAME);
+				StorableObjectWrapper.COLUMN_TYPE_CODE);
 		
 		this.muffProtoTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 		Set<Identifier> muffTypeIds = new HashSet<Identifier>();
@@ -496,9 +496,9 @@ public class ImportUCMConverter {
 		this.straightMuffs = new HashMap<Integer, SchemeProtoElement>();
 		for (SchemeProtoElement muff : muffs) {
 			if (muff.getParentSchemeProtoElement() == null) {
-				Set<SchemeCablePort> cablePorts = muff.getSchemeCablePortsRecursively();
+				Set<SchemeCablePort> cablePorts = muff.getSchemeCablePortsRecursively(false);
 				if (cablePorts.size() == 2) {
-					this.straightMuffs.put(Integer.valueOf(muff.getSchemePortsRecursively().size() / 2), muff);
+					this.straightMuffs.put(Integer.valueOf(muff.getSchemePortsRecursively(false).size() / 2), muff);
 				}
 			}
 		}
@@ -509,10 +509,10 @@ public class ImportUCMConverter {
 	}
 	
 	private void initVrms() throws ApplicationException {
-		TypicalCondition condition1 = new TypicalCondition(EquipmentType.CABLE_PANEL.getCodename(),
+		final TypicalCondition condition1 = new TypicalCondition(EquipmentType.CABLE_PANEL, 
 				OperationSort.OPERATION_EQUALS, 
 				ObjectEntities.PROTOEQUIPMENT_CODE, 
-				StorableObjectWrapper.COLUMN_CODENAME);
+				StorableObjectWrapper.COLUMN_TYPE_CODE);
 		
 		Set<ProtoEquipment> vrmTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 		Set<Identifier> vrmTypeIds = new HashSet<Identifier>();
@@ -531,7 +531,7 @@ public class ImportUCMConverter {
 		this.outVrms = new HashMap<Integer, SchemeProtoElement>();
 		for (SchemeProtoElement vrm : vrms) {
 			if (vrm.getParentSchemeProtoElement() == null) {
-				Set<SchemePort> ports = vrm.getSchemePortsRecursively();
+				Set<SchemePort> ports = vrm.getSchemePortsRecursively(false);
 				if (ports.size() > 0) {
 					SchemePort port = ports.iterator().next();
 					if (port.getDirectionType() == IdlDirectionType._OUT) {

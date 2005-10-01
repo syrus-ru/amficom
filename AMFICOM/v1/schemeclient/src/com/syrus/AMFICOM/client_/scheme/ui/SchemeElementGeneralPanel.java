@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.23 2005/09/29 13:20:49 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.24 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/09/29 13:20:49 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/01 09:03:29 $
  * @module schemeclient
  */
 
@@ -740,10 +740,10 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.cmbTypeCombo.removeAllItems();
 		
-		final TypicalCondition condition = new TypicalCondition(eqt.getCodename(), 
+		final TypicalCondition condition = new TypicalCondition(eqt, 
 				OperationSort.OPERATION_EQUALS, 
 				ObjectEntities.PROTOEQUIPMENT_CODE, 
-				StorableObjectWrapper.COLUMN_CODENAME);
+				StorableObjectWrapper.COLUMN_TYPE_CODE);
 		try {
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.cmbTypeCombo.addElements(protoEquipments);

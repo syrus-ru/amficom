@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.21 2005/09/29 13:20:49 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.22 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
-import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -39,16 +38,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/09/29 13:20:49 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/01 09:03:29 $
  * @module schemeclient
  */
 
@@ -94,7 +91,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 										link.setTargetAbstractSchemePort(null);
 									}
 									
-									Set<Identifiable> ids = scheme.getReverseDependencies();
+									Set<Identifiable> ids = scheme.getReverseDependencies(false);
 									StorableObjectPool.delete(ids);
 									TreePath parentPath = selectedPath.getParentPath();
 									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
@@ -112,7 +109,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 						else if (object instanceof SchemeProtoElement) {
 							try {
 								SchemeProtoElement proto = (SchemeProtoElement)object;
-								Set<Identifiable> ids = proto.getReverseDependencies();
+								Set<Identifiable> ids = proto.getReverseDependencies(false);
 								StorableObjectPool.delete(ids);
 								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 								TreePath parentPath = selectedPath.getParentPath();
@@ -123,18 +120,18 @@ public class SchemeTreeUI extends IconedTreeUI {
 							}
 						} else if (object instanceof SchemeProtoGroup) {
 							SchemeProtoGroup group = (SchemeProtoGroup)object;
-							if (group.getSchemeProtoElements().isEmpty() && 
+							try {
+								if (group.getSchemeProtoElements(false).isEmpty() && 
 									group.getSchemeProtoGroups().isEmpty()) {
-								try {
-									Set<Identifiable> ids = group.getReverseDependencies();
+									Set<Identifiable> ids = group.getReverseDependencies(false);
 									StorableObjectPool.delete(ids);
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 									TreePath parentPath = selectedPath.getParentPath();
 									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
 									updateRecursively((Item)parentPath.getLastPathComponent());
-								} catch (ApplicationException e1) {
-									Log.errorException(e1);
 								}
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
 							}
 						} else if (object instanceof ProtoEquipment) {
 							ProtoEquipment protoEq = (ProtoEquipment)object;

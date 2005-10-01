@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.22 2005/09/29 13:20:49 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.23 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/09/29 13:20:49 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/01 09:03:29 $
  * @module schemeclient
  */
 
@@ -85,7 +85,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
 	WrapperedComboBox<ProtoEquipment> typeCombo = new WrapperedComboBox<ProtoEquipment>(ProtoEquipmentWrapper.getInstance(),
 			StorableObjectWrapper.COLUMN_NAME,
-			StorableObjectWrapper.COLUMN_CODENAME);
+			StorableObjectWrapper.COLUMN_ID);
 	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
 	JTextField manufacturerText = new JTextField();
 	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
@@ -340,7 +340,9 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		// manufacturerCodeText.setEnabled(false);
 		this.eqtCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(final ItemEvent e) {
-				SchemeProtoElementGeneralPanel.this.eqtCombo_stateChanged((EquipmentType) e.getItem());
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+					SchemeProtoElementGeneralPanel.this.eqtCombo_stateChanged((EquipmentType) e.getItem());
+				}
 			}
 		});
 		this.typeCombo.addItemListener(new ItemListener() {
@@ -377,10 +379,10 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	void eqtCombo_stateChanged(final EquipmentType eqt) {
 		this.typeCombo.removeAllItems();
 		
-		final TypicalCondition condition = new TypicalCondition(eqt.getCodename(), 
+		final TypicalCondition condition = new TypicalCondition(eqt, 
 				OperationSort.OPERATION_EQUALS, 
 				ObjectEntities.PROTOEQUIPMENT_CODE, 
-				StorableObjectWrapper.COLUMN_CODENAME);
+				StorableObjectWrapper.COLUMN_TYPE_CODE);
 		try {
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.typeCombo.addElements(protoEquipments);
@@ -442,7 +444,9 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			}
 
 			try {
-				if (this.schemeProtoElement.getParentSchemeProtoElement() != null) {
+				SchemeProtoElement parentPE = this.schemeProtoElement.getParentSchemeProtoElement();
+				if (parentPE != null && parentPE.getProtoEquipment() != null &&
+						!parentPE.getProtoEquipment().getType().equals(EquipmentType.BUG_136)) {
 					this.parentCombo.addItem(null);
 					this.parentCombo.setSelectedItem(null);
 					this.parentCombo.setEnabled(false);
@@ -453,6 +457,8 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 					}
 					this.parentCombo.setEnabled(true);
 				}
+			} catch (ApplicationException e1) {
+				Log.errorException(e1);
 			} catch (IllegalStateException e1) {
 				// ignore as it means parent == null
 				this.parentCombo.setEnabled(true);
@@ -504,7 +510,11 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			}
 			final Object parent = this.parentCombo.getSelectedItem();
 			if (parent != null) {
-				this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup) parent);
+				try {
+					this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup) parent, false);
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
 			}
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this,
 					this.schemeProtoElement.getId(),

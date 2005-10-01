@@ -185,7 +185,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				scheme.setSchemeCell(schemeIr);
 				System.err.println("written for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)");
 				Identifier userId = LoginManager.getUserId();
-				StorableObjectPool.flush(scheme.getReverseDependencies(), userId, false);
+				StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
 
 				this.schemeTab.setGraphChanged(false);
 				

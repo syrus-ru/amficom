@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.25 2005/09/29 13:20:56 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.26 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -200,8 +200,12 @@ public class SchemeImportCommand extends ImportExportCommand {
 		
 		SchemesDocument doc = SchemesDocument.Factory.parse(xmlfile);
 		
-		if(!validateXml(doc)) {
-			throw new XmlException("Invalid XML");
+		try {
+			if(!validateXml(doc)) {
+				throw new XmlException("Invalid XML");
+			}
+		} catch (Exception e) {
+			throw new XmlException(e);
 		}
 		
 		String user_dir = System.getProperty(USER_DIR);
@@ -232,12 +236,12 @@ public class SchemeImportCommand extends ImportExportCommand {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_target") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
 			}
-			if (errorMessages.size() > 0) {
-				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
-						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
-					throw new CreateObjectException("incorrect input data");
-				}
-			}
+//			if (errorMessages.size() > 0) {
+//				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
+//						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
+//					throw new CreateObjectException("incorrect input data");
+//				}
+//			}
 			
 			try {
 				ImportUCMConverter converter = new ImportUCMConverter(this.pane.getContext(), this.pane.getGraph());
@@ -257,8 +261,12 @@ public class SchemeImportCommand extends ImportExportCommand {
 		File xmlfile = new File(fileName);
 		XmlConfigurationLibrary doc = XmlConfigurationLibrary.Factory.parse(xmlfile);
 		
-		if(!validateXml(doc)) {
-			throw new XmlException("Invalid XML");
+		try {
+			if(!validateXml(doc)) {
+				throw new XmlException("Invalid XML");
+			}
+		} catch (Exception e) {
+			throw new XmlException(e);
 		}
 		
 //		make sure default types loaded
@@ -314,8 +322,12 @@ public class SchemeImportCommand extends ImportExportCommand {
 		File xmlfile = new File(fileName);
 		SchemeProtoGroupsDocument doc = SchemeProtoGroupsDocument.Factory.parse(xmlfile);
 		
-		if(!validateXml(doc)) {
-			throw new XmlException("Invalid XML");
+		try {
+			if(!validateXml(doc)) {
+				throw new XmlException("Invalid XML");
+			}
+		} catch (Exception e) {
+			throw new XmlException(e);
 		}
 		
 		String user_dir = System.getProperty(USER_DIR);

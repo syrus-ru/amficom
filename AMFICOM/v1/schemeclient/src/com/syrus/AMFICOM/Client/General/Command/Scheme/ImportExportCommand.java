@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.6 2005/09/29 13:20:56 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.7 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -145,13 +145,13 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		
 		ProtoEquipment stubProtoEquipment1 = null;
 		try {
-			final TypicalCondition condition = new TypicalCondition(EquipmentType.OTHER.getCodename(), 
+			final TypicalCondition condition = new TypicalCondition(EquipmentType.BUG_136, 
 					OperationSort.OPERATION_EQUALS, 
 					ObjectEntities.PROTOEQUIPMENT_CODE, 
-					StorableObjectWrapper.COLUMN_CODENAME);
+					StorableObjectWrapper.COLUMN_TYPE_CODE);
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (protoEquipments.isEmpty()) {
-				stubProtoEquipment1 = SchemeObjectsFactory.createProtoEquipment("stub", EquipmentType.OTHER);
+				stubProtoEquipment1 = SchemeObjectsFactory.createProtoEquipment("", EquipmentType.BUG_136);
 			} else {
 				stubProtoEquipment1 = protoEquipments.iterator().next();
 			}
@@ -180,7 +180,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 						// in case of ucm_scheme - change protoEquipmentId to stub
 						if (protoEquipmentId.getStringValue().equals(UCM_SCHEMED_EQT)) {
 							XmlIdentifier realProtoId = XmlIdentifier.Factory.newInstance();
-							realProtoId.setStringValue(stubProtoEquipment.getId().getIdentifierString());
+							stubProtoEquipment.getId().getXmlTransferable(realProtoId, importType);
 							equipment.setProtoEquipmentId(realProtoId);								
 						}
 					}

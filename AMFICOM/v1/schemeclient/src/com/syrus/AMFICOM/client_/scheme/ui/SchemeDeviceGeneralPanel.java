@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.13 2005/09/19 13:10:29 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.14 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/19 13:10:29 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/01 09:03:29 $
  * @module schemeclient
  */
 
@@ -265,7 +265,6 @@ class NameableEditor extends DefaultCellEditor {
 	public NameableEditor(AComboBox comboBox) {
 		super(comboBox);
 		comboBox.setRenderer(new NameableListRenderer());
-		comboBox.setFontSize(AComboBox.SMALL_FONT);
 	}
 	
 }

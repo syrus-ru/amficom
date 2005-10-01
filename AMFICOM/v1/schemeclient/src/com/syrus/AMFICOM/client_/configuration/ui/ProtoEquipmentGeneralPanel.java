@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.2 2005/09/29 13:20:49 stas Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.3 2005/10/01 09:03:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/09/29 13:20:49 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/01 09:03:29 $
  * @module schemeclient
  */
 
@@ -248,6 +248,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		this.tfEqtCombo.setRenderer(new NameableComboBoxRenderer());
+		this.tfEqtCombo.setFontSize(this.tfEqtCombo.getFont().getSize() - 2);
 		
 		addToUndoableListener(this.tfNameText);
 		addToUndoableListener(this.tfEqtCombo);
