@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeElementCommand.java,v 1.36 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: PlaceSchemeElementCommand.java,v 1.37 2005/10/02 14:55:42 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой или по
  * координатам
  * 
- * @version $Revision: 1.36 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/02 14:55:42 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,8 +87,12 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 		try {
 			long t1 = System.currentTimeMillis();
 			// если географическа€ точка не задана, получить ее из экранной точки
-			if(this.coordinatePoint == null)
+			if(this.coordinatePoint == null) {
 				this.coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
+			}
+			if(this.point == null) {
+				this.point = this.logicalNetLayer.getConverter().convertMapToScreen(this.coordinatePoint);
+			}
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
 			long t2 = System.currentTimeMillis();
