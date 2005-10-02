@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.24 2005/10/01 09:03:29 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.25 2005/10/02 07:11:15 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.NameableComboBoxRenderer;
+import com.syrus.AMFICOM.client.UI.NameableListCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/10/01 09:03:29 $
+ * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2005/10/02 07:11:15 $
  * @module schemeclient
  */
 
@@ -719,7 +719,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.tfKisPortText);
 		super.addToUndoableListener(this.taDescrArea);
 
-		this.eqtCombo.setRenderer(new NameableComboBoxRenderer());
+		this.eqtCombo.setRenderer(new NameableListCellRenderer());
 
 		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
