@@ -1,5 +1,5 @@
 /*-
- * $$Id: LineComboBox.java,v 1.7 2005/10/02 12:33:00 krupenn Exp $$
+ * $$Id: LineComboBox.java,v 1.8 2005/10/02 13:07:10 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import javax.swing.ListCellRenderer;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/02 12:33:00 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/02 13:07:10 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -40,52 +40,47 @@ public class LineComboBox extends AComboBox {
 	public static LineStyleHolder[] presetLines;
 	static int lineWidth = 3;
 
-	public static boolean do_init = true;
-
-	{
-		if(do_init) {
-			presetLines = new LineStyleHolder[5];
-			presetLines[0] = new LineStyleHolder(
-							new BasicStroke(lineWidth),
-							"Solid line"); //$NON-NLS-1$
-			presetLines[1] = new LineStyleHolder(
-					new BasicStroke(
-							lineWidth,
-							BasicStroke.CAP_BUTT,
-							BasicStroke.JOIN_BEVEL,
-							(float) 0.0,
-							new float[] { 10, 3 },
-							(float) 0.0), 
-					"Dash line 1"); //$NON-NLS-1$
-			presetLines[2] = new LineStyleHolder(
-					new BasicStroke(
-							lineWidth,
-							BasicStroke.CAP_BUTT,
-							BasicStroke.JOIN_BEVEL,
-							(float) 0.0,
-							new float[] { 3, 10 },
-							(float) 0.0), 
-					"Dash line 2"); //$NON-NLS-1$
-			presetLines[3] = new LineStyleHolder(
-					new BasicStroke(
-							lineWidth,
-							BasicStroke.CAP_BUTT,
-							BasicStroke.JOIN_BEVEL,
-							(float) 0.0,
-							new float[] { 10, 3, 10 },
-							(float) 0.0), 
-					"Dash line 3"); //$NON-NLS-1$
-			presetLines[4] = new LineStyleHolder(
-					new BasicStroke(
-							lineWidth,
-							BasicStroke.CAP_BUTT,
-							BasicStroke.JOIN_BEVEL,
-							(float) 0.0,
-							new float[] { 10, 10, 3, 10 },
-							(float) 0.0), 
-					"Dash line 4"); //$NON-NLS-1$
-			do_init = false;
-		}
+	static {
+		presetLines = new LineStyleHolder[5];
+		presetLines[0] = new LineStyleHolder(
+						new BasicStroke(lineWidth),
+						"Solid line"); //$NON-NLS-1$
+		presetLines[1] = new LineStyleHolder(
+				new BasicStroke(
+						lineWidth,
+						BasicStroke.CAP_BUTT,
+						BasicStroke.JOIN_BEVEL,
+						(float) 0.0,
+						new float[] { 10, 3 },
+						(float) 0.0), 
+				"Dash line 1"); //$NON-NLS-1$
+		presetLines[2] = new LineStyleHolder(
+				new BasicStroke(
+						lineWidth,
+						BasicStroke.CAP_BUTT,
+						BasicStroke.JOIN_BEVEL,
+						(float) 0.0,
+						new float[] { 3, 10 },
+						(float) 0.0), 
+				"Dash line 2"); //$NON-NLS-1$
+		presetLines[3] = new LineStyleHolder(
+				new BasicStroke(
+						lineWidth,
+						BasicStroke.CAP_BUTT,
+						BasicStroke.JOIN_BEVEL,
+						(float) 0.0,
+						new float[] { 10, 3, 10 },
+						(float) 0.0), 
+				"Dash line 3"); //$NON-NLS-1$
+		presetLines[4] = new LineStyleHolder(
+				new BasicStroke(
+						lineWidth,
+						BasicStroke.CAP_BUTT,
+						BasicStroke.JOIN_BEVEL,
+						(float) 0.0,
+						new float[] { 10, 10, 3, 10 },
+						(float) 0.0), 
+				"Dash line 4"); //$NON-NLS-1$
 	}
 
 	public BasicStroke returnStroke;
@@ -93,31 +88,6 @@ public class LineComboBox extends AComboBox {
 
 	public LineStyleHolder returnLineStyleHolder = new LineStyleHolder();
 	LineStyleHolder[] lines;
-
-	public class LineStyleHolder {
-		public BasicStroke basicStroke;
-		public String text;
-
-		public LineStyleHolder(BasicStroke col, String tx) {
-			this.basicStroke = col;
-			this.text = tx;
-		}
-
-		public LineStyleHolder() {
-			this.basicStroke = new BasicStroke(2);
-			this.text = "Solid line"; //$NON-NLS-1$
-		}
-
-		public void setLineStyleHolder(BasicStroke col, String tx) {
-			this.basicStroke = col;
-			this.text = tx;
-		}
-
-		@Override
-		public String toString() {
-			return this.text;
-		}
-	}
 
 	class ComboBoxRenderer extends JPanel implements ListCellRenderer {
 		public JLabel lbl = new JLabel();
@@ -326,3 +296,28 @@ public class LineComboBox extends AComboBox {
 	}
 
 }
+class LineStyleHolder {
+	public BasicStroke basicStroke;
+	public String text;
+
+	public LineStyleHolder(BasicStroke col, String tx) {
+		this.basicStroke = col;
+		this.text = tx;
+	}
+
+	public LineStyleHolder() {
+		this.basicStroke = new BasicStroke(2);
+		this.text = "Solid line"; //$NON-NLS-1$
+	}
+
+	public void setLineStyleHolder(BasicStroke col, String tx) {
+		this.basicStroke = col;
+		this.text = tx;
+	}
+
+	@Override
+	public String toString() {
+		return this.text;
+	}
+}
+
