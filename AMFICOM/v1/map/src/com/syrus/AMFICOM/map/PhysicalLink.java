@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.127 2005/10/01 15:13:17 bass Exp $
+ * $Id: PhysicalLink.java,v 1.128 2005/10/02 14:54:38 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.127 $, $Date: 2005/10/01 15:13:17 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.128 $, $Date: 2005/10/02 14:54:38 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1100,7 +1100,7 @@ public class PhysicalLink extends StorableObject
 								}
 								this.containees.clear();
 							}
-							for (final Characteristic containee : StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, true)) {
+							for (final Characteristic containee : StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false)) {
 								containee.markAsPersistent();
 								this.containees.add(containee);
 							}
