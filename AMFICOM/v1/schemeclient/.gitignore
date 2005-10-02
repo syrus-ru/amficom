@@ -31,3 +31,7 @@ SchemeV2.jpx
 src_scheme.txt
 .pmd
 .mach
+cache
+export
+Application.properties
+logs
