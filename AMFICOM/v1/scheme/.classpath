@@ -15,5 +15,8 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapxml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/xbean.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/schemexml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/bugs"/>
+	<classpathentry kind="lib" path="schemexml.jar"/>
+	<classpathentry kind="var" path="EXTLIB/jsr173_api.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
