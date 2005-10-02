@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.111 2005/10/01 10:14:02 bass Exp $
+ * $Id: StorableObject.java,v 1.112 2005/10/02 09:51:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/10/01 10:14:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.112 $, $Date: 2005/10/02 09:51:57 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -633,8 +633,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.111 $, $Date: 2005/10/01 10:14:02 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.112 $, $Date: 2005/10/02 09:51:57 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -672,7 +672,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 					containee.markAsPersistent();
 					this.containees.add(containee);
 				}
-			} else if (buildCacheOnModification()) {
+			} else if (this.buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
 				if (!this.containees.contains(containee)) {
@@ -695,7 +695,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 					containee.cleanupPersistence();
 					this.containees.remove(containee);
 				}
-			} else if (buildCacheOnModification()) {
+			} else if (this.buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
 				if (this.containees.contains(containee)) {
