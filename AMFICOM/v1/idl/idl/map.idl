@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.37 2005/09/01 13:49:35 max Exp $
+ * $Id: map.idl,v 1.38 2005/10/02 08:23:55 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,9 @@ module map {
 
 
 /////////////////////// SiteNodeType ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlSiteNodeType : general::corba::IdlStorableObject {
-			
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum SiteNodeTypeSort {
 				WELL,
 	 			PIQUET,
@@ -69,8 +69,9 @@ module map {
 		/**
 		 * Physical line type such as tunnel, subway, etc.
 		 */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlPhysicalLinkType : general::corba::IdlStorableObject {
-			
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum PhysicalLinkTypeSort {
 				TUNNEL,
 				COLLECTOR,
@@ -111,10 +112,10 @@ module map {
 
 
 /////////////////////// AbstractNode - SiteNode, TopologicalNode ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlAbstractNode : general::corba::IdlStorableObject {
 		};
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlSiteNode : IdlAbstractNode {
 			public wstring name;
 			public wstring description;
@@ -148,7 +149,8 @@ module map {
 					in wstring building,
 					in general::corba::IdlIdentifier attachmentSiteNodeId);
 		};
-
+		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTopologicalNode : IdlAbstractNode {
 			public wstring name;
 			public wstring description;
@@ -177,6 +179,7 @@ module map {
 		/**
 		 * Map item, line fragment.
 		 */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlNodeLink : general::corba::IdlStorableObject {
 			
 			public general::corba::IdlIdentifier physicalLinkId;
@@ -204,6 +207,7 @@ module map {
 		/**
 		 * Mark which has coordinates and is bound to a subway (MapLink) by distance.
 		 */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMark : general::corba::IdlStorableObject {
 			public wstring name;
 			public wstring description;
@@ -241,6 +245,7 @@ module map {
 		/**
 		 * Line item.
 		 */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlPhysicalLink : general::corba::IdlStorableObject {
 			public wstring name;
 			public wstring description;
@@ -285,7 +290,7 @@ module map {
 
 
 /////////////////////// Collector ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCollector : general::corba::IdlStorableObject {
 			public wstring name;
 			public wstring description;
@@ -305,7 +310,7 @@ module map {
 		
 		
 //////////////////////// MapLibrary ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMapLibrary : general::corba::IdlStorableObject {
 			public wstring name;
 			public wstring codename;
@@ -327,7 +332,7 @@ module map {
 
 
 /////////////////////// Map ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMap : administration::corba::IdlDomainMember {
 			public wstring name;
 			public wstring description;
@@ -364,7 +369,7 @@ module map {
 
 
 /////////////////////// /// ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		struct IdlTopologicalImageQuery {
 			long mapImageWidth;
 			long mapImageHeight;
@@ -376,19 +381,21 @@ module map {
 			::CORBA::BooleanSeq layerVisibilities;
 			::CORBA::BooleanSeq labelVisibilities;
 		};
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		struct IdlRenderedImage {
 			::CORBA::OctetSeq image;
 		};
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		struct IdlMapFeature {
 			double centerX;
 			double centerY;
 
 			wstring name;
 		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlMapFeature> IdlMapFeatureSeq;
-
+		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		struct IdlMapDescriptor {
 			wstring name;
 			wstring fileName;
@@ -397,8 +404,10 @@ module map {
 			long long length;
 			long long lastModified;
 		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlMapDescriptor> IdlMapDescriptorSeq;
 		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		struct IdlLayerDescriptor {
 			wstring fileName;
 			wstring pathName;
@@ -406,6 +415,7 @@ module map {
 			long long length;
 			long long lastModified;
 		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlLayerDescriptor> IdlLayerDescriptorSeq;
 	};
 };
