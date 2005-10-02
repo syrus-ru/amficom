@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.13 2005/09/29 15:58:30 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.14 2005/10/02 11:47:12 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,17 +18,16 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/09/29 15:58:30 $
+ * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/10/02 11:47:12 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
-	private static final Map<Key, XmlIdentifier> FORWARD_MAP = new HashMap<Key, XmlIdentifier>();
+	private static final Map<Key, String> FORWARD_MAP = new HashMap<Key, String>();
 
 	private static final Map<XmlKey, Identifier> REVERSE_MAP = new HashMap<XmlKey, Identifier>();
 	
@@ -50,7 +49,7 @@ public final class LocalXmlIdentifierPool {
 	 * @param xmlId
 	 * @param importType
 	 */
-	static void put(final Identifier id, final XmlIdentifier xmlId,
+	static void put(final Identifier id, final String xmlId,
 			final String importType) {
 		put(id, xmlId, importType, KeyState.NEW);
 	}
@@ -61,7 +60,7 @@ public final class LocalXmlIdentifierPool {
 	 * @param importType
 	 * @param state
 	 */
-	private static void put(final Identifier id, final XmlIdentifier xmlId,
+	private static void put(final Identifier id, final String xmlId,
 			final String importType, final KeyState state) {
 		if (id == null) {
 			throw new NullPointerException("id is null");
@@ -73,17 +72,17 @@ public final class LocalXmlIdentifierPool {
 			throw new NullPointerException("state is null");
 		}
 
-		final XmlIdentifier oldXmlId = FORWARD_MAP.put(new Key(id, importType, state), xmlId);
+		final String oldXmlId = FORWARD_MAP.put(new Key(id, importType, state), xmlId);
 		final Identifier oldId = REVERSE_MAP.put(new XmlKey(xmlId, importType, state), id);
-
+		
 		if (oldXmlId != null) {
-			final String xmlIdStringValue = xmlId.getStringValue();
-			final String oldXmlIdStringValue = oldXmlId.getStringValue();
+			final String xmlIdStringValue = xmlId;
+			final String oldXmlIdStringValue = oldXmlId;
 			if (!xmlIdStringValue.equals(oldXmlIdStringValue)) {
 				throw new IllegalStateException(
-						"Such situations are currently unsupported: oldXmlId = XmlIdentifier(``"
+						"Such situations are currently unsupported: oldXmlId = String(``"
 						+ oldXmlIdStringValue
-						+ "''); xmlId = XmlIdentifier(``"
+						+ "''); xmlId = String(``"
 						+ xmlIdStringValue + "'')");
 			}
 		} else if (oldId != null && !id.equals(oldId)) {
@@ -93,20 +92,24 @@ public final class LocalXmlIdentifierPool {
 					+ "''); id = Identifier(``"
 					+ id.getIdentifierString() + "'')"); 
 		}
+		
+		assert Log.debugMessage("LocalXmlIdentifierPool.put | FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
+		assert Log.debugMessage("LocalXmlIdentifierPool.put | REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
+
 	}
 
 	/**
 	 * @param id
 	 * @param importType
 	 */
-	static XmlIdentifier get(final Identifier id, final String importType) {
+	static String get(final Identifier id, final String importType) {
 		if (id == null) {
 			throw new NullPointerException("id is null");
 		} else if (importType == null || importType.length() == 0) {
 			throw new NullPointerException("importType is either null or empty");
 		}
 
-		final XmlIdentifier xmlId = FORWARD_MAP.get(new Key(id, importType));
+		final String xmlId = FORWARD_MAP.get(new Key(id, importType));
 		if (xmlId == null) {
 			throw new NoSuchElementException(
 					"No forward mapping found for id = Identifier(``"
@@ -114,6 +117,11 @@ public final class LocalXmlIdentifierPool {
 					+ "''), importType = ``"
 					+ importType + "''");
 		}
+		
+		assert Log.debugMessage("LocalXmlIdentifierPool.get | id:" + id 
+			+ ", importType:" + importType
+			+ ", xmlId:" + xmlId, Log.DEBUGLEVEL09);
+		
 		return xmlId;
 	}
 
@@ -121,7 +129,7 @@ public final class LocalXmlIdentifierPool {
 	 * @param xmlId
 	 * @param importType
 	 */
-	static Identifier get(final XmlIdentifier xmlId, final String importType) {
+	static Identifier get(final String xmlId, final String importType) {
 		if (xmlId == null) {
 			throw new NullPointerException("xmlId is null");
 		} else if (importType == null || importType.length() == 0) {
@@ -131,11 +139,15 @@ public final class LocalXmlIdentifierPool {
 		final Identifier id = REVERSE_MAP.get(new XmlKey(xmlId, importType));
 		if (id == null) {
 			throw new NoSuchElementException(
-					"No reverse mapping found for xmlId = XmlIdentifier(``"
-					+ xmlId.getStringValue()
+					"No reverse mapping found for xmlId = String(``"
+					+ xmlId
 					+ "''), importType = ``"
 					+ importType + "''");
 		}
+		
+		assert Log.debugMessage("LocalXmlIdentifierPool.get | xmlId:" + xmlId 
+			+ ", importType:" + importType
+			+ ", id:" + id , Log.DEBUGLEVEL09);
 		return id;
 	}
 
@@ -150,7 +162,7 @@ public final class LocalXmlIdentifierPool {
 			throw new NullPointerException("importType is either null or empty");
 		}
 
-		final XmlIdentifier xmlId = FORWARD_MAP.get(new Key(id, importType));
+		final String xmlId = FORWARD_MAP.get(new Key(id, importType));
 		if (xmlId == null) {
 			final long nanos = System.nanoTime();
 			for (final Entry<XmlKey, Identifier> entry : REVERSE_MAP.entrySet()) {
@@ -174,8 +186,8 @@ public final class LocalXmlIdentifierPool {
 					+ id.getIdentifierString()
 					+ "''), id2 = Identifier(``"
 					+ id2.getIdentifierString()
-					+ "''), xmlId = XmlIdentifier(``"
-					+ xmlId.getStringValue()
+					+ "''), xmlId = String(``"
+					+ xmlId
 					+ "''), importType = ``"
 					+ importType + "''");
 		}
@@ -186,7 +198,7 @@ public final class LocalXmlIdentifierPool {
 	 * @param xmlId
 	 * @param importType
 	 */
-	static boolean contains(final XmlIdentifier xmlId, final String importType) {
+	static boolean contains(final String xmlId, final String importType) {
 		if (xmlId == null) {
 			throw new NullPointerException("xmlId is null");
 		} else if (importType == null || importType.length() == 0) {
@@ -194,14 +206,16 @@ public final class LocalXmlIdentifierPool {
 		}
 
 		final Identifier id = REVERSE_MAP.get(new XmlKey(xmlId, importType));
-		final String xmlIdStringValue = xmlId.getStringValue();
+		final String xmlIdStringValue = xmlId;
 		if (id == null) {
 			final long nanos = System.nanoTime();
-			for (final Entry<Key, XmlIdentifier> entry : FORWARD_MAP.entrySet()) {
-				if (entry.getKey().getImportType().equals(importType)
-						&& entry.getValue().getStringValue().equals(xmlId.getStringValue())) {
+			for (final Entry<Key, String> entry : FORWARD_MAP.entrySet()) {
+				final Key key = entry.getKey();
+				final String value = entry.getValue();
+				if (key.getImportType().equals(importType)
+						&& value.equals(xmlIdStringValue)) {
 					throw new IllegalStateException(
-							"Reverse map contains no key while forward map contains a valuexmlId = XmlIdentifier(``"
+							"Reverse map contains no key while forward map contains a valuexmlId = String(``"
 							+ xmlIdStringValue
 							+ "''), importType = ``"
 							+ importType + "''");
@@ -211,13 +225,13 @@ public final class LocalXmlIdentifierPool {
 
 			return false;
 		}
-		final XmlIdentifier xmlId2 = FORWARD_MAP.get(new Key(id, importType));
-		final String xmlId2StringValue = xmlId2.getStringValue();
+		final String xmlId2 = FORWARD_MAP.get(new Key(id, importType));
+		final String xmlId2StringValue = xmlId2;
 		if (!xmlId2StringValue.equals(xmlIdStringValue)) {
 			throw new IllegalStateException(
-					"Both forward and reverse mappings are present, but they do not match: xmlId = XmlIdentifier(``"
+					"Both forward and reverse mappings are present, but they do not match: xmlId = String(``"
 					+ xmlIdStringValue
-					+ "''), xmlId2 = XmlIdentifier(``"
+					+ "''), xmlId2 = String(``"
 					+ xmlId2StringValue
 					+ "''), id = Identifier(``"
 					+ id.getIdentifierString()
@@ -232,17 +246,17 @@ public final class LocalXmlIdentifierPool {
 	 * @param importType
 	 */
 	public static void remove(final XmlIdentifier xmlId, final String importType) {
-		final XmlKey xmlKey = new XmlKey(xmlId, importType);
+		final String xmlIdStringValue = xmlId.getStringValue();
+		final XmlKey xmlKey = new XmlKey(xmlIdStringValue, importType);
 		final Identifier id = REVERSE_MAP.remove(xmlKey);
 		final Key key = new Key(id, importType);
-		final XmlIdentifier xmlId2 = FORWARD_MAP.remove(key);
-		final String xmlIdStringValue = xmlId.getStringValue();
-		final String xmlId2StringValue = xmlId2.getStringValue();
+		final String xmlId2 = FORWARD_MAP.remove(key);
+		final String xmlId2StringValue = xmlId2;
 		if (!xmlId2StringValue.equals(xmlIdStringValue)) {
 			throw new IllegalStateException(
-					"Both forward and reverse mappings are present, but they do not match: xmlId = XmlIdentifier(``"
+					"Both forward and reverse mappings are present, but they do not match: xmlId = String(``"
 					+ xmlIdStringValue
-					+ "''), xmlId2 = XmlIdentifier(``"
+					+ "''), xmlId2 = String(``"
 					+ xmlId2StringValue
 					+ "''), id = Identifier(``"
 					+ id.getIdentifierString()
@@ -258,7 +272,7 @@ public final class LocalXmlIdentifierPool {
 	 */
 	public static void remove(final Identifier id, final String importType) {
 		final Key key = new Key(id, importType);
-		final XmlIdentifier xmlId = FORWARD_MAP.remove(key);
+		final String xmlId = FORWARD_MAP.remove(key);
 		final XmlKey xmlKey = new XmlKey(xmlId, importType);
 		final Identifier id2 = REVERSE_MAP.remove(xmlKey);
 		if (!id2.equals(id)) {
@@ -267,8 +281,8 @@ public final class LocalXmlIdentifierPool {
 					+ id.getIdentifierString()
 					+ "''), id2 = Identifier(``"
 					+ id2.getIdentifierString()
-					+ "''), xmlId = XmlIdentifier(``"
-					+ xmlId.getStringValue()
+					+ "''), xmlId = String(``"
+					+ xmlId
 					+ "''), importType = ``"
 					+ importType + "''");
 		}
@@ -301,7 +315,7 @@ public final class LocalXmlIdentifierPool {
 				}
 			}
 
-			final Map<Identifier, XmlIdentifier> idXmlIdMap;
+			final Map<Identifier, String> idXmlIdMap;
 			try {
 				idXmlIdMap = XmlIdentifierDatabase.retrievePrefetchedMap(importType);
 			} catch (final RetrieveObjectException roe) {
@@ -309,7 +323,7 @@ public final class LocalXmlIdentifierPool {
 				return;
 			}
 			for (final Identifier id : idXmlIdMap.keySet()) {
-				final XmlIdentifier xmlId =  idXmlIdMap.get(id);
+				final String xmlId =  idXmlIdMap.get(id);
 				put(id, xmlId, importType, KeyState.UP_TO_DATE);
 			}
 			PREFETCHED_IMPORT_TYPES.add(importType);
@@ -317,7 +331,7 @@ public final class LocalXmlIdentifierPool {
 	}
 
 	public static void flush() {
-		final Map<Key, XmlIdentifier> keysToCreate = new HashMap<Key, XmlIdentifier>();
+		final Map<Key, String> keysToCreate = new HashMap<Key, String>();
 		for (final Key key : FORWARD_MAP.keySet()) {
 			KeyState state = key.getState();
 			if (state.equals(KeyState.NEW)) {
@@ -370,8 +384,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Maxim Selivanov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.13 $, $Date: 2005/09/29 15:58:30 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.14 $, $Date: 2005/10/02 11:47:12 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -388,8 +402,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.13 $, $Date: 2005/09/29 15:58:30 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.14 $, $Date: 2005/10/02 11:47:12 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -397,7 +411,7 @@ public final class LocalXmlIdentifierPool {
 
 		private String importType;
 
-		private HashCodeGenerator hashCodeGenerator;
+		private int hashCode = 0;
 		
 		Identifier getId() {
 			return this.id;
@@ -451,31 +465,29 @@ public final class LocalXmlIdentifierPool {
 		 */
 		@Override
 		public int hashCode() {
-			if (this.hashCodeGenerator == null) {
-				this.hashCodeGenerator = new HashCodeGenerator();
+			if (this.hashCode == 0) {
+				this.hashCode = 37 * 17 + this.id.hashCode();
+				this.hashCode = 37 * this.hashCode + this.importType.hashCode();
 			}
-			this.hashCodeGenerator.clear();
-			this.hashCodeGenerator.addObject(this.id);
-			this.hashCodeGenerator.addObject(this.importType);
-			return this.hashCodeGenerator.getResult();
+			return this.hashCode;
 		}
 	}
 	
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.13 $, $Date: 2005/09/29 15:58:30 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.14 $, $Date: 2005/10/02 11:47:12 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {
-		private XmlIdentifier id;
+		private String xmlId;
 
 		private String importType;
 
-		private HashCodeGenerator hashCodeGenerator;
+		private int hashCode = 0;
 		
-		XmlIdentifier getXmlId() {
-			return this.id;
+		String getXmlId() {
+			return this.xmlId;
 		}
 		
 		String getImportType() {
@@ -483,26 +495,26 @@ public final class LocalXmlIdentifierPool {
 		}
 
 		/**
-		 * @param id
+		 * @param xmlId
 		 * @param importType
 		 */
-		XmlKey(final XmlIdentifier id, final String importType) {
-			this(id, importType, KeyState.NEW);
+		XmlKey(final String xmlId, final String importType) {
+			this(xmlId, importType, KeyState.NEW);
 		}
 
 		/**
-		 * @param id
+		 * @param xmlId
 		 * @param importType
 		 * @param state
 		 */
-		XmlKey(final XmlIdentifier id, final String importType, final KeyState state) {
-			if (id == null) {
+		XmlKey(final String xmlId, final String importType, final KeyState state) {
+			if (xmlId == null) {
 				throw new NullPointerException("id is null");
 			} else if (importType == null || importType.length() == 0) {
 				throw new NullPointerException("importType is either null or empty");
 			}
 
-			this.id = id;
+			this.xmlId = xmlId;
 			this.importType = importType;
 			this.state = state;
 		}
@@ -515,7 +527,7 @@ public final class LocalXmlIdentifierPool {
 		public boolean equals(final Object obj) {
 			if (obj instanceof XmlKey) {
 				final XmlKey that = (XmlKey) obj;
-				return this.id.getStringValue().equals(that.id.getStringValue())
+				return this.xmlId.equals(that.xmlId)
 						&& this.importType.equals(that.importType);
 			}
 			return false;
@@ -526,13 +538,11 @@ public final class LocalXmlIdentifierPool {
 		 */
 		@Override
 		public int hashCode() {
-			if (this.hashCodeGenerator == null) {
-				this.hashCodeGenerator = new HashCodeGenerator();
+			if (this.hashCode == 0) {
+				this.hashCode = 37 * 17 + this.xmlId.hashCode();
+				this.hashCode = 37 * this.hashCode + this.importType.hashCode();
 			}
-			this.hashCodeGenerator.clear();
-			this.hashCodeGenerator.addObject(this.id.getStringValue());
-			this.hashCodeGenerator.addObject(this.importType);
-			return this.hashCodeGenerator.getResult();
+			return this.hashCode;
 		}
 	}
 }
