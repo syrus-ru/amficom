@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.110 2005/09/30 06:40:56 arseniy Exp $
+ * $Id: configuration.idl,v 1.111 2005/10/02 11:59:33 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,8 @@ module configuration {
 
 
 /////////////////////// EquipmentType /////////////////////
-
+		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlEquipmentType {
 			REFLECTOMETER,
 			OPTICAL_SWITCH,
@@ -40,10 +41,11 @@ module configuration {
 
 			BUG_136
 		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence <IdlEquipmentType> IdlEquipmentTypeSeq;
 
 /////////////////////// TransmissionPathType /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTransmissionPathType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
@@ -62,14 +64,15 @@ module configuration {
 
 
 /////////////////////// PortType /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlPortType : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum PortTypeSort {
 				PORTTYPESORT_OPTICAL,
 				PORTTYPESORT_ELECTRICAL,
 				PORTTYPESORT_THERMAL
 			};
-
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum PortTypeKind {
 				PORT_KIND_SIMPLE,
 				PORT_KIND_CABLE
@@ -96,8 +99,9 @@ module configuration {
 
 
 /////////////////////// AbstractLinkType -- LinkType, CableLinkType /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlAbstractLinkType : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum LinkTypeSort {
 				LINKTYPESORT_OPTICAL,
 				LINKTYPESORT_COPPER,
@@ -113,7 +117,8 @@ module configuration {
 			public general::corba::WString32 manufacturerCode;
 			public general::corba::IdlIdentifier imageId;
 		};
-
+		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlLinkType : IdlAbstractLinkType {
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -130,6 +135,7 @@ module configuration {
 					in general::corba::IdlIdentifier imageId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCableLinkType : IdlAbstractLinkType {
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -149,6 +155,7 @@ module configuration {
 
 /////////////////////// CableThreadType /////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCableThreadType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
@@ -176,6 +183,7 @@ module configuration {
 
 ///////////////////////// ProtoEquipment ///////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlProtoEquipment : general::corba::IdlStorableObject {
 			public IdlEquipmentType type;
 
@@ -200,6 +208,7 @@ module configuration {
 
 ///////////////////////// Equipment ///////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlEquipment : administration::corba::IdlDomainMember {
 			public general::corba::IdlIdentifier protoEquipmentId;
 
@@ -245,6 +254,7 @@ module configuration {
 
 /////////////////////////////// Port ////////////////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlPort : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier _typeId;
 			public general::corba::WString256 description;
@@ -264,6 +274,7 @@ module configuration {
 
 ///////////////////// Transmission Path ///////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTransmissionPath : administration::corba::IdlDomainMember {
 			public general::corba::WString128 name;
 			public general::corba::WString256 description;
@@ -288,7 +299,8 @@ module configuration {
 
 
 ///////////////////// AbstractLink - Link, CableLink /////////////////////
-
+		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlAbstractLink : administration::corba::IdlDomainMember {
 			public general::corba::WString128 name;
 			public general::corba::WString256 description;
@@ -302,6 +314,7 @@ module configuration {
 			public general::corba::WString32 mark;
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlLink : IdlAbstractLink {
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -319,7 +332,8 @@ module configuration {
 					in long color,
 					in general::corba::WString32 mark);
 		};
-
+		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCableLink : IdlAbstractLink {
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -341,6 +355,7 @@ module configuration {
 
 ///////////////////// CableThread /////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCableThread : administration::corba::IdlDomainMember {
 			public general::corba::WString128 name;
 			public general::corba::WString256 description;
