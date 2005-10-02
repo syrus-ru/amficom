@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.8 2005/10/02 10:55:15 bass Exp $
+ * $Id: ImportExportCommand.java,v 1.9 2005/10/02 11:42:01 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.jgraph.graph.DefaultGraphCell;
+
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -82,12 +83,11 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String UCM_STRAIGHT_MUFF = "UCM.codename.straight_muff";
 	protected static final String UCM_SCHEMED_EQT = "UCM_SCHEMED";
 	
-	protected static final String separator = "/";
-	protected static final String id_prefix = "id";
-	protected static final String protoElementsFileName = "protos.xml";
-	protected static final String configurationFileName = "config.xml";
-	protected static String exportDirectory = "/export";
-	protected static final String imageDirectory = "image";
+	protected static final String ID_PREFIX = "id";
+	protected static final String PROTO_ELEMENTS_FILENAME = "protos.xml";
+	protected static final String CONFIGURATION_FILENAME = "config.xml";
+	protected static final String EXPORT_DIRECTORY = "export";
+	protected static final String IMAGE_DIRECTORY = "image";
 	
 	protected Identifier userId;
 	
@@ -216,10 +216,10 @@ public abstract class ImportExportCommand extends AbstractCommand {
 					try {
 						if (proto.isSetUgoCellFilename()) {
 							final SchemeImageResource ugoCell = SchemeObjectsFactory.createSchemeImageResource();
-							ugoCell.setImage(readImageResource(exportDirectory + separator + proto.getUgoCellFilename()));
+							ugoCell.setImage(readImageResource(EXPORT_DIRECTORY + File.separatorChar + proto.getUgoCellFilename()));
 							
 							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
-									readObject(exportDirectory + separator + proto.getUgoCellFilename() + id_prefix);
+									readObject(EXPORT_DIRECTORY + File.separatorChar + proto.getUgoCellFilename() + ID_PREFIX);
 							
 							proto.unsetUgoCellFilename();
 							ugoCell.getId().getXmlTransferable(proto.addNewUgoCellId(), importType);
@@ -228,10 +228,10 @@ public abstract class ImportExportCommand extends AbstractCommand {
 						}
 						if (proto.isSetSchemeCellFilename()) {
 							final SchemeImageResource schemeCell = SchemeObjectsFactory.createSchemeImageResource();
-							schemeCell.setImage(readImageResource(exportDirectory + separator + proto.getSchemeCellFilename()));
+							schemeCell.setImage(readImageResource(EXPORT_DIRECTORY + File.separatorChar + proto.getSchemeCellFilename()));
 							
 							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
-									readObject(exportDirectory + separator + proto.getSchemeCellFilename() + id_prefix);
+									readObject(EXPORT_DIRECTORY + File.separatorChar + proto.getSchemeCellFilename() + ID_PREFIX);
 							
 							proto.unsetSchemeCellFilename();
 							schemeCell.getId().getXmlTransferable(proto.addNewSchemeCellId(), importType);
@@ -305,7 +305,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 					break;
 				case EXPORT:
 					try {
-						new File(exportDirectory + separator + imageDirectory).mkdirs();
+						new File(EXPORT_DIRECTORY + File.separatorChar + IMAGE_DIRECTORY).mkdirs();
 						
 						if (proto.isSetUgoCellId()) {
 							final Identifier ugoCellId = Identifier.fromXmlTransferable(proto.getUgoCellId(), 
@@ -336,9 +336,9 @@ public abstract class ImportExportCommand extends AbstractCommand {
 //								cellId.getXmlTransferable(identifierSeq.addNewId(), importType);
 //							}
 
-							final String fileName = imageDirectory + separator + ugoCellId.getIdentifierString();
-							writeImageResource(exportDirectory + separator + fileName, ugoCell.getImage());
-							writeObject(exportDirectory + separator + fileName + id_prefix, cellIds);
+							final String fileName = IMAGE_DIRECTORY + File.separatorChar + ugoCellId.getIdentifierString();
+							writeImageResource(EXPORT_DIRECTORY + File.separatorChar + fileName, ugoCell.getImage());
+							writeObject(EXPORT_DIRECTORY + File.separatorChar + fileName + ID_PREFIX, cellIds);
 							
 							proto.unsetUgoCellId();
 							proto.setUgoCellFilename(fileName);
@@ -359,11 +359,12 @@ public abstract class ImportExportCommand extends AbstractCommand {
 								}
 							}
 							
-							final String fileName = imageDirectory + separator + schemeCellId.getIdentifierString();
-							writeImageResource(exportDirectory + separator + fileName, schemeCell.getImage());
-							writeObject(exportDirectory + separator + fileName + id_prefix, cellIds);
+							final String fileName = IMAGE_DIRECTORY + File.separatorChar + schemeCellId.getIdentifierString();
+							writeImageResource(EXPORT_DIRECTORY + File.separatorChar + fileName, schemeCell.getImage());
+							writeObject(EXPORT_DIRECTORY + File.separatorChar + fileName + ID_PREFIX, cellIds);
 							
 							proto.unsetSchemeCellId();
+							
 							proto.setSchemeCellFilename(fileName);
 						}
 					} catch (final IOException ioe) {
