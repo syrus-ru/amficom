@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapExportCommand.java,v 1.29 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapExportCommand.java,v 1.30 2005/10/02 12:31:39 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/02 12:31:39 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -111,7 +111,7 @@ public class MapExportCommand extends ExportCommand {
 			MapsDocument doc = 
 				MapsDocument.Factory.newInstance(xmlOptions);
 
-			map.getXmlTransferable(doc.addNewMaps().addNewMap(), "amficom"); //$NON-NLS-1$
+			map.getXmlTransferable(doc.addNewMaps().addNewMap(), "amficom", false); //$NON-NLS-1$
 
 			// Validate the new XML
 			if (validateXml(doc)) {

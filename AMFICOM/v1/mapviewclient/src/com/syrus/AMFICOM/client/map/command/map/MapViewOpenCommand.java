@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.32 2005/09/30 16:08:38 krupenn Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.33 2005/10/02 12:31:39 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.32 $, $Date: 2005/09/30 16:08:38 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/02 12:31:39 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -136,7 +136,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 
 	// TODO think of moving this method to 'Scheme'
 	public static void openScheme(Scheme scheme) throws ApplicationException {
-		Set<Identifiable> reverseDependencies = scheme.getReverseDependencies();
+		Set<Identifiable> reverseDependencies = scheme.getReverseDependencies(true);
 
 		Map<Short, Set<Identifier>> objectsToLoad = new HashMap<Short, Set<Identifier>>();
 
