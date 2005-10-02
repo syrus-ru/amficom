@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.24 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.25 2005/10/02 14:00:23 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/02 14:00:23 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -250,6 +251,7 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	/**
 	 * @param parentSchemeOptimizeInfoId
 	 */
+	@Crutch109
 	void setParentSchemeOptimizeInfoId(final Identifier parentSchemeOptimizeInfoId) {
 		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
 		final boolean parentSchemeOptimizeInfoIdVoid = parentSchemeOptimizeInfoId.isVoid();
@@ -271,6 +273,7 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	 *
 	 * @param schemeOptimizeInfo
 	 */
+	@Crutch109
 	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
 		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(schemeOptimizeInfo));
 	}

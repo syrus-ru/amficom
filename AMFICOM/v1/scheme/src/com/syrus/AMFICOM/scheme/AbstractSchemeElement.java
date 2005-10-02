@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.60 2005/10/01 15:13:19 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.61 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -49,7 +50,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.61 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -198,6 +199,7 @@ public abstract class AbstractSchemeElement
 	 *
 	 * @see #parentSchemeId
 	 */
+	@Crutch109
 	public void setParentScheme(final Scheme parentScheme) {
 		if (parentScheme == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -305,7 +307,7 @@ public abstract class AbstractSchemeElement
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
@@ -416,6 +418,7 @@ public abstract class AbstractSchemeElement
 		this.alarmed = alarmed;
 	}
 	
+	@Crutch109
 	final void setParentSchemeId(final Identifier parentSchemeId) {
 //		TODO: inroduce additional sanity checks
 		assert parentSchemeId != null : NON_NULL_EXPECTED;

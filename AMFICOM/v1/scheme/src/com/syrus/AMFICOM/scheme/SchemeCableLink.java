@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.99 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.100 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLink;
@@ -90,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.100 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -289,11 +290,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		cableChannelingItem.setParentPathOwner(this, processSubsequentSiblings);
 	}
 
-	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		assert schemeCableThread != null: NON_NULL_EXPECTED;
-		schemeCableThread.setParentSchemeCableLink(this);
-	}
-
 	/**
 	 * @throws CloneNotSupportedException
 	 * @see Object#clone()
@@ -417,22 +413,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		final Identifier parentSchemeId1 = super.getParentSchemeId();
 		assert !parentSchemeId1.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		return parentSchemeId1;
-	}
-
-	/**
-	 * @return an immutable set.
-	 */
-	public Set<SchemeCableThread> getSchemeCableThreads() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeCableThreads0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeCableThread> getSchemeCableThreads0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true);
 	}
 
 	/**
@@ -576,12 +556,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		cableChannelingItem.setParentPathOwner(null, processSubsequentSiblings);
 	}
 
-	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		assert schemeCableThread != null: NON_NULL_EXPECTED;
-		assert schemeCableThread.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeCableThread.setParentSchemeCableLink(null);
-	}
-
 	/**
 	 * @param created
 	 * @param modified
@@ -672,26 +646,11 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
 	@Override
+	@Crutch109
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
 		assert !super.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		super.setParentScheme(parentScheme);
-	}
-
-	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) throws ApplicationException {
-		assert schemeCableThreads != null: NON_NULL_EXPECTED;
-		final Set<SchemeCableThread> oldSchemeCableThreads = this.getSchemeCableThreads0();
-		/*
-		 * Check is made to prevent SchemeCableThreads from
-		 * permanently losing their parents.
-		 */
-		oldSchemeCableThreads.removeAll(schemeCableThreads);
-		for (final SchemeCableThread oldSchemeCableThread : oldSchemeCableThreads) {
-			this.removeSchemeCableThread(oldSchemeCableThread);
-		}
-		for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
-			this.addSchemeCableThread(schemeCableThread);
-		}
 	}
 
 	/**
@@ -893,6 +852,71 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		assert pathMembers.size() == 1;
 		return pathMembers.iterator().next();
 	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme cable threads                        *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemeCableThread> schemeCableThreadContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeCableThread> getSchemeCableThreadContainerWrappee() {
+		if (this.schemeCableThreadContainerWrappee == null) {
+			this.schemeCableThreadContainerWrappee = new StorableObjectContainerWrappee<SchemeCableThread>(this, SCHEMECABLETHREAD_CODE);
+		}
+		return this.schemeCableThreadContainerWrappee;
+	}
+
+	@Crutch109
+	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
+		assert schemeCableThread != null: NON_NULL_EXPECTED;
+		schemeCableThread.setParentSchemeCableLink(this);
+	}
+
+	@Crutch109
+	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
+		assert schemeCableThread != null: NON_NULL_EXPECTED;
+		assert schemeCableThread.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeCableThread.setParentSchemeCableLink(null);
+	}
+
+	/**
+	 * @return an immutable set.
+	 */
+	@Crutch109
+	public Set<SchemeCableThread> getSchemeCableThreads() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeCableThreads0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	Set<SchemeCableThread> getSchemeCableThreads0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) throws ApplicationException {
+		assert schemeCableThreads != null: NON_NULL_EXPECTED;
+		final Set<SchemeCableThread> oldSchemeCableThreads = this.getSchemeCableThreads0();
+		/*
+		 * Check is made to prevent SchemeCableThreads from
+		 * permanently losing their parents.
+		 */
+		oldSchemeCableThreads.removeAll(schemeCableThreads);
+		for (final SchemeCableThread oldSchemeCableThread : oldSchemeCableThreads) {
+			this.removeSchemeCableThread(oldSchemeCableThread);
+		}
+		for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
+			this.addSchemeCableThread(schemeCableThread);
+		}
+	}
+
+	/*-********************************************************************
+	 * Non-model members                                                  *
+	 **********************************************************************/	
 
 	/**
 	 * @param cableLinkType

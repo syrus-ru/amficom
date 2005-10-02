@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.53 2005/09/23 11:45:48 bass Exp $
+ * $Id: Server.java,v 1.54 2005/10/02 14:00:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/09/23 11:45:48 $
+ * @version $Revision: 1.54 $, $Date: 2005/10/02 14:00:22 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -219,7 +219,7 @@ public final class Server extends DomainMember implements Characterizable, Namab
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.131 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeElement.java,v 1.132 2005/10/02 14:00:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,6 +54,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.bugs.Crutch136;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -96,7 +97,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.131 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.132 $, $Date: 2005/10/02 14:00:23 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1270,6 +1271,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
 	@Override
+	@Crutch109
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
@@ -1595,7 +1597,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: scheme devices                              *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeDevice> getSchemeDeviceContainerWrappee() {
 		if (this.schemeDeviceContainerWrappee == null) {
@@ -1680,7 +1682,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: scheme links, lynx and w3m                  *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
 		if (this.schemeLinkContainerWrappee == null) {
@@ -1765,7 +1767,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: scheme elements                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
 		if (this.schemeElementContainerWrappee == null) {
@@ -1859,7 +1861,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: schemes                                     *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Scheme> schemeContainerWrappee;
+	private StorableObjectContainerWrappee<Scheme> schemeContainerWrappee;
 
 	StorableObjectContainerWrappee<Scheme> getSchemeContainerWrappee() {
 		if (this.schemeContainerWrappee == null) {

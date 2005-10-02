@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.107 2005/10/01 15:13:19 bass Exp $
+ * $Id: Scheme.java,v 1.108 2005/10/02 14:00:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -86,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.107 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.108 $, $Date: 2005/10/02 14:00:23 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -333,43 +334,6 @@ public final class Scheme extends AbstractCloneableDomainMember
 			Log.debugException(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
-	}
-
-	/**
-	 * @param schemeCableLink cannot be <code>null</code>.
-	 */
-	public void addSchemeCableLink(final SchemeCableLink schemeCableLink) {
-		assert schemeCableLink != null: NON_NULL_EXPECTED;
-		schemeCableLink.setParentScheme(this);
-	}
-
-	/**
-	 * @param schemeElement cannot be <code>null</code>.
-	 */
-	public void addSchemeElement(final SchemeElement schemeElement) {
-		assert schemeElement != null: NON_NULL_EXPECTED;
-		schemeElement.setParentScheme(this);
-	}
-
-	/**
-	 * @param schemeLink cannot be <code>null</code>.
-	 */
-	public void addSchemeLink(final SchemeLink schemeLink) {
-		assert schemeLink != null: NON_NULL_EXPECTED;
-		schemeLink.setParentScheme(this);
-	}
-
-	/**
-	 * @param schemeOptimizeInfo cannot be <code>null</code>.
-	 */
-	public void addSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
-		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
-		schemeOptimizeInfo.setParentScheme(this);
-	}
-
-	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		assert schemeMonitoringSolution != null : NON_NULL_EXPECTED;
-		schemeMonitoringSolution.setParentScheme(this);
 	}
 
 	/**
@@ -636,19 +600,6 @@ public final class Scheme extends AbstractCloneableDomainMember
 		return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 	}
 
-	public Set<SchemeCableLink> getSchemeCableLinks() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeCableLinks0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeCableLink> getSchemeCableLinks0() throws ApplicationException {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true);
-	}
-
 	Identifier getSchemeCellId() {
 		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
 		assert this.schemeCellId.isVoid() || this.schemeCellId.getMajor() == IMAGERESOURCE_CODE;
@@ -678,70 +629,8 @@ public final class Scheme extends AbstractCloneableDomainMember
 		return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
-	public Set<SchemeElement> getSchemeElements() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeElements0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeElement> getSchemeElements0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true);
-	}
-
 	public IdlKind getKind() {
 		return IdlKind.from_int(this.kind);
-	}
-
-	public Set<SchemeLink> getSchemeLinks() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeLinks0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
-	}
-
-	public Set<SchemeOptimizeInfo> getSchemeOptimizeInfos() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeOptimizeInfos0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	private Set<SchemeOptimizeInfo> getSchemeOptimizeInfos0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true);
-	}
-
-	/**
-	 * Returns a {@code Set} of {@code SchemeMonitoringSolution}s
-	 * <em>directly</em> referencing this {@code Scheme}, i. e. having
-	 * <em>no</em> parent {@code SchemeOptimizeInfo}. To get the
-	 * <em>entire</em> {@code Set} of {@code SchemeMonitoringSolution}s
-	 * that belong to this {@code Scheme}, use
-	 * {@link #getSchemeMonitoringSolutionsRecursively()} instead.
-	 * 
-	 * @see #getSchemeMonitoringSolutionsRecursively()
-	 */
-	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEMONITORINGSOLUTION_CODE), true);
 	}
 
 	Identifier getSymbolId() {
@@ -940,66 +829,6 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * The <code>SchemeCableLink</code> must belong to this
-	 * <code>Scheme</code>, or crap will meet the fan.
-	 *
-	 * @param schemeCableLink
-	 */
-	public void removeSchemeCableLink(final SchemeCableLink schemeCableLink) {
-		assert schemeCableLink != null: NON_NULL_EXPECTED;
-		assert schemeCableLink.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeCableLink.setParentScheme(null);
-	}
-
-	/**
-	 * The <code>SchemeElement</code> must belong to this
-	 * <code>Scheme</code>, or crap will meet the fan.
-	 *
-	 * @param schemeElement
-	 */
-	public void removeSchemeElement(final SchemeElement schemeElement) {
-		assert schemeElement != null: NON_NULL_EXPECTED;
-		assert schemeElement.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeElement.setParentScheme(null);
-	}
-
-	/**
-	 * The <code>SchemeLink</code> must belong to this <code>Scheme</code>,
-	 * or crap will meet the fan.
-	 *
-	 * @param schemeLink
-	 */
-	public void removeSchemeLink(final SchemeLink schemeLink) {
-		assert schemeLink != null: NON_NULL_EXPECTED;
-		assert schemeLink.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeLink.setParentScheme(null);
-	}
-
-	/**
-	 * The {@code SchemeOptimizeInfo} must belong to this {@code Scheme}, or
-	 * crap will meet the fan.
-	 *
-	 * @param schemeOptimizeInfo
-	 */
-	public void removeSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
-		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
-		assert schemeOptimizeInfo.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeOptimizeInfo.setParentScheme(null);
-	}
-
-	/**
-	 * The {@code SchemeMonitoringSolution} must belong to this
-	 * {@code Scheme}, or crap will meet the fan.
-	 *
-	 * @param schemeMonitoringSolution
-	 */
-	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		assert schemeMonitoringSolution != null : NON_NULL_EXPECTED;
-		assert schemeMonitoringSolution.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeMonitoringSolution.setParentScheme(null);
-	}
-
-	/**
 	 * @param created
 	 * @param modified
 	 * @param creatorId
@@ -1192,22 +1021,6 @@ public final class Scheme extends AbstractCloneableDomainMember
 		super.markAsChanged();
 	}
 
-	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) throws ApplicationException {
-		assert schemeCableLinks != null: NON_NULL_EXPECTED;
-		final Set<SchemeCableLink> oldSchemeCableLinks = this.getSchemeCableLinks0();
-		/*
-		 * Check is made to prevent SchemeCableLinks from
-		 * permanently losing their parents.
-		 */
-		oldSchemeCableLinks.removeAll(schemeCableLinks);
-		for (final SchemeCableLink oldSchemeCableLink : oldSchemeCableLinks) {
-			this.removeSchemeCableLink(oldSchemeCableLink);
-		}
-		for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
-			this.addSchemeCableLink(schemeCableLink);
-		}
-	}
-
 	/**
 	 * @param schemeCellId
 	 */
@@ -1230,22 +1043,6 @@ public final class Scheme extends AbstractCloneableDomainMember
 		this.setSchemeCellId(Identifier.possiblyVoid(schemeCell));
 	}
 
-	public void setSchemeElements(final Set<SchemeElement> schemeElements) throws ApplicationException {
-		assert schemeElements != null: NON_NULL_EXPECTED;
-		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
-		/*
-		 * Check is made to prevent SchemeElements from
-		 * permanently losing their parents.
-		 */
-		oldSchemeElements.removeAll(schemeElements);
-		for (final SchemeElement oldSchemeElement : oldSchemeElements) {
-			this.removeSchemeElement(oldSchemeElement);
-		}
-		for (final SchemeElement schemeElement : schemeElements) {
-			this.addSchemeElement(schemeElement);
-		}
-	}
-
 	/**
 	 * @param kind
 	 */
@@ -1256,54 +1053,6 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 		this.kind = kind.value();
 		super.markAsChanged();
-	}
-
-	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) throws ApplicationException {
-		assert schemeLinks != null: NON_NULL_EXPECTED;
-		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
-		/*
-		 * Check is made to prevent SchemeLinks from
-		 * permanently losing their parents.
-		 */
-		oldSchemeLinks.removeAll(schemeLinks);
-		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
-			this.removeSchemeLink(oldSchemeLink);
-		}
-		for (final SchemeLink schemeLink : schemeLinks) {
-			this.addSchemeLink(schemeLink);
-		}
-	}
-
-	public void setSchemeOptimizeInfos(final Set<SchemeOptimizeInfo> schemeOptimizeInfos) throws ApplicationException {
-		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
-		final Set<SchemeOptimizeInfo> oldSchemeOptimizeInfos = this.getSchemeOptimizeInfos0();
-		/*
-		 * Check is made to prevent SchemeOptimizeInfos from
-		 * permanently losing their parents.
-		 */
-		oldSchemeOptimizeInfos.removeAll(schemeOptimizeInfos);
-		for (final SchemeOptimizeInfo oldSchemeOptimizeInfo : oldSchemeOptimizeInfos) {
-			this.removeSchemeOptimizeInfo(oldSchemeOptimizeInfo);
-		}
-		for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
-			this.addSchemeOptimizeInfo(schemeOptimizeInfo);
-		}
-	}
-
-	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) throws ApplicationException {
-		assert schemeMonitoringSolutions != null : NON_NULL_EXPECTED;
-		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
-		/*
-		 * Check is made to prevent SchemeMonitoringSolutions from
-		 * permanently losing their parents.
-		 */
-		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
-		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
-			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
-		}
-		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
-			this.addSchemeMonitoringSolution(schemeMonitoringSolution);
-		}
 	}
 
 	/**
@@ -1452,10 +1201,77 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/*-********************************************************************
+	 * Children manipulation: scheme elements                             *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
+		if (this.schemeElementContainerWrappee == null) {
+			this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE);
+		}
+		return this.schemeElementContainerWrappee;
+	}
+
+	/**
+	 * @param schemeElement cannot be <code>null</code>.
+	 */
+	@Crutch109
+	public void addSchemeElement(final SchemeElement schemeElement) {
+		assert schemeElement != null: NON_NULL_EXPECTED;
+		schemeElement.setParentScheme(this);
+	}
+
+	/**
+	 * The <code>SchemeElement</code> must belong to this
+	 * <code>Scheme</code>, or crap will meet the fan.
+	 *
+	 * @param schemeElement
+	 */
+	@Crutch109
+	public void removeSchemeElement(final SchemeElement schemeElement) {
+		assert schemeElement != null: NON_NULL_EXPECTED;
+		assert schemeElement.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeElement.setParentScheme(null);
+	}
+
+	@Crutch109
+	public Set<SchemeElement> getSchemeElements() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeElements0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	Set<SchemeElement> getSchemeElements0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeElements(final Set<SchemeElement> schemeElements) throws ApplicationException {
+		assert schemeElements != null: NON_NULL_EXPECTED;
+		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
+		/*
+		 * Check is made to prevent SchemeElements from
+		 * permanently losing their parents.
+		 */
+		oldSchemeElements.removeAll(schemeElements);
+		for (final SchemeElement oldSchemeElement : oldSchemeElements) {
+			this.removeSchemeElement(oldSchemeElement);
+		}
+		for (final SchemeElement schemeElement : schemeElements) {
+			this.addSchemeElement(schemeElement);
+		}
+	}
+
+	/*-********************************************************************
 	 * Children manipulation: scheme links                                *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
 		if (this.schemeLinkContainerWrappee == null) {
@@ -1464,17 +1280,266 @@ public final class Scheme extends AbstractCloneableDomainMember
 		return this.schemeLinkContainerWrappee;
 	}
 
+	/**
+	 * @param schemeLink cannot be <code>null</code>.
+	 */
+	@Crutch109
+	public void addSchemeLink(final SchemeLink schemeLink) {
+		assert schemeLink != null: NON_NULL_EXPECTED;
+		schemeLink.setParentScheme(this);
+	}
+
+	/**
+	 * The <code>SchemeLink</code> must belong to this <code>Scheme</code>,
+	 * or crap will meet the fan.
+	 *
+	 * @param schemeLink
+	 */
+	@Crutch109
+	public void removeSchemeLink(final SchemeLink schemeLink) {
+		assert schemeLink != null: NON_NULL_EXPECTED;
+		assert schemeLink.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeLink.setParentScheme(null);
+	}
+
+	@Crutch109
+	public Set<SchemeLink> getSchemeLinks() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeLinks0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) throws ApplicationException {
+		assert schemeLinks != null: NON_NULL_EXPECTED;
+		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
+		/*
+		 * Check is made to prevent SchemeLinks from
+		 * permanently losing their parents.
+		 */
+		oldSchemeLinks.removeAll(schemeLinks);
+		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
+			this.removeSchemeLink(oldSchemeLink);
+		}
+		for (final SchemeLink schemeLink : schemeLinks) {
+			this.addSchemeLink(schemeLink);
+		}
+	}
+
 	/*-********************************************************************
-	 * Children manipulation: scheme elements                             *
+	 * Children manipulation: scheme cable links                          *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
+	StorableObjectContainerWrappee<SchemeCableLink> schemeCableLinkContainerWrappee;
 
-	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
-		if (this.schemeElementContainerWrappee == null) {
-			this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE);
+	StorableObjectContainerWrappee<SchemeCableLink> getSchemeCableLinkContainerWrappee() {
+		if (this.schemeCableLinkContainerWrappee == null) {
+			this.schemeCableLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeCableLink>(this, SCHEMECABLELINK_CODE);
 		}
-		return this.schemeElementContainerWrappee;
+		return this.schemeCableLinkContainerWrappee;
+	}
+
+	/**
+	 * @param schemeCableLink cannot be <code>null</code>.
+	 */
+	@Crutch109
+	public void addSchemeCableLink(final SchemeCableLink schemeCableLink) {
+		assert schemeCableLink != null: NON_NULL_EXPECTED;
+		schemeCableLink.setParentScheme(this);
+	}
+
+	/**
+	 * The <code>SchemeCableLink</code> must belong to this
+	 * <code>Scheme</code>, or crap will meet the fan.
+	 *
+	 * @param schemeCableLink
+	 */
+	@Crutch109
+	public void removeSchemeCableLink(final SchemeCableLink schemeCableLink) {
+		assert schemeCableLink != null: NON_NULL_EXPECTED;
+		assert schemeCableLink.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeCableLink.setParentScheme(null);
+	}
+
+	@Crutch109
+	public Set<SchemeCableLink> getSchemeCableLinks() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeCableLinks0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	Set<SchemeCableLink> getSchemeCableLinks0() throws ApplicationException {
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) throws ApplicationException {
+		assert schemeCableLinks != null: NON_NULL_EXPECTED;
+		final Set<SchemeCableLink> oldSchemeCableLinks = this.getSchemeCableLinks0();
+		/*
+		 * Check is made to prevent SchemeCableLinks from
+		 * permanently losing their parents.
+		 */
+		oldSchemeCableLinks.removeAll(schemeCableLinks);
+		for (final SchemeCableLink oldSchemeCableLink : oldSchemeCableLinks) {
+			this.removeSchemeCableLink(oldSchemeCableLink);
+		}
+		for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
+			this.addSchemeCableLink(schemeCableLink);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme optimizeInfos                        *
+	 **********************************************************************/
+
+	StorableObjectContainerWrappee<SchemeOptimizeInfo> schemeOptimizeInfoContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeOptimizeInfo> getSchemeOptimizeInfoContainerWrappee() {
+		if (this.schemeOptimizeInfoContainerWrappee == null) {
+			this.schemeOptimizeInfoContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfo>(this, SCHEMEOPTIMIZEINFO_CODE);
+		}
+		return this.schemeOptimizeInfoContainerWrappee;
+	}
+
+	/**
+	 * @param schemeOptimizeInfo cannot be <code>null</code>.
+	 */
+	@Crutch109
+	public void addSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
+		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
+		schemeOptimizeInfo.setParentScheme(this);
+	}
+
+	/**
+	 * The {@code SchemeOptimizeInfo} must belong to this {@code Scheme}, or
+	 * crap will meet the fan.
+	 *
+	 * @param schemeOptimizeInfo
+	 */
+	@Crutch109
+	public void removeSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
+		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
+		assert schemeOptimizeInfo.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeOptimizeInfo.setParentScheme(null);
+	}
+
+	@Crutch109
+	public Set<SchemeOptimizeInfo> getSchemeOptimizeInfos() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeOptimizeInfos0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	private Set<SchemeOptimizeInfo> getSchemeOptimizeInfos0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeOptimizeInfos(final Set<SchemeOptimizeInfo> schemeOptimizeInfos) throws ApplicationException {
+		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
+		final Set<SchemeOptimizeInfo> oldSchemeOptimizeInfos = this.getSchemeOptimizeInfos0();
+		/*
+		 * Check is made to prevent SchemeOptimizeInfos from
+		 * permanently losing their parents.
+		 */
+		oldSchemeOptimizeInfos.removeAll(schemeOptimizeInfos);
+		for (final SchemeOptimizeInfo oldSchemeOptimizeInfo : oldSchemeOptimizeInfos) {
+			this.removeSchemeOptimizeInfo(oldSchemeOptimizeInfo);
+		}
+		for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
+			this.addSchemeOptimizeInfo(schemeOptimizeInfo);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme monitoringSolutions                  *
+	 **********************************************************************/
+
+	StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeMonitoringSolution> getSchemeMonitoringSolutionContainerWrappee() {
+		if (this.schemeMonitoringSolutionContainerWrappee == null) {
+			this.schemeMonitoringSolutionContainerWrappee = new StorableObjectContainerWrappee<SchemeMonitoringSolution>(this, SCHEMEMONITORINGSOLUTION_CODE);
+		}
+		return this.schemeMonitoringSolutionContainerWrappee;
+	}
+
+	@Crutch109
+	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		assert schemeMonitoringSolution != null : NON_NULL_EXPECTED;
+		schemeMonitoringSolution.setParentScheme(this);
+	}
+
+	/**
+	 * The {@code SchemeMonitoringSolution} must belong to this
+	 * {@code Scheme}, or crap will meet the fan.
+	 *
+	 * @param schemeMonitoringSolution
+	 */
+	@Crutch109
+	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		assert schemeMonitoringSolution != null : NON_NULL_EXPECTED;
+		assert schemeMonitoringSolution.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeMonitoringSolution.setParentScheme(null);
+	}
+
+	/**
+	 * Returns a {@code Set} of {@code SchemeMonitoringSolution}s
+	 * <em>directly</em> referencing this {@code Scheme}, i. e. having
+	 * <em>no</em> parent {@code SchemeOptimizeInfo}. To get the
+	 * <em>entire</em> {@code Set} of {@code SchemeMonitoringSolution}s
+	 * that belong to this {@code Scheme}, use
+	 * {@link #getSchemeMonitoringSolutionsRecursively()} instead.
+	 * 
+	 * @see #getSchemeMonitoringSolutionsRecursively()
+	 */
+	@Crutch109
+	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEMONITORINGSOLUTION_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) throws ApplicationException {
+		assert schemeMonitoringSolutions != null : NON_NULL_EXPECTED;
+		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
+		/*
+		 * Check is made to prevent SchemeMonitoringSolutions from
+		 * permanently losing their parents.
+		 */
+		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
+			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
+		}
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+			this.addSchemeMonitoringSolution(schemeMonitoringSolution);
+		}
 	}
 
 	/*-********************************************************************

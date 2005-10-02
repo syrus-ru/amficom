@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.95 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemePath.java,v 1.96 2005/10/02 14:00:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -71,7 +72,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.96 $, $Date: 2005/10/02 14:00:23 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -407,6 +408,7 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param parentSchemeMonitoringSolutionId
 	 */
+	@Crutch109
 	void setParentSchemeMonitoringSolutionId(final Identifier parentSchemeMonitoringSolutionId) {
 		assert this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
@@ -432,6 +434,7 @@ public final class SchemePath extends StorableObject
 	 *
 	 * @param parentSchemeMonitoringSolution
 	 */
+	@Crutch109
 	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
 		this.setParentSchemeMonitoringSolutionId(Identifier.possiblyVoid(parentSchemeMonitoringSolution));
 	}
@@ -536,7 +539,7 @@ public final class SchemePath extends StorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

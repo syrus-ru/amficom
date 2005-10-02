@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.138 2005/10/01 15:13:17 bass Exp $
+ * $Id: Equipment.java,v 1.139 2005/10/02 14:00:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.138 $, $Date: 2005/10/01 15:13:17 $
+ * @version $Revision: 1.139 $, $Date: 2005/10/02 14:00:22 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -639,7 +639,7 @@ public final class Equipment extends DomainMember
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

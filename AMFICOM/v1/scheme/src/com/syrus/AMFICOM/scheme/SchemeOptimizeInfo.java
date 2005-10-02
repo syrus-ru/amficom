@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.67 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.68 2005/10/02 14:00:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.68 $, $Date: 2005/10/02 14:00:23 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -247,21 +248,6 @@ public final class SchemeOptimizeInfo extends StorableObject
 		}
 	}
 
-	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
-		schemeMonitoringSolution.setParentSchemeOptimizeInfo(this);
-	}
-
-	public void addSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
-		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
-		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(this);
-	}
-
-	public void addSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
-		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
-		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this);
-	}
-
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
@@ -370,45 +356,6 @@ public final class SchemeOptimizeInfo extends StorableObject
 		return this.rtuDeleteProb;
 	}
 
-	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true);
-	}
-
-	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true);
-	}
-
-	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true);
-	}
-
 	public double getSurvivorRate() {
 		return this.survivorRate;
 	}
@@ -460,24 +407,6 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	public double getWaveLength() {
 		return this.waveLength;
-	}
-
-	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
-		assert schemeMonitoringSolution.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeMonitoringSolution.setParentSchemeOptimizeInfo(null);
-	}
-
-	public void removeSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
-		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
-		assert schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(null);
-	}
-
-	public void removeSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
-		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
-		assert schemeOptimizeInfoSwitch.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null);
 	}
 
 	/**
@@ -621,6 +550,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	/**
 	 * @param parentSchemeId
 	 */
+	@Crutch109
 	void setParentSchemeId(final Identifier parentSchemeId) {
 		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
@@ -646,6 +576,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 *
 	 * @param parentScheme
 	 */
+	@Crutch109
 	public void setParentScheme(final Scheme parentScheme) {
 		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme));
 	}
@@ -669,54 +600,6 @@ public final class SchemeOptimizeInfo extends StorableObject
 			return;
 		this.rtuDeleteProb = rtuDeleteProb;
 		super.markAsChanged();
-	}
-
-	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) throws ApplicationException {
-		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
-		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
-		/*
-		 * Check is made to prevent SchemeMonitoringSolutions from
-		 * permanently losing their parents.
-		 */
-		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
-		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
-			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
-		}
-		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
-			this.addSchemeMonitoringSolution(schemeMonitoringSolution);
-		}
-	}
-
-	public void setSchemeOptimizeInfoRtus(final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus) throws ApplicationException {
-		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
-		final Set<SchemeOptimizeInfoRtu> oldSchemeOptimizeInfoRtus = this.getSchemeOptimizeInfoRtus0();
-		/*
-		 * Check is made to prevent SchemeOptimizeInfoRtus from
-		 * permanently losing their parents.
-		 */
-		oldSchemeOptimizeInfoRtus.removeAll(schemeOptimizeInfoRtus);
-		for (final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu : oldSchemeOptimizeInfoRtus) {
-			this.removeSchemeOptimizeInfoRtu(oldSchemeOptimizeInfoRtu);
-		}
-		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : schemeOptimizeInfoRtus) {
-			this.addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu);
-		}
-	}
-
-	public void setSchemeOptimizeInfoSwitches(final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches) throws ApplicationException {
-		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
-		final Set<SchemeOptimizeInfoSwitch> oldSchemeOptimizeInfoSwitches = this.getSchemeOptimizeInfoSwitches0();
-		/*
-		 * Check is made to prevent SchemeOptimizeInfoSwitches from
-		 * permanently losing their parents.
-		 */
-		oldSchemeOptimizeInfoSwitches.removeAll(schemeOptimizeInfoSwitches);
-		for (final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch : oldSchemeOptimizeInfoSwitches) {
-			this.removeSchemeOptimizeInfoSwitch(oldSchemeOptimizeInfoSwitch);
-		}
-		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : schemeOptimizeInfoSwitches) {
-			this.addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch);
-		}
 	}
 
 	public void setSurvivorRate(final double survivorRate) {
@@ -778,5 +661,179 @@ public final class SchemeOptimizeInfo extends StorableObject
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme optimizeInfo switches                *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitchContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitchContainerWrappee() {
+		if (this.schemeOptimizeInfoSwitchContainerWrappee == null) {
+			this.schemeOptimizeInfoSwitchContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch>(this, SCHEMEOPTIMIZEINFOSWITCH_CODE);
+		}
+		return this.schemeOptimizeInfoSwitchContainerWrappee;
+	}
+
+	@Crutch109
+	public void addSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
+		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
+		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this);
+	}
+
+	@Crutch109
+	public void removeSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
+		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
+		assert schemeOptimizeInfoSwitch.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null);
+	}
+
+	@Crutch109
+	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeOptimizeInfoSwitches(final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches) throws ApplicationException {
+		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
+		final Set<SchemeOptimizeInfoSwitch> oldSchemeOptimizeInfoSwitches = this.getSchemeOptimizeInfoSwitches0();
+		/*
+		 * Check is made to prevent SchemeOptimizeInfoSwitches from
+		 * permanently losing their parents.
+		 */
+		oldSchemeOptimizeInfoSwitches.removeAll(schemeOptimizeInfoSwitches);
+		for (final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch : oldSchemeOptimizeInfoSwitches) {
+			this.removeSchemeOptimizeInfoSwitch(oldSchemeOptimizeInfoSwitch);
+		}
+		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : schemeOptimizeInfoSwitches) {
+			this.addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme optimizeInfo RTUs                    *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtuContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtuContainerWrappee() {
+		if (this.schemeOptimizeInfoRtuContainerWrappee == null) {
+			this.schemeOptimizeInfoRtuContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfoRtu>(this, SCHEMEOPTIMIZEINFORTU_CODE);
+		}
+		return this.schemeOptimizeInfoRtuContainerWrappee;
+	}
+
+	@Crutch109
+	public void addSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
+		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
+		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(this);
+	}
+
+	@Crutch109
+	public void removeSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
+		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
+		assert schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(null);
+	}
+
+	@Crutch109
+	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeOptimizeInfoRtus(final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus) throws ApplicationException {
+		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
+		final Set<SchemeOptimizeInfoRtu> oldSchemeOptimizeInfoRtus = this.getSchemeOptimizeInfoRtus0();
+		/*
+		 * Check is made to prevent SchemeOptimizeInfoRtus from
+		 * permanently losing their parents.
+		 */
+		oldSchemeOptimizeInfoRtus.removeAll(schemeOptimizeInfoRtus);
+		for (final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu : oldSchemeOptimizeInfoRtus) {
+			this.removeSchemeOptimizeInfoRtu(oldSchemeOptimizeInfoRtu);
+		}
+		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : schemeOptimizeInfoRtus) {
+			this.addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme monitoringSolutions                  *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeMonitoringSolution> getSchemeMonitoringSolutionContainerWrappee() {
+		if (this.schemeMonitoringSolutionContainerWrappee == null) {
+			this.schemeMonitoringSolutionContainerWrappee = new StorableObjectContainerWrappee<SchemeMonitoringSolution>(this, SCHEMEMONITORINGSOLUTION_CODE);
+		}
+		return this.schemeMonitoringSolutionContainerWrappee;
+	}
+
+	@Crutch109
+	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
+		schemeMonitoringSolution.setParentSchemeOptimizeInfo(this);
+	}
+
+	@Crutch109
+	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
+		assert schemeMonitoringSolution.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeMonitoringSolution.setParentSchemeOptimizeInfo(null);
+	}
+
+	@Crutch109
+	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) throws ApplicationException {
+		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
+		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
+		/*
+		 * Check is made to prevent SchemeMonitoringSolutions from
+		 * permanently losing their parents.
+		 */
+		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
+			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
+		}
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+			this.addSchemeMonitoringSolution(schemeMonitoringSolution);
+		}
 	}
 }

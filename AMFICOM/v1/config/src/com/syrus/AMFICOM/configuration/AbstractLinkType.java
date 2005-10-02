@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.23 2005/09/28 19:06:20 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.24 2005/10/02 14:00:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/28 19:06:20 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/02 14:00:22 $
  * @author $Author: bass $
  * @module config
  */
@@ -88,7 +88,7 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

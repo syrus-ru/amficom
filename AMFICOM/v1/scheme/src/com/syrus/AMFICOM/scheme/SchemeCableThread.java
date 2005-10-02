@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.89 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.90 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -76,7 +77,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.90 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -712,6 +713,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @param parentSchemeCableLink
 	 */
+	@Crutch109
 	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
 		assert this.parentSchemeCableLinkId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
@@ -875,6 +877,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
+	@Crutch109
 	void setParentSchemeCableLinkId(Identifier parentSchemeCableLinkId) {
 //		TODO: inroduce additional sanity checks
 		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
@@ -911,7 +914,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

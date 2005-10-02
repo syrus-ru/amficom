@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.73 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.74 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.74 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -240,11 +241,6 @@ public final class SchemeMonitoringSolution
 		}
 	}
 
-	public void addSchemePath(final SchemePath schemePath) {
-		assert schemePath != null: NON_NULL_EXPECTED;
-		schemePath.setParentSchemeMonitoringSolution(this);
-	}
-
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
@@ -345,19 +341,6 @@ public final class SchemeMonitoringSolution
 		return this.active;
 	}
 
-	public Set<SchemePath> getSchemePaths() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemePaths0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemePath> getSchemePaths0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
-	}
-
 	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
@@ -392,12 +375,6 @@ public final class SchemeMonitoringSolution
 			final boolean usePool)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
-	}
-
-	public void removeSchemePath(final SchemePath schemePath) {
-		assert schemePath != null: NON_NULL_EXPECTED;
-		assert schemePath.getParentSchemeMonitoringSolutionId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemePath.setParentSchemeMonitoringSolution(null);
 	}
 
 	/**
@@ -467,6 +444,7 @@ public final class SchemeMonitoringSolution
 	/**
 	 * @param parentSchemeOptimizeInfoId
 	 */
+	@Crutch109
 	void setParentSchemeOptimizeInfoId(final Identifier parentSchemeOptimizeInfoId) {
 		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeOptimizeInfoIdVoid = this.parentSchemeOptimizeInfoId.isVoid();
@@ -505,6 +483,7 @@ public final class SchemeMonitoringSolution
 	 *
 	 * @param parentSchemeOptimizeInfo
 	 */
+	@Crutch109
 	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
 		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(parentSchemeOptimizeInfo));
 	}
@@ -512,6 +491,7 @@ public final class SchemeMonitoringSolution
 	/**
 	 * @param parentSchemeId
 	 */
+	@Crutch109
 	void setParentSchemeId(final Identifier parentSchemeId) {
 		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
@@ -545,6 +525,7 @@ public final class SchemeMonitoringSolution
 	 * @param parentScheme must be non-{@code null}, otherwise the object
 	 *        will be deleted from pool. 
 	 */
+	@Crutch109
 	public void setParentScheme(final Scheme parentScheme) {
 		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme));
 	}
@@ -590,22 +571,6 @@ public final class SchemeMonitoringSolution
 		super.markAsChanged();
 	}
 
-	public void setSchemePaths(final Set<SchemePath> schemePaths) throws ApplicationException {
-		assert schemePaths != null: NON_NULL_EXPECTED;
-		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0();
-		/*
-		 * Check is made to prevent SchemePaths from
-		 * permanently losing their parents.
-		 */
-		oldSchemePaths.removeAll(schemePaths);
-		for (final SchemePath oldSchemePath : oldSchemePaths) {
-			this.removeSchemePath(oldSchemePath);
-		}
-		for (final SchemePath schemePath : schemePaths) {
-			this.addSchemePath(schemePath);
-		}
-	}
-
 	/**
 	 * @param transferable
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
@@ -642,5 +607,63 @@ public final class SchemeMonitoringSolution
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme paths                                *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemePath> schemePathContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemePath> getSchemePathContainerWrappee() {
+		if (this.schemePathContainerWrappee == null) {
+			this.schemePathContainerWrappee = new StorableObjectContainerWrappee<SchemePath>(this, SCHEMEPATH_CODE);
+		}
+		return this.schemePathContainerWrappee;
+	}
+
+	@Crutch109
+	public void addSchemePath(final SchemePath schemePath) {
+		assert schemePath != null: NON_NULL_EXPECTED;
+		schemePath.setParentSchemeMonitoringSolution(this);
+	}
+
+	@Crutch109
+	public void removeSchemePath(final SchemePath schemePath) {
+		assert schemePath != null: NON_NULL_EXPECTED;
+		assert schemePath.getParentSchemeMonitoringSolutionId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemePath.setParentSchemeMonitoringSolution(null);
+	}
+
+	@Crutch109
+	public Set<SchemePath> getSchemePaths() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemePaths0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	Set<SchemePath> getSchemePaths0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemePaths(final Set<SchemePath> schemePaths) throws ApplicationException {
+		assert schemePaths != null: NON_NULL_EXPECTED;
+		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0();
+		/*
+		 * Check is made to prevent SchemePaths from
+		 * permanently losing their parents.
+		 */
+		oldSchemePaths.removeAll(schemePaths);
+		for (final SchemePath oldSchemePath : oldSchemePaths) {
+			this.removeSchemePath(oldSchemePath);
+		}
+		for (final SchemePath schemePath : schemePaths) {
+			this.addSchemePath(schemePath);
+		}
 	}
 }

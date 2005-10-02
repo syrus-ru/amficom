@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.8 2005/10/01 15:13:17 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.9 2005/10/02 14:00:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/01 15:13:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/02 14:00:22 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -374,7 +374,7 @@ public final class ProtoEquipment extends StorableObject implements Characteriza
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.62 2005/09/28 11:01:11 bob Exp $
+ * $Id: Domain.java,v 1.63 2005/10/02 14:00:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/09/28 11:01:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.63 $, $Date: 2005/10/02 14:00:22 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -259,7 +259,7 @@ public final class Domain extends DomainMember implements Characterizable {
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

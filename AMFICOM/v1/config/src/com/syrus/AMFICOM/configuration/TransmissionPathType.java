@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.72 2005/09/23 11:45:45 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.73 2005/10/02 14:00:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/09/23 11:45:45 $
+ * @version $Revision: 1.73 $, $Date: 2005/10/02 14:00:22 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -165,7 +165,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.109 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.110 2005/10/02 14:00:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.109 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.110 $, $Date: 2005/10/02 14:00:23 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -1271,7 +1271,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
@@ -1360,7 +1360,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * Children manipulation: scheme devices                              *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeDevice> getSchemeDeviceContainerWrappee() {
 		if (this.schemeDeviceContainerWrappee == null) {
@@ -1445,7 +1445,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * Children manipulation: scheme links                                *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
 		if (this.schemeLinkContainerWrappee == null) {
@@ -1530,7 +1530,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * Children manipulation: scheme protoelements                        *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeProtoElement> getSchemeProtoElementContainerWrappee() {
 		if (this.schemeProtoElementContainerWrappee == null) {

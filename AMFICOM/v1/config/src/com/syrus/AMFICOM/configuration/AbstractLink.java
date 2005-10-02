@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.11 2005/09/23 11:45:45 bass Exp $
+ * $Id: AbstractLink.java,v 1.12 2005/10/02 14:00:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -147,7 +147,7 @@ public abstract class AbstractLink extends DomainMember
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

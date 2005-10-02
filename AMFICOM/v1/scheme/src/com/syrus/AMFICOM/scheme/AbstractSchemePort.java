@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.73 2005/10/01 15:13:19 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.74 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -60,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.74 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -417,6 +418,7 @@ public abstract class AbstractSchemePort
 	/**
 	 * @param parentSchemeDeviceId
 	 */
+	@Crutch109
 	final void setParentSchemeDeviceId(final Identifier parentSchemeDeviceId) {
 		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
@@ -442,6 +444,7 @@ public abstract class AbstractSchemePort
 	 *
 	 * @param parentSchemeDevice
 	 */
+	@Crutch109
 	public final void setParentSchemeDevice(final SchemeDevice parentSchemeDevice) {
 		this.setParentSchemeDeviceId(Identifier.possiblyVoid(parentSchemeDevice));
 	}
@@ -668,7 +671,7 @@ public abstract class AbstractSchemePort
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

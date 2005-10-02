@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.90 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeLink.java,v 1.91 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.Link;
@@ -75,7 +76,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.91 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -881,6 +882,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
 	@Override
+	@Crutch109
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null
 				&& this.parentSchemeElementId != null

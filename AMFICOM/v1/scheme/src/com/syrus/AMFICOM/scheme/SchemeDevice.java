@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.96 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeDevice.java,v 1.97 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -79,7 +80,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.97 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -299,22 +300,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 	}
 
-	/**
-	 * @param schemeCablePort cannot be <code>null</code>.
-	 */
-	public void addSchemeCablePort(final SchemeCablePort schemeCablePort) {
-		assert schemeCablePort != null: NON_NULL_EXPECTED;
-		schemeCablePort.setParentSchemeDevice(this);
-	}
-
-	/**
-	 * @param schemePort cannot be <code>null</code>.
-	 */
-	public void addSchemePort(final SchemePort schemePort) {
-		assert schemePort != null: NON_NULL_EXPECTED;
-		schemePort.setParentSchemeDevice(this);
-	}
-
 	@Override
 	public SchemeDevice clone() throws CloneNotSupportedException {
 		final boolean usePool = true;
@@ -478,38 +463,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @return an immutable set.
-	 */
-	public Set<SchemeCablePort> getSchemeCablePorts() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeCablePorts0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeCablePort> getSchemeCablePorts0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true);
-	}
-
-	/**
-	 * @return an immutable set.
-	 */
-	public Set<SchemePort> getSchemePorts() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemePorts0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemePort> getSchemePorts0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true);
-	}
-
-	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
@@ -591,30 +544,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			}
 		}
 		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, EXPORT);
-	}
-
-	/**
-	 * The <code>SchemeCablePort</code> must belong to this
-	 * <code>SchemeDevice</code>, or crap will meet the fan.
-	 *
-	 * @param schemeCablePort
-	 */
-	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort) {
-		assert schemeCablePort != null: NON_NULL_EXPECTED;
-		assert schemeCablePort.getParentSchemeDeviceId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeCablePort.setParentSchemeDevice(null);
-	}
-
-	/**
-	 * The <code>SchemePort</code> must belong to this
-	 * <code>SchemeDevice</code>, or crap will meet the fan.
-	 *
-	 * @param schemePort
-	 */
-	public void removeSchemePort(final SchemePort schemePort) {
-		assert schemePort != null: NON_NULL_EXPECTED;
-		assert schemePort.getParentSchemeDeviceId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemePort.setParentSchemeDevice(null);
 	}
 
 	/**
@@ -830,38 +759,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
-	public void setSchemeCablePorts(final Set<SchemeCablePort> schemeCablePorts) throws ApplicationException {
-		assert schemeCablePorts != null: NON_NULL_EXPECTED;
-		final Set<SchemeCablePort> oldSchemeCablePorts = this.getSchemeCablePorts0();
-		/*
-		 * Check is made to prevent SchemeCablePorts from
-		 * permanently losing their parents.
-		 */
-		oldSchemeCablePorts.removeAll(schemeCablePorts);
-		for (final SchemeCablePort oldSchemeCablePort : oldSchemeCablePorts) {
-			this.removeSchemeCablePort(oldSchemeCablePort);
-		}
-		for (final SchemeCablePort schemeCablePort : schemeCablePorts) {
-			this.addSchemeCablePort(schemeCablePort);
-		}
-	}
-
-	public void setSchemePorts(final Set<SchemePort> schemePorts) throws ApplicationException {
-		assert schemePorts != null: NON_NULL_EXPECTED;
-		final Set<SchemePort> oldSchemePorts = this.getSchemePorts0();
-		/*
-		 * Check is made to prevent SchemePorts from
-		 * permanently losing their parents.
-		 */
-		oldSchemePorts.removeAll(schemePorts);
-		for (final SchemePort oldSchemePort : oldSchemePorts) {
-			this.removeSchemePort(oldSchemePort);
-		}
-		for (final SchemePort schemePort : schemePorts) {
-			this.addSchemePort(schemePort);
-		}
-	}
-
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
@@ -943,7 +840,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
@@ -1025,6 +922,146 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		toAdd.removeAll(oldCharacteristics);
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme ports                                *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemePort> schemePortContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemePort> getSchemePortContainerWrappee() {
+		if (this.schemePortContainerWrappee == null) {
+			this.schemePortContainerWrappee = new StorableObjectContainerWrappee<SchemePort>(this, SCHEMEPORT_CODE);
+		}
+		return this.schemePortContainerWrappee;
+	}
+
+	/**
+	 * @param schemePort cannot be <code>null</code>.
+	 */
+	@Crutch109
+	public void addSchemePort(final SchemePort schemePort) {
+		assert schemePort != null: NON_NULL_EXPECTED;
+		schemePort.setParentSchemeDevice(this);
+	}
+
+	/**
+	 * The <code>SchemePort</code> must belong to this
+	 * <code>SchemeDevice</code>, or crap will meet the fan.
+	 *
+	 * @param schemePort
+	 */
+	@Crutch109
+	public void removeSchemePort(final SchemePort schemePort) {
+		assert schemePort != null: NON_NULL_EXPECTED;
+		assert schemePort.getParentSchemeDeviceId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemePort.setParentSchemeDevice(null);
+	}
+
+	/**
+	 * @return an immutable set.
+	 */
+	@Crutch109
+	public Set<SchemePort> getSchemePorts() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemePorts0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	Set<SchemePort> getSchemePorts0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemePorts(final Set<SchemePort> schemePorts) throws ApplicationException {
+		assert schemePorts != null: NON_NULL_EXPECTED;
+		final Set<SchemePort> oldSchemePorts = this.getSchemePorts0();
+		/*
+		 * Check is made to prevent SchemePorts from
+		 * permanently losing their parents.
+		 */
+		oldSchemePorts.removeAll(schemePorts);
+		for (final SchemePort oldSchemePort : oldSchemePorts) {
+			this.removeSchemePort(oldSchemePort);
+		}
+		for (final SchemePort schemePort : schemePorts) {
+			this.addSchemePort(schemePort);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme cable ports                          *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemeCablePort> schemeCablePortContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeCablePort> getSchemeCablePortContainerWrappee() {
+		if (this.schemeCablePortContainerWrappee == null) {
+			this.schemeCablePortContainerWrappee = new StorableObjectContainerWrappee<SchemeCablePort>(this, SCHEMECABLEPORT_CODE);
+		}
+		return this.schemeCablePortContainerWrappee;
+	}
+
+	/**
+	 * @param schemeCablePort cannot be <code>null</code>.
+	 */
+	@Crutch109
+	public void addSchemeCablePort(final SchemeCablePort schemeCablePort) {
+		assert schemeCablePort != null: NON_NULL_EXPECTED;
+		schemeCablePort.setParentSchemeDevice(this);
+	}
+
+	/**
+	 * The <code>SchemeCablePort</code> must belong to this
+	 * <code>SchemeDevice</code>, or crap will meet the fan.
+	 *
+	 * @param schemeCablePort
+	 */
+	@Crutch109
+	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort) {
+		assert schemeCablePort != null: NON_NULL_EXPECTED;
+		assert schemeCablePort.getParentSchemeDeviceId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeCablePort.setParentSchemeDevice(null);
+	}
+
+	/**
+	 * @return an immutable set.
+	 */
+	@Crutch109
+	public Set<SchemeCablePort> getSchemeCablePorts() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeCablePorts0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	Set<SchemeCablePort> getSchemeCablePorts0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true);
+	}
+
+	@Crutch109
+	public void setSchemeCablePorts(final Set<SchemeCablePort> schemeCablePorts) throws ApplicationException {
+		assert schemeCablePorts != null: NON_NULL_EXPECTED;
+		final Set<SchemeCablePort> oldSchemeCablePorts = this.getSchemeCablePorts0();
+		/*
+		 * Check is made to prevent SchemeCablePorts from
+		 * permanently losing their parents.
+		 */
+		oldSchemeCablePorts.removeAll(schemeCablePorts);
+		for (final SchemeCablePort oldSchemeCablePort : oldSchemeCablePorts) {
+			this.removeSchemeCablePort(oldSchemeCablePort);
+		}
+		for (final SchemeCablePort schemeCablePort : schemeCablePorts) {
+			this.addSchemeCablePort(schemeCablePort);
 		}
 	}
 }

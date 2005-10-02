@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.77 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.78 2005/10/02 14:00:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -63,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.78 $, $Date: 2005/10/02 14:00:24 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -231,19 +232,6 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @param schemeProtoGroup can be neither <code>null</code> nor
-	 *        <code>this</code>.
-	 * @bug provide a check to disallow addition of higher-level objects as
-	 *      children for lower-level ones (within the same hierarchy tree).
-	 * @todo add sanity checks for my own id.
-	 */
-	public void addSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
-		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
-		assert schemeProtoGroup != this: CIRCULAR_DEPS_PROHIBITED;
-		schemeProtoGroup.setParentSchemeProtoGroup(this);
-	}
-
-	/**
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
 	@Override
@@ -312,22 +300,6 @@ public final class SchemeProtoGroup extends StorableObject
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
-	}
-
-	/**
-	 * @return an immutable set.
-	 */
-	public Set<SchemeProtoGroup> getSchemeProtoGroups() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeProtoGroups0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	private Set<SchemeProtoGroup> getSchemeProtoGroups0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOGROUP_CODE), true);
 	}
 
 	Identifier getSymbolId() {
@@ -426,20 +398,6 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * The <code>SchemeProtoGroup</code> must belong to this
-	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
-	 *
-	 * @param schemeProtoGroup
-	 * @todo Decide whether it's good to have more than one top-level
-	 *       <code>schemeProtoGroup</code>.
-	 */
-	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
-		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
-		assert schemeProtoGroup.getParentSchemeProtoGroupId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeProtoGroup.setParentSchemeProtoGroup(null);
-	}
-
-	/**
 	 * @param created
 	 * @param modified
 	 * @param creatorId
@@ -501,6 +459,7 @@ public final class SchemeProtoGroup extends StorableObject
 	/**
 	 * @param parentSchemeProtoGroupId
 	 */
+	@Crutch109
 	void setParentSchemeProtoGroupId(final Identifier parentSchemeProtoGroupId) {
 		assert !parentSchemeProtoGroupId.equals(this) : CIRCULAR_DEPS_PROHIBITED;
 		assert parentSchemeProtoGroupId.isVoid() || parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
@@ -518,31 +477,9 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @todo Check whether <code>parentSchemeProtoGroup</code> is not a
 	 *       lower-level descendant of <code>this</code>.
 	 */
+	@Crutch109
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
 		this.setParentSchemeProtoGroupId(Identifier.possiblyVoid(parentSchemeProtoGroup));
-	}
-
-	/**
-	 * To make a slight alteration of <code>schemeProtoGroups</code> for
-	 * this <code>schemeProtoGroup</code>, use
-	 * {@link #addSchemeProtoGroup(SchemeProtoGroup)} and/or
-	 * {@link #removeSchemeProtoGroup(SchemeProtoGroup)}. This method
-	 * will completely overwrite old <code>schemeProtoGroups</code> with
-	 * the new ones (i. e. remove old and add new ones).
-	 *
-	 * @param schemeProtoGroups
-	 * @throws ApplicationException 
-	 */
-	public void setSchemeProtoGroups(final Set<SchemeProtoGroup> schemeProtoGroups) throws ApplicationException {
-		assert schemeProtoGroups != null: NON_NULL_EXPECTED;
-		final Set<SchemeProtoGroup> oldSchemeProtoGroups = this.getSchemeProtoGroups0();
-		oldSchemeProtoGroups.removeAll(schemeProtoGroups);
-		for (final SchemeProtoGroup oldSchemeProtoGroup : this.getSchemeProtoGroups()) {
-			this.removeSchemeProtoGroup(oldSchemeProtoGroup);
-		}
-		for (final SchemeProtoGroup schemeProtoGroup : schemeProtoGroups) {
-			this.addSchemeProtoGroup(schemeProtoGroup);
-		}
 	}
 
 	/**
@@ -630,7 +567,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 * Children manipulation: scheme protoelements                        *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
+	private StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeProtoElement> getSchemeProtoElementContainerWrappee() {
 		if (this.schemeProtoElementContainerWrappee == null) {
@@ -728,6 +665,90 @@ public final class SchemeProtoGroup extends StorableObject
 		toAdd.removeAll(oldSchemeProtoElements);
 		for (final SchemeProtoElement schemeProtoElement : toAdd) {
 			this.addSchemeProtoElement(schemeProtoElement, usePool);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: scheme protogroups                          *
+	 **********************************************************************/
+
+	private StorableObjectContainerWrappee<SchemeProtoGroup> schemeProtoGroupContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeProtoGroup> getSchemeProtoGroupContainerWrappee() {
+		if (this.schemeProtoGroupContainerWrappee == null) {
+			this.schemeProtoGroupContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoGroup>(this, SCHEMEPROTOGROUP_CODE);
+		}
+		return this.schemeProtoGroupContainerWrappee;
+	}
+
+	/**
+	 * @param schemeProtoGroup can be neither <code>null</code> nor
+	 *        <code>this</code>.
+	 * @bug provide a check to disallow addition of higher-level objects as
+	 *      children for lower-level ones (within the same hierarchy tree).
+	 * @todo add sanity checks for my own id.
+	 */
+	@Crutch109
+	public void addSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
+		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
+		assert schemeProtoGroup != this: CIRCULAR_DEPS_PROHIBITED;
+		schemeProtoGroup.setParentSchemeProtoGroup(this);
+	}
+
+	/**
+	 * The <code>SchemeProtoGroup</code> must belong to this
+	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
+	 *
+	 * @param schemeProtoGroup
+	 * @todo Decide whether it's good to have more than one top-level
+	 *       <code>schemeProtoGroup</code>.
+	 */
+	@Crutch109
+	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
+		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
+		assert schemeProtoGroup.getParentSchemeProtoGroupId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeProtoGroup.setParentSchemeProtoGroup(null);
+	}
+
+	/**
+	 * @return an immutable set.
+	 */
+	@Crutch109
+	public Set<SchemeProtoGroup> getSchemeProtoGroups() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeProtoGroups0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	@Crutch109
+	private Set<SchemeProtoGroup> getSchemeProtoGroups0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOGROUP_CODE), true);
+	}
+
+	/**
+	 * To make a slight alteration of <code>schemeProtoGroups</code> for
+	 * this <code>schemeProtoGroup</code>, use
+	 * {@link #addSchemeProtoGroup(SchemeProtoGroup)} and/or
+	 * {@link #removeSchemeProtoGroup(SchemeProtoGroup)}. This method
+	 * will completely overwrite old <code>schemeProtoGroups</code> with
+	 * the new ones (i. e. remove old and add new ones).
+	 *
+	 * @param schemeProtoGroups
+	 * @throws ApplicationException 
+	 */
+	@Crutch109
+	public void setSchemeProtoGroups(final Set<SchemeProtoGroup> schemeProtoGroups) throws ApplicationException {
+		assert schemeProtoGroups != null: NON_NULL_EXPECTED;
+		final Set<SchemeProtoGroup> oldSchemeProtoGroups = this.getSchemeProtoGroups0();
+		oldSchemeProtoGroups.removeAll(schemeProtoGroups);
+		for (final SchemeProtoGroup oldSchemeProtoGroup : this.getSchemeProtoGroups()) {
+			this.removeSchemeProtoGroup(oldSchemeProtoGroup);
+		}
+		for (final SchemeProtoGroup schemeProtoGroup : schemeProtoGroups) {
+			this.addSchemeProtoGroup(schemeProtoGroup);
 		}
 	}
 }

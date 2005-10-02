@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.6 2005/09/23 11:45:49 bass Exp $
+* $Id: LayoutItem.java,v 1.7 2005/10/02 14:00:24 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author $Author: bass $
  * @module resource
  */
@@ -254,7 +254,7 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
