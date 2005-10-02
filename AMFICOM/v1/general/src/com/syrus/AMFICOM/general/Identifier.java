@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.81 2005/09/28 19:06:21 bass Exp $
+ * $Id: Identifier.java,v 1.82 2005/10/02 11:49:44 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Log;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.81 $, $Date: 2005/09/28 19:06:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.82 $, $Date: 2005/10/02 11:49:44 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -151,15 +152,18 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 
 		LocalXmlIdentifierPool.prefetch(importType);
 
+		final String xmlStringValue; //  = xmlId.getStringValue()
 		if (LocalXmlIdentifierPool.contains(this, importType)) {
-			xmlId.setStringValue(LocalXmlIdentifierPool.get(this, importType).getStringValue());
+			xmlStringValue = LocalXmlIdentifierPool.get(this, importType);
+			xmlId.setStringValue(xmlStringValue);
 		} else {
-			xmlId.setStringValue(this.getIdentifierString());
-			assert !LocalXmlIdentifierPool.contains(xmlId, importType);
-			LocalXmlIdentifierPool.put(this, xmlId, importType);
+			xmlStringValue = this.getIdentifierString();
+			xmlId.setStringValue(xmlStringValue);
+			assert !LocalXmlIdentifierPool.contains(xmlStringValue, importType);
+			LocalXmlIdentifierPool.put(this, xmlStringValue, importType);
 		}
-
-		assert LocalXmlIdentifierPool.contains(xmlId, importType);
+		
+		assert LocalXmlIdentifierPool.contains(xmlStringValue, importType);
 	}
 
 	@Override
@@ -445,8 +449,9 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	throws IdentifierGenerationException, ObjectNotFoundException {
 		LocalXmlIdentifierPool.prefetch(importType);
 
-		if (LocalXmlIdentifierPool.contains(xmlId, importType)) {
-			final Identifier id = LocalXmlIdentifierPool.get(xmlId, importType);
+		final String xmlStringValue = xmlId.getStringValue();
+		if (LocalXmlIdentifierPool.contains(xmlStringValue, importType)) {
+			final Identifier id = LocalXmlIdentifierPool.get(xmlStringValue, importType);
 
 			assert !id.isVoid() : NON_VOID_EXPECTED;
 			assert entityCode == UNKNOWN_CODE || entityCode == id.getMajor();
@@ -460,7 +465,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 
 			assert !LocalXmlIdentifierPool.contains(id, importType);
 
-			LocalXmlIdentifierPool.put(id, xmlId, importType);
+			LocalXmlIdentifierPool.put(id, xmlStringValue, importType);
 
 			return id;
 		case MODE_RETURN_VOID_IF_ABSENT:

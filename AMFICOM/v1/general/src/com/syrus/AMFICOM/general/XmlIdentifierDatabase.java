@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.13 2005/09/27 15:17:01 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.14 2005/10/02 11:49:44 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,6 @@ import java.util.Map.Entry;
 
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool.Key;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool.XmlKey;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -47,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/09/27 15:17:01 $
+ * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/10/02 11:49:44 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -119,8 +118,8 @@ final class XmlIdentifierDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	static Map<Identifier, XmlIdentifier> retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
-		Map<Identifier, XmlIdentifier> idXmlIdMap = new HashMap<Identifier, XmlIdentifier>(); 
+	static Map<Identifier, String> retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
+		Map<Identifier, String> idXmlIdMap = new HashMap<Identifier, String>(); 
 		if (importType == null || importType.length() == 0) {
 			return idXmlIdMap;
 		}
@@ -156,9 +155,7 @@ final class XmlIdentifierDatabase {
 				 * CORBA object loader.
 				 */
 				if (true || StorableObjectDatabase.isPresentInDatabase(id)) {
-					final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-					xmlId.setStringValue(resultSet.getString(COLUMN_XML_ID));
-					idXmlIdMap.put(id, xmlId);
+					idXmlIdMap.put(id, resultSet.getString(COLUMN_XML_ID));
 				} else {
 					resultSet.deleteRow();
 				}
@@ -251,7 +248,7 @@ final class XmlIdentifierDatabase {
 				xmlIds = new HashSet<String>();
 				sortedXmlIds.put(importType, xmlIds);
 			}
-			xmlIds.add(xmlKey.getXmlId().getStringValue());
+			xmlIds.add(xmlKey.getXmlId());
 		}
 
 		final StringBuilder sql = new StringBuilder();
@@ -313,7 +310,7 @@ final class XmlIdentifierDatabase {
 		}
 	}
 
-	static void insertKeys(Map<Key, XmlIdentifier> keysToCreate) throws CreateObjectException {
+	static void insertKeys(Map<Key, String> keysToCreate) throws CreateObjectException {
 		if(keysToCreate == null || keysToCreate.isEmpty()) {
 			return;
 		}
@@ -335,11 +332,11 @@ final class XmlIdentifierDatabase {
 			Log.debugMessage("XmlIdentifierDatabase.insertEntities | Trying: " + sql, DEBUGLEVEL10);
 			for (final Key key : keysToCreate.keySet()) {
 				Identifier id = key.getId();
-				XmlIdentifier xmlId = keysToCreate.get(key);
+				String xmlId = keysToCreate.get(key);
 				String importKind = key.getImportType();
 				int i = 1;
 				DatabaseIdentifier.setIdentifier(preparedStatement, i++, id);
-				preparedStatement.setString(i++, xmlId.getStringValue());
+				preparedStatement.setString(i++, xmlId);
 				preparedStatement.setString(i++, importKind);
 				preparedStatement.executeUpdate();
 			}
