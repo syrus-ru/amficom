@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.61 2005/10/02 14:00:24 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.62 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/10/02 14:00:24 $
+ * @version $Revision: 1.62 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -197,10 +197,16 @@ public abstract class AbstractSchemeElement
 	/**
 	 * Descendants almost always need to override this.
 	 *
+	 * @param parentScheme
+	 * @param usePool
+	 * @throws ApplicationException
 	 * @see #parentSchemeId
 	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	public void setParentScheme(final Scheme parentScheme) {
+	public void setParentScheme(final Scheme parentScheme,
+			final boolean usePool)
+	throws ApplicationException {
 		if (parentScheme == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(this.id);
@@ -418,8 +424,16 @@ public abstract class AbstractSchemeElement
 		this.alarmed = alarmed;
 	}
 	
+	/**
+	 * @param parentSchemeId
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	final void setParentSchemeId(final Identifier parentSchemeId) {
+	final void setParentSchemeId(final Identifier parentSchemeId,
+			final boolean usePool)
+	throws ApplicationException {
 //		TODO: inroduce additional sanity checks
 		assert parentSchemeId != null : NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;

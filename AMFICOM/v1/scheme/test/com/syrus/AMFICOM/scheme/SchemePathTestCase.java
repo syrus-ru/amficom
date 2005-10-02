@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.25 2005/09/30 13:58:58 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.26 2005/10/02 18:58:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/09/30 13:58:58 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/02 18:58:43 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -151,14 +151,18 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testSchemePathSiblings() throws ApplicationException {
-		this.testSchemePath(true);
+		final boolean usePool = false;
+
+		this.testSchemePath(true, usePool);
 	}
 
 	public void testSchemePathNoSiblings() throws ApplicationException {
-		this.testSchemePath(false);
+		final boolean usePool = false;
+
+		this.testSchemePath(false, usePool);
 	}
 
-	public void testSchemePath(final boolean processSubsequentSiblings) throws ApplicationException {
+	public void testSchemePath(final boolean processSubsequentSiblings, final boolean usePool) throws ApplicationException {
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 		final Identifier imageId = new Identifier("ImageResource_0");
@@ -172,7 +176,7 @@ public final class SchemePathTestCase extends TestCase {
 		final String schemePathName = "a scheme path";
 		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, schemeMonitoringSolution);
 		assertEquals(schemeName, schemePath.getParentSchemeMonitoringSolution().getParentScheme().getName());
-		final Set<SchemePath> schemePaths = scheme.getSchemePathsRecursively();
+		final Set<SchemePath> schemePaths = scheme.getSchemePathsRecursively(usePool);
 		assertEquals(1, schemePaths.size());
 		assertEquals(schemePathName, schemePaths.iterator().next().getName());
 
@@ -230,6 +234,8 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testShiftLeft() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 
@@ -240,7 +246,7 @@ public final class SchemePathTestCase extends TestCase {
 		final String schemePathName = "a scheme path";
 		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, schemeMonitoringSolution);
 		assertEquals(schemeName, schemePath.getParentSchemeMonitoringSolution().getParentScheme().getName());
-		final Set<SchemePath> schemePaths = scheme.getSchemePathsRecursively();
+		final Set<SchemePath> schemePaths = scheme.getSchemePathsRecursively(usePool);
 		assertEquals(1, schemePaths.size());
 		assertEquals(schemePathName, schemePaths.iterator().next().getName());
 
@@ -441,9 +447,11 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	/**
-	 * @see SchemeMonitoringSolution#setSchemePaths(java.util.Set)
+	 * @see SchemeMonitoringSolution#setSchemePaths(java.util.Set, boolean)
 	 */
 	public void testSetSchemePaths() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 
@@ -467,10 +475,10 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemePath schemePath8 = SchemePath.createInstance(userId, "8", schemeMonitoringSolution1);
 		final SchemePath schemePath9 = SchemePath.createInstance(userId, "9", schemeMonitoringSolution1);
 
-		for (final SchemePath schemePath : scheme0.getSchemePathsRecursively()) {
+		for (final SchemePath schemePath : scheme0.getSchemePathsRecursively(usePool)) {
 			System.out.println(scheme0.getName() + ": " + schemePath.getName());
 		}
-		for (final SchemePath schemePath : scheme1.getSchemePathsRecursively()) {
+		for (final SchemePath schemePath : scheme1.getSchemePathsRecursively(usePool)) {
 			System.out.println(scheme1.getName() + ": " + schemePath.getName());
 		}
 		
@@ -483,12 +491,12 @@ public final class SchemePathTestCase extends TestCase {
 		schemePaths.add(schemePath8);
 		schemePaths.add(schemePath9);
 		
-		schemeMonitoringSolution0.setSchemePaths(schemePaths);
+		schemeMonitoringSolution0.setSchemePaths(schemePaths, usePool);
 
-		for (final SchemePath schemePath : scheme0.getSchemePathsRecursively()) {
+		for (final SchemePath schemePath : scheme0.getSchemePathsRecursively(usePool)) {
 			System.out.println(scheme0.getName() + ": " + schemePath.getName());
 		}
-		for (final SchemePath schemePath : scheme1.getSchemePathsRecursively()) {
+		for (final SchemePath schemePath : scheme1.getSchemePathsRecursively(usePool)) {
 			System.out.println(scheme1.getName() + ": " + schemePath.getName());
 		}
 	}
@@ -548,10 +556,12 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	/**
-	 * @throws CreateObjectException 
-	 * @see Scheme#getCurrentSchemeMonitoringSolution()
+	 * @throws ApplicationException 
+	 * @see Scheme#getCurrentSchemeMonitoringSolution(boolean)
 	 */
-	public void testGetCurrentSchemeMonitoringSolution() throws CreateObjectException {
+	public void testGetCurrentSchemeMonitoringSolution() throws ApplicationException {
+		final boolean usePool = false;
+
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 
@@ -581,43 +591,43 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemeMonitoringSolution schemeMonitoringSolution9 =
 				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution9", schemeOptimizeInfo1);
 
-		schemeMonitoringSolution0.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution0.getId());
+		schemeMonitoringSolution0.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution0.getId());
 
-		schemeMonitoringSolution1.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution1.getId());
+		schemeMonitoringSolution1.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution1.getId());
 
-		schemeMonitoringSolution2.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution2.getId());
+		schemeMonitoringSolution2.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution2.getId());
 
-		schemeMonitoringSolution3.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution3.getId());
+		schemeMonitoringSolution3.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution3.getId());
 
-		schemeMonitoringSolution4.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution4.getId());
+		schemeMonitoringSolution4.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution4.getId());
 
-		schemeMonitoringSolution5.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution5.getId());
+		schemeMonitoringSolution5.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution5.getId());
 
-		schemeMonitoringSolution6.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution6.getId());
+		schemeMonitoringSolution6.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution6.getId());
 
-		schemeMonitoringSolution7.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution7.getId());
+		schemeMonitoringSolution7.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution7.getId());
 
-		schemeMonitoringSolution8.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution8.getId());
+		schemeMonitoringSolution8.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution8.getId());
 
-		schemeMonitoringSolution9.setActive(true);
-		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution9.getId());
+		schemeMonitoringSolution9.setActive(true, usePool);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution(usePool).getId(), schemeMonitoringSolution9.getId());
 
 		int i = 0;
-		for (Set<SchemeMonitoringSolution> schemeMonitoringSolutions = scheme0.getSchemeMonitoringSolutionsRecursively();
+		for (Set<SchemeMonitoringSolution> schemeMonitoringSolutions = scheme0.getSchemeMonitoringSolutionsRecursively(usePool);
 				!schemeMonitoringSolutions.isEmpty();
-				schemeMonitoringSolutions = scheme0.getSchemeMonitoringSolutionsRecursively()) {
-			final SchemeMonitoringSolution oldSchemeMonitoringSolution = scheme0.getCurrentSchemeMonitoringSolution();
-			oldSchemeMonitoringSolution.setActive(false);
-			final SchemeMonitoringSolution newSchemeMonitoringSolution = scheme0.getCurrentSchemeMonitoringSolution();
+				schemeMonitoringSolutions = scheme0.getSchemeMonitoringSolutionsRecursively(usePool)) {
+			final SchemeMonitoringSolution oldSchemeMonitoringSolution = scheme0.getCurrentSchemeMonitoringSolution(usePool);
+			oldSchemeMonitoringSolution.setActive(false, usePool);
+			final SchemeMonitoringSolution newSchemeMonitoringSolution = scheme0.getCurrentSchemeMonitoringSolution(usePool);
 			System.out.println("Pass " + (i++)
 					+ "; old: " + oldSchemeMonitoringSolution.getName()
 					+ "; new: " + (newSchemeMonitoringSolution == null ? "<null>" : newSchemeMonitoringSolution.getName()));
@@ -712,13 +722,13 @@ public final class SchemePathTestCase extends TestCase {
 		schemeLink3.setSourceAbstractSchemePort(schemePort3);
 		
 		final Scheme scheme0prime = scheme0.clone();
-		final SchemeElement schemeElement0prime = scheme0prime.getSchemeElements().iterator().next();
+		final SchemeElement schemeElement0prime = scheme0prime.getSchemeElements(usePool).iterator().next();
 		final Scheme scheme1prime = schemeElement0prime.getSchemes(usePool).iterator().next();
-		final SchemeElement schemeElement1prime = scheme1prime.getSchemeElements().iterator().next();
+		final SchemeElement schemeElement1prime = scheme1prime.getSchemeElements(usePool).iterator().next();
 
 		final SchemeDevice schemeDevice0prime = schemeElement1prime.getSchemeDevices(usePool).iterator().next();
 
-		final SchemeLink schemeLink0prime = scheme0prime.getSchemeLinks().iterator().next();
+		final SchemeLink schemeLink0prime = scheme0prime.getSchemeLinks(usePool).iterator().next();
 
 		assertNotSame(schemeLink0prime, schemeLink0);
 		assertFalse(schemeLink0prime.equals(schemeLink0));

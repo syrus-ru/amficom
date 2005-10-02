@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkWrapper.java,v 1.13 2005/09/28 10:22:23 bass Exp $
+ * $Id: SchemeLinkWrapper.java,v 1.14 2005/10/02 18:58:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/28 10:22:23 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/02 18:58:43 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -184,7 +184,7 @@ public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
 				} else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID)) {
 					schemeLink.setTargetAbstractSchemePortId((Identifier) value);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-					schemeLink.setParentSchemeId((Identifier) value);
+					schemeLink.setParentSchemeId((Identifier) value, usePool);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
 					schemeLink.setParentSchemeElementId((Identifier) value, usePool);
 				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {

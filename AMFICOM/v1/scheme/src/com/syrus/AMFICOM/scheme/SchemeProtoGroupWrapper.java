@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.11 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.12 2005/10/02 18:58:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/05 11:20:03 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/02 18:58:43 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -93,17 +95,25 @@ public final class SchemeProtoGroupWrapper extends StorableObjectWrapper<SchemeP
 	}
 
 	@Override
-	public void setValue(final SchemeProtoGroup schemeProtoGroup, final String key, final Object value) {
-		if (schemeProtoGroup != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeProtoGroup.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeProtoGroup.setDescription((String) value);
-			} else if (key.equals(COLUMN_SYMBOL_ID)) {
-				schemeProtoGroup.setSymbolId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
-				schemeProtoGroup.setParentSchemeProtoGroupId((Identifier) value);
+	public void setValue(final SchemeProtoGroup schemeProtoGroup,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeProtoGroup != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeProtoGroup.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeProtoGroup.setDescription((String) value);
+				} else if (key.equals(COLUMN_SYMBOL_ID)) {
+					schemeProtoGroup.setSymbolId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
+					schemeProtoGroup.setParentSchemeProtoGroupId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

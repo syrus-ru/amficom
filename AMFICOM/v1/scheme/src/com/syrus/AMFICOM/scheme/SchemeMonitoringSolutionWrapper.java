@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionWrapper.java,v 1.11 2005/08/25 11:33:19 bass Exp $
+ * $Id: SchemeMonitoringSolutionWrapper.java,v 1.12 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/25 11:33:19 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/02 18:58:42 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -106,21 +108,30 @@ public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper
 	}
 
 	@Override
-	public void setValue(final SchemeMonitoringSolution schemeMonitoringSolution, final String key, final Object value) {
-		if (schemeMonitoringSolution != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeMonitoringSolution.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeMonitoringSolution.setDescription((String) value);
-			} else if (key.equals(COLUMN_PRICE_USD)) {
-				schemeMonitoringSolution.setPrice(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_ACTIVE)) {
-				schemeMonitoringSolution.setActive(((Boolean) value).booleanValue());
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-				schemeMonitoringSolution.setParentSchemeId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
-				schemeMonitoringSolution.setParentSchemeOptimizeInfoId((Identifier) value);
+	public void setValue(
+			final SchemeMonitoringSolution schemeMonitoringSolution,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeMonitoringSolution != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeMonitoringSolution.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeMonitoringSolution.setDescription((String) value);
+				} else if (key.equals(COLUMN_PRICE_USD)) {
+					schemeMonitoringSolution.setPrice(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_ACTIVE)) {
+					schemeMonitoringSolution.setActive(((Boolean) value).booleanValue(), usePool);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
+					schemeMonitoringSolution.setParentSchemeId((Identifier) value, usePool);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+					schemeMonitoringSolution.setParentSchemeOptimizeInfoId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

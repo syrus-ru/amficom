@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.74 2005/10/02 14:00:24 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.75 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/10/02 14:00:24 $
+ * @version $Revision: 1.75 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -417,9 +417,14 @@ public abstract class AbstractSchemePort
 
 	/**
 	 * @param parentSchemeDeviceId
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	final void setParentSchemeDeviceId(final Identifier parentSchemeDeviceId) {
+	final void setParentSchemeDeviceId(final Identifier parentSchemeDeviceId,
+			final boolean usePool)
+	throws ApplicationException {
 		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 
@@ -440,13 +445,18 @@ public abstract class AbstractSchemePort
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeDeviceId(Identifier)}.
+	 * A wrapper around {@link #setParentSchemeDeviceId(Identifier, boolean)}.
 	 *
 	 * @param parentSchemeDevice
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
 	@Crutch109
-	public final void setParentSchemeDevice(final SchemeDevice parentSchemeDevice) {
-		this.setParentSchemeDeviceId(Identifier.possiblyVoid(parentSchemeDevice));
+	public final void setParentSchemeDevice(
+			final SchemeDevice parentSchemeDevice,
+			final boolean usePool)
+	throws ApplicationException {
+		this.setParentSchemeDeviceId(Identifier.possiblyVoid(parentSchemeDevice), usePool);
 	}
 
 	/**

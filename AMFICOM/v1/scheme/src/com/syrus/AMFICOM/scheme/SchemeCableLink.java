@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.100 2005/10/02 14:00:24 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.101 2005/10/02 18:58:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/10/02 14:00:24 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/02 18:58:43 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -333,10 +333,10 @@ public final class SchemeCableLink extends AbstractSchemeLink
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
 			}
-			for (final SchemeCableThread schemeCableThread : this.getSchemeCableThreads0()) {
+			for (final SchemeCableThread schemeCableThread : this.getSchemeCableThreads0(usePool)) {
 				final SchemeCableThread schemeCableThreadClone = schemeCableThread.clone();
 				clone.clonedIdMap.putAll(schemeCableThreadClone.getClonedIdMap());
-				clone.addSchemeCableThread(schemeCableThreadClone);
+				clone.addSchemeCableThread(schemeCableThreadClone, usePool);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {
@@ -520,7 +520,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		if (schemeCableLink.isSetSchemeCableThreads()) {
 			schemeCableLink.unsetSchemeCableThreads();
 		}
-		final Set<SchemeCableThread> schemeCableThreads = this.getSchemeCableThreads0();
+		final Set<SchemeCableThread> schemeCableThreads = this.getSchemeCableThreads0(usePool);
 		if (!schemeCableThreads.isEmpty()) {
 			final XmlSchemeCableThreadSeq schemeCableThreadSeq = schemeCableLink.addNewSchemeCableThreads();
 			for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
@@ -643,14 +643,18 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 	/**
 	 * @param parentScheme
-	 * @see AbstractSchemeElement#setParentScheme(Scheme)
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
 	 */
 	@Override
 	@Crutch109
-	public void setParentScheme(final Scheme parentScheme) {
+	public void setParentScheme(final Scheme parentScheme,
+			final boolean usePool)
+	throws ApplicationException {
 		assert super.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
 		assert !super.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-		super.setParentScheme(parentScheme);
+		super.setParentScheme(parentScheme, usePool);
 	}
 
 	/**
@@ -787,7 +791,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCableThreads0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCableThreads0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {
@@ -866,51 +870,76 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		return this.schemeCableThreadContainerWrappee;
 	}
 
-	@Crutch109
-	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
+	/**
+	 * @param schemeCableThread
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void addSchemeCableThread(
+			final SchemeCableThread schemeCableThread,
+			final boolean usePool)
+	throws ApplicationException {
 		assert schemeCableThread != null: NON_NULL_EXPECTED;
-		schemeCableThread.setParentSchemeCableLink(this);
-	}
-
-	@Crutch109
-	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		assert schemeCableThread != null: NON_NULL_EXPECTED;
-		assert schemeCableThread.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeCableThread.setParentSchemeCableLink(null);
+		schemeCableThread.setParentSchemeCableLink(this, usePool);
 	}
 
 	/**
-	 * @return an immutable set.
+	 * @param schemeCableThread
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
-	@Crutch109
-	public Set<SchemeCableThread> getSchemeCableThreads() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeCableThreads0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
+	public void removeSchemeCableThread(
+			final SchemeCableThread schemeCableThread,
+			final boolean usePool)
+	throws ApplicationException {
+		assert schemeCableThread != null: NON_NULL_EXPECTED;
+		assert schemeCableThread.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeCableThread.setParentSchemeCableLink(null, usePool);
 	}
 
+	/**
+	 * @param usePool
+	 * @return an immutable set.
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeCableThread> getSchemeCableThreads(
+			final boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getSchemeCableThreads0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
 	@Crutch109
-	Set<SchemeCableThread> getSchemeCableThreads0() throws ApplicationException {
+	Set<SchemeCableThread> getSchemeCableThreads0(@SuppressWarnings("unused") final boolean usePool)
+	throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true);
 	}
 
+	/**
+	 * @param schemeCableThreads
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
 	@Crutch109
-	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) throws ApplicationException {
+	public void setSchemeCableThreads(
+			final Set<SchemeCableThread> schemeCableThreads,
+			final boolean usePool)
+	throws ApplicationException {
 		assert schemeCableThreads != null: NON_NULL_EXPECTED;
-		final Set<SchemeCableThread> oldSchemeCableThreads = this.getSchemeCableThreads0();
+		final Set<SchemeCableThread> oldSchemeCableThreads = this.getSchemeCableThreads0(usePool);
 		/*
 		 * Check is made to prevent SchemeCableThreads from
 		 * permanently losing their parents.
 		 */
 		oldSchemeCableThreads.removeAll(schemeCableThreads);
 		for (final SchemeCableThread oldSchemeCableThread : oldSchemeCableThreads) {
-			this.removeSchemeCableThread(oldSchemeCableThread);
+			this.removeSchemeCableThread(oldSchemeCableThread, usePool);
 		}
 		for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
-			this.addSchemeCableThread(schemeCableThread);
+			this.addSchemeCableThread(schemeCableThread, usePool);
 		}
 	}
 
@@ -920,11 +949,14 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 	/**
 	 * @param cableLinkType
+	 * @param creatorId
+	 * @param usePool
 	 * @throws ApplicationException 
 	 */
 	@Shitlet
 	public void setAbstractLinkTypeExt(final CableLinkType cableLinkType,
-			final Identifier creatorId)
+			final Identifier creatorId,
+			final boolean usePool)
 	throws ApplicationException {
 		this.setAbstractLinkType(cableLinkType);
 		final Set<CableThreadType> cableThreadTypes = cableLinkType.getCableThreadTypes(true);
@@ -961,6 +993,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 					true);
 			newCableThreadTypes.add(schemeCableThread);
 		}
-		this.setSchemeCableThreads(newCableThreadTypes);
+		this.setSchemeCableThreads(newCableThreadTypes, usePool);
 	}
 }

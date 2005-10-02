@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.110 2005/10/02 14:00:23 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.111 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/10/02 14:00:23 $
+ * @version $Revision: 1.111 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -1630,7 +1630,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	throws ApplicationException {
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
 		for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
-			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts0());
+			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts0(usePool));
 		}
 		for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements0(usePool)) {
 			schemeCablePorts.addAll(schemeProtoElement.getSchemeCablePortsRecursively(usePool));
@@ -1649,7 +1649,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	throws ApplicationException {
 		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
 		for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
-			schemePorts.addAll(schemeDevice.getSchemePorts0());
+			schemePorts.addAll(schemeDevice.getSchemePorts0(usePool));
 		}
 		for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements0(usePool)) {
 			schemePorts.addAll(schemeProtoElement.getSchemePortsRecursively(usePool));

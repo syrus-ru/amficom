@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.12 2005/08/15 15:14:55 max Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.13 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/15 15:14:55 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2005/10/02 18:58:42 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCablePort> {
@@ -121,23 +123,31 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCa
 	}
 
 	@Override
-	public void setValue(final SchemeCablePort schemeCablePort, final String key, final Object value) {
-		if (schemeCablePort != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeCablePort.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeCablePort.setDescription((String) value);
-			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
-				schemeCablePort.setDirectionType(IdlDirectionType.from_int(((Integer) value).intValue()));
-			} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)) {
-				schemeCablePort.setPortTypeId((Identifier) value);
-			} else if (key.equals(COLUMN_CABLE_PORT_ID)) {
-				schemeCablePort.setPortId((Identifier) value);
-			} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
-				schemeCablePort.setMeasurementPortId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
-				schemeCablePort.setParentSchemeDeviceId((Identifier) value);
+	public void setValue(final SchemeCablePort schemeCablePort,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeCablePort != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeCablePort.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeCablePort.setDescription((String) value);
+				} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
+					schemeCablePort.setDirectionType(IdlDirectionType.from_int(((Integer) value).intValue()));
+				} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)) {
+					schemeCablePort.setPortTypeId((Identifier) value);
+				} else if (key.equals(COLUMN_CABLE_PORT_ID)) {
+					schemeCablePort.setPortId((Identifier) value);
+				} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
+					schemeCablePort.setMeasurementPortId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
+					schemeCablePort.setParentSchemeDeviceId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

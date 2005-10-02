@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadWrapper.java,v 1.9 2005/08/31 17:23:36 bass Exp $
+ * $Id: SchemeCableThreadWrapper.java,v 1.10 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/31 17:23:36 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/02 18:58:42 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -108,23 +110,31 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 	}
 
 	@Override
-	public void setValue(SchemeCableThread schemeCableThread, String key, Object value) {
-		if (schemeCableThread != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeCableThread.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeCableThread.setDescription((String) value);
-			} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
-				schemeCableThread.setLinkTypeId((Identifier) value);
-			} else if (key.equals(COLUMN_LINK_ID)) {
-				schemeCableThread.setLinkId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
-				schemeCableThread.setParentSchemeCableLinkId((Identifier) value);
-			} else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID)) {
-				schemeCableThread.setSourceSchemePortId((Identifier) value);
-			} else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID)) {
-				schemeCableThread.setTargetSchemePortId((Identifier) value);
+	public void setValue(final SchemeCableThread schemeCableThread,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeCableThread != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeCableThread.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeCableThread.setDescription((String) value);
+				} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
+					schemeCableThread.setLinkTypeId((Identifier) value);
+				} else if (key.equals(COLUMN_LINK_ID)) {
+					schemeCableThread.setLinkId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
+					schemeCableThread.setParentSchemeCableLinkId((Identifier) value, usePool);
+				} else if (key.equals(COLUMN_SOURCE_SCHEME_PORT_ID)) {
+					schemeCableThread.setSourceSchemePortId((Identifier) value);
+				} else if (key.equals(COLUMN_TARGET_SCHEME_PORT_ID)) {
+					schemeCableThread.setTargetSchemePortId((Identifier) value);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

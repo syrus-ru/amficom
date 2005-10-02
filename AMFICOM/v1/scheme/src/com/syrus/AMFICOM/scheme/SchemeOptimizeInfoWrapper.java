@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoWrapper.java,v 1.9 2005/09/08 16:34:40 bass Exp $
+ * $Id: SchemeOptimizeInfoWrapper.java,v 1.10 2005/10/02 18:58:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/02 18:58:43 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -175,39 +177,47 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<Schem
 	}
 
 	@Override
-	public void setValue(SchemeOptimizeInfo schemeOptimizeInfo, String key, Object value) {
-		if (schemeOptimizeInfo != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeOptimizeInfo.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeOptimizeInfo.setDescription((String) value);
-			} else if (key.equals(COLUMN_OPTIMIZATION_MODE)) {
-				schemeOptimizeInfo.setOptimizationMode(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_ITERATIONS)) {
-				schemeOptimizeInfo.setIterations(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_PRICE)) {
-				schemeOptimizeInfo.setPrice(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_WAVE_LENGTH)) {
-				schemeOptimizeInfo.setWaveLength(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_LEN_MARGIN)) {
-				schemeOptimizeInfo.setLenMargin(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_MUTATION_RATE)) {
-				schemeOptimizeInfo.setMutationRate(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_MUTATION_DEGREE)) {
-				schemeOptimizeInfo.setMutationDegree(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_RTU_DELETE_PROB)) {
-				schemeOptimizeInfo.setRtuDeleteProb(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_RTU_CREATE_PROB)) {
-				schemeOptimizeInfo.setRtuCreateProb(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_NODES_SPLICE_PROB)) {
-				schemeOptimizeInfo.setNodesSpliceProb(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_NODES_CUT_PROB)) {
-				schemeOptimizeInfo.setNodesCutProb(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_SURVIVOR_RATE)) {
-				schemeOptimizeInfo.setSurvivorRate(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-				schemeOptimizeInfo.setParentSchemeId((Identifier) value);
+	public void setValue(final SchemeOptimizeInfo schemeOptimizeInfo,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeOptimizeInfo != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeOptimizeInfo.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeOptimizeInfo.setDescription((String) value);
+				} else if (key.equals(COLUMN_OPTIMIZATION_MODE)) {
+					schemeOptimizeInfo.setOptimizationMode(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_ITERATIONS)) {
+					schemeOptimizeInfo.setIterations(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_PRICE)) {
+					schemeOptimizeInfo.setPrice(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_WAVE_LENGTH)) {
+					schemeOptimizeInfo.setWaveLength(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_LEN_MARGIN)) {
+					schemeOptimizeInfo.setLenMargin(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_MUTATION_RATE)) {
+					schemeOptimizeInfo.setMutationRate(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_MUTATION_DEGREE)) {
+					schemeOptimizeInfo.setMutationDegree(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_RTU_DELETE_PROB)) {
+					schemeOptimizeInfo.setRtuDeleteProb(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_RTU_CREATE_PROB)) {
+					schemeOptimizeInfo.setRtuCreateProb(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_NODES_SPLICE_PROB)) {
+					schemeOptimizeInfo.setNodesSpliceProb(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_NODES_CUT_PROB)) {
+					schemeOptimizeInfo.setNodesCutProb(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_SURVIVOR_RATE)) {
+					schemeOptimizeInfo.setSurvivorRate(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
+					schemeOptimizeInfo.setParentSchemeId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.25 2005/10/02 14:00:23 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.26 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/10/02 14:00:23 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -250,9 +250,15 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 
 	/**
 	 * @param parentSchemeOptimizeInfoId
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	void setParentSchemeOptimizeInfoId(final Identifier parentSchemeOptimizeInfoId) {
+	void setParentSchemeOptimizeInfoId(
+			final Identifier parentSchemeOptimizeInfoId,
+			final boolean usePool)
+	throws ApplicationException {
 		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
 		final boolean parentSchemeOptimizeInfoIdVoid = parentSchemeOptimizeInfoId.isVoid();
 		assert parentSchemeOptimizeInfoIdVoid || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFORTU_CODE;
@@ -269,13 +275,18 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier)}.
+	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier, boolean)}.
 	 *
 	 * @param schemeOptimizeInfo
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
 	@Crutch109
-	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
-		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(schemeOptimizeInfo));
+	public void setParentSchemeOptimizeInfo(
+			final SchemeOptimizeInfo schemeOptimizeInfo,
+			final boolean usePool)
+	throws ApplicationException {
+		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(schemeOptimizeInfo), usePool);
 	}
 
 	/**

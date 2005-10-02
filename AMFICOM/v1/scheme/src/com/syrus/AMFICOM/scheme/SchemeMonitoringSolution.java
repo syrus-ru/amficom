@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.74 2005/10/02 14:00:24 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.75 2005/10/02 18:58:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/10/02 14:00:24 $
+ * @version $Revision: 1.75 $, $Date: 2005/10/02 18:58:43 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -169,11 +169,14 @@ public final class SchemeMonitoringSolution
 	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeMonitoringSolution createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final int price,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo) throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -181,7 +184,7 @@ public final class SchemeMonitoringSolution
 
 		try {
 			final Date created = new Date();
-			final boolean active = parentSchemeOptimizeInfo.getParentScheme().getSchemeMonitoringSolutionsRecursively().isEmpty();
+			final boolean active = parentSchemeOptimizeInfo.getParentScheme().getSchemeMonitoringSolutionsRecursively(usePool).isEmpty();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
 					created,
 					created,
@@ -196,8 +199,12 @@ public final class SchemeMonitoringSolution
 					parentSchemeOptimizeInfo);
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -209,11 +216,14 @@ public final class SchemeMonitoringSolution
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeMonitoringSolution createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final int price,
 			final Scheme parentScheme) throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -221,7 +231,7 @@ public final class SchemeMonitoringSolution
 
 		try {
 			final Date created = new Date();
-			final boolean active = parentScheme.getSchemeMonitoringSolutionsRecursively().isEmpty();
+			final boolean active = parentScheme.getSchemeMonitoringSolutionsRecursively(usePool).isEmpty();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
 					created,
 					created,
@@ -236,8 +246,12 @@ public final class SchemeMonitoringSolution
 					null);
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -263,7 +277,7 @@ public final class SchemeMonitoringSolution
 	public Set<Identifiable> getReverseDependencies(final boolean usePool) throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemePaths0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemePaths0(usePool)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies(usePool));
 		}
 		reverseDependencies.remove(null);
@@ -443,9 +457,15 @@ public final class SchemeMonitoringSolution
 
 	/**
 	 * @param parentSchemeOptimizeInfoId
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	void setParentSchemeOptimizeInfoId(final Identifier parentSchemeOptimizeInfoId) {
+	void setParentSchemeOptimizeInfoId(
+			final Identifier parentSchemeOptimizeInfoId,
+			final boolean usePool)
+	throws ApplicationException {
 		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeOptimizeInfoIdVoid = this.parentSchemeOptimizeInfoId.isVoid();
 		assert this.parentSchemeId.isVoid() ^ thisParentSchemeOptimizeInfoIdVoid : OBJECT_BADLY_INITIALIZED;
@@ -479,20 +499,29 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier)}.
+	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier, boolean)}.
 	 *
 	 * @param parentSchemeOptimizeInfo
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
 	@Crutch109
-	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
-		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(parentSchemeOptimizeInfo));
+	public void setParentSchemeOptimizeInfo(
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo,
+			final boolean usePool)
+	throws ApplicationException {
+		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(parentSchemeOptimizeInfo), usePool);
 	}
 
 	/**
 	 * @param parentSchemeId
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
 	@Crutch109
-	void setParentSchemeId(final Identifier parentSchemeId) {
+	void setParentSchemeId(final Identifier parentSchemeId,
+			final boolean usePool)
+	throws ApplicationException {
 		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
 		assert thisParentSchemeIdVoid ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
@@ -502,7 +531,7 @@ public final class SchemeMonitoringSolution
 		assert parentSchemeIdVoid || parentSchemeId.getMajor() == SCHEME_CODE;
 
 		if (thisParentSchemeIdVoid) {
-			this.getParentSchemeOptimizeInfo().setParentSchemeId(parentSchemeId);
+			this.getParentSchemeOptimizeInfo().setParentSchemeId(parentSchemeId, usePool);
 		} else {
 			if (parentSchemeIdVoid) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -520,14 +549,18 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeId(Identifier)}.
+	 * A wrapper around {@link #setParentSchemeId(Identifier, boolean)}.
 	 *
 	 * @param parentScheme must be non-{@code null}, otherwise the object
 	 *        will be deleted from pool. 
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
 	@Crutch109
-	public void setParentScheme(final Scheme parentScheme) {
-		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme));
+	public void setParentScheme(final Scheme parentScheme,
+			final boolean usePool)
+	throws ApplicationException {
+		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme), usePool);
 	}
 
 	public void setPrice(final int price) {
@@ -543,22 +576,25 @@ public final class SchemeMonitoringSolution
 	 *        active, thus preventing the parent {@code Scheme} from losing
 	 *        the active solution, unless it has no solutions at all upon
 	 *        removal of this one. 
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
-	public void setActive(final boolean active) {
+	public void setActive(final boolean active, final boolean usePool)
+	throws ApplicationException {
 		if (this.active == active)
 			return;
 
 		final Scheme parentScheme = this.getParentScheme();
 		if (active) {
 			final SchemeMonitoringSolution currentSchemeMonitoringSolution =
-					parentScheme.getCurrentSchemeMonitoringSolution();
+					parentScheme.getCurrentSchemeMonitoringSolution(usePool);
 			currentSchemeMonitoringSolution.active = false;
 			currentSchemeMonitoringSolution.markAsChanged();
 		} else {
 			StorableObjectPool.delete(super.id);
 
 			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions =
-					parentScheme.getSchemeMonitoringSolutionsRecursively0();
+					parentScheme.getSchemeMonitoringSolutionsRecursively0(usePool);
 			schemeMonitoringSolutions.remove(this);
 			for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
 				schemeMonitoringSolution.active = true;
@@ -622,48 +658,70 @@ public final class SchemeMonitoringSolution
 		return this.schemePathContainerWrappee;
 	}
 
-	@Crutch109
-	public void addSchemePath(final SchemePath schemePath) {
+	/**
+	 * @param schemePath
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void addSchemePath(final SchemePath schemePath,
+			final boolean usePool)
+	throws ApplicationException {
 		assert schemePath != null: NON_NULL_EXPECTED;
-		schemePath.setParentSchemeMonitoringSolution(this);
+		schemePath.setParentSchemeMonitoringSolution(this, usePool);
 	}
 
-	@Crutch109
-	public void removeSchemePath(final SchemePath schemePath) {
+	/**
+	 * @param schemePath
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void removeSchemePath(final SchemePath schemePath,
+			final boolean usePool)
+	throws ApplicationException {
 		assert schemePath != null: NON_NULL_EXPECTED;
 		assert schemePath.getParentSchemeMonitoringSolutionId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemePath.setParentSchemeMonitoringSolution(null);
+		schemePath.setParentSchemeMonitoringSolution(null, usePool);
 	}
 
-	@Crutch109
-	public Set<SchemePath> getSchemePaths() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemePaths0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public Set<SchemePath> getSchemePaths(final boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getSchemePaths0(usePool));
 	}
 
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
 	@Crutch109
-	Set<SchemePath> getSchemePaths0() throws ApplicationException {
+	Set<SchemePath> getSchemePaths0(@SuppressWarnings("unused") final boolean usePool) throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
 	}
 
+	/**
+	 * @param schemePaths
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
 	@Crutch109
-	public void setSchemePaths(final Set<SchemePath> schemePaths) throws ApplicationException {
+	public void setSchemePaths(final Set<SchemePath> schemePaths,
+			final boolean usePool)
+	throws ApplicationException {
 		assert schemePaths != null: NON_NULL_EXPECTED;
-		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0();
+		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0(usePool);
 		/*
 		 * Check is made to prevent SchemePaths from
 		 * permanently losing their parents.
 		 */
 		oldSchemePaths.removeAll(schemePaths);
 		for (final SchemePath oldSchemePath : oldSchemePaths) {
-			this.removeSchemePath(oldSchemePath);
+			this.removeSchemePath(oldSchemePath, usePool);
 		}
 		for (final SchemePath schemePath : schemePaths) {
-			this.addSchemePath(schemePath);
+			this.addSchemePath(schemePath, usePool);
 		}
 	}
 }

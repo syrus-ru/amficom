@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.11 2005/08/16 12:03:21 max Exp $
+ * $Id: SchemePathWrapper.java,v 1.12 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/16 12:03:21 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/10/02 18:58:42 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemePathWrapper extends StorableObjectWrapper<SchemePath> {
@@ -94,17 +96,25 @@ public final class SchemePathWrapper extends StorableObjectWrapper<SchemePath> {
 	}
 
 	@Override
-	public void setValue(SchemePath schemePath, String key, Object value) {
-		if (schemePath != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemePath.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemePath.setDescription((String) value);
-			} else if (key.equals(COLUMN_TRANSMISSION_PATH_ID)) {
-				schemePath.setTransmissionPathId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID)) {
-				schemePath.setParentSchemeMonitoringSolutionId((Identifier) value);
+	public void setValue(final SchemePath schemePath, final String key,
+			final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemePath != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemePath.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemePath.setDescription((String) value);
+				} else if (key.equals(COLUMN_TRANSMISSION_PATH_ID)) {
+					schemePath.setTransmissionPathId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID)) {
+					schemePath.setParentSchemeMonitoringSolutionId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

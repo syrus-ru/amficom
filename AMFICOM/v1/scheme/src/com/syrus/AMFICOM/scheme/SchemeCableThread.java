@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.90 2005/10/02 14:00:24 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.91 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/10/02 14:00:24 $
+ * @version $Revision: 1.91 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -712,9 +712,15 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * @param parentSchemeCableLink
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
+	public void setParentSchemeCableLink(
+			final SchemeCableLink parentSchemeCableLink,
+			final boolean usePool)
+	throws ApplicationException {
 		assert this.parentSchemeCableLinkId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeCableLink == null) {
@@ -877,8 +883,16 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
+	/**
+	 * @param parentSchemeCableLinkId
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	void setParentSchemeCableLinkId(Identifier parentSchemeCableLinkId) {
+	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId,
+			final boolean usePool)
+	throws ApplicationException {
 //		TODO: inroduce additional sanity checks
 		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
 		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;

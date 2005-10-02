@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.132 2005/10/02 14:00:23 bass Exp $
+ * $Id: SchemeElement.java,v 1.133 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,7 +97,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.132 $, $Date: 2005/10/02 14:00:23 $
+ * @version $Revision: 1.133 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1268,11 +1268,15 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * @param parentScheme
-	 * @see AbstractSchemeElement#setParentScheme(Scheme)
+	 * @param usePool
+	 * @throws ApplicationException
+	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
 	 */
 	@Override
 	@Crutch109
-	public void setParentScheme(final Scheme parentScheme) {
+	public void setParentScheme(final Scheme parentScheme,
+			final boolean usePool)
+	throws ApplicationException {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 
@@ -1280,7 +1284,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			/*
 			 * Moving from a scheme to another scheme.
 			 */
-			super.setParentScheme(parentScheme);
+			super.setParentScheme(parentScheme, usePool);
 		else {
 			/*
 			 * Moving from a scheme element to a scheme.
@@ -1925,7 +1929,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param schemes
 	 * @param usePool
 	 * @throws ApplicationException 
-	 * @see Scheme#setSchemeElements(Set)
+	 * @see Scheme#setSchemeElements(Set, boolean)
 	 * @todo Check for circular dependencies.
 	 */
 	public void setSchemes(final Set<Scheme> schemes, final boolean usePool)
@@ -2058,7 +2062,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	throws ApplicationException {
 		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
 		for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
-			schemePorts.addAll(schemeDevice.getSchemePorts0());
+			schemePorts.addAll(schemeDevice.getSchemePorts0(usePool));
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
 			schemePorts.addAll(schemeElement.getSchemePortsRecursively(usePool));
@@ -2075,7 +2079,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	throws ApplicationException {
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
 		for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
-			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts0());
+			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts0(usePool));
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
 			schemeCablePorts.addAll(schemeElement.getSchemeCablePortsRecursively(usePool));

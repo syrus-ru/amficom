@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.96 2005/10/02 14:00:23 bass Exp $
+ * $Id: SchemePath.java,v 1.97 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/10/02 14:00:23 $
+ * @version $Revision: 1.97 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -407,9 +407,15 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param parentSchemeMonitoringSolutionId
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
+	@SuppressWarnings("unused")
 	@Crutch109
-	void setParentSchemeMonitoringSolutionId(final Identifier parentSchemeMonitoringSolutionId) {
+	void setParentSchemeMonitoringSolutionId(
+			final Identifier parentSchemeMonitoringSolutionId,
+			final boolean usePool)
+	throws ApplicationException {
 		assert this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 
@@ -430,13 +436,18 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeMonitoringSolutionId(Identifier)}.
+	 * A wrapper around {@link #setParentSchemeMonitoringSolutionId(Identifier, boolean)}.
 	 *
 	 * @param parentSchemeMonitoringSolution
+	 * @param usePool
+	 * @throws ApplicationException
 	 */
 	@Crutch109
-	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
-		this.setParentSchemeMonitoringSolutionId(Identifier.possiblyVoid(parentSchemeMonitoringSolution));
+	public void setParentSchemeMonitoringSolution(
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution,
+			final boolean usePool)
+	throws ApplicationException {
+		this.setParentSchemeMonitoringSolutionId(Identifier.possiblyVoid(parentSchemeMonitoringSolution), usePool);
 	}
 
 	/**

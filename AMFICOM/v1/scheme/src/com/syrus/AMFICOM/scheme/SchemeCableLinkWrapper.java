@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkWrapper.java,v 1.9 2005/09/08 16:34:40 bass Exp $
+ * $Id: SchemeCableLinkWrapper.java,v 1.10 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/02 18:58:42 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -134,27 +136,35 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 	}
 
 	@Override
-	public void setValue(SchemeCableLink schemeCableLink, String key, Object value) {
-		if (schemeCableLink != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeCableLink.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeCableLink.setDescription((String) value);
-			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
-				schemeCableLink.setPhysicalLength(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
-				schemeCableLink.setOpticalLength(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_CABLE_LINK_TYPE_ID)) {
-				schemeCableLink.setAbstractLinkTypeId((Identifier) value);
-			} else if (key.equals(COLUMN_CABLE_LINK_ID)) {
-				schemeCableLink.setAbstractLinkId((Identifier) value);
-			} else if (key.equals(COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)) {
-				schemeCableLink.setSourceAbstractSchemePortId((Identifier) value);
-			} else if (key.equals(COLUMN_TARGET_SCHEME_CABLE_PORT_ID)) {
-				schemeCableLink.setTargetAbstractSchemePortId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
-				schemeCableLink.setParentSchemeId((Identifier) value);
+	public void setValue(final SchemeCableLink schemeCableLink,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeCableLink != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeCableLink.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemeCableLink.setDescription((String) value);
+				} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
+					schemeCableLink.setPhysicalLength(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
+					schemeCableLink.setOpticalLength(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_CABLE_LINK_TYPE_ID)) {
+					schemeCableLink.setAbstractLinkTypeId((Identifier) value);
+				} else if (key.equals(COLUMN_CABLE_LINK_ID)) {
+					schemeCableLink.setAbstractLinkId((Identifier) value);
+				} else if (key.equals(COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)) {
+					schemeCableLink.setSourceAbstractSchemePortId((Identifier) value);
+				} else if (key.equals(COLUMN_TARGET_SCHEME_CABLE_PORT_ID)) {
+					schemeCableLink.setTargetAbstractSchemePortId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
+					schemeCableLink.setParentSchemeId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

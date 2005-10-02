@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.8 2005/09/08 16:34:40 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.9 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/02 18:58:42 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<SchemeOptimizeInfoRtu> {
@@ -105,17 +107,26 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 	 * @see com.syrus.util.Wrapper#setValue(java.lang.Object, java.lang.String, java.lang.Object)
 	 */
 	@Override
-	public void setValue(SchemeOptimizeInfoRtu schemeOptimizeInfoRtu, String key, Object value) {
-		if (schemeOptimizeInfoRtu != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeOptimizeInfoRtu.setName((String) value);
-			} else if (key.equals(COLUMN_PRICE)) {
-				schemeOptimizeInfoRtu.setPriceUsd(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_RANGE)) {
-				schemeOptimizeInfoRtu.setRangeDb(((Float) value).floatValue());
-			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
-				schemeOptimizeInfoRtu.setParentSchemeOptimizeInfoId((Identifier) value);
+	public void setValue(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu,
+			final String key,
+			final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+		
+		try {
+			if (schemeOptimizeInfoRtu != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeOptimizeInfoRtu.setName((String) value);
+				} else if (key.equals(COLUMN_PRICE)) {
+					schemeOptimizeInfoRtu.setPriceUsd(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_RANGE)) {
+					schemeOptimizeInfoRtu.setRangeDb(((Float) value).floatValue());
+				} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+					schemeOptimizeInfoRtu.setParentSchemeOptimizeInfoId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

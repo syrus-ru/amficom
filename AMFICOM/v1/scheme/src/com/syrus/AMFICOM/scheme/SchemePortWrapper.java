@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortWrapper.java,v 1.11 2005/08/16 12:12:23 max Exp $
+ * $Id: SchemePortWrapper.java,v 1.12 2005/10/02 18:58:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/16 12:12:23 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/10/02 18:58:42 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemePortWrapper extends StorableObjectWrapper<SchemePort> {
@@ -122,23 +124,31 @@ public final class SchemePortWrapper extends StorableObjectWrapper<SchemePort> {
 	}
 
 	@Override
-	public void setValue(final SchemePort schemePort, final String key, final Object value) {
-		if (schemePort != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemePort.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemePort.setDescription((String) value);
-			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
-				schemePort.setDirectionType(IdlDirectionType.from_int(((Integer) value).intValue()));
-			} else if (key.equals(COLUMN_PORT_TYPE_ID)) {
-				schemePort.setPortTypeId((Identifier) value);
-			} else if (key.equals(COLUMN_PORT_ID)) {
-				schemePort.setPortId((Identifier) value);
-			} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
-				schemePort.setMeasurementPortId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
-				schemePort.setParentSchemeDeviceId((Identifier) value);
+	public void setValue(final SchemePort schemePort, final String key,
+			final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemePort != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemePort.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					schemePort.setDescription((String) value);
+				} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
+					schemePort.setDirectionType(IdlDirectionType.from_int(((Integer) value).intValue()));
+				} else if (key.equals(COLUMN_PORT_TYPE_ID)) {
+					schemePort.setPortTypeId((Identifier) value);
+				} else if (key.equals(COLUMN_PORT_ID)) {
+					schemePort.setPortId((Identifier) value);
+				} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
+					schemePort.setMeasurementPortId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
+					schemePort.setParentSchemeDeviceId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.8 2005/09/08 16:34:40 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.9 2005/10/02 18:58:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/02 18:58:43 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper<SchemeOptimizeInfoSwitch> {
@@ -109,17 +111,25 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @see com.syrus.util.Wrapper#setValue(java.lang.Object, java.lang.String, java.lang.Object)
 	 */
 	@Override
-	public void setValue(SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch, String key, Object value) {
-		if (schemeOptimizeInfoSwitch != null) {
-			if (key.equals(COLUMN_NAME)) {
-				schemeOptimizeInfoSwitch.setName((String) value);
-			} else if (key.equals(COLUMN_PRICE)) {
-				schemeOptimizeInfoSwitch.setPriceUsd(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_NO_OF_PORTS)) {
-				schemeOptimizeInfoSwitch.setNoOfPorts(((Byte) value).byteValue());
-			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
-				schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfoId((Identifier) value);
+	public void setValue(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		final boolean usePool = false;
+
+		try {
+			if (schemeOptimizeInfoSwitch != null) {
+				if (key.equals(COLUMN_NAME)) {
+					schemeOptimizeInfoSwitch.setName((String) value);
+				} else if (key.equals(COLUMN_PRICE)) {
+					schemeOptimizeInfoSwitch.setPriceUsd(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_NO_OF_PORTS)) {
+					schemeOptimizeInfoSwitch.setNoOfPorts(((Byte) value).byteValue());
+				} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+					schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfoId((Identifier) value, usePool);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 
