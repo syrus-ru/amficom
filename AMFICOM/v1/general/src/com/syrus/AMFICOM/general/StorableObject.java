@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.112 2005/10/02 09:51:57 arseniy Exp $
+ * $Id: StorableObject.java,v 1.113 2005/10/02 11:48:36 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/10/02 09:51:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.113 $, $Date: 2005/10/02 11:48:36 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -319,7 +319,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	protected final void insertXmlMapping(final XmlIdentifier xmlId,
 			final String importType) {
-		LocalXmlIdentifierPool.put(this.id, xmlId, importType);
+		LocalXmlIdentifierPool.put(this.id, xmlId.getStringValue(), importType);
 	}
 
 	/**
@@ -633,8 +633,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.112 $, $Date: 2005/10/02 09:51:57 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.113 $, $Date: 2005/10/02 11:48:36 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")

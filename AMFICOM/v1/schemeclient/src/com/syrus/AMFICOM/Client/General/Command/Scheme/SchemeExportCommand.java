@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.4 2005/09/29 13:20:56 stas Exp $
+ * $Id: SchemeExportCommand.java,v 1.5 2005/10/02 11:44:42 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,10 +66,10 @@ public class SchemeExportCommand extends ImportExportCommand {
 			Set<XmlSchemeProtoGroup> xmlProtoGroups = new HashSet<XmlSchemeProtoGroup>();
 			for (SchemeProtoGroup protoGroup : groups) {
 				XmlSchemeProtoGroup xmlProto = XmlSchemeProtoGroup.Factory.newInstance();
-				protoGroup.getXmlTransferable(xmlProto, AMFICOM_IMPORT);
+				protoGroup.getXmlTransferable(xmlProto, AMFICOM_IMPORT, false);
 				xmlProtoGroups.add(xmlProto);
 			}
-			final File protoFile = new File(exportDirectory + separator + protoElementsFileName);
+			final File protoFile = new File(EXPORT_DIRECTORY + File.separator + PROTO_ELEMENTS_FILENAME);
 			saveProtoGroupsXML(protoFile, xmlProtoGroups);
 
 			StorableObjectCondition condition2 = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE); 
@@ -77,7 +77,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 			Set<XmlLinkType> xmlLinkTypes = new HashSet<XmlLinkType>();
 			for (LinkType linkType : linkTypes) {
 				XmlLinkType xmlLinkType = XmlLinkType.Factory.newInstance();
-				linkType.getXmlTransferable(xmlLinkType, AMFICOM_IMPORT);
+				linkType.getXmlTransferable(xmlLinkType, AMFICOM_IMPORT, false);
 				xmlLinkTypes.add(xmlLinkType);
 			}
 			
@@ -96,7 +96,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 			Set<XmlPortType> xmlPortTypes = new HashSet<XmlPortType>();
 			for (PortType portType : portTypes) {
 				XmlPortType xmlPortType = XmlPortType.Factory.newInstance();
-				portType.getXmlTransferable(xmlPortType, AMFICOM_IMPORT);
+				portType.getXmlTransferable(xmlPortType, AMFICOM_IMPORT, false);
 				xmlPortTypes.add(xmlPortType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE); 
@@ -104,7 +104,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 			Set<XmlProtoEquipment> xmlEquipmentTypes = new HashSet<XmlProtoEquipment>();
 			for (ProtoEquipment protoEq : protoEquipments) {
 				XmlProtoEquipment xmlEquipmentType = XmlProtoEquipment.Factory.newInstance();
-				protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT);
+				protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT, false);
 				xmlEquipmentTypes.add(xmlEquipmentType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE); 
@@ -112,10 +112,10 @@ public class SchemeExportCommand extends ImportExportCommand {
 			Set<XmlEquipment> xmlEquipments = new HashSet<XmlEquipment>();
 			for (Equipment eq : equipments) {
 				XmlEquipment xmlEquipment = XmlEquipment.Factory.newInstance();
-				eq.getXmlTransferable(xmlEquipment, AMFICOM_IMPORT);
+				eq.getXmlTransferable(xmlEquipment, AMFICOM_IMPORT, false);
 				xmlEquipments.add(xmlEquipment);
 			}
-			File configFile = new File(exportDirectory + separator + configurationFileName);
+			File configFile = new File(EXPORT_DIRECTORY + File.separator + CONFIGURATION_FILENAME);
 			saveConfigXML(configFile, xmlLinkTypes, xmlCableLinkTypes, xmlPortTypes, xmlEquipmentTypes, xmlEquipments);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
