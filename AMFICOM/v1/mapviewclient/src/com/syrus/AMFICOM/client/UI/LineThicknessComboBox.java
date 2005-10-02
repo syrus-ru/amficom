@@ -1,5 +1,5 @@
 /*-
- * $$Id: LineThicknessComboBox.java,v 1.2 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: LineThicknessComboBox.java,v 1.3 2005/10/02 12:30:49 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.UI;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/02 12:30:49 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -29,7 +29,8 @@ public final class LineThicknessComboBox extends AComboBox {
 	}
 	
 	public LineThicknessComboBox() {
-		super(AComboBox.SMALL_FONT);
+		// todo set font size
+		super();
 		for(int i = MIN_VALUE; i < MAX_VALUE; i++) {
 			this.addItem(values[i]);
 		}
