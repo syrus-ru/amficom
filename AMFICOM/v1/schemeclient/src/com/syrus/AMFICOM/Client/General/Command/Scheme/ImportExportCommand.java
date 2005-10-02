@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.7 2005/10/01 09:03:29 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.8 2005/10/02 10:55:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -175,13 +175,11 @@ public abstract class ImportExportCommand extends AbstractCommand {
 					LoginManager.getDomainId().getXmlTransferable(equipment.addNewDomainId(), importType);
 					
 					if (importType.equals(UCM_IMPORT)) {
-						XmlIdentifier protoEquipmentId = equipment.getProtoEquipmentId();
+						final XmlIdentifier protoEquipmentId = equipment.getProtoEquipmentId();
 
 						// in case of ucm_scheme - change protoEquipmentId to stub
 						if (protoEquipmentId.getStringValue().equals(UCM_SCHEMED_EQT)) {
-							XmlIdentifier realProtoId = XmlIdentifier.Factory.newInstance();
-							stubProtoEquipment.getId().getXmlTransferable(realProtoId, importType);
-							equipment.setProtoEquipmentId(realProtoId);								
+							stubProtoEquipment.getId().getXmlTransferable(protoEquipmentId, importType);
 						}
 					}
 					break;
@@ -223,10 +221,8 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
 									readObject(exportDirectory + separator + proto.getUgoCellFilename() + id_prefix);
 							
-							final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-							ugoCell.getId().getXmlTransferable(xmlId, importType);
 							proto.unsetUgoCellFilename();
-							proto.setUgoCellId(xmlId);
+							ugoCell.getId().getXmlTransferable(proto.addNewUgoCellId(), importType);
 							cashedUgoCells.put(proto, ugoCell);
 							cashedUgoIdentifiers.put(proto, identifierSeq);
 						}
@@ -237,10 +233,8 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
 									readObject(exportDirectory + separator + proto.getSchemeCellFilename() + id_prefix);
 							
-							final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-							schemeCell.getId().getXmlTransferable(xmlId, importType);
 							proto.unsetSchemeCellFilename();
-							proto.setSchemeCellId(xmlId);
+							schemeCell.getId().getXmlTransferable(proto.addNewSchemeCellId(), importType);
 							cashedSchemeCells.put(proto, schemeCell);
 							cashedSchemeIdentifiers.put(proto, identifierSeq);
 						}
@@ -322,10 +316,10 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							Object[] cells = (Object[])ugoCell.getData().get(0);
 							for (Object cell : SchemeGraph.getDescendants1(cells)) {
 								if (cell instanceof IdentifiableCell) {
-									Identifier id = ((IdentifiableCell)cell).getId();
-									XmlIdentifier xmlIdentifier = XmlIdentifier.Factory.newInstance();
-									xmlIdentifier.setStringValue(id.getIdentifierString());
-									cellIds.put(id, xmlIdentifier);
+									final Identifier id = ((IdentifiableCell)cell).getId();
+									final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
+									id.getXmlTransferable(xmlId, importType);
+									cellIds.put(id, xmlId);
 								}
 							}
 //							Set<Identifier> cellIds = new HashSet<Identifier>();
@@ -358,9 +352,9 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							Object[] cells = (Object[])schemeCell.getData().get(0);
 							for (Object cell : SchemeGraph.getDescendants1(cells)) {
 								if (cell instanceof IdentifiableCell) {
-									Identifier id = ((IdentifiableCell)cell).getId();
-									XmlIdentifier xmlIdentifier = XmlIdentifier.Factory.newInstance();
-									xmlIdentifier.setStringValue(id.getIdentifierString());
+									final Identifier id = ((IdentifiableCell)cell).getId();
+									final XmlIdentifier xmlIdentifier = XmlIdentifier.Factory.newInstance();
+									id.getXmlTransferable(xmlIdentifier, importType);
 									cellIds.put(id, xmlIdentifier);
 								}
 							}
