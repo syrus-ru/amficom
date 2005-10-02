@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapNodeLinkSizeField.java,v 1.15 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapNodeLinkSizeField.java,v 1.16 2005/10/02 11:56:44 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * (пользователь нажал ENTER) меняет фрагмент линии в карте. При завершении
  * редактирования сам убирает себя из родительского компонента
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/02 11:56:44 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -125,7 +125,6 @@ public final class MapNodeLinkSizeField extends JTextField {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			// empty
-		}
 		}
 
 		@Override
