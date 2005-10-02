@@ -1037,9 +1037,9 @@ public class TimeParametersFrame extends JInternalFrame {
 				}
 			}
 			
-			if (!temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME) && start.after(end)) {
+			if (!temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME) && !start.before(end)) {
 				JOptionPane.showMessageDialog(this.panel,
-					LangModelSchedule.getString("Error.EndTimeLessThanBeginTime"), 
+					LangModelSchedule.getString("Error.EndTimeNotGreaterThanBeginTime"), 
 					LangModelSchedule.getString("Error"), 
 					JOptionPane.OK_OPTION);
 				this.schedulerModel.setBreakData();
