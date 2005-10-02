@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapVoidElementStrategy.java,v 1.36 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapVoidElementStrategy.java,v 1.37 2005/10/02 13:06:50 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * 
- * @version $Revision: 1.36 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/02 13:06:50 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -127,7 +127,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy {
 					Math.abs(endX - startX),
 					Math.abs(endY - startY));
 			selectElementsInRect(selectionRect);
-
+			this.logicalNetLayer.sendSelectionChangeEvent();
 			mapState.setActionMode(MapState.NULL_ACTION_MODE);
 		}// MapState.SELECT_MARKER_ACTION_MODE && MapState.NO_OPERATION
 	}
