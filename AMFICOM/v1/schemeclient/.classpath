@@ -14,10 +14,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jgraphpad"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DEPRECATED-layout"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xbean"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/configurationxml"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/schemexml"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/configurationxml.jar"/>
+	<classpathentry sourcepath="/EXTLIB/xml-xmlbeans-src.zip" kind="var" path="EXTLIB/xbean.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/schemexml.jar"/>
+	<classpathentry kind="var" path="EXTLIB/jgraphpad.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
+	<classpathentry kind="var" path="EXTLIB/jsr173_api.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
