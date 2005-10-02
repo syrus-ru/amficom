@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.9 2005/09/30 08:33:18 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.10 2005/10/02 14:44:12 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/30 08:33:18 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/02 14:44:12 $
  * @module importUCM
  */
 
@@ -350,8 +350,8 @@ public class UCMSchemeExportCommand {
 			muf.setLabel("MO");
 			Equipment eq = new Equipment("eq" + ucmObject.un);
 			eq.setName(ucmObject.text);
-			eq.setLatitude((float)ucmObject.x0);
-			eq.setLongitude((float)ucmObject.y0);
+			eq.setLatitude((float)ucmObject.y0);
+			eq.setLongitude((float)ucmObject.x0);
 			muf.setEquipment(eq);
 			this.equipments.add(eq);
 			
