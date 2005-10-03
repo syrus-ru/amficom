@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.5 2005/09/25 18:00:33 stas Exp $
+ * $Id: TraceLoadDialog.java,v 1.6 2005/10/03 14:04:58 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/09/25 18:00:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.6 $, $Date: 2005/10/03 14:04:58 $
  * @module analysis
  */
 
@@ -52,13 +52,13 @@ public class TraceLoadDialog {
 	static IconedTreeUI treeUI;
 	private static Set<Result> selectedResults;
 	private static Set<Identifier> selectedMeasurementIds;
-	
+
 	static JOptionPane optionPane;
 	static JDialog dialog;
 	static JButton okButton;
 	static JButton cancelButton;
 	static int result;
-	
+
 	public static Set<Result> getResults() {
 		return selectedResults;
 	}
@@ -130,6 +130,10 @@ public class TraceLoadDialog {
 					}
 				}
 			}
+			// XXX: performance: seemes to be a longest part
+			// 0.5 - 1 sec: present in local (client's) cache
+			// 3 - 4 sec: absent in local (client's) cache, seems to be presentin server's
+			// ~146 sec: seems to be absent in server cache (first request) (Arseniy says servers gets these results from agent)
 			try {
 				if (!selectedMeasurementIds.isEmpty()) {
 					StorableObjectCondition condition2 = new LinkedIdsCondition(selectedMeasurementIds, ObjectEntities.RESULT_CODE);
