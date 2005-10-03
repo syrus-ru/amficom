@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.75 2005/10/02 18:58:42 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.76 2005/10/03 10:17:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.76 $, $Date: 2005/10/03 10:17:55 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -626,6 +626,7 @@ public abstract class AbstractSchemePort
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
+			clone.characteristicContainerWrappee = null;
 			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());

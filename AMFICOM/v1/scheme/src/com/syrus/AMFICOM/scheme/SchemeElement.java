@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.133 2005/10/02 18:58:42 bass Exp $
+ * $Id: SchemeElement.java,v 1.134 2005/10/03 10:17:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,7 +97,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.133 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.134 $, $Date: 2005/10/03 10:17:55 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -626,26 +626,31 @@ public final class SchemeElement extends AbstractSchemeElement
 				clone.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
 				clone.setSchemeCell(schemeCellClone);
 			}
+			clone.characteristicContainerWrappee = null;
 			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
 			}
+			clone.schemeDeviceContainerWrappee = null;
 			for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
 				clone.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
 				clone.addSchemeDevice(schemeDeviceClone, usePool);
 			}
+			clone.schemeLinkContainerWrappee = null;
 			for (final SchemeLink schemeLink : this.getSchemeLinks0(usePool)) {
 				final SchemeLink schemeLinkClone = schemeLink.clone();
 				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
 				clone.addSchemeLink(schemeLinkClone, usePool);
 			}
+			clone.schemeContainerWrappee = null;
 			for (final Scheme scheme : this.getSchemes0(usePool)) {
 				final Scheme schemeClone = scheme.clone();
 				clone.clonedIdMap.putAll(schemeClone.getClonedIdMap());
 				clone.addScheme(schemeClone, usePool);
 			}
+			clone.schemeElementContainerWrappee = null;
 			for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
 				final SchemeElement schemeElementClone =  schemeElement.clone();
 				clone.clonedIdMap.putAll(schemeElementClone.getClonedIdMap());

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.109 2005/10/02 18:58:42 bass Exp $
+ * $Id: Scheme.java,v 1.110 2005/10/03 10:17:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.109 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.110 $, $Date: 2005/10/03 10:17:55 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -369,16 +369,19 @@ public final class Scheme extends AbstractCloneableDomainMember
 				clone.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
 				clone.setSchemeCell(schemeCellClone);
 			}
+			clone.schemeCableLinkContainerWrappee = null;
 			for (final SchemeCableLink schemeCableLink : this.getSchemeCableLinks0(usePool)) {
 				final SchemeCableLink schemeCableLinkClone = schemeCableLink.clone();
 				clone.clonedIdMap.putAll(schemeCableLinkClone.getClonedIdMap());
 				clone.addSchemeCableLink(schemeCableLinkClone, usePool);
 			}
+			clone.schemeElementContainerWrappee = null;
 			for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
 				final SchemeElement schemeElementClone = schemeElement.clone();
 				clone.clonedIdMap.putAll(schemeElementClone.getClonedIdMap());
 				clone.addSchemeElement(schemeElementClone, usePool);
 			}
+			clone.schemeLinkContainerWrappee = null;
 			for (final SchemeLink schemeLink : this.getSchemeLinks0(usePool)) {
 				final SchemeLink schemeLinkClone = schemeLink.clone();
 				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());

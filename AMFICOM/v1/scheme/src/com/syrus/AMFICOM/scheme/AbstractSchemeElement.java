@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.62 2005/10/02 18:58:42 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.63 2005/10/03 10:17:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.63 $, $Date: 2005/10/03 10:17:55 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -313,7 +313,7 @@ public abstract class AbstractSchemeElement
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()

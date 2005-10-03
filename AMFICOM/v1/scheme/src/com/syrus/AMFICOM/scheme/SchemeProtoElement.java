@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.111 2005/10/02 18:58:42 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.112 2005/10/03 10:17:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.112 $, $Date: 2005/10/03 10:17:55 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -396,21 +396,25 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				clone.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
 				clone.setSchemeCell(schemeCellClone);
 			}
+			clone.characteristicContainerWrappee = null;
 			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
 			}
+			clone.schemeDeviceContainerWrappee = null;
 			for (final SchemeDevice schemeDevice : this.getSchemeDevices0(usePool)) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
 				clone.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
 				clone.addSchemeDevice(schemeDeviceClone, usePool);
 			}
+			clone.schemeLinkContainerWrappee = null;
 			for (final SchemeLink schemeLink : this.getSchemeLinks0(usePool)) {
 				final SchemeLink schemeLinkClone = schemeLink.clone();
 				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
 				clone.addSchemeLink(schemeLinkClone, usePool);
 			}
+			clone.schemeProtoElementContainerWrappee = null;
 			for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements0(usePool)) {
 				final SchemeProtoElement schemeProtoElementClone = schemeProtoElement.clone();
 				clone.clonedIdMap.putAll(schemeProtoElementClone.getClonedIdMap());

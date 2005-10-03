@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.101 2005/10/02 18:58:43 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.102 2005/10/03 10:17:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/10/02 18:58:43 $
+ * @version $Revision: 1.102 $, $Date: 2005/10/03 10:17:55 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -328,11 +328,13 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
+			clone.characteristicContainerWrappee = null;
 			for (final Characteristic characteristic : this.getCharacteristics0(usePool)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				clone.addCharacteristic(characteristicClone, usePool);
 			}
+			clone.schemeCableThreadContainerWrappee = null;
 			for (final SchemeCableThread schemeCableThread : this.getSchemeCableThreads0(usePool)) {
 				final SchemeCableThread schemeCableThreadClone = schemeCableThread.clone();
 				clone.clonedIdMap.putAll(schemeCableThreadClone.getClonedIdMap());
