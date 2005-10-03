@@ -115,7 +115,7 @@ public class AnalysisUtil
 	public static AnalysisResult getAnalysisForMeasurementIfPresent(Measurement m)
 	throws DataFormatException, ApplicationException {
 		LinkedIdsCondition condition1 = new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_CODE);
-		Set<Analysis> analyse = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+		Set<Analysis> analyse = StorableObjectPool.getStorableObjectsByCondition(condition1, true); // XXX: performance: the most slow part of loading trace that has no analysis
 		for (Analysis analysis : analyse) {
 			LinkedIdsCondition condition2 = new LinkedIdsCondition(analysis.getId(), ObjectEntities.RESULT_CODE);
 			Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
