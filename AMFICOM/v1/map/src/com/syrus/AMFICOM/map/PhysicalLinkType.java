@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.99 2005/10/03 13:58:27 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.100 2005/10/03 16:13:36 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
-import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -61,8 +60,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/10/03 13:58:27 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.100 $, $Date: 2005/10/03 16:13:36 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -334,8 +333,8 @@ public final class PhysicalLinkType extends StorableObjectType
 		// have different indexing
 		physicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
 		
-		physicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
-		physicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
+		physicalLinkType.setDimensionX(this.getBindingDimension().getWidth());
+		physicalLinkType.setDimensionY(this.getBindingDimension().getHeight());
 	}
 
 	/**
@@ -378,8 +377,9 @@ public final class PhysicalLinkType extends StorableObjectType
 		}
 		if(xmlPhysicalLinkType.isSetDimensionX()
 				&& xmlPhysicalLinkType.isSetDimensionY()) {
-			this.bindingDimension = new IntDimension(xmlPhysicalLinkType.getDimensionX().intValue(),
-				xmlPhysicalLinkType.getDimensionY().intValue());
+			this.bindingDimension = new IntDimension(
+					xmlPhysicalLinkType.getDimensionX(),
+					xmlPhysicalLinkType.getDimensionY());
 		}
 		else {
 			this.bindingDimension = new IntDimension(1, 1);
