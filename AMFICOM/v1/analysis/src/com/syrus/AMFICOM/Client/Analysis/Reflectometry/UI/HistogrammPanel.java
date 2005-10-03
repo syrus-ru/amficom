@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.Wavelet;
@@ -237,9 +236,6 @@ public class HistogrammPanel extends ScaledGraphPanel
 				break;
 			}
 		}
-		// округляем
-		// XXX: скорее всего, округление должно проводиться в AnalysisParameters, а не здесь
-		thresh = MathRef.round_4(thresh);
 		return thresh;
 	}
 
