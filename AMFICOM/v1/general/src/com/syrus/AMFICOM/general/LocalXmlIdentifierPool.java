@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.17 2005/10/03 14:48:17 max Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.18 2005/10/03 15:29:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,12 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -94,7 +93,8 @@ public final class LocalXmlIdentifierPool {
 					+ id.getIdentifierString() + "'')"); 
 		}
 		
-//		When working with large number of objects ( ~ 26k ) this code significantly decreases speed.	
+//		When working with a large amount of objects ( ~ 26k ) this code
+//		results in significant performance degradation blia (w/o any cunt).	
 //		assert Log.debugMessage("LocalXmlIdentifierPool.put | FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
 //		assert Log.debugMessage("LocalXmlIdentifierPool.put | REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
 
@@ -383,8 +383,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Maxim Selivanov
-	 * @author $Author: max $
-	 * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -401,8 +401,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: max $
-	 * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -474,8 +474,8 @@ public final class LocalXmlIdentifierPool {
 	
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: max $
-	 * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {
