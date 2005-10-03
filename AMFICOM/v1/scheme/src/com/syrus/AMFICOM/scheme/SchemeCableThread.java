@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.92 2005/10/03 10:17:55 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.93 2005/10/03 13:58:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/10/03 10:17:55 $
+ * @version $Revision: 1.93 $, $Date: 2005/10/03 13:58:29 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -935,10 +935,9 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee;
+		return (this.characteristicContainerWrappee == null)
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
+				: this.characteristicContainerWrappee;
 	}
 
 	/**

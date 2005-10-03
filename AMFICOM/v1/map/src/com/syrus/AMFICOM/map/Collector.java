@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.92 2005/10/01 15:13:18 bass Exp $
+ * $Id: Collector.java,v 1.93 2005/10/03 13:58:27 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/10/01 15:13:18 $
+ * @version $Revision: 1.93 $, $Date: 2005/10/03 13:58:27 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -467,10 +467,9 @@ public final class Collector extends StorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee;
+		return (this.characteristicContainerWrappee == null)
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
+				: this.characteristicContainerWrappee;
 	}
 
 	/**

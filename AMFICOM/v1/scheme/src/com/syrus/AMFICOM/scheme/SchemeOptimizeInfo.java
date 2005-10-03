@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.69 2005/10/02 18:58:42 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.70 2005/10/03 13:58:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.70 $, $Date: 2005/10/03 13:58:28 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -679,10 +679,9 @@ public final class SchemeOptimizeInfo extends StorableObject
 	private StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitchContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitchContainerWrappee() {
-		if (this.schemeOptimizeInfoSwitchContainerWrappee == null) {
-			this.schemeOptimizeInfoSwitchContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch>(this, SCHEMEOPTIMIZEINFOSWITCH_CODE);
-		}
-		return this.schemeOptimizeInfoSwitchContainerWrappee;
+		return (this.schemeOptimizeInfoSwitchContainerWrappee == null)
+				? this.schemeOptimizeInfoSwitchContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch>(this, SCHEMEOPTIMIZEINFOSWITCH_CODE)
+				: this.schemeOptimizeInfoSwitchContainerWrappee;
 	}
 
 	/**
@@ -765,10 +764,9 @@ public final class SchemeOptimizeInfo extends StorableObject
 	private StorableObjectContainerWrappee<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtuContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtuContainerWrappee() {
-		if (this.schemeOptimizeInfoRtuContainerWrappee == null) {
-			this.schemeOptimizeInfoRtuContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfoRtu>(this, SCHEMEOPTIMIZEINFORTU_CODE);
-		}
-		return this.schemeOptimizeInfoRtuContainerWrappee;
+		return (this.schemeOptimizeInfoRtuContainerWrappee == null)
+				? this.schemeOptimizeInfoRtuContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfoRtu>(this, SCHEMEOPTIMIZEINFORTU_CODE)
+				: this.schemeOptimizeInfoRtuContainerWrappee;
 	}
 
 	/**
@@ -851,10 +849,9 @@ public final class SchemeOptimizeInfo extends StorableObject
 	private StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeMonitoringSolution> getSchemeMonitoringSolutionContainerWrappee() {
-		if (this.schemeMonitoringSolutionContainerWrappee == null) {
-			this.schemeMonitoringSolutionContainerWrappee = new StorableObjectContainerWrappee<SchemeMonitoringSolution>(this, SCHEMEMONITORINGSOLUTION_CODE);
-		}
-		return this.schemeMonitoringSolutionContainerWrappee;
+		return (this.schemeMonitoringSolutionContainerWrappee == null)
+				? this.schemeMonitoringSolutionContainerWrappee = new StorableObjectContainerWrappee<SchemeMonitoringSolution>(this, SCHEMEMONITORINGSOLUTION_CODE)
+				: this.schemeMonitoringSolutionContainerWrappee;
 	}
 
 	/**

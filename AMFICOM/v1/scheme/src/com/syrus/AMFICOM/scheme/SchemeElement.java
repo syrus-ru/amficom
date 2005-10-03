@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.135 2005/10/03 10:21:32 bass Exp $
+ * $Id: SchemeElement.java,v 1.136 2005/10/03 13:58:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,7 +97,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.135 $, $Date: 2005/10/03 10:21:32 $
+ * @version $Revision: 1.136 $, $Date: 2005/10/03 13:58:28 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1609,10 +1609,9 @@ public final class SchemeElement extends AbstractSchemeElement
 	private StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeDevice> getSchemeDeviceContainerWrappee() {
-		if (this.schemeDeviceContainerWrappee == null) {
-			this.schemeDeviceContainerWrappee = new StorableObjectContainerWrappee<SchemeDevice>(this, SCHEMEDEVICE_CODE);
-		}
-		return this.schemeDeviceContainerWrappee;
+		return (this.schemeDeviceContainerWrappee == null)
+				? this.schemeDeviceContainerWrappee = new StorableObjectContainerWrappee<SchemeDevice>(this, SCHEMEDEVICE_CODE)
+				: this.schemeDeviceContainerWrappee;
 	}
 
 	/**
@@ -1694,10 +1693,9 @@ public final class SchemeElement extends AbstractSchemeElement
 	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
-		if (this.schemeLinkContainerWrappee == null) {
-			this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE);
-		}
-		return this.schemeLinkContainerWrappee;
+		return (this.schemeLinkContainerWrappee == null)
+				? this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE)
+				: this.schemeLinkContainerWrappee;
 	}
 
 	/**
@@ -1779,10 +1777,9 @@ public final class SchemeElement extends AbstractSchemeElement
 	private StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
-		if (this.schemeElementContainerWrappee == null) {
-			this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE);
-		}
-		return this.schemeElementContainerWrappee;
+		return (this.schemeElementContainerWrappee == null)
+				? this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE)
+				: this.schemeElementContainerWrappee;
 	}
 
 	/**
@@ -1873,10 +1870,9 @@ public final class SchemeElement extends AbstractSchemeElement
 	private StorableObjectContainerWrappee<Scheme> schemeContainerWrappee;
 
 	StorableObjectContainerWrappee<Scheme> getSchemeContainerWrappee() {
-		if (this.schemeContainerWrappee == null) {
-			this.schemeContainerWrappee = new StorableObjectContainerWrappee<Scheme>(this, SCHEME_CODE);
-		}
-		return this.schemeContainerWrappee;
+		return (this.schemeContainerWrappee == null)
+				? this.schemeContainerWrappee = new StorableObjectContainerWrappee<Scheme>(this, SCHEME_CODE)
+				: this.schemeContainerWrappee;
 	}
 
 	/**

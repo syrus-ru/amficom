@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.99 2005/10/03 10:17:55 bass Exp $
+ * $Id: SchemeDevice.java,v 1.100 2005/10/03 13:58:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/10/03 10:17:55 $
+ * @version $Revision: 1.100 $, $Date: 2005/10/03 13:58:29 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -849,10 +849,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee;
+		return (this.characteristicContainerWrappee == null)
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
+				: this.characteristicContainerWrappee;
 	}
 
 	/**
@@ -935,10 +934,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	private StorableObjectContainerWrappee<SchemePort> schemePortContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemePort> getSchemePortContainerWrappee() {
-		if (this.schemePortContainerWrappee == null) {
-			this.schemePortContainerWrappee = new StorableObjectContainerWrappee<SchemePort>(this, SCHEMEPORT_CODE);
-		}
-		return this.schemePortContainerWrappee;
+		return (this.schemePortContainerWrappee == null)
+				? this.schemePortContainerWrappee = new StorableObjectContainerWrappee<SchemePort>(this, SCHEMEPORT_CODE)
+				: this.schemePortContainerWrappee;
 	}
 
 	/**
@@ -1020,10 +1018,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	private StorableObjectContainerWrappee<SchemeCablePort> schemeCablePortContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeCablePort> getSchemeCablePortContainerWrappee() {
-		if (this.schemeCablePortContainerWrappee == null) {
-			this.schemeCablePortContainerWrappee = new StorableObjectContainerWrappee<SchemeCablePort>(this, SCHEMECABLEPORT_CODE);
-		}
-		return this.schemeCablePortContainerWrappee;
+		return (this.schemeCablePortContainerWrappee == null)
+				? this.schemeCablePortContainerWrappee = new StorableObjectContainerWrappee<SchemeCablePort>(this, SCHEMECABLEPORT_CODE)
+				: this.schemeCablePortContainerWrappee;
 	}
 
 	/**

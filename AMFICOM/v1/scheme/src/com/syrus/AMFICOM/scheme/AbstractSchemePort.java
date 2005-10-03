@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.76 2005/10/03 10:17:55 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.77 2005/10/03 13:58:29 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/10/03 10:17:55 $
+ * @version $Revision: 1.77 $, $Date: 2005/10/03 13:58:29 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -688,10 +688,9 @@ public abstract class AbstractSchemePort
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee;
+		return (this.characteristicContainerWrappee == null)
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
+				: this.characteristicContainerWrappee;
 	}
 
 	/**

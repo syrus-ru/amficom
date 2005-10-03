@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.102 2005/10/03 10:17:55 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.103 2005/10/03 13:58:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.102 $, $Date: 2005/10/03 10:17:55 $
+ * @version $Revision: 1.103 $, $Date: 2005/10/03 13:58:29 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -866,10 +866,9 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	private StorableObjectContainerWrappee<SchemeCableThread> schemeCableThreadContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeCableThread> getSchemeCableThreadContainerWrappee() {
-		if (this.schemeCableThreadContainerWrappee == null) {
-			this.schemeCableThreadContainerWrappee = new StorableObjectContainerWrappee<SchemeCableThread>(this, SCHEMECABLETHREAD_CODE);
-		}
-		return this.schemeCableThreadContainerWrappee;
+		return (this.schemeCableThreadContainerWrappee == null)
+				? this.schemeCableThreadContainerWrappee = new StorableObjectContainerWrappee<SchemeCableThread>(this, SCHEMECABLETHREAD_CODE)
+				: this.schemeCableThreadContainerWrappee;
 	}
 
 	/**

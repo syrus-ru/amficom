@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.97 2005/10/02 18:58:42 bass Exp $
+ * $Id: SchemePath.java,v 1.98 2005/10/03 13:58:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.98 $, $Date: 2005/10/03 13:58:28 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -556,10 +556,9 @@ public final class SchemePath extends StorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee;
+		return (this.characteristicContainerWrappee == null)
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
+				: this.characteristicContainerWrappee;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.79 2005/10/02 18:58:43 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.80 2005/10/03 13:58:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/10/02 18:58:43 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/03 13:58:29 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -581,10 +581,9 @@ public final class SchemeProtoGroup extends StorableObject
 	private StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeProtoElement> getSchemeProtoElementContainerWrappee() {
-		if (this.schemeProtoElementContainerWrappee == null) {
-			this.schemeProtoElementContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoElement>(this, SCHEMEPROTOELEMENT_CODE);
-		}
-		return this.schemeProtoElementContainerWrappee;
+		return (this.schemeProtoElementContainerWrappee == null)
+				? this.schemeProtoElementContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoElement>(this, SCHEMEPROTOELEMENT_CODE)
+				: this.schemeProtoElementContainerWrappee;
 	}	
 
 	/**
@@ -686,10 +685,9 @@ public final class SchemeProtoGroup extends StorableObject
 	private StorableObjectContainerWrappee<SchemeProtoGroup> schemeProtoGroupContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeProtoGroup> getSchemeProtoGroupContainerWrappee() {
-		if (this.schemeProtoGroupContainerWrappee == null) {
-			this.schemeProtoGroupContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoGroup>(this, SCHEMEPROTOGROUP_CODE);
-		}
-		return this.schemeProtoGroupContainerWrappee;
+		return (this.schemeProtoGroupContainerWrappee == null)
+				? this.schemeProtoGroupContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoGroup>(this, SCHEMEPROTOGROUP_CODE)
+				: this.schemeProtoGroupContainerWrappee;
 	}
 
 	/**

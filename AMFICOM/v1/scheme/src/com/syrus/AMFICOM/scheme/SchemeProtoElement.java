@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.112 2005/10/03 10:17:55 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.113 2005/10/03 13:58:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/10/03 10:17:55 $
+ * @version $Revision: 1.113 $, $Date: 2005/10/03 13:58:29 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -1281,10 +1281,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-		}
-		return this.characteristicContainerWrappee;
+		return (this.characteristicContainerWrappee == null)
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE)
+				: this.characteristicContainerWrappee;
 	}
 
 	/**
@@ -1367,10 +1366,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	private StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeDevice> getSchemeDeviceContainerWrappee() {
-		if (this.schemeDeviceContainerWrappee == null) {
-			this.schemeDeviceContainerWrappee = new StorableObjectContainerWrappee<SchemeDevice>(this, SCHEMEDEVICE_CODE);
-		}
-		return this.schemeDeviceContainerWrappee;
+		return (this.schemeDeviceContainerWrappee == null)
+				? this.schemeDeviceContainerWrappee = new StorableObjectContainerWrappee<SchemeDevice>(this, SCHEMEDEVICE_CODE)
+				: this.schemeDeviceContainerWrappee;
 	}
 
 	/**
@@ -1452,10 +1450,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
-		if (this.schemeLinkContainerWrappee == null) {
-			this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE);
-		}
-		return this.schemeLinkContainerWrappee;
+		return (this.schemeLinkContainerWrappee == null)
+				? this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE)
+				: this.schemeLinkContainerWrappee;
 	}
 
 	/**
@@ -1537,10 +1534,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	private StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeProtoElement> getSchemeProtoElementContainerWrappee() {
-		if (this.schemeProtoElementContainerWrappee == null) {
-			this.schemeProtoElementContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoElement>(this, SCHEMEPROTOELEMENT_CODE);
-		}
-		return this.schemeProtoElementContainerWrappee;
+		return (this.schemeProtoElementContainerWrappee == null)
+				? this.schemeProtoElementContainerWrappee = new StorableObjectContainerWrappee<SchemeProtoElement>(this, SCHEMEPROTOELEMENT_CODE)
+				: this.schemeProtoElementContainerWrappee;
 	}
 
 	/**

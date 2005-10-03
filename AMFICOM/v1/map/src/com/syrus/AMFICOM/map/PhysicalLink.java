@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.128 2005/10/02 14:54:38 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.129 2005/10/03 13:58:27 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.128 $, $Date: 2005/10/02 14:54:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.129 $, $Date: 2005/10/03 13:58:27 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1083,34 +1083,33 @@ public class PhysicalLink extends StorableObject
 //	}
 	@Crutch134(notes = "Remove subclassing here.")
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-		if (this.characteristicContainerWrappee == null) {
-			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE) {
-				private static final long serialVersionUID = -2741783821486426615L;
+		return (this.characteristicContainerWrappee == null)
+				? this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE) {
+					private static final long serialVersionUID = -2741783821486426615L;
 
-				@Override
-				protected void ensureCacheBuilt(final boolean usePool)
-				throws ApplicationException {
-					synchronized (this) {
-						if (!this.cacheBuilt || usePool) {
-							if (this.containees == null) {
-								this.containees = new HashSet<Characteristic>();
-							} else {
-								for (final Characteristic containee : this.containees) {
-									containee.cleanupPersistence();
+					@Override
+					protected void ensureCacheBuilt(final boolean usePool)
+					throws ApplicationException {
+						synchronized (this) {
+							if (!this.cacheBuilt || usePool) {
+								if (this.containees == null) {
+									this.containees = new HashSet<Characteristic>();
+								} else {
+									for (final Characteristic containee : this.containees) {
+										containee.cleanupPersistence();
+									}
+									this.containees.clear();
 								}
-								this.containees.clear();
+								for (final Characteristic containee : StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false)) {
+									containee.markAsPersistent();
+									this.containees.add(containee);
+								}
+								this.cacheBuilt = true;
 							}
-							for (final Characteristic containee : StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false)) {
-								containee.markAsPersistent();
-								this.containees.add(containee);
-							}
-							this.cacheBuilt = true;
 						}
 					}
 				}
-			};
-		}
-		return this.characteristicContainerWrappee;
+				: this.characteristicContainerWrappee;
 	}
 
 	/**

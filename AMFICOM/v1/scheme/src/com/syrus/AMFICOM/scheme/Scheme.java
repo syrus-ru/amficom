@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.110 2005/10/03 10:17:55 bass Exp $
+ * $Id: Scheme.java,v 1.111 2005/10/03 13:58:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/10/03 10:17:55 $
+ * @version $Revision: 1.111 $, $Date: 2005/10/03 13:58:28 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1221,10 +1221,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	private StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
-		if (this.schemeElementContainerWrappee == null) {
-			this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE);
-		}
-		return this.schemeElementContainerWrappee;
+		return (this.schemeElementContainerWrappee == null)
+				? this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE)
+				: this.schemeElementContainerWrappee;
 	}
 
 	/**
@@ -1305,10 +1304,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
-		if (this.schemeLinkContainerWrappee == null) {
-			this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE);
-		}
-		return this.schemeLinkContainerWrappee;
+		return (this.schemeLinkContainerWrappee == null)
+				? this.schemeLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeLink>(this, SCHEMELINK_CODE)
+				: this.schemeLinkContainerWrappee;
 	}
 
 	/**
@@ -1389,10 +1387,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	StorableObjectContainerWrappee<SchemeCableLink> schemeCableLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeCableLink> getSchemeCableLinkContainerWrappee() {
-		if (this.schemeCableLinkContainerWrappee == null) {
-			this.schemeCableLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeCableLink>(this, SCHEMECABLELINK_CODE);
-		}
-		return this.schemeCableLinkContainerWrappee;
+		return (this.schemeCableLinkContainerWrappee == null)
+				? this.schemeCableLinkContainerWrappee = new StorableObjectContainerWrappee<SchemeCableLink>(this, SCHEMECABLELINK_CODE)
+				: this.schemeCableLinkContainerWrappee;
 	}
 
 	/**
@@ -1474,10 +1471,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	StorableObjectContainerWrappee<SchemeOptimizeInfo> schemeOptimizeInfoContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeOptimizeInfo> getSchemeOptimizeInfoContainerWrappee() {
-		if (this.schemeOptimizeInfoContainerWrappee == null) {
-			this.schemeOptimizeInfoContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfo>(this, SCHEMEOPTIMIZEINFO_CODE);
-		}
-		return this.schemeOptimizeInfoContainerWrappee;
+		return (this.schemeOptimizeInfoContainerWrappee == null)
+				? this.schemeOptimizeInfoContainerWrappee = new StorableObjectContainerWrappee<SchemeOptimizeInfo>(this, SCHEMEOPTIMIZEINFO_CODE)
+				: this.schemeOptimizeInfoContainerWrappee;
 	}
 
 	/**
@@ -1563,10 +1559,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeMonitoringSolution> getSchemeMonitoringSolutionContainerWrappee() {
-		if (this.schemeMonitoringSolutionContainerWrappee == null) {
-			this.schemeMonitoringSolutionContainerWrappee = new StorableObjectContainerWrappee<SchemeMonitoringSolution>(this, SCHEMEMONITORINGSOLUTION_CODE);
-		}
-		return this.schemeMonitoringSolutionContainerWrappee;
+		return (this.schemeMonitoringSolutionContainerWrappee == null)
+				? this.schemeMonitoringSolutionContainerWrappee = new StorableObjectContainerWrappee<SchemeMonitoringSolution>(this, SCHEMEMONITORINGSOLUTION_CODE)
+				: this.schemeMonitoringSolutionContainerWrappee;
 	}
 
 	/**
