@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.5 2005/09/16 14:53:38 krupenn Exp $
+ * $Id: MapXMLTest.java,v 1.6 2005/10/03 16:19:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,6 @@ package com.syrus.AMFICOM.client.map;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +17,6 @@ import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -142,8 +140,8 @@ public class MapXMLTest {
 		   lnode.setDescription("desc2"); //$NON-NLS-1$
 		   lnode.setName("namma2"); //$NON-NLS-1$
 		   lnode.setSort(XmlPhysicalLinkTypeSort.INDOOR);
-		   lnode.setDimensionX(BigInteger.valueOf(1));
-		   lnode.setDimensionY(BigInteger.valueOf(1));
+		   lnode.setDimensionX(1);
+		   lnode.setDimensionY(1);
 		   XmlCharacteristicSeq chars = lnode.addNewCharacteristics();
 		   XmlCharacteristic char1 = chars.addNewCharacteristic();
 		   char1.setTypecodename(AbstractLinkController.ATTRIBUTE_STYLE);
