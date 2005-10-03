@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.55 2005/09/23 13:57:16 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.56 2005/10/03 09:51:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/09/23 13:57:16 $
+ * @version $Revision: 1.56 $, $Date: 2005/10/03 09:51:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -35,17 +35,15 @@ import com.syrus.util.Log;
 public class CORBAObjectLoader implements ObjectLoader {
 	protected ServerConnectionManager serverConnectionManager;
 
-	public CORBAObjectLoader (final ServerConnectionManager serverConnectionManager) {
+	public CORBAObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		this.serverConnectionManager = serverConnectionManager;
 	}
 
-
 	/**
-	 * Overridden in:
-	 * MCMObjectLoader
+	 * Overridden in: MCMObjectLoader
 	 */
 	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
-		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
 		}
@@ -60,7 +58,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 	 */
 	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
-		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert ids != null && condition != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		return loadStorableObjectsButIdsByCondition(server, ids, condition);
@@ -75,8 +73,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IdlStorableObject[] transferables = server.transmitStorableObjects(idsT, sessionKeyT);
 				return StorableObject.fromTransferables(transferables);
-			}
-			catch (final AMFICOMRemoteException are) {
+			} catch (final AMFICOMRemoteException are) {
 				switch (are.errorCode.value()) {
 					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
@@ -105,8 +102,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IdlStorableObject[] transferables = server.transmitStorableObjectsButIdsByCondition(idsT, conditionT, sessionKeyT);
 				return StorableObject.fromTransferables(transferables);
-			}
-			catch (final AMFICOMRemoteException are) {
+			} catch (final AMFICOMRemoteException are) {
 				switch (are.errorCode.value()) {
 					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
@@ -125,11 +121,10 @@ public class CORBAObjectLoader implements ObjectLoader {
 	}
 
 	/**
-	 * Overridden in:
-	 * MCMObjectLoader
+	 * Overridden in: MCMObjectLoader
 	 */
 	public Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
-		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptyMap();
 		}
@@ -146,8 +141,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 					versionsMap.put(new Identifier(idVersions[i].id), new StorableObjectVersion(idVersions[i].version));
 				}
 				return versionsMap;
-			}
-			catch (final AMFICOMRemoteException are) {
+			} catch (final AMFICOMRemoteException are) {
 				switch (are.errorCode.value()) {
 					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
@@ -184,8 +178,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				server.receiveStorableObjects(transferables, sessionKeyT);
 				return;
-			}
-			catch (final AMFICOMRemoteException are) {
+			} catch (final AMFICOMRemoteException are) {
 				switch (are.errorCode.value()) {
 					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
@@ -216,8 +209,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				server.delete(idsT, sessionKeyT);
 				return;
-			}
-			catch (final AMFICOMRemoteException are) {
+			} catch (final AMFICOMRemoteException are) {
 				switch (are.errorCode.value()) {
 					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
 						if (++numEfforts == 1) {
