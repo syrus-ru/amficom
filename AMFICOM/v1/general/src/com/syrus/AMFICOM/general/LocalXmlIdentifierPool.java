@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.15 2005/10/03 13:53:27 max Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.16 2005/10/03 14:37:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.15 $, $Date: 2005/10/03 13:53:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -36,7 +36,7 @@ public final class LocalXmlIdentifierPool {
 	private static final Set<XmlKey> XML_KEYS_TO_DELETE = new HashSet<XmlKey>();
 	private static final Set<String> PREFETCHED_IMPORT_TYPES = new HashSet<String>();
 
-	private enum KeyState {
+	enum KeyState {
 		NEW,
 		UP_TO_DATE
 	}
@@ -61,7 +61,7 @@ public final class LocalXmlIdentifierPool {
 	 * @param importType
 	 * @param state
 	 */
-	private static void put(final Identifier id, final String xmlId,
+	static void put(final Identifier id, final String xmlId,
 			final String importType, final KeyState state) {
 		if (id == null) {
 			throw new NullPointerException("id is null");
@@ -316,16 +316,11 @@ public final class LocalXmlIdentifierPool {
 				}
 			}
 
-			final Map<Identifier, String> idXmlIdMap;
 			try {
-				idXmlIdMap = XmlIdentifierDatabase.retrievePrefetchedMap(importType);
+				XmlIdentifierDatabase.retrievePrefetchedMap(importType);
 			} catch (final RetrieveObjectException roe) {
 				Log.errorException(roe);
 				return;
-			}
-			for (final Identifier id : idXmlIdMap.keySet()) {
-				final String xmlId =  idXmlIdMap.get(id);
-				put(id, xmlId, importType, KeyState.UP_TO_DATE);
 			}
 			PREFETCHED_IMPORT_TYPES.add(importType);
 		}
@@ -387,8 +382,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Maxim Selivanov
-	 * @author $Author: max $
-	 * @version $Revision: 1.15 $, $Date: 2005/10/03 13:53:27 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -405,8 +400,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: max $
-	 * @version $Revision: 1.15 $, $Date: 2005/10/03 13:53:27 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -478,8 +473,8 @@ public final class LocalXmlIdentifierPool {
 	
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: max $
-	 * @version $Revision: 1.15 $, $Date: 2005/10/03 13:53:27 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {

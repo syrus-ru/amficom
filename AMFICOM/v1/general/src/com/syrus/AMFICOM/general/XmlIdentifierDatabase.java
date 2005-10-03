@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.14 2005/10/02 11:49:44 bob Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.15 2005/10/03 14:37:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: bob $
- * @version $Revision: 1.14 $, $Date: 2005/10/02 11:49:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/10/03 14:37:02 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -118,10 +118,9 @@ final class XmlIdentifierDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	static Map<Identifier, String> retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
-		Map<Identifier, String> idXmlIdMap = new HashMap<Identifier, String>(); 
+	static void retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
 		if (importType == null || importType.length() == 0) {
-			return idXmlIdMap;
+			return;
 		}
 		StringBuilder sql = new StringBuilder();
 		sql.append(StorableObjectDatabase.SQL_SELECT);
@@ -155,7 +154,7 @@ final class XmlIdentifierDatabase {
 				 * CORBA object loader.
 				 */
 				if (true || StorableObjectDatabase.isPresentInDatabase(id)) {
-					idXmlIdMap.put(id, resultSet.getString(COLUMN_XML_ID));
+					LocalXmlIdentifierPool.put(id, resultSet.getString(COLUMN_XML_ID), importType, LocalXmlIdentifierPool.KeyState.UP_TO_DATE);
 				} else {
 					resultSet.deleteRow();
 				}
@@ -182,8 +181,6 @@ final class XmlIdentifierDatabase {
 				Log.errorException(sqle);
 			}
 		}
-		return idXmlIdMap;
-		
 	}
 
 	static void removeKeys(final Set<Key> keysToDelete) {
