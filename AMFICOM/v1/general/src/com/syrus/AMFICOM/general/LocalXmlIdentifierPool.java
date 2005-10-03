@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.16 2005/10/03 14:37:02 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.17 2005/10/03 14:48:17 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
+ * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -94,8 +94,9 @@ public final class LocalXmlIdentifierPool {
 					+ id.getIdentifierString() + "'')"); 
 		}
 		
-		assert Log.debugMessage("LocalXmlIdentifierPool.put | FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
-		assert Log.debugMessage("LocalXmlIdentifierPool.put | REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
+//		When working with large number of objects ( ~ 26k ) this code significantly decreases speed.	
+//		assert Log.debugMessage("LocalXmlIdentifierPool.put | FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
+//		assert Log.debugMessage("LocalXmlIdentifierPool.put | REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
 
 	}
 
@@ -382,8 +383,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Maxim Selivanov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -400,8 +401,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -473,8 +474,8 @@ public final class LocalXmlIdentifierPool {
 	
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.16 $, $Date: 2005/10/03 14:37:02 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.17 $, $Date: 2005/10/03 14:48:17 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {
