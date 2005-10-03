@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.111 2005/09/26 12:05:05 saa Exp $
+ * $Id: Heap.java,v 1.112 2005/10/03 13:30:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.111 $, $Date: 2005/09/26 12:05:05 $
+ * @version $Revision: 1.112 $, $Date: 2005/10/03 13:30:25 $
  * @module
  */
 public class Heap
@@ -289,6 +289,7 @@ public class Heap
 
 		// пытаемся выбрать самую типичную рефлектограмму.
 		// если набор несовместен, используем первую попавшуюся.
+		// XXX: performance: 20-50% of method time when loading many traces (не знаю где именно)
 		Trace tracePrimary = null;
 		try {
 			PFTrace pf =
@@ -320,6 +321,7 @@ public class Heap
 		openPrimaryTrace(tracePrimary);
 
 		// Открываем все остальные как вторичные
+		// XXX: performance: 50-80% of method time when loading many traces (на рассылке сообщений?)
 		for (Trace trace: traceColl) {
 			if (trace != tracePrimary) {
 				putSecondaryTrace(trace);
