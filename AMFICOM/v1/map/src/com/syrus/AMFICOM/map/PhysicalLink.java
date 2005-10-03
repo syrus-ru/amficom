@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.129 2005/10/03 13:58:27 bass Exp $
+ * $Id: PhysicalLink.java,v 1.130 2005/10/03 16:16:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.129 $, $Date: 2005/10/03 13:58:27 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.130 $, $Date: 2005/10/03 16:16:17 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -90,9 +90,6 @@ public class PhysicalLink extends StorableObject
 	private String city;
 	private String street;
 	private String building;
-
-	private boolean leftToRight;
-	private boolean topToBottom;
 
 	protected PhysicalLinkBinding binding = null;
 
@@ -162,7 +159,8 @@ public class PhysicalLink extends StorableObject
 			final int dimensionX,
 			final int dimensionY,
 			final boolean leftToRight,
-			final boolean topToBottom) {
+			final boolean topToBottom,
+			final boolean horizontalVertical) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -177,17 +175,21 @@ public class PhysicalLink extends StorableObject
 		this.city = city;
 		this.street = street;
 		this.building = building;
-		this.leftToRight = leftToRight;
-		this.topToBottom = topToBottom;
-
-//		initialize();
 
 		this.selected = false;
 
 		if (physicalLinkType == null) {
-			this.binding = new PhysicalLinkBinding(new IntDimension(dimensionX, dimensionY));
+			this.binding = new PhysicalLinkBinding(
+					new IntDimension(dimensionX, dimensionY),
+					leftToRight,
+					topToBottom,
+					horizontalVertical);
 		} else {
-			this.binding = new PhysicalLinkBinding(physicalLinkType.getBindingDimension());
+			this.binding = new PhysicalLinkBinding(
+					physicalLinkType.getBindingDimension(),
+					leftToRight,
+					topToBottom,
+					horizontalVertical);
 		}
 	}
 	
@@ -209,6 +211,7 @@ public class PhysicalLink extends StorableObject
 				type.getBindingDimension().getWidth(),
 				type.getBindingDimension().getHeight(),
 				true,
+				true,
 				true);
 	}
 
@@ -224,7 +227,8 @@ public class PhysicalLink extends StorableObject
 			final int dimensionX,
 			final int dimensionY,
 			final boolean leftToRight,
-			final boolean topToBottom) throws CreateObjectException {
+			final boolean topToBottom,
+			final boolean horizontalVertical) throws CreateObjectException {
 
 		assert creatorId != null
 				&& name != null
@@ -252,7 +256,8 @@ public class PhysicalLink extends StorableObject
 					dimensionX,
 					dimensionY,
 					leftToRight,
-					topToBottom);
+					topToBottom,
+					horizontalVertical);
 
 			assert physicalLink.isValid() : OBJECT_BADLY_INITIALIZED;
 
@@ -275,8 +280,6 @@ public class PhysicalLink extends StorableObject
 		this.city = plt.city;
 		this.street = plt.street;
 		this.building = plt.building;
-		this.leftToRight = plt.leftToRight;
-		this.topToBottom = plt.topToBottom;
 
 		this.physicalLinkType = StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
 
@@ -288,7 +291,13 @@ public class PhysicalLink extends StorableObject
 		
 		this.selected = false;
 
-		this.binding = new PhysicalLinkBinding(new IntDimension(plt.dimensionX, plt.dimensionY));
+		this.binding = new PhysicalLinkBinding(
+				new IntDimension(plt.dimensionX, plt.dimensionY),
+				plt.leftToRight,
+				plt.topToBottom,
+				// todo make horizontalVertical persistent
+//				plt.horizontalVertical);
+				true);
 
 		this.transientFieldsInitialized = false;
 	}
@@ -314,7 +323,7 @@ public class PhysicalLink extends StorableObject
 		
 		int dimensionX = this.binding.getDimension().getWidth();
 		int dimensionY = this.binding.getDimension().getHeight();
-
+		
 		return IdlPhysicalLinkHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -332,8 +341,10 @@ public class PhysicalLink extends StorableObject
 				this.building,
 				dimensionX,
 				dimensionY,
-				this.leftToRight,
-				this.topToBottom,
+				this.binding.isLeftToRight(),
+				this.binding.isTopToBottom(),
+				// todo make horizontalVertical persistent
+//				this.binding.isHorizontalVertical(),
 				nodeLinkIds);
 	}
 
@@ -446,15 +457,28 @@ public class PhysicalLink extends StorableObject
 	}
 
 	public boolean isLeftToRight() {
-		return this.leftToRight;
+		return this.binding.isLeftToRight();
 	}
 
 	protected void setLeftToRight0(final boolean leftToRight) {
-		this.leftToRight = leftToRight;
+		this.binding.setLeftToRight(leftToRight);
 	}
 
 	public void setLeftToRight(final boolean leftToRight) {
 		this.setLeftToRight0(leftToRight);
+		super.markAsChanged();
+	}
+
+	public boolean isHorizontalVertical() {
+		return this.binding.isHorizontalVertical();
+	}
+
+	protected void setHorizontalVertical0(final boolean horizontalVertical) {
+		this.binding.setHorizontalVertical(horizontalVertical);
+	}
+
+	public void setHorizontalVertical(final boolean horizontalVertical) {
+		this.setHorizontalVertical0(horizontalVertical);
 		super.markAsChanged();
 	}
 
@@ -536,11 +560,11 @@ public class PhysicalLink extends StorableObject
 	}
 
 	public boolean isTopToBottom() {
-		return this.topToBottom;
+		return this.binding.isTopToBottom();
 	}
 
 	protected void setTopToBottom0(final boolean topToBottom) {
-		this.topToBottom = topToBottom;
+		this.binding.setTopToBottom(topToBottom);
 	}
 
 	public void setTopToBottom(final boolean topToBottom) {
@@ -563,6 +587,8 @@ public class PhysicalLink extends StorableObject
 			final int dimensionY,
 			final boolean leftToRight,
 			final boolean topToBottom,
+			// todo make horizontalVertical persistent
+//			final boolean horizontalVertical,
 			final Identifier startNodeId,
 			final Identifier endNodeId) {
 		super.setAttributes(created,
@@ -576,12 +602,14 @@ public class PhysicalLink extends StorableObject
 		this.city = city;
 		this.street = street;
 		this.building = building;
-		this.leftToRight = leftToRight;
-		this.topToBottom = topToBottom;
 		this.startNodeId = startNodeId;
 		this.endNodeId = endNodeId;
 		
 		this.binding.setDimension(new IntDimension(dimensionX, dimensionY));
+		this.binding.setLeftToRight(leftToRight);
+		this.binding.setTopToBottom(topToBottom);
+		// todo make horizontalVertical persistent
+//		this.binding.setHorizontalVertical(horizontalVertical);
 	}
 
 	/**
@@ -940,6 +968,8 @@ public class PhysicalLink extends StorableObject
 		if(this.building != null && this.building.length() != 0) {
 			physicalLink.setBuilding(this.building);
 		}
+		physicalLink.setDimensionX(this.getDimensionX());
+		physicalLink.setDimensionY(this.getDimensionY());
 	}
 
 	/**
@@ -1016,9 +1046,36 @@ public class PhysicalLink extends StorableObject
 		
 		this.physicalLinkType = physicalLinkTypes.iterator().next();
 
-		this.leftToRight = true;
-		this.topToBottom = true;
-		this.binding = new PhysicalLinkBinding(this.physicalLinkType.getBindingDimension());
+		boolean leftToRight = true;
+		boolean topToBottom = true;
+		boolean horizontalVertical = true;
+		if(xmlPhysicalLink.isSetLeftToRight()) {
+			leftToRight = xmlPhysicalLink.getLeftToRight();
+		}
+		if(xmlPhysicalLink.isSetTopToBottom()) {
+			topToBottom = xmlPhysicalLink.getTopToBottom();
+		}
+		if(xmlPhysicalLink.isSetHorVert()) {
+			horizontalVertical = xmlPhysicalLink.getHorVert();
+		}
+
+		IntDimension dim;
+		
+		if(xmlPhysicalLink.isSetDimensionX() && xmlPhysicalLink.isSetDimensionY()) {
+			dim = new IntDimension(
+					xmlPhysicalLink.getDimensionX(), 
+					xmlPhysicalLink.getDimensionY());
+		}
+		else {
+			dim = this.physicalLinkType.getBindingDimension();
+		}
+		
+		this.binding = new PhysicalLinkBinding(
+				dim,
+				leftToRight,
+				topToBottom,
+				horizontalVertical);
+		
 	}
 
 	/**
