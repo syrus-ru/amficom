@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMapReportCommand.java,v 1.10 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: CreateMapReportCommand.java,v 1.11 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,25 +12,22 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class CreateMapReportCommand extends AbstractCommand
-{
+public class CreateMapReportCommand extends AbstractCommand {
 	ApplicationContext aContext;
 //	AMTReport aReport = new AMTReport();
 //	MapReportModel mrm = new MapReportModel();
 
-	public CreateMapReportCommand(ApplicationContext aContext)
-	{
+	public CreateMapReportCommand(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
 	@Override
-	public void execute()
-	{
+	public void execute() {
 /*
 		aReport.addRecord(
 			  mrm.getLangForField(MapReportModel.topology),

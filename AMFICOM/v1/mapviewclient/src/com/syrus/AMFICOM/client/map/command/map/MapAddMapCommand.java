@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapAddMapCommand.java,v 1.17 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapAddMapCommand.java,v 1.18 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,64 +41,63 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * 
- * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapAddMapCommand extends AbstractCommand
-{
+public class MapAddMapCommand extends AbstractCommand {
 	JDesktopPane desktop;
 	ApplicationContext aContext;
 
 	protected Map map;
 
-	public MapAddMapCommand(JDesktopPane desktop, ApplicationContext aContext)
-	{
+	public MapAddMapCommand(JDesktopPane desktop, ApplicationContext aContext) {
 		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 
-	public Map getMap()
-	{
+	public Map getMap() {
 		return this.map;
 	}
 
 	@Override
-	public void execute()
-	{
+	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
-		
+
 		if(mapFrame == null)
 			return;
 
 		MapView mapView = mapFrame.getMapView();
-	
+
 		if(mapView == null)
 			return;
 
-		this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
-				this,
-				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelMap.getString(MapEditorResourceKeys.STATUS_ADDING_INTERNAL_MAP)));
+		this.aContext.getDispatcher().firePropertyChange(
+			new StatusMessageEvent(
+					this,
+					StatusMessageEvent.STATUS_MESSAGE,
+					LangModelMap.getString(
+							MapEditorResourceKeys.STATUS_ADDING_INTERNAL_MAP)));
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
 		Collection availableMaps;
-		try
-		{
+		try {
 			Identifier domainId = LoginManager.getDomainId();
-			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAP_CODE);
-			availableMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			StorableObjectCondition condition = new LinkedIdsCondition(
+					domainId,
+					ObjectEntities.MAP_CODE);
+			availableMaps = StorableObjectPool.getStorableObjectsByCondition(
+					condition,
+					true);
 			availableMaps.remove(mapView.getMap());
-		}
-		catch (ApplicationException e)
-		{
+		} catch(ApplicationException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		this.map = (Map )WrapperedTableChooserDialog.showChooserDialog(
+		this.map = (Map) WrapperedTableChooserDialog.showChooserDialog(
 				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP),
 				availableMaps,
 				mapTableController,
@@ -113,28 +112,26 @@ public class MapAddMapCommand extends AbstractCommand
 			return;
 		}
 
-		if(!mapView.getMap().getMaps().contains(this.map))
-		{
+		if(!mapView.getMap().getMaps().contains(this.map)) {
 			mapView.getMap().addMap(this.map);
 
 			MapViewController mapViewController = mapFrame.getMapViewer()
-				.getLogicalNetLayer().getMapViewController();
+					.getLogicalNetLayer().getMapViewController();
 
 			for(Iterator iter = this.map.getNodes().iterator(); iter.hasNext();) {
-				AbstractNode node = (AbstractNode )iter.next();
-				AbstractNodeController nodeController = (AbstractNodeController )
-					mapViewController.getController(node);
+				AbstractNode node = (AbstractNode) iter.next();
+				AbstractNodeController nodeController = (AbstractNodeController) mapViewController
+						.getController(node);
 				nodeController.updateScaleCoefficient(node);
 			}
-			this.aContext.getDispatcher().firePropertyChange(new MapEvent(
-					this,
-					MapEvent.MAP_VIEW_CHANGED, 
-					mapView));
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(this, MapEvent.MAP_VIEW_CHANGED, mapView));
 		}
-		this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
-				this,
-				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
+		this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 

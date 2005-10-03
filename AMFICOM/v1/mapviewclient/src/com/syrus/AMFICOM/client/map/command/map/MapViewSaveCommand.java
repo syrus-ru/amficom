@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.32 2005/10/02 12:31:39 krupenn Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.33 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,100 +35,88 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.32 $, $Date: 2005/10/02 12:31:39 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapViewSaveCommand extends AbstractCommand
-{
+public class MapViewSaveCommand extends AbstractCommand {
 	MapView mapView;
 	ApplicationContext aContext;
 
-	public MapViewSaveCommand(MapView mapView, ApplicationContext aContext)
-	{
+	public MapViewSaveCommand(MapView mapView, ApplicationContext aContext) {
 		this.mapView = mapView;
 		this.aContext = aContext;
 	}
 
 	@Override
-	public void execute()
-	{
+	public void execute() {
 		if(EditorDialog.showEditorDialog(
 				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW_PROPERTIES),
-				this.mapView, 
+				this.mapView,
 				MapViewVisualManager.getInstance().getGeneralPropertiesPanel())) {
-			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
-					this,
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_SAVING)));
+			this.aContext.getDispatcher().firePropertyChange(
+				new StatusMessageEvent(
+						this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelMap.getString(
+								MapEditorResourceKeys.STATUS_MAP_VIEW_SAVING)));
 
-			MapSaveCommand cmd = new MapSaveCommand(this.mapView.getMap(), this.aContext);
+			MapSaveCommand cmd = new MapSaveCommand(
+					this.mapView.getMap(),
+					this.aContext);
 			cmd.execute();
-			if(cmd.getResult() == Command.RESULT_CANCEL)
-			{
+			if(cmd.getResult() == Command.RESULT_CANCEL) {
 				setResult(Command.RESULT_CANCEL);
 				return;
 			}
 
 			Identifier userId = LoginManager.getUserId();
-			
-			for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();)
-			{
-				Scheme scheme = (Scheme )it.next();
+
+			for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();) {
+				Scheme scheme = (Scheme) it.next();
 				scheme.setMap(this.mapView.getMap());
-				try
-				{
-//					 save scheme
-//					StorableObjectPool.flush(scheme, userId, true);
-					for(Identifiable schemeElement : scheme.getReverseDependencies(true)) {
+				try {
+					// save scheme
+					// StorableObjectPool.flush(scheme, userId, true);
+					for(Identifiable schemeElement : scheme
+							.getReverseDependencies(true)) {
 						StorableObjectPool.flush(schemeElement, userId, true);
 					}
-				}
-				catch (VersionCollisionException e)
-				{
+				} catch(VersionCollisionException e) {
 					e.printStackTrace();
-				}
-				catch (IllegalDataException e)
-				{
+				} catch(IllegalDataException e) {
 					e.printStackTrace();
-				}
-				catch (CommunicationException e)
-				{
+				} catch(CommunicationException e) {
 					e.printStackTrace();
-				}
-				catch (DatabaseException e)
-				{
+				} catch(DatabaseException e) {
 					e.printStackTrace();
-				}
-				catch (ApplicationException e)
-				{
+				} catch(ApplicationException e) {
 					e.printStackTrace();
 				}
 			}
-			
-//			MapStorableObjectPool.putStorableObject(mapView);
-			try
-			{
-//				 save mapview
+
+			// MapStorableObjectPool.putStorableObject(mapView);
+			try {
+				// save mapview
 				StorableObjectPool.flush(this.mapView, userId, true);
 				LocalXmlIdentifierPool.flush();
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
-			
-			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
-					this,
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
+
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 			setResult(Command.RESULT_OK);
-		}
-		else
-		{
-			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
-					this,
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
+		} else {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 		}
 	}

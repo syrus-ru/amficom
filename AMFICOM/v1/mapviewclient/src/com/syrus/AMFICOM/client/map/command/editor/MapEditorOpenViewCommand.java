@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenViewCommand.java,v 1.30 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorOpenViewCommand.java,v 1.31 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.30 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -97,8 +97,9 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 				this.mapFrame = mapCommand.mapFrame;
 			}
 
-			if(this.mapFrame == null)
+			if(this.mapFrame == null) {
 				return;
+			}
 
 			try {
 				this.mapFrame.setMapView(this.mapView);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapExportCommand.java,v 1.30 2005/10/02 12:31:39 krupenn Exp $$
+ * $$Id: MapExportCommand.java,v 1.31 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.30 $, $Date: 2005/10/02 12:31:39 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -70,8 +70,9 @@ public class MapExportCommand extends ExportCommand {
 	public void execute() {
 		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		if(this.mapFrame == null)
+		if(this.mapFrame == null) {
 			return;
+		}
 
 		Log.debugMessage("Exporting map", INFO); //$NON-NLS-1$
 
@@ -79,8 +80,9 @@ public class MapExportCommand extends ExportCommand {
 
 		String fileName = ExportCommand.openFileForWriting(MapPropertiesManager
 				.getLastDirectory());
-		if(fileName == null)
+		if(fileName == null) {
 			return;
+		}
 		File file = new File(fileName);
 		MapPropertiesManager.setLastDirectory(file.getParent());
 

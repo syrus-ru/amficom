@@ -1,5 +1,5 @@
 /*-
- * $$Id: ViewMapChooserCommand.java,v 1.9 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: ViewMapChooserCommand.java,v 1.10 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -81,10 +81,12 @@ public class ViewMapChooserCommand extends AbstractCommand {
 
 
 	public static int chooseMap(MapConnection connection) {
-		if(mapChooserPanel == null)
+		if(mapChooserPanel == null) {
 			mapChooserPanel = new MapChooserPanel(connection);
-		else
+		}
+		else {
 			mapChooserPanel.setMapConnection(connection);
+		}
 
 		final String okButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_OK);
 		final String cancelButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL);

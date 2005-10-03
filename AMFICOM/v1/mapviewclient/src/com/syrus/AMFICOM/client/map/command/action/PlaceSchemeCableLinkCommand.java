@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.46 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.47 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.46 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.47 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -104,8 +104,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				// (один из узлов привязки не нанесен на карту) то элемент
 				// привязки опускается
 				if(currentStartNode == null
-					|| currentEndNode == null)
-				{
+						|| currentEndNode == null) {
 					continue;
 				}
 
@@ -113,14 +112,11 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				boolean exists = false;
 				
 				// переходим к следующему узлу кабельного пути
-				if(bufferStartSite.equals(currentStartNode))
-				{
+				if(bufferStartSite.equals(currentStartNode)) {
 					bufferStartSite = currentEndNode;
 					exists = true;
 				}
-				else
-				if(bufferStartSite.equals(currentEndNode))
-				{
+				else if(bufferStartSite.equals(currentEndNode)) {
 					bufferStartSite = currentStartNode;
 					exists = true;
 				}
@@ -129,8 +125,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				// существует разрыв последовательности привязки (линии 
 				// bufferStartSite - cci.startSiteId не существует), то
 				// создать на месте разрыва непроложенную линию из одного фрагмента
-				if(!exists)
-				{
+				if(!exists) {
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, currentStartNode);
 					CableChannelingItem newCableChannelingItem = 
 						CableController.generateCCI(
@@ -144,24 +139,23 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 
 					bufferStartSite = currentEndNode;
 				}
-				// в противном случае привязать кабель к существующей линии
+				// привязать кабель к существующей линии
 				{
 					
 					PhysicalLink link = cci.getPhysicalLink();
 					
 					// если линия не существует, опустить данный элемент привязки
-					if(link == null)
-					{
+					if(link == null) {
 						UnboundLink unbound = super.createUnboundLinkWithNodeLink(currentStartNode, currentEndNode);
 						this.cablePath.addLink(unbound, cci);
 						unbound.setCablePath(this.cablePath);
 					}
-					else
-					{
+					else {
 						link.getBinding().add(this.cablePath);
 						if(cci.getRowX() != -1
-							&& cci.getPlaceY() != -1)
+								&& cci.getPlaceY() != -1) {
 							link.getBinding().bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
+						}
 			
 						this.cablePath.addLink(link, cci);
 					}
@@ -170,8 +164,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			long t6 = System.currentTimeMillis();
 			// если элементы привязки не доходят до конца, создать непривязанную
 			// линию от текущего до конечного узла
-			if(this.endNode != bufferStartSite)
-			{
+			if(this.endNode != bufferStartSite) {
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
 				CableChannelingItem newCableChannelingItem = 
 					CableController.generateCCI(

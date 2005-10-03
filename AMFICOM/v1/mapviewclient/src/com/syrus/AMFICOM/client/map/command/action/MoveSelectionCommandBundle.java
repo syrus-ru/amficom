@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveSelectionCommandBundle.java,v 1.23 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MoveSelectionCommandBundle.java,v 1.24 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,13 +24,12 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * 
- * @version $Revision: 1.23 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MoveSelectionCommandBundle extends MapActionCommandBundle
-{
+public class MoveSelectionCommandBundle extends MapActionCommandBundle {
 	/** конечная точка сдвига */
 	public static final String END_POINT = "endpoint"; //$NON-NLS-1$
 	/** начальгая точка сдвига */
@@ -60,75 +59,60 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 */
 	double deltaY = 0.0D;
 
-	public MoveSelectionCommandBundle(Point point)
-	{
+	public MoveSelectionCommandBundle(Point point) {
 		this.startPoint = point;
 	}
 
-	public MoveSelectionCommandBundle(NetMapViewer netMapViewer)
-	{
+	public MoveSelectionCommandBundle(NetMapViewer netMapViewer) {
 		super();
 		setNetMapViewer(netMapViewer);
 	}
-	
+
 	/**
-	 * при установке параметров перемещения параметры передаются всем командам
-	 * в пучке
+	 * при установке параметров перемещения параметры передаются всем командам в
+	 * пучке
 	 */
 	@Override
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals(DELTA_X))
-		{
-			this.deltaX = Double.parseDouble((String )value);
+	public void setParameter(String field, Object value) {
+		if(field.equals(DELTA_X)) {
+			this.deltaX = Double.parseDouble((String) value);
 			super.setParameter(field, value);
-		}
-		else
-		if(field.equals(DELTA_Y))
-		{
-			this.deltaY = Double.parseDouble((String )value);
+		} else if(field.equals(DELTA_Y)) {
+			this.deltaY = Double.parseDouble((String) value);
 			super.setParameter(field, value);
-		}
-		else
-		if(field.equals(START_POINT))
-		{
-			this.startPoint = (Point )value;
-			this.endPoint = (Point )value;
-			//пересчитать смещение
+		} else if(field.equals(START_POINT)) {
+			this.startPoint = (Point) value;
+			this.endPoint = (Point) value;
+			// пересчитать смещение
+			this.setShift();
+			super.setParameter(DELTA_X, String.valueOf(this.deltaX));
+			super.setParameter(DELTA_Y, String.valueOf(this.deltaY));
+		} else if(field.equals(END_POINT)) {
+			this.endPoint = (Point) value;
+			// пересчитать смещение
 			this.setShift();
 			super.setParameter(DELTA_X, String.valueOf(this.deltaX));
 			super.setParameter(DELTA_Y, String.valueOf(this.deltaY));
 		}
-		else
-		if(field.equals(END_POINT))
-		{
-			this.endPoint = (Point )value;
-			//пересчитать смещение
-			this.setShift();
-			super.setParameter(DELTA_X, String.valueOf(this.deltaX));
-			super.setParameter(DELTA_Y, String.valueOf(this.deltaY));
-		}
-			
+
 	}
 
 	/**
 	 * при установке логического сетевого слоя оздаются команды на перемещение
-	 * выбранных объектов. выполнение удаления осуществляется только
-	 * при вызове execute()
+	 * выбранных объектов. выполнение удаления осуществляется только при вызове
+	 * execute()
 	 */
 	@Override
-	public void setNetMapViewer(NetMapViewer netMapViewer)
-	{
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		super.setNetMapViewer(netMapViewer);
 
 		this.setElements();
 	}
-	
+
 	/**
 	 * обновить абсолютное смещение по начальной и конечной точкам сдвига
 	 */
-	protected void setShift()
-	{
+	protected void setShift() {
 		try {
 			DoublePoint sp = this.logicalNetLayer.getConverter().convertScreenToMap(this.startPoint);
 			DoublePoint ep = this.logicalNetLayer.getConverter().convertScreenToMap(this.endPoint);

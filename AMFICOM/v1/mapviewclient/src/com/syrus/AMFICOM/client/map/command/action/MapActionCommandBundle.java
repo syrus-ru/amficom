@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapActionCommandBundle.java,v 1.35 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapActionCommandBundle.java,v 1.36 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,44 +37,42 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * 
- * @version $Revision: 1.35 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapActionCommandBundle extends CommandBundle
-{
+public class MapActionCommandBundle extends CommandBundle {
 	protected Throwable exception = null;
 
 	LogicalNetLayer logicalNetLayer = null;
 	ApplicationContext aContext = null;
 
 	protected NetMapViewer netMapViewer;
-	
+
 	protected boolean undoable = true;
-	
+
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
 		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		this.aContext = this.logicalNetLayer.getContext();
 	}
 
-	protected ApplicationContext getContext()
-	{
+	protected ApplicationContext getContext() {
 		return this.aContext;
 	}
-	
+
 	/**
 	 * Создается сетевой узел
 	 */
 	protected SiteNode createSite(DoublePoint point, SiteNodeType proto)
-		throws Throwable
-	{
+			throws Throwable {
 		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(proto, point);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		return cmd.getSite();
 	}
@@ -83,13 +81,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Создается непривязанный элемент
 	 */
 	protected UnboundNode createUnboundNode(DoublePoint point, SchemeElement se)
-		throws Throwable
-	{
+			throws Throwable {
 		CreateUnboundNodeCommandAtomic cmd = new CreateUnboundNodeCommandAtomic(se, point);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		return cmd.getUnbound();
 	}
@@ -98,13 +96,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Создается топологический конечный узел в неактивном состоянии
 	 */
 	protected TopologicalNode createPhysicalNode(PhysicalLink physicalLink, DoublePoint point)
-		throws Throwable
-	{
+			throws Throwable {
 		CreatePhysicalNodeCommandAtomic cmd = new CreatePhysicalNodeCommandAtomic(physicalLink, point);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		return cmd.getNode();
 	}
@@ -116,13 +114,13 @@ public class MapActionCommandBundle extends CommandBundle
 			PhysicalLink physicalLink,
 			AbstractNode startNode,
 			AbstractNode endNode)
-		throws Throwable
-	{
+			throws Throwable {
 		CreateNodeLinkCommandAtomic cmd = new CreateNodeLinkCommandAtomic(physicalLink, startNode, endNode);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		NodeLink nodeLink = cmd.getNodeLink();
 		physicalLink.addNodeLink(nodeLink);
@@ -135,13 +133,13 @@ public class MapActionCommandBundle extends CommandBundle
 	protected PhysicalLink createPhysicalLink(
 			AbstractNode startNode,
 			AbstractNode endNode)
-		throws Throwable
-	{
+			throws Throwable {
 		CreatePhysicalLinkCommandAtomic cmd = new CreatePhysicalLinkCommandAtomic(startNode, endNode);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		return cmd.getLink();
 	}
@@ -153,13 +151,13 @@ public class MapActionCommandBundle extends CommandBundle
 			SchemeCableLink schemeCableLink,
 			AbstractNode startNode,
 			AbstractNode endNode)
-		throws Throwable
-	{
+			throws Throwable {
 		CreateCablePathCommandAtomic cmd = new CreateCablePathCommandAtomic(schemeCableLink, startNode, endNode);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		return cmd.getPath();
 	}
@@ -168,13 +166,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Удаляется кабельный путь
 	 */
 	protected void removeCablePath(CablePath cablePath)
-		throws Throwable
-	{
+			throws Throwable {
 		RemoveCablePathCommandAtomic cmd = new RemoveCablePathCommandAtomic(cablePath);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 	}
 
@@ -185,13 +183,13 @@ public class MapActionCommandBundle extends CommandBundle
 			SchemePath schemePath,
 			AbstractNode startNode,
 			AbstractNode endNode)
-		throws Throwable
-	{
+			throws Throwable {
 		CreateMeasurementPathCommandAtomic cmd = new CreateMeasurementPathCommandAtomic(schemePath, startNode, endNode);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		return cmd.getPath();
 	}
@@ -200,13 +198,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Удаляется измерительный путь
 	 */
 	protected void removeMeasurementPath(MeasurementPath mpe)
-		throws Throwable
-	{
+			throws Throwable {
 		RemoveMeasurementPathCommandAtomic cmd = new RemoveMeasurementPathCommandAtomic(mpe);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 	}
 
@@ -216,13 +214,13 @@ public class MapActionCommandBundle extends CommandBundle
 	protected UnboundLink createUnboundLink(
 			AbstractNode startNode,
 			AbstractNode endNode)
-		throws Throwable
-	{
+			throws Throwable {
 		CreateUnboundLinkCommandAtomic cmd = new CreateUnboundLinkCommandAtomic(startNode, endNode);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 		return cmd.getLink();
 	}
@@ -233,8 +231,7 @@ public class MapActionCommandBundle extends CommandBundle
 	protected UnboundLink createUnboundLinkWithNodeLink(
 			AbstractNode startNode,
 			AbstractNode endNode)
-		throws Throwable
-	{
+			throws Throwable {
 		UnboundLink unbound = this.createUnboundLink(startNode, endNode);
 
 		NodeLink nodeLink = this.createNodeLink(unbound, startNode, endNode);
@@ -247,13 +244,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Удаляется линия связи
 	 */
 	protected void removePhysicalLink(PhysicalLink mple)
-		throws Throwable
-	{
+			throws Throwable {
 		RemovePhysicalLinkCommandAtomic cmd = new RemovePhysicalLinkCommandAtomic(mple);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 	}
 
@@ -261,13 +258,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Удаляется фрагмент линии
 	 */
 	protected void removeNodeLink(NodeLink nodeLink)
-		throws Throwable
-	{
+			throws Throwable {
 		RemoveNodeLinkCommandAtomic cmd = new RemoveNodeLinkCommandAtomic(nodeLink);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 	}
 
@@ -275,13 +272,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Удаляется точечный объект
 	 */
 	protected void removeNode(AbstractNode mne)
-		throws Throwable
-	{
+			throws Throwable {
 		RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(mne);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 	}
 
@@ -289,13 +286,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Изменение статуса топологического узла
 	 */
 	protected void changePhysicalNodeActivity(TopologicalNode mpne, boolean active)
-		throws Throwable
-	{
+			throws Throwable {
 		ChangePhysicalNodeActivityCommandAtomic cmd = new ChangePhysicalNodeActivityCommandAtomic(mpne, active);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
-		if(cmd.getResult() != Command.RESULT_OK)
+		if(cmd.getResult() != Command.RESULT_OK) {
 			throw cmd.getException();
+		}
 		add(cmd);
 	}
 	
@@ -303,8 +300,7 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Изменить состояние объекта, запомнив предыдущее
 	 */
 	protected void registerStateChange(MapElement me, MapElementState initialState, MapElementState finalState)
-		throws Throwable
-	{
+			throws Throwable {
 		MapElementStateChangeCommand cmd = new MapElementStateChangeCommand(me, initialState, finalState);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		add(cmd);
@@ -315,16 +311,15 @@ public class MapActionCommandBundle extends CommandBundle
 	 * топологические узлы и фрагменты
 	 */
 	protected void removeUnboundLink(UnboundLink link)
-		throws Throwable
-	{
+			throws Throwable {
 		link.sortNodes();
 		List sortedNodes = new LinkedList();
 		sortedNodes.addAll(link.getSortedNodes());
-		for(Iterator it2 = sortedNodes.iterator(); it2.hasNext();)
-		{
+		for(Iterator it2 = sortedNodes.iterator(); it2.hasNext();) {
 			AbstractNode node = (AbstractNode)it2.next();
-			if(node instanceof TopologicalNode)
+			if(node instanceof TopologicalNode) {
 				this.removeNode(node);
+			}
 		}
 		List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
 		sortedNodeLinks.addAll(link.getNodeLinks());
@@ -339,17 +334,13 @@ public class MapActionCommandBundle extends CommandBundle
 	 * отвязывается, непривязанные линии удаляются
 	 */
 	protected void removeCablePathLinks(CablePath cablePath)
-		throws Throwable
-	{
-		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
-		{
+			throws Throwable {
+		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink)it.next();
-			if(link instanceof UnboundLink)
-			{
+			if(link instanceof UnboundLink) {
 				this.removeUnboundLink((UnboundLink)link);
 			}
-			else
-			{
+			else {
 				link.getBinding().remove(cablePath);
 			}
 		}
@@ -376,8 +367,7 @@ public class MapActionCommandBundle extends CommandBundle
 			boolean registerStateChange,
 			AbstractNode firstConditionalNodeExit,
 			AbstractNode secondConditionalNodeExit)
-		throws Throwable
-	{
+			throws Throwable {
 		AbstractNode foundNode = null;
 		MapElementState state = null;
 		
@@ -388,35 +378,33 @@ public class MapActionCommandBundle extends CommandBundle
 		// неявный цикл по фракментам линии - перекидывать фрагменты в новую 
 		// физическую линию. движемся по фрагментам от первого пока не
 		// наткнемся на фрагмент, соседний с удаленным
-		for(;;)
-		{
-			if(registerStateChange)
+		for(;;) {
+			if(registerStateChange) {
 				state = startNodeLink.getState();
+			}
 
 			link.removeNodeLink(startNodeLink);
 			startNodeLink.setPhysicalLink(newLink);
 			newLink.addNodeLink(startNodeLink);
 			
-			if(registerStateChange)
+			if(registerStateChange) {
 				this.registerStateChange(
 					startNodeLink, 
 					state, 
 					startNodeLink.getState());
+			}
 			
 			// перейти к следующему узлу
 			startNode = startNodeLink.getOtherNode(startNode);
 			
 			// если наткнулись на разрыв линии связи, то обновить
 			// концевые узлы и закончить
-			if(startNode.equals(firstConditionalNodeExit))
-			{
+			if(startNode.equals(firstConditionalNodeExit)) {
 				foundNode = firstConditionalNodeExit;
 				newLink.setEndNode(firstConditionalNodeExit);
 				break;
 			}
-			else
-			if(startNode.equals(secondConditionalNodeExit))
-			{
+			else if(startNode.equals(secondConditionalNodeExit)) {
 				foundNode = secondConditionalNodeExit;
 				newLink.setEndNode(secondConditionalNodeExit);
 				break;
@@ -428,13 +416,11 @@ public class MapActionCommandBundle extends CommandBundle
 		return foundNode;
 	}
 
-	public Throwable getException()
-	{
+	public Throwable getException() {
 		return this.exception;
 	}
-	
-	public void setException(Throwable exception)
-	{
+
+	public void setException(Throwable exception) {
 		this.exception = exception;
 	}
 

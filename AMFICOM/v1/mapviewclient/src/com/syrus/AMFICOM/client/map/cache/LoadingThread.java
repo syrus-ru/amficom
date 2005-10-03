@@ -1,5 +1,5 @@
 /*-
- * $$Id: LoadingThread.java,v 1.15 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: LoadingThread.java,v 1.16 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Peter Peskovsky
  * @module mapviewclient
@@ -113,9 +113,9 @@ public class LoadingThread extends Thread {
                     this.requestCurrentlyProcessed = rqIt.next();
                     rqIt.remove();
                     this.state.setValue(State.STATE_RENDERING);
-                }
-                else
+                } else {
                 	continue;
+                }
             }
 
             // Посылаем запрос на рендеринг
@@ -244,9 +244,7 @@ public class LoadingThread extends Thread {
             setRequestInItsPlace(requestToAdd);
             
             if ((this.state.getValue() == State.STATE_RENDERING)
-                    && (this.requestCurrentlyProcessed.getPriority() > requestToAdd
-                            .getPriority()))
-            {
+                    && (this.requestCurrentlyProcessed.getPriority() > requestToAdd.getPriority())) {
                 this.stopRendering();
                 // И рассматриваемый запрос ставим обратно в очередь
                 this.setRequestInItsPlace(this.requestCurrentlyProcessed);
@@ -297,13 +295,12 @@ public class LoadingThread extends Thread {
 
         synchronized (this.state) {
             if ((this.state.getValue() == State.STATE_RENDERING)
-                    && (this.requestCurrentlyProcessed == request))
-            // Если запрос уже в обработке, проверяем:
-            // если при установке для него нового приоритета, он всё равно
-            // останется
-            // самым приоритетным - ничего не делаем, иначе останавливаем
-            // рендеринг
-            {
+                    && (this.requestCurrentlyProcessed == request)) {
+	            // Если запрос уже в обработке, проверяем:
+	            // если при установке для него нового приоритета, он всё равно
+	            // останется
+	            // самым приоритетным - ничего не делаем, иначе останавливаем
+	            // рендеринг
                 this.requestCurrentlyProcessed.setPriority(newPriority);
 
                 Iterator rqIt = this.requestQueue.iterator();

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapRemoveMapCommand.java,v 1.13 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapRemoveMapCommand.java,v 1.14 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * убрать из вида выбранную схему
  *  
- * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -47,13 +47,15 @@ public class MapRemoveMapCommand extends AbstractCommand {
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		if(mapFrame == null)
+		if(mapFrame == null) {
 			return;
+		}
 
 		MapView mapView = mapFrame.getMapView();
 
-		if(mapView == null)
+		if(mapView == null) {
 			return;
+		}
 
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(

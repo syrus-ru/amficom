@@ -1,5 +1,5 @@
 /*-
- * $$Id: GenerateCablePathCablingCommandBundle.java,v 1.38 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: GenerateCablePathCablingCommandBundle.java,v 1.39 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
  * существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам генерируютс€
  * сетевые узла и схемные элементы прив€зываютс€ к ним.
  * 
- * @version $Revision: 1.38 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -91,8 +91,7 @@ public class GenerateCablePathCablingCommandBundle extends
 			list.addAll(this.cablePath.getLinks());
 			// цикл по всем лини€м, участвующим в кабельном пути
 			// по неприв€занным лини€м генерировать тоннели
-			for(Iterator it = list.iterator(); it.hasNext();)
-			{
+			for(Iterator it = list.iterator(); it.hasNext();) {
 				PhysicalLink link = (PhysicalLink)it.next();
 
 				// перейти к следующему узлу
@@ -106,14 +105,12 @@ public class GenerateCablePathCablingCommandBundle extends
 				endsite = this.checkSite(endsite);
 
 				// если неприв€занна€ лини€, генерировать тоннель
-				if(link instanceof UnboundLink)
-				{
+				if(link instanceof UnboundLink) {
 					UnboundLink unbound = (UnboundLink)link;
 
 					link = super.createPhysicalLink(startsite, endsite);
 					// фрагменты перенос€тс€ в новый сгенерированный тоннель
-					for(Iterator it2 = new LinkedList(unbound.getNodeLinks()).iterator(); it2.hasNext();)
-					{
+					for(Iterator it2 = new LinkedList(unbound.getNodeLinks()).iterator(); it2.hasNext();) {
 						NodeLink tmpNodeLink = (NodeLink)it2.next();
 						unbound.removeNodeLink(tmpNodeLink);
 						tmpNodeLink.setPhysicalLink(link);
@@ -151,11 +148,9 @@ public class GenerateCablePathCablingCommandBundle extends
 	 * если он €вл€етс€ неприв€занным элементом, сгенерировать на его месте
 	 * сетевой узел
 	 */
-	private SiteNode checkSite(SiteNode site)
-	{
+	private SiteNode checkSite(SiteNode site) {
 		SiteNode site2 = site;
-		if(site instanceof UnboundNode)
-		{
+		if(site instanceof UnboundNode) {
 			CreateSiteCommandAtomic command = 
 					new CreateSiteCommandAtomic(
 						this.type, 

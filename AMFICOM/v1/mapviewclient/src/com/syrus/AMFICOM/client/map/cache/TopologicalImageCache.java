@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageCache.java,v 1.20 2005/09/30 16:08:36 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.21 2005/10/03 10:35:00 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Peter Peskovsky
  * @module mapviewclient
@@ -190,8 +190,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 		this.loadingThread.start();
 	}
 
-	public void setSize(Dimension newSize) throws MapConnectionException, MapDataException
-	{
+	public void setSize(Dimension newSize) throws MapConnectionException, MapDataException {
 		Log.debugMessage(" TIC | setSize | just entered.",Level.FINEST); //$NON-NLS-1$
 		
 		if ((newSize.width <= 0) || (newSize.height <= 0))
@@ -251,8 +250,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @throws MapDataException
 	 * @throws MapConnectionException
 	 */
-	private void renewSphDifferenceValues() throws MapDataException,MapConnectionException
-	{
+	private void renewSphDifferenceValues() throws MapDataException,MapConnectionException {
 		//Разница между центрами соседних по горизонтали сегментов в пикселах 
 		int xDifferenceScr = (int)Math.round(this.imageSize.width * (1.D - TopologicalImageCache.ACTIVE_AREA_SIZE));
 		//Разница между центрами соседних по вертикали сегментов в пикселах		
@@ -278,22 +276,18 @@ public class TopologicalImageCache implements MapImageRenderer {
 	/**
 	 * Центр в сферических координатах
 	 */
-	public void setCenter(DoublePoint newCenter) throws MapConnectionException, MapDataException
-	{
+	public void setCenter(DoublePoint newCenter) throws MapConnectionException, MapDataException {
 		Log.debugMessage(" TIC - setCenter - just entered.",Log.DEBUGLEVEL10);		 //$NON-NLS-1$
-		if (this.imageSize == null)
-		{
+		if (this.imageSize == null) {
 			this.center = newCenter;			
 			return;
 		}
 		
-		if ((this.center == null) || (!this.center.equals(newCenter)))
-		{
+		if ((this.center == null) || (!this.center.equals(newCenter))) {
 			// Если до этого занимались изменением масштаба - очищаем очередь
 			// подгружающего потока, меняем режим работы, очищаем кэш
 
-			if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
-			{
+			if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING) {
 				this.mode = TopologicalImageCache.MODE_CENTER_CHANGING;
 				nulifyCache();
 				
@@ -318,21 +312,17 @@ public class TopologicalImageCache implements MapImageRenderer {
 	/**
 	 * Масштаб
 	 */
-	public void setScale(double newScale) throws MapConnectionException, MapDataException
-	{
+	public void setScale(double newScale) throws MapConnectionException, MapDataException {
 		Log.debugMessage(" TIC | setScale | just entered.",Level.FINEST);		 //$NON-NLS-1$
-		if (this.imageSize == null)
-		{
+		if (this.imageSize == null) {
 			this.scale = newScale;			
 			return;
 		}
 
-		if (this.scale != newScale)
-		{
+		if (this.scale != newScale) {
 			// Если до этого занимались изменением центра - очищаем очередь
 			// подгружающего потока, меняем режим работы, очищаем кэш
-			if (this.mode == TopologicalImageCache.MODE_CENTER_CHANGING)
-			{
+			if (this.mode == TopologicalImageCache.MODE_CENTER_CHANGING) {
 				this.mode = TopologicalImageCache.MODE_SCALE_CHANGING;
 				nulifyCache();
 			}
@@ -345,16 +335,14 @@ public class TopologicalImageCache implements MapImageRenderer {
 		}
 	}
 
-	private void nulifyCache() throws MapConnectionException, MapDataException
-	{
+	private void nulifyCache() throws MapConnectionException, MapDataException {
 		Log.debugMessage(" TIC | nulifyCache.",Level.FINEST);		 //$NON-NLS-1$
 //		this.requestToPaint = null;
 		this.cacheOfImages.clear();
 		this.loadingThread.clearQueue();
 	}
 	
-	private void reactMouseLocation() throws MapDataException,MapConnectionException
-	{
+	private void reactMouseLocation() throws MapDataException,MapConnectionException {
 		//Устанавливаем всем запросам самые низкие приоритеты
 		this.loadingThread.setTheLowestPriorityForAll();
 
@@ -408,8 +396,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	}
 	
 	public void analyzeMouseLocation(MouseEvent event)
-			throws MapDataException, MapConnectionException
-	{
+			throws MapDataException, MapConnectionException {
 		Log.debugMessage(" TIC | analyzeMouseLocation | just entered.",Level.FINEST); //$NON-NLS-1$
 		
 		if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
@@ -466,54 +453,38 @@ public class TopologicalImageCache implements MapImageRenderer {
 		reactMouseLocation();		
 	}
 	
-	private Dimension getDirectionForAngle(double angle)
-	{
+	private Dimension getDirectionForAngle(double angle) {
 		Dimension direction = new Dimension();
 		
-		if ((this.edgePointsAngles[0] < angle) && (angle <= this.edgePointsAngles[1]))
-		{
+		if ((this.edgePointsAngles[0] < angle) && (angle <= this.edgePointsAngles[1])) {
 			//Северо-восток
 			direction.width = 1;
 			direction.height = -1;			
-		}
-		else if ((this.edgePointsAngles[1] < angle) && (angle <= this.edgePointsAngles[2]))
-		{
+		} else if ((this.edgePointsAngles[1] < angle) && (angle <= this.edgePointsAngles[2])) {
 			//Север
 			direction.width = 0;
 			direction.height = -1;			
-		}
-		else if ((this.edgePointsAngles[2] < angle) && (angle <= this.edgePointsAngles[3]))
-		{
+		} else if ((this.edgePointsAngles[2] < angle) && (angle <= this.edgePointsAngles[3])) {
 			//Северо-запад
 			direction.width = -1;
 			direction.height = -1;			
-		}
-		else if ((this.edgePointsAngles[3] < angle) && (angle <= this.edgePointsAngles[4]))
-		{
+		} else if ((this.edgePointsAngles[3] < angle) && (angle <= this.edgePointsAngles[4])) {
 			//Запад
 			direction.width = -1;
 			direction.height = 0;			
-		}
-		else if ((this.edgePointsAngles[4] < angle) && (angle <= this.edgePointsAngles[5]))
-		{
+		} else if ((this.edgePointsAngles[4] < angle) && (angle <= this.edgePointsAngles[5])) {
 			//Юго-запад
 			direction.width = -1;
 			direction.height = 1;			
-		}
-		else if ((this.edgePointsAngles[5] < angle) && (angle <= this.edgePointsAngles[6]))
-		{
+		} else if ((this.edgePointsAngles[5] < angle) && (angle <= this.edgePointsAngles[6])) {
 			//Юг
 			direction.width = 0;
 			direction.height = 1;			
-		}
-		else if ((this.edgePointsAngles[6] < angle) && (angle <= this.edgePointsAngles[7]))
-		{
+		} else if ((this.edgePointsAngles[6] < angle) && (angle <= this.edgePointsAngles[7])) {
 			//Юго-восток
 			direction.width = 1;
 			direction.height = 1;			
-		}
-		else if ((this.edgePointsAngles[7] < angle) || (angle <= this.edgePointsAngles[0]))
-		{
+		} else if ((this.edgePointsAngles[7] < angle) || (angle <= this.edgePointsAngles[0])) {
 			//Восток
 			direction.width = 1;
 			direction.height = 0;			
@@ -526,8 +497,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 			double pointX,
 			double pointY,
 			double coordNullX,
-			double coordNullY)
-	{
+			double coordNullY) {
 		double angle = Math.toDegrees(Math.atan(Math.abs(coordNullY - pointY)
 				/ Math.abs(coordNullX - pointX)));
 
@@ -555,16 +525,13 @@ public class TopologicalImageCache implements MapImageRenderer {
 	private TopologicalImageQuery setPriorityForRequest(
 			DoublePoint topoCenter,
 			double topoScale,
-			int priority) throws MapConnectionException, MapDataException
-	{
+			int priority) throws MapConnectionException, MapDataException {
 		
-		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
-		{
+		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();) {
 			TopologicalImageQuery request = (TopologicalImageQuery) it.next();
 			if (	TopologicalImageCache.compare(request.getTopoScale(),topoScale)
 					&&(this.screenDistance(request.getTopoCenter(),topoCenter) <
-							TopologicalImageCache.CENTER_COMPUTING_ERROR))
-			{
+							TopologicalImageCache.CENTER_COMPUTING_ERROR)) {
 				if (request.getPriority() > TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
 					this.loadingThread.changeRequestPriority(request,priority);
 				
@@ -593,11 +560,9 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @throws MapDataException 
 	 * @throws MapConnectionException 
 	 */
-	private void createVerticalRequests (int direction) throws MapConnectionException, MapDataException
-	{
-		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
-			for (int j = -i; j <= i; j++)			
-			{
+	private void createVerticalRequests (int direction) throws MapConnectionException, MapDataException {
+		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++) {
+			for (int j = -i; j <= i; j++) {
 				DoublePoint topoCenter = new DoublePoint(
 						this.center.getX() + j * this.xDifferenceSph,
 						this.center.getY() + (i + 1) * direction * this.yDifferenceSph);
@@ -610,6 +575,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 				
 				this.setPriorityForRequest(topoCenter,this.scale,priority);
 			}
+		}
 	}
 	
 	/**
@@ -619,11 +585,9 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @throws MapDataException 
 	 * @throws MapConnectionException 
 	 */
-	private void createHorizontalRequests (int direction) throws MapConnectionException, MapDataException
-	{
-		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
-			for (int j = -i; j <= i; j++)			
-			{
+	private void createHorizontalRequests (int direction) throws MapConnectionException, MapDataException {
+		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++) {
+			for (int j = -i; j <= i; j++) {
 				DoublePoint topoCenter = new DoublePoint(
 						this.center.getX() + (i + 1) * direction * this.xDifferenceSph,
 						this.center.getY() + j * this.yDifferenceSph);
@@ -636,6 +600,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 				
 				this.setPriorityForRequest(topoCenter,this.scale,priority);
 			}
+		}
 	}
 	
 	/**
@@ -645,30 +610,29 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @throws MapDataException 
 	 * @throws MapConnectionException 
 	 */
-	private void createDiagonalRequests (Dimension direction) throws MapConnectionException, MapDataException
-	{
-		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
-			for (int j = 0; j < TopologicalImageCache.CACHE_SIZE; j++)			
-			{
+	private void createDiagonalRequests (Dimension direction) throws MapConnectionException, MapDataException {
+		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++) {
+			for (int j = 0; j < TopologicalImageCache.CACHE_SIZE; j++) {
 				DoublePoint topoCenter = new DoublePoint(
 						this.center.getX() + (i + 1) * direction.width * this.xDifferenceSph,
 						this.center.getY() + (j + 1) * direction.height * this.yDifferenceSph);
 				
 				int priority = TopologicalImageQuery.PRIORITY_BACKGROUND_LOW;
-				if (i == j)
-				{
-					if (i == 0)
+				if (i == j) {
+					if (i == 0) {
 						priority = TopologicalImageQuery.PRIORITY_BACKGROUND_HIGH;
-					else
-						priority = TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE;						
+					}
+					else {
+						priority = TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE;
+					}
 				}
 				
 				this.setPriorityForRequest(topoCenter,this.scale,priority);
 			}
+		}
 	}
 
-	public void refreshLayers() throws MapConnectionException, MapDataException
-	{
+	public void refreshLayers() throws MapConnectionException, MapDataException {
 		// TODO Здесь по-хорошему надо перерисовывать отдельные слои,
 		// но такого механизма пока нет.
 		this.nulifyCache();
@@ -677,36 +641,31 @@ public class TopologicalImageCache implements MapImageRenderer {
 		this.createMovingRequests();
 	}
 
-	public Image getImage() throws MapConnectionException, MapDataException
-	{
-		if (this.requestToPaint == null)
+	public Image getImage() throws MapConnectionException, MapDataException {
+		if (this.requestToPaint == null) {
 			return null;
+		}
 
 		long startTime = System.currentTimeMillis();
-		while (this.requestToPaint.getPriority() != TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
-		{
+		while (this.requestToPaint.getPriority() != TopologicalImageQuery.PRIORITY_ALREADY_LOADED) {
 			// Изображение по запросу ещё не подгружено
 			
-			if (this.toBreak)
-			{
+			if (this.toBreak) {
 				//Остановливаем работу потока подгрузки
 				this.loadingThread.cancel();
 				return null;
 			}
 			
 			long currentTime = System.currentTimeMillis();
-			if ((currentTime - startTime) > MapPropertiesManager.getTopoImageMaxTimeWait())
-			{
+			if ((currentTime - startTime) > MapPropertiesManager.getTopoImageMaxTimeWait()) {
 				//Остановливаем работу потока подгрузки
 				this.loadingThread.cancel();
 				throw new MapConnectionException (LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_TOPOLOGICAL_IMAGE_TIMEOUT));
 			}
 			
-			try
-			{
+			try {
 				Thread.sleep(10);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -723,8 +682,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * Если карта использует кэш, этот метод выызвается на выходе из модуля
 	 *
 	 */
-	public void cancel()
-	{
+	public void cancel() {
 		this.toBreak = true;
 	}
 	
@@ -734,8 +692,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @param point 
 	 * @return Ближайший центр
 	 */
-	public DoublePoint getNearestCenter(DoublePoint point)
-	{
+	public DoublePoint getNearestCenter(DoublePoint point) {
 		//В случае, если ещё не заданы значения центра и смещений
 		if ((this.center == null) || (this.imageSize == null))
 			return point;
@@ -748,8 +705,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 		int xShiftCount = (int) Math.round(dX / this.xDifferenceSph);
 		int yShiftCount = (int) Math.round(dY / this.yDifferenceSph);		
 		
-		if ((Math.abs(xShiftCount) > 0) || (Math.abs(yShiftCount) > 0))
-		{
+		if ((Math.abs(xShiftCount) > 0) || (Math.abs(yShiftCount) > 0)) {
 			return new DoublePoint(
 					this.center.getX() + xShiftCount * this.xDifferenceSph,
 					this.center.getY() + yShiftCount * this.yDifferenceSph);
@@ -765,8 +721,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @return Расстояние
 	 */
 	double screenDistance(DoublePoint sphP1, DoublePoint sphP2)
-			throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		Point p1 = this.coordsConverter.convertMapToScreen(sphP1);
 		Point p2 = this.coordsConverter.convertMapToScreen(sphP2);
 
@@ -780,8 +735,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * для отображения
 	 */
 	private void createMovingRequests()
-			throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		Log.debugMessage(" TIC | createMovingRequests | just entered.",Level.FINEST);		 //$NON-NLS-1$
 		this.requestToPaint = this.setPriorityForRequest(this.center,this.scale,TopologicalImageQuery.PRIORITY_EXPRESS);
 		Log.debugMessage(" TIC | createMovingRequests | exiting.",Level.FINEST);		 //$NON-NLS-1$
@@ -796,8 +750,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @throws MapConnectionException 
 	 * 
 	 */
-	private void clearFarAndUnloadedSegments() throws MapConnectionException, MapDataException
-	{
+	private void clearFarAndUnloadedSegments() throws MapConnectionException, MapDataException {
 		Log.debugMessage(" TIC | clearFarAndUnloadedSegments | just entered.",Level.FINEST); //$NON-NLS-1$
 		
 		double dX = TopologicalImageCache.CACHE_SIZE * 1.01 * this.xDifferenceSph;
@@ -816,13 +769,11 @@ public class TopologicalImageCache implements MapImageRenderer {
 				- upperLeftSph.getY()));
 
 		// Ищем, есть ли уже сегмент с таким центром
-		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();)
-		{
+		for (Iterator it = this.cacheOfImages.iterator(); it.hasNext();) {
 			TopologicalImageQuery curRequest = (TopologicalImageQuery) it.next();
 			if ((!currCacheBorders.contains(curRequest.getTopoCenterX(),curRequest.getTopoCenterY()))
 					&& (curRequest.getPriority() != TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
-					&& (curRequest != this.requestToPaint))
-			{
+					&& (curRequest != this.requestToPaint)) {
 				// Удаляем сегмент - не имеет смысла его подгружает
 				Log.debugMessage(" TIC | clearFarAndUnloadedSegments | removing request." //$NON-NLS-1$
 						+ curRequest,Level.FINEST);
@@ -838,8 +789,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * Чистит список подгруженных изображений
 	 * 
 	 */
-	private void clearOldSegments()
-	{
+	private void clearOldSegments() {
 		Log.debugMessage(" TIC | clearOldSegments | just entered.",Level.FINEST); //$NON-NLS-1$
 
 		// Сортируем отчёты (по убыванию, чтобы более новые потом и искать
@@ -851,8 +801,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 		// Удаляем последние MAX_EXCEEDING_COUNT элементов
 		for (ListIterator lIt = this.cacheOfImages
 				.listIterator(TopologicalImageCache.CACHE_ELEMENTS_COUNT
-						- TopologicalImageCache.MAX_EXCEEDING_COUNT); lIt.hasNext();)
-		{
+						- TopologicalImageCache.MAX_EXCEEDING_COUNT); lIt.hasNext();) {
 			lIt.next();
 			lIt.remove();
 		}
@@ -867,13 +816,11 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * масштаба
 	 */
 	private void createScaleRequests() throws MapConnectionException,
-			MapDataException
-	{
+			MapDataException {
 		Log.debugMessage(" TIC | createScaleRequests | just entered.",Level.FINEST);		 //$NON-NLS-1$
 		if ((this.cacheOfImages.size() == 0)
 				|| (	(!TopologicalImageCache.compare(this.scale, this.mapContext.getScale() * MapContext.ZOOM_FACTOR))
-						&&(!TopologicalImageCache.compare(this.scale * MapContext.ZOOM_FACTOR, this.mapContext.getScale()))))
-		{
+						&&(!TopologicalImageCache.compare(this.scale * MapContext.ZOOM_FACTOR, this.mapContext.getScale())))) {
 			// Если новый масштаб не является кратным предыдущему (zoom_to_box)
 			// или мы только что вышли из режима изменения центра
 			// грузим все изображения заново.
@@ -888,15 +835,13 @@ public class TopologicalImageCache implements MapImageRenderer {
 
 		// Массштаб, который возможно понадобится в направлении измененеия массштаба
 		double scaleToCheck = 1;
-		if (TopologicalImageCache.compare(this.scale, this.mapContext.getScale() * MapContext.ZOOM_FACTOR))
-		{
+		if (TopologicalImageCache.compare(this.scale, this.mapContext.getScale() * MapContext.ZOOM_FACTOR)) {
 			// Новый масштаб в ZOOM_FACTOR раз меньше предыдущего
 			scaleToCheck = this.mapContext.getScale()
 					/ Math.pow(MapContext.ZOOM_FACTOR,
 							TopologicalImageCache.CACHE_SIZE);
 		} else if (TopologicalImageCache.compare(this.scale
-				* MapContext.ZOOM_FACTOR, this.mapContext.getScale()))
-		{
+				* MapContext.ZOOM_FACTOR, this.mapContext.getScale())) {
 			// Новый масштаб в ZOOM_FACTOR раз больше предыдущего
 			scaleToCheck = this.mapContext.getScale()
 					* Math.pow(MapContext.ZOOM_FACTOR,
@@ -914,10 +859,10 @@ public class TopologicalImageCache implements MapImageRenderer {
 		Log.debugMessage(" TIC | createScaleRequests | exiting.",Level.FINEST);		 //$NON-NLS-1$
 	}
 
-	private static boolean compare(double p1, double p2)
-	{
-		if (Math.round(p1 * 1000000D) == Math.round(p2 * 1000000D))
+	private static boolean compare(double p1, double p2) {
+		if (Math.round(p1 * 1000000D) == Math.round(p2 * 1000000D)) {
 			return true;
+		}
 
 		return false;
 	}
@@ -930,14 +875,12 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * @throws MapDataException
 	 */
 	private void renewScaleImages(int direction) throws MapConnectionException,
-			MapDataException
-	{
+			MapDataException {
 		//Устанавливаем отображаемое изображение. Грузим его с самым высоким приоритетом
 		this.requestToPaint = this.setPriorityForRequest(this.center,this.mapContext.getScale(),TopologicalImageQuery.PRIORITY_EXPRESS);
 
 		// Делаем изображения в направлении изменения масштаба
-		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
-		{
+		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++) {
 			this.setPriorityForRequest(
 				this.center,
 				this.mapContext.getScale() *
@@ -946,8 +889,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 		}
 		
 		// Делаем изображения в направлении обратном изменению масштаба
-		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++)
-		{
+		for (int i = 0; i < TopologicalImageCache.CACHE_SIZE; i++) {
 			this.setPriorityForRequest(
 				this.center,
 				this.mapContext.getScale() *
@@ -959,8 +901,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	private TopologicalImageQuery createRequestForExpressArea(
 			double reqScale,
 			DoublePoint reqCenter,
-			int reqPriority)
-	{
+			int reqPriority) {
 		TopologicalImageQuery result = new TopologicalImageQuery();
 		result.setLastUsed(System.currentTimeMillis());
 
@@ -974,8 +915,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 		return result;
 	}
 	
-	public Dimension getImageSize()
-	{
+	public Dimension getImageSize() {
 		return this.imageSize;
 	}
 
@@ -983,11 +923,10 @@ public class TopologicalImageCache implements MapImageRenderer {
 		return this.loader;
 	}
 	
-	public void test() throws MapDataException,MapConnectionException
-	{
+	public void test() throws MapDataException,MapConnectionException {
 		this.nulifyCache();
-		
 	}
+
 	public LoadingThread getLoadingThread() {
 		return this.loadingThread;
 	}

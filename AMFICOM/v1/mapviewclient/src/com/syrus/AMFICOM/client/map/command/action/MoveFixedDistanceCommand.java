@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveFixedDistanceCommand.java,v 1.15 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MoveFixedDistanceCommand.java,v 1.16 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,13 +21,12 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
-{
+public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle {
 	AbstractNode fixedNode;
 	AbstractNode movedNode;
 	DoublePoint fixedPoint;
@@ -37,8 +36,7 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	Point fixedScreenPoint;
 	double fixedScreenDistance;
 
-	public MoveFixedDistanceCommand(Point point, AbstractNode fixedNode, AbstractNode movedNode)
-	{
+	public MoveFixedDistanceCommand(Point point, AbstractNode fixedNode, AbstractNode movedNode) {
 		super(point);
 		this.fixedNode = fixedNode;
 		this.movedNode = movedNode;
@@ -55,8 +53,7 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	}
 
 	@Override
-	public void setNetMapViewer(NetMapViewer netMapViewer)
-	{
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		super.setNetMapViewer(netMapViewer);
 
 		try {
@@ -76,27 +73,24 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 		}
 	}
 
-	public MoveFixedDistanceCommand(NetMapViewer netMapViewer)
-	{
+	public MoveFixedDistanceCommand(NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
 	/**
-	 * создать отдельные команды на перемещение для всех выделенных
-	 * точечных объектов
+	 * создать отдельные команды на перемещение для всех выделенных точечных
+	 * объектов
 	 */
 	@Override
-	protected void setElements()
-	{
+	protected void setElements() {
 		super.add(new MoveNodeCommand(this.movedNode));
 	}
-	
+
 	/**
 	 * обновить абсолютное смещение по начальной и конечной точкам сдвига
 	 */
 	@Override
-	protected void setShift()
-	{
+	protected void setShift() {
 		try {
 			double dist1 = Math.sqrt( 
 				(super.endPoint.x - this.fixedScreenPoint.x) 

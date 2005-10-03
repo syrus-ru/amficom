@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewRemoveSchemeCommand.java,v 1.18 2005/09/30 16:08:38 krupenn Exp $$
+ * $$Id: MapViewRemoveSchemeCommand.java,v 1.19 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * убрать из вида выбранную схему
  *  
- * @version $Revision: 1.18 $, $Date: 2005/09/30 16:08:38 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -50,16 +50,18 @@ public class MapViewRemoveSchemeCommand extends AbstractCommand {
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		if(mapFrame == null)
+		if(mapFrame == null) {
 			return;
+		}
 
 		MapViewController controller = mapFrame.getMapViewer()
 				.getLogicalNetLayer().getMapViewController();
 
 		MapView mapView = mapFrame.getMapView();
 
-		if(mapView == null)
+		if(mapView == null) {
 			return;
+		}
 
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(

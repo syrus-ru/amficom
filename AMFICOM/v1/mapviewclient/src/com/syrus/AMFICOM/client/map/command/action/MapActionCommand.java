@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapActionCommand.java,v 1.12 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapActionCommand.java,v 1.13 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,12 @@ import com.syrus.AMFICOM.map.MapElementState;
 
 /**
  *  
- * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapActionCommand extends AbstractCommand
-{
+public class MapActionCommand extends AbstractCommand {
 	protected static final int ACTION_NONE = 0;
 	protected static final int ACTION_DRAW_NODE = 1;
 	protected static final int ACTION_DRAW_LINE = 2;
@@ -42,34 +41,28 @@ public class MapActionCommand extends AbstractCommand
 	
 	protected boolean undoable = true;
 
-	public MapActionCommand(int action)
-	{
+	public MapActionCommand(int action) {
 		this.action = action;
 	}
 
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
+	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
 		this.logicalNetLayer = logicalNetLayer;
 		this.aContext = logicalNetLayer.getContext();
 	}
-	
-	protected ApplicationContext getContext()
-	{
+
+	protected ApplicationContext getContext() {
 		return this.aContext;
 	}
-	
-	protected LogicalNetLayer getLogicalNetLayer()
-	{
+
+	protected LogicalNetLayer getLogicalNetLayer() {
 		return this.logicalNetLayer;
 	}
 
-	public Throwable getException()
-	{
+	public Throwable getException() {
 		return this.exception;
 	}
-	
-	public void setException(Throwable exception)
-	{
+
+	public void setException(Throwable exception) {
 		this.exception = exception;
 	}
 

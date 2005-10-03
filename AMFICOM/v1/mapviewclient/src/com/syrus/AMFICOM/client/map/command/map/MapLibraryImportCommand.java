@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryImportCommand.java,v 1.15 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapLibraryImportCommand.java,v 1.16 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -120,8 +120,9 @@ public class MapLibraryImportCommand extends ImportCommand {
 	public void execute() {
 		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		if(this.mapFrame == null)
+		if(this.mapFrame == null) {
 			return;
+		}
 
 		try {
 			MapLibrary mapLibrary = null;
@@ -129,8 +130,9 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 			String fileName = ImportCommand
 					.openFileForReading(MapPropertiesManager.getLastDirectory());
-			if(fileName == null)
+			if(fileName == null) {
 				return;
+			}
 
 			File file = new File(fileName);
 			MapPropertiesManager.setLastDirectory(file.getParent());
@@ -146,8 +148,9 @@ public class MapLibraryImportCommand extends ImportCommand {
 				mapLibrary = loadXML(fileName);
 			}
 
-			if(mapLibrary == null)
+			if(mapLibrary == null) {
 				return;
+			}
 
 			StorableObjectPool.putStorableObject(mapLibrary);
 			StorableObjectPool.flush(mapLibrary, LoginManager.getUserId(), true);

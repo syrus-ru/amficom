@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeElementCommand.java,v 1.37 2005/10/02 14:55:42 krupenn Exp $$
+ * $$Id: PlaceSchemeElementCommand.java,v 1.38 2005/10/03 10:35:00 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой или по
  * координатам
  * 
- * @version $Revision: 1.37 $, $Date: 2005/10/02 14:55:42 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/03 10:35:00 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -100,19 +100,16 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 			long t3 = System.currentTimeMillis();
 			long t4 = System.currentTimeMillis();
 			long t5 = System.currentTimeMillis();
-			if(this.site == null)
-			{
+			if(this.site == null) {
 				MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point, this.netMapViewer.getVisibleBounds());
 				t4 = System.currentTimeMillis();
 				
 				if(mapElement instanceof SiteNode
-					&& !(mapElement instanceof UnboundNode))
-				{
+						&& !(mapElement instanceof UnboundNode)) {
 					this.site = (SiteNode )mapElement;
 					this.schemeElement.setSiteNode(this.site);
 				}
-				else
-				{
+				else {
 					this.unbound = super.createUnboundNode(this.coordinatePoint, this.schemeElement);
 					this.site = this.unbound;
 				}

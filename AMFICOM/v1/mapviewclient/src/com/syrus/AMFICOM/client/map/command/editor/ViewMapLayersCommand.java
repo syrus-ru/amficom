@@ -1,5 +1,5 @@
 /*-
- * $$Id: ViewMapLayersCommand.java,v 1.5 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: ViewMapLayersCommand.java,v 1.6 2005/10/03 10:35:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.5 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/03 10:35:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -66,10 +66,12 @@ public class ViewMapLayersCommand extends AbstractCommand {
 			return;
 		}
 
-		if(this.layersPanel == null)
+		if(this.layersPanel == null) {
 			this.layersPanel = new LayersPanel(this.mapFrame);
-		else
+		}
+		else {
 			this.layersPanel.setMapFrame(this.mapFrame);
+		}
 		
 		final String okButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_OK);
 		final String cancelButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL);
