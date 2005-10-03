@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.30 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.31 2005/10/03 16:18:43 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/03 16:18:43 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -475,6 +475,18 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 			this.mTextField.setText(String.valueOf(this.physicalLink.getBinding().getDimension().getWidth()));
 			this.nTextField.setText(String.valueOf(this.physicalLink.getBinding().getDimension().getHeight()));
+
+			this.horvertLabel.setIcon(
+					this.physicalLink.getBinding().isHorizontalVertical() 
+						? horverticon : verthoricon);
+
+			this.leftRightLabel.setIcon(
+					this.physicalLink.getBinding().isLeftToRight() 
+						? leftrighticon : rightlefticon);
+
+			this.topDownLabel.setIcon(
+					this.physicalLink.getBinding().isTopToBottom() 
+						? topdownicon : downtopicon);
 
 			this.tunnelLayout.setBinding(binding);
 
