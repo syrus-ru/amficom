@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.5 2005/09/30 08:33:18 stas Exp $
+ * $Id: Port.java,v 1.6 2005/10/03 15:10:17 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ public class Port {
 	
 	private String id;
 	private String name;
+	private String description;
 	private DirectionType.Enum directionType;
 	private String parentId;
 
@@ -40,6 +41,10 @@ public class Port {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 	
 	public void setParentId(String parentId) {
 		this.parentId = parentId;
@@ -57,7 +62,9 @@ public class Port {
 		}
 		
 		xmlPort.setName(this.name);
-//		xmlPort.setDescription("");
+		if (this.description != null) {
+			xmlPort.setDescription(this.description);
+		}
 		
 		XmlIdentifier deviceId = xmlPort.addNewParentSchemeDeviceId();
 		deviceId.setStringValue(this.parentId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.11 2005/10/03 13:43:27 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.12 2005/10/03 15:10:17 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/10/03 13:43:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/03 15:10:17 $
  * @module importUCM
  */
 
@@ -441,10 +441,10 @@ public class UCMSchemeExportCommand {
 					 Port port;
 					 if (directionType.equals(DirectionType.IN)) {
 						 port = building.addInputPort(cable.getId() + "^" + obj.un);
-						 port.setName(obj.text);
+						 port.setDescription(obj.text);
 					 } else {
 						 port = building.addOutputPort(cable.getId() + "^" + obj.un);
-						 port.setName(obj.text);
+						 port.setDescription(obj.text);
 					 }
 					 return port.getId();
 				}
@@ -463,10 +463,10 @@ public class UCMSchemeExportCommand {
 									 Port port;
 									 if (directionType.equals(DirectionType.IN)) {
 										 port = building.addInputPort(cable.getId() + "^" + obj.un);
-										 port.setName(obj.text);
+										 port.setDescription(obj.text);
 									 } else {
 										 port = building.addOutputPort(cable.getId() + "^" + obj.un);
-										 port.setName(obj.text);
+										 port.setDescription(obj.text);
 									 }
 									 return port.getId();
 								}
