@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSchemeTreeModel.java,v 1.39 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapSchemeTreeModel.java,v 1.40 2005/10/03 08:19:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path2"
  * </pre>
  * 
- * @version $Revision: 1.39 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.40 $, $Date: 2005/10/03 08:19:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -241,7 +241,7 @@ public class MapSchemeTreeModel
 			treeNode.setTopological(topological);
 	
 			List compoundElements = new LinkedList();
-			for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();) {
+			for (final Iterator schemeElementIterator = parentScheme.getSchemeElements(true).iterator(); schemeElementIterator.hasNext();) {
 				final SchemeElement schemeElement = (SchemeElement) 
 						schemeElementIterator.next();
 				if (schemeElement.getScheme(false) != null)
@@ -278,7 +278,7 @@ public class MapSchemeTreeModel
 			MapSchemeTreeNode childNode;
 			treeNode.setTopological(topological);
 	
-			Set compoundElements = scheme.getSchemeElements();
+			Set compoundElements = scheme.getSchemeElements(true);
 	
 			if(compoundElements.size() > 0) {
 				for(Iterator it = compoundElements.iterator(); it.hasNext();) {
@@ -396,10 +396,15 @@ public class MapSchemeTreeModel
 		MapSchemeTreeNode childNode;
 		treeNode.setTopological(topological);
 
-		for(Iterator iter = scheme.getSchemeLinks().iterator(); iter.hasNext();) {
-			SchemeLink schemeLink = (SchemeLink )iter.next();
-			childNode = new MapSchemeTreeNode(null,schemeLink, getObjectName(schemeLink), false);
-			treeNode.addChild(childNode);
+		try {
+			for(Iterator iter = scheme.getSchemeLinks(true).iterator(); iter.hasNext();) {
+				SchemeLink schemeLink = (SchemeLink )iter.next();
+				childNode = new MapSchemeTreeNode(null,schemeLink, getObjectName(schemeLink), false);
+				treeNode.addChild(childNode);
+			}
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return treeNode;
@@ -411,15 +416,20 @@ public class MapSchemeTreeModel
 		MapSchemeTreeNode childNode;
 		treeNode.setTopological(topological);
 
-		for (final Iterator schemeCableLinkIterator = parentScheme.getSchemeCableLinks().iterator(); schemeCableLinkIterator.hasNext();) {
-			final SchemeCableLink schemeCableLink = (SchemeCableLink) schemeCableLinkIterator.next();
-			if(topological) {
-				childNode = new MapSchemeTreeNode(null,schemeCableLink, getObjectName(schemeCableLink), cableIcon, false);
-				childNode.setDragDropEnabled(true);
+		try {
+			for (final Iterator schemeCableLinkIterator = parentScheme.getSchemeCableLinks(true).iterator(); schemeCableLinkIterator.hasNext();) {
+				final SchemeCableLink schemeCableLink = (SchemeCableLink) schemeCableLinkIterator.next();
+				if(topological) {
+					childNode = new MapSchemeTreeNode(null,schemeCableLink, getObjectName(schemeCableLink), cableIcon, false);
+					childNode.setDragDropEnabled(true);
+				}
+				else
+					childNode = new MapSchemeTreeNode(null,schemeCableLink, getObjectName(schemeCableLink), false);
+				treeNode.addChild(childNode);
 			}
-			else
-				childNode = new MapSchemeTreeNode(null,schemeCableLink, getObjectName(schemeCableLink), false);
-			treeNode.addChild(childNode);
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return treeNode;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.13 2005/09/21 16:23:13 krupenn Exp $
+ * $Id: METS.java,v 1.14 2005/10/03 08:19:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -47,7 +48,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/21 16:23:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/03 08:19:11 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -74,19 +75,19 @@ public class METS {
 		mainFrame.dispose();
 	}
 
-	public static void clearSchemeBinding() {
+	public static void clearSchemeBinding() throws ApplicationException {
 		for(Iterator iter = mapView.getSchemes().iterator(); iter.hasNext();) {
 			Scheme scheme = (Scheme )iter.next();
 			clearSchemeBinding(scheme);
 		}
 	}
 	
-	private static void clearSchemeBinding(Scheme scheme) {
-		for(Iterator iter = scheme.getSchemeElements().iterator(); iter.hasNext();) {
+	private static void clearSchemeBinding(Scheme scheme) throws ApplicationException {
+		for(Iterator iter = scheme.getSchemeElements(false).iterator(); iter.hasNext();) {
 			SchemeElement element = (SchemeElement )iter.next();
 			element.setSiteNode(null);
 		}
-		for(Iterator iter = scheme.getSchemeCableLinks().iterator(); iter.hasNext();) {
+		for(Iterator iter = scheme.getSchemeCableLinks(false).iterator(); iter.hasNext();) {
 			SchemeCableLink element = (SchemeCableLink )iter.next();
 			final SortedSet<CableChannelingItem> cableChannelingItems = element.getPathMembers();
 			if (!cableChannelingItems.isEmpty()) {
