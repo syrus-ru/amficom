@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.82 2005/10/02 11:49:44 bob Exp $
+ * $Id: Identifier.java,v 1.83 2005/10/03 09:35:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.Log;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -33,8 +32,8 @@ import com.syrus.util.Log;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.82 $, $Date: 2005/10/02 11:49:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.83 $, $Date: 2005/10/03 09:35:16 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
