@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.Wavelet;
@@ -159,7 +158,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
 		StringBuilder sb = new StringBuilder();
 		Formatter formatter = new Formatter(sb);
-		formatter.format("%2.0f %% \u2014 %.3f %s", // \u2014 - тире
+		formatter.format("%2.0f %% \u2014 %.4f %s", // \u2014 - тире
 				new Double(level * 100.0),
 				new Double(level2thresh(this.level)),
 				LangModelAnalyse.getString("dB"));
