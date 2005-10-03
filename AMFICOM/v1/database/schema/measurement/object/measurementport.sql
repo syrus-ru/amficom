@@ -1,4 +1,4 @@
--- $Id: measurementport.sql,v 1.1 2005/08/21 16:40:32 arseniy Exp $
+-- $Id: measurementport.sql,v 1.2 2005/10/03 10:08:51 arseniy Exp $
 
 CREATE TABLE MeasurementPort (
  id NUMBER(19),
@@ -13,7 +13,7 @@ CREATE TABLE MeasurementPort (
  name VARCHAR2(128 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
 -- 
- kis_id,
+ kis_id NOT NULL,
  port_id,
 --
  CONSTRAINT mp_pk PRIMARY KEY (id),
@@ -29,7 +29,7 @@ CREATE TABLE MeasurementPort (
   REFERENCES KIS (id) ON DELETE CASCADE,
 --
  CONSTRAINT mp_port_fk FOREIGN KEY (port_id)
-  REFERENCES Port (id) ON DELETE CASCADE
+  REFERENCES Port (id) ON DELETE SET NULL
 );
 
 CREATE SEQUENCE measurementport_seq ORDER;
