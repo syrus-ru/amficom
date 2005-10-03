@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkBinding.java,v 1.15 2005/09/09 16:41:30 arseniy Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.16 2005/10/03 16:14:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/09/09 16:41:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/10/03 16:14:27 $
  * @module map
  */
 public final class PhysicalLinkBinding implements Serializable {
@@ -67,7 +67,14 @@ public final class PhysicalLinkBinding implements Serializable {
 	 * @param bindingDimension
 	 *        размерность привязки
 	 */
-	public PhysicalLinkBinding(final IntDimension bindingDimension) {
+	public PhysicalLinkBinding(
+			final IntDimension bindingDimension,
+			final boolean leftToRight,
+			final boolean topToBottom,
+			final boolean horizontalVertical) {
+		this.leftToRight = leftToRight;
+		this.topToBottom = topToBottom;
+		this.horizontalVertical = horizontalVertical;
 		setDimension(bindingDimension);
 	}
 
@@ -348,5 +355,17 @@ public final class PhysicalLinkBinding implements Serializable {
 	 */
 	public boolean isHorizontalVertical() {
 		return this.horizontalVertical;
+	}
+
+	public void setLeftToRight(boolean leftToRight) {
+		this.leftToRight = leftToRight;
+	}
+
+	public void setHorizontalVertical(boolean horizontalVertical) {
+		this.horizontalVertical = horizontalVertical;
+	}
+
+	public void setTopToBottom(boolean topToBottom) {
+		this.topToBottom = topToBottom;
 	}
 }
