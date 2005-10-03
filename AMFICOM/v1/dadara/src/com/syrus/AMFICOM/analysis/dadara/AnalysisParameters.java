@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.18 2005/09/30 12:56:21 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.19 2005/10/03 13:00:21 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,10 @@ import com.syrus.io.SignatureMismatchException;
  * Ќабор параметров анализа с контролем допустимости (согласованности) набора.
  * ≈сли нужно изменить сразу несколько аргументов - используйте методы
  * {@link #getStorageClone()} и {@link #setAllFrom(AnalysisParametersStorage)}
+ * ”станавливаемые параметры вовсе не об€заны иметь точность double,
+ * и могут округл€тьс€ при вызове modifier-методов без каких-либо уведомлений.
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/09/30 12:56:21 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/03 13:00:21 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -214,14 +216,14 @@ implements DataStreamable, Cloneable
 	public void setConnectorTh(double v)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setConnectorTh(v);
+		test.setConnectorTh(round(v, 1e4));
 		setAllFrom(test);
 	}
 
 	public void setEndTh(double v)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setEndTh(v);
+		test.setEndTh(round(v, 1e4));
 		setAllFrom(test);
 	}
 
@@ -297,7 +299,7 @@ implements DataStreamable, Cloneable
 	public void setSensitivity(double v, boolean nearest)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setSensitivity(v, nearest);
+		test.setSensitivity(round(v, 1e4), nearest);
 		setAllFrom(test);
 	}
 
@@ -322,5 +324,9 @@ implements DataStreamable, Cloneable
 		}
 		testStorage.setAllFrom(this.storage);
 		return testStorage;
+	}
+
+	private static double round(double v, double d) {
+		return Math.round(v * d) / d;
 	}
 }
