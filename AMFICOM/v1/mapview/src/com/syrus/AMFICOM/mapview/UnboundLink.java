@@ -1,5 +1,5 @@
 /*-
- * $Id: UnboundLink.java,v 1.29 2005/09/29 11:34:11 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.30 2005/10/03 16:17:48 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * 
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.29 $, $Date: 2005/09/29 11:34:11 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/03 16:17:48 $
  * @module mapview
  */
 public final class UnboundLink extends PhysicalLink {
@@ -59,7 +59,7 @@ public final class UnboundLink extends PhysicalLink {
 			final AbstractNode stNode,
 			final AbstractNode eNode,
 			final PhysicalLinkType type) {
-		super(id, creatorId, version, id.toString(), "", type, stNode.getId(), eNode.getId(), "", "", "", 0, 0, true, true);
+		super(id, creatorId, version, id.toString(), "", type, stNode.getId(), eNode.getId(), "", "", "", 0, 0, true, true, true);
 	}
 
 	/**

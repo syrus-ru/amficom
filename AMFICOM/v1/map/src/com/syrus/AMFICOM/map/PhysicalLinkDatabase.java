@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.37 2005/09/30 08:16:49 krupenn Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.38 2005/10/03 16:16:58 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/09/30 08:16:49 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/03 16:16:58 $
  * @author $Author: krupenn $
  * @module map
  */
@@ -132,6 +132,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				null,
 				0,
 				0,
+				false,
 				false,
 				false) : storableObject;
 
