@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.5 2005/10/02 11:44:42 bob Exp $
+ * $Id: SchemeExportCommand.java,v 1.6 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import org.apache.xmlbeans.XmlOptions;
 
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -103,9 +104,11 @@ public class SchemeExportCommand extends ImportExportCommand {
 			Collection<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlProtoEquipment> xmlEquipmentTypes = new HashSet<XmlProtoEquipment>();
 			for (ProtoEquipment protoEq : protoEquipments) {
-				XmlProtoEquipment xmlEquipmentType = XmlProtoEquipment.Factory.newInstance();
-				protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT, false);
-				xmlEquipmentTypes.add(xmlEquipmentType);
+				if (!protoEq.getType().equals(EquipmentType.BUG_136)) {
+					XmlProtoEquipment xmlEquipmentType = XmlProtoEquipment.Factory.newInstance();
+					protoEq.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT, false);
+					xmlEquipmentTypes.add(xmlEquipmentType);
+				}
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE); 
 			Collection<Equipment> equipments = StorableObjectPool.getStorableObjectsByCondition(condition2, true);

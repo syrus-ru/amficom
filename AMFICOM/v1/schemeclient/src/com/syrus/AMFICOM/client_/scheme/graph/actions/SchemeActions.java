@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.36 2005/09/29 13:20:49 stas Exp $
+ * $Id: SchemeActions.java,v 1.37 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2005/09/29 13:20:49 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -301,8 +301,8 @@ public class SchemeActions {
 			SchemeCableLink cl1 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme());
 			SchemeCableLink cl2 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme());
 
-			cl1.setAbstractLinkTypeExt(cableLink.getAbstractLinkType(), LoginManager.getUserId());
-			cl2.setAbstractLinkTypeExt(cableLink.getAbstractLinkType(), LoginManager.getUserId());
+			cl1.setAbstractLinkTypeExt(cableLink.getAbstractLinkType(), LoginManager.getUserId(), false);
+			cl2.setAbstractLinkTypeExt(cableLink.getAbstractLinkType(), LoginManager.getUserId(), false);
 			
 			cl1.setDescription(cableLink.getDescription());
 			cl1.setOpticalLength(cableLink.getOpticalLength() / 2);
@@ -878,22 +878,26 @@ public class SchemeActions {
 		}
 		
 		IdlDirectionType direction = sp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
-		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
-		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads());	
-		
-		Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
-		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 
-		for (Iterator it1 = ports.iterator(), it2 = threads.iterator(); it1.hasNext() && it2.hasNext();) {
-			SchemePort sport = (SchemePort)it1.next();
-			SchemeCableThread thread = (SchemeCableThread)it2.next();
-			if (is_source) {
-				thread.setSourceSchemePort(sport);
-			} else {
-				thread.setTargetSchemePort(sport);
+		try {
+			List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
+			Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+
+			List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads(false));	
+			Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+			for (Iterator it1 = ports.iterator(), it2 = threads.iterator(); it1.hasNext() && it2.hasNext();) {
+				SchemePort sport = (SchemePort)it1.next();
+				SchemeCableThread thread = (SchemeCableThread)it2.next();
+				if (is_source) {
+					thread.setSourceSchemePort(sport);
+				} else {
+					thread.setTargetSchemePort(sport);
+				}
 			}
+			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
-		GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
 		
 		return true;
 	}
@@ -931,12 +935,16 @@ public class SchemeActions {
 		if (sp != null) {
 			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, null));
 			
-			for (SchemeCableThread thread : sl.getSchemeCableThreads()) {
-				if (is_source) {
-					thread.setSourceSchemePort(null);
-				} else {
-					thread.setTargetSchemePort(null);
+			try {
+				for (SchemeCableThread thread : sl.getSchemeCableThreads(false)) {
+					if (is_source) {
+						thread.setSourceSchemePort(null);
+					} else {
+						thread.setTargetSchemePort(null);
+					}
 				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 	}
@@ -972,9 +980,9 @@ public class SchemeActions {
 		return null;
 	}
 	
-	public static Set<SchemePort> findPorts(SchemeDevice dev, IdlDirectionType direction) {
+	public static Set<SchemePort> findPorts(SchemeDevice dev, IdlDirectionType direction) throws ApplicationException {
 		Set<SchemePort> ports = new HashSet<SchemePort>();
-		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();) {
+		for (Iterator it = dev.getSchemePorts(false).iterator(); it.hasNext();) {
 			SchemePort p = (SchemePort)it.next();
 			if (p.getDirectionType().equals(direction))
 				ports.add(p);
@@ -982,9 +990,9 @@ public class SchemeActions {
 		return ports;
 	}
 
-	public static Set<SchemeCablePort> findCablePorts(SchemeDevice dev, IdlDirectionType direction) {
+	public static Set<SchemeCablePort> findCablePorts(SchemeDevice dev, IdlDirectionType direction) throws ApplicationException {
 		Set<SchemeCablePort> ports = new HashSet<SchemeCablePort>();
-		for (Iterator it = dev.getSchemeCablePorts().iterator(); it.hasNext();) {
+		for (Iterator it = dev.getSchemeCablePorts(false).iterator(); it.hasNext();) {
 			SchemeCablePort p = (SchemeCablePort)it.next();
 			if (p.getDirectionType().equals(direction))
 				ports.add(p);

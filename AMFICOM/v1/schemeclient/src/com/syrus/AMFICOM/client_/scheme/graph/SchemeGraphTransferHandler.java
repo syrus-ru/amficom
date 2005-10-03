@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphTransferHandler.java,v 1.1 2005/09/06 15:11:22 stas Exp $
+ * $Id: SchemeGraphTransferHandler.java,v 1.2 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.jgraph.plaf.basic.TransferHandler;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -135,14 +136,18 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 	}
 
 	private void assingToNewScheme(Object[] cells, Scheme scheme) {
-		for (SchemeElement schemeElement : SchemeActions.getSchemeElements(cells)) {
-			schemeElement.setParentScheme(scheme);
-		}
-		for (SchemeCableLink schemeCableLink : SchemeActions.getSchemeCableLinks(cells)) {
-			schemeCableLink.setParentScheme(scheme);
-		}
-		for (SchemeLink schemeLink : SchemeActions.getSchemeLinks(cells)) {
-			schemeLink.setParentScheme(scheme);
+		try {
+			for (SchemeElement schemeElement : SchemeActions.getSchemeElements(cells)) {
+				schemeElement.setParentScheme(scheme, false);
+			}
+			for (SchemeCableLink schemeCableLink : SchemeActions.getSchemeCableLinks(cells)) {
+				schemeCableLink.setParentScheme(scheme, false);
+			}
+			for (SchemeLink schemeLink : SchemeActions.getSchemeLinks(cells)) {
+				schemeLink.setParentScheme(scheme, false);
+			}
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 	}
 

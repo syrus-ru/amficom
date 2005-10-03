@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.12 2005/09/06 12:45:57 stas Exp $
+ * $Id: ElementsPanel.java,v 1.13 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Set;
 
 import com.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -121,7 +122,13 @@ public class ElementsPanel extends UgoPanel {
 				this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, proto.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PORT)) {
-				SchemePort port = (SchemePort)ev.getSelectedObject();
+				// TODO multiple selection
+				SchemePort port;
+				if (ev.getSelectedObject() instanceof Set) {
+					port = (SchemePort)((Set)ev.getSelectedObject()).iterator().next();
+				} else {
+					port = (SchemePort)ev.getSelectedObject();
+				}
 				this.graph.setSelectionCell(SchemeActions.findPortCellById(this.graph, port.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)) {

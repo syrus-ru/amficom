@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.13 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.14 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -94,22 +94,26 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.link != null) {
-			List<SchemeCableThread> scts = ClientUtils.getSortedCableThreads(this.link);
-		// TODO разобраться с числом модулей
-			int nModules = 8;
-			if (scts.size() == 6 || scts.size() == 12 || scts.size() == 18 || scts.size() == 24 || scts.size() == 30) {
-				nModules = 6;
-			}
-			
-			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
-					scts.size() / (double) nModules + 0.499)));
-			this.radius = 20;
-			if (tmp > this.radius)
-				this.radius = tmp;
+			try {
+				List<SchemeCableThread> scts = ClientUtils.getSortedCableThreads(this.link);
+// TODO разобраться с числом модулей
+				int nModules = 8;
+				if (scts.size() == 6 || scts.size() == 12 || scts.size() == 18 || scts.size() == 24 || scts.size() == 30) {
+					nModules = 6;
+				}
+				
+				int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
+						scts.size() / (double) nModules + 0.499)));
+				this.radius = 20;
+				if (tmp > this.radius)
+					this.radius = tmp;
 
-			this.panel.getGraph().removeAll();
-			createModules(nModules);
-			createFibers(nModules, scts);
+				this.panel.getGraph().removeAll();
+				createModules(nModules);
+				createFibers(nModules, scts);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
 		}
 	}
 	

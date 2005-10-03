@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePathPropertiesManager;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
@@ -42,11 +42,11 @@ public class PathNewCommand extends AbstractCommand {
 		
 		try {
 			SchemeMonitoringSolution solution = null;
-			Set<SchemeMonitoringSolution> solutions = scheme.getSchemeMonitoringSolutions();
+			Set<SchemeMonitoringSolution> solutions = scheme.getSchemeMonitoringSolutions(false);
 			if(solutions.isEmpty()) {
 				solution = SchemeObjectsFactory.createSchemeMonitoringSolution(scheme);
 			} else {
-				solution = scheme.getCurrentSchemeMonitoringSolution();
+				solution = scheme.getCurrentSchemeMonitoringSolution(false);
 			}
 			SchemePath path = SchemeObjectsFactory.createSchemePath(solution);
 //		CharacteristicType type = MiscUtil.getCharacteristicType(
@@ -61,7 +61,7 @@ public class PathNewCommand extends AbstractCommand {
 			aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, path,
 					SchemePathPropertiesManager.getInstance(aContext),
 					ObjectSelectedEvent.SCHEME_PATH));
-		} catch (CreateObjectException e) {
+		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
 	}

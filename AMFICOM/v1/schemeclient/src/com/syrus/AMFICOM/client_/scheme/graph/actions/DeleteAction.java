@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.25 2005/10/01 09:03:29 stas Exp $
+ * $Id: DeleteAction.java,v 1.26 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/10/01 09:03:29 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -332,8 +332,12 @@ public class DeleteAction extends AbstractAction {
 			objectsToDelete.add(link.getAbstractLink().getId());
 		}
 		objectsToDelete.add(link.getId());
-		for (SchemeCableThread thread : link.getSchemeCableThreads()) {
-			objectsToDelete.add(thread.getId());
+		try {
+			for (SchemeCableThread thread : link.getSchemeCableThreads(false)) {
+				objectsToDelete.add(thread.getId());
+			}
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 	}
 	

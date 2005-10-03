@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.27 2005/09/28 11:37:50 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.28 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2005/09/28 11:37:50 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -505,7 +505,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						
 							try {
 								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("cable" + System.currentTimeMillis(), scheme);
-								link.setAbstractLinkTypeExt(type, LoginManager.getUserId());
+								link.setAbstractLinkTypeExt(type, LoginManager.getUserId(), false);
 								DefaultCableLink cell = SchemeActions.createCableLink(graph,
 										this.firstPort, this.port, graph.fromScreen(new Point(this.start)), 
 										graph.fromScreen(new Point(this.current)), link.getId());
@@ -545,7 +545,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							if (panel instanceof SchemePanel) {
 								SchemeResource res = ((SchemePanel)panel).getSchemeResource();
 								if (res.getCellContainerType() == SchemeResource.SCHEME)
-									link.setParentScheme(res.getScheme());
+									link.setParentScheme(res.getScheme(), false);
 								else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT)
 									link.setParentSchemeElement(res.getSchemeElement(), false);
 								else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT)
@@ -567,7 +567,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							try {
 								SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
 								if (res.getCellContainerType() == SchemeResource.SCHEME) {
-									link.setParentScheme(res.getScheme());
+									link.setParentScheme(res.getScheme(), false);
 								} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 									link.setParentSchemeElement(res.getSchemeElement(), false);
 								} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.26 2005/10/01 09:03:29 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.27 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -194,7 +194,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 		}
 	}
 	
-	protected Scheme loadSchemeXML(String fileName) throws CreateObjectException, XmlException, IOException {
+	protected Scheme loadSchemeXML(String fileName) throws XmlException, IOException, ApplicationException {
 		Scheme scheme = null;
 		File xmlfile = new File(fileName);
 		
@@ -219,19 +219,19 @@ public class SchemeImportCommand extends ImportExportCommand {
 //			scheme.setName(scheme.getName()	+ "(imported " + " from \'" + xmlfile.getName() + "\')");
 			
 			List<String> errorMessages = new LinkedList<String>();
-			for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
-				if (schemeCableLink.getSchemeCableThreads().size() == 0) {
+			for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
+				if (schemeCableLink.getSchemeCableThreads(false).size() == 0) {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_threads") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
 				SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
 				if (sourcePort != null) {
-					this.portThreadsCount.put(sourcePort, schemeCableLink.getSchemeCableThreads());
+					this.portThreadsCount.put(sourcePort, schemeCableLink.getSchemeCableThreads(false));
 				} else {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_source") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
 				SchemeCablePort targetPort = schemeCableLink.getTargetAbstractSchemePort();
 				if (targetPort != null) {
-					this.portThreadsCount.put(targetPort, schemeCableLink.getSchemeCableThreads());
+					this.portThreadsCount.put(targetPort, schemeCableLink.getSchemeCableThreads(false));
 				} else {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_target") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
@@ -668,11 +668,11 @@ public class SchemeImportCommand extends ImportExportCommand {
 		
 		// determine bounds
 		double xmin = 180, ymin = 90, xmax = -180, ymax = -90; 
-		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
+		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
 			Equipment equipment = schemeElement.getEquipment();
 			if (equipment != null) {
-				double x0 = equipment.getLatitude();
-				double y0 = equipment.getLongitude();
+				double x0 = equipment.getLongitude();
+				double y0 = equipment.getLatitude();
 				xmin = Math.min(xmin, x0);
 				ymin = Math.min(ymin, y0);
 				xmax = Math.max(xmax, x0);
@@ -685,7 +685,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 		
 		Set<Identifier> placedObjects = ImportUCMConverter.getPlacedObjects(schemeGraph);
 		
-		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
+		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
 			if (!ImportUCMConverter.contains(placedObjects, schemeElement)) {
 				Equipment equipment = schemeElement.getEquipment();
 				Point p;
@@ -705,7 +705,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 			}
 		}
 		
-		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
+		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
 			Point p = null;
 			SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
 			SchemeCablePort targetPort = schemeCableLink.getSourceAbstractSchemePort();

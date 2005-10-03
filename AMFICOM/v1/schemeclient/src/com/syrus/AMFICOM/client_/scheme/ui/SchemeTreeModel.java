@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.44 2005/09/27 06:50:45 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.45 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.44 $, $Date: 2005/09/27 06:50:45 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -210,70 +210,74 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 			}
 			else if (node.getObject() instanceof Scheme) {
 				Scheme s = (Scheme) node.getObject();
-				Set<SchemeElement> innerSEs = s.getSchemeElements(); 
-				if (innerSEs.size() != 0) {
-					boolean has_schemes = false;
-					boolean has_elements = false;
-					for (SchemeElement el : innerSEs) {
-						if (el.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
-							has_elements = true;
-							break;
+				try {
+					Set<SchemeElement> innerSEs = s.getSchemeElements(false); 
+					if (innerSEs.size() != 0) {
+						boolean has_schemes = false;
+						boolean has_elements = false;
+						for (SchemeElement el : innerSEs) {
+							if (el.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
+								has_elements = true;
+								break;
+							}
 						}
-					}
-					for (SchemeElement el : innerSEs) {
-						if (el.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-							has_schemes = true;
-							break;
+						for (SchemeElement el : innerSEs) {
+							if (el.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
+								has_schemes = true;
+								break;
+							}
 						}
-					}
 
-					if (!contents.contains(SchemeResourceKeys.SCHEME) && has_schemes) {
-						LinkedIdsCondition condition1 = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
-						// FIXME add TypicalCondition
-						FiltrableIconedNode child = new FiltrableIconedNode();
-						child.setChildrenFactory(this);
-						child.setObject(SchemeResourceKeys.SCHEME);
-						child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME));
-						child.setDefaultCondition(condition1);
-						node.addChild(child);
+						if (!contents.contains(SchemeResourceKeys.SCHEME) && has_schemes) {
+							LinkedIdsCondition condition1 = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
+							// FIXME add TypicalCondition
+							FiltrableIconedNode child = new FiltrableIconedNode();
+							child.setChildrenFactory(this);
+							child.setObject(SchemeResourceKeys.SCHEME);
+							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME));
+							child.setDefaultCondition(condition1);
+							node.addChild(child);
+						}
+						if (!contents.contains(SchemeResourceKeys.SCHEME_ELEMENT) && has_elements) {
+							LinkedIdsCondition condition1 = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
+							// FIXME add TypicalCondition
+							FiltrableIconedNode child = new FiltrableIconedNode();
+							child.setChildrenFactory(this);
+							child.setObject(SchemeResourceKeys.SCHEME_ELEMENT);
+							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_ELEMENT));
+							child.setDefaultCondition(condition1);
+							node.addChild(child);
+						}
+						if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !s.getSchemeLinks(false).isEmpty()) {
+							LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMELINK_CODE);
+							FiltrableIconedNode child = new FiltrableIconedNode();
+							child.setChildrenFactory(this);
+							child.setObject(SchemeResourceKeys.SCHEME_LINK);
+							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK));
+							child.setDefaultCondition(condition);
+							node.addChild(child);
+						}
+						if (!contents.contains(SchemeResourceKeys.SCHEME_CABLELINK) && !s.getSchemeCableLinks(false).isEmpty()) {
+							LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMECABLELINK_CODE);
+							FiltrableIconedNode child = new FiltrableIconedNode();
+							child.setChildrenFactory(this);
+							child.setObject(SchemeResourceKeys.SCHEME_CABLELINK);
+							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK));
+							child.setDefaultCondition(condition);
+							node.addChild(child);
+						}
+						if (!contents.contains(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION) && !s.getSchemeMonitoringSolutions(false).isEmpty()) {
+							LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
+							FiltrableIconedNode child = new FiltrableIconedNode();
+							child.setChildrenFactory(this);
+							child.setObject(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION);
+							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION));
+							child.setDefaultCondition(condition);
+							node.addChild(child);
+						}
 					}
-					if (!contents.contains(SchemeResourceKeys.SCHEME_ELEMENT) && has_elements) {
-						LinkedIdsCondition condition1 = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
-						// FIXME add TypicalCondition
-						FiltrableIconedNode child = new FiltrableIconedNode();
-						child.setChildrenFactory(this);
-						child.setObject(SchemeResourceKeys.SCHEME_ELEMENT);
-						child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_ELEMENT));
-						child.setDefaultCondition(condition1);
-						node.addChild(child);
-					}
-					if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !s.getSchemeLinks().isEmpty()) {
-						LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMELINK_CODE);
-						FiltrableIconedNode child = new FiltrableIconedNode();
-						child.setChildrenFactory(this);
-						child.setObject(SchemeResourceKeys.SCHEME_LINK);
-						child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK));
-						child.setDefaultCondition(condition);
-						node.addChild(child);
-					}
-					if (!contents.contains(SchemeResourceKeys.SCHEME_CABLELINK) && !s.getSchemeCableLinks().isEmpty()) {
-						LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMECABLELINK_CODE);
-						FiltrableIconedNode child = new FiltrableIconedNode();
-						child.setChildrenFactory(this);
-						child.setObject(SchemeResourceKeys.SCHEME_CABLELINK);
-						child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK));
-						child.setDefaultCondition(condition);
-						node.addChild(child);
-					}
-					if (!contents.contains(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION) && !s.getSchemeMonitoringSolutions().isEmpty()) {
-						LinkedIdsCondition condition = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
-						FiltrableIconedNode child = new FiltrableIconedNode();
-						child.setChildrenFactory(this);
-						child.setObject(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION);
-						child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION));
-						child.setDefaultCondition(condition);
-						node.addChild(child);
-					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 			}
 			else if (node.getObject() instanceof SchemeElement) {

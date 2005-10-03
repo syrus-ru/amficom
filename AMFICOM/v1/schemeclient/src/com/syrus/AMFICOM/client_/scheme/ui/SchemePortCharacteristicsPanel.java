@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortCharacteristicsPanel.java,v 1.11 2005/08/09 06:52:52 stas Exp $
+ * $Id: SchemePortCharacteristicsPanel.java,v 1.12 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.ui;
+
+import java.util.Set;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.Port;
@@ -18,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/09 06:52:52 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -39,9 +41,12 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 	}
 
 	public void setObject(Object or) {
-		this.schemePort = (SchemePort)or;
+		if (or instanceof Set) {
+			this.schemePort = null;
+		} else {
+			this.schemePort = (SchemePort)or;
+		}
 		super.clear();
-
 		if (this.schemePort != null) {
 			try {
 				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,

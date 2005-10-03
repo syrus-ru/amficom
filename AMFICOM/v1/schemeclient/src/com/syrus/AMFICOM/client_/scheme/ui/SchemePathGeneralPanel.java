@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.6 2005/09/26 14:13:46 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.7 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -285,7 +285,11 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 				this.cmbSolutionCombo.removeAllItems();
 				final SchemeMonitoringSolution solution = this.schemePath.getParentSchemeMonitoringSolution();
 				final Scheme scheme = solution.getParentScheme();
-				this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions());
+				try {
+					this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions(false));
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
 				this.cmbSolutionCombo.setSelectedItem(solution);
 			}
 
@@ -333,10 +337,10 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		if (this.schemePath != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePath.setName(this.tfNameText.getText());
 			this.schemePath.setDescription(this.taDescriptionArea.getText());
-			this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution) this.cmbSolutionCombo.getSelectedItem());
 			
 			// set name for associated MonitoredElement if any
 			try {
+				this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution) this.cmbSolutionCombo.getSelectedItem(), false);
 				SortedSet<PathElement> pathMemebers = this.schemePath.getPathMembers();
 				if (!pathMemebers.isEmpty()) {
 					AbstractSchemePort startPort = pathMemebers.first().getEndAbstractSchemePort();

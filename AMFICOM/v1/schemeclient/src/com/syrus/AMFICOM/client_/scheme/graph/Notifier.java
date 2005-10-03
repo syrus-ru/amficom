@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.14 2005/09/13 10:19:05 bass Exp $
+ * $Id: Notifier.java,v 1.15 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,11 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 
+import com.jgraph.graph.DefaultPort;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -44,8 +47,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -197,7 +200,22 @@ public class Notifier {
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObject, manager, selectedType));
 			}
 		} else if (cells.length > 1) {
-			// TODO multiple selection
+			// only Ports
+			Class selectedClass = null;
+			Set<SchemePort> selectedPorts = new HashSet<SchemePort>();
+			for (Object cell : cells) {
+				if (cell instanceof PortCell) {
+					selectedClass = SchemePort.class;
+					selectedPorts.add(((PortCell)cell).getSchemePort());
+				} else {
+					selectedClass = null;
+					break;
+				}
+			}
+			if (SchemePort.class.equals(selectedClass)) {
+				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedPorts, 
+						SchemePortPropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME_PORT));
+			}
 		}
 		} catch (Exception e) {
 			Log.errorException(e);

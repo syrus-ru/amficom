@@ -1,5 +1,5 @@
 /*
- * $Id: PortEdge.java,v 1.7 2005/08/19 15:41:35 stas Exp $
+ * $Id: PortEdge.java,v 1.8 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.jgraph.graph.Port;
 /**
  * used just for identification of link between PortCell and DeviceCell
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -38,10 +38,10 @@ public class PortEdge extends DefaultEdge {
 			ConnectionSet cs) {
 		PortEdge cell = new PortEdge(userObject); 
 		
-		UIDefaults defaults = UIManager.getDefaults();
-		Font f = defaults.getFont("Label.font");
-		if (f == null)
-			f = new Font("Dialog", Font.PLAIN, 12);
+//		UIDefaults defaults = UIManager.getDefaults();
+//		Font f = defaults.getFont("Label.font");
+//		if (f == null)
+		Font f = new Font("Dialog", Font.PLAIN, 12);
 		
 		Map map = new HashMap();
 		List list = new ArrayList();

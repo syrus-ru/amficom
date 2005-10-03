@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.25 2005/09/26 14:13:46 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.26 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Collections;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -72,12 +73,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/09/26 14:13:46 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
 public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
+	protected Set<SchemePort> schemePorts;
 	protected SchemePort schemePort;
 	protected SchemeElement parent;
 
@@ -516,7 +518,10 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void setObject(final Object or) {
-		this.schemePort = (SchemePort) or;
+		boolean multiplePorts = (or instanceof Set);
+		this.schemePorts = multiplePorts ? (Set<SchemePort>)or : Collections.singleton((SchemePort)or);
+		this.schemePort = multiplePorts ? ((Set<SchemePort>)or).iterator().next() : (SchemePort)or;
+		
 		MeasurementPort mPort = null;
 		Port port = null;
 		this.cmbTypeCombo.removeAllItems();
@@ -527,26 +532,34 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 
 		if (this.schemePort != null) {
 			try {
-				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
-				port = this.schemePort.getPort();
-				mPort = this.schemePort.getMeasurementPort();
-				KIS kis = null;
-				if (this.parent != null) {
-					kis = this.parent.getKis();
-				}
-
-				if (kis != null) {
-					final Set<MeasurementPort> mPorts = kis.getMeasurementPorts(false);
-					if (!mPorts.isEmpty()) {
-						this.rbExistMPBut.setEnabled(true);
-						this.rbExistMPBut.doClick();
-						this.cmbExistMPCombo.addElements(mPorts);
-
-						final MeasurementPort mp = this.schemePort.getMeasurementPort();
-						if (mp != null) {
-							this.cmbExistMPCombo.setSelectedItem(mp);
+				if (!multiplePorts) {
+					this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
+					port = this.schemePort.getPort();
+					mPort = this.schemePort.getMeasurementPort();
+					KIS kis = null;
+					if (this.parent != null) {
+						kis = this.parent.getKis();
+					}
+					
+					if (kis != null) {
+						final Set<MeasurementPort> mPorts = kis.getMeasurementPorts(false);
+						if (!mPorts.isEmpty()) {
+							this.rbExistMPBut.setEnabled(true);
+							this.rbExistMPBut.doClick();
+							this.cmbExistMPCombo.addElements(mPorts);
+							
+							final MeasurementPort mp = this.schemePort.getMeasurementPort();
+							if (mp != null) {
+								this.cmbExistMPCombo.setSelectedItem(mp);
+							}
 						}
 					}
+					
+					this.tfNameText.setText(this.schemePort.getName());
+					this.taDescrArea.setText(this.schemePort.getDescription());
+				} else {
+					this.tfNameText.setText("...");
+					this.taDescrArea.setText("");
 				}
 			} catch (IllegalStateException e1) {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
@@ -570,9 +583,6 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-
-			this.tfNameText.setText(this.schemePort.getName());
-			this.taDescrArea.setText(this.schemePort.getDescription());
 			this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
 		}
 		if (port != null) {
@@ -602,7 +612,12 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	@Override
 	public void commitChanges() {
 		super.commitChanges();
-		if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
+		if (this.schemePorts.size() > 1) {
+			PortType ptype = (PortType) this.cmbTypeCombo.getSelectedItem();
+			for (SchemePort schemePort1 : this.schemePorts) {
+				schemePort1.setPortType(ptype);
+			}
+		} else if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePort.setName(this.tfNameText.getText());
 			this.schemePort.setDescription(this.taDescrArea.getText());
 			this.schemePort.setPortType((PortType) this.cmbTypeCombo.getSelectedItem());

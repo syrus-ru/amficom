@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.22 2005/10/01 09:03:29 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.23 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/10/01 09:03:29 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -55,6 +56,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 	
 	public SchemeTreeUI(Item rootItem, ApplicationContext aContext) {
 		super(rootItem);
+		this.treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		new SchemeTreeSelectionListener(this, aContext);
 		setContext(aContext);
 	}
@@ -73,8 +75,9 @@ public class SchemeTreeUI extends IconedTreeUI {
 			deleteButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			deleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					TreePath selectedPath = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPath();
-					if (selectedPath != null) {
+					TreePath[] selectedPaths = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPaths();
+					TreePath selectedPath1 = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPath();
+					for (TreePath selectedPath : selectedPaths) {
 						Item item = (Item)selectedPath.getLastPathComponent();
 						Object object = item.getObject();
 						if (object instanceof Scheme) {
@@ -82,20 +85,17 @@ public class SchemeTreeUI extends IconedTreeUI {
 							try {
 								if (scheme.getParentSchemeElement() == null) {
 									// отцепляем линки
-									for (SchemeCableLink link : scheme.getSchemeCableLinks()) {
+									for (SchemeCableLink link : scheme.getSchemeCableLinks(false)) {
 										link.setSourceAbstractSchemePort(null);
 										link.setTargetAbstractSchemePort(null);
 									}
-									for (SchemeLink link : scheme.getSchemeLinks()) {
+									for (SchemeLink link : scheme.getSchemeLinks(false)) {
 										link.setSourceAbstractSchemePort(null);
 										link.setTargetAbstractSchemePort(null);
 									}
 									
 									Set<Identifiable> ids = scheme.getReverseDependencies(false);
 									StorableObjectPool.delete(ids);
-									TreePath parentPath = selectedPath.getParentPath();
-									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-									updateRecursively((Item)parentPath.getLastPathComponent());
 									
 									Identifier userId = LoginManager.getUserId();
 									for (Identifiable id : ids) {
@@ -112,9 +112,6 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Set<Identifiable> ids = proto.getReverseDependencies(false);
 								StorableObjectPool.delete(ids);
 								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
-								TreePath parentPath = selectedPath.getParentPath();
-								SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-								updateRecursively((Item)parentPath.getLastPathComponent());
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}
@@ -122,13 +119,10 @@ public class SchemeTreeUI extends IconedTreeUI {
 							SchemeProtoGroup group = (SchemeProtoGroup)object;
 							try {
 								if (group.getSchemeProtoElements(false).isEmpty() && 
-									group.getSchemeProtoGroups().isEmpty()) {
+									group.getSchemeProtoGroups(false).isEmpty()) {
 									Set<Identifiable> ids = group.getReverseDependencies(false);
 									StorableObjectPool.delete(ids);
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
-									TreePath parentPath = selectedPath.getParentPath();
-									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-									updateRecursively((Item)parentPath.getLastPathComponent());
 								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
@@ -145,13 +139,6 @@ public class SchemeTreeUI extends IconedTreeUI {
 //									if (schemeElements.isEmpty()) {
 										StorableObjectPool.delete(protoEq.getId());
 										StorableObjectPool.flush(protoEq, LoginManager.getUserId(), false);
-//										
-//										TreePath parentPath = selectedPath.getParentPath();
-//										SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-//										updateRecursively((Item)parentPath.getLastPathComponent());
-//									} else {
-//										Log.debugMessage("Can not delete EquipmetType as there are SchemeElements with such type", Level.WARNING);
-//									}
 								} else {
 									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 								}
@@ -166,10 +153,6 @@ public class SchemeTreeUI extends IconedTreeUI {
 								if (links.isEmpty()) {
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
-									
-									TreePath parentPath = selectedPath.getParentPath();
-									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-									updateRecursively((Item)parentPath.getLastPathComponent());
 								} else {
 									Log.debugMessage("Can not delete LinkType as there are SchemeLinks with such type", Level.WARNING);
 								}
@@ -190,10 +173,6 @@ public class SchemeTreeUI extends IconedTreeUI {
 									ids.add(type.getId());
 									StorableObjectPool.delete(ids);
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
-									
-									TreePath parentPath = selectedPath.getParentPath();
-									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-									updateRecursively((Item)parentPath.getLastPathComponent());
 								} else {
 									Log.debugMessage("Can not delete CableLinkType as there are SchemeCableLinks with such type", Level.WARNING);
 								}
@@ -209,17 +188,16 @@ public class SchemeTreeUI extends IconedTreeUI {
 //								if (ports.isEmpty()) {
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
-//									
-//									TreePath parentPath = selectedPath.getParentPath();
-//									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-//									updateRecursively((Item)parentPath.getLastPathComponent());
-//								} else {
-//									Log.debugMessage("Can not delete PortType as there are SchemePorts with such type", Level.WARNING);
-//								}
+							
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}
 						}
+					}
+					if (selectedPath1 != null) {
+						TreePath parentPath = selectedPath1.getParentPath();
+						SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
+						updateRecursively((Item)parentPath.getLastPathComponent());
 					}
 				}
 			});

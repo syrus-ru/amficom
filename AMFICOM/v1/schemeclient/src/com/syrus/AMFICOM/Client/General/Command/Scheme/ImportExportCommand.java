@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.9 2005/10/02 11:42:01 bob Exp $
+ * $Id: ImportExportCommand.java,v 1.10 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.jgraph.graph.DefaultGraphCell;
-
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -86,7 +85,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String ID_PREFIX = "id";
 	protected static final String PROTO_ELEMENTS_FILENAME = "protos.xml";
 	protected static final String CONFIGURATION_FILENAME = "config.xml";
-	protected static final String EXPORT_DIRECTORY = "export";
+	protected static final String EXPORT_DIRECTORY = "/export";
 	protected static final String IMAGE_DIRECTORY = "image";
 	
 	protected Identifier userId;
@@ -432,7 +431,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 			Log.errorMessage("Invalid XML: ");
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				System.out.println(xml);
+				Log.debugMessage(xml.toString(), Level.WARNING);
 				Log.errorMessage(error.getMessage());
 				Log.errorMessage(String.valueOf(error.getObjectLocation()));
 				Log.errorMessage("Column " + error.getColumn());

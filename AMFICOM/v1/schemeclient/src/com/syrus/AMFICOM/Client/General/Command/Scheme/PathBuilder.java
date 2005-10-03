@@ -453,13 +453,13 @@ public class PathBuilder {
 		}
 	}
 
-	private static SchemeCablePort getCablePortByThread(Set cableports, SchemeCableThread thread) {
+	private static SchemeCablePort getCablePortByThread(Set cableports, SchemeCableThread thread) throws ApplicationException {
 		for (Iterator it = cableports.iterator(); it.hasNext(); )
 		{
 			SchemeCablePort port = (SchemeCablePort)it.next();
 			if (port.getAbstractSchemeLink() != null)
 			{
-				if (port.getAbstractSchemeLink().getSchemeCableThreads().contains(thread))
+				if (port.getAbstractSchemeLink().getSchemeCableThreads(false).contains(thread))
 					return port;
 			}
 		}

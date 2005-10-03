@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.14 2005/10/01 09:03:29 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.15 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -53,10 +54,11 @@ import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemePortWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/10/01 09:03:29 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -153,43 +155,45 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	public void setObject(Object or) {
 		this.schemeDevice = (SchemeDevice)or;
 		this.combo.removeAllItems();
-//	XXX check use of numbered comparator
 		if (this.schemeDevice != null) {
-			List<SchemePort> sPorts = new ArrayList<SchemePort>(this.schemeDevice.getSchemePorts());
-			Comparator<SchemePort> sorter1 = new NumberedComparator<SchemePort>(
-					SchemePortWrapper.getInstance(),
-					StorableObjectWrapper.COLUMN_NAME);
-			Collections.sort(sPorts, sorter1);
-			Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
-			this.combo.addItem(NULL_PORT);
-			for (int i = 0; i < sPorts.size(); i++) {
-				SchemePort port = sPorts.get(i);
-				this.combo.addItem(port);
-				SchemeCableThread thread = port.getSchemeCableThread();
-				if (thread != null)
-					schemeCableLinks.add(thread.getParentSchemeCableLink());
-			}
-
-			List<SchemeCableThread> scThreads = new ArrayList<SchemeCableThread>();
-			for (SchemeCableLink scl : schemeCableLinks) {
-				scThreads.addAll(scl.getSchemeCableThreads());
-			}
-			NumberedComparator<SchemeCableThread> sorter2 = new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, true);
-			Collections.sort(scThreads, sorter2);
-			this.size = scThreads.size();
-			this.data = new Object[this.size][2];
-			for (int i = 0; i < scThreads.size(); i++) {
-				SchemeCableThread thread = scThreads.get(i);
-				this.data[i][0] = thread;
-				SchemePort port = thread.getSchemePort(this.schemeDevice);
-				if (port != null) {
-					this.data[i][1] = port;
-					if (port.equals(thread.getSourceSchemePort()))
-						this.portDirection = IdlDirectionType.__OUT;
-					else
-						this.portDirection = IdlDirectionType.__IN;
-				} else
-					this.data[i][1] = NULL_PORT;
+			try {
+				List<SchemePort> sPorts = new ArrayList<SchemePort>(this.schemeDevice.getSchemePorts(false));
+				Comparator<SchemePort> sorter1 = new NumberedComparator<SchemePort>(
+						SchemePortWrapper.getInstance(),
+						StorableObjectWrapper.COLUMN_NAME);
+				Collections.sort(sPorts, sorter1);
+				Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+				this.combo.addItem(NULL_PORT);
+				for (int i = 0; i < sPorts.size(); i++) {
+					SchemePort port = sPorts.get(i);
+					this.combo.addItem(port);
+					SchemeCableThread thread = port.getSchemeCableThread();
+					if (thread != null)
+						schemeCableLinks.add(thread.getParentSchemeCableLink());
+				}
+				List<SchemeCableThread> scThreads = new ArrayList<SchemeCableThread>();
+				for (SchemeCableLink scl : schemeCableLinks) {
+					scThreads.addAll(scl.getSchemeCableThreads(false));
+				}
+				NumberedComparator<SchemeCableThread> sorter2 = new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, true);
+				Collections.sort(scThreads, sorter2);
+				this.size = scThreads.size();
+				this.data = new Object[this.size][2];
+				for (int i = 0; i < scThreads.size(); i++) {
+					SchemeCableThread thread = scThreads.get(i);
+					this.data[i][0] = thread;
+					SchemePort port = thread.getSchemePort(this.schemeDevice);
+					if (port != null) {
+						this.data[i][1] = port;
+						if (port.equals(thread.getSourceSchemePort()))
+							this.portDirection = IdlDirectionType.__OUT;
+						else
+							this.portDirection = IdlDirectionType.__IN;
+					} else
+						this.data[i][1] = NULL_PORT;
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		} else {
 			this.size = 0;

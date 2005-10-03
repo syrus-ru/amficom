@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.9 2005/09/20 19:47:52 stas Exp $
+ * $Id: BlockPortCell.java,v 1.10 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/20 19:47:52 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/03 07:44:39 $
  * @module schemeclient
  */
 
@@ -46,10 +46,10 @@ public class BlockPortCell  extends DefaultGraphCell implements IdentifiableCell
 		cell.setAbstractSchemePortId(port.getId());
 		cell.isCablePort = port instanceof SchemeCablePort;
 		
-		UIDefaults defaults = UIManager.getDefaults();
-		Font f = defaults.getFont("Label.font"); //$NON-NLS-1$
-		if (f == null)
-			f = new Font("Dialog", Font.PLAIN, 12); //$NON-NLS-1$
+//		UIDefaults defaults = UIManager.getDefaults();
+//		Font f = defaults.getFont("Label.font"); //$NON-NLS-1$
+//		if (f == null)
+		Font f = new Font("Dialog", Font.PLAIN, 12); //$NON-NLS-1$
 		
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);

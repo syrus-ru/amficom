@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.5 2005/09/28 07:53:10 stas Exp $
+ * $Id: ClientUtils.java,v 1.6 2005/10/03 07:44:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -53,8 +54,8 @@ public class ClientUtils {
 		return name.substring(i + 1);
 	}
 	
-	public static List<SchemeCableThread> getSortedCableThreads(SchemeCableLink link) {
-		Set<SchemeCableThread> schemeCableThreads = link.getSchemeCableThreads();
+	public static List<SchemeCableThread> getSortedCableThreads(SchemeCableLink link) throws ApplicationException {
+		Set<SchemeCableThread> schemeCableThreads = link.getSchemeCableThreads(false);
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(schemeCableThreads);
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_NAME));
