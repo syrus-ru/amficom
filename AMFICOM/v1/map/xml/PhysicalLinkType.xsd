@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: PhysicalLinkType.xsd,v 1.13 2005/09/14 19:49:07 bass Exp $
+			$Id: PhysicalLinkType.xsd,v 1.14 2005/10/03 16:12:44 krupenn Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -47,8 +47,8 @@
 				<xsd:sequence>
 					<xsd:element name = "name" type = "xsd:string"/>
 					<xsd:element name = "sort" type = "map:XmlPhysicalLinkTypeSort"/>
-					<xsd:element name = "dimensionX" type = "xsd:integer" minOccurs = "0"/>
-					<xsd:element name = "dimensionY" type = "xsd:integer" minOccurs = "0"/>
+					<xsd:element name = "dimensionX" type = "xsd:int" minOccurs = "0"/>
+					<xsd:element name = "dimensionY" type = "xsd:int" minOccurs = "0"/>
 					<xsd:element ref = "general:characteristics" minOccurs = "0"/>
 				</xsd:sequence>
 			</xsd:extension>
