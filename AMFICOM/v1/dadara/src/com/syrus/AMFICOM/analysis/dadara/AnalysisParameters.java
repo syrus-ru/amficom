@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.19 2005/10/03 13:00:21 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.20 2005/10/03 13:12:19 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.SignatureMismatchException;
  * Устанавливаемые параметры вовсе не обязаны иметь точность double,
  * и могут округляться при вызове modifier-методов без каких-либо уведомлений.
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/10/03 13:00:21 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/03 13:12:19 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -290,16 +290,16 @@ implements DataStreamable, Cloneable
 
 	/**
 	 * @param v новое значение параметра
-	 * @param nearest true, если желательно ограничить новое значение
+	 * @param useLimit true, если желательно ограничить новое значение
 	 * допустимым диапазоном
 	 * @throws InvalidAnalysisParametersException если новое значение
 	 * параметра выходит за допустимые диапазоны, а ограничение допустимым
 	 * диапазоном либо не было запрошено, либо не удалось
 	 */
-	public void setSensitivity(double v, boolean nearest)
+	public void setSensitivity(double v, boolean useLimit)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setSensitivity(round(v, 1e4), nearest);
+		test.setSensitivity(round(v, 1e4), useLimit);
 		setAllFrom(test);
 	}
 
