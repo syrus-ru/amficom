@@ -1,5 +1,5 @@
 /*-
- * $Id: Equipment.java,v 1.4 2005/09/30 08:33:18 stas Exp $
+ * $Id: Equipment.java,v 1.5 2005/10/03 13:43:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,11 +64,11 @@ public class Equipment {
 		eqtid.setStringValue(this.typeId);
 		xmlEq.setProtoEquipmentId(eqtid);
 		
-		double[] d = Site.UTMtoGeo(this.latitude, this.longitude);
+		double[] d = Site.UTMtoGeo(this.longitude, this.latitude);
 		
 		xmlEq.setName(this.name);
-		xmlEq.setLatitude((float)d[0]);
-		xmlEq.setLongitude((float)d[1]);
+		xmlEq.setLongitude((float)d[0]);
+		xmlEq.setLatitude((float)d[1]);
 		
 		return xmlEq;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ChannelingItem.java,v 1.3 2005/09/11 20:24:19 stas Exp $
+ * $Id: ChannelingItem.java,v 1.4 2005/10/03 13:43:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,8 +70,8 @@ public class ChannelingItem {
 		
 		xmlCCI.setStartSpare(0);
 		xmlCCI.setEndSpare(0);
-		xmlCCI.setRowX(this.rowX);
-		xmlCCI.setPlaceY(this.placeY);
+		xmlCCI.setRowX(this.rowX - 1);
+		xmlCCI.setPlaceY(this.placeY - 1);
 		xmlCCI.setSequentialNumber(this.number);
 		
 		XmlIdentifier pluid = xmlCCI.addNewPhysicalLinkId();

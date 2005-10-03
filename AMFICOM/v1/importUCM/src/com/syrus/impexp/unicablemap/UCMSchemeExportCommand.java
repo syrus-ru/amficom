@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.10 2005/10/02 14:44:12 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.11 2005/10/03 13:43:27 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/10/02 14:44:12 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/03 13:43:27 $
  * @module importUCM
  */
 
@@ -353,9 +353,6 @@ public class UCMSchemeExportCommand {
 			eq.setLatitude((float)ucmObject.y0);
 			eq.setLongitude((float)ucmObject.x0);
 			muf.setEquipment(eq);
-			this.equipments.add(eq);
-			
-			this.muffs.put(Integer.valueOf(ucmObject.un), muf);
 			
 			for(UniCableMapLink ucmLink : this.ucmDatabase.getParents(ucmObject)) {
 				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_TYPE_REALIZATION)) {
@@ -376,12 +373,25 @@ public class UCMSchemeExportCommand {
 				}
 			}
 
+			int inPorts = 0, outPorts = 0;
 			for(UniCableMapLink ucmLink : this.ucmDatabase.getChildren(ucmObject)) {
 				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_START_STARTS)) {
 					 muf.addOutputPort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
+					 outPorts++;
 				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
 					 muf.addInputPort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
+					 inPorts++;
 				}
+			}
+			if (inPorts + outPorts > 0) {
+				this.equipments.add(eq);
+				this.muffs.put(Integer.valueOf(ucmObject.un), muf);
+			}
+			if (inPorts == 0) {
+				System.out.println("Муфта " + ucmObject.text + " [" + ucmObject.un + "]" +  " не имеет конечного кабеля");
+			}
+			if (outPorts == 0) {
+				System.out.println("Муфта " + ucmObject.text + " [" + ucmObject.un + "]" +  " не имеет начального кабеля");
 			}
 		}
 	}
@@ -391,8 +401,8 @@ public class UCMSchemeExportCommand {
 			Element building = new Element(plan.un);
 			Equipment eq = new Equipment("eq" + plan.un);
 			eq.setName(plan.text);
-			eq.setLatitude((float)plan.x0);
-			eq.setLongitude((float)plan.y0);
+			eq.setLatitude((float)plan.y0);
+			eq.setLongitude((float)plan.x0);
 			eq.setTypeId("UCM_SCHEMED");
 			building.setEquipment(eq);
 			this.equipments.add(eq);
@@ -466,7 +476,7 @@ public class UCMSchemeExportCommand {
 				}
 			}
 		} else {
-			System.out.println("Cable " + cable.getName() + " connected to " + obj.typ.text + ": " + obj.text + " [" + obj.un + "]");
+			System.out.println("Кабель " + cable.getName() + " присоединен к " + obj.typ.text + ": " + obj.text + " [" + obj.un + "]");
 			return null;
 		}
 		System.err.println("No free port found for " + obj.text);
