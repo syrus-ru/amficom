@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer.NumberRenderer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -40,13 +41,31 @@ public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChan
 		AnalysisParametersListener, ReportTable {
 	private static final long serialVersionUID = -5866433900913468687L;
 
-//	private WrapperedPropertyTableModel<AnalysisParameters> tModelMinuit;
 	private WrapperedPropertyTable<AnalysisParameters> table;
 	private JPanel mainPanel;
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	ApplicationContext aContext;
 	private boolean analysisParametersUpdatedHere = false;
+	private NumberRenderer numberRenderer =
+			new ADefaultTableCellRenderer.NumberRenderer () {
+		private NumberFormat formatter;
+		@Override
+		public void setValue(Object value) {
+			if (this.formatter == null) {
+				this.formatter = NumberFormat.getInstance();
+				// Значения min/max fraction digits
+				// выбраны из следующих соображений:
+				// 1. обеспечивать достаточную точность отображения
+				//   (для этого надо maximumFractionDigits >= 4)
+				// 2. отображать так же, как это будет делать редактор
+				//   (min=1, max - достаточно велико)
+				this.formatter.setMaximumFractionDigits(5);
+				this.formatter.setMinimumFractionDigits(1);
+			}
+			super.label.setText((value == null) ? "" : this.formatter.format(value));
+		}
+	};
 
 	public AnalysisSelectionFrame(final ApplicationContext aContext) {
 		this.createUI();
@@ -92,17 +111,9 @@ public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChan
 							AnalysisParametersWrapper.KEY_MIN_END,
 							AnalysisParametersWrapper.KEY_NOISE_FACTOR }));
 		
-		this.table.setRenderer(new ADefaultTableCellRenderer.NumberRenderer () {
-			private NumberFormat formatter;
-			@Override
-			public void setValue(Object value) {
-				if (this.formatter == null) {
-					this.formatter = NumberFormat.getInstance();
-					this.formatter.setMaximumFractionDigits(4);
-				}
-				super.label.setText((value == null) ? "" : this.formatter.format(value));
-			}
-		}, AnalysisParametersWrapper.KEY_SENSITIVITY);
+		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_SENSITIVITY);
+		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_MIN_CONNECTOR);
+		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_MIN_END);
 
 		
 //		{
