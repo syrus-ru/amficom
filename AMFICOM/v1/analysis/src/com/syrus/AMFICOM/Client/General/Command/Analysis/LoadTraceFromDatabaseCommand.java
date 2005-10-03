@@ -57,6 +57,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 	public void execute()
 	{
 		// Получаем набор результатов, которые надо загрузить
+		// XXX: performance: загружаем - иногда долго
 		JFrame parent = Environment.getActiveWindow();
 		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
 			return;
@@ -67,6 +68,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			return;
 
 		// преобразуем выбранный набор результатов в набор рефлектограмм
+		// XXX: performance: 40-80% time, because of waiting for empty set of analysis for each measurement
 		Collection<Trace> traces;
 		try {
 			traces = AddTraceFromDatabaseCommand.getTracesFromResults(results);
@@ -79,6 +81,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			return;
 		}
 		// открываем выбранный набор рефлектограмм
+		// XXX: performance: 20-50% time?
 		Heap.openManyTraces(traces);
 
 		// если результат выбранного primaryTrace получен в результате измерения,
