@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.129 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.130 2005/10/04 17:09:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandList;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -75,7 +76,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.129 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.130 $, $Date: 2005/10/04 17:09:31 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -974,7 +975,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.129 $, $Date: 2005/09/30 16:08:36 $
+	 * @version $Revision: 1.130 $, $Date: 2005/10/04 17:09:31 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1607,6 +1608,18 @@ public final class LogicalNetLayer {
 			}
 		}
 		// ensure characteristics are loaded
+		if(!physicalLinkIds.isEmpty()) {
+			try {
+				final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(
+						new LinkedIdsCondition(
+								physicalLinkIds, 
+								ObjectEntities.CHARACTERISTIC_CODE), 
+						true);
+				} catch(ApplicationException e) {
+				e.printStackTrace();
+			}
+		}
+
 //		if(!physicalLinkIds.isEmpty()) {
 //			try {
 //				// m
