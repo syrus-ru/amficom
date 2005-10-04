@@ -46,7 +46,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Plugger;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -76,7 +78,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	WrapperedList<MeasurementSetup> testSetups;
 	// UI components end
 	
-	private Dispatcher		dispatcher;
+	Dispatcher		dispatcher;
 
 	ParametersTestPanel		parametersTestPanel;
 
@@ -279,11 +281,26 @@ final class TestParametersPanel implements PropertyChangeListener {
 						try {
 							final Set<Identifier> measurementSetupIdSet = Collections.singleton(measurementSetup.getId());
 							final Set<Test> tests = TestParametersPanel.this.schedulerModel.getSelectedTests();
+							
+							for (final Test test : tests) {
+								if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+									boolean canBeApplied = TestParametersPanel.this.schedulerModel.isValid(test, measurementSetup);
+									if (!canBeApplied) {
+										final MeasurementSetup ms = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+										setMeasurementSetup(ms);
+										throw new IllegalDataException(LangModelSchedule.getString("Error.CannotApplyMeasurementSetup"));
+									}
+								}
+							}							
+							
 							for (final Test test : tests) {
 								if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}
 							}
+							
+							TestParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, null));
+							
 						} catch (final ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 						}
