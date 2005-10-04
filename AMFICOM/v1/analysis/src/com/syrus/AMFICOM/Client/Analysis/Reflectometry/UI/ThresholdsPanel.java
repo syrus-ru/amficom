@@ -235,28 +235,25 @@ public class ThresholdsPanel extends MapMarkersPanel
 		paint_scales(g);
 
 		if (showAll) {
-			if (isDraw_events())
-			{
+			if (isDraw_events()) {
 				paint_events(g);
-			} else
-			{
+			} else {
 				paint_trace(g);
 			}
-			if (isDraw_modeled())
-			{
+			if (isDraw_modeled()) {
 				paint_modeled_trace(g);
 			}
-			
-			if (draw_alarms)
+			if (draw_alarms) {
 				paint_alarms(g);
+			}
 		}
 
-		if (draw_min_trace_level && isDraw_events())
-		{
+		if (draw_min_trace_level && isDraw_events()) {
 			paint_noise_level(g);
 			paint_min_trace_level(g);
-		} else if (draw_noise_level && isDraw_events())
+		} else if (draw_noise_level && isDraw_events()) {
 			paint_noise_level(g);
+		}
 
 		paint_scale_digits(g);
 
