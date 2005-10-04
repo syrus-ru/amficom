@@ -1,5 +1,5 @@
 /**
- * $Id: Link.java,v 1.4 2005/09/22 10:32:28 krupenn Exp $
+ * $Id: Link.java,v 1.5 2005/10/04 09:07:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.impexp.unicablemap.UniCableMapLink;
 import com.syrus.impexp.unicablemap.UniCableMapLinkType;
 import com.syrus.impexp.unicablemap.UniCableMapObject;
 import com.syrus.impexp.unicablemap.UniCableMapParameter;
+import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class Link {
 
@@ -31,7 +32,12 @@ public class Link {
 	private String endNodeId;
 	private String startNodeId;
 	private double length = 0.0D;
-	private Collection<NodeLink> nodeLinks = new LinkedList<NodeLink>();;
+	private int dimensionX = -1;
+	private int dimensionY = -1;
+	private Collection<NodeLink> nodeLinks = new LinkedList<NodeLink>();
+	private boolean fromRight = false;
+	private boolean fromTop = false;
+	private boolean horVert = true;
 	
 	public void setStreet(String street) {
 		this.street = street;
@@ -136,6 +142,13 @@ public class Link {
 		xmlPhysicalLink.setCity(this.city);
 		xmlPhysicalLink.setStreet(this.street);
 		xmlPhysicalLink.setBuilding(this.building);
+		if(this.dimensionX != -1 && this.dimensionY != -1) {
+			xmlPhysicalLink.setDimensionX(this.dimensionX);
+			xmlPhysicalLink.setDimensionY(this.dimensionY);
+		}
+		xmlPhysicalLink.setLeftToRight(!this.fromRight);
+		xmlPhysicalLink.setTopToBottom(this.fromTop);
+		xmlPhysicalLink.setHorVert(this.horVert);
 
 		if(this.name == null || this.name.length() == 0 || this.startNodeId == null || this.startNodeId.length() == 0 || this.endNodeId == null || this.endNodeId.length() == 0) {
 			System.out.println("link " + this.uid + " has no name!");
@@ -181,7 +194,28 @@ public class Link {
 		}
 
 		for(UniCableMapLink ucmLink : ucmDatabase.getChildren(ucmObject)) {
-			// nothing
+			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_GENERALIATION_DETALIZATION)
+					&& ucmLink.child.typ.text.equals(UniCableMapType.UCM_TUNNEL_PROFILE)) {
+				for(UniCableMapLink ucmLink2 : ucmDatabase.getChildren(ucmLink.child)) {
+					if(ucmLink2.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)
+							&& ucmLink2.child.typ.text.equals(UniCableMapType.UCM_BLOCK)) {
+						for(UniCableMapParameter param : ucmLink2.child.buf.params) {
+							if(param.realParameter.text.equals(UniCableMapParameter.UCM_X)) {
+								link.setDimensionX(Integer.parseInt(param.value));
+							}
+							if(param.realParameter.text.equals(UniCableMapParameter.UCM_Y)) {
+								link.setDimensionY(Integer.parseInt(param.value));
+							}
+							if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_TOP)) {
+								link.setFromTop(Boolean.getBoolean(param.value));
+							}
+							if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_RIGHT)) {
+								link.setFromRight(Boolean.getBoolean(param.value));
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		for(UniCableMapParameter param : ucmObject.buf.params) {
@@ -203,6 +237,30 @@ public class Link {
 		link.setBuilding(building);
 		
 		return link;
+	}
+
+	public void setFromRight(boolean fromRight) {
+		this.fromRight = fromRight;
+	}
+
+	public void setFromTop(boolean fromTop) {
+		this.fromTop = fromTop;
+	}
+
+	public int getDimensionY() {
+		return this.dimensionY;
+	}
+
+	public void setDimensionY(int dimensionY) {
+		this.dimensionY = dimensionY;
+	}
+
+	public int getDimensionX() {
+		return this.dimensionX;
+	}
+
+	public void setDimensionX(int dimensionX) {
+		this.dimensionX = dimensionX;
 	}
 
 }
