@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.11 2005/09/20 19:47:52 stas Exp $
+ * $Id: DefaultLink.java,v 1.12 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/20 19:47:52 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -211,7 +211,8 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 							+ bounds.height));
 				} else {
 					boolean bendable = GraphConstants.isBendable(edge.getAllAttributes());
-					if (!bendable || DefaultLink.this.routed == null) {
+					if (true) {
+//					if (!bendable || DefaultLink.this.routed == null) {
 						int x2 = from.x + ((to.x - from.x) / 2);
 						int y2 = from.y + ((to.y - from.y) / 2);
 						DefaultLink.this.routed = new Point[4];

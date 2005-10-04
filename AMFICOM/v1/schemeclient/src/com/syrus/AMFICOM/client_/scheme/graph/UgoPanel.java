@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.15 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: UgoPanel.java,v 1.16 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -102,6 +102,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		// this.graph.setEditable(false);
 		// this.graph.setEnabled(false);
 		this.graph.setBendable(true);
+		this.graph.setDoubleBuffered(false);
 	}
 
 	public String getReportTitle() {

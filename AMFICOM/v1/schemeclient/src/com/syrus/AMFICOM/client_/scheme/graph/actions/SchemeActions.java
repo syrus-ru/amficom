@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.38 2005/10/04 08:14:15 stas Exp $
+ * $Id: SchemeActions.java,v 1.39 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -93,7 +94,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.38 $, $Date: 2005/10/04 08:14:15 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -469,6 +470,7 @@ public class SchemeActions {
 		}
 		
 		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
+			if (!placedObjectIds.contains(schemeCableLink.getId())) {
 			Point p = null;
 			SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
 			SchemeCablePort targetPort = schemeCableLink.getSourceAbstractSchemePort();
@@ -508,6 +510,7 @@ public class SchemeActions {
 			}
 			
 			internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, schemeCableLink.getId(), p, SchemeEvent.INSERT_SCHEME_CABLELINK));
+			}
 		}
 		schemeGraph.setMakeNotifications(true);
 	} 
@@ -877,15 +880,9 @@ public class SchemeActions {
 		}
 		SchemeLink sl = link.getSchemeLink();
 
-		// TODO externalyze
 		if (connectedLink != null) {
-			String message = "К порту " + sp.getName()
-					+ " уже подключена линия связи " + connectedLink.getName() + ".\n";
-			message += "Изменить подключенную линию на " + sl.getName() + "?";
-			// int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-			// message, "Подтверждение", JOptionPane.YES_NO_OPTION);
-			// if (res == JOptionPane.NO_OPTION)
-			// return false;
+			Log.debugMessage("Port already has connected link", WARNING);
+			return false;
 		}
 
 		if (is_source) {
@@ -961,17 +958,9 @@ public class SchemeActions {
 		}
 		SchemeCableLink sl = link.getSchemeCableLink();
 		
-		// TODO externalyze
 		if (connectedLink != null) {
-			String message = "К порту " + sp.getName()
-					+ " уже подключена линия связи " + connectedLink.getName()
-					+ ".\n";
-			message += "Изменить подключенную линию на " + sl.getName() + "?";
-
-			// int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-			// message, "Предупреждение", JOptionPane.YES_NO_OPTION);
-			// if (res == JOptionPane.NO_OPTION)
-			// return false;
+			Log.debugMessage("CablePort already has connected cable", WARNING);
+			return false;
 		}
 
 		if (is_source) {

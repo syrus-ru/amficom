@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.28 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.29 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.28 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -438,10 +438,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 
 				if (!isCable) { //port
 					SchemeActions.createPort(graph, deviceCell, 
-							graph.fromScreen(graph.snap(p)), name, directionType, color, schemePort.getId());
+							graph.snap(graph.fromScreen(p)), name, directionType, color, schemePort.getId());
 				} else {
 					SchemeActions.createCablePort(graph, deviceCell, 
-							graph.fromScreen(graph.snap(p)), name, directionType, color, schemePort.getId());
+							graph.snap(graph.fromScreen(p)), name, directionType, color, schemePort.getId());
 				}
 			} catch (ApplicationException e1) {
 				Log.errorException(e1);
@@ -460,8 +460,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			
 		if (SwingUtilities.isLeftMouseButton(event)) {
 			if (event != null && !event.isConsumed() && this.bounds != null && !this.s.isSelected()) {
+				graph.snap(graph.fromScreen(this.bounds));
+//				this.bounds.x++;
+//				this.bounds.y++;
 				if (this.dev.isSelected()) {
-					graph.fromScreen(this.bounds);
+					
 //					bounds.width += 2;
 //					bounds.height += 2;
 //					this.bounds.width ++;
@@ -473,8 +476,9 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					} catch (ApplicationException e1) {
 						Log.errorException(e1);
 					}
-				} else if (this.r.isSelected())
+				} else if (this.r.isSelected()) {
 					graph.addVertex("", this.bounds, false, Color.black); //$NON-NLS-1$
+				}
 				else if (this.c.isSelected())
 					graph.addEllipse("", this.bounds); //$NON-NLS-1$
 				else if (this.ce.isSelected()) {
@@ -507,8 +511,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("cable" + System.currentTimeMillis(), scheme);
 								link.setAbstractLinkTypeExt(type, LoginManager.getUserId(), false);
 								DefaultCableLink cell = SchemeActions.createCableLink(graph,
-										this.firstPort, this.port, graph.fromScreen(new Point(this.start)), 
-										graph.fromScreen(new Point(this.current)), link.getId());
+										this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
+										graph.snap(graph.fromScreen(new Point(this.current))), link.getId());
 								link.setName((String)cell.getUserObject());
 								Notifier.notify(graph, this.pane.aContext, link);
 							} catch (ApplicationException e1) {
@@ -553,8 +557,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							}
 							
 							DefaultLink cell = SchemeActions.createLink(graph,
-									this.firstPort, this.port, graph.fromScreen(new Point(this.start)), 
-									graph.fromScreen(new Point(this.current)), link.getId());
+									this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
+									graph.snap(graph.fromScreen(new Point(this.current))), link.getId());
 							link.setName((String)cell.getUserObject());
 							Notifier.notify(graph, this.pane.aContext, link);
 						} catch (ApplicationException e1) {
@@ -582,8 +586,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				} 
 				else if (this.l.isSelected()) {
 					List<Point> list = new ArrayList<Point>();
-					list.add(graph.fromScreen(new Point(this.start)));
-					list.add(graph.toScreen(new Point(this.current)));
+					list.add(graph.snap(graph.fromScreen(new Point(this.start))));
+					list.add(graph.snap(graph.fromScreen(new Point(this.current))));
 					Map map = GraphConstants.createMap();
 					GraphConstants.setPoints(map, list);
 					GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);

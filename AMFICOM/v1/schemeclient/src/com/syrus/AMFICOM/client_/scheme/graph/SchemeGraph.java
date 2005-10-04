@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.15 2005/09/20 19:47:52 stas Exp $
+ * $Id: SchemeGraph.java,v 1.16 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/09/20 19:47:52 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -127,17 +127,33 @@ public class SchemeGraph extends GPGraph {
 		return new LinkView(e, this, cm);
 	}
 	
+	public int snap(int coord) {
+		if (this.gridEnabled) {
+			coord = coord + this.gridSize / 2;
+			coord = (coord / this.gridSize) * this.gridSize;
+		}
+		return coord;
+	}
+	
 	// correcting mapping between screen and logical points
 	@Override
 	public Point snap(Point p) {
-		Point p2 = new Point(fromScreen(p));
+		if (this.gridEnabled && p != null) {
+			p.x = p.x + this.gridSize / 2;
+			p.y = p.y + this.gridSize / 2;
+			p.x = (p.x / this.gridSize) * this.gridSize;
+			p.y = (p.y / this.gridSize) * this.gridSize;
+		}
+		return p;
+		
+		/*Point p2 = new Point(fromScreen(p));
 		if (this.gridEnabled && p != null) {
 			p2.x = p.x + this.gridSize / 2;
 			p2.y = p.y + this.gridSize / 2;
 			p2.x = Math.round(p2.x / this.gridSize) * this.gridSize;
 			p2.y = Math.round(p2.y / this.gridSize) * this.gridSize;
 		}
-		return toScreen(p2);
+		return toScreen(p2);*/
 	}
 
 	@Override
@@ -145,6 +161,13 @@ public class SchemeGraph extends GPGraph {
 		return super.snap(d);
 	}
 
+	public Rectangle snap(Rectangle r) {
+		r.setLocation(snap(r.getLocation()));
+		r.width = snap(r.width);
+		r.height = snap(r.height);
+		return r;
+	}
+	
 	@Override
 	public Point toScreen(Point p) {
 		if (p == null)
@@ -153,7 +176,7 @@ public class SchemeGraph extends GPGraph {
 		p.y = (int) Math.round(p.y * this.scale);
 		return p;
 	}
-
+	
 	@Override
 	public Point fromScreen(Point p) {
 		if (p == null)
@@ -163,6 +186,11 @@ public class SchemeGraph extends GPGraph {
 		return p;
 	}
 
+	public int fromScreen(int coord) {
+		coord = (int) Math.round(coord / this.scale);
+		return coord;
+	}
+	
 	@Override
 	public Rectangle toScreen(Rectangle rect) {
 		if (rect == null)

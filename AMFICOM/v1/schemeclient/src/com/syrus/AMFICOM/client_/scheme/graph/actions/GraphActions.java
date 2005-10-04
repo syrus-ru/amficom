@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.17 2005/10/01 09:03:29 stas Exp $
+ * $Id: GraphActions.java,v 1.18 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/10/01 09:03:29 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -191,10 +191,10 @@ public class GraphActions {
 		else
 			rect = topcv.getBounds();
 
-		Point setpoint = graph.fromScreen(graph.snap(p));
-		Point p0 = graph.fromScreen(rect.getLocation());
-		int x = (setpoint.x - p0.x - (isCenterPoint ? rect.width / 2 : 0)) / 2;  
-		int y = (setpoint.y - p0.y - (isCenterPoint ? rect.height / 2 : 0)) / 2;
+		Point setpoint = graph.snap(graph.fromScreen(p));
+		Point p0 = graph.snap(graph.fromScreen(rect.getLocation()));
+		int x = graph.snap((setpoint.x - p0.x - (isCenterPoint ? rect.width / 2 : 0)) / 2);  
+		int y = graph.snap((setpoint.y - p0.y - (isCenterPoint ? rect.height / 2 : 0)) / 2);
 		translateViews(cv, x, y);
 		graph.getGraphLayoutCache().refresh(cv, true);
 	}

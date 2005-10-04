@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.19 2005/09/11 16:17:22 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.20 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.TooManyListenersException;
+import java.util.logging.Level;
 
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.jgraph.JGraph;
+import com.jgraph.graph.AbstractCellView;
 import com.jgraph.graph.CellHandle;
 import com.jgraph.graph.CellView;
 import com.jgraph.graph.DefaultEdge;
@@ -52,10 +54,11 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -166,7 +169,7 @@ public class SchemeGraphUI extends GPGraphUI {
 				int s = graph2.getTolerance();
 				Rectangle r = graph2.fromScreen(new Rectangle(e.getX() - s,
 						e.getY() - s, 2 * s, 2 * s));
-				Point point = graph2.fromScreen(new Point(e.getPoint()));
+				Point point = graph2.snap(graph2.fromScreen(new Point(e.getPoint())));
 
 				SchemeGraphUI.this.focus = (SchemeGraphUI.this.focus != null && SchemeGraphUI.this.focus.intersects(graph2.getGraphics(), r)) ? SchemeGraphUI.this.focus : null;
 				this.cell = graph2.getNextViewAt(SchemeGraphUI.this.focus, point.x, point.y);
@@ -202,7 +205,7 @@ public class SchemeGraphUI extends GPGraphUI {
 
 				//Marquee Selection 
 				if (// XXX unremark this to move cells without <CTRL> pressed						
-						//!e.isConsumed() &&   
+						!e.isConsumed() &&   
 						(!isToggleSelectionEvent(e) || SchemeGraphUI.this.focus == null)) {
 					if (SchemeGraphUI.this.marquee != null) {
 						SchemeGraphUI.this.marquee.mousePressed(e);
@@ -294,6 +297,162 @@ public class SchemeGraphUI extends GPGraphUI {
 			super(ctx);
 		}
 
+		@Override // fixes bug when move cell in scale differ from 1
+		public void mouseDragged(MouseEvent event) {
+			boolean constrained = isConstrainedMoveEvent(event);
+			SchemeGraph schemeGraph = (SchemeGraph)SchemeGraphUI.this.graph;
+			Rectangle dirty = null;
+			if (this.firstDrag && schemeGraph.isDoubleBuffered() && this.cachedBounds == null) {
+				long st = System.currentTimeMillis();
+				initOffscreen();
+				Log.debugMessage("Init offline graphUI took " + (System.currentTimeMillis() - st) + "ms", Level.FINEST);
+				this.firstDrag = false;
+			}
+
+			if (event != null && !event.isConsumed()) {
+				GraphLayoutCache layoutCache = SchemeGraphUI.this.graphLayoutCache;
+				
+				if (this.activeHandle != null) {// Paint Active Handle
+					this.activeHandle.mouseDragged(event);
+				} // Invoke Mouse Dragged
+				else if (this.start != null) { // Move Cells
+					
+					Graphics g = (this.offgraphics != null) ? this.offgraphics : schemeGraph.getGraphics();
+					Point point = new Point(event.getPoint());
+					point.translate(-this._mouseToViewDelta_x, -this._mouseToViewDelta_y);
+					Point snapCurrent = schemeGraph.snap(point);
+					Point current = snapCurrent;
+					int thresh = schemeGraph.getMinimumMove();
+					int dx = current.x - this.start.x;
+					int dy = current.y - this.start.y;
+					
+					if (this.isMoving || Math.abs(dx) > thresh || Math.abs(dy) > thresh) {
+						boolean overlayed = false;
+						this.isMoving = true;
+						if (this.disconnect == null && schemeGraph.isDisconnectOnMove())
+							this.disconnect = this.context.disconnect(
+									layoutCache.getAllDescendants(this.views));
+						// Constrained movement
+						if (constrained && this.cachedBounds == null) {
+							int totDx = current.x - this.start.x;
+							int totDy = current.y - this.start.y;
+							if (Math.abs(totDx) < Math.abs(totDy)) {
+								dx = 0;
+								dy = totDy;
+							} else {
+								dx = totDx;
+								dy = 0;
+							}
+						} else {
+							dx = current.x - this.snapLast.x;
+							dy = current.y - this.snapLast.y;
+							System.out.println("last x = " + last.x + "; last y = " + last.y);
+							System.out.println("snaplast x = " + snapLast.x + "; snaplast y = " + snapLast.y);
+						}
+						double scale = schemeGraph.getScale();
+						dx = schemeGraph.snap(schemeGraph.fromScreen(dx));
+						if (dx < 0) {
+							dx -= schemeGraph.getGridSize();
+						}
+						//we don't want to round. The best thing is to get just the integer part.
+						//That way, the view won't "run away" from the mouse. It may lag behind
+						//a mouse pointer occasionally, but will be catching up.
+						dy = schemeGraph.snap(schemeGraph.fromScreen(dy));
+						if (dy < 0) {
+							dy -= schemeGraph.getGridSize();
+						}
+						
+						g.setColor(schemeGraph.getForeground());
+						g.setXORMode(schemeGraph.getBackground());
+						// Start Drag and Drop
+						if (schemeGraph.isDragEnabled() && !this.isDragging) {
+							startDragging(event);
+						}
+						if (dx != 0 || dy != 0) {
+							if (!this.snapLast.equals(this.snapStart)
+								&& (this.offscreen != null || !this.blockPaint)) {
+								overlay(g);
+								overlayed = true;
+							}
+							this.isContextVisible = !event.isControlDown() || !schemeGraph.isCloneable();
+							this.blockPaint = false;
+							if (this.offscreen != null) {
+								dirty = schemeGraph.toScreen(
+										AbstractCellView.getBounds(this.views));
+								Rectangle t = schemeGraph.toScreen(
+										AbstractCellView.getBounds(this.contextViews));
+								if (t != null) {
+									dirty.add(t);
+								}
+							}
+							if (constrained && this.cachedBounds == null) {
+								//Reset Initial Positions
+								CellView[] all = layoutCache.getAllDescendants(this.views);
+								for (int i = 0; i < all.length; i++) {
+									CellView orig = layoutCache.getMapping(
+											all[i].getCell(), false);
+									Map attr = orig.getAllAttributes();
+									all[i].setAttributes(GraphConstants.cloneMap(attr));
+									all[i].refresh(false);
+								}
+							}
+							if (this.cachedBounds != null) {
+								this.cachedBounds.translate(dx, dy);
+								System.out.println("translate " + dx + "; " + dy);
+//										schemeGraph.snap((int) (dy * scale)));
+							}
+							else {
+								System.err.println("cashed bounds is null");
+								// Translate
+								GraphLayoutCache.translateViews(this.views, dx, dy);
+								
+								if (this.views != null) {
+									layoutCache.update(this.views);
+								}
+								if (this.contextViews != null) {
+									layoutCache.update(this.contextViews);
+								}
+							}
+							if (!snapCurrent.equals(this.snapStart)) {
+								overlay(g);
+								overlayed = true;
+							}
+							if (constrained) {
+								this.last = new Point(this.start);
+							}
+							this.last.translate(
+									schemeGraph.snap((int) (dx * scale)),
+									schemeGraph.snap((int) (dy * scale)));
+							// It is better to translate <code>last<code> by a scaled dx/dy
+							// instead of making it to be the <code>current<code> (as in prev version),
+							// so that the view would be catching up with a mouse pointer
+							this.snapLast = snapCurrent;
+							if (overlayed && this.offscreen != null) {
+								dirty.add(schemeGraph.toScreen(
+										AbstractCellView.getBounds(this.views)));
+								Rectangle t = schemeGraph.toScreen(
+										AbstractCellView.getBounds(this.contextViews));
+								if (t != null) {
+									dirty.add(t);
+								}
+								dirty.grow(2, 2);
+								int sx1 = Math.max(0, dirty.x);
+								int sy1 = Math.max(0, dirty.y);
+								int sx2 = sx1 + dirty.width;
+								int sy2 = sy1 + dirty.height;
+								if (this.isDragging) // JDK BUG!
+									return;
+								schemeGraph.getGraphics().drawImage(this.offscreen, 
+										sx1, sy1, sx2, sy2, sx1, sy1, sx2, sy2, schemeGraph);
+							}
+						}
+					} // end if (isMoving or ...)
+				} // end if (start != null)
+			} else if (event == null)
+				schemeGraph.repaint();
+		}
+
+
 		@Override
 		public void mouseReleased(MouseEvent event) {
 			try {
@@ -305,7 +464,7 @@ public class SchemeGraphUI extends GPGraphUI {
 						if (this.cachedBounds != null) {
 							int dx = event.getX() - this.start.x;
 							int dy = event.getY() - this.start.y;
-							Point tmp = SchemeGraphUI.this.graph.fromScreen(SchemeGraphUI.this.graph.snap(new Point(dx, dy)));
+							Point tmp = graph.snap(SchemeGraphUI.this.graph.fromScreen(new Point(dx, dy)));
 							GraphLayoutCache.translateViews(this.views, tmp.x, tmp.y);
 						}
 						CellView[] all = SchemeGraphUI.this.graphLayoutCache.getAllDescendants(this.views);

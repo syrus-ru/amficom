@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.25 2005/09/28 07:31:39 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.26 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,6 +54,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -65,7 +66,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/09/28 07:31:39 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -381,8 +382,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						Point p1 = sourceView == null ? new Point(p.x - 2 * d, p.y) : sourceView.getBounds().getLocation();
 						Point p2 = targetView == null ? new Point(p.x + 2 * d, p.y) : targetView.getBounds().getLocation();
 						DefaultCableLink cell = SchemeActions.createCableLink(graph,
-								sourceView, targetView, graph.fromScreen(p1), 
-								graph.fromScreen(p2), schemeCableLink.getId());
+								sourceView, targetView, graph.snap(graph.fromScreen(p1)), 
+								graph.snap(graph.fromScreen(p2)), schemeCableLink.getId());
 						cell.setUserObject(schemeCableLink.getName());
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -434,8 +435,20 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			b.doClick();
 		}
 	}
-		
+
+	static int counter = 0;
 	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch) {
+//
+//		if (counter == 0 && sch.getName().startsWith("UCM")) {
+//			try {
+//				counter++;
+//				SchemeActions.putToGraph(sch, this);
+//				return null;
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
 		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {

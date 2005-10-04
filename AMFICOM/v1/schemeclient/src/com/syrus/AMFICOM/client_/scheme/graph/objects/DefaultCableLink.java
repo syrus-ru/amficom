@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.12 2005/09/20 19:47:52 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.13 2005/10/04 16:25:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -32,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/20 19:47:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/04 16:25:54 $
  * @module schemeclient
  */
 
@@ -199,21 +198,49 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 					DefaultCableLink.this.routed[3] = new Point(bounds.x + 2 * width, bounds.y + bounds.height);
 				} else {
 					if (DefaultCableLink.this.routed == null) {
-						int x2 = from.x + ((to.x - from.x) / 2);
-						int y2 = from.y + ((to.y - from.y) / 2);
-						DefaultCableLink.this.routed = new Point[4];
-						int grid = graph.getGridSize();
-						if (from.x <= to.x) {
-							DefaultCableLink.this.routed[0] = graph.snap(new Point(from.x + grid, from.y));
-							DefaultCableLink.this.routed[1] = graph.snap(new Point(x2, from.y));
-							DefaultCableLink.this.routed[2] = graph.snap(new Point(x2, to.y));
-							DefaultCableLink.this.routed[3] = graph.snap(new Point(to.x - grid, to.y));
-						} else {
-							DefaultCableLink.this.routed[0] = graph.snap(new Point(from.x + grid, from.y));
-							DefaultCableLink.this.routed[1] = graph.snap(new Point(from.x + grid, y2));
-							DefaultCableLink.this.routed[2] = graph.snap(new Point(to.x - grid, y2));
-							DefaultCableLink.this.routed[3] = graph.snap(new Point(to.x - grid, to.y));
+						 DefaultCableLink.this.routed = createDefaultRouting(graph, from, to);
+					} else {
+						int grid = edge.getGraph().getGridSize();
+						Point[] p1 = createDefaultRouting(graph, from, to);
+						if (DefaultCableLink.this.routed.length != p1.length) {
+							DefaultCableLink.this.routed = p1;
 						}
+						Point[] p = DefaultCableLink.this.routed;
+						// крайние точки
+						if (p[0].y != from.y) {
+							p[0].y = from.y;
+						}
+						if (p[0].x <= from.x) {
+							p[0].x = from.x + grid;
+						}
+						if (p[p.length-1].y != to.y) {
+							p[p.length-1].y = to.y;
+						}
+						if (p[p.length-1].x >= to.x) {
+							p[p.length-1].x = to.x - grid;
+						}
+						// средние точки
+						if (p.length == 2) {
+							if (p[1].x != p[0].x) {
+								p[1].x = p[0].x;
+							}
+						} else if (p.length == 4) {
+							if (p[1].x != p[0].x) {
+								p[1].x = p[0].x;
+							}
+							if (p[2].x != p[3].x) {
+								p[2].x = p[3].x;
+							}
+							if (p[2].y != p[1].y) {
+								p[2].y = p[1].y;
+							}
+						}
+//						
+//						Point[] tmp = new Point[4];
+//						createDefaultRouting(graph, tmp, from, to);
+//						if (false) {
+//							DefaultCableLink.this.routed = tmp;
+//						}
 					}
 				}
 				// Set/Add Points
@@ -228,6 +255,27 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 				}
 			}
 		}
+	}
+	
+	Point[] createDefaultRouting(SchemeGraph graph, Point from, Point to) {
+		int x2 = from.x + ((to.x - from.x) / 2);
+		int y2 = from.y + ((to.y - from.y) / 2);
+		int grid = graph.getGridSize();
+		Point[] p;
+		if (from.x + graph.getGridSize() * 3 <= to.x) {
+			p = new Point[2];
+//			p[0] = graph.snap(new Point(from.x + grid, from.y));
+			p[0] = graph.snap(new Point(x2, from.y));
+			p[1] = graph.snap(new Point(x2, to.y));
+//			p[3] = graph.snap(new Point(to.x - grid, to.y));
+		} else {
+			p = new Point[4];
+			p[0] = graph.snap(new Point(from.x + grid, from.y));
+			p[1] = graph.snap(new Point(from.x + grid, y2));
+			p[2] = graph.snap(new Point(to.x - grid, y2));
+			p[3] = graph.snap(new Point(to.x - grid, to.y));
+		}
+		return p;
 	}
 
 	public SchemeCableLink getSchemeCableLink() {
