@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.113 2005/10/04 13:05:17 bob Exp $
+ * $Id: SchedulerModel.java,v 1.114 2005/10/04 13:42:59 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/10/04 13:05:17 $
+ * @version $Revision: 1.114 $, $Date: 2005/10/04 13:42:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1046,6 +1046,30 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			Identifier.VOID_IDENTIFIER);
 		
 		Log.debugMessage("SchedulerModel.isValid | return " + result, Log.DEBUGLEVEL10);
+		return result;
+	}
+	
+	public boolean isValid(final Test test,
+	                       final  MeasurementSetup measurementSetup) 
+	throws ApplicationException {
+		
+		final Set<Date> times; 
+		final Identifier temporalPatternId = test.getTemporalPatternId();
+		
+		final Date startTime0 = test.getStartTime();
+		final Date endTime0 = test.getEndTime();		
+		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
+			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);			
+			times = temporalPattern.getTimes(startTime0, endTime0);
+		} else {
+			times = Collections.singleton(startTime0);
+		}
+		
+		final boolean result = this.isValid0(test.getMonitoredElementId(), 
+			times, 
+			measurementSetup, 
+			test.getId());
+		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + measurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
