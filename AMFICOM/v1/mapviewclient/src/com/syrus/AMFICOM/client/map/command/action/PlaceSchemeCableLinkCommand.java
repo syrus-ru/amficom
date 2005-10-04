@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.47 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.48 2005/10/04 17:11:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,14 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
@@ -27,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.47 $, $Date: 2005/10/03 10:35:00 $
+ * @version $Revision: 1.48 $, $Date: 2005/10/04 17:11:31 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -154,7 +156,24 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 						link.getBinding().add(this.cablePath);
 						if(cci.getRowX() != -1
 								&& cci.getPlaceY() != -1) {
-							link.getBinding().bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
+							try {
+								link.getBinding().bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
+							} catch(ArrayIndexOutOfBoundsException e) {
+								XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
+								link.getId().getXmlTransferable(xmlId, "ucm");
+								String linkUn = xmlId.getStringValue();
+								cci.getId().getXmlTransferable(xmlId, "ucm");
+								String cciUn = xmlId.getStringValue();
+								final IntDimension dimension = link.getBinding().getDimension();
+								System.out.println("link '" + link.getName() 
+										+ "' (un " + linkUn 
+										+ ") has dimensions (" + dimension.getWidth()
+										+ ", " + dimension.getHeight()
+										+ "), which is inconsistent with cci (un " + cciUn
+										+ ") with position (" + cci.getRowX()
+										+ ", " + cci.getPlaceY() + ")");
+								e.printStackTrace();
+							}
 						}
 			
 						this.cablePath.addLink(link, cci);
