@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.116 2005/09/26 11:19:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.117 2005/10/04 14:59:49 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.116 $, $Date: 2005/09/26 11:19:34 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/04 14:59:49 $
  * @module
  */
 
@@ -67,7 +67,8 @@ public class CoreAnalysisManager
 	 * @param minLevel уровень чувствительности для определения границ события
 	 * @param minWeld минимальное отраж. событие
 	 * @param minConnector минимальное неотр. событие
-	 * @param minEnd мин. уровень конца волокна
+	 * @param minEnd мин. амплитуда отражения конца волокна
+	 * @param minEotLevel мин. абс. уровень отражения конца волокна
 	 * @param noiseFactor множитель для уровня шума - чем больше множитель,
 	 *   тем меньше чувствительность и больше достоверность.
 	 *   (1.0 - макс. чувствительность, по уровню 3 сигма; рекомендованы
@@ -84,16 +85,17 @@ public class CoreAnalysisManager
 	 * может быть 0, тогда будет найдена автоматически
 	 * @param noiseDB уровень шума по 3 сигма, в абс. дБ;
 	 * может быть null - тогда будет найден автоматически
-	 * @param scaleFactor - множитель для прогрессии используемых масштабов. XXX: тестовая опция, для Виталия
+	 * @param scaleFactor - множитель для прогрессии используемых масштабов.
 	 * @return массив событий
 	 */
-	private static native ReliabilitySimpleReflectogramEventImpl[] analyse7(
+	private static native ReliabilitySimpleReflectogramEventImpl[] analyse8(
 			double[] y,
 			double dX,
 			double minLevel,
 			double minWeld,
 			double minConnector,
 			double minEnd,
+			double minEotLevel,
 			double noiseFactor,
 			int nReflSize,
 			double rSACrit,
@@ -247,6 +249,7 @@ public class CoreAnalysisManager
 			double minWeld,
 			double minConnector,
 			double minEnd,
+			double minEotLevel,
 			double noiseFactor,
 			int nReflSize,
 			double rSACrit,
@@ -257,8 +260,9 @@ public class CoreAnalysisManager
 			double scaleFactor
 			)
 	{
-		return analyse7(y, deltaX,
-			minLevel, minWeld, minConnector, minEnd, noiseFactor,
+		return analyse8(y, deltaX,
+			minLevel, minWeld, minConnector, minEnd, minEotLevel,
+			noiseFactor,
 			nReflSize, rSACrit, rSSmall, rSBig,
 			traceLength, noiseArray, scaleFactor);
 	}
@@ -348,6 +352,7 @@ public class CoreAnalysisManager
 				ap.getSpliceTh(),
 				ap.getConnectorTh(),
 				ap.getEndTh(),
+				ap.getLevelEot(),
 				ap.getNoiseFactor(),
 				nReflSize,
 				ap.getRsaCrit(),

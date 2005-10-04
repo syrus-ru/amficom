@@ -26,10 +26,10 @@
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
- * Method:    analyse7
- * Signature: ([DDDDDDDIDIII[DD)[Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;
+ * Method:    analyse8
+ * Signature: ([DDDDDDDDIDIII[DD)[Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;
  */
-JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse7(
+JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse8(
 	JNIEnv* env,
 	jclass obj,
 	jdoubleArray y,
@@ -38,6 +38,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 	jdouble min_weld,
 	jdouble min_connector,
 	jdouble min_end,
+	jdouble min_eot_level,
 	jdouble noiseFactor,
 	jint nonReflectiveSize,
     jdouble rSACrit,
@@ -92,6 +93,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 		min_weld,
 		min_connector,
 		min_end,
+		min_eot_level,
 		noiseFactor,
 		nonReflectiveSize,
 		rSACrit,

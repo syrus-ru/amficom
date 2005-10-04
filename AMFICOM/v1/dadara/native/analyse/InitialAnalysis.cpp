@@ -25,10 +25,11 @@ InitialAnalysis::InitialAnalysis(
 	double* data,				//точки рефлектограммы
 	int data_length,			//число точек
 	double delta_x,				//расстояние между точками (м)
-	double minimalThreshold,	//минимальный уровень события
-	double minimalWeld,			//минимальный уровень неотражательного события
-	double minimalConnector,	//минимальный уровень отражательного события
-	double minimalEnd,			//минимальный уровень отражения в конце волокна
+	double minimalThreshold,	//минимальная амплитуда события
+	double minimalWeld,			//минимальная амплитуда неотражательного события
+	double minimalConnector,	//минимальная амплитуда уровень отражательного события
+	double minimalEnd,			//минимальный амплитуда отражения в конце волокна
+	double min_eot_level,		//минимальный абс. уровень отражения в конце волокна
 	double noiseFactor,			// множитель для уровня шума (около 2.0)
 	int nonReflectiveSize,		//характерная длина неотражательного события
 	double rACrit,				// порог "большого" коннектора
@@ -42,8 +43,8 @@ InitialAnalysis::InitialAnalysis(
 	logf = fopen(DEBUG_INITIAL_WIN_LOGF, "a");
 	assert(logf);
 	fprintf(logf, "=== IA invoked\n"
-		"len %d deltaX %g minTh %g minWeld %g minConn %g minEnd %g noiseFactor %g\n",
-		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, minimalEnd, noiseFactor);
+		"len %d deltaX %g minTh %g minWeld %g minConn %g minEnd %g minEotLevel %g noiseFactor %g\n",
+		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, minimalEnd, min_eot_level, noiseFactor);
 	fprintf(logf, "nRefSize %d rACrit %g rSBig %d rSSmall %d lTZ %d extNoise %s\n",
 		nonReflectiveSize, rACrit, rSBig, rSSmall, lengthTillZero, externalNoise ? "present" : "absent");
 	fflush(logf);
@@ -57,6 +58,7 @@ InitialAnalysis::InitialAnalysis(
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
     this->minimalEnd			= minimalEnd;
+	this->minimalEotLevel		= min_eot_level;
     this->noiseFactor			= noiseFactor;
 	this->data_length			= data_length;
 	this->data					= data;
@@ -959,9 +961,20 @@ void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1,
 	int av_scale = (sp1.scale + sp2.scale) / 2; // используем средний масштаб для определения R3-параметров. XXX: возможно, надо использовать максимальный либо начальный
     r3s = r2*(rSSmall - l)/av_scale;
     r3b = r2*(rSBig - l)/av_scale;
-    // может ли этот "коннектор" быть концом волокна
-    if(sp1.sign>0 && sp1.f_extr>= minimalEnd)
-    { ep.can_be_endoftrace = true;
+    // может ли этот "коннектор" быть концом волокна?
+    if(sp1.sign>0 && sp1.f_extr>= minimalEnd) //знак и амп. всплеска достаточная?
+    {
+		// ищем абс. макс. на участке ep
+		double vMax = data[ep.begin];
+		int i;
+		for(i = ep.begin; i <= ep.end; i++) {
+			if (vMax < data[i])
+				vMax = data[i];
+		}
+
+		if (vMax > minimalEotLevel) { // абс. уровень достаточен?
+			ep.can_be_endoftrace = true;
+		}
     }
 	double t1 = r1s<r3b ? r1s:r3b, t2 = r3s>r1b ? r3s:r1b;
     double t3 = r2<t2 ? r2:t2;

@@ -38,6 +38,7 @@ public:
 		double minimalWeld,
 		double minimalConnector,
 		double minimalEnd,
+		double min_eot_level,
 		double noiseFactor,
 		int nonReflectiveSize,
 		double rACrit,	// порог "большого" коннектора
@@ -69,6 +70,7 @@ private:
 	double minimalWeld;
 	double minimalConnector;
     double minimalEnd;
+    double minimalEotLevel;
     double noiseFactor;
 
     int reflectiveSize; // максимальная ширина коннектора
