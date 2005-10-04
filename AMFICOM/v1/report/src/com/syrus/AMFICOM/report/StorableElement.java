@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.3 2005/09/30 12:34:07 max Exp $
+ * $Id: StorableElement.java,v 1.4 2005/10/04 11:04:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.report;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
-import java.awt.Dimension;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
