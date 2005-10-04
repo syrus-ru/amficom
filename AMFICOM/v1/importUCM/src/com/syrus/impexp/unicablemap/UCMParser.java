@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMParser.java,v 1.2 2005/09/22 10:32:28 krupenn Exp $
+ * $Id: UCMParser.java,v 1.3 2005/10/04 17:06:47 krupenn Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import org.apache.xmlbeans.XmlOptions;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/09/22 10:32:28 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/04 17:06:47 $
  * @module importUCM
  */
 
@@ -84,32 +84,40 @@ public final class UCMParser {
 		for (UniCableMapObject ucmObject : objs) {
 			if(i++ > count)
 				break;
-			parseObject(pw, ucmObject);
-			try {
-				Collection children = ucmDatabase.getChildren(ucmObject);
-				pw.println("Children:");
-				for (Iterator it = children.iterator(); it.hasNext();) {
-					// get link
-					UniCableMapLink ucmChild = (UniCableMapLink)it.next();
-					pw.println("Тип связи: " + ucmChild.mod);
-					// parse child
-					parseObject(pw, ucmChild.child);
-				}
-				
-				Collection parents = ucmDatabase.getParents(ucmObject);
-				pw.println("Parents:");
-				for (Iterator it = parents.iterator(); it.hasNext();) {
-					// get link
-					UniCableMapLink ucmParent = (UniCableMapLink)it.next();
-					pw.println("Тип связи: " + ucmParent.mod);
-					// parse parent
-					parseObject(pw, ucmParent.parent);
-				}
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			surveyObject(pw, ucmDatabase, ucmObject);
 		}
 		System.out.println(objs.size() + " done");
-		pw.flush();
+	}
+
+	/**
+	 * @param pw
+	 * @param ucmDatabase
+	 * @param ucmObject
+	 */
+	public static void surveyObject(PrintWriter pw, UniCableMapDatabase ucmDatabase, UniCableMapObject ucmObject) {
+		parseObject(pw, ucmObject);
+		try {
+			Collection children = ucmDatabase.getChildren(ucmObject);
+			pw.println("Children:");
+			for (Iterator it = children.iterator(); it.hasNext();) {
+				// get link
+				UniCableMapLink ucmChild = (UniCableMapLink)it.next();
+				pw.println("Тип связи: " + ucmChild.mod);
+				// parse child
+				parseObject(pw, ucmChild.child);
+			}
+			
+			Collection parents = ucmDatabase.getParents(ucmObject);
+			pw.println("Parents:");
+			for (Iterator it = parents.iterator(); it.hasNext();) {
+				// get link
+				UniCableMapLink ucmParent = (UniCableMapLink)it.next();
+				pw.println("Тип связи: " + ucmParent.mod);
+				// parse parent
+				parseObject(pw, ucmParent.parent);
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 	}
 }

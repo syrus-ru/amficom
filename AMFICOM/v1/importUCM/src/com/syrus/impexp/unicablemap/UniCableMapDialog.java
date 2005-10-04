@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -43,7 +44,7 @@ import com.syrus.impexp.ImportExportException;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/10/04 09:06:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/04 17:06:47 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
@@ -94,6 +95,9 @@ public class UniCableMapDialog extends JFrame
 	private JTextField surveyFileField = new JTextField();
 	private JButton surveyButton = new JButton();
 	
+	private JTextField surveyUnField = new JTextField();
+	private JButton surveyUnButton = new JButton();
+
 	private JSeparator jSeparator1 = new JSeparator();
 	private JSeparator jSeparator2 = new JSeparator();
 	private JSeparator jSeparator3 = new JSeparator();
@@ -264,15 +268,21 @@ public class UniCableMapDialog extends JFrame
 		this.surveyTypesScrollPane = new JScrollPane(this.surveyTypes);
 		this.surveyTypesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		this.surveyFileField.setText(".\\out.txt");
+		this.surveyUnField.setText("");
 
 		this.surveyButton.setText("Îבחמנ");
-		this.surveyButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					survey();
-				}
-			});
+		this.surveyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				survey();
+			}
+		});
+
+		this.surveyUnButton.setText("Îבחמנ Un");
+		this.surveyUnButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				surveyUn();
+			}
+		});
 
 		this.mainPanel.setLayout(new GridBagLayout());
 
@@ -525,7 +535,7 @@ public class UniCableMapDialog extends JFrame
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
-		constraints.gridheight = 2;
+		constraints.gridheight = 4;
 		constraints.weightx = 0.7;
 		constraints.weighty = 1.0;
 		constraints.anchor = GridBagConstraints.WEST;
@@ -573,6 +583,32 @@ public class UniCableMapDialog extends JFrame
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.surveyPanel.add(this.surveyButton, constraints);
+		
+		constraints.gridx = 2;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.3;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.surveyPanel.add(this.surveyUnField, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.surveyPanel.add(this.surveyUnButton, constraints);
 		
 
 		constraints.gridx = 0;
@@ -655,6 +691,7 @@ public class UniCableMapDialog extends JFrame
 		this.importMapLibraryButton.setEnabled(false);
 		this.importSchemeButton.setEnabled(false);
 		this.surveyButton.setEnabled(false);
+		this.surveyUnButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
 
@@ -673,6 +710,7 @@ public class UniCableMapDialog extends JFrame
 			this.importMapLibraryButton.setEnabled(true);
 			this.importSchemeButton.setEnabled(true);
 			this.surveyButton.setEnabled(true);
+			this.surveyUnButton.setEnabled(true);
 			this.disconnectButton.setEnabled(true);
 
 			Collection<UniCableMapObject> types = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_TYPE));
@@ -685,6 +723,7 @@ public class UniCableMapDialog extends JFrame
 			this.importMapButton.setEnabled(false);
 			this.importMapLibraryButton.setEnabled(false);
 			this.surveyButton.setEnabled(false);
+			this.surveyUnButton.setEnabled(false);
 			this.disconnectButton.setEnabled(false);
 		}
 	}
@@ -699,6 +738,7 @@ public class UniCableMapDialog extends JFrame
 		this.importMapLibraryButton.setEnabled(false);
 		this.importSchemeButton.setEnabled(false);
 		this.surveyButton.setEnabled(false);
+		this.surveyUnButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
 
@@ -748,13 +788,44 @@ public class UniCableMapDialog extends JFrame
 		}
 		UniCableMapObject selectedObject = (UniCableMapObject )this.surveyTypes.getSelectedValue();
 		UCMParser.surveyObjects(pw, selectedObject.text, this.ucmDatabase, count);
-		this.statusLabel.setText("OK!");
+		pw.flush();
 		pw.close();
+		this.statusLabel.setText("OK!");
 		try {
 			if(fos != null)
 				fos.close();
 		} catch(IOException e1) {
 			e1.printStackTrace();
+		}
+	}
+
+	protected void surveyUn() {
+		File f;
+		FileOutputStream fos = null;
+		PrintWriter pw;
+		try {
+			f = new File(this.surveyFileField.getText());
+			fos = new FileOutputStream(f);
+			pw = new PrintWriter(fos);
+		}
+		catch (FileNotFoundException ex) {
+			pw = new PrintWriter(System.out);
+		}
+		String unString = this.surveyUnField.getText();
+		int un = Integer.parseInt(unString);
+		try {
+			UCMParser.surveyObject(pw, this.ucmDatabase, this.ucmDatabase.getObject(un));
+			pw.flush();
+			pw.close();
+			this.statusLabel.setText("OK!");
+			try {
+				if(fos != null)
+					fos.close();
+			} catch(IOException e1) {
+				e1.printStackTrace();
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 

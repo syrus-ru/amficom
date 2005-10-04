@@ -1,5 +1,5 @@
 /**
- * $Id: Link.java,v 1.5 2005/10/04 09:07:18 krupenn Exp $
+ * $Id: Link.java,v 1.6 2005/10/04 17:06:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -170,6 +170,10 @@ public class Link {
 		String street = "";
 		String city = "";
 		String building = "";
+//		if(ucmObject.un == 597402L) {
+//			// link with 2 blocks
+//			int a = 0;
+//		}
 
 		for(UniCableMapLink ucmLink : ucmDatabase.getParents(ucmObject)) {
 			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_START_STARTS))
@@ -193,12 +197,14 @@ public class Link {
 //				}
 		}
 
+		int blocksscanned = 0;
 		for(UniCableMapLink ucmLink : ucmDatabase.getChildren(ucmObject)) {
 			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_GENERALIATION_DETALIZATION)
 					&& ucmLink.child.typ.text.equals(UniCableMapType.UCM_TUNNEL_PROFILE)) {
 				for(UniCableMapLink ucmLink2 : ucmDatabase.getChildren(ucmLink.child)) {
 					if(ucmLink2.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)
 							&& ucmLink2.child.typ.text.equals(UniCableMapType.UCM_BLOCK)) {
+						blocksscanned++;
 						for(UniCableMapParameter param : ucmLink2.child.buf.params) {
 							if(param.realParameter.text.equals(UniCableMapParameter.UCM_X)) {
 								link.setDimensionX(Integer.parseInt(param.value));
@@ -216,6 +222,11 @@ public class Link {
 					}
 				}
 			}
+		}
+
+		if(blocksscanned > 1) {
+			System.out.println("Ошибка! Тоннель '" + ucmObject.text + "' содержит блоков труб: "
+					+ blocksscanned + ", усечение.");
 		}
 		
 		for(UniCableMapParameter param : ucmObject.buf.params) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.13 2005/10/04 10:26:58 krupenn Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.14 2005/10/04 17:06:47 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/10/04 10:26:58 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/04 17:06:47 $
  * @module importUCM
  */
 
@@ -283,14 +283,27 @@ public class UCMSchemeExportCommand {
 								leftToRight = ! Boolean.getBoolean(param.value);
 							}
 						}
+//						if(ucmObject.un == 604919L) {
+//							// in a link which nas 2 blocks
+//							int a = 0;
+//						}
 						int seq = truba.un - block.un;
-						int rowX = (pox == 0) ? 1
+						if(seq > pox * poy) {
+							System.out.println("seq " + seq
+									+ " is greater than " + pox
+									+ " * " + poy
+									+ " for truba " + truba.un
+									+ " (" + truba.text + ") "
+									+ " in block " + block.un
+									+ " (" + block.text + ") ");
+						}
+						int rowX = (pox == 0) ? 0
 								: (leftToRight) ? ((seq % pox) - 1) 
 										: (pox - (seq % pox));
 						if(rowX < 0) {
 							rowX += pox;
 						}
-						int placeY = (pox == 0) ? 1
+						int placeY = (pox == 0) ? 0
 								: (topToBottom) ? ((seq - 1) / pox) 
 										: (poy - ((seq - 1) / pox) - 1);
 						item.setRowX(rowX);
@@ -652,12 +665,12 @@ public class UCMSchemeExportCommand {
 			processTypeObjects();
 			processSchemeObjects(Integer.MAX_VALUE);
 			
-			int pos = this.filename.lastIndexOf(".");
-			if (pos != -1) {
-				this.filename = this.filename.substring(0, pos);
-			}
-			saveConfigXML(this.filename);
-			saveSchemeXML(this.filename, Integer.MAX_VALUE);
+//			int pos = this.filename.lastIndexOf(".");
+//			if (pos != -1) {
+//				this.filename = this.filename.substring(0, pos);
+//			}
+//			saveConfigXML(this.filename);
+//			saveSchemeXML(this.filename, Integer.MAX_VALUE);
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
