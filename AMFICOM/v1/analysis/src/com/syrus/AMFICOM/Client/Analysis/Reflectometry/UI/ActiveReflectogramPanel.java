@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
  * Интерактивная панель с рефлектограммой - может отслеживать и изменять
  * уровень шума
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/04 09:22:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/04 15:00:31 $
  * @module
  */
 public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
@@ -48,15 +48,11 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
 		this.startpos = e.getPoint();
 		this.currpos = e.getPoint();
 
-		if (this.minTraceLevel.isDrawed() && this.minTraceLevel.isDefined()) {
-			if (super.coord2index(this.currpos.x) > this.y.length) { // XXX: ненужное условие?
-				return;
-			}
-
-			if (this.minTraceLevel.startMoving(this.currpos)) {
-				this.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
-				return;
-			}
+		// пытаемся начать перемещение какого-нибудь LevelLine
+		if (this.minTraceLevel.startMoving(this.currpos)
+				|| this.eotDetectionLevel.startMoving(this.currpos)) {
+			this.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+			return;
 		}
 		super.this_mousePressed(e);
 	}
@@ -66,11 +62,15 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
 		if (this.minTraceLevel.isMoving()) {
 			this.upd_currpos(e);
 			this.minTraceLevel.endMoving(this.currpos);
-			this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-			this.parent.repaint();
+		} else if (this.eotDetectionLevel.isMoving()) {
+			this.upd_currpos(e);
+			this.eotDetectionLevel.endMoving(this.currpos);
+		} else {
+			super.this_mouseReleased(e);
 			return;
 		}
-		super.this_mouseReleased(e);
+		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		this.parent.repaint();
 	}
 
 	@Override
@@ -78,10 +78,15 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
 		if (this.minTraceLevel.isMoving()) {
 			this.upd_currpos(e);
 			this.minTraceLevel.continueMoving(this.currpos);
-			this.parent.repaint();
-			this.dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
+		} else if (this.eotDetectionLevel.isMoving()) {
+			this.upd_currpos(e);
+			this.eotDetectionLevel.continueMoving(this.currpos);
+		} else {
+			super.this_mouseDragged(e);
 			return;
 		}
-		super.this_mouseDragged(e);
+		this.parent.repaint();
+		this.dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
+		return;
 	}
 }

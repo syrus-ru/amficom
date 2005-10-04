@@ -248,11 +248,11 @@ public class ThresholdsPanel extends MapMarkersPanel
 			}
 		}
 
-		if (minTraceLevel.isDefined() && minTraceLevel.isDrawed() && isDraw_events()) {
-			paint_noise_level(g);
+		if (isDraw_events()) {
 			minTraceLevel.draw(g);
-		} else if (draw_noise_level && isDraw_events()) {
-			paint_noise_level(g);
+			if (draw_noise_level || minTraceLevel.isDrawed()) {
+				paint_noise_level(g);
+			}
 		}
 
 		paint_scale_digits(g);

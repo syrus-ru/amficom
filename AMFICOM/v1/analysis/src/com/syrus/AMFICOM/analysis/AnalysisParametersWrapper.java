@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.8 2005/09/07 02:56:49 arseniy Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.9 2005/10/04 15:00:31 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/09/07 02:56:49 $
+ * @author $Author: saa $
+ * @version $Revision: 1.9 $, $Date: 2005/10/04 15:00:31 $
  * @module analysis
  */
 
@@ -35,6 +35,7 @@ public class AnalysisParametersWrapper implements Wrapper<AnalysisParameters> {
 	public static final String KEY_MIN_CONNECTOR = "analysisMinConnector";
 	public static final String KEY_MIN_END = "analysisMinEnd";
 	public static final String KEY_NOISE_FACTOR = "analysisNoiseFactor";
+	public static final String KEY_EOT_LEVEL = "analysisEotLevel";
 
 	private static AnalysisParametersWrapper instance;
 	private static Map<Double, Double> noiseFactors = new HashMap<Double, Double>();
@@ -54,7 +55,12 @@ public class AnalysisParametersWrapper implements Wrapper<AnalysisParameters> {
 
 	private AnalysisParametersWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { KEY_MIN_CONNECTOR, KEY_MIN_END, KEY_SENSITIVITY, KEY_NOISE_FACTOR };
+		final String[] keysArray = new String[] {
+				KEY_MIN_CONNECTOR,
+				KEY_MIN_END,
+				KEY_SENSITIVITY,
+				KEY_NOISE_FACTOR,
+				KEY_EOT_LEVEL };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -100,6 +106,8 @@ public class AnalysisParametersWrapper implements Wrapper<AnalysisParameters> {
 			return new Double(params.getSentitivity());
 		} else if (key.equals(KEY_NOISE_FACTOR)) {
 			return new Double(params.getNoiseFactor());
+		} else if (key.equals(KEY_EOT_LEVEL)) {
+			return new Double(params.getLevelEot());
 		}
 		return null;
 	}
@@ -122,6 +130,8 @@ public class AnalysisParametersWrapper implements Wrapper<AnalysisParameters> {
 				params.setSensitivity(Double.parseDouble((String) value));
 			} else if (key.equals(KEY_NOISE_FACTOR)) {
 				params.setNoiseFactor(((Double) value).doubleValue());
+			} else if (key.equals(KEY_EOT_LEVEL)) {
+				params.setLevelEot(Double.parseDouble((String) value));
 			}
 			Heap.notifyAnalysisParametersUpdated();
 		} catch (NumberFormatException e) {

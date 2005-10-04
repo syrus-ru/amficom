@@ -109,6 +109,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 			((AnalysisPanel)p).updEvents(id);
 			((AnalysisPanel)p).updateNoiseLevel();
 			((AnalysisPanel)p).draw_noise_level = true;
+			((AnalysisPanel)p).eotDetectionLevel.setDrawed(true);
 		} else {
 			//p = new SimpleGraphPanel(y, deltaX);
 			p = new ReflectogramPanel(ppp, id, true);

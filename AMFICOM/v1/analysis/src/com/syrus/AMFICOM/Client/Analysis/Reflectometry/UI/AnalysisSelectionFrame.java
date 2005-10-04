@@ -37,7 +37,8 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
-public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChangeListener, PrimaryMTAEListener,
+public class AnalysisSelectionFrame extends JInternalFrame
+implements BsHashChangeListener, PrimaryMTAEListener,
 		AnalysisParametersListener, ReportTable {
 	private static final long serialVersionUID = -5866433900913468687L;
 
@@ -109,7 +110,8 @@ public class AnalysisSelectionFrame extends JInternalFrame implements BsHashChan
 					new String[] { AnalysisParametersWrapper.KEY_SENSITIVITY,
 							AnalysisParametersWrapper.KEY_MIN_CONNECTOR,
 							AnalysisParametersWrapper.KEY_MIN_END,
-							AnalysisParametersWrapper.KEY_NOISE_FACTOR }));
+							AnalysisParametersWrapper.KEY_NOISE_FACTOR,
+							AnalysisParametersWrapper.KEY_EOT_LEVEL}));
 		
 		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_SENSITIVITY);
 		this.table.setRenderer(numberRenderer, AnalysisParametersWrapper.KEY_MIN_CONNECTOR);

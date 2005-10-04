@@ -1,5 +1,5 @@
 /*-
- * $Id: EnhancedReflectogramPanel.java,v 1.7 2005/10/04 09:22:53 saa Exp $
+ * $Id: EnhancedReflectogramPanel.java,v 1.8 2005/10/04 15:00:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,17 +18,20 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 
 /**
  * Отрисовывает рефлектограмму и кучу всяких сопутствующих вещей
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/10/04 09:22:53 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/04 15:00:31 $
  * @module
  */
 public class EnhancedReflectogramPanel extends ReflectogramPanel {
 	/**
 	 * Описывает горизонтальную линию-уровень.
+	 * Обеспечивает необходимую рассылку сообщений при выполнении setValue().
+	 * Не обеспечивает подписку на изменение значения (клиент должен подписаться сам).
 	 */
 	protected abstract class LevelLine {
 		private boolean drawed = false;
@@ -81,6 +84,10 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 		 */
 		protected abstract void setLevel(double level);
 
+		/**
+		 * Отрисовывается только если {@link #isDefined} && {@link #isDrawed}
+		 * @param g
+		 */
 		public final void draw(Graphics g) {
 			if (!isDefined() || !isDrawed())
 				return;
@@ -95,7 +102,7 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 		public final boolean startMoving(Point pos) {
 			this.moving = false;
 			if (isDefined() && isDrawed() && isMovable()) {
-				if (Math.abs(pos.y - value2coord(Heap.getMinTraceLevel()))
+				if (Math.abs(pos.y - value2coord(getLevel()))
 						< MOUSE_COUPLING) {
 					this.moving = true;
 				}
@@ -137,6 +144,33 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 		}
 	};
 
+	public LevelLine eotDetectionLevel =  new LevelLine(
+			UIManager.getColor(AnalysisResourceKeys.COLOR_END)) {
+		@Override
+		public boolean isMovable() {
+			return true;
+		}
+		@Override
+		public boolean isDefined() {
+			return true;
+		}
+		@Override
+		public double getLevel() {
+			// ограничиваем уровень областью самой р/г
+			double level = Heap.getMinuitAnalysisParams().getLevelEot();
+			return level >= minY ? level : minY;
+		}
+		@Override
+		protected void setLevel(double level) {
+			try {
+				Heap.getMinuitAnalysisParams().setLevelEot(level, true);
+				Heap.notifyAnalysisParametersUpdated();
+			} catch (InvalidAnalysisParametersException e) {
+				// ignore
+			}
+		}
+	};
+
 	public boolean draw_noise_level = false;
 	protected double noise_level = 28; // ???!
 	protected ReflectogramMismatch[] alarms;
@@ -162,17 +196,12 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 			if (draw_alarms)
 				paint_alarms(g);
 		}
-//		if (draw_min_trace_level && isDraw_events()) {
-//			paint_noise_level(g);
-//			paint_min_trace_level(g);
-//		} else if (draw_noise_level && isDraw_events()) {
-//			paint_noise_level(g);
-//		}
-		if (minTraceLevel.isDrawed() && isDraw_events()) {
-			paint_noise_level(g);
+		if (isDraw_events()) {
 			minTraceLevel.draw(g);
-		} else if (draw_noise_level && isDraw_events()) {
-			paint_noise_level(g);
+			eotDetectionLevel.draw(g);
+			if (draw_noise_level || minTraceLevel.isDrawed()) {
+				paint_noise_level(g);
+			}
 		}
 	}
 

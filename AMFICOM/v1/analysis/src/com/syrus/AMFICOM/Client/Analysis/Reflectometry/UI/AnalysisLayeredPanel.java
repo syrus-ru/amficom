@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
@@ -15,7 +16,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 public class AnalysisLayeredPanel
 extends TraceEventsLayeredPanel
 implements CurrentEventChangeListener,
-		PrimaryRefAnalysisListener, RefMismatchListener
+		PrimaryRefAnalysisListener, RefMismatchListener,
+		AnalysisParametersListener
 {
 	public static final long LOSS_ANALYSIS = 0x00000001;
 	public static final long REFLECTION_ANALYSIS = 0x00000010;
@@ -36,6 +38,7 @@ implements CurrentEventChangeListener,
 		Heap.addCurrentEventChangeListener(this);
 		Heap.addPrimaryRefAnalysisListener(this);
 		Heap.addRefMismatchListener(this);
+		Heap.addAnalysisParametersListener(this);
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -176,5 +179,19 @@ implements CurrentEventChangeListener,
 
 	public void refMismatchRemoved() {
 		updRefMismatch();
+	}
+
+	public void analysisParametersUpdated() {
+		boolean updated = false;
+		for(int i = 0; i < jLayeredPane.getComponentCount(); i++) {
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof EnhancedReflectogramPanel) {
+				EnhancedReflectogramPanel p2 = (EnhancedReflectogramPanel)panel;
+				updated = p2.eotDetectionLevel.isDrawed();
+			}
+		}
+		if (updated) {
+			jLayeredPane.repaint();
+		}
 	}
 }
