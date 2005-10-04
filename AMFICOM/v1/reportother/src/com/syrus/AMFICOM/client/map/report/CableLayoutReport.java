@@ -1,28 +1,34 @@
 package com.syrus.AMFICOM.client.map.report;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
+import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.util.Log;
 
 /**
  * Отчёт "Прокладка кабеля"
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/09/25 16:23:18 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.7 $, $Date: 2005/10/04 08:34:56 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -34,16 +40,25 @@ public class CableLayoutReport {
 	
 	public static TableDataRenderingComponent createReport(
 			TableDataStorableElement tableStorableElement,
-			SchemeCableLink cableLink) {
+			SchemeCableLink cableLink) throws CreateReportException {
 		int vertDivisionsCount = tableStorableElement.getVerticalDivisionsCount();
 		TableDataRenderingComponent renderingComponent = null;
 		
-		renderingComponent = new TableDataRenderingComponent(
-			tableStorableElement,
-			new CableLayoutReportTableModel(
-					cableLink,
-					vertDivisionsCount),
-			getTableColumnWidths(vertDivisionsCount));
+		try {
+			renderingComponent = new TableDataRenderingComponent(
+				tableStorableElement,
+				new CableLayoutReportTableModel(
+						cableLink,
+						vertDivisionsCount),
+				getTableColumnWidths(vertDivisionsCount));
+		} catch (ApplicationException e) {
+			Log.errorMessage("TunnelCableListReport.createReport | " + e.getMessage());
+			Log.errorException(e);			
+			throw new CreateReportException(
+					tableStorableElement.getReportName(),
+					tableStorableElement.getModelClassName(),
+					CreateReportException.ERROR_GETTING_FROM_POOL);
+		}
 		
 		return renderingComponent;
 	}
@@ -88,7 +103,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 	
 	protected CableLayoutReportTableModel (
 			SchemeCableLink cableLink,
-			int vertDivisionsCount) {
+			int vertDivisionsCount) throws ApplicationException{
 		this.vertDivisionsCount = vertDivisionsCount;
 
 		this.siteNodeNameColumn.add(LangModelMap.getString(START_NODE));
@@ -117,44 +132,45 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 			
 			// Информация о тоннеле - строка типа Тоннель тон.1, место N, L =
 			// xxx
-			String tunnelInfoString = null;
-			if(currentItemIndex == channelingItems.size() - 1)
-				tunnelInfoString = EMPTY_OBJECT_STRING;
-			else {
+			StringBuffer tunnelInfoStringBuffer = new StringBuffer();
+			if(currentItemIndex != channelingItems.size() - 1) {
 				//Тип и имя тоннеля
 				PhysicalLink physicalLink = chanellingItem.getPhysicalLink();
-
-				//TODO получаем Map по кондишену
-				Map map = null;
+				//Получаем коллекторы для тоннеля
+				LinkedIdsCondition condition = new LinkedIdsCondition(
+						physicalLink.getId(),
+						ObjectEntities.COLLECTOR_CODE);
+				Set<Collector> collectorsSet =
+					StorableObjectPool.getStorableObjectsByCondition(condition,true);
+				Iterator<Collector> collectorsIterator = collectorsSet.iterator();
 				
-				Collector pipePath = map.getCollector(physicalLink);
-				if(pipePath != null)
-					tunnelInfoString =
-						LangModelMap.getString(COLLECTOR)
-						+ pipePath.getName();
-				else
-					tunnelInfoString =
-						LangModelMap.getString(TUNNEL)
-						+ physicalLink.getName();
-
-				//TODO Как-то вычисляется положение. Без биндинга надо
-				int place = physicalLink.getBinding().getSequenceNumber(
-						chanellingItem.getRowX(),
-						chanellingItem.getPlaceY());
+				//Хотя коллекторов для physicalLink'а может быть больше одного,
+				//это неправильная ситуация((C)А.Крупенников). Отчёт учитывает
+				//один коллектор.
+				if (collectorsIterator.hasNext()) {
+					Collector collector = collectorsIterator.next();
+					tunnelInfoStringBuffer.append(LangModelMap.getString(COLLECTOR));
+					tunnelInfoStringBuffer.append(collector.getName());
+				}
+				else {
+					tunnelInfoStringBuffer.append(LangModelMap.getString(TUNNEL));
+					tunnelInfoStringBuffer.append(physicalLink.getName());
+				}
 
 				// Место в тоннеле
-				tunnelInfoString += 
-					(","
-					+ LangModelMap.getString(MAP_TUNNEL_POSIT)
-					+ ": " + Integer.toString(place));
+				tunnelInfoStringBuffer.append(",");
+				tunnelInfoStringBuffer.append(LangModelMap.getString(MAP_TUNNEL_POSIT));
+				tunnelInfoStringBuffer.append(": (");
+				tunnelInfoStringBuffer.append(chanellingItem.getRowX());
+				tunnelInfoStringBuffer.append(chanellingItem.getPlaceY());
+				tunnelInfoStringBuffer.append(")");
 
 				// Длина тоннеля
-				tunnelInfoString += 
-					(", L = "
-					+ physicalLink.getLengthLt()
-					+ LangModelMap.getString(METRIC));
+				tunnelInfoStringBuffer.append(", L = ");
+				tunnelInfoStringBuffer.append(physicalLink.getLengthLt());
+				tunnelInfoStringBuffer.append(LangModelMap.getString(METRIC));
 			}
-			this.startLinkColumn.add(tunnelInfoString);
+			this.startLinkColumn.add(tunnelInfoStringBuffer.toString());
 			
 			currentItemIndex++;
 		}
