@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.13 2005/09/29 13:20:49 stas Exp $
+ * $Id: PopupFactory.java,v 1.14 2005/10/04 08:14:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -292,7 +292,7 @@ public class PopupFactory {
 	private static JMenuItem createMuffMenuItem(final ApplicationContext aContext, final SchemeGraph graph, final DefaultCableLink cell) {
 		JMenu menu = new JMenu(LangModelScheme.getString("Menu.path.insert_muff")); //$NON-NLS-1$
 		try {
-			TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF.getCodename(), OperationSort.OPERATION_EQUALS, ObjectEntities.PROTOEQUIPMENT_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF, OperationSort.OPERATION_EQUALS, ObjectEntities.PROTOEQUIPMENT_CODE, StorableObjectWrapper.COLUMN_TYPE_CODE);
 			Set<ProtoEquipment> protoEqs = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 			Set<Identifier> protoEqIds = new HashSet<Identifier>(); 
 			for (ProtoEquipment protoEq : protoEqs) {

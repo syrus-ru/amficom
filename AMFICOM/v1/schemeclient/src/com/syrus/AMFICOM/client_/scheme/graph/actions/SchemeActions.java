@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.37 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeActions.java,v 1.38 2005/10/04 08:14:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,11 +37,13 @@ import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
 import com.jgraph.graph.PortView;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -54,6 +56,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
+import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
@@ -90,7 +93,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.37 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/04 08:14:15 $
  * @module schemeclient
  */
 
@@ -415,6 +418,116 @@ public class SchemeActions {
 		openSchemeImageResource(graph, ugoRes, doClone, p, true); 
 	}
 	
+	public static void putToGraph(Scheme scheme, SchemeTabbedPane pane) throws ApplicationException {
+		int width = scheme.getWidth();
+		int height = scheme.getHeight();
+		
+		ApplicationContext aContext =  pane.getContext();
+		Dispatcher internalDispatcher = aContext.getDispatcher();
+		SchemeGraph schemeGraph = pane.getGraph();
+		schemeGraph.setActualSize(new Dimension(width, height));
+		int grid = schemeGraph.getGridSize();
+		internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, scheme.getId(), SchemeEvent.OPEN_SCHEME));
+		
+		// determine bounds
+		double xmin = 180, ymin = 90, xmax = -180, ymax = -90; 
+		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
+			Equipment equipment = schemeElement.getEquipment();
+			if (equipment != null) {
+				double x0 = equipment.getLongitude();
+				double y0 = equipment.getLatitude();
+				xmin = Math.min(xmin, x0);
+				ymin = Math.min(ymin, y0);
+				xmax = Math.max(xmax, x0);
+				ymax = Math.max(ymax, y0);
+			}
+		}
+		
+		double kx = (xmax - xmin == 0) ? 1 : (scheme.getWidth() - grid * 20) / (xmax - xmin);
+		double ky = (ymax - ymin == 0) ? 1 : (scheme.getHeight() - grid * 20) / (ymax - ymin);
+		
+		Set<Identifier> placedObjectIds = getPlacedObjects(schemeGraph);
+		
+		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
+			if (!placedObjectIds.contains(schemeElement.getId())) {
+				Equipment equipment = schemeElement.getEquipment();
+				Point p;
+				if (equipment != null) {
+					double x0 = equipment.getLongitude();
+					double y0 = equipment.getLatitude();
+					p = new Point((int)(grid * 10 + (x0 - xmin) * kx), (grid * 5 + height - (int)((y0 - ymin) * ky))); 
+				} else {
+					Log.errorMessage("No equipment for " + schemeElement.getName() + " (" + schemeElement.getId() + ")");
+					p = new Point((int)(width * Math.random()), (int)(height * Math.random()));
+				}
+				if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+					internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, schemeElement.getScheme(false).getId(), p, SchemeEvent.INSERT_SCHEME));	
+				} else {
+					internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, schemeElement.getId(), p, SchemeEvent.INSERT_SCHEMEELEMENT));
+				}
+			}
+		}
+		
+		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
+			Point p = null;
+			SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
+			SchemeCablePort targetPort = schemeCableLink.getSourceAbstractSchemePort();
+			if (sourcePort != null) {
+				CablePortCell cell = SchemeActions.findCablePortCellById(schemeGraph, sourcePort.getId());
+				if (cell != null) {
+					try {
+						DefaultPort source = SchemeActions.getSuitablePort(cell, schemeCableLink.getId());
+						PortView sourceView = (PortView)schemeGraph.getGraphLayoutCache().getMapping(source, false);
+						p = sourceView.getBounds().getLocation();
+					} catch (CreateObjectException e) {
+						Log.errorException(e);
+						return;
+					}
+				} else {
+					Log.errorMessage("No source found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
+				}
+			} 
+			if (p == null && targetPort != null) {
+				CablePortCell cell = SchemeActions.findCablePortCellById(schemeGraph, targetPort.getId());
+				if (cell != null) {
+					try {
+						DefaultPort source = SchemeActions.getSuitablePort(cell, schemeCableLink.getId());
+						PortView sourceView = (PortView)schemeGraph.getGraphLayoutCache().getMapping(source, false);
+						p = sourceView.getBounds().getLocation();
+					} catch (CreateObjectException e) {
+						Log.errorMessage(e.getMessage());
+						return;
+					}
+				} else {
+					Log.errorMessage("No target found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
+				}
+			} 
+			if (p == null) {
+				Log.errorMessage("Both source and target not found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
+				p = new Point(10 * grid, 10 * grid); 
+			}
+			
+			internalDispatcher.firePropertyChange(new SchemeEvent(schemeGraph, schemeCableLink.getId(), p, SchemeEvent.INSERT_SCHEME_CABLELINK));
+		}
+		schemeGraph.setMakeNotifications(true);
+	} 
+	
+	public static Set<Identifier> getPlacedObjects(SchemeGraph graph) {
+		graph.setMakeNotifications(false);
+		
+		Set<Identifier> placedObjectIds = new HashSet<Identifier>();
+		for (Object cell : graph.getAll()) {
+			if (cell instanceof DeviceGroup) {
+				placedObjectIds.add(((DeviceGroup)cell).getElementId());
+			} else if (cell instanceof DefaultCableLink) {
+				placedObjectIds.add(((DefaultCableLink)cell).getSchemeCableLinkId());
+			} else if (cell instanceof DefaultLink) {
+				placedObjectIds.add(((DefaultLink)cell).getSchemeLinkId());
+			}
+		}
+		return placedObjectIds;
+	}
+
 	/**
 	 * @param schemeImageResource Scheme or SchemeElement or SchemeProtoElement SchemeCell or UgoCell
 	 * @param doClone create copy of objects or open themself
@@ -758,23 +871,13 @@ public class SchemeActions {
 			PortCell port, boolean is_source) {
 
 		SchemePort sp = port.getSchemePort();
-		if (sp == null) {
-			Log.debugMessage("SchemeActions.connectSchemeLink() port not found " + port.getSchemePortId(), Level.WARNING); //$NON-NLS-1$
-			return false;
-		}
-		SchemeLink sl = link.getSchemeLink();
-		if (sl == null) {
-			Log.debugMessage("SchemeActions.connectSchemeLink() link not found " + link.getSchemeLinkId(), Level.WARNING); //$NON-NLS-1$
-			return false;
-		}
-		
 		AbstractSchemeLink connectedLink = sp.getAbstractSchemeLink();
-		if (sl.equals(connectedLink)) {
+		if (connectedLink != null && link.getSchemeLinkId().equals(connectedLink.getId())) {
 			return true;
 		}
+		SchemeLink sl = link.getSchemeLink();
 
 		// TODO externalyze
-		
 		if (connectedLink != null) {
 			String message = "К порту " + sp.getName()
 					+ " уже подключена линия связи " + connectedLink.getName() + ".\n";
@@ -850,13 +953,13 @@ public class SchemeActions {
 
 	public static boolean connectSchemeCableLink(SchemeGraph graph,
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
+		
 		SchemeCablePort sp = port.getSchemeCablePort();
-		SchemeCableLink sl = link.getSchemeCableLink();
-
 		AbstractSchemeLink connectedLink = sp.getAbstractSchemeLink();
-		if (sl.equals(connectedLink)) {
+		if (connectedLink != null && link.getSchemeCableLinkId().equals(connectedLink.getId())) {
 			return true;
 		}
+		SchemeCableLink sl = link.getSchemeCableLink();
 		
 		// TODO externalyze
 		if (connectedLink != null) {
