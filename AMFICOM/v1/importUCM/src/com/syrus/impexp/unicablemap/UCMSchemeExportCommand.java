@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.12 2005/10/03 15:10:17 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.13 2005/10/04 10:26:58 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.impexp.unicablemap.objects.Port;
 import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/10/03 15:10:17 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/10/04 10:26:58 $
  * @module importUCM
  */
 
@@ -270,16 +270,40 @@ public class UCMSchemeExportCommand {
 						UniCableMapObject block = ucmLink1.parent;
 						int pox = 0;
 						int poy = 0;
+						boolean leftToRight = true;
+						boolean topToBottom = false;
 						for(UniCableMapParameter param : block.buf.params) {
 							if (param.realParameter.text.equals(UniCableMapParameter.UCM_X)) {
 								pox = Integer.parseInt(param.value);
 							} else if (param.realParameter.text.equals(UniCableMapParameter.UCM_Y)) {
 								poy = Integer.parseInt(param.value);
+							} else if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_TOP)) {
+								topToBottom = Boolean.getBoolean(param.value);
+							} else if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_RIGHT)) {
+								leftToRight = ! Boolean.getBoolean(param.value);
 							}
 						}
 						int seq = truba.un - block.un;
-						item.setRowX(seq / poy == 0 ? 1 : poy);
-						item.setPlaceY(seq % pox == 0 ? seq : pox);
+						int rowX = (pox == 0) ? 1
+								: (leftToRight) ? ((seq % pox) - 1) 
+										: (pox - (seq % pox));
+						if(rowX < 0) {
+							rowX += pox;
+						}
+						int placeY = (pox == 0) ? 1
+								: (topToBottom) ? ((seq - 1) / pox) 
+										: (poy - ((seq - 1) / pox) - 1);
+						item.setRowX(rowX);
+						item.setPlaceY(placeY);
+						if(rowX == -1 || placeY == -1) {
+							System.out.println("row " + rowX
+									+ ", place " + placeY
+									+ " for seq " + seq
+									+ " at tunnel dimensions (" + pox
+									+ ", " + poy + ")");
+						}
+//						item.setRowX(seq / poy == 0 ? 1 : poy);
+//						item.setPlaceY(seq % pox == 0 ? seq : pox);
 						for(UniCableMapLink ucmLink2 : this.ucmDatabase.getParents(block)) {
 							if(ucmLink2.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
 								UniCableMapObject razrez = ucmLink2.parent;
