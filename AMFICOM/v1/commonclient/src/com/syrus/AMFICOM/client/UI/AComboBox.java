@@ -11,7 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.UIManager;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/30 09:11:26 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/04 10:56:16 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -63,7 +63,7 @@ public class AComboBox extends JComboBox {
 	}
 
 	private void actualResize() {
-		final FontMetrics fm = this.getFontMetrics(UIManager.getFont("ComboBox.font"));
+		final FontMetrics fm = this.getFontMetrics(UIManager.getFont("AComboBox.font"));
 		if (fm != null) {
 			final int height = fm.getHeight();
 			int width = 0;
