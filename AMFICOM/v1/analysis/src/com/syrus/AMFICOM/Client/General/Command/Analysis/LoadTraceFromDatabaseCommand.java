@@ -30,7 +30,6 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 
 	public LoadTraceFromDatabaseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
-		System.out.println("LoadTraceFromDatabaseCommand constructor");
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
@@ -59,8 +58,9 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		// Получаем набор результатов, которые надо загрузить
 		// XXX: performance: загружаем - иногда долго
 		JFrame parent = Environment.getActiveWindow();
-		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
+		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION) {
 			return;
+		}
 		Set<Result> results = TraceLoadDialog.getResults();
 
 		// XXX: Если набор результатов пуст, ничего не делаем
