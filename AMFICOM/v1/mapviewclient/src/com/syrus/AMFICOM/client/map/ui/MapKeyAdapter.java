@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapKeyAdapter.java,v 1.17 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapKeyAdapter.java,v 1.18 2005/10/04 17:12:18 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,15 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 
 /**
@@ -25,7 +28,7 @@ import com.syrus.AMFICOM.map.NodeLink;
  * обработки действий (SHIFT, ALT, CTRL) и для удаления выбранных элементов
  * (DEL)
  * 
- * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/04 17:12:18 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -63,6 +66,28 @@ public final class MapKeyAdapter extends KeyAdapter {
 			if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
 				logicalNetLayer.getMapState().setActionMode(
 						MapState.MOVE_ACTION_MODE);
+			if(code == KeyEvent.VK_A) {
+				final Set<MapElement> selectedElements = logicalNetLayer.getMapView().getMap().getSelectedElements();
+				for(MapElement mapElement : selectedElements) {
+					this.viewer.animateTimer.add(mapElement);
+				}
+			}
+			if(code == KeyEvent.VK_R) {
+				final Set<MapElement> selectedElements = logicalNetLayer.getMapView().getMap().getSelectedElements();
+				for(MapElement mapElement : selectedElements) {
+					this.viewer.animateTimer.remove(mapElement);
+				}
+			}
+			if(code == KeyEvent.VK_U) {
+				final Set<MapElement> selectedElements = logicalNetLayer.getMapView().getMap().getSelectedElements();
+				if(selectedElements.size() == 1) {
+					MapElement mapElement = selectedElements.iterator().next();
+					XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
+					mapElement.getId().getXmlTransferable(xmlId, "ucm");
+					System.out.println("un for '" + mapElement.getName() 
+							+ "' is '" + xmlId.getStringValue() + "'");
+				}
+			}
 		}
 		// }
 
