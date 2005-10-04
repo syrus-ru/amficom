@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.27 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.28 2005/10/04 06:15:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,18 +24,11 @@ import javax.swing.JScrollPane;
 
 import org.apache.xmlbeans.XmlException;
 
-import com.jgraph.graph.DefaultPort;
-import com.jgraph.graph.PortView;
-import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Equipment;
@@ -56,15 +48,12 @@ import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipmentSeq;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
-import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.AMFICOM.scheme.xml.SchemeProtoGroupsDocument;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
@@ -173,7 +162,10 @@ public class SchemeImportCommand extends ImportExportCommand {
 //						}
 //					}
 					
-					putToGraph(scheme);
+					scheme.setWidth(SCHEME_SIZE.width);
+					scheme.setHeight(SCHEME_SIZE.height);
+					SchemeActions.putToGraph(scheme, this.pane);
+					
 					ApplicationModel aModel = this.pane.getContext().getApplicationModel();
 					aModel.setEnabled("menuSchemeImportCommit", true);
 					aModel.fireModelChanged();
@@ -656,222 +648,4 @@ public class SchemeImportCommand extends ImportExportCommand {
 		}
 	}*/
 	
-	private void putToGraph(Scheme scheme) throws ApplicationException {
-		scheme.setWidth(SCHEME_SIZE.width);
-		scheme.setHeight(SCHEME_SIZE.height);
-		
-		ApplicationContext aContext =  this.pane.getContext();
-		Dispatcher internalDispatcher = aContext.getDispatcher();
-		SchemeGraph schemeGraph = this.pane.getGraph();
-		int grid = schemeGraph.getGridSize();
-		internalDispatcher.firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
-		
-		// determine bounds
-		double xmin = 180, ymin = 90, xmax = -180, ymax = -90; 
-		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
-			Equipment equipment = schemeElement.getEquipment();
-			if (equipment != null) {
-				double x0 = equipment.getLongitude();
-				double y0 = equipment.getLatitude();
-				xmin = Math.min(xmin, x0);
-				ymin = Math.min(ymin, y0);
-				xmax = Math.max(xmax, x0);
-				ymax = Math.max(ymax, y0);
-			}
-		}
-		
-		double kx = (xmax - xmin == 0) ? 1 : (SCHEME_SIZE.width - grid * 20) / (xmax - xmin);
-		double ky = (ymax - ymin == 0) ? 1 : (SCHEME_SIZE.height - grid * 20) / (ymax - ymin);
-		
-		Set<Identifier> placedObjects = ImportUCMConverter.getPlacedObjects(schemeGraph);
-		
-		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
-			if (!ImportUCMConverter.contains(placedObjects, schemeElement)) {
-				Equipment equipment = schemeElement.getEquipment();
-				Point p;
-				if (equipment != null) {
-					double x0 = equipment.getLatitude();
-					double y0 = equipment.getLongitude();
-					p = new Point((int)(grid * 10 + (x0 - xmin) * kx), (grid * 5 + SCHEME_SIZE.height - (int)((y0 - ymin) * ky))); 
-				} else {
-					Log.errorMessage("No equipment for " + schemeElement.getName() + " (" + schemeElement.getId() + ")");
-					p = new Point((int)(SCHEME_SIZE.width * Math.random()), (int)(SCHEME_SIZE.height * Math.random()));
-				}
-				if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
-					internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeElement.getScheme(false).getId(), p, SchemeEvent.INSERT_SCHEME));	
-				} else {
-					internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeElement.getId(), p, SchemeEvent.INSERT_SCHEMEELEMENT));
-				}
-			}
-		}
-		
-		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
-			Point p = null;
-			SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
-			SchemeCablePort targetPort = schemeCableLink.getSourceAbstractSchemePort();
-			if (sourcePort != null) {
-				CablePortCell cell = SchemeActions.findCablePortCellById(schemeGraph, sourcePort.getId());
-				if (cell != null) {
-					try {
-						DefaultPort source = SchemeActions.getSuitablePort(cell, schemeCableLink.getId());
-						PortView sourceView = (PortView)schemeGraph.getGraphLayoutCache().getMapping(source, false);
-						p = sourceView.getBounds().getLocation();
-					} catch (CreateObjectException e) {
-						Log.errorException(e);
-						return;
-					}
-				} else {
-					Log.errorMessage("No source found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
-				}
-			} 
-			if (p == null && targetPort != null) {
-				CablePortCell cell = SchemeActions.findCablePortCellById(schemeGraph, targetPort.getId());
-				if (cell != null) {
-					try {
-						DefaultPort source = SchemeActions.getSuitablePort(cell, schemeCableLink.getId());
-						PortView sourceView = (PortView)schemeGraph.getGraphLayoutCache().getMapping(source, false);
-						p = sourceView.getBounds().getLocation();
-					} catch (CreateObjectException e) {
-						Log.errorMessage(e.getMessage());
-						return;
-					}
-				} else {
-					Log.errorMessage("No target found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
-				}
-			} 
-			if (p == null) {
-				Log.errorMessage("Both source and target not found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
-				p = new Point(10 * grid, 10 * grid); 
-			}
-			
-			internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeCableLink.getId(), p, SchemeEvent.INSERT_SCHEME_CABLELINK));
-		}
-		schemeGraph.setMakeNotifications(true);
-	}
-/*
-	private void initMuffs() throws ApplicationException {
-		TypicalCondition condition1 = new TypicalCondition(EquipmentTypeCodename.MUFF.stringValue(), OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-		this.muffTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-		Set<Identifier> muffTypeIds = new HashSet<Identifier>();
-		for (EquipmentType eqt : muffTypes) {
-			muffTypeIds.add(eqt.getId());
-		}
-		LinkedIdsCondition condition2 = new LinkedIdsCondition(muffTypeIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
-		Set<SchemeProtoElement> muffs = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
-		if (muffs.size() == 0) {
-			Log.debugMessage("No muffs found", Level.WARNING);
-			return;
-		}
-
-		// put <number of ports, muff>
-		this.straightMuffs = new HashMap<Integer, SchemeProtoElement>();
-		for (SchemeProtoElement muff : muffs) {
-			if (muff.getParentSchemeProtoElement() == null) {
-				Set<SchemeCablePort> cablePorts = muff.getSchemeCablePortsRecursively();
-				if (cablePorts.size() == 2) {
-					this.straightMuffs.put(Integer.valueOf(muff.getSchemePortsRecursively().size() / 2), muff);
-				}
-			}
-		}
-	}
-	
-	private void initVrms() throws ApplicationException {
-		TypicalCondition condition1 = new TypicalCondition(EquipmentTypeCodename.CABLE_PANEL.stringValue(), OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-		Set<EquipmentType> vrmTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-		Set<Identifier> vrmTypeIds = new HashSet<Identifier>();
-		for (EquipmentType eqt : vrmTypes) {
-			vrmTypeIds.add(eqt.getId());
-		}
-		LinkedIdsCondition condition2 = new LinkedIdsCondition(vrmTypeIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
-		Set<SchemeProtoElement> vrms = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
-		if (vrms.size() == 0) {
-			Log.debugMessage("No vrms found", Level.WARNING);
-			return;
-		}
-
-		// put <number of ports, muff>
-		this.inVrms = new HashMap<Integer, SchemeProtoElement>();
-		this.outVrms = new HashMap<Integer, SchemeProtoElement>();
-		for (SchemeProtoElement vrm : vrms) {
-			if (vrm.getParentSchemeProtoElement() == null) {
-				Set<SchemePort> ports = vrm.getSchemePortsRecursively();
-				if (ports.size() > 0) {
-					SchemePort port = ports.iterator().next();
-					if (port.getDirectionType() == IdlDirectionType._OUT) {
-						this.inVrms.put(Integer.valueOf(ports.size()), vrm);
-					} else {
-						this.outVrms.put(Integer.valueOf(ports.size()), vrm);
-					}
-				}
-			}
-		}
-	}
-	
-	private SchemeProtoElement getSuitableProto(Map<Integer, SchemeProtoElement> mapping, Integer num) {
-		//  search for proto with corresponding number of ports, if nothing found search with larger number, 
-		//  if not again - get any
-		SchemeProtoElement suitableProto = mapping.get(num);
-		if (suitableProto == null) {
-			for (Integer i : mapping.keySet()) {
-				if (i.compareTo(num) > 0) {
-					suitableProto = mapping.get(i);
-					break;
-				}
-			}
-			if (suitableProto == null) {
-				suitableProto = mapping.values().iterator().next();
-			}
-		}
-		return suitableProto;
-	}
-	
-	private void substituteExistingPorts(Map<Identifier, Identifier>clonedIds, Set<SchemeCablePort> existingCablePorts) throws ApplicationException {
-		Map<Identifier, SchemeCablePort>existingPortsMapping = new HashMap<Identifier, SchemeCablePort>();
-		for (Identifier id1 : clonedIds.keySet()) {
-			if (id1.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
-				SchemeCablePort cport = StorableObjectPool.getStorableObject(clonedIds.get(id1), false);
-				for (SchemeCablePort existingPort : existingCablePorts) {
-					if (cport.getDirectionType() == existingPort.getDirectionType()) {
-						existingPortsMapping.put(id1, existingPort);
-					}
-				}
-			}
-		}
-		for (Identifier id : existingPortsMapping.keySet()) {
-			SchemeCablePort portToRemove = StorableObjectPool.getStorableObject(clonedIds.get(id), false);
-			SchemeCablePort portToAdd = existingPortsMapping.get(id);
-			
-			SchemeDevice parent = portToRemove.getParentSchemeDevice();
-			portToAdd.setParentSchemeDevice(parent);
-			portToAdd.setPortType(portToRemove.getPortType());
-			clonedIds.put(id, portToAdd.getId());
-			StorableObjectPool.delete(portToRemove.getId());
-			StorableObjectPool.flush(portToRemove.getId(), this.userId, false);
-		}
-	}
-	
-	private void substituteExistingPorts(Map<Identifier, Identifier>clonedIds, SchemeCablePort existingCablePort) throws ApplicationException {
-		Map<Identifier, SchemeCablePort>existingPortsMapping = new HashMap<Identifier, SchemeCablePort>();
-		for (Identifier id1 : clonedIds.keySet()) {
-			if (id1.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
-				SchemeCablePort cport = StorableObjectPool.getStorableObject(clonedIds.get(id1), false);
-				if (cport.getDirectionType() == existingCablePort.getDirectionType()) {
-					existingPortsMapping.put(id1, existingCablePort);
-					break;
-				}
-			}
-		}
-		for (Identifier id : existingPortsMapping.keySet()) {
-			SchemeCablePort portToRemove = StorableObjectPool.getStorableObject(clonedIds.get(id), false);
-			SchemeCablePort portToAdd = existingPortsMapping.get(id);
-			
-			SchemeDevice parent = portToRemove.getParentSchemeDevice();
-			portToAdd.setParentSchemeDevice(parent);
-			portToAdd.setPortType(portToRemove.getPortType());
-			portToAdd.setName(portToRemove.getName());
-			clonedIds.put(id, portToAdd.getId());
-			StorableObjectPool.delete(portToRemove.getId());
-			StorableObjectPool.flush(portToRemove.getId(), this.userId, false);
-		}
-	}*/
 }

@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -183,10 +185,12 @@ public class SchemeSaveCommand extends AbstractCommand {
 				long start = System.currentTimeMillis();
 				schemeIr.setData((List) graph.getArchiveableState());
 				scheme.setSchemeCell(schemeIr);
-				System.err.println("written for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)");
+				Log.debugMessage("Scheme cell created for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)", Level.FINER);
 				Identifier userId = LoginManager.getUserId();
 				StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
 
+				LocalXmlIdentifierPool.flush();
+				
 				this.schemeTab.setGraphChanged(false);
 				
 				if (scheme.getUgoCell() == null) {

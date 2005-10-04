@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.7 2005/10/03 07:44:39 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.8 2005/10/04 06:15:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 
 import java.awt.Point;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,9 +35,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -51,6 +47,7 @@ import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -82,7 +79,8 @@ public class ImportUCMConverter {
 	private Set<Identifier> placedObjectIds;
 	private Set<ProtoEquipment> muffProtoTypes;
 	private Map<SchemeCablePort, Set<SchemeCableThread>> portThreadsCount = new HashMap<SchemeCablePort, Set<SchemeCableThread>>();
-
+	private Set<Identifiable> objectsToDelete;
+	
 	private Identifier userId;
 	private ApplicationContext aContext;
 	private SchemeGraph graph;
@@ -165,6 +163,7 @@ public class ImportUCMConverter {
 	}
 	
 	void parseSchemeElements(Scheme scheme) throws ApplicationException {
+		this.objectsToDelete = new HashSet<Identifiable>();
 		initMuffs();
 		initVrms();
 		initPlacedObjects(scheme);
@@ -187,7 +186,7 @@ public class ImportUCMConverter {
 //		}
 		
 		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
-			if (!contains(schemeElement)) {
+			if (!this.placedObjectIds.contains(schemeElement.getId())) {
 			try{
 				if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 				// if no real Scheme associated create new scheme with internal VRM's
@@ -366,20 +365,8 @@ public class ImportUCMConverter {
 			}
 			}
 		}
+		StorableObjectPool.flush(this.objectsToDelete, this.userId, true);
 	}
-
-	// it's contains as cell, placed on scheme picture, not as member of hierarchy
-	static boolean contains(Set<Identifier> placedObjectIds, SchemeElement schemeElement) {
-		if (placedObjectIds.contains(schemeElement.getId())) {
-			return true;
-		}
-		return false;
-	}
-	
-	private boolean contains(SchemeElement schemeElement) {
-		return contains(this.placedObjectIds, schemeElement);
-	}
-	
 	private SchemeProtoElement getSuitableProto(Map<Integer, SchemeProtoElement> mapping, Integer num) {
 		//  search for proto with corresponding number of ports, if nothing found search with larger number, 
 		//  if not again - get any
@@ -409,7 +396,7 @@ public class ImportUCMConverter {
 			}
 			Log.debugMessage("Remove device " + dev.getId(), Level.FINE);
 			StorableObjectPool.delete(dev.getId());
-			StorableObjectPool.flush(dev, this.userId, false);
+			this.objectsToDelete.add(dev);
 		}
 		seToAdd.setSchemeDevices(seToRemove.getSchemeDevices(false), false);
 		seToAdd.setSchemeElements(seToRemove.getSchemeElements(false), false);
@@ -427,7 +414,7 @@ public class ImportUCMConverter {
 			}
 		}
 		StorableObjectPool.delete(seToRemove.getId());
-		StorableObjectPool.flush(seToRemove.getId(), this.userId, false);
+		this.objectsToDelete.add(seToRemove);
 	}
 	
 	private void substituteExistingPorts(Map<Identifier, Identifier>clonedIds, Set<SchemeCablePort> existingCablePorts) throws ApplicationException {
@@ -482,7 +469,7 @@ public class ImportUCMConverter {
 			clonedIds.put(seCablePortReversedMap.get(portToRemove), portToAdd.getId());
 			Log.debugMessage("Remove port " + portToRemove.getId() + " (parentId = '" + parent.getId() + "')", Level.FINE);
 			StorableObjectPool.delete(portToRemove.getId());
-			StorableObjectPool.flush(portToRemove.getId(), this.userId, false);
+			this.objectsToDelete.add(portToRemove);
 			Log.debugMessage("\tparent schemeElement " + parent.getParentSchemeElement().getId(), Level.FINE);
 			for (SchemeCablePort child : parent.getSchemeCablePorts(false)) {
 				Log.debugMessage("\tchild cablePort " + child.getId(), Level.FINE);
@@ -516,26 +503,11 @@ public class ImportUCMConverter {
 		}
 	}
 	*/
-	static Set<Identifier> getPlacedObjects(SchemeGraph graph) {
-		graph.setMakeNotifications(false);
-		
-		Set<Identifier> placedObjectIds = new HashSet<Identifier>();
-		for (Object cell : graph.getAll()) {
-			if (cell instanceof DeviceGroup) {
-				placedObjectIds.add(((DeviceGroup)cell).getElementId());
-			} else if (cell instanceof DefaultCableLink) {
-				placedObjectIds.add(((DefaultCableLink)cell).getSchemeCableLinkId());
-			} else if (cell instanceof DefaultLink) {
-				placedObjectIds.add(((DefaultLink)cell).getSchemeLinkId());
-			}
-		}
-		return placedObjectIds;
-	}
-	
+
 	private void initPlacedObjects(Scheme scheme) {
 		Dispatcher internalDispatcher = this.aContext.getDispatcher();
 		internalDispatcher.firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
-		this.placedObjectIds = getPlacedObjects(this.graph);
+		this.placedObjectIds = SchemeActions.getPlacedObjects(this.graph);
 	}
 	
 	private void initMuffs() throws ApplicationException {
