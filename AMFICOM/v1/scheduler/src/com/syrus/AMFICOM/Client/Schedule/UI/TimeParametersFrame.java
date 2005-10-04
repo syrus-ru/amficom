@@ -204,31 +204,30 @@ public class TimeParametersFrame extends JInternalFrame {
 																								.isSelected();
 																				if (size == 1 || !b) {
 																					if (b) {
-																						if (startDate.getTime() > endDate
+																						final long startTime = startDate.getTime();
+																						if (startTime > endDate
 																								.getTime()) {
 																							waiting = false;
 
 																						} else {
-																							boolean canBeMoved;
 																							final Test selectedTest;
 																							try {
 																							selectedTest = TimeParametersPanel.this.schedulerModel
 																									.getSelectedTest();
-																								canBeMoved = selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)
-																										&& TimeParametersPanel.this.schedulerModel
-																												.isValid(
-																													startDate,
-																													selectedTest
-																															.getEndTime(),
-																													selectedTest
-																															.getMonitoredElement()
-																															.getId());
+//																								canBeMoved = selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)
+//																										&& 
+//																										TimeParametersPanel.this.schedulerModel
+//																												.isValid(
+//																													selectedTest, 
+//																													startTime - selectedTest.getStartTime().getTime());
+//																										
 																							} catch (final ApplicationException e) {
 																								waiting = false;
 																								AbstractMainFrame.showErrorMessage(e.getMessage());
 																								continue;
 																							}
-																							if (canBeMoved) {
+//																							if (canBeMoved) 
+																							{
 																								selectedTest
 																										.setStartTime(startDate);
 

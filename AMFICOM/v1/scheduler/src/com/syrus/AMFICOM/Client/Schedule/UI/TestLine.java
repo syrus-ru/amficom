@@ -11,7 +11,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -20,7 +19,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -54,7 +52,6 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
-import com.syrus.util.Log;
 
 final class TestLine extends TimeLine {
 
@@ -161,9 +158,7 @@ final class TestLine extends TimeLine {
 
 	boolean selectTest(final int x, final SortedSet<TestTimeItem> testTimeItems) {
 		boolean selected = false;
-		final List<TestTimeItem> list = new ArrayList<TestTimeItem>(testTimeItems); 
-		for (final ListIterator it = list.listIterator(list.size()); it.hasPrevious();) {
-			final TestTimeItem testTimeItem = (TestTimeItem) it.previous();
+		for (final TestTimeItem testTimeItem : testTimeItems) {
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 				if (this.selectedTestIds == null) {
 					this.selectedTestIds = new HashSet<Identifier>();
@@ -188,6 +183,13 @@ final class TestLine extends TimeLine {
 					return false;
 				}
 				this.selectedItems.add(testTimeItem);
+				
+				for (final TestTimeItem testTimeItem2 : testTimeItems) {
+					if (testTimeItem2.testTimeLine.testId.equals(testTimeItem.testTimeLine.testId)) {
+						this.selectedItems.add(testTimeItem2);
+					}
+				}
+				
 				selected = true;
 				break;
 			}
@@ -326,31 +328,41 @@ final class TestLine extends TimeLine {
 			public void mousePressed(MouseEvent e) {
 				int x = e.getX();
 				if (SwingUtilities.isLeftMouseButton(e)) {
+					
+					boolean unselect = false;
+					boolean selected = false;
+					
 					if (TestLine.this.selectedItems != null && !e.isShiftDown()) {
-						TestLine.this.selectedItems.clear();
-						if (TestLine.this.selectedTestIds != null) {
-							TestLine.this.selectedTestIds.clear();
-						}
-						TestLine.this.schedulerModel.unselectTests(TestLine.this);
+						unselect = true;
 					}
 					if (!TestLine.this.timeItems.isEmpty()) {
-						if (!selectTest(x, TestLine.this.timeItems)) {
-							if (!selectTest(x, TestLine.this.unsavedTestTimeItems)) {
+						if (!(selected = selectTest(x, TestLine.this.timeItems))) {
+							if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems))) {
 								TestLine.this.schedulerModel.unselectTests(TestLine.this);
 								for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
 									mouseListener.mousePressed(e);
 								}
 							}
 						}
-					} else if (!selectTest(x, TestLine.this.unsavedTestTimeItems)) {
+					} else if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems))) {
 						for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
 							mouseListener.mousePressed(e);
 						}
 					}
+					
+					if (unselect && !selected){
+						TestLine.this.selectedItems.clear();
+						if (TestLine.this.selectedTestIds != null) {
+							TestLine.this.selectedTestIds.clear();
+						}
+						TestLine.this.schedulerModel.unselectTests(TestLine.this);
+					}					
 				} else if (SwingUtilities.isRightMouseButton(e)) {
 					// popupRelativeX = x;
 					// popupMenu.show(TimeStampsEditor.this, x, y);
 				}
+				
+				
 			}
 
 			@Override
@@ -364,18 +376,25 @@ final class TestLine extends TimeLine {
 					// moveIntervals(offset);
 
 					if (TestLine.this.selectedItems != null && !TestLine.this.selectedItems.isEmpty()) {
-						final TestTimeItem testTimeItem = TestLine.this.selectedItems.first();
+//						final TestTimeItem testTimeItem = TestLine.this.selectedItems.first();
+//						final Test test;
+//						try {
+//							test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
+//						} catch (final ApplicationException e1) {
+//							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+//							return;
+//						}
 						try {
-							final Test test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
-							final Date startTime = test.getStartTime();
-							TestLine.this.schedulerModel.moveSelectedTests(new Date(startTime.getTime() + offset));
+//							final Date startTime = test.getStartTime();
+//							TestLine.this.schedulerModel.moveSelectedTests(new Date(startTime.getTime() + offset));
+							TestLine.this.schedulerModel.moveSelectedTests(offset);
 							TestLine.this.dispatcher
 									.firePropertyChange(new PropertyChangeEvent(
 																				this,
 																				SchedulerModel.COMMAND_REFRESH_TEMPORAL_STAMPS,
 																				null, null));
 						} catch (final ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+							AbstractMainFrame.showErrorMessage(e1.getMessage());
 						}
 
 					}
@@ -398,18 +417,19 @@ final class TestLine extends TimeLine {
 					TestLine.this.previousPoint = TestLine.this.startPoint;
 					
 					if (!TestLine.this.selectedItems.isEmpty()) {
-						int minX = Integer.MAX_VALUE;
-						int width = 5;
-						for (Iterator it = TestLine.this.selectedItems.iterator(); it.hasNext();) {
-							TestTimeItem testTimeItem = (TestTimeItem) it.next();
-							if (testTimeItem.x < minX) {
-								minX = testTimeItem.x;
-								width = testTimeItem.width;
-							}
-							
+						
+						final int mouseX = e.getX();
+						
+						TestTimeItem currentTestTimeItem = null;						
+						for (final TestTimeItem testTimeItem : TestLine.this.selectedItems) {
+							if (testTimeItem.x <= mouseX && 
+									mouseX <= testTimeItem.x + testTimeItem.width) {
+								currentTestTimeItem = testTimeItem;
+								break;
+							}							
 						}
 						
-						if (Math.abs(e.getX() - minX) > width) {
+						if (currentTestTimeItem == null) {							
 							TestLine.this.startPoint = null;
 						}
 					}
@@ -426,16 +446,16 @@ final class TestLine extends TimeLine {
 						return;
 					}
 
-					for (Iterator it = TestLine.this.selectedItems.iterator(); it.hasNext();) {
-						TestTimeItem testTimeItem = (TestTimeItem) it.next();
+					for (final TestTimeItem testTimeItem : TestLine.this.selectedItems) {
 						try {
 							final Test test = StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
 							if (!isTestNewer(test)) {
 								continue;
 							}
-						} catch (ApplicationException e1) {
+						} catch (final ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 						}
+						
 						testTimeItem.x += dx;
 					}
 					TestLine.this.repaint();
@@ -608,8 +628,8 @@ final class TestLine extends TimeLine {
 							testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime +
 									measurementSetup.getMeasurementDuration();
 							
-							assert Log.debugMessage("TestLine.acquireTests | " + testTimeLine.duration,
-								Log.DEBUGLEVEL09);
+//							assert Log.debugMessage("TestLine.acquireTests | " + testTimeLine.duration,
+//								Log.DEBUGLEVEL09);
 							
 							testTimeLine.color = color;
 							testTimeLine.selectedColor = selectedColor;
@@ -620,6 +640,10 @@ final class TestLine extends TimeLine {
 
 
 				Collections.sort(measurementTestList);
+//				for (final TestTimeLine testTimeLine : measurementTestList) {
+//					assert Log.debugMessage("TestLine.acquireTests | " + testTimeLine.testId + " > " + testTimeLine.date,
+//						Log.DEBUGLEVEL09);
+//				}
 			}
 		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
