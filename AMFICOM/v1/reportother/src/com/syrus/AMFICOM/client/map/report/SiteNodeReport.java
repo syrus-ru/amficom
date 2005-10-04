@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.7 2005/10/04 08:33:46 peskovsky Exp $
+ * $Id: SiteNodeReport.java,v 1.8 2005/10/04 09:27:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 package com.syrus.AMFICOM.client.map.report;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -173,13 +175,19 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 				ObjectEntities.CABLECHANNELINGITEM_CODE);
 		Set<CableChannelingItem> cableChanellingItemsSet =
 			StorableObjectPool.getStorableObjectsByCondition(condition1,true);
+
+		//Определяются входящие/исходящие для этого колодца
+		Set<CableChannelingItem> incomingCableLinksSet =
+			new HashSet<CableChannelingItem>();
+		for (Iterator<CableChannelingItem> ccItemIterator = cableChanellingItemsSet.iterator();ccItemIterator.hasNext();) {
+			CableChannelingItem ccItem = ccItemIterator.next();
+			if (	ccItem.getStartSiteNode().equals(siteNode)
+				||	ccItem.getEndSiteNode().equals(siteNode)) {
+				incomingCableLinksSet.add(ccItem);
+				ccItemIterator.remove();
+			}
+		}
 		
-		//TODO Здесь надо определять входящие/исходящие для этого колодца
-//		Set<SchemeCableLink> cableLinksPassingThroughSet =
-//			new HashSet<SchemeCableLink>();
-//		for (SchemeCableLink cableLink : cableLinksSet) {
-//
-//		}
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.propertyNamesColumn.add(LangModelReport.getString(THROUGH_CABLES));
@@ -197,11 +205,12 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 		this.propertyNamesColumn.add(LangModelReport.getString(IN_OUT_CABLES));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 2;		
-//		for (SchemeCableLink cableLink : cableLinksSet) {
-//			this.propertyNamesColumn.add(cableLink.getName());
-//			this.propertyValuesColumn.add(EMPTY_STRING);
-//			this.originalRowCount++;			
-//		}
+		for (CableChannelingItem ccItem : incomingCableLinksSet) {
+			this.propertyNamesColumn.add(
+				ccItem.getParentPathOwner().getName());
+			this.propertyValuesColumn.add(EMPTY_STRING);
+			this.originalRowCount++;			
+		}
 		
 		//Вычисляем число строк и столбцов для таблицы
 		this.rowCount = this.originalRowCount / this.vertDivisionsCount;
