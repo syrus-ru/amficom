@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.57 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: NetMapViewer.java,v 1.58 2005/10/04 17:10:27 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,7 +83,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.57 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.58 $, $Date: 2005/10/04 17:10:27 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -112,7 +112,8 @@ public abstract class NetMapViewer {
 	 * Timer меняет флаг отрисовки и выдает команду
 	 * логическому слою перерисовать свое содержимое.
 	 */
-	private AlarmIndicationTimer animateTimer;
+	public AlarmIndicationTimer animateTimer;
+	//TODO make animateTimer private
 	
 	public NetMapViewer(
 			LogicalNetLayer logicalNetLayer,
@@ -600,7 +601,7 @@ public abstract class NetMapViewer {
 						this.logicalNetLayer.updateZoom();
 
 						PhysicalLink physicalLink = marker.getNodeLink().getPhysicalLink();
-						this.animateTimer.container.add(physicalLink);
+						this.animateTimer.add(physicalLink);
 						// todo alarm marker can be link to site node, not link
 					}
 				}
@@ -633,7 +634,7 @@ public abstract class NetMapViewer {
 						this.logicalNetLayer.updateZoom();
 						if(marker instanceof AlarmMarker) {
 							PhysicalLink physicalLink = marker.getNodeLink().getPhysicalLink();
-							this.animateTimer.container.remove(physicalLink);
+							this.animateTimer.remove(physicalLink);
 							// todo alarm marker can be link to site node, not link
 						}
 					}
