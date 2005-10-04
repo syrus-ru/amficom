@@ -2,8 +2,8 @@ package com.syrus.AMFICOM.report;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
 
 import java.util.Collections;
 import java.util.Date;

@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.6 2005/10/01 10:08:35 max Exp $
+ * $Id: TableDataStorableElement.java,v 1.7 2005/10/04 11:04:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@ package com.syrus.AMFICOM.report;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: max $
- * @version $Revision: 1.6 $, $Date: 2005/10/01 10:08:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/04 11:04:55 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
