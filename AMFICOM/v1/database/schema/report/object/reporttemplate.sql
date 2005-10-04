@@ -1,4 +1,4 @@
---$Id: reporttemplate.sql,v 1.3 2005/09/30 07:05:08 max Exp $
+--$Id: reporttemplate.sql,v 1.4 2005/10/04 12:25:14 max Exp $
 
 CREATE TABLE ReportTemplate (
  id NUMBER(19),
@@ -12,8 +12,8 @@ CREATE TABLE ReportTemplate (
  description 			VARCHAR2(256 CHAR)	NOT NULL,
  sheet_size				NUMBER(3) 			NOT NULL,
  orientation			NUMBER(1)			NOT NULL,
- marginSize				NUMBER(10)			NOT NULL,
- destinationModule		VARCHAR2(64 CHAR)	NOT NULL,
+ margin_size			NUMBER(10)			NOT NULL,
+ destination_module		VARCHAR2(64 CHAR)	NOT NULL,
 --
  CONSTRAINT reporttemplate_pk PRIMARY KEY (id),
  CONSTRAINT reporttemplate_creator_fk FOREIGN KEY (creator_id)
@@ -22,6 +22,6 @@ CREATE TABLE ReportTemplate (
   REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE ReportTableData IS '$Id: reporttemplate.sql,v 1.3 2005/09/30 07:05:08 max Exp $';
+COMMENT ON TABLE ReportTableData IS '$Id: reporttemplate.sql,v 1.4 2005/10/04 12:25:14 max Exp $';
 
 CREATE SEQUENCE ReportTemplate_Seq ORDER;
