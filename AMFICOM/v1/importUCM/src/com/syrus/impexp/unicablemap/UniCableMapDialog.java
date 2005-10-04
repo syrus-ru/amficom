@@ -42,13 +42,13 @@ import com.syrus.impexp.ImportExportException;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/30 08:33:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/10/04 09:06:54 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
 {
-	private static final String ALL_OBJECTS = "all";
+	private static final String ALL_OBJECTS = "все";
 
 	private static final String TEN_OBJECTS = "10";
 
@@ -147,7 +147,7 @@ public class UniCableMapDialog extends JFrame
 					thisWindowClosing(e);
 				}
 			});
-		this.connectButton.setText("Connect!");
+		this.connectButton.setText("Подключение");
 		this.connectButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -155,7 +155,7 @@ public class UniCableMapDialog extends JFrame
 					connect();
 				}
 			});
-		this.disconnectButton.setText("Disconnect");
+		this.disconnectButton.setText("Отключение");
 		this.disconnectButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -192,7 +192,7 @@ public class UniCableMapDialog extends JFrame
 					browseESF();
 				}
 			});
-		this.importMapButton.setText("Map");
+		this.importMapButton.setText("Карта");
 		this.importMapButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -202,7 +202,7 @@ public class UniCableMapDialog extends JFrame
 			});
 		this.importMapButton.setPreferredSize(this.browseESFButton.getPreferredSize());
 
-		this.importMapLibraryButton.setText("MapLibrary");
+		this.importMapLibraryButton.setText("Типы");
 		this.importMapLibraryButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -212,7 +212,7 @@ public class UniCableMapDialog extends JFrame
 			});
 		this.importMapLibraryButton.setPreferredSize(this.browseESFButton.getPreferredSize());
 
-		this.importSchemeButton.setText("Scheme");
+		this.importSchemeButton.setText("Схема");
 		this.importSchemeButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -265,7 +265,7 @@ public class UniCableMapDialog extends JFrame
 		this.surveyTypesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		this.surveyFileField.setText(".\\out.txt");
 
-		this.surveyButton.setText("Survey");
+		this.surveyButton.setText("Обзор");
 		this.surveyButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -667,7 +667,7 @@ public class UniCableMapDialog extends JFrame
 					this.passwordField.getText(),
 					this.hostField.getText(),
 					this.databaseField.getText());
-			this.statusLabel.setText("Connected!");
+			this.statusLabel.setText("Есть соединение!");
 			this.connectButton.setEnabled(false);
 			this.importMapButton.setEnabled(true);
 			this.importMapLibraryButton.setEnabled(true);
@@ -693,7 +693,7 @@ public class UniCableMapDialog extends JFrame
 	{
 		this.surveyTypes.removeAll();
 		this.ucmDatabase.close();
-		this.statusLabel.setText("Disconnected!");
+		this.statusLabel.setText("Соединение закрыто.");
 		this.connectButton.setEnabled(true);
 		this.importMapButton.setEnabled(false);
 		this.importMapLibraryButton.setEnabled(false);
