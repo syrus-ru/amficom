@@ -1,5 +1,5 @@
 /*-
- * $$Id: AlarmIndicationTimer.java,v 1.3 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: AlarmIndicationTimer.java,v 1.4 2005/10/04 17:09:54 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,12 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.MapElementController;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.MapTypedElementsContainer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/04 17:09:54 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -85,6 +86,16 @@ public class AlarmIndicationTimer {
 
 	public void dispose() {
 		this.animateTimer.stop();
+	}
+
+	public void remove(MapElement mapElement) {
+		mapElement.setAlarmState(false);
+		this.container.remove(mapElement);
+	}
+
+	public void add(MapElement mapElement) {
+		mapElement.setAlarmState(true);
+		this.container.add(mapElement);
 	}
 
 }
