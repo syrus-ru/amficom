@@ -351,7 +351,7 @@ public class AnalysisPanel extends MapMarkersPanel
 			}
 
 			// если был сделан клик < 2 пикселов - двигаем туда маркер ј дл€ левой мыши и маркер Ѕ дл€ правой
-			if (coord2index(currpos.x) < y.length && !moving_level)
+			if (coord2index(currpos.x) < y.length && !minTraceLevel.isMoving())
 			{
 				if (((Math.abs(currpos.x - startpos.x)) < 2) && ((Math.abs(currpos.y - startpos.y)) < 2 ))
 				{

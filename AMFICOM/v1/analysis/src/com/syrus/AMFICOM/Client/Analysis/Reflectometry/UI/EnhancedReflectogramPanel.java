@@ -1,5 +1,5 @@
 /*-
- * $Id: EnhancedReflectogramPanel.java,v 1.6 2005/10/04 07:22:31 saa Exp $
+ * $Id: EnhancedReflectogramPanel.java,v 1.7 2005/10/04 09:22:53 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import javax.swing.UIManager;
 
@@ -22,12 +23,120 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 /**
  * Отрисовывает рефлектограмму и кучу всяких сопутствующих вещей
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/04 07:22:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/04 09:22:53 $
  * @module
  */
 public class EnhancedReflectogramPanel extends ReflectogramPanel {
+	/**
+	 * Описывает горизонтальную линию-уровень.
+	 */
+	protected abstract class LevelLine {
+		private boolean drawed = false;
+		protected boolean moving = false;
+		private Color levelColor;
+
+		/**
+		 * Создает линию в состоянии "не отображается"
+		 * @param levelColor цвет отрисовки линии
+		 */
+		public LevelLine(Color levelColor) {
+			this.levelColor = levelColor;
+		}
+
+		/**
+		 * @return разрешено ли сейчас отображение этой линии.
+		 * Линия будет отображаться только если
+		 * {@link #isDrawed()} && {@link #isDefined()}
+		 */
+		public final boolean isDrawed() { return this.drawed; }
+		/**
+		 * Установить флаг, отображать ли линию.
+		 * Клиент должен сам обеспечить перерисовку.
+		 */
+		public final void setDrawed(boolean flag) { this.drawed = flag; }
+		/**
+		 * @return Находится ли ли сейчас эта линия в состоянии перемещения.
+		 */
+		public final boolean isMoving() { return this.moving; }
+
+		/**
+		 * Описание модели
+		 * @return Должен вернуть, определено ли сейчас состояние этой линии.
+		 */
+		public abstract boolean isDefined();
+		/**
+		 * Описание модели. Этот метод не будет вызываться, если
+		 * {@link #isDefined()} возвращает false.
+		 * @return Должен вернуть уровень линии в физических единицах (дБ).
+		 */
+		public abstract double getLevel();
+		/**
+		 * Описание модели.
+		 * @return Можно ли линию (вообще) двигать.
+		 */
+		public abstract boolean isMovable();
+		/**
+		 * Метод не будет вызываься, если {@link #isMovable()} возвращает false
+		 * @param level Установить новое значение уровня (физ. ед. - дБ).
+		 */
+		protected abstract void setLevel(double level);
+
+		public final void draw(Graphics g) {
+			if (!isDefined() || !isDrawed())
+				return;
+			int jw = getWidth();
+			((Graphics2D) g).setStroke(SELECTION_STROKE);
+			g.setColor(this.levelColor);
+			int coordY = value2coord(getLevel());
+			g.drawLine(0, coordY, jw, coordY);
+			((Graphics2D) g).setStroke(DEFAULT_STROKE);
+		}
+
+		public final boolean startMoving(Point pos) {
+			this.moving = false;
+			if (isDefined() && isDrawed() && isMovable()) {
+				if (Math.abs(pos.y - value2coord(Heap.getMinTraceLevel()))
+						< MOUSE_COUPLING) {
+					this.moving = true;
+				}
+			}
+			return this.moving;
+		}
+		public final void continueMoving(Point pos) {
+			if (this.moving) {
+				setLevel(coord2value(pos.y));
+			}
+		}
+
+		public final void endMoving(Point pos) {
+			if (this.moving) {
+				setLevel(coord2value(pos.y));
+			}
+			this.moving = false;
+		}
+	}
+
 	public boolean draw_alarms = false;
-	public boolean draw_min_trace_level = false;
+	public LevelLine minTraceLevel =  new LevelLine(
+			UIManager.getColor(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL)) {
+		@Override
+		public boolean isMovable() {
+			return true;
+		}
+		@Override
+		public boolean isDefined() {
+			return Heap.hasMinTraceLevel();
+		}
+		@Override
+		public double getLevel() {
+			return Heap.getMinTraceLevel();
+		}
+		@Override
+		protected void setLevel(double level) {
+			Heap.setMinTraceLevel(level);
+		}
+	};
+
 	public boolean draw_noise_level = false;
 	protected double noise_level = 28; // ???!
 	protected ReflectogramMismatch[] alarms;
@@ -53,9 +162,15 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 			if (draw_alarms)
 				paint_alarms(g);
 		}
-		if (draw_min_trace_level && isDraw_events()) {
+//		if (draw_min_trace_level && isDraw_events()) {
+//			paint_noise_level(g);
+//			paint_min_trace_level(g);
+//		} else if (draw_noise_level && isDraw_events()) {
+//			paint_noise_level(g);
+//		}
+		if (minTraceLevel.isDrawed() && isDraw_events()) {
 			paint_noise_level(g);
-			paint_min_trace_level(g);
+			minTraceLevel.draw(g);
 		} else if (draw_noise_level && isDraw_events()) {
 			paint_noise_level(g);
 		}
@@ -84,22 +199,5 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 				}
 			}
 		}
-	}
-
-	protected boolean hasMinTraceLevel() {
-		return Heap.hasMinTraceLevel();
-	}
-	protected int getMinTraceLevelCoord() {
-		return value2coord(Heap.getMinTraceLevel());
-	}
-
-	protected void paint_min_trace_level(Graphics g) {
-		if (! hasMinTraceLevel())
-			return;
-		int jw = getWidth();
-		((Graphics2D) g).setStroke(SELECTION_STROKE);
-		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL));
-		g.drawLine(0, getMinTraceLevelCoord(), jw, getMinTraceLevelCoord());
-		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 }

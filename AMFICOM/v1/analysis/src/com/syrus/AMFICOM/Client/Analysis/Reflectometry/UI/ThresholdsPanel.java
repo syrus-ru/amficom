@@ -248,9 +248,9 @@ public class ThresholdsPanel extends MapMarkersPanel
 			}
 		}
 
-		if (draw_min_trace_level && isDraw_events()) {
+		if (minTraceLevel.isDefined() && minTraceLevel.isDrawed() && isDraw_events()) {
 			paint_noise_level(g);
-			paint_min_trace_level(g);
+			minTraceLevel.draw(g);
 		} else if (draw_noise_level && isDraw_events()) {
 			paint_noise_level(g);
 		}

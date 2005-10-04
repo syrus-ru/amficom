@@ -80,7 +80,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 			p = new ThresholdsPanel(ppp, dispatcher, y, deltaX);
 			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
-			((ThresholdsPanel)p).draw_min_trace_level = true;
+			((ThresholdsPanel)p).minTraceLevel.setDrawed(true);
 		} else {
 			//p = new SimpleGraphPanel(y, deltaX);
 			p = new ReflectogramPanel(ppp, id, true);

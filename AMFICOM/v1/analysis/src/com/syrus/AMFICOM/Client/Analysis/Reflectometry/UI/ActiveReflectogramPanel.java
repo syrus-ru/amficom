@@ -12,15 +12,14 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 /**
  * Интерактивная панель с рефлектограммой - может отслеживать и изменять
  * уровень шума
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/09/07 02:56:49 $
+ * @author $Author: saa $
+ * @version $Revision: 1.6 $, $Date: 2005/10/04 09:22:53 $
  * @module
  */
 public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
 	private static final long serialVersionUID = 7682534739688705176L;
 
 	protected Dispatcher dispatcher;
-	protected boolean moving_level = false;
 
 	public ActiveReflectogramPanel(final TraceEventsLayeredPanel panel,
 			final Dispatcher dispatcher,
@@ -49,13 +48,12 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
 		this.startpos = e.getPoint();
 		this.currpos = e.getPoint();
 
-		if (this.draw_min_trace_level && hasMinTraceLevel()) {
-			if (super.coord2index(this.currpos.x) > this.y.length) {
+		if (this.minTraceLevel.isDrawed() && this.minTraceLevel.isDefined()) {
+			if (super.coord2index(this.currpos.x) > this.y.length) { // XXX: ненужное условие?
 				return;
 			}
 
-			if (Math.abs(this.currpos.y - super.getMinTraceLevelCoord()) < MOUSE_COUPLING) {
-				this.moving_level = true;
+			if (this.minTraceLevel.startMoving(this.currpos)) {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 				return;
 			}
@@ -65,8 +63,9 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
 
 	@Override
 	protected void this_mouseReleased(final MouseEvent e) {
-		if (this.moving_level) {
-			this.moving_level = false;
+		if (this.minTraceLevel.isMoving()) {
+			this.upd_currpos(e);
+			this.minTraceLevel.endMoving(this.currpos);
 			this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			this.parent.repaint();
 			return;
@@ -76,11 +75,9 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel {
 
 	@Override
 	protected void this_mouseDragged(final MouseEvent e) {
-		if (this.moving_level) {
+		if (this.minTraceLevel.isMoving()) {
 			this.upd_currpos(e);
-
-			final double pos = coord2value(this.currpos.y);
-			Heap.setMinTraceLevel(pos);
+			this.minTraceLevel.continueMoving(this.currpos);
 			this.parent.repaint();
 			this.dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
 			return;
