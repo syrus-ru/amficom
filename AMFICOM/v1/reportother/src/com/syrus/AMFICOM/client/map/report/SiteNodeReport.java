@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.6 2005/09/25 16:23:18 krupenn Exp $
+ * $Id: SiteNodeReport.java,v 1.7 2005/10/04 08:33:46 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -162,7 +162,7 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 			StorableObjectPool.getStorableObjectsByCondition(condition,true);
 		for (SchemeElement schemeElement : schemeElementsSet) {
 			this.propertyNamesColumn.add(
-					schemeElement.getEquipmentType().getName());
+					schemeElement.getProtoEquipment().getName());
 			this.propertyValuesColumn.add(schemeElement.getName());
 			this.originalRowCount++;
 		}
