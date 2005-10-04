@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.8 2005/09/30 12:56:22 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.9 2005/10/04 14:09:44 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.io.SignatureMismatchException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/04 14:09:44 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -37,9 +37,17 @@ implements DataStreamable, Cloneable
 	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
 		1.0, 1.3, 1.5, 2.0, 2.5 };
 
-	private double[] param; // основные параметры анализа
+	// основные параметры анализа
+	private double[] param;
 
-	// дополнительные параметры анализа - экспериментальная версия
+	private static final double LEVEL_EOT_FRACTION = 10;
+	private static final double LEVEL_EOT_MIN = -99.0;
+	private static final double LEVEL_EOT_MAX = 0.0;
+	private static final double LEVEL_EOT_DEFAULT = LEVEL_EOT_MIN;
+	// FIXME: levelEot: save to String & ini / restore from String & ini
+	private double levelEot;
+
+	// дополнительные параметры анализа
 	private double tau2nrs = 1.0;
 	private int nrsMin = 15;
 	private double rsaCrit = 0.5;
@@ -49,7 +57,7 @@ implements DataStreamable, Cloneable
 
 	// еще дополнительный параметр
 	private double scaleFactor = 1.65;
-	private static final long SIGNATURE = 8679213050930145800L;
+	private static final long SIGNATURE_BASE_VER = 8679213050930145800L;
 
 	/**
 	 * Устанавливает все свои свойства так же, как и у другого экземпляря
@@ -63,6 +71,7 @@ implements DataStreamable, Cloneable
 		this.nrs2rsaSmall = that.nrs2rsaSmall;
 		this.nrs2rsaBig = that.nrs2rsaBig;
 		this.l2rsaBig = that.l2rsaBig;
+		this.levelEot = that.levelEot;
 	}
 
 	/**
@@ -78,6 +87,8 @@ implements DataStreamable, Cloneable
 		if (getConnectorTh() < getMinConnectorTh() | getConnectorTh() > getMaxConectorTh())
 			return false;
 		if (getEndTh() < getMinEndTh() || getEndTh() > getMaxEndTh())
+			return false;
+		if (getLevelEot() < getMinLevelEot() || getLevelEot() > getMaxLevelEot())
 			return false;
 
 		// проверяем дополнительные параметры
@@ -105,6 +116,13 @@ implements DataStreamable, Cloneable
 			return false;
 
 		return true;
+	}
+
+	private double getMinLevelEot() {
+		return LEVEL_EOT_MIN;
+	}
+	private double getMaxLevelEot() {
+		return LEVEL_EOT_MAX;
 	}
 
 	public double getEventTh() {
@@ -216,11 +234,13 @@ implements DataStreamable, Cloneable
 			endTh,
 			noiseFactor
 		};
+		this.levelEot = LEVEL_EOT_DEFAULT;
 	}
 
 	public AnalysisParametersStorage(DataInputStream dis)
 	throws IOException, SignatureMismatchException {
-		if (dis.readLong() != SIGNATURE) {
+		long version = dis.readLong() - SIGNATURE_BASE_VER; 
+		if (version < 0 || version > 1) {
 			throw new SignatureMismatchException();
 		}
 		this.param = new double[5];
@@ -229,6 +249,11 @@ implements DataStreamable, Cloneable
 		this.param[2] = dis.readDouble();
 		this.param[3] = dis.readDouble();
 		this.param[4] = dis.readDouble();
+		if (version == 1) {
+			this.levelEot = dis.readDouble();
+		} else {
+			this.levelEot = LEVEL_EOT_DEFAULT;
+		}
 	}
 
 	// returns true if all fields were initialized,
@@ -250,9 +275,12 @@ implements DataStreamable, Cloneable
 	 * @param val text representation of parameters
 	 * @param defaults default values
 	 */
-	public AnalysisParametersStorage(String val, AnalysisParametersStorage defaults) {
-		this.param = defaults.param.clone();
-		setParamsFromString(val);
+	public static AnalysisParametersStorage createFromStringWithDefaults(
+			String val,
+			AnalysisParametersStorage defaults) {
+		AnalysisParametersStorage ret = defaults.clone();
+		ret.setParamsFromString(val);
+		return ret;
 	}
 
 	/**
@@ -262,6 +290,7 @@ implements DataStreamable, Cloneable
 	 */
 	public AnalysisParametersStorage(String val) {
 		this.param = new double[5];
+		this.levelEot = LEVEL_EOT_DEFAULT;
 		if (!setParamsFromString(val))
 			throw new IllegalArgumentException(
 					"couldn't parse analysis parameters string");
@@ -276,7 +305,7 @@ implements DataStreamable, Cloneable
 	}
 
 	@Override
-	public Object clone() {
+	public AnalysisParametersStorage clone() {
 		try {
 			AnalysisParametersStorage ret = (AnalysisParametersStorage)super.clone();
 			ret.param = this.param.clone();
@@ -288,12 +317,16 @@ implements DataStreamable, Cloneable
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
-		dos.writeLong(SIGNATURE);
+		long version = this.levelEot == LEVEL_EOT_DEFAULT ? 0 : 1;
+		dos.writeLong(SIGNATURE_BASE_VER + version);
 		dos.writeDouble(this.param[0]);
 		dos.writeDouble(this.param[1]);
 		dos.writeDouble(this.param[2]);
 		dos.writeDouble(this.param[3]);
 		dos.writeDouble(this.param[4]);
+		if (version == 1) {
+			dos.writeDouble(this.levelEot);
+		}
 	}
 
 	public double getL2rsaBig() {
@@ -550,5 +583,18 @@ implements DataStreamable, Cloneable
 
 	private static double limit(double v, double low, double high) {
 		return v < high ? v < low ? low : v : high; 
+	}
+
+	public double getLevelEot() {
+		return this.levelEot;
+	}
+
+	public void setLevelEot(double levelEot) {
+		this.levelEot = Math.round(levelEot * LEVEL_EOT_FRACTION)
+			/ LEVEL_EOT_FRACTION;
+	}
+
+	public void setLevelEot(double v, boolean useLimits) {
+		setLevelEot(useLimits ? limit(v, getMinLevelEot(), getMaxLevelEot()) : v);
 	}
 }

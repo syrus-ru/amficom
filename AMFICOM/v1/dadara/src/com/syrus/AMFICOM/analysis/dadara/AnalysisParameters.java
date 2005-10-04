@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.20 2005/10/03 13:12:19 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.21 2005/10/04 14:09:44 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.SignatureMismatchException;
  * Устанавливаемые параметры вовсе не обязаны иметь точность double,
  * и могут округляться при вызове modifier-методов без каких-либо уведомлений.
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/10/03 13:12:19 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/04 14:09:44 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -70,7 +70,9 @@ implements DataStreamable, Cloneable
 	 */
 	public AnalysisParameters(String val, AnalysisParameters defaults)
 	throws InvalidAnalysisParametersException {
-		this.storage = new AnalysisParametersStorage(val, defaults.storage);
+		this.storage = AnalysisParametersStorage.createFromStringWithDefaults(
+				val,
+				defaults.storage);
 		checkStorage(this.storage);
 	}
 
@@ -328,5 +330,20 @@ implements DataStreamable, Cloneable
 
 	private static double round(double v, double d) {
 		return Math.round(v * d) / d;
+	}
+
+	public double getLevelEot() {
+		return storage.getLevelEot();
+	}
+
+	public void setLevelEot(double levelEot)
+	throws InvalidAnalysisParametersException {
+		setLevelEot(levelEot, false);
+	}
+	public void setLevelEot(double v, boolean useLimit)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setLevelEot(v, useLimit);
+		setAllFrom(test);
 	}
 }
