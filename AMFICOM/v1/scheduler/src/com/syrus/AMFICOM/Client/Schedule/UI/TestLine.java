@@ -376,17 +376,7 @@ final class TestLine extends TimeLine {
 					// moveIntervals(offset);
 
 					if (TestLine.this.selectedItems != null && !TestLine.this.selectedItems.isEmpty()) {
-//						final TestTimeItem testTimeItem = TestLine.this.selectedItems.first();
-//						final Test test;
-//						try {
-//							test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
-//						} catch (final ApplicationException e1) {
-//							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
-//							return;
-//						}
 						try {
-//							final Date startTime = test.getStartTime();
-//							TestLine.this.schedulerModel.moveSelectedTests(new Date(startTime.getTime() + offset));
 							TestLine.this.schedulerModel.moveSelectedTests(offset);
 							TestLine.this.dispatcher
 									.firePropertyChange(new PropertyChangeEvent(
@@ -395,6 +385,7 @@ final class TestLine extends TimeLine {
 																				null, null));
 						} catch (final ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(e1.getMessage());
+							updateTests();
 						}
 
 					}
