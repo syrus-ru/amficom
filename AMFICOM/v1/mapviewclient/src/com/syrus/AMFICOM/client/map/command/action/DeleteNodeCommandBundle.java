@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeleteNodeCommandBundle.java,v 1.47 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: DeleteNodeCommandBundle.java,v 1.48 2005/10/04 17:11:09 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
  * 
- * @version $Revision: 1.47 $, $Date: 2005/10/03 10:35:00 $
+ * @version $Revision: 1.48 $, $Date: 2005/10/04 17:11:09 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -420,6 +420,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle {
 			return;
 		}
 
+		this.netMapViewer.animateTimer.remove(marker.getNodeLink().getPhysicalLink());
 		this.logicalNetLayer.getMapView().removeMarker(marker);
 		setResult(Command.RESULT_OK);
 	}
