@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.78 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapFrame.java,v 1.79 2005/10/04 17:12:42 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
@@ -204,7 +205,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.78 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.79 $, $Date: 2005/10/04 17:12:42 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -559,10 +560,13 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if (ret == JOptionPane.YES_OPTION) {
-				// TODO should clean only changes in map, mapview, mapview.schemes
-				StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MAP_CODE);
-				StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MAPVIEW_CODE);
-				StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SCHEME_CODE);
+				// TODO should clean not only changes in map, mapview, mapview.schemes
+				// but also in underlaying objects
+				StorableObjectPool.cleanChangedStorableObjects(
+						Collections.singleton(this.getMapView().getMap()));
+				StorableObjectPool.cleanChangedStorableObjects(
+						Collections.singleton(this.getMapView()));
+				StorableObjectPool.cleanChangedStorableObjects(this.getMapView().getSchemes());
 				changesPresent = false;
 			}
 		}
