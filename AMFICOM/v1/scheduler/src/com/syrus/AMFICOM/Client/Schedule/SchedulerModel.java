@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.112 2005/09/30 15:42:37 bob Exp $
+ * $Id: SchedulerModel.java,v 1.113 2005/10/04 13:05:17 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/09/30 15:42:37 $
+ * @version $Revision: 1.113 $, $Date: 2005/10/04 13:05:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -377,7 +377,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public void setBreakData() {
 		this.flag = 0;
 	}
-
+	
 	public void updateTests(final long startTime, final long endTime) throws ApplicationException {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
@@ -458,7 +458,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			return StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 		}
 		return Collections.emptySet();
-	}
+	}	
 
 	public Test getSelectedTest() throws ApplicationException {
 		try {
@@ -663,7 +663,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
 			final AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
-				if (this.isValid(startTime, new Date(endTime.getTime() + this.measurementSetup.getMeasurementDuration()), this.monitoredElement.getId())) {
+//				if (this.isValid(startTime, new Date(endTime.getTime() + this.measurementSetup.getMeasurementDuration()), this.monitoredElement.getId())) {
+				if (this.isValid(this.monitoredElement.getId(), startTime, endTime, temporalPattern, this.measurementSetup)) {
 					try {
 						test = Test.createInstance(LoginManager.getUserId(),
 								startTime,
@@ -701,7 +702,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				} 
 				
 			} else {
-				if (this.isValid(startTime, new Date(endTime.getTime() + this.measurementSetup.getMeasurementDuration()), this.monitoredElement.getId())) {
+//				if (this.isValid(startTime, new Date(endTime.getTime() + this.measurementSetup.getMeasurementDuration()), this.monitoredElement.getId())) {
+				if (this.isValid(this.monitoredElement.getId(), startTime, endTime, temporalPattern, this.measurementSetup)) {
 					test.setAttributes(test.getCreated(),
 							new Date(System.currentTimeMillis()),
 							test.getCreatorId(),
@@ -748,31 +750,52 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	public void moveSelectedTests(final Date startDate) throws ApplicationException {
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
-			final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator<Test>(TestWrapper.getInstance(),
-					TestWrapper.COLUMN_START_TIME));
+			final Set<Test> tests;
 			try {
-				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
-				selectedTests.addAll(tests);
+				tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 			} catch (final ApplicationException e) {
 				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			}
 
-			final Test firstTest = selectedTests.first();
-			final long offset = startDate.getTime() - firstTest.getStartTime().getTime();
+			Date firstStartDate = null;
+			for(final Test test : tests) {
+				final Date startTime = test.getStartTime();
+				if (firstStartDate == null) {
+					firstStartDate = startTime;
+				} else {
+					if (firstStartDate.after(startTime)) {
+						firstStartDate = startTime;
+					}
+				}
+			}
+			
+			if (firstStartDate != null) {
+				this.moveSelectedTests(startDate.getTime() - firstStartDate.getTime());
+			} else {
+				assert Log.debugMessage("SchedulerModel.moveSelectedTests | firstStartDate == null ",
+					Log.DEBUGLEVEL09);
+			}
+			
+		}
+	}
+
+	public void moveSelectedTests(final long offset) throws ApplicationException {
+		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+			final Set<Test> selectedTests;
+			try {
+				selectedTests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
+			} catch (final ApplicationException e) {
+				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+			}
 
 			boolean correct = true;
 			for (final Test selectedTest : selectedTests) {
 				if (selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-					final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
-					Date newEndDate = selectedTest.getEndTime();
-					if (newEndDate != null) {
-						newEndDate = new Date(newEndDate.getTime() + offset);
-					}
-					final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(selectedTest.getMainMeasurementSetupId(), true);
-					correct = this.isValid(newStartDate, new Date(newEndDate.getTime() + measurementSetup.getMeasurementDuration()), selectedTest.getMonitoredElement().getId());
+					correct = this.isValid(selectedTest, offset);
 					if (!correct) {
 						throw new ApplicationException(LangModelSchedule.getString("Error.CannotMoveTests"));
 					}
+					
 				}
 			}
 
@@ -808,7 +831,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 		}
 	}
-
+	
 	private void addGroupTests() throws ApplicationException {
 		Log.debugMessage("SchedulerModel.addGroupTests | ", Level.FINEST);
 		final Identifier meId = this.monitoredElement.getId();
@@ -821,11 +844,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			}
 			if (this.aloneGroupTest) {					
-				if (this.isValid(this.startGroupDate, null, testGroup.getMonitoredElement().getId())) {
+//				if (this.isValid(this.startGroupDate, null, testGroup.getMonitoredElement().getId())) {
+				if (this.isValid(this.monitoredElement.getId(), this.startGroupDate, this.startGroupDate, Identifier.VOID_IDENTIFIER, this.measurementSetup)) {
 					try {
 						final Test test = Test.createInstance(LoginManager.getUserId(),
 								this.startGroupDate,
-								null,
+								this.startGroupDate,
 								Identifier.VOID_IDENTIFIER,
 								TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
 								testGroup.getMeasurementType(),
@@ -893,7 +917,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				// new startDate " + startDate, Log.FINEST);
 				// Log.debugMessage("SchedulerModel.addGroupTests |
 				// new endDate " + endDate, Log.FINEST);
-				correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
+//				correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
+				correct = (this.isValid(this.monitoredElement.getId(), startDate, endDate, selectedTest.getTemporalPatternId(), this.measurementSetup)); 
 				if (!correct) {
 					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest") + ':'
 						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
@@ -940,6 +965,211 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 	}
 	
+	public boolean isValid(final Identifier monitoredElementId,
+	                       final Date startDate, 
+	                       final Date endDate,
+	                       final Identifier temporalPatternId,
+	                       final MeasurementSetup measurementSetup) 
+	throws ApplicationException {
+		final AbstractTemporalPattern temporalPattern;
+		if (temporalPatternId == null || temporalPatternId.isVoid()) {
+			temporalPattern = null;
+		} else {
+			temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);
+		}
+		return this.isValid(monitoredElementId, startDate, endDate, temporalPattern, measurementSetup);
+	}
+	
+	private boolean isValid0(final Identifier monitoredElementId,
+	                       final Set<Date> times,
+	                       final MeasurementSetup measurementSetup,
+	                       final Identifier testId) 
+	throws ApplicationException {
+		final long measurementDuration = measurementSetup.getMeasurementDuration();
+		
+		final Map<Date, Date> localStartEndTimeMap = new HashMap<Date, Date>();
+		
+		boolean result = true;
+		try {
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
+			for (final Test test : tests) {
+				if (test.getId().equals(testId) || 
+						!test.getMonitoredElementId().equals(monitoredElementId)) {
+					continue;
+				}				
+				
+				// ignore sub group tests,   
+				// since they are taken into account in the main group test 
+				final Identifier groupTestId = test.getGroupTestId();
+				if (!groupTestId.isVoid() && !test.getId().equals(groupTestId)) {					
+					continue;
+				}
+				
+				for(final Date stDate : times) {
+					Date enDate = localStartEndTimeMap.get(stDate);
+					if (enDate == null) {
+						enDate = new Date(stDate.getTime() + measurementDuration);
+						localStartEndTimeMap.put(stDate, enDate);
+					}
+					
+					result = !this.isIntersect(test, stDate, enDate);
+					
+					if (!result) {
+						break;
+					}
+				}
+			}
+		} catch (final ApplicationException e) {
+			throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+		}
+		Log.debugMessage("SchedulerModel.isValid0 | return " + result, Log.DEBUGLEVEL10);
+		return result;
+	}
+	
+	public boolean isValid(final Identifier monitoredElementId,
+	                       final Date startDate, 
+	                       final Date endDate,
+	                       final AbstractTemporalPattern temporalPattern,
+	                       final MeasurementSetup measurementSetup) 
+	throws ApplicationException {
+		
+		final Set<Date> times; 
+		if (temporalPattern != null) {
+			times = temporalPattern.getTimes(startDate, endDate);
+		} else {
+			times = Collections.singleton(startDate);
+		}
+		
+		final boolean result = this.isValid0(monitoredElementId, 
+			times, 
+			measurementSetup, 
+			Identifier.VOID_IDENTIFIER);
+		
+		Log.debugMessage("SchedulerModel.isValid | return " + result, Log.DEBUGLEVEL10);
+		return result;
+	}
+	
+	public boolean isValid(final Test test,
+	                       final long offset) 
+	throws ApplicationException {
+		
+		final Set<Date> times; 
+		final Identifier temporalPatternId = test.getTemporalPatternId();
+		
+		final Date startTime0 = offset == 0 ? test.getStartTime() : new Date(test.getStartTime().getTime() + offset);
+		final Date endTime0 = offset == 0 ? test.getEndTime() : new Date(test.getEndTime().getTime() + offset);
+		
+		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
+			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);			
+			times = temporalPattern.getTimes(startTime0, endTime0);
+		} else {
+			times = Collections.singleton(startTime0);
+		}
+		
+		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+		
+		final boolean result = this.isValid0(test.getMonitoredElementId(), 
+			times, 
+			measurementSetup, 
+			test.getId());
+		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
+		return result;
+	}
+	
+	private boolean isIntersect(final Test test, 
+	                            final Date startDate0, 
+	                            final Date endDate0) 
+	throws ApplicationException{
+		final Identifier groupTestId = test.getGroupTestId();
+		if (groupTestId.isVoid()) {
+			return this.isIntersect0(test, startDate0, endDate0);
+		} 
+
+		boolean intersect = false;
+		
+		final Set<Test> groupTests = StorableObjectPool.getStorableObjectsByCondition(
+			new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
+		for(final Test groupTest : groupTests) {
+			intersect = this.isIntersect0(groupTest, startDate0, endDate0);
+			if (intersect) {
+				break;
+			}
+		}
+		
+		return intersect;
+	}
+	
+	private boolean isIntersect0(final Test test, 
+	                            final Date startDate0, 
+	                            final Date endDate0) 
+	throws ApplicationException{
+		final MeasurementSetup testMeasurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+		final long measurementDuration = testMeasurementSetup.getMeasurementDuration();
+		
+		final long startTime0 = startDate0.getTime();
+		final long endTime0 = endDate0.getTime();
+		
+		final Date startDate = test.getStartTime();
+		final long startTime = startDate.getTime();
+		
+		final Date endDate = test.getEndTime();
+		
+		final TestTemporalType temporalType = test.getTemporalType();
+		
+		// TODO add stoppings	
+		
+		switch(temporalType.value()) {
+		case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+			final boolean oneTimeIntersection = startTime <= endTime0 &&
+					startTime0 <= startTime + measurementDuration;
+			assert Log.debugMessage("SchedulerModel.isIntersect0 | " 
+					+ test 
+					+ (oneTimeIntersection ? " " : " doen't") 
+					+ " intersect [" 
+					+ startDate0 
+					+ ", " 
+					+ endDate0 
+					+ ']' , 
+				Log.DEBUGLEVEL09);
+			return oneTimeIntersection;
+		case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+			final SortedSet<Date> times = temporalPattern.getTimes(startDate, endDate);
+			for(final Date date : times) {
+				final long time = date.getTime();
+				assert Log.debugMessage("SchedulerModel.isIntersect0 | " + date + " <= " + endDate0 
+						+ " && " + startDate0 + " <= " + new Date(time + measurementDuration),
+					Log.DEBUGLEVEL09);
+				boolean intersect = time <= endTime0 &&
+						startTime0 <= time + measurementDuration;
+				if (intersect) {
+					assert Log.debugMessage("SchedulerModel.isIntersect0 | _TEST_TEMPORAL_TYPE_PERIODICAL " + intersect,
+						Log.DEBUGLEVEL09);
+					return intersect;
+				}
+			}
+			break;
+		case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+			return startTime <= endTime0 &&
+					startTime0 <= endDate.getTime() + measurementDuration;
+		default:
+			throw new IllegalArgumentException("Unsupported test temporal type " + temporalType.value());
+		} 
+		assert Log.debugMessage("SchedulerModel.isIntersect0 | " 
+				+ test 
+				+ " doen't intersect [" 
+				+ startDate0 
+				+ ", " 
+				+ endDate0 
+				+ ']' , 
+			Log.DEBUGLEVEL09);
+		return false;
+	}	
+	
+	/**
+	 * @deprecated 
+	 */
+	@Deprecated
 	public boolean isValid(final Date startDate, 
 	                       Date endDate, 
 	                       final Identifier monitoredElementId) throws ApplicationException {
