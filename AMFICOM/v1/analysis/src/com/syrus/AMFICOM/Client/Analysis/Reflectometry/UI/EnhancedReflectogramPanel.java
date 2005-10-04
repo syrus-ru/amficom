@@ -1,5 +1,5 @@
 /*-
- * $Id: EnhancedReflectogramPanel.java,v 1.5 2005/10/04 07:08:56 saa Exp $
+ * $Id: EnhancedReflectogramPanel.java,v 1.6 2005/10/04 07:22:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 /**
  * Отрисовывает рефлектограмму и кучу всяких сопутствующих вещей
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/04 07:08:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/04 07:22:31 $
  * @module
  */
 public class EnhancedReflectogramPanel extends ReflectogramPanel {
@@ -46,6 +46,7 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 		}
 	}
 
+	@Override
 	protected void paint_specific(Graphics g) {
 		super.paint_specific(g);
 		if (showAll) {
