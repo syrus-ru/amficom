@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.10 2005/09/30 16:22:15 max Exp $
+ * $Id: ReportTemplate.java,v 1.11 2005/10/04 11:03:53 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,36 +8,42 @@
 
 package com.syrus.AMFICOM.report;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
 
 import java.awt.Rectangle;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplate;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplateHelper;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlOrientation;
 import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.IdlSheetSize;
-import com.syrus.AMFICOM.report.corba.IdlReportTemplatePackage.Orientation;
 import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.util.Log;
 
 /**
  * <p>Класс шаблона отчёта - включает в себя списки элементов, надписей и
@@ -48,7 +54,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
  * отчёт </p>
  * 
  * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/09/30 16:22:15 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/04 11:03:53 $
  * @module generalclient_v1
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable {
@@ -73,7 +79,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	/**
 	 * Размер шаблона (его ширина)
 	 */
-	private SheetSize size = SheetSize.A4;
+	private SheetSize sheetSize = SheetSize.A4;
 	/**
 	 * Размер шаблона (его ширина)
 	 */
@@ -89,6 +95,12 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	 * Принадлежность шаблона к модулю
 	 */
 	private String destinationModule = DestinationModules.UNKNOWN_MODULE;
+
+	private LinkedIdsCondition	attTextCondition;
+
+	private LinkedIdsCondition	imageCondition;
+
+	private StorableObjectCondition	dataCondition;
 
 	//Приходится хранить элементы в разных списках, несмотря на то, что они
 	//все наследуют StorableElement, поскольку при загрузке (импорте) важно,
@@ -130,7 +142,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
-		this.size = size;
+		this.sheetSize = size;
 		this.orientation = orientation;
 		this.marginSize = marginSize;
 		this.destinationModule = destinationModule;
@@ -176,7 +188,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		}
 		this.name = irt.name;
 		this.description = irt.description;
-		this.size = SheetSize.values()[irt.sheetSize.value()];
+		this.sheetSize = SheetSize.values()[irt.sheetSize.value()];
 		this.orientation = Orientation.values()[irt.idlOrientation.value()];
 		this.marginSize = irt.marginSize;
 		this.destinationModule = irt.destinationModule;
@@ -193,7 +205,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 				this.version.longValue(),
 				this.name,
 				this.description,
-				IdlSheetSize.from_int(this.size.ordinal()),
+				IdlSheetSize.from_int(this.sheetSize.ordinal()),
 				IdlOrientation.from_int(this.orientation.ordinal()),
 				this.marginSize,
 				this.destinationModule);
@@ -213,7 +225,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
-		this.size = size;
+		this.sheetSize = size;
 		this.orientation = orientation;
 		this.marginSize = marginSize;
 		this.destinationModule = destinationModule;
@@ -223,12 +235,23 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	 * @param rteName искомое имя
 	 * @return элемент шаблона, отображающий искомый отчёт
 	 */
-	public DataStorableElement findStorableElementForName (String rteName)
-	{
-		for (DataStorableElement storableElement : this.dataStorableElements)
-			if (storableElement.getReportName().equals(rteName))
-				return storableElement;
-
+	public DataStorableElement findStorableElementForName (String rteName) {
+		TypicalCondition typicalCondition = new TypicalCondition(rteName, OperationSort.OPERATION_EQUALS, ObjectEntities.REPORTDATA_CODE, StorableObjectWrapper.COLUMN_NAME);
+		LinkedIdsCondition linkedCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
+		CompoundCondition condition = new CompoundCondition(typicalCondition, CompoundConditionSort.AND, linkedCondition);
+		Set<DataStorableElement> dataElements = null;
+		try {
+			dataElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
+		if (dataElements.size() > 1) {
+			Log.errorMessage("ReportTemplate.findStorableElementForName | Error: to many of dataStorableElements");
+		}
+		if (!dataElements.isEmpty()) {
+			return dataElements.iterator().next();
+		}
 		return null;
 	}
 
@@ -236,25 +259,26 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	 * @param dataStorableElement Объект отображения данных
 	 * @return Список надписей, привязанных к данному объекту отображения
 	 */
-	public List<AttachedTextStorableElement> getAttachedTextStorableElements (DataStorableElement dataStorableElement)
+	public Set<AttachedTextStorableElement> getAttachedTextStorableElements (DataStorableElement dataStorableElement)
 	{
-		List<AttachedTextStorableElement> result =
-			new ArrayList<AttachedTextStorableElement>();
-		
-		for (AttachedTextStorableElement storableElement : this.textStorableElements)
-			if (	storableElement.getVerticalAttacher().equals(dataStorableElement)
-				||	storableElement.getHorizontalAttacher().equals(dataStorableElement))
-				result.add(storableElement);
-
-		return result;
+		LinkedIdsCondition condition1 = new LinkedIdsCondition(this.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
+		LinkedIdsCondition condition2 = new LinkedIdsCondition(dataStorableElement.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
+		CompoundCondition condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
+		try {
+			return StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return Collections.emptySet();
+		}
 	}
 	
 	/**
 	 * @return Возвращает границы прямоугольника, в который
 	 * вписывается схематичное изображение элемента шаблона и
 	 * привязанные к нему надписи.
+	 * @throws ApplicationException 
 	 */
-	public Rectangle getElementClasterBounds(DataStorableElement dataStorableElement)
+	public Rectangle getElementClasterBounds(DataStorableElement dataStorableElement) throws ApplicationException
 	{
 		if (dataStorableElement == null)
 			throw new AssertionError("The claster bounds can't be calculated for the null element!");
@@ -264,11 +288,12 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		int y1 = dataStorableElement.getLocation().y;
 		int y2 = y1 + dataStorableElement.getHeight();
 
-		if (this.textStorableElements == null)
+		Set<AttachedTextStorableElement> textStorableElements = getAttachedTextStorableElements();
+		if (textStorableElements.isEmpty()) {
 			return new Rectangle(x1,y1,x2 - x1,y2 - y1);
+		}
 		
-		for (AttachedTextStorableElement textStorableElement : this.textStorableElements)
-		{
+		for (AttachedTextStorableElement textStorableElement : textStorableElements) {
 			DataStorableElement vertAttacher = textStorableElement.getVerticalAttacher();
 			DataStorableElement horizAttacher = textStorableElement.getHorizontalAttacher();			
 			if (!		(	(vertAttacher != null)
@@ -304,8 +329,9 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	 * @param x координата точки по x
 	 * @param y координата точки по y
 	 * @return true если точка, принадлежит кластеру
+	 * @throws ApplicationException 
 	 */
-	public boolean clasterContainsPoint (DataStorableElement dataStorableElement,int x, int y)
+	public boolean clasterContainsPoint (DataStorableElement dataStorableElement,int x, int y) throws ApplicationException
 	{
 		Rectangle bounds = this.getElementClasterBounds(dataStorableElement);
 		return bounds.contains(x,y);
@@ -313,11 +339,12 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	
 	public DataStorableElement getDataRElement(Identifier dreId)
 	{
-		for (DataStorableElement dataStorableElement : this.dataStorableElements)
-			if (dataStorableElement.getId().equals (dreId))
-				return dataStorableElement;
-		
-		return null;
+		try {
+			return StorableObjectPool.getStorableObject(dreId, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
 	}
 
 	public String getDescription() {
@@ -328,16 +355,25 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		this.description = description;
 	}
 
-	public List<DataStorableElement> getDataStorableElements() {
-		return this.dataStorableElements;
+	public Set<DataStorableElement> getDataStorableElements() throws ApplicationException {
+		if(this.dataCondition == null) {
+			this.dataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
+		}
+		return StorableObjectPool.getStorableObjectsByCondition(this.dataCondition, true);
 	}
 
-	public List<ImageStorableElement> getImageStorableElements() {
-		return this.imageStorableElements;
+	public Set<ImageStorableElement> getImageStorableElements() throws ApplicationException {
+		if(this.imageCondition == null) {
+			this.imageCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTIMAGE_CODE);
+		}
+		return StorableObjectPool.getStorableObjectsByCondition(this.imageCondition, true);
 	}
 
-	public List<AttachedTextStorableElement> getTextStorableElements() {
-		return this.textStorableElements;
+	public Set<AttachedTextStorableElement> getAttachedTextStorableElements() throws ApplicationException {
+		if(this.attTextCondition == null) {
+			this.attTextCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
+		}
+		return StorableObjectPool.getStorableObjectsByCondition(this.attTextCondition, true);
 	}
 
 	public String getName() {
@@ -349,7 +385,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 //	}
 
 	public IntDimension getSize() {
-		return this.size;
+		return this.sheetSize.getSize();
 	}
 
 	public String getDestinationModule() {
@@ -376,8 +412,8 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		this.destinationModule = destinationModule;
 	}
 
-	public void setSize(IntDimension size) {
-		this.size = size;
+	public void setSize(SheetSize sheetSize) {
+		this.sheetSize = sheetSize;
 	}
 
 	public Orientation getOrientation() {
@@ -389,21 +425,11 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	}
 	
 	public void addElement(StorableElement element) {
-		if (element instanceof DataStorableElement)
-			this.dataStorableElements.add((DataStorableElement)element);
-		else if (element instanceof ImageStorableElement)
-			this.imageStorableElements.add((ImageStorableElement)element);
-		else if (element instanceof AttachedTextStorableElement)
-			this.textStorableElements.add((AttachedTextStorableElement)element);
+		element.setReportTemplateId(this.getId());
 	}
 
 	public void removeElement(StorableElement element) {
-		if (element instanceof DataStorableElement)
-			this.dataStorableElements.remove(element);
-		else if (element instanceof ImageStorableElement)
-			this.imageStorableElements.remove(element);
-		else if (element instanceof AttachedTextStorableElement)
-			this.textStorableElements.remove(element);
+		element.setReportTemplateId(Identifier.VOID_IDENTIFIER);
 	}
 
 	@Override
@@ -413,6 +439,6 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	}
 	
 	SheetSize getSheetSize() {
-		return this.size
+		return this.sheetSize;
 	}
 }
