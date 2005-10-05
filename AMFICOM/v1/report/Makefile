@@ -7,10 +7,14 @@ IDL_SOURCES = $(IDLDIR)/report.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
 
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
+LIBNAME_GENERALXML=generalxml.jar
+
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/report/*.java)
@@ -23,7 +27,7 @@ $(LIBNAME): .mach
 
 .mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -38,7 +42,7 @@ corba: .corba
 
 .corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/report/corba/*.java
 	touch $@
