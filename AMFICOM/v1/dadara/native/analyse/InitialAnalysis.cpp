@@ -322,7 +322,8 @@ return;}
 
 	// ====== “–≈“»… Ё“јѕ - ‘»Ћ№“–ј÷»я ¬—ѕЋ≈— ќ¬ ======
 	// удал€ем всплески после спадов при маскировании
-	removedMaskedSplashes(accSpl);
+	//removedMaskedSplashes(accSpl);
+	processMaskedSplashes(accSpl);
 
 #ifdef DEBUG_INITIAL_ANALYSIS_STDERR
 		{
@@ -489,7 +490,7 @@ return;
 // ======= ‘”Ќ ÷»» “–≈“№≈√ќ Ё“јѕј јЌјЋ»«ј - ќѕ–≈ƒ≈Ћ≈Ќ»я —ќЅџ“»… ѕќ ¬—ѕЋ≈— јћ =======
 //
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::removedMaskedSplashes(ArrList &accSpl)
+/*void InitialAnalysis::removedMaskedSplashes(ArrList &accSpl)
 {
 	int i;
 	for (i = 1; i < accSpl.getLength(); i++) {
@@ -527,6 +528,47 @@ void InitialAnalysis::removedMaskedSplashes(ArrList &accSpl)
 		}
 		//fprintf(stderr, "\n");
 	}
+}*/
+
+void InitialAnalysis::processMaskedSplashes(ArrList &accSpl) {
+	// @todo вынести эти параметры анализа
+	const double A_MAX = 15; // амплитуда насыщени€ источника звона, дЅ
+	const double ZVON_RATIO = 0.03; // начальна€ отн. амплитуда звона, разы; рекомендую 0.01 .. 0.03 .. 0.1
+	const double CRIT_DIST = 250.0; // затухание звона в e раз, метры
+
+	int j;
+	for (j = 0; j < accSpl.getLength(); j++) {
+		Splash *sL = (Splash*)accSpl[j];
+		if (sL->sign > 0)
+			continue; // пропускаем подъемы
+		if (sL->end_conn < 0)
+			continue; // спад - не достиг коннекторного порога, игнорируем
+		double A0 = fabs(sL->f_extr);
+		if (A0 > A_MAX) A0 = A_MAX;
+		int k;
+		for (k = j + 1; k < accSpl.getLength(); k++) {
+			Splash *sR = (Splash*)accSpl[k];
+			double A1 = fabs(sR->f_extr);
+			double dist = sR->begin_thr - sL->end_conn;
+			double LH = pow(10.0, (A1 - A0) / 5.0);
+			double RH = ZVON_RATIO * exp(-dist * delta_x / CRIT_DIST);
+			if (LH < RH) {
+				// помечаем всплеск как маскированный
+				sR->setMasked(true);
+				// корректируем достоверность всплеска (XXX: так ли?)
+				double rMax = -(LH - RH) / RH;
+				sR->lowerRFactors(rMax);
+			} else {
+				// (не измен€ем всплеск)
+				// корректируем достоверность всплеска
+				double rMax = (LH - RH) / RH;
+				sR->lowerRFactors(rMax);
+				double LMin = pow(10.0, (- A0) / 5.0);
+				if (RH < LMin)
+					break; // breaks k-loop
+			}
+		}
+	}
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -543,7 +585,14 @@ return;
     for(int i = i0; i<splashes.getLength()-1; i++) // XXX: < or <= ?
     {
 	  EventParams *ep = 0;
-	  int len = findConnector(i, splashes, ep);
+	  int len;
+  	  // есть ли маскированна€ область?
+	  len = processMaskedToNonId(i, splashes);
+	  if (len != 0) {
+		  i += len - 1;
+	continue;
+	  }
+	  len = findConnector(i, splashes, ep);
       if(len != 0)// если коннектор был найден
       { i+= len - 1;
 	    events->add(ep);
@@ -1035,6 +1084,22 @@ return;
     ev->begin = i_x - 1;
 }
 // -------------------------------------------------------------------------------------------------
+// объедин€ем маскированные всплески в неид. событи€
+int InitialAnalysis::processMaskedToNonId(int i, ArrList& splashes)
+{
+	if (! ((Splash*)splashes[i])->masked)
+		return 0;
+	int j;
+	for (j = i + 1; j < splashes.getLength(); j++) {
+		if (! ((Splash*)splashes[j])->masked)
+			break;
+	}
+	EventParams &ep = *new EventParams;
+	setUnrecognizedParamsBySplashes(ep, *(Splash*)splashes[i], *(Splash*)splashes[j - 1]);
+	events->add(&ep);
+	return j - i;
+}
+// -------------------------------------------------------------------------------------------------
 // к этому моменту уже известно, что перед нами не коннектор
 int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
 {
@@ -1389,4 +1454,7 @@ void Splash::lowerRFactors(double rMax) {
 		r_weld = rMax;
 	if (r_conn > rMax)
 		r_conn = rMax;
+}
+void Splash::setMasked(bool masked) {
+	this->masked = masked;
 }

@@ -124,12 +124,14 @@ private:
 	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
 
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОБРАБОТКА ВСПЛЕСКОВ =======
-	void removedMaskedSplashes(ArrList &accSpl);
+	//void removedMaskedSplashes(ArrList &accSpl);
+	void processMaskedSplashes(ArrList &accSpl);
 
 	// ======= ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
     void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes, int dzMaxDist);
 	int	 processDeadZone(ArrList& splashes, int dzMaxDist);
     int  findConnector(int i, ArrList& splashes, EventParams *&ep);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и создать (не добавляя), изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
+    int  processMaskedToNonId(int i, ArrList& splashes);// поиск неид. областей по маскированным областям - проверка до проверки коннекторов
     int  processIfIsNonId(int i, ArrList& splashes);// поиск неид. областей (есть и другой код, создающий неид. области)
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
     void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2, double l);
@@ -157,6 +159,7 @@ class Splash
     int end_weld;
 	int begin_conn;		// пересечение коннекторного порога
     int end_conn;
+	bool masked;		// true, если событие маскировано другим большим событием
 
 	int scale;			// масштаб, на котором splash был обнаружен
 	double r_conn;		// max{(f_wlet[i]-minimalConnector)/noise[i]} (<0, если порог не достигнут)
@@ -167,6 +170,7 @@ class Splash
     int sign;  // знак всплеска
 
 	void lowerRFactors(double rMax); // понизить достоверность R-факторов этого всплеска до rMax (при прохождении всплеском фильтра)
+	void setMasked(bool masked);
 
 	// инициализируем неопределёнными значениями, указав только масштаб обнаружения
     Splash(int scale1)
@@ -183,6 +187,7 @@ class Splash
 		r_conn			= -1;
 		r_acrit			= -1;
 		r_weld			= -1;
+		masked			= false;
     }
 };
 //====================================================================================================
