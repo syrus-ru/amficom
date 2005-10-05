@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.115 2005/10/05 09:26:15 bob Exp $
+ * $Id: SchedulerModel.java,v 1.116 2005/10/05 09:44:10 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -70,7 +71,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/10/05 09:26:15 $
+ * @version $Revision: 1.116 $, $Date: 2005/10/05 09:44:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -646,6 +647,30 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 		
 		return measurementSetup;
+	}
+	
+	public void changeMeasurementSetup(final MeasurementSetup measurementSetup) 
+	throws ApplicationException {
+		final Set<Identifier> measurementSetupIdSet = Collections.singleton(measurementSetup.getId());
+		final Set<Test> tests = getSelectedTests();
+		
+		for (final Test test : tests) {
+			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+				boolean canBeApplied = this.isValid(test, measurementSetup);
+				if (!canBeApplied) {
+					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
+					throw new IllegalDataException(LangModelSchedule.getString("Error.CannotApplyMeasurementSetup"));
+				}
+			}
+		}							
+		
+		for (final Test test : tests) {
+			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+				test.setMeasurementSetupIds(measurementSetupIdSet);
+			}
+		}
+		
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, null));
 	}
 
 	private void generateTest() throws ApplicationException {
