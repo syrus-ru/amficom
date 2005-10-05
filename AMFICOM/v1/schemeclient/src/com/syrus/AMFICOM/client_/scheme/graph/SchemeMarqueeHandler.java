@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.29 2005/10/04 16:25:54 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.30 2005/10/05 15:49:43 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2005/10/04 16:25:54 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/05 15:49:43 $
  * @module schemeclient
  */
 
@@ -451,6 +451,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 
 	@Override
 	public void mouseReleased(MouseEvent event) {
+		if (event == null) {
+			super.mouseReleased(event);
+			return;
+		}
+		
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		boolean notify = true;
 				

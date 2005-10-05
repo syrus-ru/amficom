@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.20 2005/10/04 16:25:54 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.21 2005/10/05 15:49:43 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/10/04 16:25:54 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/05 15:49:43 $
  * @module schemeclient
  */
 
@@ -320,6 +320,7 @@ public class SchemeGraphUI extends GPGraphUI {
 					Graphics g = (this.offgraphics != null) ? this.offgraphics : schemeGraph.getGraphics();
 					Point point = new Point(event.getPoint());
 					point.translate(-this._mouseToViewDelta_x, -this._mouseToViewDelta_y);
+//					Point snapCurrent = schemeGraph.snap(schemeGraph.fromScreen(point));
 					Point snapCurrent = schemeGraph.snap(point);
 					Point current = snapCurrent;
 					int thresh = schemeGraph.getMinimumMove();
@@ -346,21 +347,10 @@ public class SchemeGraphUI extends GPGraphUI {
 						} else {
 							dx = current.x - this.snapLast.x;
 							dy = current.y - this.snapLast.y;
-							System.out.println("last x = " + last.x + "; last y = " + last.y);
-							System.out.println("snaplast x = " + snapLast.x + "; snaplast y = " + snapLast.y);
 						}
-						double scale = schemeGraph.getScale();
-						dx = schemeGraph.snap(schemeGraph.fromScreen(dx));
-						if (dx < 0) {
-							dx -= schemeGraph.getGridSize();
-						}
-						//we don't want to round. The best thing is to get just the integer part.
-						//That way, the view won't "run away" from the mouse. It may lag behind
-						//a mouse pointer occasionally, but will be catching up.
-						dy = schemeGraph.snap(schemeGraph.fromScreen(dy));
-						if (dy < 0) {
-							dy -= schemeGraph.getGridSize();
-						}
+//						double scale = schemeGraph.getScale();
+						dx = schemeGraph.snap(dx);
+						dy = schemeGraph.snap(dy);
 						
 						g.setColor(schemeGraph.getForeground());
 						g.setXORMode(schemeGraph.getBackground());
@@ -398,11 +388,9 @@ public class SchemeGraphUI extends GPGraphUI {
 							}
 							if (this.cachedBounds != null) {
 								this.cachedBounds.translate(dx, dy);
-								System.out.println("translate " + dx + "; " + dy);
 //										schemeGraph.snap((int) (dy * scale)));
 							}
 							else {
-								System.err.println("cashed bounds is null");
 								// Translate
 								GraphLayoutCache.translateViews(this.views, dx, dy);
 								
@@ -421,8 +409,8 @@ public class SchemeGraphUI extends GPGraphUI {
 								this.last = new Point(this.start);
 							}
 							this.last.translate(
-									schemeGraph.snap((int) (dx * scale)),
-									schemeGraph.snap((int) (dy * scale)));
+									schemeGraph.snap(schemeGraph.toScreen(dx)),
+									schemeGraph.snap(schemeGraph.toScreen(dy)));
 							// It is better to translate <code>last<code> by a scaled dx/dy
 							// instead of making it to be the <code>current<code> (as in prev version),
 							// so that the view would be catching up with a mouse pointer
@@ -524,9 +512,8 @@ public class SchemeGraphUI extends GPGraphUI {
 					g.drawLine(xe, y0, xe, ye);
 					g.drawLine(x0, ye, xe, ye);
 					
-//					Rectangle pageBounds = this.graph.getBounds();
-//					if (this.graph.isGridVisible())
-//						paintGrid(gs, g, this.graph.getPreferredSize());
+					if (this.graph.isGridVisible())
+						paintGrid(gs, g, this.graph.getPreferredSize());
 				}
 			}
 		}
@@ -592,7 +579,8 @@ public class SchemeGraphUI extends GPGraphUI {
 					ye = Math.min(ye, (h / gs - 2) * gs);
 				}
 			}
-			g.setColor(this.graph.getGridColor());
+//			g.setColor(this.graph.getGridColor());
+			g.setColor(Color.lightGray);
 			
 			for (int x = x0; x <= xe; x += gs)
 				for (int y = y0; y <= ye; y += gs)

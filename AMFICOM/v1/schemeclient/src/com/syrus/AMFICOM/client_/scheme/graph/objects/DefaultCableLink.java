@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.13 2005/10/04 16:25:54 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.14 2005/10/05 15:49:43 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/10/04 16:25:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/05 15:49:43 $
  * @module schemeclient
  */
 
@@ -40,7 +40,10 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 
 	private Identifier schemeCablelinkId;
 
+	protected Point[] _routed;
 	protected Point[] routed;
+	protected Point _from;
+	protected Point _to;
 	protected transient DefaultPort _source, _target;
 	protected transient DefaultPort source1, target1;
 	private LinkRouting routing = new LinkRouting();
@@ -176,13 +179,20 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 				cell._target = cell.target1;
 			}
 
-			int n = points.size();
 			Point from = edge.getPoint(0);
-			if (edge.getSource() != null)
+			if (edge.getSource() != null) {
 				from = edge.getSource().getLocation(null);
-			Point to = edge.getPoint(n - 1);
-			if (edge.getTarget() != null)
+			}
+			if (DefaultCableLink.this._from == null) {
+				DefaultCableLink.this._from = new Point();
+			}
+			Point to = edge.getPoint(points.size() - 1);
+			if (edge.getTarget() != null) {
 				to = edge.getTarget().getLocation(null);
+			}
+			if (DefaultCableLink.this._to == null) {
+				DefaultCableLink.this._to = new Point();
+			}
 			if (from != null && to != null) {
 				// Handle self references
 				if (edge.getSource() == edge.getTarget() && edge.getSource() != null) {
@@ -200,47 +210,160 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 					if (DefaultCableLink.this.routed == null) {
 						 DefaultCableLink.this.routed = createDefaultRouting(graph, from, to);
 					} else {
-						int grid = edge.getGraph().getGridSize();
 						Point[] p1 = createDefaultRouting(graph, from, to);
 						if (DefaultCableLink.this.routed.length != p1.length) {
 							DefaultCableLink.this.routed = p1;
 						}
-						Point[] p = DefaultCableLink.this.routed;
-						// крайние точки
-						if (p[0].y != from.y) {
-							p[0].y = from.y;
-						}
-						if (p[0].x <= from.x) {
-							p[0].x = from.x + grid;
-						}
-						if (p[p.length-1].y != to.y) {
-							p[p.length-1].y = to.y;
-						}
-						if (p[p.length-1].x >= to.x) {
-							p[p.length-1].x = to.x - grid;
-						}
-						// средние точки
-						if (p.length == 2) {
-							if (p[1].x != p[0].x) {
-								p[1].x = p[0].x;
+						if (DefaultCableLink.this._routed != null
+								&& DefaultCableLink.this._routed.length == DefaultCableLink.this.routed.length) {
+
+							if ((DefaultCableLink.this._from != null && DefaultCableLink.this._to != null)
+									&& (DefaultCableLink.this._from.x != from.x && DefaultCableLink.this._to.x != to.x)
+									|| (DefaultCableLink.this._from.y != from.y && DefaultCableLink.this._to.y != to.y)) {
+								
+								int delta = from.x - DefaultCableLink.this._from.x;
+								if (edge.getSource() != null) {
+									DefaultCableLink.this.routed[0].x += delta;
+									if (DefaultCableLink.this.routed.length == 4) {
+										DefaultCableLink.this.routed[1].x += delta;
+									}
+								}
+								if (edge.getTarget() != null) {
+									delta = to.x - DefaultCableLink.this._to.x;
+									if (DefaultCableLink.this.routed.length == 2) {
+										DefaultCableLink.this.routed[1].x += delta;
+									} else if (DefaultCableLink.this.routed.length == 4) {
+										DefaultCableLink.this.routed[2].x += delta;
+										DefaultCableLink.this.routed[3].x += delta;
+									}
+								}
+								if (edge.getSource() != null && edge.getTarget() != null) {
+									int deltay = ((from.y - DefaultCableLink.this._from.y) +
+											(to.y - DefaultCableLink.this._to.y)) / 2;
+									if (DefaultCableLink.this.routed.length == 4) {
+										DefaultCableLink.this.routed[1].y += deltay;
+										DefaultCableLink.this.routed[2].y += deltay;
+									}
+								}
+								
+							/*if (DefaultCableLink.this._from != null
+									&& (DefaultCableLink.this._from.x != from.x || DefaultCableLink.this._from.y != from.y)) {
+								// если сдвинулись одновременно начало и конец - перемещаем целиком
+								if (edge.getSource() != null) {
+									int delta = graph.snap((from.x - DefaultCableLink.this._from.x) / 2);
+									DefaultCableLink.this.routed[0].x += delta;
+									DefaultCableLink.this.routed[1].x += delta;
+									if (DefaultCableLink.this.routed.length == 4) {
+										delta = graph.snap(from.y - DefaultCableLink.this._from.y);
+										DefaultCableLink.this.routed[1].y += delta;
+										DefaultCableLink.this.routed[2].y += delta;
+									}
+								}
+							} else if (DefaultCableLink.this._from != null
+									&& (DefaultCableLink.this._from.x != from.x || DefaultCableLink.this._from.y != from.y)) {
+								// если сдвинулись одновременно начало и конец - перемещаем целиком
+								if (edge.getTarget() != null) {
+									if (DefaultCableLink.this.routed.length == 4) {
+										int delta = graph.snap(to.x - DefaultCableLink.this._to.x);
+										DefaultCableLink.this.routed[2].x += delta;
+										DefaultCableLink.this.routed[3].x += delta;
+										delta = graph.snap(to.y - DefaultCableLink.this._to.y);
+										DefaultCableLink.this.routed[1].y += delta;
+										DefaultCableLink.this.routed[2].y += delta;
+									}
+								}*/
+							} else {
+								int grid = edge.getGraph().getGridSize();
+								Point[] p = DefaultCableLink.this.routed;
+								Point[] _p = DefaultCableLink.this._routed;
+								
+								// крайние точки обязаны находиться на одном y с концами
+								if (p[0].y != from.y) {
+									p[0].y = from.y;
+								}
+								if (p[p.length-1].y != to.y) {
+									p[p.length-1].y = to.y;
+								}
+								if (p[0].x <= from.x) {
+									p[0].x = from.x + grid;
+								}
+								if (p[p.length-1].x >= to.x) {
+									p[p.length-1].x = to.x - grid;
+								}
+								
+								// двигать можно только за точку, за линию - игнорим
+								if (p.length == 2) {
+									// только горизонтальные перемещения доступны
+									if (p[0].x != _p[0].x && p[1].x == _p[1].x) { // двигаем точку 0
+										if (p[0].x >= to.x) {
+											p[0].x = to.x - grid;
+										}
+										p[1].x = p[0].x;
+									} else if (p[1].x != _p[1].x && p[0].x == _p[0].x) { // двигаем точку 1
+										if (p[1].x <= from.x) {
+											p[1].x = from.x + grid;
+										}
+										p[0].x = p[1].x;
+									} else { // сбрасываем все изменения по х
+										for (int i = 0; i < p.length; i++) {
+											p[i].x = _p[i].x;
+										}
+									}
+								} else if (p.length == 4) {
+									//	горизонтальные перемещения
+									if (p[0].x != _p[0].x && p[1].x == _p[1].x) { // двигаем точку 0
+										p[1].x = p[0].x;
+									} else if (p[1].x != _p[1].x && p[2].x == _p[2].x) { // двигаем точку 1
+										if (p[1].x <= from.x) {
+											p[1].x = from.x + grid;
+										}
+										p[0].x = p[1].x;
+									} else if (p[2].x != _p[2].x && p[1].x == _p[1].x) { // двигаем точку 2
+										if (p[2].x >= to.x) {
+											p[2].x = to.x - grid;
+										}
+										p[3].x = p[2].x;
+									} else if (p[3].x != _p[3].x && p[2].x == _p[2].x) { // двигаем точку 3
+										p[2].x = p[3].x;
+									} else if (from.x != DefaultCableLink.this._from.x) { // двигаем начало
+										if (edge.getSource() != null) {
+											int delta = from.x - DefaultCableLink.this._from.x;
+											p[0].x += delta;
+											p[1].x += delta;
+										}
+									} else if (to.x != DefaultCableLink.this._to.x) { // двигаем конец
+										if (edge.getTarget() != null) {
+											int delta = to.x - DefaultCableLink.this._to.x;
+											p[2].x += delta;
+											p[3].x += delta;
+										}
+									} else { // сбрасываем все изменения по х
+										for (int i = 0; i < p.length; i++) {
+											p[i].x = _p[i].x;
+										}
+									}
+									//	вертикальные перемещения только для точек 1, 2
+									if (p[1].y != _p[1].y && p[2].y == _p[2].y) { // двигаем точку 1
+										p[2].y = p[1].y;
+									} else if (p[2].y != _p[2].y && p[1].y == _p[1].y) { // двигаем точку 1
+										p[1].y = p[2].y;
+									} else { // сбрасываем все изменения по y
+										for (int i = 1; i < p.length - 1; i++) {
+											p[i].y = _p[i].y;
+										}
+									}
+								}
 							}
-						} else if (p.length == 4) {
-							if (p[1].x != p[0].x) {
-								p[1].x = p[0].x;
-							}
-							if (p[2].x != p[3].x) {
-								p[2].x = p[3].x;
-							}
-							if (p[2].y != p[1].y) {
-								p[2].y = p[1].y;
+						} else {
+							DefaultCableLink.this._routed = new Point[DefaultCableLink.this.routed.length];
+							for (int i = 0; i < DefaultCableLink.this._routed.length; i++) {
+								DefaultCableLink.this._routed[i] = new Point();
 							}
 						}
-//						
-//						Point[] tmp = new Point[4];
-//						createDefaultRouting(graph, tmp, from, to);
-//						if (false) {
-//							DefaultCableLink.this.routed = tmp;
-//						}
+						for (int i = 0; i < DefaultCableLink.this.routed.length; i++) {
+							DefaultCableLink.this._routed[i].x = DefaultCableLink.this.routed[i].x;
+							DefaultCableLink.this._routed[i].y = DefaultCableLink.this.routed[i].y;
+						}
 					}
 				}
 				// Set/Add Points
@@ -254,6 +377,10 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 					points.remove(points.size() - 2);
 				}
 			}
+			DefaultCableLink.this._from.x = from.x;
+			DefaultCableLink.this._from.y = from.y;
+			DefaultCableLink.this._to.x = to.x;
+			DefaultCableLink.this._to.y = to.y;
 		}
 	}
 	
