@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.72 2005/10/05 05:22:16 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.73 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/10/05 05:22:16 $
+ * @version $Revision: 1.73 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -195,6 +195,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeOptimizeInfo createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -210,7 +211,10 @@ public final class SchemeOptimizeInfo extends StorableObject
 			final double nodesSpliceProb,
 			final double nodesCutProb,
 			final double survivorRate,
-			final Scheme parentScheme) throws CreateObjectException {
+			final Scheme parentScheme)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -239,10 +243,16 @@ public final class SchemeOptimizeInfo extends StorableObject
 					nodesCutProb,
 					survivorRate,
 					parentScheme);
+			parentScheme.getSchemeOptimizeInfoContainerWrappee().addToCache(schemeOptimizeInfo, usePool);
+
 			schemeOptimizeInfo.markAsChanged();
 			return schemeOptimizeInfo;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeOptimizeInfo.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

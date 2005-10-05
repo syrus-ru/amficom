@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.138 2005/10/05 05:22:16 bass Exp $
+ * $Id: SchemeElement.java,v 1.139 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.138 $, $Date: 2005/10/05 05:22:16 $
+ * @version $Revision: 1.139 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -291,6 +291,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentScheme,
 					null);
+			parentScheme.getSchemeElementContainerWrappee().addToCache(schemeElement, usePool);
 
 			if (schemeElement.clonedIdMap == null) {
 				schemeElement.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -432,6 +433,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {""})
 	public static SchemeElement createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -443,7 +445,10 @@ public final class SchemeElement extends AbstractSchemeElement
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final Scheme parentScheme) throws CreateObjectException {
+			final Scheme parentScheme)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -471,13 +476,20 @@ public final class SchemeElement extends AbstractSchemeElement
 					schemeCell,
 					parentScheme,
 					null);
-			schemeElement.markAsChanged();
+			parentScheme.getSchemeElementContainerWrappee().addToCache(schemeElement, usePool);
+
 			if (equipment != null || protoEquipment != null) {
 				schemeElement.protoEquipmentSet = true;
 			}
+
+			schemeElement.markAsChanged();
 			return schemeElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -503,6 +515,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param parentSchemeElement
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeElement createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -514,7 +527,10 @@ public final class SchemeElement extends AbstractSchemeElement
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeElement parentSchemeElement) throws CreateObjectException {
+			final SchemeElement parentSchemeElement)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -542,13 +558,20 @@ public final class SchemeElement extends AbstractSchemeElement
 					schemeCell,
 					null,
 					parentSchemeElement);
-			schemeElement.markAsChanged();
+			parentSchemeElement.getSchemeElementContainerWrappee().addToCache(schemeElement, usePool);
+
 			if (equipment != null || protoEquipment != null) {
 				schemeElement.protoEquipmentSet = true;
 			}
+
+			schemeElement.markAsChanged();
 			return schemeElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

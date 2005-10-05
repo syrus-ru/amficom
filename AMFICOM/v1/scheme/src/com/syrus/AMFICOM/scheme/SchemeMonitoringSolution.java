@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.78 2005/10/05 05:22:17 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.79 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.79 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -195,6 +195,8 @@ public final class SchemeMonitoringSolution
 					active,
 					null,
 					parentSchemeOptimizeInfo);
+			parentSchemeOptimizeInfo.getSchemeMonitoringSolutionContainerWrappee().addToCache(schemeMonitoringSolution, usePool);
+
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
 		} catch (final CreateObjectException coe) {
@@ -242,6 +244,8 @@ public final class SchemeMonitoringSolution
 					active,
 					parentScheme,
 					null);
+			parentScheme.getSchemeMonitoringSolutionContainerWrappee().addToCache(schemeMonitoringSolution, usePool);
+
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
 		} catch (final CreateObjectException coe) {

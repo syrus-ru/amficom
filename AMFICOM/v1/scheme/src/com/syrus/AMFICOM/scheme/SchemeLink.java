@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.95 2005/10/05 05:22:17 bass Exp $
+ * $Id: SchemeLink.java,v 1.96 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.96 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -237,6 +237,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -247,7 +248,10 @@ public final class SchemeLink extends AbstractSchemeLink
 			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final Scheme parentScheme) throws CreateObjectException {
+			final Scheme parentScheme)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -273,11 +277,18 @@ public final class SchemeLink extends AbstractSchemeLink
 					parentScheme,
 					null,
 					null);
-			schemeLink.markAsChanged();
+			parentScheme.getSchemeLinkContainerWrappee().addToCache(schemeLink, usePool);
+
 			schemeLink.abstractLinkTypeSet = (link != null || linkType != null);
+
+			schemeLink.markAsChanged();
 			return schemeLink;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -295,6 +306,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentSchemeElement
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -305,7 +317,10 @@ public final class SchemeLink extends AbstractSchemeLink
 			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final SchemeElement parentSchemeElement) throws CreateObjectException {
+			final SchemeElement parentSchemeElement)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -331,11 +346,18 @@ public final class SchemeLink extends AbstractSchemeLink
 					null,
 					parentSchemeElement,
 					null);
-			schemeLink.markAsChanged();
+			parentSchemeElement.getSchemeLinkContainerWrappee().addToCache(schemeLink, usePool);
+
 			schemeLink.abstractLinkTypeSet = (link != null || linkType != null);
+
+			schemeLink.markAsChanged();
 			return schemeLink;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -353,6 +375,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @param parentSchemeProtoElement
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeLink createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -363,7 +386,10 @@ public final class SchemeLink extends AbstractSchemeLink
 			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final SchemeProtoElement parentSchemeProtoElement) throws CreateObjectException {
+			final SchemeProtoElement parentSchemeProtoElement)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -389,11 +415,18 @@ public final class SchemeLink extends AbstractSchemeLink
 					null,
 					null,
 					parentSchemeProtoElement);
-			schemeLink.markAsChanged();
+			parentSchemeProtoElement.getSchemeLinkContainerWrappee().addToCache(schemeLink, usePool);
+
 			schemeLink.abstractLinkTypeSet = (link != null || linkType != null);
+
+			schemeLink.markAsChanged();
 			return schemeLink;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

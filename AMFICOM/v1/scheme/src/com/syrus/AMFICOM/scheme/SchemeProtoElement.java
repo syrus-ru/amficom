@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.115 2005/10/05 05:22:16 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.116 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.115 $, $Date: 2005/10/05 05:22:16 $
+ * @version $Revision: 1.116 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -228,6 +228,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoElement cannot be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeProtoElement createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -236,7 +237,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeProtoElement parentSchemeProtoElement) throws CreateObjectException {
+			final SchemeProtoElement parentSchemeProtoElement)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -260,10 +264,16 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					schemeCell,
 					null,
 					parentSchemeProtoElement);
+			parentSchemeProtoElement.getSchemeProtoElementContainerWrappee().addToCache(schemeProtoElement, usePool);
+
 			schemeProtoElement.markAsChanged();
 			return schemeProtoElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -279,6 +289,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoGroup cannot be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeProtoElement createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -287,7 +298,10 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
+			final SchemeProtoGroup parentSchemeProtoGroup)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -311,10 +325,16 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 					schemeCell,
 					parentSchemeProtoGroup,
 					null);
+			parentSchemeProtoGroup.getSchemeProtoElementContainerWrappee().addToCache(schemeProtoElement, usePool);
+
 			schemeProtoElement.markAsChanged();
 			return schemeProtoElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

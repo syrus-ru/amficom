@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.112 2005/10/05 05:03:48 bass Exp $
+ * $Id: Scheme.java,v 1.113 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.113 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -241,9 +241,10 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param symbol
 	 * @param ugoCell
 	 * @param schemeCell
-	 * @param parentSchemeElement
+	 * @param parentSchemeElement may be {@code null}.
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static Scheme createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -256,7 +257,10 @@ public final class Scheme extends AbstractCloneableDomainMember
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeElement parentSchemeElement) throws CreateObjectException {
+			final SchemeElement parentSchemeElement)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
 		assert description != null: NON_NULL_EXPECTED;
@@ -284,11 +288,18 @@ public final class Scheme extends AbstractCloneableDomainMember
 					ugoCell,
 					schemeCell,
 					parentSchemeElement);
+			if (parentSchemeElement != null) {
+				parentSchemeElement.getSchemeContainerWrappee().addToCache(scheme, usePool);
+			}
+
 			scheme.markAsChanged();
 			return scheme;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"Scheme.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("Scheme.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

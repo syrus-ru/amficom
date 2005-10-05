@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.74 2005/10/05 05:22:16 bass Exp $
+ * $Id: SchemePort.java,v 1.75 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/10/05 05:22:16 $
+ * @version $Revision: 1.75 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -171,6 +171,7 @@ public final class SchemePort extends AbstractSchemePort
 	 * @param parentSchemeDevice
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemePort createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -178,7 +179,10 @@ public final class SchemePort extends AbstractSchemePort
 			final PortType portType,
 			final Port port,
 			final MeasurementPort measurementPort,
-			final SchemeDevice parentSchemeDevice) throws CreateObjectException {
+			final SchemeDevice parentSchemeDevice)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -200,12 +204,20 @@ public final class SchemePort extends AbstractSchemePort
 					port,
 					measurementPort,
 					parentSchemeDevice);
-			schemePort.markAsChanged();
-			if (port != null || portType != null)
+			parentSchemeDevice.getSchemePortContainerWrappee().addToCache(schemePort, usePool);
+
+			if (port != null || portType != null) {
 				schemePort.portTypeSet = true;
+			}
+
+			schemePort.markAsChanged();
 			return schemePort;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemePort.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

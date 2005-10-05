@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.105 2005/10/05 05:22:17 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.106 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.106 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -193,6 +193,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeCableLink createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -202,7 +203,10 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			final CableLink cableLink,
 			final SchemeCablePort sourceSchemeCablePort,
 			final SchemeCablePort targetSchemeCablePort,
-			final Scheme parentScheme) throws CreateObjectException {
+			final Scheme parentScheme)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -225,12 +229,20 @@ public final class SchemeCableLink extends AbstractSchemeLink
 					sourceSchemeCablePort,
 					targetSchemeCablePort,
 					parentScheme);
-			schemeCableLink.markAsChanged();
-			if (cableLink != null || cableLinkType != null)
+			parentScheme.getSchemeCableLinkContainerWrappee().addToCache(schemeCableLink, usePool);
+
+			if (cableLink != null || cableLinkType != null) {
 				schemeCableLink.abstractLinkTypeSet = true;
+			}
+
+			schemeCableLink.markAsChanged();
 			return schemeCableLink;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeCableLink.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

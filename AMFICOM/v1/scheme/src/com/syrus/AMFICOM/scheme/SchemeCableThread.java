@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.95 2005/10/05 05:22:17 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.96 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.96 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -190,6 +190,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeCableThread createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
@@ -197,7 +198,10 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			final Link link,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
+			final SchemeCableLink parentSchemeCableLink)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -219,13 +223,20 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 					sourceSchemePort,
 					targetSchemePort,
 					parentSchemeCableLink);
-			schemeCableThread.markAsChanged();
+			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(schemeCableThread, usePool);
+
 			if (link != null || linkType != null) {
 				schemeCableThread.linkTypeSet = true;
 			}
+
+			schemeCableThread.markAsChanged();
 			return schemeCableThread;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ioee) {
 			throw new CreateObjectException("SchemeCableThread.createInstance | cannot generate identifier ", ioee);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

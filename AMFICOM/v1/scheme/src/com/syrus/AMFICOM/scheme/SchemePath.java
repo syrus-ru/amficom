@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.100 2005/10/05 05:22:16 bass Exp $
+ * $Id: SchemePath.java,v 1.101 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/10/05 05:22:16 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -149,11 +149,15 @@ public final class SchemePath extends StorableObject
 	 * @param parentSchemeMonitoringSolution
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemePath createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final TransmissionPath transmissionPath,
-			final SchemeMonitoringSolution parentSchemeMonitoringSolution) throws CreateObjectException {
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -170,10 +174,16 @@ public final class SchemePath extends StorableObject
 					description,
 					transmissionPath,
 					parentSchemeMonitoringSolution);
+			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(schemePath, usePool);
+
 			schemePath.markAsChanged();
 			return schemePath;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemePath.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

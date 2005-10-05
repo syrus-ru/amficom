@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.28 2005/10/05 05:22:16 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.29 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/10/05 05:22:16 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -111,12 +111,15 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeOptimizeInfoRtu createInstance(final Identifier creatorId,
 			final String name,
 			final int priceUsd,
 			final float rangeDb,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert parentSchemeOptimizeInfo != null : NON_NULL_EXPECTED;
 
@@ -132,10 +135,16 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 					priceUsd,
 					rangeDb,
 					parentSchemeOptimizeInfo);
+			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(schemeOptimizeInfoRtu, usePool);
+
 			schemeOptimizeInfoRtu.markAsChanged();
 			return schemeOptimizeInfoRtu;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeOptimizeInfoRtu.createInstance() | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

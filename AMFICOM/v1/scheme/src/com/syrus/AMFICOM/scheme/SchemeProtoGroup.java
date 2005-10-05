@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.81 2005/10/05 05:03:48 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.82 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.82 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -159,11 +159,15 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @param parentSchemeProtoGroup may be <code>null</code> (for a top-level group).
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeProtoGroup createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final BitmapImageResource symbol,
-			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
+			final SchemeProtoGroup parentSchemeProtoGroup)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -180,10 +184,18 @@ public final class SchemeProtoGroup extends StorableObject
 					description,
 					symbol,
 					parentSchemeProtoGroup);
+			if (parentSchemeProtoGroup != null) {
+				parentSchemeProtoGroup.getSchemeProtoGroupContainerWrappee().addToCache(schemeProtoGroup, usePool);
+			}
+
 			schemeProtoGroup.markAsChanged();
 			return schemeProtoGroup;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeProtoGroup.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.102 2005/10/05 05:22:17 bass Exp $
+ * $Id: SchemeDevice.java,v 1.103 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.102 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.103 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -191,10 +191,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param parentSchemeProtoElement
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeDevice createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
-			final SchemeProtoElement parentSchemeProtoElement) throws CreateObjectException {
+			final SchemeProtoElement parentSchemeProtoElement)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -212,10 +216,16 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					description,
 					parentSchemeProtoElement,
 					null);
+			parentSchemeProtoElement.getSchemeDeviceContainerWrappee().addToCache(schemeDevice, usePool);
+
 			schemeDevice.markAsChanged();
 			return schemeDevice;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -226,10 +236,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param parentSchemeElement
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeDevice createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
-			final SchemeElement parentSchemeElement) throws CreateObjectException {
+			final SchemeElement parentSchemeElement)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -247,10 +261,16 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 					description,
 					null,
 					parentSchemeElement);
+			parentSchemeElement.getSchemeDeviceContainerWrappee().addToCache(schemeDevice, usePool);
+
 			schemeDevice.markAsChanged();
 			return schemeDevice;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

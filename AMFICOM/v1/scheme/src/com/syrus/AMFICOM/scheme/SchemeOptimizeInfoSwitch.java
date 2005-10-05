@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.28 2005/10/05 05:22:17 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.29 2005/10/05 07:40:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/05 07:40:14 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch extends StorableObject
@@ -111,12 +111,15 @@ public final class SchemeOptimizeInfoSwitch extends StorableObject
 	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeOptimizeInfoSwitch createInstance(final Identifier creatorId,
 			final String name,
 			final int priceUsd,
 			final byte noOfPorts,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert parentSchemeOptimizeInfo != null : NON_NULL_EXPECTED;
 
@@ -132,10 +135,16 @@ public final class SchemeOptimizeInfoSwitch extends StorableObject
 					priceUsd,
 					noOfPorts,
 					parentSchemeOptimizeInfo);
+			parentSchemeOptimizeInfo.getSchemeOptimizeInfoSwitchContainerWrappee().addToCache(schemeOptimizeInfoSwitch, usePool);
+
 			schemeOptimizeInfoSwitch.markAsChanged();
 			return schemeOptimizeInfoSwitch;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeOptimizeInfoSwitch.createInstance() | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

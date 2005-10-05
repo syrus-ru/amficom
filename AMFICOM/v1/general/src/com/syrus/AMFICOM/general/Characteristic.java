@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.70 2005/10/01 15:13:21 bass Exp $
+ * $Id: Characteristic.java,v 1.71 2005/10/05 07:40:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,10 @@
 
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.*;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/10/01 15:13:21 $
+ * @version $Revision: 1.71 $, $Date: 2005/10/05 07:40:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -132,18 +134,21 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * @param name
 	 * @param description
 	 * @param value
-	 * @param characterizable
+	 * @param parentCharacterizable
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static Characteristic createInstance(final Identifier creatorId,
 			final CharacteristicType type,
 			final String name,
 			final String description,
 			final String value,
-			final Characterizable characterizable,
+			final Characterizable parentCharacterizable,
 			final boolean editable,
 			final boolean visible) throws CreateObjectException {
-		assert characterizable != null : ErrorMessages.NON_NULL_EXPECTED;
+		final boolean usePool = false;
+
+		assert parentCharacterizable != null : NON_NULL_EXPECTED;
 		try {
 			final Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
 					creatorId,
@@ -152,17 +157,21 @@ public final class Characteristic extends AbstractCloneableStorableObject
 					name,
 					description,
 					value,
-					characterizable.getId(),
+					parentCharacterizable.getId(),
 					editable,
 					visible);
+			parentCharacterizable.getCharacteristicContainerWrappee().addToCache(characteristic, usePool);
 
-			assert characteristic.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert characteristic.isValid() : OBJECT_STATE_ILLEGAL;
 
 			characteristic.markAsChanged();
-
 			return characteristic;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -228,7 +237,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		this.editable = ct.editable;
 		this.visible = ct.visible;
 		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -248,7 +257,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public IdlCharacteristic getTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		
 		return IdlCharacteristicHelper.init(orb,
 				this.id.getTransferable(),
@@ -490,7 +499,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.parentCharacterizableId);
