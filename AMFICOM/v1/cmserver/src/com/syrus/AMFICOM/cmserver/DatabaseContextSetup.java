@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.40 2005/09/29 08:28:55 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.41 2005/10/05 10:41:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,9 +42,14 @@ import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
+import com.syrus.AMFICOM.report.AttachedTextDatabase;
+import com.syrus.AMFICOM.report.DataDatabase;
+import com.syrus.AMFICOM.report.ImageDatabase;
+import com.syrus.AMFICOM.report.ReportTemplateDatabase;
+import com.syrus.AMFICOM.report.TableDataDatabase;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/09/29 08:28:55 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/05 10:41:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -92,5 +97,11 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 		DatabaseContext.registerDatabase(new KISDatabase());
 		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+
+		DatabaseContext.registerDatabase(new AttachedTextDatabase());
+		DatabaseContext.registerDatabase(new DataDatabase());
+		DatabaseContext.registerDatabase(new TableDataDatabase());
+		DatabaseContext.registerDatabase(new ImageDatabase());
+		DatabaseContext.registerDatabase(new ReportTemplateDatabase());
 	}
 }
