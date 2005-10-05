@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.20 2005/09/21 13:23:32 bob Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.21 2005/10/05 10:56:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.beans.PropertyChangeListener;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/21 13:23:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/10/05 10:56:10 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -94,6 +94,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, mClientServantManager);
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, mClientServantManager);
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.REPORT_GROUP_CODE, mClientServantManager);
 
 		final ClientPoolContext clientPoolContext = new MClientPoolContext(objectLoader);
 
@@ -113,6 +114,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAP_GROUP_CODE, mscharClientServantManager);
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.SCHEME_GROUP_CODE, mscharClientServantManager);
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAPVIEW_GROUP_CODE, mscharClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.REPORT_GROUP_CODE, mClientServantManager);
 
 		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
 
