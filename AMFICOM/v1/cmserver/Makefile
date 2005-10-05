@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.36 2005/09/12 20:52:00 arseniy Exp $
+# $Id: Makefile,v 1.37 2005/10/05 10:42:08 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,7 +19,7 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/report.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 

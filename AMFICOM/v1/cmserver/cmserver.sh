@@ -22,12 +22,13 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
+$LIB/report.jar:\
 $LIB/csbridge.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/mserver_interface.jar:\
 $LIB/util.jar
 
 JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8003,server=y,suspend=n"
-$JAVA -Xloggc:./gc -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer &
+$JAVA -Xloggc:./gc -Xms128m -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH com.syrus.AMFICOM.cmserver.ClientMeasurementServer &
 # Expands to the process ID of the most recently executed background (asynchronous) command.
 echo $! > `dirname $0`/cmserver.pid
