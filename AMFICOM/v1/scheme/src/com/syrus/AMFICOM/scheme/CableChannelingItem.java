@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.74 2005/10/01 15:13:19 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.75 2005/10/05 05:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.75 $, $Date: 2005/10/05 05:22:17 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -634,12 +634,15 @@ public final class CableChannelingItem
 	 * @param newParentSchemeCableLinkId
 	 * @param newSequentialNumber
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	private void setParentPathOwner(final Identifier newParentSchemeCableLinkId,
 			final int newSequentialNumber) {
+		final boolean usePool = false;
+
 		this.setParentSchemeCableLinkId(newParentSchemeCableLinkId);
 		if (newParentSchemeCableLinkId.isVoid()) {
 			this.setSequentialNumber(-1);
-			StorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			this.setSequentialNumber(newSequentialNumber);
 		}

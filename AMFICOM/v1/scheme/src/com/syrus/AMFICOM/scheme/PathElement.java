@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.81 2005/10/05 05:03:48 bass Exp $
+ * $Id: PathElement.java,v 1.82 2005/10/05 05:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.82 $, $Date: 2005/10/05 05:22:17 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -960,12 +960,15 @@ public final class PathElement extends StorableObject
 	 * @param newParentSchemePathId
 	 * @param newSequentialNumber
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	private void setParentPathOwner(final Identifier newParentSchemePathId,
 			final int newSequentialNumber) {
+		final boolean usePool = false;
+
 		this.setParentSchemePathId(newParentSchemePathId);
 		if (newParentSchemePathId.isVoid()) {
 			this.setSequentialNumber(-1);
-			StorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			this.setSequentialNumber(newSequentialNumber);
 		}

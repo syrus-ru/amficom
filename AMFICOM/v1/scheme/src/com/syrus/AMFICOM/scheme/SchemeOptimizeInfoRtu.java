@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.27 2005/10/05 05:03:48 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.28 2005/10/05 05:22:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/05 05:22:16 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -294,7 +294,7 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 
 		if (parentSchemeOptimizeInfo == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(this, usePool);
 		}

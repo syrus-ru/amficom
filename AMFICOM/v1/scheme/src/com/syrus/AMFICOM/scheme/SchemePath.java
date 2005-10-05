@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.99 2005/10/05 05:03:48 bass Exp $
+ * $Id: SchemePath.java,v 1.100 2005/10/05 05:22:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.100 $, $Date: 2005/10/05 05:22:16 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -448,7 +448,7 @@ public final class SchemePath extends StorableObject
 
 		if (parentSchemeMonitoringSolution == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(this, usePool);
 		}

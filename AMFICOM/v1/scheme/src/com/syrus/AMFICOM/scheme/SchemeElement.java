@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.137 2005/10/05 05:03:48 bass Exp $
+ * $Id: SchemeElement.java,v 1.138 2005/10/05 05:22:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.137 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.138 $, $Date: 2005/10/05 05:22:16 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1309,7 +1309,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 			if (parentSchemeNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(this.id);
+				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			}
 		}
 
@@ -1381,7 +1381,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 			if (parentSchemeElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(this.id);
+				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			}
 		}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.104 2005/10/05 05:03:48 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.105 2005/10/05 05:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.104 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.105 $, $Date: 2005/10/05 05:22:17 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -666,7 +666,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 		if (parentScheme == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(super.id);
+			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentScheme.getSchemeCableLinkContainerWrappee().addToCache(this, usePool);
 		}
