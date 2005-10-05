@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/09/30 14:06:21 $
+ * @version $Revision: 1.86 $, $Date: 2005/10/05 09:44:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -865,8 +865,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 											measurementSetupId = measurementSetup.getId();
 											unchangedMeasurementSetupNewMap.put(baseMeasurementSetup.getId(), measurementSetupId);
 										}
-		
-										test.setMeasurementSetupIds(Collections.singleton(measurementSetupId));
 									}
 								} else {
 									// TODO PROBLEM ?
