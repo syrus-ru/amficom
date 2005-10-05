@@ -99,7 +99,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 		JRadioButton				oneRadioButton;
 
-		private JRadioButton		continuosRadioButton;
+//		private JRadioButton		continuosRadioButton;
 
 		private JRadioButton		periodicalRadioButton;
 		
@@ -155,8 +155,8 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.panel.add(this.oneRadioButton, gbc);
 			gbc.gridy++;
 			this.panel.add(this.periodicalRadioButton, gbc);
-			gbc.gridy++;
-			this.panel.add(this.continuosRadioButton, gbc);
+//			gbc.gridy++;
+//			this.panel.add(this.continuosRadioButton, gbc);
 			gbc.gridy++;
 			this.panel.add(this.groupRadioButton, gbc);
 
@@ -565,7 +565,7 @@ public class TimeParametersFrame extends JInternalFrame {
 //																				Log.debugMessage(".run | 3 ", Log.FINEST);
 																				final boolean valid2;
 																				try {
-																					valid2 = TimeParametersPanel.this.schedulerModel.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
+																					valid2 = TimeParametersPanel.this.schedulerModel.isValid(selectedTest, startDate, endDate);
 																				} catch (ApplicationException e) {
 																					waiting = false;
 																					AbstractMainFrame.showErrorMessage(e.getMessage());
@@ -646,7 +646,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			ButtonGroup group = new ButtonGroup();
 			group.add(this.oneRadioButton);
 			group.add(this.periodicalRadioButton);
-			group.add(this.continuosRadioButton);
+//			group.add(this.continuosRadioButton);
 			group.add(this.groupRadioButton);
 
 //			this.synchroRadioButton = new JRadioButton(LangModelSchedule.getString("Together"));
@@ -671,7 +671,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		
 		private void createTemporalTypeButtons() {
 			this.oneRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Onetime"));
-			this.continuosRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Continual"));		
+//			this.continuosRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Continual"));		
 			this.periodicalRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Periodical"));			
 			this.groupRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Sectional"));
 
@@ -692,15 +692,15 @@ public class TimeParametersFrame extends JInternalFrame {
 					}				
 			});
 			
-			this.continuosRadioButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-//						setPeriodEnabled(false);
-						setContinousEnable(true);			
-						
-					
-				}
-			});
+//			this.continuosRadioButton.addActionListener(new ActionListener() {
+//
+//				public void actionPerformed(ActionEvent e) {
+////						setPeriodEnabled(false);
+//						setContinousEnable(true);			
+//						
+//					
+//				}
+//			});
 			
 			this.groupRadioButton.addActionListener(new ActionListener() {
 
@@ -762,9 +762,9 @@ public class TimeParametersFrame extends JInternalFrame {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 						result = this.periodicalRadioButton.isSelected();
 						break;
-					case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-						result = this.continuosRadioButton.isSelected();
-						break;
+//					case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+//						result = this.continuosRadioButton.isSelected();
+//						break;
 				}
 				if (!test.getGroupTestId().isVoid()) {
 					result = this.groupRadioButton.isSelected();
@@ -1019,10 +1019,12 @@ public class TimeParametersFrame extends JInternalFrame {
 
 				}				
 				 end = this.getEndDate();
-			} else if (this.continuosRadioButton.isSelected()) {
-				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
-				end = this.getEndDate();
-			} else  if (this.groupRadioButton.isSelected()) {
+			} 
+//			else if (this.continuosRadioButton.isSelected()) {
+//				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
+//				end = this.getEndDate();
+//			} 
+			else  if (this.groupRadioButton.isSelected()) {
 				if (this.choosedButton != null) {
 					if (this.choosedButton == this.startTimeButton) {
 						temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
@@ -1089,11 +1091,11 @@ public class TimeParametersFrame extends JInternalFrame {
 						
 					}
 					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					if (!this.continuosRadioButton.isSelected()) {
-						this.continuosRadioButton.doClick();
-					}
-					break;
+//				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+//					if (!this.continuosRadioButton.isSelected()) {
+//						this.continuosRadioButton.doClick();
+//					}
+//					break;
 
 			}
 		}
