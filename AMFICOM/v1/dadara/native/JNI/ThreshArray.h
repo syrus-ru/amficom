@@ -42,12 +42,12 @@ public:
 class ThreshDYArray : public ThreshArray
 {
 private:
-	jfieldID id_typeL;
+	jfieldID id_type;
 	jfieldID id_values;
 public:
 	ThreshDYArray(JNIEnv *env, jobjectArray array);
 	~ThreshDYArray();
-	int getTypeL(int id);
+	int getType(int id);
 	double getValue(int id, int key);
 	void setValue(int id, int key, double value);
 };

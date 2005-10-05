@@ -28,8 +28,8 @@ const char *S_Thresh_x1			= "I";
 const char *N_Thresh_roundUp	= "roundUp";
 const char *S_Thresh_roundUp	= "(I)V";
 
-const char *N_ThreshDY_typeL	= "typeL";
-const char *S_ThreshDY_typeL	= "Z";
+const char *N_ThreshDY_type		= "type";
+const char *S_ThreshDY_type		= "B";
 const char *N_ThreshDY_values	= "values";
 const char *S_ThreshDY_values	= "[D";
 const char *N_ThreshDX_dX		= "dX";

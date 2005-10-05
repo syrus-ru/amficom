@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.20 2005/07/22 06:39:51 saa Exp $
+ * $Id: ThreshDY.java,v 1.21 2005/10/05 16:36:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,40 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/05 16:36:00 $
  * @module
  */
-public class ThreshDY extends Thresh
-{
+public class ThreshDY extends Thresh {
 	private static final double VALUE_FRACTION = 1000; // 1/1000 dB precision
 
-	private boolean typeL; // 0: dA, 1: dL
+	/**
+	 * “ип DY-порога.
+	 * Ўаблон typesafe enum (Java1.5 здесь пока не используетс€).
+	 * ¬ реализации {@link ThreshDY}, дл€ удобства native-части,
+	 * используетс€ не этот enum, а byte {@link #type}
+	 */
+	public static class Type {
+		private byte code;
+		private Type(byte code) {
+			this.code = code;
+		}
+
+		public byte getCode() {
+			return this.code;
+		}
+		//  оды 0,1,2 используютс€ непосредственно в native-коде
+		public static final Type dA = new Type((byte)0);
+		public static final Type dL = new Type((byte)1);
+		public static final Type nI = new Type((byte)2);
+
+		private static final Type[] VALUES = { dA, dL, nI };
+
+		static Type byCode(int code) {
+			return VALUES[code];
+		}
+	}
+
+	private byte type;
 	private double[] values; // dA or dL values
 
 	protected ThreshDY()
@@ -30,7 +56,7 @@ public class ThreshDY extends Thresh
 	protected ThreshDY(ThreshDY that)
 	{
 		super(that);
-		this.typeL = that.typeL;
+		this.type = that.type;
 		this.values = that.values;
 	}
 
@@ -39,14 +65,14 @@ public class ThreshDY extends Thresh
 	 * ƒл€ работы пороги надо будет расширить, см., напр.,
 	 * {@link ModelTraceManager#updateThreshToContain}
 	 * @param eventId номер событи€, к которому "относитс€" этот порог
-	 * @param typeL true дл€ L-порога, false дл€ A-порога
+	 * @param type тип порога - Type.dL, Type.dA или Type.nI
 	 * @param xMin мин. X-координата доминирование порога
 	 * @param xMax макс. X-координата доминирование порога
 	 */
-	protected ThreshDY(int eventId, boolean typeL, int xMin, int xMax)
+	protected ThreshDY(int eventId, Type type, int xMin, int xMax)
 	{
 		super(eventId, eventId, xMin, xMax);
-		this.typeL = typeL;
+		this.type = type.getCode();
 		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 };
 	}
 
@@ -100,9 +126,9 @@ public class ThreshDY extends Thresh
 	{
 		return values[n];
 	}
-	protected boolean getTypeL()
+	protected Type getType()
 	{
-		return typeL;
+		return Type.byCode(this.type);
 	}
 	private void snapAndLimit(int key) // прив€зать к сетке и скорректировать при неправильном знаке  
 	{

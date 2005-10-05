@@ -3,7 +3,6 @@
 #include "BreakL-enh.h"
 #include "BreakL-fit.h"
 #include "BreakL-mf.h"
-#include "../common/prf.h"
 #include "../common/ModelF.h"
 #include "../common/ArrList.h"
 #include "../thresh/thresh.h"
@@ -11,6 +10,7 @@
 inline int imax(int a, int b) { return a > b ? a : b; }
 inline int imin(int a, int b) { return a < b ? a : b; }
 
+//#include "../common/prf.h"
 #define prf_b(x) ((void)0)
 #define prf_e() ((void)0)
 
@@ -291,16 +291,40 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 
 	prf_b("BreakL_ChangeByThresh: process AL threshs");
 
-	// process A and L threshs
+	// process A, L and NI threshs
 	if (thNpY)
 	{
+		// сначала подготавливаем информацию о мин/макс. значении в NI-порогах
+		int i;
+		for (i = 0; i < thNpY; i++)
+		{
+			if (thY[i].type != THY_NI)
+				continue;
+			int jMin = isat(thY[i].x0, xMin, xMax) - xMin;
+			int jMax = isat(thY[i].x1, xMin, xMax) - xMin;
+			// ищем мин. или макс. значение
+			thY[i].temp = unpk[jMin];
+			if (isUpper)
+			{
+				for (j = jMin + 1; j <= jMax; j++)
+					if (thY[i].temp < unpk[j])
+						thY[i].temp = unpk[j];
+			}
+			else
+			{
+				for (j = jMin + 1; j <= jMax; j++)
+					if (thY[i].temp > unpk[j])
+						thY[i].temp = unpk[j];
+			}
+			thY[i].temp += thY[i].dy;
+		}
+
 		int curLTn = -1; // номер текущего порога либо левого из текущих
 
 		// для переходов A->L, L->A:
 		double Yx1L = 1; // не инициализируем, т.к. крайние события не м б типа L
 		double Yx0R = 0; // (инициализируем только для успокоения компилятора)
 
-		int i;
 		for (i = 0; i < Nx; i++)
 		{
 			int curX = xMin + i;
@@ -327,7 +351,10 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 				if (ttdyOut)
 					ttdyOut[i].set(curLTn, 0); // NB: это гарантирует, что ttdyOut[i].thId будет всегда >= 0
 #endif
-				unpk[i] += thY[curLTn].dy;
+				if (thY[curLTn].type == THY_NI)
+					unpk[i] = thY[curLTn].temp; // для NI-порога используем постоянный уровень
+				else
+					unpk[i] += thY[curLTn].dy; // для dA и dL порогов смещаем исходную кривую
 				continue;
 			}
 
@@ -339,15 +366,16 @@ void ChangeArrayByThreshEx (double *yArr, THX *thX, THY *thY, int thNpX, int thN
 			double dyL = thY[curLTn].dy;
 			double dyR = thY[curLTn + 1].dy;
 
-			int typeL = thY[curLTn].typeL;
-			int typeR = thY[curLTn + 1].typeL;
+			int typL = thY[curLTn].type;
+			int typR = thY[curLTn + 1].type;
 
 			double wei;
 
 			// для A-типа - линейный переход;
 			// A-тип и L-тип - L-переход;
 			// два порога L-типа не могут быть рядом.
-			if (typeL || typeR)
+			// NI-порог должен стыковаться с другими вплотную, поэтому здесь мы его не ожидаем
+			if (typL == THY_DL || typR == THY_DL)
 				wei = (unpk[i] - Yx1L) / (Yx0R - Yx1L);
 			else
 				wei = (double )(curX - xL) / (xR - xL);

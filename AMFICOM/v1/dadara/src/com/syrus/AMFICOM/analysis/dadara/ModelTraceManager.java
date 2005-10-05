@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.99 2005/09/30 12:56:22 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.100 2005/10/05 16:36:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.io.SignatureMismatchException;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.99 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.100 $, $Date: 2005/10/05 16:36:00 $
  * @module
  */
 public class ModelTraceManager
@@ -118,7 +118,7 @@ implements DataStreamable, Cloneable
 			int evBegin = getSE()[i].getBegin();
 			int evEnd = getSE()[i].getEnd();
 			if (last == null)
-				thresholds.add(last = new ThreshDY(i, false, evBegin, evEnd)); // "C" coding style
+				thresholds.add(last = new ThreshDY(i, ThreshDY.Type.dA, evBegin, evEnd)); // "C" coding style
 
 			// Дополнительно расширяем область действия DX-порогов
 			// на DELTA=1 точку.
@@ -152,20 +152,20 @@ implements DataStreamable, Cloneable
 				last.xMax = evBegin;
 				last.eventId1 = i;
 				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, true, false));
-				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
+				thresholds.add(last = new ThreshDY(i, ThreshDY.Type.dA, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.LOSS:
 				last.xMax = evBegin;
 				last.eventId1 = i;
 				thresholds.add(new ThreshDX(i, evBegin - DELTA, evEnd + DELTA, false, false));
-				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
+				thresholds.add(last = new ThreshDY(i, ThreshDY.Type.dA, evEnd, evEnd));
 				break;
 			case SimpleReflectogramEvent.NOTIDENTIFIED:
 				if (last.xMax > last.xMin)
 					last.xMax = evBegin - 1;
 				if (evEnd < evBegin)
 					evEnd--;
-				thresholds.add(new ThreshDY(i, false, evBegin, evEnd));
+				thresholds.add(new ThreshDY(i, ThreshDY.Type.nI, evBegin, evEnd));
 				last = null;
 				break;
 			case SimpleReflectogramEvent.DEADZONE:
@@ -180,9 +180,9 @@ implements DataStreamable, Cloneable
 				last.xMax = evBegin;
 				last.eventId1 = i;
 				thresholds.add(new ThreshDX(i, evBegin - DELTA, evCenter, true, true));
-				thresholds.add(new ThreshDY(i, true, evCenter, evCenter));
+				thresholds.add(new ThreshDY(i, ThreshDY.Type.dL, evCenter, evCenter));
 				thresholds.add(new ThreshDX(i, evCenter, evEnd + DELTA, false, false));
-				thresholds.add(last = new ThreshDY(i, false, evEnd, evEnd));
+				thresholds.add(last = new ThreshDY(i, ThreshDY.Type.dA, evEnd, evEnd));
 				//System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
 				break;
 			}
@@ -261,7 +261,7 @@ implements DataStreamable, Cloneable
 
 	public class ThreshEditor
 	{
-		public static final int TYPE_A = 1;
+		public static final int TYPE_A = 1; // XXX: both dA and nI
 		public static final int TYPE_L = 2;
 		public static final int TYPE_DXF = 3;
 		public static final int TYPE_DXT = 4;
@@ -374,7 +374,7 @@ implements DataStreamable, Cloneable
 			if (th instanceof ThreshDY)
 			{
 				ret.add(new ThreshEditorWithDefaultMark(
-					((ThreshDY )th).getTypeL()
+					((ThreshDY )th).getType() == ThreshDY.Type.dL
 						? ThreshEditor.TYPE_L
 						: ThreshEditor.TYPE_A,
 					th,
@@ -658,7 +658,8 @@ implements DataStreamable, Cloneable
 			super(thId, ModelTraceManager.this.tDY, key, posX, posY, Thresh.IS_KEY_UPPER[key] ? VERTICAL_UP_TYPE :  VERTICAL_DOWN_TYPE);
 			int posMin = this.th.xMin;
 			int posMax = this.th.xMax;
-			if (((ThreshDY)this.th).getTypeL() && thId > 0 && thId < ModelTraceManager.this.tDY.length - 1)
+			if (((ThreshDY)this.th).getType() == ThreshDY.Type.dL
+					&& thId > 0 && thId < ModelTraceManager.this.tDY.length - 1)
 			{
 				// уточняем положение точки привязки по ширине 98% максимума кривой
 				posMin = ModelTraceManager.this.tDY[thId - 1].xMax;
@@ -730,7 +731,8 @@ implements DataStreamable, Cloneable
 	{
 		// пытаемся вернуть DL-порог -- для коннекторов
 		for (int i = 0; i < this.tDY.length; i++) {
-			if (this.tDY[i].isRelevantToNEvent(nEvent) && this.tDY[i].getTypeL())
+			if (this.tDY[i].isRelevantToNEvent(nEvent)
+					&& this.tDY[i].getType() == ThreshDY.Type.dL)
 				return this.tDY[i];
 		}
 		// возвращаем любой DY-порог (самый же первый) -- для не-коннекторов  

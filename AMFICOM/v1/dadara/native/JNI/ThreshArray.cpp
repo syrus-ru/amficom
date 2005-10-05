@@ -19,6 +19,8 @@ ThreshArray::ThreshArray(JNIEnv *env, jobjectArray array)
 
 	id_x0     = env->GetFieldID(clazz, N_Thresh_x0, S_Thresh_x0);
 	id_x1     = env->GetFieldID(clazz, N_Thresh_x1, S_Thresh_x1);
+	assert(id_x0);
+	assert(id_x1);
 
 	{
 		jfieldID id_UPPER = env->GetStaticFieldID(clazz, N_Thresh_IS_KEY_UPPER, S_Thresh_IS_KEY_UPPER);
@@ -99,8 +101,10 @@ ThreshDYArray::ThreshDYArray(JNIEnv *env, jobjectArray array)
 {
 	jclass clazz = env->FindClass(CL_ThreshDY);
 	assert(clazz);
-	id_typeL  = env->GetFieldID(clazz, N_ThreshDY_typeL, S_ThreshDY_typeL);
+	id_type   = env->GetFieldID(clazz, N_ThreshDY_type, S_ThreshDY_type);
 	id_values = env->GetFieldID(clazz, N_ThreshDY_values, S_ThreshDY_values);
+	assert(id_type);
+	assert(id_values);
 }
 
 ThreshDXArray::ThreshDXArray(JNIEnv *env, jobjectArray array)
@@ -111,6 +115,9 @@ ThreshDXArray::ThreshDXArray(JNIEnv *env, jobjectArray array)
 	id_dX     = env->GetFieldID(clazz, N_ThreshDX_dX, S_ThreshDX_dX);
 	id_isRise = env->GetFieldID(clazz, N_ThreshDX_isRise, S_ThreshDX_isRise);
 	id_flags  = env->GetFieldID(clazz, N_ThreshDX_flags, S_ThreshDX_flags);
+	assert(id_dX);
+	assert(id_isRise);
+	assert(id_flags);
 }
 
 ThreshDXArray::~ThreshDXArray()
@@ -208,10 +215,10 @@ int ThreshDXArray::hasABCorrFlag(int id)
 	return (flags & com_syrus_AMFICOM_analysis_dadara_ThreshDX_FLAG_AB_CORR) != 0;
 }
 
-int ThreshDYArray::getTypeL(int id)
+int ThreshDYArray::getType(int id)
 {
 	if (selectId(id))
-		return env->GetBooleanField(cur_obj, id_typeL);
+		return env->GetByteField(cur_obj, id_type);
 	else
 	{
 		fprintf(stderr, "getType -- ??\n"); // FIXME
@@ -276,7 +283,6 @@ void ThreshDXArrayToTHXArray(ThreshDXArray &taX, int key, THX** thxOut, int *thx
 
 void ThreshDYArrayToTHYArray(ThreshDYArray &taY, int key, THY** thyOut, int *thyOutSize)
 {
-
 	const int thNpY = taY.getLength();
 	*thyOutSize = thNpY;
 
@@ -292,7 +298,7 @@ void ThreshDYArrayToTHYArray(ThreshDYArray &taY, int key, THY** thyOut, int *thy
 		thY[j].x0 = taY.getX0(j);
 		thY[j].x1 = taY.getX1(j);
 		thY[j].dy = taY.getValue(j, key);
-		thY[j].typeL = taY.getTypeL(j);
+		thY[j].type = taY.getType(j);
 	}
 	*thyOut = thY;
 	// the user will then have to free the array:

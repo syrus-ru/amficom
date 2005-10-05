@@ -45,8 +45,8 @@ extern const char *N_ThreshDX_flags;
 extern const char *S_ThreshDX_flags;
 
 extern const char *CL_ThreshDY;
-extern const char *N_ThreshDY_typeL;
-extern const char *S_ThreshDY_typeL;
+extern const char *N_ThreshDY_type;
+extern const char *S_ThreshDY_type;
 extern const char *N_ThreshDY_values;
 extern const char *S_ThreshDY_values;
 
