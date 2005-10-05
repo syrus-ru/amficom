@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.116 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.117 2005/10/05 13:10:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,6 @@ import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -59,6 +58,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -84,12 +84,12 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/05 13:10:18 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
-		implements Describable, SchemeCellContainer, Characterizable,
-		ReverseDependencyContainer,
+		implements Describable, SchemeCellContainer,
+		StorableObject.CharacterizableExt, ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeProtoElement> {
 	private static final long serialVersionUID = 3689348806202569782L;
 
@@ -1290,7 +1290,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

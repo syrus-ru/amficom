@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.130 2005/10/03 16:16:17 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.131 2005/10/05 13:10:16 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,12 +71,12 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.130 $, $Date: 2005/10/03 16:16:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.131 $, $Date: 2005/10/05 13:10:16 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
-		implements Characterizable, TypedObject<PhysicalLinkType>,
+		implements StorableObject.CharacterizableExt, TypedObject<PhysicalLinkType>,
 		MapElement, XmlBeansTransferable<XmlPhysicalLink> {
 	private static final long serialVersionUID = 4121409622671570743L;
 
@@ -1130,7 +1130,7 @@ public class PhysicalLink extends StorableObject
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 //	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 //		if (this.characteristicContainerWrappee == null) {

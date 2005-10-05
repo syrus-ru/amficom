@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.8 2005/10/03 13:58:30 bass Exp $
+* $Id: LayoutItem.java,v 1.9 2005/10/05 13:10:18 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -38,12 +37,13 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author $Author: bass $
  * @module resource
  */
 
-public final class LayoutItem extends StorableObject implements Characterizable, Namable {
+public final class LayoutItem extends StorableObject
+		implements StorableObject.CharacterizableExt, Namable {
 	
 	public static final String CHARACTERISCTIC_TYPE_X = "x";
 	public static final String CHARACTERISCTIC_TYPE_Y = "y";
@@ -257,7 +257,7 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

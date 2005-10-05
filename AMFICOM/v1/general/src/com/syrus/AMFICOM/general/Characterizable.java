@@ -1,5 +1,5 @@
 /*-
- * $Id: Characterizable.java,v 1.13 2005/09/23 11:45:45 bass Exp $
+ * $Id: Characterizable.java,v 1.14 2005/10/05 13:10:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,17 +10,13 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.StorableObject.StorableObjectContainerWrappee;
-
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/23 11:45:45 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/05 13:10:16 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public interface Characterizable extends Identifiable {
-	StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee();
-
 	/**
 	 * @param characteristic
 	 * @param usePool

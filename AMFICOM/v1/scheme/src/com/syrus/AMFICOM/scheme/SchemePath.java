@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.101 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemePath.java,v 1.102 2005/10/05 13:10:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,6 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -71,12 +70,13 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.102 $, $Date: 2005/10/05 13:10:18 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
-		implements Describable, Characterizable, PathOwner<PathElement>,
-		ReverseDependencyContainer, XmlBeansTransferable<XmlSchemePath> {
+		implements Describable, StorableObject.CharacterizableExt,
+		PathOwner<PathElement>, ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemePath> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -570,7 +570,7 @@ public final class SchemePath extends StorableObject
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

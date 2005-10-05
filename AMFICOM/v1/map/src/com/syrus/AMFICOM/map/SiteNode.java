@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.105 2005/10/03 13:58:27 bass Exp $
+ * $Id: SiteNode.java,v 1.106 2005/10/05 13:10:16 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -65,11 +66,12 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/10/03 13:58:27 $
+ * @version $Revision: 1.106 $, $Date: 2005/10/05 13:10:16 $
  * @module map
  */
 public class SiteNode extends AbstractNode
-		implements Characterizable, TypedObject<SiteNodeType>, XmlBeansTransferable<XmlSiteNode> {
+		implements StorableObject.CharacterizableExt,
+		TypedObject<SiteNodeType>, XmlBeansTransferable<XmlSiteNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -525,7 +527,7 @@ public class SiteNode extends AbstractNode
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

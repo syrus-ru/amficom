@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.140 2005/10/03 13:58:27 bass Exp $
+ * $Id: Equipment.java,v 1.141 2005/10/05 13:10:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.configuration.corba.IdlEquipmentHelper;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -48,6 +47,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -60,13 +60,15 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.140 $, $Date: 2005/10/03 13:58:27 $
+ * @version $Revision: 1.141 $, $Date: 2005/10/05 13:10:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Equipment extends DomainMember
-		implements MonitoredDomainMember, Characterizable, XmlBeansTransferable<XmlEquipment> {
+		implements MonitoredDomainMember,
+		StorableObject.CharacterizableExt,
+		XmlBeansTransferable<XmlEquipment> {
 	private static final long serialVersionUID = 2432748205979033898L;
 
 	private Identifier protoEquipmentId;
@@ -642,7 +644,7 @@ public final class Equipment extends DomainMember
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

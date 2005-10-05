@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.95 2005/10/03 13:58:26 bass Exp $
+ * $Id: TransmissionPath.java,v 1.96 2005/10/05 13:10:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,25 +27,26 @@ import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPath;
 import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.95 $, $Date: 2005/10/03 13:58:26 $
+ * @version $Revision: 1.96 $, $Date: 2005/10/05 13:10:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class TransmissionPath extends DomainMember 
-		implements MonitoredDomainMember, Characterizable,
+		implements MonitoredDomainMember,
+		StorableObject.CharacterizableExt,
 		TypedObject<TransmissionPathType> {
 
 	private static final long serialVersionUID = 8129503678304843903L;
@@ -258,7 +259,7 @@ public final class TransmissionPath extends DomainMember
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

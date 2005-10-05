@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.65 2005/10/05 05:03:48 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.66 2005/10/05 13:10:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,13 +25,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
@@ -47,12 +47,13 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/10/05 05:03:48 $
+ * @version $Revision: 1.66 $, $Date: 2005/10/05 13:10:18 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
 		extends AbstractCloneableStorableObject
-		implements Describable, Characterizable, ReverseDependencyContainer {
+		implements Describable, StorableObject.CharacterizableExt,
+		ReverseDependencyContainer {
 	static final long serialVersionUID = 4644766113809681630L;
 
 	private String name;
@@ -318,7 +319,7 @@ public abstract class AbstractSchemeElement
 	StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

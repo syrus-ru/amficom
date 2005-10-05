@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.54 2005/10/03 13:58:27 bass Exp $
+ * $Id: MCM.java,v 1.55 2005/10/05 13:10:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.administration.corba.IdlMCM;
 import com.syrus.AMFICOM.administration.corba.IdlMCMHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -32,17 +31,19 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/10/03 13:58:27 $
+ * @version $Revision: 1.55 $, $Date: 2005/10/05 13:10:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class MCM extends DomainMember implements Characterizable, Namable {
+public final class MCM extends DomainMember
+		implements StorableObject.CharacterizableExt, Namable {
 	private static final long serialVersionUID = 4622885259080741046L;
 
 	private String name;
@@ -265,7 +266,7 @@ public final class MCM extends DomainMember implements Characterizable, Namable 
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicContainerWrappee()
+	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)
