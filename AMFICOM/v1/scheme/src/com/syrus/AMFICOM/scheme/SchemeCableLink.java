@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.106 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.107 2005/10/05 08:06:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.107 $, $Date: 2005/10/05 08:06:56 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -231,9 +231,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 					parentScheme);
 			parentScheme.getSchemeCableLinkContainerWrappee().addToCache(schemeCableLink, usePool);
 
-			if (cableLink != null || cableLinkType != null) {
-				schemeCableLink.abstractLinkTypeSet = true;
-			}
+			schemeCableLink.abstractLinkTypeSet = (cableLink != null || cableLinkType != null);
 
 			schemeCableLink.markAsChanged();
 			return schemeCableLink;

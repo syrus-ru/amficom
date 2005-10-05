@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.75 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemePort.java,v 1.76 2005/10/05 08:06:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.76 $, $Date: 2005/10/05 08:06:56 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -206,9 +206,7 @@ public final class SchemePort extends AbstractSchemePort
 					parentSchemeDevice);
 			parentSchemeDevice.getSchemePortContainerWrappee().addToCache(schemePort, usePool);
 
-			if (port != null || portType != null) {
-				schemePort.portTypeSet = true;
-			}
+			schemePort.portTypeSet = (port != null || portType != null);
 
 			schemePort.markAsChanged();
 			return schemePort;

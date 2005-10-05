@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.96 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.97 2005/10/05 08:06:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.97 $, $Date: 2005/10/05 08:06:56 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -225,9 +225,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 					parentSchemeCableLink);
 			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(schemeCableThread, usePool);
 
-			if (link != null || linkType != null) {
-				schemeCableThread.linkTypeSet = true;
-			}
+			schemeCableThread.linkTypeSet = (link != null || linkType != null);
 
 			schemeCableThread.markAsChanged();
 			return schemeCableThread;

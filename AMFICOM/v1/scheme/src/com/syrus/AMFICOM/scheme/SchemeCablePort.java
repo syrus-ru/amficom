@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.74 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.75 2005/10/05 08:06:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.75 $, $Date: 2005/10/05 08:06:56 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -205,9 +205,7 @@ public final class SchemeCablePort extends AbstractSchemePort
 					parentSchemeDevice);
 			parentSchemeDevice.getSchemeCablePortContainerWrappee().addToCache(schemeCablePort, usePool);
 			
-			if (port != null || portType != null) {
-				schemeCablePort.portTypeSet = true;
-			}
+			schemeCablePort.portTypeSet = (port != null || portType != null);
 
 			schemeCablePort.markAsChanged();
 			return schemeCablePort;

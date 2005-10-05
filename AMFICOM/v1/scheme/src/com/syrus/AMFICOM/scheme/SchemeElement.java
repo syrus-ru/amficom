@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.139 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeElement.java,v 1.140 2005/10/05 08:06:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.139 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.140 $, $Date: 2005/10/05 08:06:56 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -478,9 +478,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null);
 			parentScheme.getSchemeElementContainerWrappee().addToCache(schemeElement, usePool);
 
-			if (equipment != null || protoEquipment != null) {
-				schemeElement.protoEquipmentSet = true;
-			}
+			schemeElement.protoEquipmentSet = (equipment != null || protoEquipment != null);
 
 			schemeElement.markAsChanged();
 			return schemeElement;
@@ -560,9 +558,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					parentSchemeElement);
 			parentSchemeElement.getSchemeElementContainerWrappee().addToCache(schemeElement, usePool);
 
-			if (equipment != null || protoEquipment != null) {
-				schemeElement.protoEquipmentSet = true;
-			}
+			schemeElement.protoEquipmentSet = (equipment != null || protoEquipment != null);
 
 			schemeElement.markAsChanged();
 			return schemeElement;
