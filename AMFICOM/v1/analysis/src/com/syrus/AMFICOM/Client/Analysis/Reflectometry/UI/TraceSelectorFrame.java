@@ -115,8 +115,15 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 						TraceSelectorFrame.this.here = false;
 					} else {
 						final int selectedRow = lsm.getMinSelectionIndex();
-						// selectedRow is selected
-						Heap.setCurrentTrace(traces.get(selectedRow));
+						// XXX: по непонятным мне причинам, при нажатии
+						// TAB в последней строке таблицы, selectedRow
+						// становится равным кол-ву строк, что породит
+						// ArrayIndexOutOfBoundsException
+						// при вызове traces.get(selectedRow).
+						// Поэтому принимаем только значения < traces.size()
+						if (selectedRow < traces.size()) { 
+							Heap.setCurrentTrace(traces.get(selectedRow));
+						}
 					}
 				}
 			}
