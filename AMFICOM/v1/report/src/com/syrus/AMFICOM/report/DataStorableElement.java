@@ -63,10 +63,11 @@ public class DataStorableElement extends StorableElement {
 		this.modelClassName = modelClassName;
 	}
 	
-	public DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName) throws CreateObjectException {
+	public static DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, IntPoint location) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert reportName != null : NON_NULL_EXPECTED;
 		assert modelClassName != null: NON_NULL_EXPECTED;
+		assert location != null : NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
 			return new DataStorableElement(
@@ -76,7 +77,7 @@ public class DataStorableElement extends StorableElement {
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
-					new IntPoint(),
+					location,
 					new IntDimension(),
 					VOID_IDENTIFIER,
 					reportName,

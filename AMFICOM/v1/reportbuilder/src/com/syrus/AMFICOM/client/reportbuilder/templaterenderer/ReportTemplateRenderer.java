@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.12 2005/10/05 09:39:37 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.13 2005/10/05 11:06:07 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -514,9 +514,15 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					1,
 					intLocation);
 		else
-			storableElement = new DataStorableElement(
+			storableElement = DataStorableElement.createInstance(
+					LoginManager.getUserId(),
 					reportName,
-					reportModelName);
+					reportModelName,
+					intLocation);
+			
+//			storableElement = new DataStorableElement(
+//					reportName,
+//					reportModelName);
 		storableElement.setReportObjectId(reportObjectId);		
 
 		RTEDataRenderingComponent component =
