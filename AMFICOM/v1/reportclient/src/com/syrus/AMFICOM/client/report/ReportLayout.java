@@ -1,5 +1,5 @@
 /*
- * $Id: ReportLayout.java,v 1.4 2005/09/08 13:59:10 peskovsky Exp $
+ * $Id: ReportLayout.java,v 1.5 2005/10/05 09:39:38 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.report.TextAttachingType;
  * элементами отчёта так, чтобы расстояния между компонентами были
  * равны расстоянию между компонентами на схеме шаблона отчёта.
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/09/08 13:59:10 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/05 09:39:38 $
  * @module reportclient_v1
  */
 public class ReportLayout {
@@ -35,7 +36,7 @@ public class ReportLayout {
 	
 	private final Map<RenderingComponent,Boolean> componentsSetUp = new HashMap<RenderingComponent,Boolean>();
 	
-	public void dolayout (List<RenderingComponent> container,ReportTemplate template)
+	public void dolayout (List<RenderingComponent> container,ReportTemplate template) throws ApplicationException
 	{
 		this.componentContainer = container;
 		this.reportTemplate = template;		
@@ -70,7 +71,7 @@ public class ReportLayout {
 	 * в том случае, когда элементы, находящиеся выше на схеме, ещё не
 	 * реализованы.
 	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.4 $, $Date: 2005/09/08 13:59:10 $
+	 * @version $Revision: 1.5 $, $Date: 2005/10/05 09:39:38 $
 	 * @module reportclient_v1
 	 */
 	private class NonImplementedElementFoundException extends Exception
@@ -87,11 +88,12 @@ public class ReportLayout {
 	 * @param xs вектор значений x и x + width для всех объектов
 	 * @param ys вектор значений y и y + height для всех объектов
 	 * @return значение y для реализации элемента шаблона
+	 * @throws ApplicationException 
 	 */
 	private int checkToTopForElements(
 			RenderingComponent component,
 			List<Integer> xs,
-			List<Integer> ys) throws NonImplementedElementFoundException{
+			List<Integer> ys) throws NonImplementedElementFoundException, ApplicationException{
 		StorableElement element  = component.getElement();
 		
 		//Находим границы диапазона по абциссе на котором мы проверяем наличие
@@ -180,10 +182,11 @@ public class ReportLayout {
 	 * элементов отображений по x,y.
 	 * @param xs вектор значений x и x + width для всех объектов
 	 * @param ys вектор значений y и y + height для всех объектов
+	 * @throws ApplicationException 
 	 */
 	private void getAxisValuesMatrices(
 			List<Integer> xs,
-			List<Integer> ys) {
+			List<Integer> ys) throws ApplicationException {
 		//Для хранения выходных данных используются списки, поскольку мы не
 		//знаем заранее какие надписи привязаны, а какие нет (мы отдельно
 		//учитываем только координаты непривязанных надписей) - не знаем сколько
@@ -238,8 +241,9 @@ public class ReportLayout {
 	 * @return возвращает 
 	 *  -1, если в этой точке нет элемента шаблона;
 	 *  -2, если есть, но он ещё не расположен в соответствующеем ему месте.
+	 * @throws ApplicationException 
 	 */
-	private RenderingComponent getComponentAtPoint(int x,int y) {
+	private RenderingComponent getComponentAtPoint(int x,int y) throws ApplicationException {
 		for (RenderingComponent component : this.componentContainer) {
 			StorableElement element = component.getElement();
 			if (element instanceof AttachedTextStorableElement)
@@ -277,9 +281,9 @@ public class ReportLayout {
 	 * с надписями.
 	 * @param component
 	 * @return Габариты кластера
+	 * @throws ApplicationException 
 	 */
-	private Rectangle getDataComponentsClasterBounds(DataRenderingComponent component)
-	{
+	private Rectangle getDataComponentsClasterBounds(DataRenderingComponent component) throws ApplicationException {
 		Rectangle bounds = this.reportTemplate.getElementClasterBounds(
 				(DataStorableElement)component.getElement());
 		

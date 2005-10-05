@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.14 2005/09/20 09:25:54 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.15 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.14 $, $Date: 2005/09/20 09:25:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/05 09:39:37 $
  * @author Peskovsky Peter
  * @module reportbuilder_v1
  */
@@ -429,7 +429,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 					this.reportPreviewRenderer.setReportTemplate(reportTemplate);
 					try {
 						this.reportPreviewRenderer.setData(EMPTY_REPORT_DATA);
-					} catch (ReportException e) {
+					} catch (Exception e) {
 						Log.errorMessage("ReportBuilderMainFrame.propertyChange | "
 								+ e.getMessage());
 						Log.errorException(e);

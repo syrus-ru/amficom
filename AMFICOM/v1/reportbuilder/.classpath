@@ -22,5 +22,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement_v1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/analysis"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dadara_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csbridge_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

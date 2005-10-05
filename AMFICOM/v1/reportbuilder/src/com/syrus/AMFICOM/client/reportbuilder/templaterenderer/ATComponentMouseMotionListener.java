@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentMouseMotionListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ATComponentMouseMotionListener.java,v 1.4 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,9 @@ import java.awt.event.MouseMotionListener;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
+import com.syrus.util.Log;
 
 public class ATComponentMouseMotionListener implements MouseMotionListener{
 	ApplicationContext applicationContext = null;
@@ -78,9 +80,12 @@ public class ATComponentMouseMotionListener implements MouseMotionListener{
 		component.setLocation(newX,newY);
 		element.setLocation(newX,newY);
 		
-		element.refreshAttachingDistances();
-
-		element.setModified(System.currentTimeMillis());
+		try {
+			element.refreshAttachingDistances();
+		} catch (ApplicationException e1) {
+			Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
+			Log.errorException(e1);			
+		}
 		
 		this.applicationContext.getDispatcher().firePropertyChange(new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));
 	}

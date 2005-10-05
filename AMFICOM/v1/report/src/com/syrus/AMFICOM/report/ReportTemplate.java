@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.11 2005/10/04 11:03:53 max Exp $
+ * $Id: ReportTemplate.java,v 1.12 2005/10/05 09:39:36 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.report;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
 
 import java.awt.Rectangle;
@@ -53,8 +55,8 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: max $
- * @version $Revision: 1.11 $, $Date: 2005/10/04 11:03:53 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.12 $, $Date: 2005/10/05 09:39:36 $
  * @module generalclient_v1
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable {
@@ -148,8 +150,14 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		this.destinationModule = destinationModule;
 	}
 	
-	public static ReportTemplate createInstance(Identifier creatorId) throws CreateObjectException {
+	public static ReportTemplate createInstance(
+			final Identifier creatorId, 
+			final String name, 
+			final String description) throws 
+			CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
 			final ReportTemplate reportTemplate = new ReportTemplate(
@@ -159,8 +167,8 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
-					"",
-					"",
+					name,
+					description,
 					SheetSize.A4,
 					Orientation.PORTRAIT,
 					STANDART_MARGIN_SIZE,

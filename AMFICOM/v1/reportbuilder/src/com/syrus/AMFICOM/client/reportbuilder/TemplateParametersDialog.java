@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateParametersDialog.java,v 1.3 2005/09/14 14:37:29 peskovsky Exp $
+ * $Id: TemplateParametersDialog.java,v 1.4 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import javax.swing.JTextField;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.report.ReportTemplate;
-import com.syrus.AMFICOM.report.ReportTemplate.ORIENTATION;
-import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.report.SheetSize;
+import com.syrus.AMFICOM.report.ReportTemplate.Orientation;
 
 public class TemplateParametersDialog extends JDialog {
 	private static final String TITLE = LangModelReport.getString("report.UI.Menubar.menuTemplateParameters");	
@@ -136,26 +136,26 @@ public class TemplateParametersDialog extends JDialog {
 		this.reportTemplate = reportTemplate;
 		this.templateSizeComboBox.setSelectedItem(reportTemplate.getSize());
 		this.marginSizeTextField.setText(Integer.toString(reportTemplate.getMarginSize()));
-		if (reportTemplate.getOrientation().equals(ORIENTATION.LANDSCAPE))
+		if (reportTemplate.getOrientation().equals(Orientation.LANDSCAPE))
 			this.landscapeRadioButton.setSelected(true);
 		else
 			this.portraitRadioButton.setSelected(true);			
 	}
 	
 	protected void applyButtonPressed() {
-		IntDimension newSize = null;
+		SheetSize newSize = null;
 		Object sizeItemSelected =
 			this.templateSizeComboBox.getSelectedItem();
 		if (sizeItemSelected.equals(A0))
-			newSize = ReportTemplate.A0;
+			newSize = SheetSize.A0;
 		else if (sizeItemSelected.equals(A1))
-			newSize = ReportTemplate.A1;
+			newSize = SheetSize.A1;
 		else if (sizeItemSelected.equals(A2))
-			newSize = ReportTemplate.A2;
+			newSize = SheetSize.A2;
 		else if (sizeItemSelected.equals(A3))
-			newSize = ReportTemplate.A3;
+			newSize = SheetSize.A3;
 		else if (sizeItemSelected.equals(A4))
-			newSize = ReportTemplate.A4;
+			newSize = SheetSize.A4;
 		
 		int marginSize;
 		try {
@@ -171,9 +171,9 @@ public class TemplateParametersDialog extends JDialog {
 		this.reportTemplate.setSize(newSize);		
 		this.reportTemplate.setMarginSize(marginSize);
 		if (this.portraitRadioButton.isSelected())
-			this.reportTemplate.setOrientation(ORIENTATION.PORTRAIT);
+			this.reportTemplate.setOrientation(Orientation.PORTRAIT);
 		else
-			this.reportTemplate.setOrientation(ORIENTATION.LANDSCAPE);
+			this.reportTemplate.setOrientation(Orientation.LANDSCAPE);
 		
 		this.setVisible(false);
 	}

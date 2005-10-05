@@ -1,5 +1,5 @@
 /*
- * $Id: SaveAsTemplateCommand.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: SaveAsTemplateCommand.java,v 1.3 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,6 @@ public class SaveAsTemplateCommand extends AbstractCommand {
 	public void execute() {
 		ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();		
 		TemplateOpenSaveDialog.saveTemplate(currentTemplate);
-		currentTemplate.refreshModified();
 		this.result = RESULT_OK;
 	}
 }

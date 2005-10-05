@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataComponentMenu.java,v 1.2 2005/09/30 08:13:22 peskovsky Exp $
+ * $Id: TableDataComponentMenu.java,v 1.3 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,6 @@ public class TableDataComponentMenu extends JPopupMenu {
 					return;
 				}
 				element.setVerticalDivisionsCount(newVertDivCount);
-				element.setModified(System.currentTimeMillis());				
 			}
 		});
 		
@@ -77,7 +76,6 @@ public class TableDataComponentMenu extends JPopupMenu {
 					return;
 
 				element.setFont(FontChooserDialog.selectedFont);
-				element.setModified(System.currentTimeMillis());				
 			}
 		});
 		

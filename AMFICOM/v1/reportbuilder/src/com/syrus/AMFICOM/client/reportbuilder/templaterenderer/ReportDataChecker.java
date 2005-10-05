@@ -1,5 +1,5 @@
 /*
- * $Id: ReportDataChecker.java,v 1.3 2005/09/30 08:14:25 peskovsky Exp $
+ * $Id: ReportDataChecker.java,v 1.4 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
@@ -39,11 +38,14 @@ public class ReportDataChecker {
 				||	(objectToInstall instanceof SchemePath)
 				||	(objectToInstall instanceof PhysicalLink)
 				||	(objectToInstall instanceof SiteNode)
-				||	(objectToInstall instanceof Collector)) {
+				||	(objectToInstall instanceof Collector)
+				||	(objectToInstall instanceof Test)
+				||	(objectToInstall instanceof Measurement)) {
 			return true;
 		}
-		return true;
+		return false;
 	}
+	
 	public static Map<String,String> getObjectReportAttributes(
 			Object objectToInstall) {
 		Map<String,String> attributes = null;

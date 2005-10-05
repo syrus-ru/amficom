@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentPropertyChangeListener.java,v 1.4 2005/09/08 13:59:09 peskovsky Exp $
+ * $Id: ATComponentPropertyChangeListener.java,v 1.5 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,10 @@ import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.DRComponentMovedEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.StorableElement;
+import com.syrus.util.Log;
 
 public class ATComponentPropertyChangeListener implements PropertyChangeListener{
 	AttachedTextComponent textComponent = null;
@@ -52,15 +54,20 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 			
 			AttachedTextStorableElement textElement =
 				(AttachedTextStorableElement) this.textComponent.getElement();
-			if (	drElement.equals(textElement.getHorizontalAttacher())
-				||	drElement.equals(textElement.getVerticalAttacher())) {
-				textElement.suiteAttachingDistances(this.templateBounds);
-				this.textComponent.setLocation(textElement.getX(),textElement.getY());
+			try {
+				if (	drElement.equals(textElement.getHorizontalAttacher())
+					||	drElement.equals(textElement.getVerticalAttacher())) {
+					textElement.suiteAttachingDistances(this.templateBounds);
+					this.textComponent.setLocation(textElement.getX(),textElement.getY());
 //				drComponent.setLocation(drElement.getX(),drElement.getY());				
-				//TODO Есть репейнт в лисенере движения объекта, к которому
-				//привязана надпись - возможно этот репейнт не нужен!
-				this.applicationContext.getDispatcher().firePropertyChange(
-						new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));			
+					//TODO Есть репейнт в лисенере движения объекта, к которому
+					//привязана надпись - возможно этот репейнт не нужен!
+					this.applicationContext.getDispatcher().firePropertyChange(
+							new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));			
+				}
+			} catch (ApplicationException e) {
+				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
+				Log.errorException(e);			
 			}
 		}
 		else if (evt instanceof ComponentSelectionChangeEvent) {
@@ -85,7 +92,6 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 				//Выставляем размер хранимому элементу
 				StorableElement element = this.textComponent.getElement();
 				element.setSize(textSize.width,textSize.height);
-				element.setModified(System.currentTimeMillis());
 			}
 		}
 	}

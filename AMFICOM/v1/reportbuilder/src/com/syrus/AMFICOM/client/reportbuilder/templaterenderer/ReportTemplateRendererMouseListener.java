@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererMouseListener.java,v 1.5 2005/09/18 13:13:19 peskovsky Exp $
+ * $Id: ReportTemplateRendererMouseListener.java,v 1.6 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,15 @@ package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.util.Log;
 
 public class ReportTemplateRendererMouseListener implements MouseListener {
 
@@ -41,10 +45,20 @@ public class ReportTemplateRendererMouseListener implements MouseListener {
 
 	public void mouseReleased(MouseEvent e) {
 		if (RendererMode.getMode().equals(RENDERER_MODE.CREATE_IMAGE)){
-			this.renderer.createImageRenderingComponent(e.getPoint());
+			try {
+				this.renderer.createImageRenderingComponent(e.getPoint());
+			} catch (Exception e1) {
+				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
+				Log.errorException(e1);			
+			}
 		}
 		else if (RendererMode.getMode().equals(RENDERER_MODE.CREATE_LABEL)){
-			this.renderer.createTextRenderingComponent(e.getPoint());
+			try {
+				this.renderer.createTextRenderingComponent(e.getPoint());
+			} catch (CreateObjectException e1) {
+				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
+				Log.errorException(e1);			
+			}
 		}
 		this.applicationContext.getDispatcher().firePropertyChange(
 				new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED));

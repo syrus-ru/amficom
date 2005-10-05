@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.7 2005/10/04 11:04:55 max Exp $
+ * $Id: TableDataStorableElement.java,v 1.8 2005/10/05 09:39:36 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
 
+import java.awt.Font;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -25,17 +26,21 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: max $
- * @version $Revision: 1.7 $, $Date: 2005/10/04 11:04:55 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.8 $, $Date: 2005/10/05 09:39:36 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
 	private static final long serialVersionUID = -2699698026579054587L;
+	
+	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.PLAIN,12);	
 	/**
 	 * Число вертикальных разбиений таблицы (применяется для длинных и узких
 	 * таблиц)
 	 */
 	private int verticalDivisionsCount;
+	
+	private Font font = DEFAULT_FONT;
 	
 	TableDataStorableElement (final Identifier id,
 			final Date created,
@@ -53,10 +58,11 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 		this.verticalDivisionsCount = verticalDivisionsCount;
 	}
 	
-	public DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, int verticalDivisionsCount) throws CreateObjectException {
+	public static DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, int verticalDivisionsCount, IntPoint location) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert reportName != null : NON_NULL_EXPECTED;
 		assert modelClassName != null: NON_NULL_EXPECTED;
+		assert location != null: NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
 			return new TableDataStorableElement(
@@ -66,7 +72,7 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
-					new IntPoint(),
+					location,
 					new IntDimension(),
 					VOID_IDENTIFIER,
 					reportName,
@@ -107,5 +113,13 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 
 	public void setVerticalDivisionsCount(int verticalDivisionsCount) {
 		this.verticalDivisionsCount = verticalDivisionsCount;
+	}
+
+	public Font getFont() {
+		return this.font;
+	}
+
+	public void setFont(Font font) {
+		this.font = font;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.4 2005/09/23 12:10:59 peskovsky Exp $
+ * $Id: CreateReportDialog.java,v 1.5 2005/10/05 09:39:38 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.AMFICOM.report.SheetSize;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
  * открытия шаблонов определённого типа.
  *
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/09/23 12:10:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/05 09:39:38 $
  * @module generalclient_v1
  */
 public class CreateReportDialog extends JDialog {
@@ -157,9 +158,8 @@ public class CreateReportDialog extends JDialog {
 
 
 	private void setListContents() throws ApplicationException {
-		//TODO Подставить правильный EntityCode
 		StorableObjectCondition condition = new EquivalentCondition(
-				ObjectEntities.ANALYSIS_CODE);
+				ObjectEntities.REPORTTEMPLATE_CODE);
 		Set<ReportTemplate> allReportTemplates =
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		
@@ -216,7 +216,7 @@ public class CreateReportDialog extends JDialog {
 		buttonPanel.add(closeButton);
 		this.openedViewDialog.getContentPane().add(buttonPanel,BorderLayout.SOUTH);
 
-		IntDimension a4Size = ReportTemplate.A4;
+		IntDimension a4Size = SheetSize.A4.getSize();
 		this.openedViewDialog.setSize(a4Size.getWidth(),a4Size.getHeight());
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -272,7 +272,7 @@ public class CreateReportDialog extends JDialog {
 			reportRenderer.setReportTemplate(this.selectedTemplate);
 			reportRenderer.setData(this.reportData);
 		}
-		catch (ReportException cre) {
+		catch (Exception cre) {
 			Log.errorMessage("CreateReportDialog.createReportRendererForSelectedTemplate | " 
 					+ cre.getMessage());
 			Log.errorException(cre);

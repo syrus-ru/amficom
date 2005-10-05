@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.9 2005/09/23 12:10:59 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.10 2005/10/05 09:39:38 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,17 +20,18 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
-import com.syrus.AMFICOM.report.ReportTemplate.ORIENTATION;
+import com.syrus.AMFICOM.report.ReportTemplate.Orientation;
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.9 $, $Date: 2005/09/23 12:10:59 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/05 09:39:38 $
  * @module reportclient_v1
  */
 public class ReportRenderer extends JPanel {
@@ -61,7 +63,7 @@ public class ReportRenderer extends JPanel {
 	}
 	
 	public void setData(Map<Object, Object> data)
-		throws CreateReportException, CreateModelException {
+		throws CreateReportException, CreateModelException, ApplicationException, IOException {
 		if (this.reportTemplate == null)
 			throw new AssertionError("Report template is not set!");
 		
@@ -98,7 +100,7 @@ public class ReportRenderer extends JPanel {
 			this.add((JComponent)component);
 		}
 
-		for (AttachedTextStorableElement textElement : this.reportTemplate.getTextStorableElements()) {
+		for (AttachedTextStorableElement textElement : this.reportTemplate.getAttachedTextStorableElements()) {
 			AttachedTextComponent component = new AttachedTextComponent(textElement);
 			component.setText(textElement.getText());
 			component.setLocation(textElement.getX(),textElement.getY());
@@ -110,7 +112,7 @@ public class ReportRenderer extends JPanel {
 		for (ImageStorableElement imageElement : this.reportTemplate.getImageStorableElements()) {
 			ImageRenderingComponent component = new ImageRenderingComponent(
 					imageElement,
-					imageElement.getImage());
+					imageElement.getBufferedImage());
 			component.setLocation(imageElement.getX(),imageElement.getY());
 			component.setSize(imageElement.getWidth(),imageElement.getHeight());			
 			this.add(component);
@@ -130,7 +132,7 @@ public class ReportRenderer extends JPanel {
 	
 	private void refreshTemplateBounds() {
 		this.templateBounds = new IntDimension(this.reportTemplate.getSize());
-		if (this.reportTemplate.getOrientation().equals(ORIENTATION.LANDSCAPE)) {
+		if (this.reportTemplate.getOrientation().equals(Orientation.LANDSCAPE)) {
 			int tempWidth = this.templateBounds.getWidth();
 			this.templateBounds.setWidth(this.templateBounds.getHeight());
 			this.templateBounds.setHeight(tempWidth);

@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseMotionListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: DRIComponentMouseMotionListener.java,v 1.4 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.report.StorableElement;
 /**
  * MouseMotionListener for DataRenderingComponent и ImageRenderingComponent
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/09/07 08:43:25 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/05 09:39:37 $
  * @module reportclient_v1
  */
 public class DRIComponentMouseMotionListener implements MouseMotionListener{
@@ -191,8 +191,6 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 		element.setLocation(component.getX(),component.getY());
 		element.setSize(component.getWidth(),component.getHeight());			
 
-		component.getElement().setModified(System.currentTimeMillis());
-		
 		//ќтсылаем сообщение, чтобы те надписи, которые прив€заны к данному
 		//элементу отображени€ данных, передвинулись, сохран€€ интервал между
 		//ними.

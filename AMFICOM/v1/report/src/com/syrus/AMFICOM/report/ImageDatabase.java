@@ -1,5 +1,5 @@
 /*-
- * $Id: ImageDatabase.java,v 1.1 2005/09/30 12:34:07 max Exp $
+ * $Id: ImageDatabase.java,v 1.2 2005/10/05 09:39:36 peskovsky Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -36,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 12:34:07 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2005/10/05 09:39:36 $
  * @module report
  */
 
@@ -120,13 +121,12 @@ public class ImageDatabase extends StorableObjectDatabase<ImageStorableElement> 
 	 * @param storableObject
 	 * @param resultSet
 	 * @return dataStorableElement
-	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
 	@Override
 	protected ImageStorableElement updateEntityFromResultSet(
 			ImageStorableElement storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+			throws SQLException {
 		final Date created = new Date();
 		final ImageStorableElement reportImage = (storableObject == null)
 				? new ImageStorableElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
@@ -138,7 +138,7 @@ public class ImageDatabase extends StorableObjectDatabase<ImageStorableElement> 
 						null,
 						null,
 						null,
-						null)
+						Identifier.VOID_IDENTIFIER)
 				: storableObject;
 		
 		reportImage.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),

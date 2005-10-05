@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.5 2005/09/30 11:08:54 peskovsky Exp $
+ * $Id: HTMLReportEncoder.java,v 1.6 2005/10/05 09:39:38 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -134,21 +134,28 @@ public class HTMLReportEncoder {
 				int cellHeight = ys.get(row + size.height).intValue() - ys.get(row).intValue();
 				int cellWidth = xs.get(col + size.width).intValue() - xs.get(col).intValue();	
 	
-				String buffer =
-					"<td"
-					+ " width=\"" + cellWidth + "\""
-					+ " height=\""+ cellHeight + "\"";
-				if (size.width > 1)
-					buffer += "colspan=\"" + size.width + "\"";
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("<td");
+				buffer.append(" width=\"");
+				buffer.append(cellWidth);
+				buffer.append("\"");
+				buffer.append(" height=\"");
+				buffer.append(cellHeight);
+				buffer.append("\"");
+				if (size.width > 1) {
+					buffer.append("colspan=\"");
+					buffer.append(size.width);
+					buffer.append("\"");
+				}
 				if (size.height > 1)
-					buffer += "rowspan=\"" + size.height + "\"";
+					buffer.append("rowspan=\"" + size.height + "\"");
 				
 				//Пишем компонент
 				if (componentsMatrix[row][col] < 0) {
 					String emptyCellEndOfTDTag = ">";
 					
-					buffer += emptyCellEndOfTDTag;
-					out.write(buffer.getBytes());					
+					buffer.append(emptyCellEndOfTDTag);
+					out.write(buffer.toString().getBytes());					
 				}
 				else {
 					//В ячейке есть компонент
@@ -168,8 +175,8 @@ public class HTMLReportEncoder {
 					else
 						endOfTDTag = ">";
 					
-					buffer += endOfTDTag;
-					out.write(buffer.getBytes());					
+					buffer.append(endOfTDTag);
+					out.write(buffer.toString().getBytes());					
 					
 					if (component instanceof AttachedTextComponent) {
 						AttachedTextComponent textComponent =
@@ -230,26 +237,21 @@ public class HTMLReportEncoder {
 	}
 
 	private String getHTMLFontText(String text,Font font) {
-		String italicTagStart = "";
-		String italicTagEnd = "";
-		if (font.isItalic()) {
-			italicTagStart = "<i>";
-			italicTagEnd = "</i>";
-		}
-		String boldTagStart = "";
-		String boldTagEnd = "";
-		if (font.isBold()) {
-			boldTagStart = "<b>";
-			boldTagEnd = "</b>";
-		}
-
-		String result = 
-		 	"<font face=\"" + font.getName() + "\">"
-			+ boldTagStart + italicTagStart
-			+ text
-			+ italicTagEnd + boldTagEnd
-			+ "</font>";
-		return result;
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("<font face=\"");
+		buffer.append(font.getName());
+		buffer.append("\">");
+		if (font.isBold())
+			buffer.append("<b>");
+		if (font.isItalic())
+			buffer.append("<i>");
+		buffer.append(text);
+		if (font.isItalic())
+			buffer.append("</i>");
+		if (font.isBold())
+			buffer.append("</b>");
+		buffer.append("</font>");
+		return buffer.toString();
 	}
 	
 	private void encodeTableComponent(
@@ -257,17 +259,16 @@ public class HTMLReportEncoder {
 			FileOutputStream out) throws IOException {
 		JTable table = component.getTable();
 		Font tableFont = table.getFont();
-		String buffer = "\n<table frame=\"box\" border=\"1\" width=\""
-			+ table.getWidth()
-			+ "\""
-			+ " style=\"font-size: "
-			+ tableFont.getSize();
-		
-		buffer += "px";
-		buffer += ";\">\n\n";
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("\n<table frame=\"box\" border=\"1\" width=\"");
+		buffer.append(table.getWidth());
+		buffer.append("\"");
+		buffer.append(" style=\"font-size: ");
+		buffer.append(tableFont.getSize());
+		buffer.append("px;\">\n\n");
 	
 		for (int i = 0; i < table.getRowCount(); i++) {
-			buffer += "<tr>";
+			buffer.append("<tr>");
 			for (int j = 0; j < table.getColumnCount(); j++) {
 				float startTableWidth = table.getColumnModel()
 						.getTotalColumnWidth();
@@ -276,57 +277,55 @@ public class HTMLReportEncoder {
 						.getWidth()
 						* currTableWidth / startTableWidth);
 	
-				buffer += "<td width=\""
-						+ (new Integer(columnWidth)).toString() + "\"";
-				buffer += ">";
+				buffer.append("<td width=\"");
+				buffer.append(Integer.toString(columnWidth));
+				buffer.append("\">");
 	
 				if (table.getValueAt(i, j) instanceof String) {
 					String stringValue = (String) table.getValueAt(i, j);
 					if (!stringValue.equals(""))
-						buffer += this.getHTMLFontText(stringValue,tableFont);
+						buffer.append(this.getHTMLFontText(stringValue,tableFont));
 					else
-						buffer += "&nbsp";
+						buffer.append("&nbsp");
 				}
-				buffer += "</td>\n";
+				buffer.append("</td>\n");
 			}
-			buffer += "</tr>\n";
+			buffer.append("</tr>\n");
 		}
-		buffer += "</table>\n\n";
-		out.write(buffer.getBytes());
+		buffer.append("</table>\n\n");
+		out.write(buffer.toString().getBytes());
 	}
 	
 	private void encodeHeader(FileOutputStream out, int mainTableWidth)
 		throws java.io.IOException {
-		String buff =
-			"<html>\n\n"
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("<html>\n\n");
 			
-			+ "<head>\n"
+		buffer.append("<head>\n");
 			
-			+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\">\n"
-			+ "<meta name=\"GENERATOR\" content=\"AMFICOM HTML generator\">\n"
-			+ "<meta name=\"ProgId\" content=\"AMFICOM report\">\n"
+		buffer.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\">\n");
+		buffer.append("<meta name=\"GENERATOR\" content=\"AMFICOM HTML generator\">\n");
+		buffer.append("<meta name=\"ProgId\" content=\"AMFICOM report\">\n");
 			
-			+ "<title>"
-			+ LangModelReport.getString("report.reportForTemplate") + " \"" 
-			+ this.reportTemplate.getName()
-			+ "\"</title>\n"
+		buffer.append("<title>");
+		buffer.append(LangModelReport.getString("report.reportForTemplate"));
+		buffer.append(" \"");
+		buffer.append(this.reportTemplate.getName());
+		buffer.append("\"</title>\n");
 			
-			+ "</head>\n\n"
+		buffer.append("</head>\n\n");
 			
-			+ "<body>\n\n"
-			+ "<table border=\"0\" width=\"" + mainTableWidth
-			+ "\" style=\"font-size: 0\"> \n\n";
+		buffer.append("<body>\n\n");
+		buffer.append("<table border=\"0\" width=\"");
+		buffer.append(mainTableWidth);
+		buffer.append("\" style=\"font-size: 0\"> \n\n");
 
-		out.write(buff.getBytes());
+		out.write(buffer.toString().getBytes());
 	}
 
 	private void encodeFooter(FileOutputStream out)
 		throws java.io.FileNotFoundException, java.io.IOException {
-		String buff =
-			"</table>\n\n"
-			+ "</body>\n\n"
-			+ "</html>";
-		
+		String buff = "</table>\n\n</body>\n\n</html>";
 		out.write(buff.getBytes());
 	}
 
@@ -334,12 +333,20 @@ public class HTMLReportEncoder {
 		ImageRenderingComponent component,
 		String imageFileName,
 		FileOutputStream out) throws IOException {
-		String buffer = "<img border=\"0\" "
-			+ "src=\"" + this.relativeFilesDirName + FILE_SEPARATOR + imageFileName + "\" "
-			+ "width=\"" + Integer.toString(component.getWidth()) + "\" "
-			+ "height=\"" + Integer.toString(component.getHeight())
-			+ "\">";
-		out.write(buffer.getBytes());
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("<img border=\"0\" ");
+		buffer.append("src=\"");
+		buffer.append(this.relativeFilesDirName);
+		buffer.append(FILE_SEPARATOR);
+		buffer.append(imageFileName);
+		buffer.append("\" ");
+		buffer.append("width=\"");
+		buffer.append(component.getWidth());
+		buffer.append("\" ");
+		buffer.append("height=\"");
+		buffer.append(component.getHeight());
+		buffer.append("\">");
+		out.write(buffer.toString().getBytes());
 	}
 	
 	private Dimension findComponentGridSize(

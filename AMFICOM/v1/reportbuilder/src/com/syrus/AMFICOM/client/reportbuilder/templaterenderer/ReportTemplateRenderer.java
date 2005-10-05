@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.11 2005/09/20 09:25:54 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.12 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,9 @@ import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
@@ -58,8 +60,9 @@ import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.report.StorableElement;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.report.TextAttachingType;
-import com.syrus.AMFICOM.report.ReportTemplate.ORIENTATION;
+import com.syrus.AMFICOM.report.ReportTemplate.Orientation;
 import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.Log;
 
 public class ReportTemplateRenderer extends JPanel implements PropertyChangeListener{
@@ -77,7 +80,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private RenderingComponent selectedComponent = null;
 	
 	private AttachedTextComponent labelToBeAttached = null;
-	private String labelAttachingType = null;
+	private TextAttachingType labelAttachingType = null;
 	
 	private Rectangle marginBounds = new Rectangle();
 	private Rectangle templateBounds = new Rectangle();	
@@ -130,10 +133,20 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			else if (eventType.equals(ReportFlagEvent.SPECIAL_MODE_CANCELED))
 				RendererMode.setMode(RENDERER_MODE.NO_SPECIAL);
 			else if (eventType.equals(ReportFlagEvent.DELETE_OBJECT)) {
-				ReportTemplateRenderer.this.removeRenderingComponent(
-						this.selectedComponent);
-				this.selectedComponent = null;				
-				ReportTemplateRenderer.this.repaint();
+				try {
+					ReportTemplateRenderer.this.removeRenderingComponent(
+							this.selectedComponent);
+					this.selectedComponent = null;				
+					ReportTemplateRenderer.this.repaint();
+				} catch (ApplicationException e) {
+					Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
+					Log.errorException(e);			
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							LangModelReport.getString("report.Exception.deleteObjectError"),
+							LangModelReport.getString("report.Exception.error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 			else if (eventType.equals(ReportFlagEvent.TEMPLATE_PARAMETERS_CHANGED)) {
 				this.refreshTemplateBounds();
@@ -143,7 +156,17 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				ReportTemplateRenderer.this.repaint();
 		}
 		else if (evt instanceof UseTemplateEvent){
-			this.removeAllComponents();
+			try {
+				this.removeAllComponents();
+			} catch (ApplicationException e1) {
+				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
+				Log.errorException(e1);			
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(),
+						LangModelReport.getString("report.Exception.deleteObjectError"),
+						LangModelReport.getString("report.Exception.error"),
+						JOptionPane.ERROR_MESSAGE);
+			}
 			
 			try {
 				this.setTemplate(((UseTemplateEvent)evt).getReportTemplate());
@@ -180,7 +203,17 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			if (command.getResult() == Command.RESULT_CANCEL)
 				return;
 			
-			this.removeAllComponents();
+			try {
+				this.removeAllComponents();
+			} catch (ApplicationException e1) {
+				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
+				Log.errorException(e1);			
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(),
+						LangModelReport.getString("report.Exception.deleteObjectError"),
+						LangModelReport.getString("report.Exception.error"),
+						JOptionPane.ERROR_MESSAGE);
+			}
 			
 			try {
 				this.createDataComponentWithText(
@@ -215,8 +248,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 							dataElement,
 							this.labelAttachingType);
 					
-					textElement.setModified(System.currentTimeMillis());
-					
 					this.applicationContext.getDispatcher().firePropertyChange(
 							new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED),true);			
 				}
@@ -232,14 +263,14 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		}
 	}
 
-	private void removeAllComponents() {
+	private void removeAllComponents() throws ApplicationException {
 		for (int i = 0; i < this.getComponentCount(); i++) {
 			this.removeRenderingComponent(
 					(RenderingComponent)this.getComponent(i));
 		}
 	}
 	
-	private void removeRenderingComponent(RenderingComponent component) {
+	private void removeRenderingComponent(RenderingComponent component) throws ApplicationException {
 		if (component instanceof DataRenderingComponent) {
 			DataRenderingComponent drComponent =
 				(DataRenderingComponent) component;
@@ -283,7 +314,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		return this.template;
 	}
 
-	public void setTemplate(ReportTemplate template) throws CreateModelException, ApplicationException {
+	public void setTemplate(ReportTemplate template) throws CreateModelException, ApplicationException, IOException {
 		this.template = template;
 		this.refreshTemplateBounds();
 		
@@ -296,7 +327,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					new Dimension(dataElement.getWidth(),dataElement.getHeight()));
 		}
 
-		for (AttachedTextStorableElement textElement : this.template.getTextStorableElements()) {
+		for (AttachedTextStorableElement textElement : this.template.getAttachedTextStorableElements()) {
 			AttachedTextComponent component = this.createTextRenderingComponent(
 					new Point(textElement.getX(),textElement.getY()));
 			component.setText(textElement.getText());
@@ -317,7 +348,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private void refreshTemplateBounds() {
 		IntDimension size = this.template.getSize();
 		
-		if (this.template.getOrientation().equals(ORIENTATION.PORTRAIT))
+		if (this.template.getOrientation().equals(Orientation.PORTRAIT))
 			this.setSize(size.getWidth(),size.getHeight() * 2);
 		else
 			this.setSize(2 * size.getHeight(),size.getWidth());
@@ -329,7 +360,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.templateBounds.setLocation(
 				new Point(2,2));
 
-		if (this.template.getOrientation().equals(ORIENTATION.PORTRAIT)){
+		if (this.template.getOrientation().equals(Orientation.PORTRAIT)){
 			this.marginBounds.setSize(
 					size.getWidth() - 2 * templateMarginSize,
 					2 * size.getHeight() - 2 * templateMarginSize);
@@ -382,7 +413,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.paintChildren(g);
 	}
 	
-	public ImageRenderingComponent createImageRenderingComponent(Point point) {
+	public ImageRenderingComponent createImageRenderingComponent(Point point) throws ApplicationException, IOException {
 		String imageFileName = this.getImageFileName();
 		if (imageFileName == null)
 			return null;
@@ -408,15 +439,17 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				
 			return null;
 		}
-					
-		ImageStorableElement element = new ImageStorableElement();
-		element.setLocation(point.x,point.y);
+
 		Dimension defaultSize = ImageRenderingComponent.DEFAULT_IMAGE_SIZE;
-		element.setSize(new IntDimension(defaultSize.width,defaultSize.height));
-		element.setImage(elementImage);
+
+		ImageStorableElement element = ImageStorableElement.createInstance(
+				LoginManager.getUserId(),
+				elementImage,
+				new IntDimension(defaultSize.width,defaultSize.height),
+				new IntPoint(point.x,point.y));
 		this.template.addElement(element);
 		 
-		ImageRenderingComponent component = new ImageRenderingComponent(element,element.getImage());
+		ImageRenderingComponent component = new ImageRenderingComponent(element,element.getBufferedImage());
 		this.add(component);
 		component.setLocation(element.getX(),element.getY());
 		component.setSize(element.getWidth(),element.getHeight());
@@ -429,9 +462,15 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		return component;
 	}
 
-	public AttachedTextComponent createTextRenderingComponent(Point point){
-		AttachedTextStorableElement element = new AttachedTextStorableElement();
-		element.setFont(AttachedTextComponent.DEFAULT_FONT);
+	public AttachedTextComponent createTextRenderingComponent(Point point) throws CreateObjectException{
+		AttachedTextStorableElement element = AttachedTextStorableElement.createInstance(
+				LoginManager.getUserId(),
+				AttachedTextComponent.DEFAULT_FONT,
+				new IntPoint(point.x,point.y),
+				new IntDimension(
+						AttachedTextComponent.MINIMUM_COMPONENT_SIZE.width,
+						AttachedTextComponent.MINIMUM_COMPONENT_SIZE.height));
+
 		AttachedTextComponent component = new AttachedTextComponent(element);
 		this.add(component);
 		component.setLocation(point.x,point.y);
@@ -447,10 +486,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 						this.applicationContext,
 						this.marginBounds));
 		
-		element.setLocation(point.x,point.y);
-		element.setSize(
-			AttachedTextComponent.MINIMUM_COMPONENT_SIZE.width,
-			AttachedTextComponent.MINIMUM_COMPONENT_SIZE.height);
 		this.template.addElement(element);		
 		
 		this.applicationContext.getDispatcher().addPropertyChangeListener(
@@ -469,12 +504,15 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		ReportModel reportModel = ReportModelPool.getModel(reportModelName);
 		ReportType reportType = reportModel.getReportKind(reportName);
 		
+		IntPoint intLocation = new IntPoint(location.x,location.y);		
 		DataStorableElement storableElement = null;
 		if (reportType.equals(ReportType.TABLE))
-			storableElement = new TableDataStorableElement(
+			storableElement = TableDataStorableElement.createInstance(
+					LoginManager.getUserId(),
 					reportName,
 					reportModelName,
-					1);
+					1,
+					intLocation);
 		else
 			storableElement = new DataStorableElement(
 					reportName,
@@ -499,7 +537,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		
 		component.setContext(this.applicationContext);
 		
-		storableElement.setLocation(location.x,location.y);
 		storableElement.setSize(component.getWidth(),component.getHeight());
 		this.template.addElement(storableElement);
 

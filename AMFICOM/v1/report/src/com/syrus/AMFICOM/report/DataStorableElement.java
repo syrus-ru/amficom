@@ -45,6 +45,8 @@ public class DataStorableElement extends StorableElement {
 	 */
 	private String modelClassName;
 	
+	private Identifier reportObjectId = Identifier.VOID_IDENTIFIER;
+	
 	DataStorableElement(final Identifier id,
 			final Date created,
 			final Date modified,
@@ -136,5 +138,13 @@ public class DataStorableElement extends StorableElement {
 	public DataStorableElement(String reportName, String modelClassName) {
 		this.reportName = reportName;
 		this.modelClassName = modelClassName;		
+	}
+
+	public Identifier getReportObjectId() {
+		return this.reportObjectId;
+	}
+
+	public void setReportObjectId(Identifier reportObjectId) {
+		this.reportObjectId = reportObjectId;
 	}
 }

@@ -101,9 +101,12 @@ public final class AttachedTextStorableElement extends StorableElement
 		
 	}
 	
-	public static AttachedTextStorableElement createInstance(Identifier creatorId, IntPoint location) throws CreateObjectException {
+	public static AttachedTextStorableElement createInstance(Identifier creatorId, Font font, IntPoint location, IntDimension size) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert location != null : NON_NULL_EXPECTED;
+		assert size != null : NON_NULL_EXPECTED;
+		assert font != null : NON_NULL_EXPECTED;
+		
 		try {
 			final Date created = new Date();
 			final AttachedTextStorableElement atse = new AttachedTextStorableElement(IdentifierPool.getGeneratedIdentifier(ATTACHEDTEXT_CODE),
@@ -113,13 +116,12 @@ public final class AttachedTextStorableElement extends StorableElement
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					location,
-					new IntDimension(),
+					size,
 					VOID_IDENTIFIER,
 					"",
 					VOID_IDENTIFIER,
 					VOID_IDENTIFIER,
-					// TODO: use real font
-					new Font("qwe", 0, 0),
+					font,
 					TextAttachingType.TO_FIELDS_LEFT,
 					TextAttachingType.TO_FIELDS_TOP,
 					0,

@@ -18,11 +18,13 @@ import com.syrus.AMFICOM.client.report.ReportTemplateWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.util.Log;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -70,6 +72,8 @@ public class TemplateOpenSaveDialog extends JDialog {
 	/**
 	 * Список всех шаблонов отчётов
 	 */
+	protected int mode = 0;
+	
 	private Set<ReportTemplate> allReportTemplates = null;
 	
 	private JPanel contentPanel = new JPanel();
@@ -84,7 +88,6 @@ public class TemplateOpenSaveDialog extends JDialog {
 
 	private JTextField selectedTemplateNameField = new JTextField();
 
-	private int mode = 0;
 	private ReportTemplate templateProcessed = null;
 
 	public static ReportTemplate openTemplate() {
@@ -141,7 +144,23 @@ public class TemplateOpenSaveDialog extends JDialog {
 		this.openSaveButton.setEnabled(false);
 		this.openSaveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				openSaveButton_actionPerformed(e);
+				try {
+					openSaveButton_actionPerformed(e);
+				} catch (ApplicationException e1) {
+					Log.errorMessage("TemplateOpenSaveDialog.actionPerformed | " + e1.getMessage());
+					Log.errorException(e1);			
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							LangModelReport.getString(
+									TemplateOpenSaveDialog.this.mode == SAVE 
+									? "report.Exception.saveTemplateError" 
+											: "report.Exception.openTemplateError")
+								+ " ("
+								+ e1.getMessage()
+								+ ").",
+							LangModelReport.getString("report.Exception.error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
@@ -233,9 +252,8 @@ public class TemplateOpenSaveDialog extends JDialog {
 	}
 
 	private void getReportTemplatesFromPool() throws ApplicationException {
-		//TODO Подставить правильный EntityCode
 		StorableObjectCondition condition = new EquivalentCondition(
-				ObjectEntities.ANALYSIS_CODE);
+				ObjectEntities.REPORTTEMPLATE_CODE);
 		this.allReportTemplates = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 	}
 	
@@ -251,7 +269,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					LangModelReport.getString(DestinationModules.COMBINED));
 	}
 
-	protected void openSaveButton_actionPerformed(ActionEvent e) {
+	protected void openSaveButton_actionPerformed(ActionEvent e) throws ApplicationException {
 		ReportTemplate selectedTemplate =
 			this.templateForName(this.selectedTemplateNameField.getText());
 		
@@ -280,22 +298,17 @@ public class TemplateOpenSaveDialog extends JDialog {
 				if (replace == JOptionPane.NO_OPTION)
 					return;
 
-				//TODO Здесь должно быть удаление шаблона с указанным именем
 				StorableObjectPool.delete(selectedTemplate.getId());
+				StorableObjectPool.flush(selectedTemplate,LoginManager.getUserId(),true);				
 			}
 			
 			this.templateProcessed.setName(this.selectedTemplateNameField.getText());
 			this.templateProcessed.setDestinationModule(
 					MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()]);
 
-			//TODO Здесь должно быть сохранение шаблона с указанным именем
-			try {
-				StorableObjectPool.putStorableObject(selectedTemplate);
-			} catch (IllegalObjectEntityException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			selectedTemplate.refreshModified();
+			StorableObjectPool.putStorableObject(selectedTemplate);
+			StorableObjectPool.flush(selectedTemplate,LoginManager.getUserId(),true);
+
 			this.setVisible(false);
 		}
 	}
@@ -312,8 +325,13 @@ public class TemplateOpenSaveDialog extends JDialog {
 			selectedTemplates.add((ReportTemplate)this.templatesList.
 				getModel().getElementAt(selectedIndices[i]));
 
-		//TODO Здесь должно быть удаление списка шаблонов
 		StorableObjectPool.delete(selectedTemplates);
+		try {
+			StorableObjectPool.flush(selectedTemplates,LoginManager.getUserId(),true);
+		} catch (ApplicationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	protected void templatesList_ItemChanged() {

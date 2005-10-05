@@ -3,13 +3,19 @@ package com.syrus.AMFICOM.report;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -54,13 +60,32 @@ public final class ImageStorableElement extends StorableElement {
 		this.bitmapImageResourceId = bitmapImageResourceId;
 	}
 	
-	public ImageStorableElement createInstance(Identifier creatorId, byte[] image) throws CreateObjectException {
+	ImageStorableElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final IntPoint location,
+			final IntDimension size,
+			final Identifier reportTemplateId,
+			final byte[] image) throws IdentifierGenerationException, CreateObjectException {
+		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId);
+		this.bitmapImageResourceId = IdentifierPool.getGeneratedIdentifier(IMAGERESOURCE_CODE);
+		this.bitmapImageResource  = BitmapImageResource.createInstance(this.bitmapImageResourceId , this.bitmapImageResourceId.toString(), image);
+	}
+	
+	public static ImageStorableElement createInstance(
+			Identifier creatorId,
+			BufferedImage image,
+			IntDimension size,
+			IntPoint location) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert image != null : NON_NULL_EXPECTED;
 		try {
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ImageIO.write(image, "bmp", baos);
 			final Date created = new Date();
-			Identifier imageId = IdentifierPool.getGeneratedIdentifier(IMAGERESOURCE_CODE);
-			this.bitmapImageResource  = BitmapImageResource.createInstance(imageId, imageId.toString(), image);
 			return new ImageStorableElement(
 					IdentifierPool.getGeneratedIdentifier(REPORTDATA_CODE),
 					created,
@@ -68,13 +93,16 @@ public final class ImageStorableElement extends StorableElement {
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
-					new IntPoint(),
-					new IntDimension(),
+					location,
+					size,
 					VOID_IDENTIFIER,
-					imageId);
+					baos.toByteArray());
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"ImageStorableElement.createInstance() | cannot generate identifier ", ige);
+		} catch (final IOException ioe) {
+			throw new CreateObjectException(
+					"ImageStorableElement.createInstance() | stream error ", ioe);
 		}
 	}
 	
@@ -134,6 +162,18 @@ public final class ImageStorableElement extends StorableElement {
 	
 	public void setImage(byte[] image) throws ApplicationException {
 		getBitmapImageResource().setImage(image);
+	}
+
+	public BufferedImage getBufferedImage() throws ApplicationException, IOException {
+		return ImageIO.read(new ByteArrayInputStream(getBitmapImageResource().getImage()));
+	}
+	
+	public void setBufferedImage(BufferedImage image) throws ApplicationException, IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(image, "bmp", baos);
+		getBitmapImageResource().setImage(baos.toByteArray());
+		baos.flush();
+		baos.close();		
 	}
 	
 	Identifier getBitmapImageResourceId() {

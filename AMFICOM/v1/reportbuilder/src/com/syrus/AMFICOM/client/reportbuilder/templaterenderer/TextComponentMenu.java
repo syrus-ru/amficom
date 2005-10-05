@@ -1,5 +1,5 @@
 /*
- * $Id: TextComponentMenu.java,v 1.6 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: TextComponentMenu.java,v 1.7 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,6 @@ public class TextComponentMenu extends JPopupMenu {
 	
 				component.setSize(component.getTextSize());
 				element.setSize(component.getWidth(),component.getHeight());
-				
-				element.setModified(System.currentTimeMillis());				
 			}
 		});
 
@@ -72,17 +70,17 @@ public class TextComponentMenu extends JPopupMenu {
 				//Возможные варианты вертикальной привязки
 				List<String> selectItems = new ArrayList<String>();
 				selectItems.add(LangModelReport
-						.getString(TextAttachingType.TO_FIELDS_TOP));
+						.getString(TextAttachingType.TO_FIELDS_TOP.stringValue()));
 				selectItems.add(LangModelReport
-						.getString(TextAttachingType.TO_TOP));
+						.getString(TextAttachingType.TO_TOP.stringValue()));
 				selectItems.add(LangModelReport
-						.getString(TextAttachingType.TO_BOTTOM));
+						.getString(TextAttachingType.TO_BOTTOM.stringValue()));
 
 				//Значение вертикальной привязки, установленное для этой надписи
-				String oldValue = element.getVerticalAttachType();
+				String oldValue = element.getVerticalAttachType().stringValue();
 
-				String newAttachmentType = null;
-				newAttachmentType = (String) JOptionPane.showInputDialog(
+				TextAttachingType newAttachmentType = null;
+				String newAttachmentTypeString = (String) JOptionPane.showInputDialog(
 					Environment.getActiveWindow(),
 					LangModelReport.getString("report.TextComponentMenu.attachChooseMessage"),
 					LangModelReport.getString("report.TextComponentMenu.attachChooseHeader"),
@@ -96,15 +94,15 @@ public class TextComponentMenu extends JPopupMenu {
 
 				// Если мы выбрали привязку по полю
 				if (newAttachmentType.equals(LangModelReport
-						.getString(TextAttachingType.TO_FIELDS_TOP)))
+						.getString(TextAttachingType.TO_FIELDS_TOP.stringValue())))
 					newAttachmentType = TextAttachingType.TO_FIELDS_TOP;
 
-				else if (newAttachmentType.equals(LangModelReport
-						.getString(TextAttachingType.TO_TOP)))
+				else if (newAttachmentTypeString.equals(LangModelReport
+						.getString(TextAttachingType.TO_TOP.stringValue())))
 					newAttachmentType = TextAttachingType.TO_TOP;
 
-				else if (newAttachmentType.equals(LangModelReport
-						.getString(TextAttachingType.TO_BOTTOM)))
+				else if (newAttachmentTypeString.equals(LangModelReport
+						.getString(TextAttachingType.TO_BOTTOM.stringValue())))
 					newAttachmentType = TextAttachingType.TO_BOTTOM;
 
 				// ждём пока пользователь выберет объект
@@ -130,19 +128,19 @@ public class TextComponentMenu extends JPopupMenu {
 				//Возможные варианты горизонтальной привязки
 				List<String> selectItems = new ArrayList<String>();
 				selectItems.add(LangModelReport
-						.getString(TextAttachingType.TO_FIELDS_LEFT));
+						.getString(TextAttachingType.TO_FIELDS_LEFT.stringValue()));
 				selectItems.add(LangModelReport
-						.getString(TextAttachingType.TO_LEFT));
+						.getString(TextAttachingType.TO_LEFT.stringValue()));
 				selectItems.add(LangModelReport
-						.getString(TextAttachingType.TO_WIDTH_CENTER));
+						.getString(TextAttachingType.TO_WIDTH_CENTER.stringValue()));
 				selectItems.add(LangModelReport
-						.getString(TextAttachingType.TO_RIGHT));
+						.getString(TextAttachingType.TO_RIGHT.stringValue()));
 	
 				//Значение горизонтальной привязки, установленное для этой надписи
-				String oldValue = element.getHorizontalAttachType();
+				String oldValue = element.getHorizontalAttachType().stringValue();
 	
-				String newAttachmentType = null;
-				newAttachmentType = (String) JOptionPane.showInputDialog(
+				TextAttachingType newAttachmentType = null;
+				String newAttachmentTypeString = (String) JOptionPane.showInputDialog(
 					Environment.getActiveWindow(),
 					LangModelReport.getString("report.TextComponentMenu.attachChooseMessage"),
 					LangModelReport.getString("report.TextComponentMenu.attachChooseHeader"),
@@ -155,20 +153,20 @@ public class TextComponentMenu extends JPopupMenu {
 					return;
 	
 				// Если мы выбрали привязку по полю
-				if (newAttachmentType.equals(LangModelReport
-						.getString(TextAttachingType.TO_FIELDS_LEFT)))
+				if (newAttachmentTypeString.equals(LangModelReport
+						.getString(TextAttachingType.TO_FIELDS_LEFT.stringValue())))
 					newAttachmentType = TextAttachingType.TO_FIELDS_LEFT;
 	
-				else if (newAttachmentType.equals(LangModelReport
-						.getString(TextAttachingType.TO_LEFT)))
+				else if (newAttachmentTypeString.equals(LangModelReport
+						.getString(TextAttachingType.TO_LEFT.stringValue())))
 					newAttachmentType = TextAttachingType.TO_LEFT;
 
-				else if (newAttachmentType.equals(LangModelReport
-						.getString(TextAttachingType.TO_WIDTH_CENTER)))
+				else if (newAttachmentTypeString.equals(LangModelReport
+						.getString(TextAttachingType.TO_WIDTH_CENTER.stringValue())))
 					newAttachmentType = TextAttachingType.TO_WIDTH_CENTER;
 				
-				else if (newAttachmentType.equals(LangModelReport
-						.getString(TextAttachingType.TO_RIGHT)))
+				else if (newAttachmentTypeString.equals(LangModelReport
+						.getString(TextAttachingType.TO_RIGHT.stringValue())))
 					newAttachmentType = TextAttachingType.TO_RIGHT;
 	
 				// ждём пока пользователь выберет объект
@@ -193,7 +191,6 @@ public class TextComponentMenu extends JPopupMenu {
 
 				element.setAttachment(null, TextAttachingType.TO_FIELDS_LEFT);
 				element.setAttachment(null, TextAttachingType.TO_FIELDS_TOP);
-				element.setModified(System.currentTimeMillis());
 				
 				TextComponentMenu.this.setVisible(false);
 			}

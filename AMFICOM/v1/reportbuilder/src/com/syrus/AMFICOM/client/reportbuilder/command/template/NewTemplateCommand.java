@@ -1,5 +1,5 @@
 /*
- * $Id: NewTemplateCommand.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: NewTemplateCommand.java,v 1.3 2005/10/05 09:39:37 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,15 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
-import com.syrus.AMFICOM.client.reportbuilder.ReportTemplateFactory;
 import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 
 public class NewTemplateCommand extends AbstractCommand {
+	public static final String NEW_TEMPLATE_NAME = "report.Command.NewTemplate.newTemplateName";
 	ApplicationContext aContext;
 	ReportBuilderMainFrame mainFrame;
 	
@@ -38,7 +40,7 @@ public class NewTemplateCommand extends AbstractCommand {
 		try {
 			ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
 			if (	currentTemplate != null
-				&&	currentTemplate.isModified()) {
+				&&	currentTemplate.isChanged()) {
 				int saveChanges = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
 						LangModelReport.getString("report.Command.SaveTemplate.saveConfirmText"),
@@ -54,7 +56,11 @@ public class NewTemplateCommand extends AbstractCommand {
 				}
 			}
 			
-			ReportTemplate reportTemplate = ReportTemplateFactory.createReportTemplate();
+			ReportTemplate reportTemplate = ReportTemplate.createInstance(
+					LoginManager.getUserId(),
+					LangModelReport.getString(NEW_TEMPLATE_NAME),
+					"");
+			reportTemplate.setDestinationModule(DestinationModules.UNKNOWN_MODULE);
 			
 			ApplicationModel aModel = this.aContext.getApplicationModel(); 
 			aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME).execute();
