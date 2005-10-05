@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.11 2005/10/05 13:10:17 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.12 2005/10/05 13:43:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlProtoEquipmentHelper;
 import com.syrus.AMFICOM.configuration.xml.XmlProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -52,13 +53,13 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/05 13:10:17 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/05 13:43:33 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class ProtoEquipment extends StorableObject
-		implements StorableObject.CharacterizableExt, Namable,
+		implements Characterizable, Namable,
 		XmlBeansTransferable<XmlProtoEquipment> {
 	private static final long serialVersionUID = 7066410483749919904L;
 
@@ -377,7 +378,7 @@ public final class ProtoEquipment extends StorableObject
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

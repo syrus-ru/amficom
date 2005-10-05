@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.101 2005/10/05 13:10:17 bass Exp $
+ * $Id: PortType.java,v 1.102 2005/10/05 13:43:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.configuration.xml.XmlPortTypeKind;
 import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -44,7 +45,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -56,14 +56,14 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/10/05 13:10:17 $
+ * @version $Revision: 1.102 $, $Date: 2005/10/05 13:43:33 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
 public final class PortType extends StorableObjectType
-		implements StorableObject.CharacterizableExt, Namable,
+		implements Characterizable, Namable,
 		XmlBeansTransferable<XmlPortType> {
 	private static final long serialVersionUID = -115251480084275101L;
 
@@ -387,7 +387,7 @@ public final class PortType extends StorableObjectType
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

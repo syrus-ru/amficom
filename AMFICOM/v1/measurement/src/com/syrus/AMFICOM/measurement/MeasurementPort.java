@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.10 2005/10/05 13:10:16 bass Exp $
+ * $Id: MeasurementPort.java,v 1.11 2005/10/05 13:43:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -37,13 +38,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/05 13:10:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/05 13:43:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementPort extends StorableObject
-		implements StorableObject.CharacterizableExt,
+		implements Characterizable,
 		TypedObject<MeasurementPortType> {
 	private static final long serialVersionUID = -5100885507408715167L;
 
@@ -248,7 +249,7 @@ public final class MeasurementPort extends StorableObject
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

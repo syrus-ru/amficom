@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.101 2005/10/05 13:10:16 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.102 2005/10/05 13:43:32 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -37,7 +38,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -61,11 +61,11 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/10/05 13:10:16 $
+ * @version $Revision: 1.102 $, $Date: 2005/10/05 13:43:32 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
-		implements StorableObject.CharacterizableExt, Namable,
+		implements Characterizable, Namable,
 		LibraryEntry, XmlBeansTransferable<XmlPhysicalLinkType> {
 
 	/** тоннель */
@@ -538,7 +538,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

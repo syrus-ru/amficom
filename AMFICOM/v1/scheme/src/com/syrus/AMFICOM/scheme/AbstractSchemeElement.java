@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.66 2005/10/05 13:10:18 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.67 2005/10/05 13:43:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,13 +25,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
@@ -47,12 +47,12 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/10/05 13:10:18 $
+ * @version $Revision: 1.67 $, $Date: 2005/10/05 13:43:35 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
 		extends AbstractCloneableStorableObject
-		implements Describable, StorableObject.CharacterizableExt,
+		implements Describable, Characterizable,
 		ReverseDependencyContainer {
 	static final long serialVersionUID = 4644766113809681630L;
 
@@ -319,7 +319,7 @@ public abstract class AbstractSchemeElement
 	StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

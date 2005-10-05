@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.65 2005/10/05 13:10:15 bass Exp $
+ * $Id: Domain.java,v 1.66 2005/10/05 13:43:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.administration.corba.IdlDomainHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -33,7 +34,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -42,14 +42,14 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/10/05 13:10:15 $
+ * @version $Revision: 1.66 $, $Date: 2005/10/05 13:43:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
 public final class Domain extends DomainMember
-		implements StorableObject.CharacterizableExt {
+		implements Characterizable {
 	private static final long serialVersionUID = 6401785674412391641L;
 
 	private String name;
@@ -263,7 +263,7 @@ public final class Domain extends DomainMember
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

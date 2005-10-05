@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.98 2005/10/05 13:10:18 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.99 2005/10/05 13:43:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -57,7 +58,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -76,11 +76,11 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/10/05 13:10:18 $
+ * @version $Revision: 1.99 $, $Date: 2005/10/05 13:43:35 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
-		implements Describable, StorableObject.CharacterizableExt,
+		implements Describable, Characterizable,
 		ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeCableThread> {
 	private static final long serialVersionUID = 4050204133015171124L;
@@ -950,7 +950,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

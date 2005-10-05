@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.72 2005/10/05 13:10:16 bass Exp $
+ * $Id: Characteristic.java,v 1.73 2005/10/05 13:43:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/10/05 13:10:16 $
+ * @version $Revision: 1.73 $, $Date: 2005/10/05 13:43:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -160,8 +160,8 @@ public final class Characteristic extends AbstractCloneableStorableObject
 					parentCharacterizable.getId(),
 					editable,
 					visible);
-			if (parentCharacterizable instanceof CharacterizableExt) {
-				((CharacterizableExt) parentCharacterizable).getCharacteristicContainerWrappee().addToCache(characteristic, usePool);
+			if (parentCharacterizable != null) {
+				parentCharacterizable.getCharacteristicContainerWrappee().addToCache(characteristic, usePool);
 			}
 
 			assert characteristic.isValid() : OBJECT_STATE_ILLEGAL;
@@ -454,11 +454,11 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		}
 
 		final Characterizable oldParentCharacterizable = this.getParentCharacterizable();
-		if (oldParentCharacterizable instanceof CharacterizableExt) {
-			((CharacterizableExt) oldParentCharacterizable).getCharacteristicContainerWrappee().removeFromCache(this, usePool);
+		if (oldParentCharacterizable != null) {
+			oldParentCharacterizable.getCharacteristicContainerWrappee().removeFromCache(this, usePool);
 		}
-		if (parentCharacterizable instanceof CharacterizableExt) {
-			((CharacterizableExt) parentCharacterizable).getCharacteristicContainerWrappee().addToCache(this, usePool);
+		if (parentCharacterizable != null) {
+			parentCharacterizable.getCharacteristicContainerWrappee().addToCache(this, usePool);
 		}
 
 		this.parentCharacterizableId = newParentCharacterizableId;

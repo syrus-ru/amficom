@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.115 2005/10/05 13:10:16 bass Exp $
+ * $Id: StorableObject.java,v 1.116 2005/10/05 13:43:32 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/10/05 13:10:16 $
+ * @version $Revision: 1.116 $, $Date: 2005/10/05 13:43:32 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -638,7 +638,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.115 $, $Date: 2005/10/05 13:10:16 $
+	 * @version $Revision: 1.116 $, $Date: 2005/10/05 13:43:32 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -754,17 +754,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.115 $, $Date: 2005/10/05 13:10:16 $
-	 * @module general
-	 */
-	protected interface CharacterizableExt extends Characterizable {
-		StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee();
-	}
-
-	/**
-	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.115 $, $Date: 2005/10/05 13:10:16 $
+	 * @version $Revision: 1.116 $, $Date: 2005/10/05 13:43:32 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

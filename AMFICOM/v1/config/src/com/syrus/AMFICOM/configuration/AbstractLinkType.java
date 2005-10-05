@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.26 2005/10/05 13:10:17 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.27 2005/10/05 13:43:33 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,21 +20,21 @@ import java.util.Set;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/10/05 13:10:17 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/05 13:43:33 $
  * @author $Author: bass $
  * @module config
  */
 public abstract class AbstractLinkType extends StorableObjectType
-		implements Namable, StorableObject.CharacterizableExt {
+		implements Namable, Characterizable {
 	private static final long serialVersionUID = 6276017738364160981L;
 
 	AbstractLinkType(/*IdlAbstractLinkType*/) {
@@ -92,7 +92,7 @@ public abstract class AbstractLinkType extends StorableObjectType
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

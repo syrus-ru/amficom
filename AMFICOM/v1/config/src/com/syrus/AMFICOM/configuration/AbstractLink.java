@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.14 2005/10/05 13:10:17 bass Exp $
+ * $Id: AbstractLink.java,v 1.15 2005/10/05 13:43:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,14 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 
 public abstract class AbstractLink extends DomainMember
-		implements StorableObject.CharacterizableExt, TypedObject<AbstractLinkType> {
+		implements Characterizable, TypedObject<AbstractLinkType> {
 	AbstractLinkType type;
 	String name;
 	String description;
@@ -150,7 +150,7 @@ public abstract class AbstractLink extends DomainMember
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

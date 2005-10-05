@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.79 2005/10/05 13:10:18 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.80 2005/10/05 13:43:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,13 +37,13 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -58,12 +58,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/10/05 13:10:18 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/05 13:43:35 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
 		extends AbstractCloneableStorableObject
-		implements Describable, StorableObject.CharacterizableExt,
+		implements Describable, Characterizable,
 		ReverseDependencyContainer {
 	private static final long serialVersionUID = 6943625949984422779L;
 
@@ -671,7 +671,7 @@ public abstract class AbstractSchemePort
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)

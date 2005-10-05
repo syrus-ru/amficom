@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.27 2005/10/05 13:10:15 bass Exp $
+ * $Id: SystemUser.java,v 1.28 2005/10/05 13:43:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserHelper;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -38,14 +39,14 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/05 13:10:15 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/05 13:43:31 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
 public final class SystemUser extends StorableObject
-		implements StorableObject.CharacterizableExt, Namable {
+		implements Characterizable, Namable {
 	private static final long serialVersionUID = 7173419705878464356L;
 
 	private String login;
@@ -254,7 +255,7 @@ public final class SystemUser extends StorableObject
 	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
-	 * @see CharacterizableExt#getCharacteristicContainerWrappee()
+	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
 	public StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)
