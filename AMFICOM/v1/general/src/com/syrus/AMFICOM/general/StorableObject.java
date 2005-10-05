@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.113 2005/10/02 11:48:36 bob Exp $
+ * $Id: StorableObject.java,v 1.114 2005/10/05 05:57:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,13 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.PERSISTENCE_COUNTER_NEGATIVE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static java.util.logging.Level.INFO;
 
 import java.io.Serializable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,8 +35,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/10/02 11:48:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.114 $, $Date: 2005/10/05 05:57:48 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -633,8 +637,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bob $
-	 * @version $Revision: 1.113 $, $Date: 2005/10/02 11:48:36 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.114 $, $Date: 2005/10/05 05:57:48 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -745,5 +749,17 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		private boolean buildCacheOnModification() {
 			return Boolean.parseBoolean(System.getProperty(KEY, DEFAULT_VALUE));
 		}
+	}
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.114 $, $Date: 2005/10/05 05:57:48 $
+	 * @module general
+	 */
+	@Retention(SOURCE)
+	@Target(METHOD)
+	protected static @interface ParameterizationPending {
+		String[] value();
 	}
 }
