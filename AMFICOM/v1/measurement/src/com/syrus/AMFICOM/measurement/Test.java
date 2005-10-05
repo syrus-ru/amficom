@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.167 2005/09/25 12:27:28 arseniy Exp $
+ * $Id: Test.java,v 1.168 2005/10/05 08:08:18 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -38,17 +38,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStops;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.ContinuousTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStops;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.167 $, $Date: 2005/09/25 12:27:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.168 $, $Date: 2005/10/05 08:08:18 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -638,15 +637,6 @@ public final class Test extends StorableObject implements Describable {
 						this.temporalPatternId = VOID_IDENTIFIER;
 					}
 					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					this.startTime = startTime;
-					this.endTime = endTime;
-					this.temporalPatternId = VOID_IDENTIFIER;
-					if (this.endTime == null) {
-						Log.errorMessage("ERROR: End time is NULL");
-						this.endTime = this.startTime;
-					}
-					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
 			}
@@ -666,12 +656,6 @@ public final class Test extends StorableObject implements Describable {
 					this.startTime = new Date(ptts.startTime);
 					this.endTime = new Date(ptts.endTime);
 					this.temporalPatternId = new Identifier(ptts.temporalPatternId);
-					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					ContinuousTestTimeStamps ctts = ttst.ctts();
-					this.startTime = new Date(ctts.startTime);
-					this.endTime = new Date(ctts.endTime);
-					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
@@ -697,9 +681,6 @@ public final class Test extends StorableObject implements Describable {
 							this.endTime.getTime(),
 							this.temporalPatternId.getTransferable()));
 					break;
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(), this.endTime.getTime()));
-					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 			}
@@ -712,9 +693,7 @@ public final class Test extends StorableObject implements Describable {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					return valid;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					return valid && (this.temporalPatternId != null) && (this.startTime.getTime() < this.endTime.getTime());
-				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					return valid && (this.startTime.getTime() < this.endTime.getTime());
+					return valid && (this.temporalPatternId != null) && (this.startTime.before(this.endTime));
 				default:
 					return false;
 			}
