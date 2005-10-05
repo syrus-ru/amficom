@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.80 2005/10/03 13:58:29 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.81 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING;
 import static com.syrus.AMFICOM.general.ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
@@ -24,6 +25,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -33,7 +35,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -41,7 +42,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -457,40 +457,59 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeProtoGroup(SchemeProtoGroup, boolean)}.
+	 *
 	 * @param parentSchemeProtoGroupId
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
 	void setParentSchemeProtoGroupId(
 			final Identifier parentSchemeProtoGroupId,
 			final boolean usePool)
 	throws ApplicationException {
-		assert !parentSchemeProtoGroupId.equals(this) : CIRCULAR_DEPS_PROHIBITED;
+		assert parentSchemeProtoGroupId != null : NON_NULL_EXPECTED;
 		assert parentSchemeProtoGroupId.isVoid() || parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
+
 		if (this.parentSchemeProtoGroupId.equals(parentSchemeProtoGroupId)) {
 			return;
 		}
-		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
-		super.markAsChanged();
+
+		this.setParentSchemeProtoGroup(
+				StorableObjectPool.<SchemeProtoGroup>getStorableObject(parentSchemeProtoGroupId, true),
+				usePool);
 	}
 
 	/**
-	 * A wrapper around {@link #getParentSchemeProtoGroupId()}
-	 *
 	 * @param parentSchemeProtoGroup
 	 * @param usePool
 	 * @throws ApplicationException
 	 * @todo Check whether <code>parentSchemeProtoGroup</code> is not a
 	 *       lower-level descendant of <code>this</code>.
 	 */
-	@Crutch109
 	public void setParentSchemeProtoGroup(
 			final SchemeProtoGroup parentSchemeProtoGroup,
 			final boolean usePool)
 	throws ApplicationException {
-		this.setParentSchemeProtoGroupId(Identifier.possiblyVoid(parentSchemeProtoGroup), usePool);
+		assert this.parentSchemeProtoGroupId != null : OBJECT_BADLY_INITIALIZED;
+		final boolean parentSchemeProtoGroupNull = (parentSchemeProtoGroup == null);
+		assert parentSchemeProtoGroupNull || !parentSchemeProtoGroup.equals(this) : CIRCULAR_DEPS_PROHIBITED;
+
+		final Identifier newParentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
+		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId)) {
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			return;
+		}
+
+		final SchemeProtoGroup oldParentSchemeProtoGroup = this.getParentSchemeProtoGroup();
+		if (oldParentSchemeProtoGroup != null) {
+			oldParentSchemeProtoGroup.getSchemeProtoGroupContainerWrappee().removeFromCache(this, usePool);
+		}
+		if (!parentSchemeProtoGroupNull) {
+			parentSchemeProtoGroup.getSchemeProtoGroupContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
+		super.markAsChanged();
 	}
 
 	/**
@@ -740,11 +759,10 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	private Set<SchemeProtoGroup> getSchemeProtoGroups0(
-			@SuppressWarnings("unused") final boolean usePool)
+			final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOGROUP_CODE), true);
+		return this.getSchemeProtoGroupContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -759,18 +777,23 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeProtoGroups(
 			final Set<SchemeProtoGroup> schemeProtoGroups,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeProtoGroups != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeProtoGroup> oldSchemeProtoGroups = this.getSchemeProtoGroups0(usePool);
-		oldSchemeProtoGroups.removeAll(schemeProtoGroups);
-		for (final SchemeProtoGroup oldSchemeProtoGroup : this.getSchemeProtoGroups(usePool)) {
-			this.removeSchemeProtoGroup(oldSchemeProtoGroup, usePool);
+
+		final Set<SchemeProtoGroup> toRemove = new HashSet<SchemeProtoGroup>(oldSchemeProtoGroups);
+		toRemove.removeAll(schemeProtoGroups);
+		for (final SchemeProtoGroup schemeProtoGroup : toRemove) {
+			this.removeSchemeProtoGroup(schemeProtoGroup, usePool);
 		}
-		for (final SchemeProtoGroup schemeProtoGroup : schemeProtoGroups) {
+
+		final Set<SchemeProtoGroup> toAdd = new HashSet<SchemeProtoGroup>(schemeProtoGroups);
+		toAdd.removeAll(oldSchemeProtoGroups);
+		for (final SchemeProtoGroup schemeProtoGroup : toAdd) {
 			this.addSchemeProtoGroup(schemeProtoGroup, usePool);
 		}
 	}

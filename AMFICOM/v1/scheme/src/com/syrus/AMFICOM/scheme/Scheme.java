@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.111 2005/10/03 13:58:28 bass Exp $
+ * $Id: Scheme.java,v 1.112 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -87,7 +86,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/10/03 13:58:28 $
+ * @version $Revision: 1.112 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1018,6 +1017,8 @@ public final class Scheme extends AbstractCloneableDomainMember
 			final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {
+		assert this.parentSchemeElementId != null : OBJECT_BADLY_INITIALIZED;
+
 		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
 			return;
@@ -1267,10 +1268,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	Set<SchemeElement> getSchemeElements0(@SuppressWarnings("unused") final boolean usePool)
+	Set<SchemeElement> getSchemeElements0(final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true);
+		return this.getSchemeElementContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -1278,21 +1278,22 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeElements(final Set<SchemeElement> schemeElements,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeElements != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0(usePool);
-		/*
-		 * Check is made to prevent SchemeElements from
-		 * permanently losing their parents.
-		 */
-		oldSchemeElements.removeAll(schemeElements);
-		for (final SchemeElement oldSchemeElement : oldSchemeElements) {
-			this.removeSchemeElement(oldSchemeElement, usePool);
+
+		final Set<SchemeElement> toRemove = new HashSet<SchemeElement>(oldSchemeElements);
+		toRemove.removeAll(schemeElements);
+		for (final SchemeElement schemeElement : toRemove) {
+			this.removeSchemeElement(schemeElement, usePool);
 		}
-		for (final SchemeElement schemeElement : schemeElements) {
+
+		final Set<SchemeElement> toAdd = new HashSet<SchemeElement>(schemeElements);
+		toAdd.removeAll(oldSchemeElements);
+		for (final SchemeElement schemeElement : toAdd) {
 			this.addSchemeElement(schemeElement, usePool);
 		}
 	}
@@ -1350,10 +1351,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	Set<SchemeLink> getSchemeLinks0(@SuppressWarnings("unused") final boolean usePool)
+	Set<SchemeLink> getSchemeLinks0(final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
+		return this.getSchemeLinkContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -1361,21 +1361,22 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeLinks(final Set<SchemeLink> schemeLinks,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0(usePool);
-		/*
-		 * Check is made to prevent SchemeLinks from
-		 * permanently losing their parents.
-		 */
-		oldSchemeLinks.removeAll(schemeLinks);
-		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
-			this.removeSchemeLink(oldSchemeLink, usePool);
+
+		final Set<SchemeLink> toRemove = new HashSet<SchemeLink>(oldSchemeLinks);
+		toRemove.removeAll(schemeLinks);
+		for (final SchemeLink schemeLink : toRemove) {
+			this.removeSchemeLink(schemeLink, usePool);
 		}
-		for (final SchemeLink schemeLink : schemeLinks) {
+
+		final Set<SchemeLink> toAdd = new HashSet<SchemeLink>(schemeLinks);
+		toAdd.removeAll(oldSchemeLinks);
+		for (final SchemeLink schemeLink : toAdd) {
 			this.addSchemeLink(schemeLink, usePool);
 		}
 	}
@@ -1433,10 +1434,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	Set<SchemeCableLink> getSchemeCableLinks0(@SuppressWarnings("unused") final boolean usePool)
+	Set<SchemeCableLink> getSchemeCableLinks0(final boolean usePool)
 	throws ApplicationException {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true);
+		return this.getSchemeCableLinkContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -1444,22 +1444,23 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeCableLinks(
 			final Set<SchemeCableLink> schemeCableLinks,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeCableLinks != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeCableLink> oldSchemeCableLinks = this.getSchemeCableLinks0(usePool);
-		/*
-		 * Check is made to prevent SchemeCableLinks from
-		 * permanently losing their parents.
-		 */
-		oldSchemeCableLinks.removeAll(schemeCableLinks);
-		for (final SchemeCableLink oldSchemeCableLink : oldSchemeCableLinks) {
-			this.removeSchemeCableLink(oldSchemeCableLink, usePool);
+
+		final Set<SchemeCableLink> toRemove = new HashSet<SchemeCableLink>(oldSchemeCableLinks);
+		toRemove.removeAll(schemeCableLinks);
+		for (final SchemeCableLink schemeCableLink : toRemove) {
+			this.removeSchemeCableLink(schemeCableLink, usePool);
 		}
-		for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
+
+		final Set<SchemeCableLink> toAdd = new HashSet<SchemeCableLink>(schemeCableLinks);
+		toAdd.removeAll(oldSchemeCableLinks);
+		for (final SchemeCableLink schemeCableLink : toAdd) {
 			this.addSchemeCableLink(schemeCableLink, usePool);
 		}
 	}
@@ -1520,11 +1521,10 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	private Set<SchemeOptimizeInfo> getSchemeOptimizeInfos0(
-			@SuppressWarnings("unused") final boolean usePool)
+			final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true);
+		return this.getSchemeOptimizeInfoContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -1532,22 +1532,23 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeOptimizeInfos(
 			final Set<SchemeOptimizeInfo> schemeOptimizeInfos,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeOptimizeInfo> oldSchemeOptimizeInfos = this.getSchemeOptimizeInfos0(usePool);
-		/*
-		 * Check is made to prevent SchemeOptimizeInfos from
-		 * permanently losing their parents.
-		 */
-		oldSchemeOptimizeInfos.removeAll(schemeOptimizeInfos);
-		for (final SchemeOptimizeInfo oldSchemeOptimizeInfo : oldSchemeOptimizeInfos) {
-			this.removeSchemeOptimizeInfo(oldSchemeOptimizeInfo, usePool);
+
+		final Set<SchemeOptimizeInfo> toRemove = new HashSet<SchemeOptimizeInfo>(oldSchemeOptimizeInfos);
+		toRemove.removeAll(schemeOptimizeInfos);
+		for (final SchemeOptimizeInfo schemeOptimizeInfo : toRemove) {
+			this.removeSchemeOptimizeInfo(schemeOptimizeInfo, usePool);
 		}
-		for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
+
+		final Set<SchemeOptimizeInfo> toAdd = new HashSet<SchemeOptimizeInfo>(schemeOptimizeInfos);
+		toAdd.removeAll(oldSchemeOptimizeInfos);
+		for (final SchemeOptimizeInfo schemeOptimizeInfo : toAdd) {
 			this.addSchemeOptimizeInfo(schemeOptimizeInfo, usePool);
 		}
 	}
@@ -1616,11 +1617,10 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0(
-			@SuppressWarnings("unused") final boolean usePool)
+			final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEMONITORINGSOLUTION_CODE), true);
+		return this.getSchemeMonitoringSolutionContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -1628,22 +1628,23 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeMonitoringSolutions(
 			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeMonitoringSolutions != null : NON_NULL_EXPECTED;
+
 		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0(usePool);
-		/*
-		 * Check is made to prevent SchemeMonitoringSolutions from
-		 * permanently losing their parents.
-		 */
-		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
-		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
-			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution, usePool);
+
+		final Set<SchemeMonitoringSolution> toRemove = new HashSet<SchemeMonitoringSolution>(oldSchemeMonitoringSolutions);
+		toRemove.removeAll(schemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : toRemove) {
+			this.removeSchemeMonitoringSolution(schemeMonitoringSolution, usePool);
 		}
-		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+
+		final Set<SchemeMonitoringSolution> toAdd = new HashSet<SchemeMonitoringSolution>(schemeMonitoringSolutions);
+		toAdd.removeAll(oldSchemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : toAdd) {
 			this.addSchemeMonitoringSolution(schemeMonitoringSolution, usePool);
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.136 2005/10/03 13:58:28 bass Exp $
+ * $Id: SchemeElement.java,v 1.137 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.bugs.Crutch136;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -97,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.136 $, $Date: 2005/10/03 13:58:28 $
+ * @version $Revision: 1.137 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -251,7 +250,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	/**
 	 * Creates a new {@code SchemeElement} with the same {@code name},
 	 * {@code ugoCell} and {@code schemeCell} as the {@code parentScheme}
-	 * and inserts the {@childScheme} into the newly created
+	 * and inserts the {@code childScheme} into the newly created
 	 * {@code SchemeElement}.
 	 *
 	 * @param creatorId
@@ -1278,30 +1277,48 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
 	 */
 	@Override
-	@Crutch109
 	public void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
 	throws ApplicationException {
-		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
-		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
+		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
+		assert thisParentSchemeIdVoid ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 
-		if (!super.parentSchemeId.isVoid())
-			/*
-			 * Moving from a scheme to another scheme.
-			 */
-			super.setParentScheme(parentScheme, usePool);
-		else {
-			/*
-			 * Moving from a scheme element to a scheme.
-			 */
-			if (parentScheme == null) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-				return;
-			}
-			super.parentSchemeId = parentScheme.getId();
-			this.parentSchemeElementId = VOID_IDENTIFIER;
-			super.markAsChanged();
+		final boolean parentSchemeNull = (parentScheme == null);
+
+		final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
+		if (this.parentSchemeId.equals(newParentSchemeId)) {
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			return;
 		}
+
+		if (thisParentSchemeIdVoid) {
+			/*
+			 * Moving from a scheme element to a scheme. At this
+			 * point, newParentSchemeId is non-void.
+			 */
+			this.getParentSchemeElement().getSchemeElementContainerWrappee().removeFromCache(this, usePool);
+
+			this.parentSchemeElementId = VOID_IDENTIFIER;
+		} else {
+			/*
+			 * Moving from a scheme to another scheme. At this
+			 * point, newParentSchemeId may be void.
+			 */
+			this.getParentScheme().getSchemeElementContainerWrappee().removeFromCache(this, usePool);
+
+			if (parentSchemeNull) {
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				StorableObjectPool.delete(this.id);
+			}
+		}
+
+		if (!parentSchemeNull) {
+			parentScheme.getSchemeElementContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeId = newParentSchemeId;
+		this.markAsChanged();
 	}
 
 	/**
@@ -1352,9 +1369,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			 * Moving from a scheme to a scheme element. At this
 			 * point, newParentSchemeElementId is non-void.
 			 */
-			final Scheme oldParentScheme = super.getParentScheme();
-			assert oldParentScheme != null : NON_NULL_EXPECTED;
-			oldParentScheme.getSchemeElementContainerWrappee().removeFromCache(this, usePool);
+			super.getParentScheme().getSchemeElementContainerWrappee().removeFromCache(this, usePool);
 
 			super.parentSchemeId = VOID_IDENTIFIER;
 		} else {
@@ -1362,9 +1377,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			 * Moving from a scheme element to another scheme element.
 			 * At this point, newParentSchemeElementId may be void.
 			 */
-			final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
-			assert oldParentSchemeElement != null : NON_NULL_EXPECTED;
-			oldParentSchemeElement.getSchemeElementContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeElement().getSchemeElementContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.64 2005/10/03 13:58:29 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.65 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,20 +11,17 @@ package com.syrus.AMFICOM.scheme;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -50,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.65 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -195,30 +192,35 @@ public abstract class AbstractSchemeElement
 	}
 
 	/**
-	 * Descendants almost always need to override this.
+	 * A wrapper around {@link #setParentScheme(Scheme, boolean)}.
 	 *
+	 * @param parentSchemeId
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	final void setParentSchemeId(final Identifier parentSchemeId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
+
+		if (this.parentSchemeId.equals(parentSchemeId)) {
+			return;
+		}
+
+		this.setParentScheme(
+				StorableObjectPool.<Scheme>getStorableObject(parentSchemeId, true),
+				usePool);
+	}
+
+	/**
 	 * @param parentScheme
 	 * @param usePool
 	 * @throws ApplicationException
-	 * @see #parentSchemeId
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
-	public void setParentScheme(final Scheme parentScheme,
+	public abstract void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
-	throws ApplicationException {
-		if (parentScheme == null) {
-			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(this.id);
-			return;
-		}
-		final Identifier newParentSchemeId = parentScheme.getId();
-		if (this.parentSchemeId.equals(newParentSchemeId)) {
-			return;
-		}
-		this.parentSchemeId = newParentSchemeId;
-		super.markAsChanged();
-	}
+	throws ApplicationException;
 
 	/**
 	 * @param abstractSchemeElement
@@ -421,22 +423,5 @@ public abstract class AbstractSchemeElement
 	 */
 	public final void setAlarmed(final boolean alarmed) {
 		this.alarmed = alarmed;
-	}
-	
-	/**
-	 * @param parentSchemeId
-	 * @param usePool
-	 * @throws ApplicationException
-	 */
-	@SuppressWarnings("unused")
-	@Crutch109
-	final void setParentSchemeId(final Identifier parentSchemeId,
-			final boolean usePool)
-	throws ApplicationException {
-//		TODO: inroduce additional sanity checks
-		assert parentSchemeId != null : NON_NULL_EXPECTED;
-		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
-		this.parentSchemeId = parentSchemeId;
-		super.markAsChanged();
 	}
 }

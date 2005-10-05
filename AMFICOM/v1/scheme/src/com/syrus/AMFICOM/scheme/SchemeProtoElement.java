@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.113 2005/10/03 13:58:29 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.114 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.113 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.114 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -986,9 +986,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 * Moving from a protoelement to another protoelement.
 			 * At this point, newParentSchemeProtoElementId may be void.
 			 */
-			final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
-			assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
-			oldParentSchemeProtoElement.getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoElement().getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeProtoElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -999,9 +997,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 * Moving from a protogroup to a protoelement. At this
 			 * point, newParentSchemeProtoElementId is non-void.
 			 */
-			final SchemeProtoGroup oldParentSchemeProtoGroup = this.getParentSchemeProtoGroup();
-			assert oldParentSchemeProtoGroup != null : NON_NULL_EXPECTED;
-			oldParentSchemeProtoGroup.getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoGroup().getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
 
 			this.parentSchemeProtoGroupId = VOID_IDENTIFIER;
 		}
@@ -1076,9 +1072,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 * Moving from a protogroup to another protogroup.
 			 * At this point, newParentSchemeProtoGroupId may be void.
 			 */
-			final SchemeProtoGroup oldParentSchemeProtoGroup = this.getParentSchemeProtoGroup();
-			assert oldParentSchemeProtoGroup != null : NON_NULL_EXPECTED;
-			oldParentSchemeProtoGroup.getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoGroup().getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeProtoGroupNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -1089,9 +1083,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			 * Moving from a protoelement to a protogroup. At this
 			 * point, newParentSchemeProtoGroupId is non-void.
 			 */
-			final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
-			assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
-			oldParentSchemeProtoElement.getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoElement().getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
 
 			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.103 2005/10/03 13:58:29 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.104 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
@@ -33,6 +34,7 @@ import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPO
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -45,7 +47,6 @@ import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLink;
@@ -91,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.104 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -650,13 +651,28 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
 	 */
 	@Override
-	@Crutch109
 	public void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
 	throws ApplicationException {
-		assert super.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
-		assert !super.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-		super.setParentScheme(parentScheme, usePool);
+		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
+		if (this.parentSchemeId.equals(newParentSchemeId)) {
+			return;
+		}
+
+		this.getParentScheme().getSchemeCableLinkContainerWrappee().removeFromCache(this, usePool);
+
+		if (parentScheme == null) {
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			StorableObjectPool.delete(super.id);
+		} else {
+			parentScheme.getSchemeCableLinkContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeId = newParentSchemeId;
+		super.markAsChanged();
 	}
 
 	/**
@@ -913,10 +929,9 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	Set<SchemeCableThread> getSchemeCableThreads0(@SuppressWarnings("unused") final boolean usePool)
+	Set<SchemeCableThread> getSchemeCableThreads0(final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true);
+		return this.getSchemeCableThreadContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -924,22 +939,23 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeCableThreads(
 			final Set<SchemeCableThread> schemeCableThreads,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeCableThreads != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeCableThread> oldSchemeCableThreads = this.getSchemeCableThreads0(usePool);
-		/*
-		 * Check is made to prevent SchemeCableThreads from
-		 * permanently losing their parents.
-		 */
-		oldSchemeCableThreads.removeAll(schemeCableThreads);
-		for (final SchemeCableThread oldSchemeCableThread : oldSchemeCableThreads) {
-			this.removeSchemeCableThread(oldSchemeCableThread, usePool);
+
+		final Set<SchemeCableThread> toRemove = new HashSet<SchemeCableThread>(oldSchemeCableThreads);
+		toRemove.removeAll(schemeCableThreads);
+		for (final SchemeCableThread schemeCableThread : toRemove) {
+			this.removeSchemeCableThread(schemeCableThread, usePool);
 		}
-		for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
+
+		final Set<SchemeCableThread> toAdd = new HashSet<SchemeCableThread>(schemeCableThreads);
+		toAdd.removeAll(oldSchemeCableThreads);
+		for (final SchemeCableThread schemeCableThread : toAdd) {
 			this.addSchemeCableThread(schemeCableThread, usePool);
 		}
 	}

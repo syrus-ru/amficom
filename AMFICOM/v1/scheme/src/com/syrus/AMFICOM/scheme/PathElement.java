@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.80 2005/10/02 18:58:43 bass Exp $
+ * $Id: PathElement.java,v 1.81 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/10/02 18:58:43 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -151,7 +151,7 @@ public final class PathElement extends StorableObject
 	 * @param startAbstractSchemePort
 	 * @param endSbstractSchemePort
 	 * @todo Narrow visibility to private and remove
-	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.StorableObject)}
+	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.Identifiable)}
 	 *       invocations (in favor of direct checks) unless this constructor
 	 *       is ever called by databases.
 	 */
@@ -192,7 +192,7 @@ public final class PathElement extends StorableObject
 	 * @param parentSchemePath
 	 * @param schemeCableThread
 	 * @todo Narrow visibility to private and remove
-	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.StorableObject)}
+	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.Identifiable)}
 	 *       invocations (in favor of direct checks) unless this constructor
 	 *       is ever called by databases.
 	 */
@@ -228,7 +228,7 @@ public final class PathElement extends StorableObject
 	 * @param parentSchemePath
 	 * @param schemeLink
 	 * @todo Narrow visibility to private and remove
-	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.StorableObject)}
+	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.Identifiable)}
 	 *       invocations (in favor of direct checks) unless this constructor
 	 *       is ever called by databases.
 	 */

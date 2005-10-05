@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.98 2005/10/03 13:58:28 bass Exp $
+ * $Id: SchemePath.java,v 1.99 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -72,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/10/03 13:58:28 $
+ * @version $Revision: 1.99 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -406,48 +405,56 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeMonitoringSolution(SchemeMonitoringSolution, boolean)}.
+	 *
 	 * @param parentSchemeMonitoringSolutionId
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
 	void setParentSchemeMonitoringSolutionId(
 			final Identifier parentSchemeMonitoringSolutionId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeMonitoringSolutionId != null : NON_NULL_EXPECTED;
+		assert parentSchemeMonitoringSolutionId.isVoid() || parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
+
+		if (this.parentSchemeMonitoringSolutionId.equals(parentSchemeMonitoringSolutionId)) {
+			return;
+		}
+
+		this.setParentSchemeMonitoringSolution(
+				StorableObjectPool.<SchemeMonitoringSolution>getStorableObject(parentSchemeMonitoringSolutionId, true),
+				usePool);
+	}
+
+	/**
+	 * @param parentSchemeMonitoringSolution
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setParentSchemeMonitoringSolution(
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution,
 			final boolean usePool)
 	throws ApplicationException {
 		assert this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 
-		assert parentSchemeMonitoringSolutionId != null : NON_NULL_EXPECTED;
-		final boolean parentSchemeMonitoringSolutionVoid = parentSchemeMonitoringSolutionId.isVoid();
-		assert parentSchemeMonitoringSolutionVoid || parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
+		final Identifier newParentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
+		if (this.parentSchemeMonitoringSolutionId.equals(newParentSchemeMonitoringSolutionId)) {
+			return;
+		}
 
-		if (parentSchemeMonitoringSolutionVoid) {
+		this.getParentSchemeMonitoringSolution().getSchemePathContainerWrappee().removeFromCache(this, usePool);
+
+		if (parentSchemeMonitoringSolution == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
-			return;
+		} else {
+			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(this, usePool);
 		}
-		if (this.parentSchemeMonitoringSolutionId.equals(parentSchemeMonitoringSolutionId)) {
-			return;
-		}
-		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
-		super.markAsChanged();
-	}
 
-	/**
-	 * A wrapper around {@link #setParentSchemeMonitoringSolutionId(Identifier, boolean)}.
-	 *
-	 * @param parentSchemeMonitoringSolution
-	 * @param usePool
-	 * @throws ApplicationException
-	 */
-	@Crutch109
-	public void setParentSchemeMonitoringSolution(
-			final SchemeMonitoringSolution parentSchemeMonitoringSolution,
-			final boolean usePool)
-	throws ApplicationException {
-		this.setParentSchemeMonitoringSolutionId(Identifier.possiblyVoid(parentSchemeMonitoringSolution), usePool);
+		this.parentSchemeMonitoringSolutionId = newParentSchemeMonitoringSolutionId;
+		super.markAsChanged();
 	}
 
 	/**

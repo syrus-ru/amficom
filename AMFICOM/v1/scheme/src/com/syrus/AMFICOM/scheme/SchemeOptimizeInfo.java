@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.70 2005/10/03 13:58:28 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.71 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -39,7 +38,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -55,7 +53,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/10/03 13:58:28 $
+ * @version $Revision: 1.71 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -548,46 +546,54 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	/**
+	 * A wrapper around {@link #setParentScheme(Scheme, boolean)}.
+	 *
 	 * @param parentSchemeId
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
 	void setParentSchemeId(final Identifier parentSchemeId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
+
+		if (this.parentSchemeId.equals(parentSchemeId)) {
+			return;
+		}
+
+		this.setParentScheme(
+				StorableObjectPool.<Scheme>getStorableObject(parentSchemeId, true),
+				usePool);
+	}
+
+	/**
+	 * @param parentScheme
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
 	throws ApplicationException {
 		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 
-		assert parentSchemeId != null : NON_NULL_EXPECTED;
-		final boolean parentSchemeIdVoid = parentSchemeId.isVoid();
-		assert parentSchemeIdVoid || parentSchemeId.getMajor() == SCHEME_CODE;
+		final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
+		if (this.parentSchemeId.equals(newParentSchemeId)) {
+			return;
+		}
 
-		if (parentSchemeIdVoid) {
+		this.getParentScheme().getSchemeOptimizeInfoContainerWrappee().removeFromCache(this, usePool);
+
+		if (parentScheme == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
-			return;
+		} else {
+			parentScheme.getSchemeOptimizeInfoContainerWrappee().addToCache(this, usePool);
 		}
-		if (this.parentSchemeId.equals(parentSchemeId)) {
-			return;
-		}
-		this.parentSchemeId = parentSchemeId;
-		super.markAsChanged();
-	}
 
-	/**
-	 * A wrapper around {@link #setParentSchemeId(Identifier, boolean)}.
-	 *
-	 * @param parentScheme
-	 * @param usePool
-	 * @throws ApplicationException
-	 */
-	@Crutch109
-	public void setParentScheme(final Scheme parentScheme,
-			final boolean usePool)
-	throws ApplicationException {
-		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme), usePool);
+		this.parentSchemeId = newParentSchemeId;
+		super.markAsChanged();
 	}
 
 	public void setPrice(double price) {
@@ -725,11 +731,10 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0(
-			@SuppressWarnings("unused") final boolean usePool)
+			final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true);
+		return this.getSchemeOptimizeInfoSwitchContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -737,22 +742,23 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeOptimizeInfoSwitches(
 			final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeOptimizeInfoSwitch> oldSchemeOptimizeInfoSwitches = this.getSchemeOptimizeInfoSwitches0(usePool);
-		/*
-		 * Check is made to prevent SchemeOptimizeInfoSwitches from
-		 * permanently losing their parents.
-		 */
-		oldSchemeOptimizeInfoSwitches.removeAll(schemeOptimizeInfoSwitches);
-		for (final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch : oldSchemeOptimizeInfoSwitches) {
-			this.removeSchemeOptimizeInfoSwitch(oldSchemeOptimizeInfoSwitch, usePool);
+
+		final Set<SchemeOptimizeInfoSwitch> toRemove = new HashSet<SchemeOptimizeInfoSwitch>(oldSchemeOptimizeInfoSwitches);
+		toRemove.removeAll(schemeOptimizeInfoSwitches);
+		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : toRemove) {
+			this.removeSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch, usePool);
 		}
-		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : schemeOptimizeInfoSwitches) {
+
+		final Set<SchemeOptimizeInfoSwitch> toAdd = new HashSet<SchemeOptimizeInfoSwitch>(schemeOptimizeInfoSwitches);
+		toAdd.removeAll(oldSchemeOptimizeInfoSwitches);
+		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : toAdd) {
 			this.addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch, usePool);
 		}
 	}
@@ -810,11 +816,10 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0(
-			@SuppressWarnings("unused") final boolean usePool)
+			final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true);
+		return this.getSchemeOptimizeInfoRtuContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -822,22 +827,23 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeOptimizeInfoRtus(
 			final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeOptimizeInfoRtu> oldSchemeOptimizeInfoRtus = this.getSchemeOptimizeInfoRtus0(usePool);
-		/*
-		 * Check is made to prevent SchemeOptimizeInfoRtus from
-		 * permanently losing their parents.
-		 */
-		oldSchemeOptimizeInfoRtus.removeAll(schemeOptimizeInfoRtus);
-		for (final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu : oldSchemeOptimizeInfoRtus) {
-			this.removeSchemeOptimizeInfoRtu(oldSchemeOptimizeInfoRtu, usePool);
+
+		final Set<SchemeOptimizeInfoRtu> toRemove = new HashSet<SchemeOptimizeInfoRtu>(oldSchemeOptimizeInfoRtus);
+		toRemove.removeAll(schemeOptimizeInfoRtus);
+		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : toRemove) {
+			this.removeSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu, usePool);
 		}
-		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : schemeOptimizeInfoRtus) {
+
+		final Set<SchemeOptimizeInfoRtu> toAdd = new HashSet<SchemeOptimizeInfoRtu>(schemeOptimizeInfoRtus);
+		toAdd.removeAll(oldSchemeOptimizeInfoRtus);
+		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : toAdd) {
 			this.addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu, usePool);
 		}
 	}
@@ -895,11 +901,10 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0(
-			@SuppressWarnings("unused") final boolean usePool)
+			final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true);
+		return this.getSchemeMonitoringSolutionContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -907,22 +912,23 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeMonitoringSolutions(
 			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0(usePool);
-		/*
-		 * Check is made to prevent SchemeMonitoringSolutions from
-		 * permanently losing their parents.
-		 */
-		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
-		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
-			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution, usePool);
+
+		final Set<SchemeMonitoringSolution> toRemove = new HashSet<SchemeMonitoringSolution>(oldSchemeMonitoringSolutions);
+		toRemove.removeAll(schemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : toRemove) {
+			this.removeSchemeMonitoringSolution(schemeMonitoringSolution, usePool);
 		}
-		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+
+		final Set<SchemeMonitoringSolution> toAdd = new HashSet<SchemeMonitoringSolution>(schemeMonitoringSolutions);
+		toAdd.removeAll(oldSchemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : toAdd) {
 			this.addSchemeMonitoringSolution(schemeMonitoringSolution, usePool);
 		}
 	}

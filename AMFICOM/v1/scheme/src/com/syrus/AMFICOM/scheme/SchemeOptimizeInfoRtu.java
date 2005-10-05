@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.26 2005/10/02 18:58:42 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.27 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,12 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,7 +27,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -48,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/10/02 18:58:42 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -249,44 +251,56 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeOptimizeInfo(SchemeOptimizeInfo, boolean)}.
+	 *
 	 * @param parentSchemeOptimizeInfoId
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
 	void setParentSchemeOptimizeInfoId(
 			final Identifier parentSchemeOptimizeInfoId,
 			final boolean usePool)
 	throws ApplicationException {
 		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
-		final boolean parentSchemeOptimizeInfoIdVoid = parentSchemeOptimizeInfoId.isVoid();
-		assert parentSchemeOptimizeInfoIdVoid || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFORTU_CODE;
+		assert parentSchemeOptimizeInfoId.isVoid() || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
 
 		if (this.parentSchemeOptimizeInfoId.equals(parentSchemeOptimizeInfoId)) {
 			return;
 		}
-		if (parentSchemeOptimizeInfoIdVoid) {
-			StorableObjectPool.delete(super.id);
-			return;
-		}
-		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
-		super.markAsChanged();
+
+		this.setParentSchemeOptimizeInfo(
+				StorableObjectPool.<SchemeOptimizeInfo>getStorableObject(parentSchemeOptimizeInfoId, true),
+				usePool);
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier, boolean)}.
-	 *
-	 * @param schemeOptimizeInfo
+	 * @param parentSchemeOptimizeInfo
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setParentSchemeOptimizeInfo(
-			final SchemeOptimizeInfo schemeOptimizeInfo,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo,
 			final boolean usePool)
 	throws ApplicationException {
-		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(schemeOptimizeInfo), usePool);
+		assert this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newParentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
+		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId)) {
+			return;
+		}
+
+		this.getParentSchemeOptimizeInfo().getSchemeOptimizeInfoRtuContainerWrappee().removeFromCache(this, usePool);
+
+		if (parentSchemeOptimizeInfo == null) {
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			StorableObjectPool.delete(super.id);
+		} else {
+			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeOptimizeInfoId = newParentSchemeOptimizeInfoId;
+		super.markAsChanged();
 	}
 
 	/**

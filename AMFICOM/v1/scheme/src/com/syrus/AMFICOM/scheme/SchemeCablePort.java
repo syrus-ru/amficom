@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.71 2005/10/01 15:13:19 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.72 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,15 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
@@ -24,6 +27,7 @@ import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPO
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Date;
 import java.util.Set;
@@ -58,7 +62,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.72 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -389,5 +393,36 @@ public final class SchemeCablePort extends AbstractSchemePort
 		}
 
 		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType, POST_IMPORT);
+	}
+
+	/**
+	 * @param parentSchemeDevice
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	@Override
+	public final void setParentSchemeDevice(
+			final SchemeDevice parentSchemeDevice,
+			final boolean usePool)
+	throws ApplicationException {
+		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newParentSchemeDeviceId = Identifier.possiblyVoid(parentSchemeDevice);
+		if (this.parentSchemeDeviceId.equals(newParentSchemeDeviceId)) {
+			return;
+		}
+
+		this.getParentSchemeDevice().getSchemeCablePortContainerWrappee().removeFromCache(this, usePool);
+
+		if (parentSchemeDevice == null) {
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			StorableObjectPool.delete(super.id);
+		} else {
+			parentSchemeDevice.getSchemeCablePortContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeDeviceId = newParentSchemeDeviceId;
+		super.markAsChanged();
 	}
 }

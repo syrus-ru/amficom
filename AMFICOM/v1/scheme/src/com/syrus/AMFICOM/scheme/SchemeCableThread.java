@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.93 2005/10/03 13:58:29 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.94 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -77,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.94 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -712,26 +711,53 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeCableLink(SchemeCableLink, boolean)}.
+	 *
+	 * @param parentSchemeCableLinkId
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
+		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
+
+		if (this.parentSchemeCableLinkId.equals(parentSchemeCableLinkId)) {
+			return;
+		}
+
+		this.setParentSchemeCableLink(
+				StorableObjectPool.<SchemeCableLink>getStorableObject(parentSchemeCableLinkId, true),
+				usePool);
+	}
+
+	/**
 	 * @param parentSchemeCableLink
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
 	public void setParentSchemeCableLink(
 			final SchemeCableLink parentSchemeCableLink,
 			final boolean usePool)
 	throws ApplicationException {
 		assert this.parentSchemeCableLinkId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+
+		final Identifier newParentSchemeCableLinkId = Identifier.possiblyVoid(parentSchemeCableLink);
+		if (this.parentSchemeCableLinkId.equals(newParentSchemeCableLinkId)) {
+			return;
+		}
+
+		this.getParentSchemeCableLink().getSchemeCableThreadContainerWrappee().removeFromCache(this, usePool);
+
 		if (parentSchemeCableLink == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
-			return;
+		} else {
+			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(this, usePool);
 		}
-		final Identifier newParentSchemeCableLinkId = parentSchemeCableLink.getId();
-		if (this.parentSchemeCableLinkId.equals(newParentSchemeCableLinkId))
-			return;
+
 		this.parentSchemeCableLinkId = newParentSchemeCableLinkId;
 		super.markAsChanged();
 	}
@@ -881,23 +907,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert linkId != null : NON_NULL_EXPECTED;
 		assert linkId.isVoid() || linkId.getMajor() == LINK_CODE;
 		this.linkId = linkId;
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param parentSchemeCableLinkId
-	 * @param usePool
-	 * @throws ApplicationException
-	 */
-	@SuppressWarnings("unused")
-	@Crutch109
-	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId,
-			final boolean usePool)
-	throws ApplicationException {
-//		TODO: inroduce additional sanity checks
-		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
-		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
-		this.parentSchemeCableLinkId = parentSchemeCableLinkId;
 		super.markAsChanged();
 	}
 

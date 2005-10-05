@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.93 2005/10/03 10:17:55 bass Exp $
+ * $Id: SchemeLink.java,v 1.94 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.Link;
@@ -76,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/10/03 10:17:55 $
+ * @version $Revision: 1.94 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -885,45 +884,63 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @see AbstractSchemeElement#setParentScheme(Scheme, boolean)
 	 */
 	@Override
-	@Crutch109
 	public void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
 	throws ApplicationException {
-		assert super.parentSchemeId != null
+		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
+		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
+		assert this.parentSchemeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
-				&& ((super.parentSchemeId.isVoid() ? 0 : 1)
-						+ (this.parentSchemeElementId.isVoid() ? 0 : 1)
+				&& ((thisParentSchemeIdVoid ? 0 : 1)
+						+ (thisParentSchemeElementIdVoid ? 0 : 1)
 						+ (this.parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1) : OBJECT_BADLY_INITIALIZED;
 
-		if (super.parentSchemeId.isVoid()) {
-			if (this.parentSchemeElementId.isVoid()) {
+		final boolean parentSchemeNull = (parentScheme == null);
+
+		final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
+		if (this.parentSchemeId.equals(newParentSchemeId)) {
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			return;
+		}
+
+		if (thisParentSchemeIdVoid) {
+			if (thisParentSchemeElementIdVoid) {
 				/*
 				 * Moving from a scheme protoelement to a scheme.
+				 * At this point, newParentSchemeId is non-void.
 				 */
-				if (parentScheme == null) {
-					Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-					return;
-				}
+				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+
 				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 			} else {
 				/*
 				 * Moving from a scheme element to a scheme.
+				 * At this point, newParentSchemeId is non-void.
 				 */
-				if (parentScheme == null) {
-					Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-					return;
-				}
+				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+
 				this.parentSchemeElementId = VOID_IDENTIFIER;
 			}
-			super.parentSchemeId = parentScheme.getId();
-			super.markAsChanged();
 		} else {
 			/*
 			 * Moving from a scheme to another scheme.
+			 * At this point, newParentSchemeId may be void.
 			 */
-			super.setParentScheme(parentScheme, usePool);
+			this.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+
+			if (parentSchemeNull) {
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				StorableObjectPool.delete(this.id);
+			}
 		}
+
+		if (!parentSchemeNull) {
+			parentScheme.getSchemeLinkContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeId = newParentSchemeId;
+		this.markAsChanged();
 	}
 
 	/**
@@ -956,11 +973,13 @@ public final class SchemeLink extends AbstractSchemeLink
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {
-		assert super.parentSchemeId != null
+		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
+		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
+		assert this.parentSchemeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
-				&& ((super.parentSchemeId.isVoid() ? 0 : 1)
-						+ (this.parentSchemeElementId.isVoid() ? 0 : 1)
+				&& ((thisParentSchemeIdVoid ? 0 : 1)
+						+ (thisParentSchemeElementIdVoid ? 0 : 1)
 						+ (this.parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1) : OBJECT_BADLY_INITIALIZED;
 
 		final boolean parentSchemeElementIsNull = (parentSchemeElement == null);
@@ -971,15 +990,13 @@ public final class SchemeLink extends AbstractSchemeLink
 			return;
 		}
 
-		if (super.parentSchemeId.isVoid()) {
-			if (this.parentSchemeElementId.isVoid()) {
+		if (thisParentSchemeIdVoid) {
+			if (thisParentSchemeElementIdVoid) {
 				/*
 				 * Moving from a scheme protoelement to a scheme element.
 				 * At this point, newParentSchemeElementId is non-void.
 				 */
-				final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
-				assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
-				oldParentSchemeProtoElement.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 				this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 			} else {
@@ -987,9 +1004,7 @@ public final class SchemeLink extends AbstractSchemeLink
 				 * Moving from a scheme element to another scheme element.
 				 * At this point, newParentSchemeElementId may be void.
 				 */
-				final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
-				assert oldParentSchemeElement != null : NON_NULL_EXPECTED;
-				oldParentSchemeElement.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 				if (parentSchemeElementIsNull) {
 					Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -1001,9 +1016,7 @@ public final class SchemeLink extends AbstractSchemeLink
 			 * Moving from a scheme to a scheme element. At this
 			 * point, newParentSchemeElementId is non-void.
 			 */
-			final Scheme oldParentScheme = super.getParentScheme();
-			assert oldParentScheme != null : NON_NULL_EXPECTED;
-			oldParentScheme.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+			super.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 			super.parentSchemeId = VOID_IDENTIFIER;
 		}
@@ -1048,11 +1061,13 @@ public final class SchemeLink extends AbstractSchemeLink
 			final SchemeProtoElement parentSchemeProtoElement,
 			final boolean usePool)
 	throws ApplicationException {
-		assert super.parentSchemeId != null
+		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
+		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
+		assert this.parentSchemeId != null
 				&& this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
-				&& ((super.parentSchemeId.isVoid() ? 0 : 1)
-						+ (this.parentSchemeElementId.isVoid() ? 0 : 1)
+				&& ((thisParentSchemeIdVoid ? 0 : 1)
+						+ (thisParentSchemeElementIdVoid ? 0 : 1)
 						+ (this.parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1) : OBJECT_BADLY_INITIALIZED;
 
 		final boolean parentSchemeProtoElementNull = (parentSchemeProtoElement == null);
@@ -1063,15 +1078,13 @@ public final class SchemeLink extends AbstractSchemeLink
 			return;
 		}
 
-		if (super.parentSchemeId.isVoid()) { 
-			if (this.parentSchemeElementId.isVoid()) {
+		if (thisParentSchemeIdVoid) { 
+			if (thisParentSchemeElementIdVoid) {
 				/*
 				 * Moving from a scheme protoelement to another scheme protoelement.
 				 * At this point, newParentSchemeProtoElementId may be void.
 				 */
-				final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
-				assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
-				oldParentSchemeProtoElement.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 				if (parentSchemeProtoElementNull) {
 					Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -1082,9 +1095,7 @@ public final class SchemeLink extends AbstractSchemeLink
 				 * Moving from a scheme element to a scheme protoelement.
 				 * At this point, newParentSchemeProtoElementId is non-void.
 				 */
-				final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
-				assert oldParentSchemeElement != null : NON_NULL_EXPECTED;
-				oldParentSchemeElement.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 				this.parentSchemeElementId = VOID_IDENTIFIER;
 			}
@@ -1093,9 +1104,7 @@ public final class SchemeLink extends AbstractSchemeLink
 			 * Moving from a scheme to a scheme protoelement.
 			 * At this point, newParentSchemeProtoElementId is non-void.
 			 */
-			final Scheme oldParentScheme = this.getParentScheme();
-			assert oldParentScheme != null : NON_NULL_EXPECTED;
-			oldParentScheme.getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
+			this.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 			super.parentSchemeId = VOID_IDENTIFIER;
 		}

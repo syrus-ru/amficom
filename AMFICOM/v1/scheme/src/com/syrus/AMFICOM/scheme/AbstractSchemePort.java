@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.77 2005/10/03 13:58:29 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.78 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
@@ -26,7 +25,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -34,7 +32,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -61,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.78 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -416,48 +413,36 @@ public abstract class AbstractSchemePort
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeDevice(SchemeDevice, boolean)}.
+	 *
 	 * @param parentSchemeDeviceId
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
 	final void setParentSchemeDeviceId(final Identifier parentSchemeDeviceId,
 			final boolean usePool)
 	throws ApplicationException {
-		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-
 		assert parentSchemeDeviceId != null : NON_NULL_EXPECTED;
-		final boolean parentSchemeDeviceIdVoid = parentSchemeDeviceId.isVoid();
-		assert parentSchemeDeviceIdVoid || parentSchemeDeviceId.getMajor() == SCHEMEDEVICE_CODE;
+		assert parentSchemeDeviceId.isVoid() || parentSchemeDeviceId.getMajor() == SCHEMEDEVICE_CODE;
 
-		if (parentSchemeDeviceIdVoid) {
-			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(super.id);
-			return;
-		}
 		if (this.parentSchemeDeviceId.equals(parentSchemeDeviceId)) {
 			return;
 		}
-		this.parentSchemeDeviceId = parentSchemeDeviceId;
-		super.markAsChanged();
+
+		this.setParentSchemeDevice(
+				StorableObjectPool.<SchemeDevice>getStorableObject(parentSchemeDeviceId, true),
+				usePool);
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeDeviceId(Identifier, boolean)}.
-	 *
 	 * @param parentSchemeDevice
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	public final void setParentSchemeDevice(
+	public abstract void setParentSchemeDevice(
 			final SchemeDevice parentSchemeDevice,
 			final boolean usePool)
-	throws ApplicationException {
-		this.setParentSchemeDeviceId(Identifier.possiblyVoid(parentSchemeDevice), usePool);
-	}
+	throws ApplicationException;
 
 	/**
 	 * @param portId

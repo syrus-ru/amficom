@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.76 2005/10/03 13:58:29 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.77 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -41,7 +40,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -57,7 +55,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.77 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -456,25 +454,45 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeOptimizeInfo(SchemeOptimizeInfo, boolean)}.
+	 *
 	 * @param parentSchemeOptimizeInfoId
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@SuppressWarnings("unused")
-	@Crutch109
 	void setParentSchemeOptimizeInfoId(
 			final Identifier parentSchemeOptimizeInfoId,
+			final boolean usePool)
+	throws ApplicationException {
+		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
+		assert parentSchemeOptimizeInfoId.isVoid() || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
+		
+		if (this.parentSchemeOptimizeInfoId.equals(parentSchemeOptimizeInfoId)) {
+			return;
+		}
+
+		this.setParentSchemeOptimizeInfo(
+				StorableObjectPool.<SchemeOptimizeInfo>getStorableObject(parentSchemeOptimizeInfoId, true),
+				usePool);
+	}
+
+	/**
+	 * @param parentSchemeOptimizeInfo
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void setParentSchemeOptimizeInfo(
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo,
 			final boolean usePool)
 	throws ApplicationException {
 		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeOptimizeInfoIdVoid = this.parentSchemeOptimizeInfoId.isVoid();
 		assert this.parentSchemeId.isVoid() ^ thisParentSchemeOptimizeInfoIdVoid : OBJECT_BADLY_INITIALIZED;
-		
-		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
-		final boolean parentSchemeOptimizeInfoIdVoid = parentSchemeOptimizeInfoId.isVoid();
-		assert parentSchemeOptimizeInfoIdVoid || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
-		
-		if (this.parentSchemeOptimizeInfoId.equals(parentSchemeOptimizeInfoId)) {
+
+		final boolean parentSchemeOptimizeInfoNull = (parentSchemeOptimizeInfo == null);
+
+		final Identifier newParentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
+		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId)) {
 			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
@@ -482,85 +500,146 @@ public final class SchemeMonitoringSolution
 		if (thisParentSchemeOptimizeInfoIdVoid) {
 			/*
 			 * Erasing old object-type value, setting new object
-			 * value.
+			 * value. At this point, newParentSchemeOptimizeInfoId
+			 * is non-void.
 			 */
+			this.getParentScheme().getSchemeMonitoringSolutionContainerWrappee().removeFromCache(this, usePool);
+
 			this.parentSchemeId = VOID_IDENTIFIER;
-		} else if (parentSchemeOptimizeInfoIdVoid) {
+		} else {
 			/*
-			 * Erasing old object value, preserving old object-type
-			 * value. This point is not assumed to be reached unless
-			 * initial object value has already been set (i. e.
-			 * there already is object-type value to preserve).
+			 * At this point, newParentSchemeOptimizeInfoId may
+			 * be void.
 			 */
-			this.parentSchemeId = this.getParentSchemeOptimizeInfo().getParentSchemeId();
+			this.getParentSchemeOptimizeInfo().getSchemeMonitoringSolutionContainerWrappee().removeFromCache(this, usePool);
+
+			if (parentSchemeOptimizeInfoNull) {
+				/*
+				 * Erasing old object value, preserving old object-type
+				 * value. This point is not assumed to be reached unless
+				 * initial object value has already been set (i. e.
+				 * there already is object-type value to preserve).
+				 * 
+				 * this.parentSchemeOptimizeInfoId will
+				 * automatically become a VOID_IDENTIFIER
+				 */
+				final Scheme parentScheme = this.getParentSchemeOptimizeInfo().getParentScheme();
+				parentScheme.getSchemeMonitoringSolutionContainerWrappee().addToCache(this, usePool);
+
+				this.parentSchemeId = parentScheme.getId();
+			}
 		}
-		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
+
+		if (!parentSchemeOptimizeInfoNull) {
+			parentSchemeOptimizeInfo.getSchemeMonitoringSolutionContainerWrappee().addToCache(this, usePool);
+		}
+
+		this.parentSchemeOptimizeInfoId = newParentSchemeOptimizeInfoId;
 		super.markAsChanged();
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier, boolean)}.
+	 * <p>A wrapper around {@link #setParentScheme(Scheme, boolean)}.</p>
 	 *
-	 * @param parentSchemeOptimizeInfo
-	 * @param usePool
-	 * @throws ApplicationException
-	 */
-	@Crutch109
-	public void setParentSchemeOptimizeInfo(
-			final SchemeOptimizeInfo parentSchemeOptimizeInfo,
-			final boolean usePool)
-	throws ApplicationException {
-		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(parentSchemeOptimizeInfo), usePool);
-	}
-
-	/**
+	 * <p>This method features one extra check since <em>if</em>
+	 * {@code parentSchemeId} is void, <em>then</em> either this
+	 * {@code SchemeMonitoringSolution} or its parent
+	 * {@code SchemeOptimizeInfo} will be deleted.</p>
+	 *
 	 * @param parentSchemeId
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	void setParentSchemeId(final Identifier parentSchemeId,
 			final boolean usePool)
 	throws ApplicationException {
-		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
-		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
-		assert thisParentSchemeIdVoid ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
-
 		assert parentSchemeId != null : NON_NULL_EXPECTED;
-		final boolean parentSchemeIdVoid = parentSchemeId.isVoid();
-		assert parentSchemeIdVoid || parentSchemeId.getMajor() == SCHEME_CODE;
+		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
 
-		if (thisParentSchemeIdVoid) {
+		if (this.parentSchemeId.isVoid()) {
 			this.getParentSchemeOptimizeInfo().setParentSchemeId(parentSchemeId, usePool);
 		} else {
-			if (parentSchemeIdVoid) {
-				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(super.id);
-				return;
-			}
-	
 			if (this.parentSchemeId.equals(parentSchemeId)) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
-			this.parentSchemeId = parentSchemeId;
-			super.markAsChanged();
+
+			this.setParentScheme(
+					StorableObjectPool.<Scheme>getStorableObject(parentSchemeId, true),
+					usePool);
 		}
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeId(Identifier, boolean)}.
+	 * Sets the {@code Scheme}, parent for this
+	 * {@code SchemeMonitoringSolution}.
+	 * 
+	 * <table border = "1" width = "100%">
+	 * <tbody>
+	 * <tr>
+	 * 	<th bgcolor = "#800000"><font color="#ffffff">{@code oldParentScheme}</font></th>
+	 * 	<th bgcolor = "#800000"><font color="#ffffff">{@code newParentScheme}</font></th>
+	 * 	<th bgcolor = "#800000"><font color="#ffffff">Action taken</font></th>
+	 * </tr>
+	 * <tr>
+	 * 	<td>{@code non-null}</td>
+	 * 	<td>{@code non-null}</td>
+	 * 	<td>{@code parentScheme} property is changed unless old value and the new one are equal</td></tr>
+	 * <tr>
+	 * 	<td>{@code non-null}</td>
+	 * 	<td>{@code null}</td>
+	 * 	<td>No {@code parentSchemeOptimizeInfo} property was present. The object is deleted.</td>
+	 * </tr>
+	 * <tr>
+	 * 	<td>{@code null}</td>
+	 * 	<td>{@code non-null}</td>
+	 * 	<td>{@code parentSchemeOptimizeInfo} property is present.
+	 * 	    Its {@code parentScheme} property is modified.</td>
+	 * </tr>
+	 * <tr>
+	 * 	<td>{@code null}</td>
+	 * 	<td>{@code null}</td>
+	 * 	<td>{@code parentSchemeOptimizeInfo} property is present.
+	 * 	    Its {@code parentScheme} property is modified (set to
+	 * 	    {@code null}), resulting in cascading deletion of
+	 * 	    {@code parentSchemeOptimizeInfo} with all its <em>reverse
+	 * 	    dependencies</em>, including this
+	 * 	    {@code SchemeMonitoringSolution}.</td>
+	 * </tr>
+	 * </tbody>
+	 * </table>
 	 *
 	 * @param parentScheme must be non-{@code null}, otherwise the object
 	 *        will be deleted from pool. 
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setParentScheme(final Scheme parentScheme,
 			final boolean usePool)
 	throws ApplicationException {
-		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme), usePool);
+		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
+
+		if (this.parentSchemeId.isVoid()) {
+			this.getParentSchemeOptimizeInfo().setParentScheme(parentScheme, usePool);
+		} else {
+			final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
+			if (this.parentSchemeId.equals(newParentSchemeId)) {
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				return;
+			}
+
+			this.getParentScheme().getSchemeMonitoringSolutionContainerWrappee().removeFromCache(this, usePool);
+
+			if (parentScheme == null) {
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				StorableObjectPool.delete(super.id);
+			} else {
+				parentScheme.getSchemeMonitoringSolutionContainerWrappee().addToCache(this, usePool);
+			}
+
+			this.parentSchemeId = newParentSchemeId;
+			super.markAsChanged();
+		}
 	}
 
 	public void setPrice(final int price) {
@@ -695,9 +774,9 @@ public final class SchemeMonitoringSolution
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	Set<SchemePath> getSchemePaths0(@SuppressWarnings("unused") final boolean usePool) throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
+	Set<SchemePath> getSchemePaths0(final boolean usePool)
+	throws ApplicationException {
+		return this.getSchemePathContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -705,21 +784,22 @@ public final class SchemeMonitoringSolution
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemePaths(final Set<SchemePath> schemePaths,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemePaths != null: NON_NULL_EXPECTED;
+
 		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0(usePool);
-		/*
-		 * Check is made to prevent SchemePaths from
-		 * permanently losing their parents.
-		 */
-		oldSchemePaths.removeAll(schemePaths);
-		for (final SchemePath oldSchemePath : oldSchemePaths) {
-			this.removeSchemePath(oldSchemePath, usePool);
+
+		final Set<SchemePath> toRemove = new HashSet<SchemePath>(oldSchemePaths);
+		toRemove.removeAll(schemePaths);
+		for (final SchemePath schemePath : toRemove) {
+			this.removeSchemePath(schemePath, usePool);
 		}
-		for (final SchemePath schemePath : schemePaths) {
+
+		final Set<SchemePath> toAdd = new HashSet<SchemePath>(schemePaths);
+		toAdd.removeAll(oldSchemePaths);
+		for (final SchemePath schemePath : toAdd) {
 			this.addSchemePath(schemePath, usePool);
 		}
 	}

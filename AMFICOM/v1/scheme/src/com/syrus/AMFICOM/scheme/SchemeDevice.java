@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.100 2005/10/03 13:58:29 bass Exp $
+ * $Id: SchemeDevice.java,v 1.101 2005/10/05 05:03:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.bugs.Crutch109;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -55,7 +54,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -80,7 +78,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/10/03 13:58:29 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/05 05:03:48 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -658,9 +656,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from an element to another element. At this
 			 * point, newParentSchemeElementId may be void.
 			 */
-			final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
-			assert oldParentSchemeElement != null : NON_NULL_EXPECTED;
-			oldParentSchemeElement.getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -671,9 +667,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from a protoelement to an element. At this
 			 * point, newParentSchemeElementId is non-void.
 			 */
-			final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
-			assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
-			oldParentSchemeProtoElement.getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
 
 			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 		}
@@ -734,9 +728,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * At this point, newParentSchemeProtoElementId may be
 			 * void.
 			 */
-			final SchemeProtoElement oldParentSchemeProtoElement = this.getParentSchemeProtoElement();
-			assert oldParentSchemeProtoElement != null : NON_NULL_EXPECTED;
-			oldParentSchemeProtoElement.getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeProtoElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeProtoElementNull) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
@@ -747,9 +739,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from an element to a protoelement. At this
 			 * point, newParentSchemeProtoElementId is non-void.
 			 */
-			final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
-			assert oldParentSchemeElement != null : NON_NULL_EXPECTED;
-			oldParentSchemeElement.getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
+			this.getParentSchemeElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
 
 			this.parentSchemeElementId = VOID_IDENTIFIER;
 		}
@@ -981,10 +971,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	Set<SchemePort> getSchemePorts0(@SuppressWarnings("unused") final boolean usePool)
+	Set<SchemePort> getSchemePorts0(final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true);
+		return this.getSchemePortContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -992,21 +981,22 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemePorts(final Set<SchemePort> schemePorts,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemePorts != null: NON_NULL_EXPECTED;
+
 		final Set<SchemePort> oldSchemePorts = this.getSchemePorts0(usePool);
-		/*
-		 * Check is made to prevent SchemePorts from
-		 * permanently losing their parents.
-		 */
-		oldSchemePorts.removeAll(schemePorts);
-		for (final SchemePort oldSchemePort : oldSchemePorts) {
-			this.removeSchemePort(oldSchemePort, usePool);
+
+		final Set<SchemePort> toRemove = new HashSet<SchemePort>(oldSchemePorts);
+		toRemove.removeAll(schemePorts);
+		for (final SchemePort schemePort : toRemove) {
+			this.removeSchemePort(schemePort, usePool);
 		}
-		for (final SchemePort schemePort : schemePorts) {
+
+		final Set<SchemePort> toAdd = new HashSet<SchemePort>(schemePorts);
+		toAdd.removeAll(oldSchemePorts);
+		for (final SchemePort schemePort : toAdd) {
 			this.addSchemePort(schemePort, usePool);
 		}
 	}
@@ -1065,10 +1055,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
-	Set<SchemeCablePort> getSchemeCablePorts0(@SuppressWarnings("unused") final boolean usePool)
+	Set<SchemeCablePort> getSchemeCablePorts0(final boolean usePool)
 	throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true);
+		return this.getSchemeCablePortContainerWrappee().getContainees(usePool);
 	}
 
 	/**
@@ -1076,22 +1065,23 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@Crutch109
 	public void setSchemeCablePorts(
 			final Set<SchemeCablePort> schemeCablePorts,
 			final boolean usePool)
 	throws ApplicationException {
 		assert schemeCablePorts != null: NON_NULL_EXPECTED;
+
 		final Set<SchemeCablePort> oldSchemeCablePorts = this.getSchemeCablePorts0(usePool);
-		/*
-		 * Check is made to prevent SchemeCablePorts from
-		 * permanently losing their parents.
-		 */
-		oldSchemeCablePorts.removeAll(schemeCablePorts);
-		for (final SchemeCablePort oldSchemeCablePort : oldSchemeCablePorts) {
-			this.removeSchemeCablePort(oldSchemeCablePort, usePool);
+
+		final Set<SchemeCablePort> toRemove = new HashSet<SchemeCablePort>(oldSchemeCablePorts);
+		toRemove.removeAll(schemeCablePorts);
+		for (final SchemeCablePort schemeCablePort : toRemove) {
+			this.removeSchemeCablePort(schemeCablePort, usePool);
 		}
-		for (final SchemeCablePort schemeCablePort : schemeCablePorts) {
+
+		final Set<SchemeCablePort> toAdd = new HashSet<SchemeCablePort>(schemeCablePorts);
+		toAdd.removeAll(oldSchemeCablePorts);
+		for (final SchemeCablePort schemeCablePort : toAdd) {
 			this.addSchemeCablePort(schemeCablePort, usePool);
 		}
 	}
