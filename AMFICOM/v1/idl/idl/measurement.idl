@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.88 2005/09/19 18:16:14 arseniy Exp $
+ * $Id: measurement.idl,v 1.89 2005/10/05 08:07:57 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ module measurement {
 
 
 ////////////////////////// MeasurementType ///////////////////////////	
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlMeasurementType {
 			REFLECTOMETRY,
 			UNKNOWN_MEASUREMENTTYPE
@@ -34,7 +34,7 @@ module measurement {
 
 
 ////////////////////////// AnalysisType ///////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlAnalysisType {
 			DADARA,
 			UNKNOWN_ANALYSISTYPE
@@ -42,7 +42,7 @@ module measurement {
 
 
 ////////////////////////// ModelingType ///////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlModelingType {
 			DADARA_MODELING,
 			UNKNOWN_MODELINGTYPE
@@ -50,8 +50,9 @@ module measurement {
 
 
 /////////////////// Measurement /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurement : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum MeasurementStatus {
 				MEASUREMENT_STATUS_SCHEDULED,
 				MEASUREMENT_STATUS_ACQUIRING,
@@ -91,7 +92,7 @@ module measurement {
 
 
 //////////////////// Analysis ///////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlAnalysis : general::corba::IdlStorableObject {
 			public IdlAnalysisType type;
 			public general::corba::IdlIdentifier monitoredElementId;
@@ -116,7 +117,7 @@ module measurement {
 
 
 /////////////////// Modeling /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlModeling : general::corba::IdlStorableObject {
 			public IdlModelingType type;
 			public general::corba::IdlIdentifier monitoredElementId;
@@ -139,7 +140,7 @@ module measurement {
 
 
 /////////////////// MeasurementSetup /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementSetup : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier parameterSetId;
 			public general::corba::IdlIdentifier criteriaSetId;
@@ -168,18 +169,20 @@ module measurement {
 
 
 /////////////////// Parameter /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		struct IdlParameter {
 			general::corba::IdlIdentifier id;
 			general::corba::IdlParameterType type;
 			::CORBA::OctetSeq value;
 		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlParameter> IdlParameterSeq;
 
 
 ////////////////////// Result ///////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlResult : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum ResultSort {
 				RESULT_SORT_MEASUREMENT,
 				RESULT_SORT_ANALYSIS,
@@ -207,8 +210,9 @@ module measurement {
 
 
 /////////////////// ParameterSet /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlParameterSet : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum ParameterSetSort {
 				SET_SORT_MEASUREMENT_PARAMETERS,
 				SET_SORT_ANALYSIS_CRITERIA,
@@ -237,12 +241,12 @@ module measurement {
 
 
 /////////////////////// Test ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTest : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			union IdlTestTimeStamps switch (enum TestTemporalType {
 					TEST_TEMPORAL_TYPE_ONETIME,
-					TEST_TEMPORAL_TYPE_PERIODICAL,
-					TEST_TEMPORAL_TYPE_CONTINUOUS}) {
+					TEST_TEMPORAL_TYPE_PERIODICAL}) {
 				case TEST_TEMPORAL_TYPE_ONETIME:
 					long long startTime;
 				case TEST_TEMPORAL_TYPE_PERIODICAL:
@@ -251,13 +255,8 @@ module measurement {
 						long long endTime;
 						general::corba::IdlIdentifier temporalPatternId;
 					} ptts;
-				case TEST_TEMPORAL_TYPE_CONTINUOUS:
-					struct ContinuousTestTimeStamps {
-						long long startTime;
-						long long endTime;
-					} ctts;
 			};
-
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum TestStatus {
 				TEST_STATUS_NEW,		//Сохранён в БД на сервере
 				TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
@@ -267,11 +266,12 @@ module measurement {
 				TEST_STATUS_STOPPED,	//Остановлен по запросу
 				TEST_STATUS_ABORTED		//Прерван
 			};
-
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			struct TestStops {
 				long long time;
 				general::corba::WString256 reason;
 			};
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			typedef sequence<TestStops> TestStopsSeq;
 
 
@@ -303,12 +303,12 @@ module measurement {
 					in TestStopsSeq stoppings,
 					in general::corba::IdlIdentifierSeq measurementSetupIds);
 		};
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlTest> IdlTestSeq;
 
 
 /////////////////////// Temporal Pattern ////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCronTemporalPattern : general::corba::IdlStorableObject {
 			public general::corba::WString256 description;
 			public general::corba::WString64Seq cronStrings;
@@ -322,18 +322,22 @@ module measurement {
 					in general::corba::WString256 description,
 					in general::corba::WString64Seq cronStrings);
 		};
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlIntervalsTemporalPattern : general::corba::IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			struct IntervalTemporalPatternId {
 				long long ms;
 				general::corba::IdlIdentifier temporalPatternId;
 			};
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			typedef sequence<IntervalTemporalPatternId> IntervalTemporalPatternIdSeq;
 
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			struct IntervalDuration {
 				long long ms;
 				long long duration;
 			};
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			typedef sequence<IntervalDuration> IntervalDurationSeq;
 
 			public IntervalTemporalPatternIdSeq intervalsTemporalPatternId;
@@ -349,7 +353,7 @@ module measurement {
 					in IntervalDurationSeq intervalsDuration);
 		};
 
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlPeriodicalTemporalPattern : general::corba::IdlStorableObject {
 			public long long period;
 
@@ -364,7 +368,7 @@ module measurement {
 
 
 /////////////////////// MeasurementPortType /////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementPortType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
@@ -385,7 +389,7 @@ module measurement {
 
 
 ////////////////////////// MeasurementPort ///////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMeasurementPort : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier _typeId;
 			public general::corba::WString128 name;
@@ -408,7 +412,7 @@ module measurement {
 
 
 //////////////////////////////// KIS ////////////////////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlKIS : administration::corba::IdlDomainMember {
 			public general::corba::WString128 name;
 			public general::corba::WString256 description;
@@ -434,8 +438,9 @@ module measurement {
 
 
 ///////////////////// Monitored Element ///////////////////
-
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlMonitoredElement : administration::corba::IdlDomainMember {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum MonitoredElementSort {
 				MONITOREDELEMENT_SORT_LINK,
 				MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
