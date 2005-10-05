@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.114 2005/10/04 13:42:59 bob Exp $
+ * $Id: SchedulerModel.java,v 1.115 2005/10/05 09:26:15 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,6 +55,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -69,7 +70,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.114 $, $Date: 2005/10/04 13:42:59 $
+ * @version $Revision: 1.115 $, $Date: 2005/10/05 09:26:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -637,7 +638,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				null,
 				null,
 				description,				
-				1000L, // TODO add calculation from ReflectometyUtil ? 
+				0L,  
 				Collections.singleton(this.monitoredElement.getId()),
 				EnumSet.of(this.measurementType));
 		if (this.measurementSetupIdMap != null) {
@@ -965,6 +966,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 	}
 	
+	public boolean isTestNewer(final Test test) {
+		return test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) 
+			&& test.getStatus().value() == TestStatus._TEST_STATUS_NEW;
+	}
+
+	
 	public boolean isValid(final Identifier monitoredElementId,
 	                       final Date startDate, 
 	                       final Date endDate,
@@ -1033,12 +1040,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final MeasurementSetup measurementSetup) 
 	throws ApplicationException {
 		
-		final Set<Date> times; 
-		if (temporalPattern != null) {
-			times = temporalPattern.getTimes(startDate, endDate);
-		} else {
-			times = Collections.singleton(startDate);
-		}
+		final Set<Date> times = this.getTestTimes(temporalPattern, startDate, endDate, 0L); 
 		
 		final boolean result = this.isValid0(monitoredElementId, 
 			times, 
@@ -1049,21 +1051,93 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return result;
 	}
 	
+	private SortedSet<Date> getTestTimes(final AbstractTemporalPattern temporalPattern,
+		final Date startDate,
+		final Date endDate,
+		final long offset) {
+		final SortedSet<Date> times; 
+		
+		final Date startTime0 = offset == 0 ? startDate : new Date(startDate.getTime() + offset);
+		final Date endTime0 = offset == 0 ? endDate : new Date(endDate.getTime() + offset);
+		
+		if (temporalPattern != null) {
+			times = temporalPattern.getTimes(startTime0, endTime0);
+		} else {
+			times = new TreeSet<Date>();
+			times.add(startTime0);
+		}
+		return times;
+	}
+	
+	private SortedSet<Date> getTestTimes(final Identifier temporalPatternId,
+		final Date startDate,
+		final Date endDate,
+		final long offset) throws ApplicationException{
+		
+		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
+			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);
+			return this.getTestTimes(temporalPattern, startDate, endDate, offset);
+		}
+		return this.getTestTimes((AbstractTemporalPattern)null, startDate, endDate, offset);
+	}
+	
+	private SortedSet<Date> getTestTimes(final Test test,
+		final long offset) throws ApplicationException{
+		return this.getTestTimes(test, test.getStartTime(), test.getEndTime(), offset);
+	}
+	
+	private SortedSet<Date> getTestTimes(final Test test,
+		final Date startTime,
+		final Date endTime,
+		final long offset) throws ApplicationException{		
+		
+		final SortedSet<Date> testTimes = this.getTestTimes(test.getTemporalPatternId(), startTime, endTime, 0L);
+		
+		final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
+		
+		if (!stoppingMap.isEmpty()) {
+			final SortedSet<Date> measurementDates;
+			if (!this.isTestNewer(test)) {
+				final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE);	
+				final Set<Measurement> testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
+				measurementDates = new TreeSet<Date>();
+				for (final Measurement measurement : testMeasurements) {
+					measurementDates.add(measurement.getStartTime());
+				}
+			} else {
+				measurementDates = null;
+			}
+			
+			for(final Date stopDate : stoppingMap.keySet()) {
+				final SortedSet<Date> tailSet = measurementDates != null ? 
+						measurementDates.tailSet(stopDate) : null;
+				if (tailSet != null && !tailSet.isEmpty()) {					
+					final Date first = tailSet.first();
+					testTimes.subSet(stopDate, first).clear();
+					measurementDates.headSet(first).clear();
+				} else {
+					testTimes.tailSet(stopDate).clear();
+					break;
+				}
+			}			
+		}
+		
+		if (offset != 0 && !testTimes.isEmpty()) {
+			final SortedSet<Date> testTimesOffsetted = new TreeSet<Date>();
+			for (final Date date : testTimes) {
+				testTimesOffsetted.add(new Date(date.getTime() + offset));
+			}
+			return testTimesOffsetted;
+		}
+		
+		return testTimes;
+	}
+	
 	public boolean isValid(final Test test,
 	                       final  MeasurementSetup measurementSetup) 
 	throws ApplicationException {
 		
-		final Set<Date> times; 
-		final Identifier temporalPatternId = test.getTemporalPatternId();
-		
-		final Date startTime0 = test.getStartTime();
-		final Date endTime0 = test.getEndTime();		
-		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
-			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);			
-			times = temporalPattern.getTimes(startTime0, endTime0);
-		} else {
-			times = Collections.singleton(startTime0);
-		}
+		final Set<Date> times = this.getTestTimes(test, 0L);
 		
 		final boolean result = this.isValid0(test.getMonitoredElementId(), 
 			times, 
@@ -1077,18 +1151,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final long offset) 
 	throws ApplicationException {
 		
-		final Set<Date> times; 
-		final Identifier temporalPatternId = test.getTemporalPatternId();
-		
-		final Date startTime0 = offset == 0 ? test.getStartTime() : new Date(test.getStartTime().getTime() + offset);
-		final Date endTime0 = offset == 0 ? test.getEndTime() : new Date(test.getEndTime().getTime() + offset);
-		
-		if (temporalPatternId != null && !temporalPatternId.isVoid()) {
-			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(temporalPatternId, true);			
-			times = temporalPattern.getTimes(startTime0, endTime0);
-		} else {
-			times = Collections.singleton(startTime0);
-		}
+		final Set<Date> times = this.getTestTimes(test, offset);
 		
 		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
 		
@@ -1097,6 +1160,23 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			measurementSetup, 
 			test.getId());
 		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
+		return result;
+	}
+	
+	public boolean isValid(final Test test,
+	                       final Date startDate,
+	               		   final Date endDate) 
+	throws ApplicationException {
+		
+		final Set<Date> times = this.getTestTimes(test, startDate, endDate, 0L);
+		
+		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+		
+		final boolean result = this.isValid0(test.getMonitoredElementId(), 
+			times, 
+			measurementSetup, 
+			test.getId());
+		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + startDate + ", " + endDate + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1126,142 +1206,39 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private boolean isIntersect0(final Test test, 
 	                            final Date startDate0, 
 	                            final Date endDate0) 
-	throws ApplicationException{
-		final MeasurementSetup testMeasurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
-		final long measurementDuration = testMeasurementSetup.getMeasurementDuration();
+	throws ApplicationException{	
 		
-		final long startTime0 = startDate0.getTime();
-		final long endTime0 = endDate0.getTime();
+		final SortedSet<Date> testTimes = this.getTestTimes(test, 0);
 		
-		final Date startDate = test.getStartTime();
-		final long startTime = startDate.getTime();
+		final SortedSet<Date> tailSet = testTimes.tailSet(startDate0);
 		
-		final Date endDate = test.getEndTime();
+		boolean intersect = false;
+		if (!tailSet.isEmpty()) {
+			intersect = tailSet.first().before(endDate0);
+		}
 		
-		final TestTemporalType temporalType = test.getTemporalType();
-		
-		// TODO add stoppings	
-		
-		switch(temporalType.value()) {
-		case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-			final boolean oneTimeIntersection = startTime <= endTime0 &&
-					startTime0 <= startTime + measurementDuration;
-			assert Log.debugMessage("SchedulerModel.isIntersect0 | " 
-					+ test 
-					+ (oneTimeIntersection ? " " : " doen't") 
-					+ " intersect [" 
-					+ startDate0 
-					+ ", " 
-					+ endDate0 
-					+ ']' , 
-				Log.DEBUGLEVEL09);
-			return oneTimeIntersection;
-		case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-			final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-			final SortedSet<Date> times = temporalPattern.getTimes(startDate, endDate);
-			for(final Date date : times) {
-				final long time = date.getTime();
-				assert Log.debugMessage("SchedulerModel.isIntersect0 | " + date + " <= " + endDate0 
-						+ " && " + startDate0 + " <= " + new Date(time + measurementDuration),
-					Log.DEBUGLEVEL09);
-				boolean intersect = time <= endTime0 &&
-						startTime0 <= time + measurementDuration;
-				if (intersect) {
-					assert Log.debugMessage("SchedulerModel.isIntersect0 | _TEST_TEMPORAL_TYPE_PERIODICAL " + intersect,
-						Log.DEBUGLEVEL09);
-					return intersect;
-				}
+		if (!intersect) {
+			final SortedSet<Date> headSet = testTimes.headSet(endDate0);			
+			if (!headSet.isEmpty()) {
+				final MeasurementSetup measurementSetup = 
+					StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+				intersect = 
+					headSet.last().getTime() + measurementSetup.getMeasurementDuration() > startDate0.getTime();
 			}
-			break;
-		case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-			return startTime <= endTime0 &&
-					startTime0 <= endDate.getTime() + measurementDuration;
-		default:
-			throw new IllegalArgumentException("Unsupported test temporal type " + temporalType.value());
-		} 
+		}
+		
 		assert Log.debugMessage("SchedulerModel.isIntersect0 | " 
 				+ test 
-				+ " doen't intersect [" 
+				+ (intersect ? " intersects " : " doen't intersect ") 
+				+ '[' 
 				+ startDate0 
 				+ ", " 
 				+ endDate0 
 				+ ']' , 
 			Log.DEBUGLEVEL09);
-		return false;
+		return intersect;
 	}	
 	
-	/**
-	 * @deprecated 
-	 */
-	@Deprecated
-	public boolean isValid(final Date startDate, 
-	                       Date endDate, 
-	                       final Identifier monitoredElementId) throws ApplicationException {
-		
-		if (endDate == null) {
-			endDate = startDate;
-		}
-		
-		assert startDate != null;
-		assert endDate != null;
-		
-		Log.debugMessage("SchedulerModel.isValid | ", Log.DEBUGLEVEL10);
-
-		Log.debugMessage("SchedulerModel.isValid | startDate " + startDate, Log.DEBUGLEVEL10);
-		Log.debugMessage("SchedulerModel.isValid | endDate " + endDate, Log.DEBUGLEVEL10);
-
-		boolean result = true;
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
-			for (final Test test : tests) {
-				if (!test.getMonitoredElementId().equals(monitoredElementId)) {
-					continue;
-				}	
-				final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
-				final long measurementDuration = measurementSetup.getMeasurementDuration();
-				
-				final TestTemporalType temporalType = test.getTemporalType();
-				final Date startTime = test.getStartTime();
-				final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
-				
-				Date endTime = test.getEndTime();				
-				endTime = stoppingMap.isEmpty() ? 
-						new Date(endTime.getTime() + measurementDuration) : 
-						stoppingMap.lastKey();
-				
-				assert startTime != null;
-				assert endTime != null;
-
-				
-				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime, Log.DEBUGLEVEL10);
-				Log.debugMessage("SchedulerModel.isValid | endTime " + endTime, Log.DEBUGLEVEL10);
-				
-				if (temporalType == TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL) {
-					final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-					final SortedSet<Date> times = temporalPattern.getTimes(startTime, endTime);
-					for(final Date stDate : times) {
-						assert stDate != null;
-						 if (stDate.before(endDate) && 
-									startDate.getTime() <= stDate.getTime() + measurementDuration) {
-								result = false;
-								break;
-							}
-					}
-				} else {
-					if (startTime.before(endDate) && 
-							startDate.before(endTime)) {
-						result = false;
-						break;
-					}
-				}
-			}
-		} catch (final ApplicationException e) {
-			throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
-		}
-		Log.debugMessage("SchedulerModel.isValid | return " + result, Log.DEBUGLEVEL10);
-		return result;
-	}
-
 	public static Color getColor(final TestStatus testStatus) {
 		return getColor(testStatus, false);
 	}
