@@ -43,7 +43,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -224,11 +223,6 @@ final class TestLine extends TimeLine {
 		return rectangle;
 	}
 	
-	boolean isTestNewer(final Test test) {
-		return test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) 
-			&& test.getStatus().value() == TestStatus._TEST_STATUS_NEW;
-	}
-
 	private void paintFlash(Graphics g) {
 
 		if (g != null) {
@@ -440,7 +434,7 @@ final class TestLine extends TimeLine {
 					for (final TestTimeItem testTimeItem : TestLine.this.selectedItems) {
 						try {
 							final Test test = StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
-							if (!isTestNewer(test)) {
+							if (!TestLine.this.schedulerModel.isTestNewer(test)) {
 								continue;
 							}
 						} catch (final ApplicationException e1) {
@@ -489,7 +483,7 @@ final class TestLine extends TimeLine {
 				
 				this.testIds.add(testId);
 				
-				final boolean newerTest = this.isTestNewer(test);
+				final boolean newerTest = this.schedulerModel.isTestNewer(test);
 
 				final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
 				this.measurements.put(testId, measurementTestList);
@@ -500,7 +494,7 @@ final class TestLine extends TimeLine {
 					this.unsavedTestIds.add(testId);
 				} else {
 					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(testId, ObjectEntities.MEASUREMENT_CODE);	
-					testMeasurements = new HashSet(StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true));
+					testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
 				}
 				
 				switch (test.getTemporalType().value()) {
@@ -720,7 +714,7 @@ final class TestLine extends TimeLine {
 				this.unsavedTestTimeItems.clear();
 				for (final Iterator it = this.timeItems.iterator(); it.hasNext();) {
 					final TestTimeItem testTimeItem = (TestTimeItem) it.next();
-					if (this.isTestNewer((Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true))) {
+					if (this.schedulerModel.isTestNewer(((Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true)))) {
 						it.remove();
 						this.unsavedTestTimeItems.add(testTimeItem);
 					}
