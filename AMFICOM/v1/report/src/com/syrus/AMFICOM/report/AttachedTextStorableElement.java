@@ -449,26 +449,31 @@ public final class AttachedTextStorableElement extends StorableElement
 	 * @throws ApplicationException 
 	 */
 	public void refreshAttachingDistances() throws ApplicationException {
-		DataStorableElement horizontalAttacher = this.getHorizontalAttacher();
-		DataStorableElement verticalAttacher = this.getVerticalAttacher();
-		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT)) {
-			this.distanceX = this.getX();
-		} else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
-			this.distanceX = this.getX() - horizontalAttacher.getX();
-		} else if (this.horizontalAttachType.equals(TextAttachingType.TO_WIDTH_CENTER)) {
-			this.distanceX = this.getX() - horizontalAttacher.getX()
-				- horizontalAttacher.getWidth() / 2;
-		} else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT)) {
-			this.distanceX = this.getX() - horizontalAttacher.getX()
-				- horizontalAttacher.getWidth();			
-		}		
-		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP)) {
-			this.distanceY = this.getY();
-		} else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
-			this.distanceY = this.getY() - verticalAttacher.getY();
-		} else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM)) {
-			this.distanceY = this.getY() - verticalAttacher.getY()
-				- verticalAttacher.getHeight();
+		if (!this.horizontalAttacherId.equals(Identifier.VOID_IDENTIFIER)) {
+			DataStorableElement horizontalAttacher = this.getHorizontalAttacher();			
+			if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT)) {
+				this.distanceX = this.getX();
+			} else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
+				this.distanceX = this.getX() - horizontalAttacher.getX();
+			} else if (this.horizontalAttachType.equals(TextAttachingType.TO_WIDTH_CENTER)) {
+				this.distanceX = this.getX() - horizontalAttacher.getX()
+					- horizontalAttacher.getWidth() / 2;
+			} else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT)) {
+				this.distanceX = this.getX() - horizontalAttacher.getX()
+					- horizontalAttacher.getWidth();			
+			}
+		}
+		
+		if (!this.verticalAttacherId.equals(Identifier.VOID_IDENTIFIER)) {		
+			DataStorableElement verticalAttacher = this.getVerticalAttacher();
+			if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP)) {
+				this.distanceY = this.getY();
+			} else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
+				this.distanceY = this.getY() - verticalAttacher.getY();
+			} else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM)) {
+				this.distanceY = this.getY() - verticalAttacher.getY()
+					- verticalAttacher.getHeight();
+			}
 		}
 	}
 	
