@@ -1,5 +1,5 @@
 /*-
- * $Id: TableDataDatabase.java,v 1.1 2005/10/01 10:08:35 max Exp $
+ * $Id: TableDataDatabase.java,v 1.2 2005/10/05 10:46:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,7 @@
  */
 package com.syrus.AMFICOM.report;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/10/01 10:08:35 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/10/05 10:46:38 $
  * @module report
  */
 public class TableDataDatabase extends StorableObjectDatabase<TableDataStorableElement> {
@@ -52,7 +52,7 @@ public class TableDataDatabase extends StorableObjectDatabase<TableDataStorableE
 	
 	@Override
 	protected short getEntityCode() {
-		return REPORTDATA_CODE;
+		return REPORTTABLEDATA_CODE;
 	}
 	
 	@Override

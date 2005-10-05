@@ -1,5 +1,5 @@
 /*-
- * $Id: ImageDatabase.java,v 1.2 2005/10/05 09:39:36 peskovsky Exp $
+ * $Id: ImageDatabase.java,v 1.3 2005/10/05 10:46:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,7 @@
  */
 package com.syrus.AMFICOM.report;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTIMAGE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/10/05 09:39:36 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/10/05 10:46:38 $
  * @module report
  */
 
@@ -48,7 +48,7 @@ public class ImageDatabase extends StorableObjectDatabase<ImageStorableElement> 
 	
 	@Override
 	protected short getEntityCode() {
-		return REPORTDATA_CODE;
+		return REPORTIMAGE_CODE;
 	}
 	
 	@Override
