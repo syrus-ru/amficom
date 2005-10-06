@@ -1,5 +1,5 @@
 /**
- * $Id: Link.java,v 1.6 2005/10/04 17:06:47 krupenn Exp $
+ * $Id: Link.java,v 1.7 2005/10/06 09:59:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -225,8 +225,8 @@ public class Link {
 		}
 
 		if(blocksscanned > 1) {
-			System.out.println("Ошибка! Тоннель '" + ucmObject.text + "' содержит блоков труб: "
-					+ blocksscanned + ", усечение.");
+			System.out.println("Внимание! Тоннель '" + ucmObject.text + "' содержит блоков труб: "
+					+ blocksscanned + ".");
 		}
 		
 		for(UniCableMapParameter param : ucmObject.buf.params) {
