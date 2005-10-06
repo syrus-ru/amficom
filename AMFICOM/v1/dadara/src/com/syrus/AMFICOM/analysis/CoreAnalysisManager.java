@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.117 2005/10/04 14:59:49 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.118 2005/10/06 15:52:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.117 $, $Date: 2005/10/04 14:59:49 $
+ * @version $Revision: 1.118 $, $Date: 2005/10/06 15:52:57 $
  * @module
  */
 
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
@@ -749,10 +750,10 @@ public class CoreAnalysisManager
 	 * @param ar Результаты анализа
 	 * @param etalon параметры эталона
 	 */
-	public static List<ReflectogramMismatch> compareAndMakeAlarms(AnalysisResult ar,
+	public static List<ReflectogramMismatchImpl> compareAndMakeAlarms(AnalysisResult ar,
 			Etalon etalon) {
 		// формируем выходной список
-		List<ReflectogramMismatch> alarmList = new ArrayList<ReflectogramMismatch>();
+		List<ReflectogramMismatchImpl> alarmList = new ArrayList<ReflectogramMismatchImpl>();
 
 		// получаем параметры эталона
 		ModelTraceManager etMTM = etalon.getMTM();
@@ -780,7 +781,7 @@ public class CoreAnalysisManager
 		// проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
 		if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
 		{
-			ReflectogramMismatch alarm = new ReflectogramMismatch();
+			ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
 			alarm.setSeverity(ReflectogramMismatch.SEVERITY_HARD);
 			alarm.setAlarmType(ReflectogramMismatch.TYPE_LINEBREAK);
 			alarm.setCoord(etMTM.fixAlarmPos(breakPos, false)); // корректируем с учетом событий
@@ -798,7 +799,7 @@ public class CoreAnalysisManager
 		}
 		else // обрыв не обнаружен
 		{
-			ReflectogramMismatch alarm =
+			ReflectogramMismatchImpl alarm =
 					ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
 
 			// обеспечиваем EventAnchorer-привязку результатов анализа
