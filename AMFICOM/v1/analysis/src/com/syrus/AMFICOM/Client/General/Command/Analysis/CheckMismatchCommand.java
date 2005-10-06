@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckMismatchCommand.java,v 1.6 2005/09/26 12:05:06 saa Exp $
+ * $Id: CheckMismatchCommand.java,v 1.7 2005/10/06 15:53:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
 public class CheckMismatchCommand extends AbstractCommand {
@@ -21,12 +21,12 @@ public class CheckMismatchCommand extends AbstractCommand {
 		if (Heap.getPFTracePrimary() != null
 				&& Heap.getMinuitAnalysisParams() != null
 				&& Heap.hasEtalon()) {
-			List<ReflectogramMismatch> alarms =
+			List<ReflectogramMismatchImpl> alarms =
 				CoreAnalysisManager.compareAndMakeAlarms(
 					Heap.getRefAnalysisPrimary().getAR(),
 					Heap.getEtalon());
 			if (alarms.size() > 0) {
-				ReflectogramMismatch first = alarms.iterator().next();
+				ReflectogramMismatchImpl first = alarms.iterator().next();
 				Heap.setRefMismatch(first);
 			} else {
 				Heap.setRefMismatch(null);
@@ -36,7 +36,7 @@ public class CheckMismatchCommand extends AbstractCommand {
 				System.out.println("No alarms");
 			else
 				System.out.println(alarms.size() + " alarms:");
-			for (ReflectogramMismatch al: alarms) {
+			for (ReflectogramMismatchImpl al: alarms) {
 				System.out.println("- " + al);
 			}
 		}

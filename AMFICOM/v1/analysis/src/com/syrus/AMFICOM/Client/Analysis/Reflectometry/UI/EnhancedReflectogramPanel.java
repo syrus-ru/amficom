@@ -1,5 +1,5 @@
 /*-
- * $Id: EnhancedReflectogramPanel.java,v 1.8 2005/10/04 15:00:31 saa Exp $
+ * $Id: EnhancedReflectogramPanel.java,v 1.9 2005/10/06 15:53:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 
 /**
  * Отрисовывает рефлектограмму и кучу всяких сопутствующих вещей
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/10/04 15:00:31 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/06 15:53:58 $
  * @module
  */
 public class EnhancedReflectogramPanel extends ReflectogramPanel {
@@ -173,14 +173,14 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 
 	public boolean draw_noise_level = false;
 	protected double noise_level = 28; // ???!
-	protected ReflectogramMismatch[] alarms;
+	protected ReflectogramMismatchImpl[] alarms;
 
 	public EnhancedReflectogramPanel(TraceEventsLayeredPanel panel,
 			double[] y, double deltaX) {
 		super(panel, y, deltaX);
 	}
 
-	public void updateAlarms (ReflectogramMismatch[] alarms1) {
+	public void updateAlarms (ReflectogramMismatchImpl[] alarms1) {
 		this.alarms = alarms1;
 		if (alarms1 != null) {
 			draw_alarms = true;

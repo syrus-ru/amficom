@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
@@ -147,7 +147,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 	}
 
 	private void setWholeData() {
-		final ReflectogramMismatch mismatch = Heap.getRefMismatch();
+		final ReflectogramMismatchImpl mismatch = Heap.getRefMismatch();
 		final ModelTraceManager etalonMTM = Heap.getMTMEtalon();
 		final ModelTraceAndEvents dataMTAE = Heap.getMTAEPrimary();
 		if (etalonMTM == null || dataMTAE == null || dataMTAE.getNEvents() == 0) {

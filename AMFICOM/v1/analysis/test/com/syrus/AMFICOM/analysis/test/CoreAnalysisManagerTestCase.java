@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.7 2005/10/06 14:56:03 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.8 2005/10/06 15:53:58 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.io.BellcoreCreator;
 import com.syrus.io.DataFormatException;
@@ -125,9 +125,9 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		}
 
 		if (verbose) {
-			ReflectogramMismatch res = ModelTraceComparer.compareMTAEToMTM(mtm.getMTAE(), mtm);
+			ReflectogramMismatchImpl res = ModelTraceComparer.compareMTAEToMTM(mtm.getMTAE(), mtm);
 			System.out.println("pre-compare alarm: " + res);
-			ReflectogramMismatch res2 = ModelTraceComparer.compareMTAEToMTM(mtm2.getMTAE(), mtm);
+			ReflectogramMismatchImpl res2 = ModelTraceComparer.compareMTAEToMTM(mtm2.getMTAE(), mtm);
 			System.out.println("compare alarm: " + res2);
 			assertTrue(res == null); // mtm should cover itself
 			assertTrue(res2 == null); // restored mtae should be the same
@@ -191,10 +191,10 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		return new PFTrace(new BellcoreCreator(y, 1.0, 50).getBS());
 	}
 
-	private static ReflectogramMismatch getFirstMismatch(List list) {
+	private static ReflectogramMismatchImpl getFirstMismatch(List list) {
 		Iterator it = list.iterator();
 		if (it.hasNext())
-			return (ReflectogramMismatch) it.next();
+			return (ReflectogramMismatchImpl) it.next();
 		else
 			return null;
 	}
@@ -215,7 +215,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		double breakThresh = ReflectogramMath.getArrayMin(trace.getFilteredTraceClone());
 		printEventList(mtm.getMTAE().getSimpleEvents());
 
-		ReflectogramMismatch res;
+		ReflectogramMismatchImpl res;
 
 		res = ModelTraceComparer.compareMTAEToMTM(mtm.getMTAE(), mtm);
 		System.out.println("compare mtae: " + res);

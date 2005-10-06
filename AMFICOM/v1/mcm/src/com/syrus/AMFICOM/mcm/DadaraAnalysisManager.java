@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.68 2005/09/21 14:57:06 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.69 2005/10/06 15:53:21 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/09/21 14:57:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.69 $, $Date: 2005/10/06 15:53:21 $
+ * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.Analysis;
@@ -149,7 +149,7 @@ final class DadaraAnalysisManager implements AnalysisManager {
 
 		// если есть эталон, то сравниваем:
 		// дополняем ar результатами сравнения и получаем алармы
-		final List<ReflectogramMismatch> alarmList = (etalon != null) ? CoreAnalysisManager.compareAndMakeAlarms(ar, etalon) : null;
+		final List<ReflectogramMismatchImpl> alarmList = (etalon != null) ? CoreAnalysisManager.compareAndMakeAlarms(ar, etalon) : null;
 		Log.debugMessage("DadaraAnalysisManager.analyse | alarmList = " + alarmList, Log.DEBUGLEVEL08);
 
 		// добавляем AnalysisResult в результаты анализа
@@ -159,8 +159,8 @@ final class DadaraAnalysisManager implements AnalysisManager {
 
 		// если эталон есть, то добавляем алармы в результаты анализа
 		if (etalon != null) {
-			final ReflectogramMismatch[] alarms = alarmList.toArray(new ReflectogramMismatch[alarmList.size()]);
-			outParameters.put(ParameterType.DADARA_ALARMS, ReflectogramMismatch.alarmsToByteArray(alarms));
+			final ReflectogramMismatchImpl[] alarms = alarmList.toArray(new ReflectogramMismatchImpl[alarmList.size()]);
+			outParameters.put(ParameterType.DADARA_ALARMS, ReflectogramMismatchImpl.alarmsToByteArray(alarms));
 		}
 
 		// формируем результаты анализа

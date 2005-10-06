@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.10 2005/09/26 11:19:34 saa Exp $
+ * $Id: OverallStats.java,v 1.11 2005/10/06 15:53:58 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/09/26 11:19:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/06 15:53:58 $
  * @module analysis
  */
 
@@ -68,7 +68,7 @@ public class OverallStats {
 			double meanDeviation1,
 			double etalonLength1,
 			double lossDifference1,
-			ReflectogramMismatch alarm) {
+			ReflectogramMismatchImpl alarm) {
 		setEtalonLength(String.valueOf(MathRef.round_3(etalonLength1)) + " " + LangModelAnalyse.getString("km"));
 		setMaxDeviation(String.valueOf(MathRef.round_4(maxDeviation1)) + " " + LangModelAnalyse.getString("dB"));
 		setMeanDeviation(String.valueOf(MathRef.round_4(meanDeviation1)) + " " + LangModelAnalyse.getString("dB"));
