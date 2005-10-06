@@ -1,4 +1,4 @@
-$Id: reportimage.sql,v 1.3 2005/09/30 07:05:45 max Exp $
+--$Id: reportimage.sql,v 1.4 2005/10/06 11:35:08 max Exp $
 
 CREATE TABLE ReportImage (
  id NUMBER(19),
@@ -27,6 +27,6 @@ CREATE TABLE ReportImage (
   REFERENCES ReportTemplate (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE ReportImage IS '$Id: reportimage.sql,v 1.3 2005/09/30 07:05:45 max Exp $';
+COMMENT ON TABLE ReportImage IS '$Id: reportimage.sql,v 1.4 2005/10/06 11:35:08 max Exp $';
 
 CREATE SEQUENCE ReportImage_Seq ORDER;
