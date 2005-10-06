@@ -4,13 +4,16 @@ package com.syrus.AMFICOM.client.resource;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import com.syrus.util.Shitlet;
+
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/06 13:15:08 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  * @deprecated use {@link com.syrus.AMFICOM.client.resource.I18N}
  */
+@Shitlet
 @Deprecated
 public class LangModel {
 

@@ -463,7 +463,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				}
 			}
 			
-		}, I18N.getString("Message.Information.PlsWait"));
+		}, I18N.getString("Common.ProcessingDialog.PlsWait"));
 	}
 	
 	private void refreshMeasurementSetup() throws ApplicationException {

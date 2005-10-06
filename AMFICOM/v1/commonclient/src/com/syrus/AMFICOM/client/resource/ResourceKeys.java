@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.11 2005/09/22 10:54:17 bob Exp $
+ * $Id: ResourceKeys.java,v 1.12 2005/10/06 14:34:35 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,15 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/22 10:54:17 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public interface ResourceKeys {
 
-	String	SIMPLE_DATE_FORMAT						= "simpleDateFormat";
-	String	HOURS_MINUTES_SECONDS_DATE_FORMAT		= "hmsDateFormat";
+	String	SIMPLE_DATE_FORMAT						= "Common.DateFormat.simpleDateFormat";
+	String	HOURS_MINUTES_SECONDS_DATE_FORMAT		= "Common.DateFormat.hmsDateFormat";
 
 	String	COLOR_GRAPHICS_BACKGROUND				= "graphicsBackgroundColor";
 
@@ -77,8 +77,8 @@ public interface ResourceKeys {
 	String	I18N_NAME								= "Text.Name";													//$NON-NLS-1$
 	String	I18N_DESCRIPTION						= "Text.Description";											//$NON-NLS-1$
 
-	String	I18N_CHOOSE_COLOR						= "Action.Text.ChooseColor";											//$NON-NLS-1$
-	String	I18N_CHOOSE								= "Text.Choose";												//$NON-NLS-1$
+	String	I18N_CHOOSE_COLOR						= "Common.ColorChooser.ChooseColor";											//$NON-NLS-1$
+	String	I18N_CHOOSE								= "Common.ColorChooser.Choose";												//$NON-NLS-1$
 
 	String	I18N_COMMIT		= "Action.Text.Commit";									//$NON-NLS-1$
 }

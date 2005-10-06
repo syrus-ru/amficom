@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.49 2005/10/06 13:18:02 bob Exp $
+ * $Id: TableFrame.java,v 1.50 2005/10/06 14:34:57 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/10/06 13:18:02 $
+ * @version $Revision: 1.50 $, $Date: 2005/10/06 14:34:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -184,7 +184,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 								final WrapperedTableModel<Test> model = TableFrame.this.listTable.getModel();
 								TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, model.getObject(selectedRow));
 							}
-						}, I18N.getString("Message.Information.PlsWait"));
+						}, I18N.getString("Common.ProcessingDialog.PlsWait"));
 					} else {
 						TableFrame.this.schedulerModel.unselectTests(TableFrame.this);
 					}

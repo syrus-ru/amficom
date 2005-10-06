@@ -16,11 +16,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/02 13:03:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/10/06 14:34:35 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class ModuleCodeDialog {
@@ -64,7 +64,7 @@ public class ModuleCodeDialog {
 				gbc.insets = new Insets(5, 5, 5, 5);
 				gbc.weightx = 0.0;
 				gbc.anchor = GridBagConstraints.EAST;
-				textFieldsPanel.add(new JLabel(LangModelGeneral.getString("ModuleCode.Code") + ':'), gbc);
+				textFieldsPanel.add(new JLabel(I18N.getString("ModuleCode.Code") + ':'), gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.fill = GridBagConstraints.HORIZONTAL;
 				gbc.weightx = 1.0;
@@ -81,13 +81,13 @@ public class ModuleCodeDialog {
 		}
 
 		this.fieldPassword.requestFocus();
-		final String okButton = LangModelGeneral.getString("ModuleCode.Button.ok");
-		final String cancelButton = LangModelGeneral.getString("ModuleCode.Button.cancel");
+		final String okButton = I18N.getString("ModuleCode.Button.ok");
+		final String cancelButton = I18N.getString("ModuleCode.Button.cancel");
 		final JOptionPane optionPane = new JOptionPane(this.mainPanel, JOptionPane.PLAIN_MESSAGE,
 														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
 																cancelButton}, null);
 
-		final JDialog dialog = optionPane.createDialog(frame, LangModelGeneral.getString("ModuleCode.Title") + " '"
+		final JDialog dialog = optionPane.createDialog(frame, I18N.getString("ModuleCode.Title") + " '"
 				+ this.title + '\'');
 		
 		final ActionListener actionListener = new ActionListener() {
@@ -116,8 +116,8 @@ public class ModuleCodeDialog {
 
 			this.fieldPassword.setText("");
 			this.fieldPassword.setCaretPosition(0);
-			JOptionPane.showMessageDialog(null, LangModelGeneral.getString("ModuleCode.IncorrectCode"),
-				LangModelGeneral.getString("ModuleCode.Title") + " '" + this.title + '\'', JOptionPane.ERROR_MESSAGE,
+			JOptionPane.showMessageDialog(null, I18N.getString("ModuleCode.IncorrectCode"),
+				I18N.getString("ModuleCode.Title") + " '" + this.title + '\'', JOptionPane.ERROR_MESSAGE,
 				null);
 			this.result = JOptionPane.CANCEL_OPTION;
 			dialog.setVisible(true);

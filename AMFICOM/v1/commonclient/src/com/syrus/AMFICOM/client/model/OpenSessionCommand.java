@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.23 2005/10/06 13:16:33 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.24 2005/10/06 14:34:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -43,7 +42,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.23 $, $Date: 2005/10/06 13:16:33 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/06 14:34:35 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -102,7 +101,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 //						LangModelGeneral.getString("Error.ServerConnection"),
 						e.getMessage(),
-						LangModelGeneral.getString("Error.OpenSession"),
+						I18N.getString("Error.OpenSession"),
 					JOptionPane.ERROR_MESSAGE, null);
 				this.dispatcher.firePropertyChange(
 					new StatusMessageEvent(this, 
@@ -112,7 +111,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			} catch (final LoginException e) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						e.getMessage(), 
-						LangModelGeneral.getString("Error.OpenSession"),
+						I18N.getString("Error.OpenSession"),
 						JOptionPane.ERROR_MESSAGE, 
 						null);
 				this.dispatcher.firePropertyChange(
@@ -144,7 +143,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 
 		if (clientSessionEnvironment == null) {
-			throw new LoginException(LangModelGeneral.getString("Error.SessionHasNotEstablish"));
+			throw new LoginException(I18N.getString("Error.SessionHasNotEstablish"));
 		}
 		
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
@@ -165,8 +164,7 @@ public class OpenSessionCommand extends AbstractCommand {
 					new StatusMessageEvent(
 						OpenSessionCommand.this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString(
-							"StatusBar.SessionHaveBeenOpened")));
+						I18N.getString("Common.StatusBar.SessionHaveBeenOpened")));
 				dispatcher1.firePropertyChange(
 					new ContextChangeEvent(OpenSessionCommand.this,
 						ContextChangeEvent.SESSION_OPENED_EVENT));
@@ -189,9 +187,9 @@ public class OpenSessionCommand extends AbstractCommand {
 						} catch (CommunicationException e) {
 							JOptionPane.showMessageDialog(
 								Environment.getActiveWindow(), 
-								LangModelGeneral.getString(
+								I18N.getString(
 									"Error.ServerConnection"), 
-								LangModelGeneral.getString(
+								I18N.getString(
 									"Error.OpenSession"), 
 								JOptionPane.ERROR_MESSAGE, 
 								null);
@@ -206,7 +204,7 @@ public class OpenSessionCommand extends AbstractCommand {
 						StatusMessageEvent.STATUS_PROGRESS_BAR, 
 						false));
 			}
-		}, LangModelGeneral.getString("Message.Information.LoadingPlsWait"));	
+		}, I18N.getString("Common.ProcessingDialog.LoadingPlsWait"));	
 		
 		return this.logged;
 	}
@@ -244,7 +242,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				gbc.anchor = GridBagConstraints.EAST;
 				textFieldsPanel.add(
 					new JLabel(
-						LangModelGeneral.getString("Login.LoginName") + ':'),
+						I18N.getString("Common.Login.LoginName") + ':'),
 					gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -258,7 +256,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				gbc.anchor = GridBagConstraints.EAST;
 				textFieldsPanel.add(
 					new JLabel(
-						LangModelGeneral.getString("Login.Password") + ':'),
+						I18N.getString("Common.Login.Password") + ':'),
 					gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -290,9 +288,9 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		if (this.dialog == null) {
 			this.okButton = 
-				LangModelGeneral.getString("Login.Button.ok");
+				I18N.getString("Common.Login.Button.ok");
 			this.cancelButton = 
-				LangModelGeneral.getString("Login.Button.cancel");
+				I18N.getString("Common.Login.Button.cancel");
 			if (this.optionPane == null) {
 				this.optionPane = 
 					new JOptionPane(this.mainPanel, 
@@ -343,7 +341,7 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 	
 	protected String getDialogTitle() {
-		return LangModelGeneral.getString("Login.Login");
+		return I18N.getString("Common.Login.Login");
 	}
 
 	protected void disposeDialog() {

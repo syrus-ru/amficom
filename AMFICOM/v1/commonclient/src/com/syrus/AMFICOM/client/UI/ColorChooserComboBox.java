@@ -1,5 +1,5 @@
 /*-
- * $Id: ColorChooserComboBox.java,v 1.7 2005/09/30 09:11:44 bob Exp $
+ * $Id: ColorChooserComboBox.java,v 1.8 2005/10/06 14:34:35 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,12 +20,12 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/09/30 09:11:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/06 14:34:35 $
  * @module commonclient
  */
 
@@ -48,14 +48,15 @@ public class ColorChooserComboBox extends AComboBox {
 	public ColorChooserComboBox(Color[] colors) {
 		this.model = new DefaultComboBoxModel(colors);
 
-		this.addColorButton = new JButton(LangModelGeneral.getString(ResourceKeys.I18N_CHOOSE));
+		this.addColorButton = new JButton(I18N.getString(ResourceKeys.I18N_CHOOSE));
 		this.addColorButton.setHorizontalAlignment(SwingConstants.LEFT);
 		this.addColorButton.setBorder(BorderFactory.createEmptyBorder());
 		this.addColorButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				Color newColor = JColorChooser.showDialog(Environment.getActiveWindow(), LangModelGeneral
-						.getString(ResourceKeys.I18N_CHOOSE_COLOR), ColorChooserComboBox.this.selectedColor);
+				final Color newColor = JColorChooser.showDialog(Environment.getActiveWindow(), 
+					I18N.getString(ResourceKeys.I18N_CHOOSE_COLOR), 
+					ColorChooserComboBox.this.selectedColor);
 
 				if (newColor != null) {
 					addItem(newColor);

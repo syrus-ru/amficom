@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.12 2005/09/26 07:29:40 bob Exp $
+ * $Id: ClientServantManager.java,v 1.13 2005/10/06 14:34:35 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.CommonServerHelper;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
@@ -25,7 +24,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/26 07:29:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -117,12 +116,12 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		this.connectionLostMap.put(servantName, Boolean.valueOf(true));
 		Log.debugMessage("AbstractClientServantManager.onLoseConnection() | Connection with '" + servantName + "' lost",
 			Log.DEBUGLEVEL08);
-		final String msg = LangModelGeneral.getString("Error.ConnectionWith.ConnectionWith") + " '" + servantName + "' " + LangModelGeneral.getString("Error.ConnectionWith.Lost");
+		final String msg = I18N.getString("Error.ConnectionWith.ConnectionWith") + " '" + servantName + "' " + I18N.getString("Error.ConnectionWith.Lost");
 		final Boolean lost = this.connectionLostMap.get(servantName);
 		if (lost != null && !lost.booleanValue()) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 				msg,
-				LangModelGeneral.getString("Error.ErrorOccur"),
+				I18N.getString("Error.ErrorOccur"),
 				JOptionPane.ERROR_MESSAGE);		
 		}
 		this.connectionLostMap.put(servantName, Boolean.TRUE);
@@ -132,15 +131,15 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	protected final void onRestoreConnection(final String servantName) {
 		Log.debugMessage("AbstractClientServantManager.onRestoreConnection() | Connection with '" + servantName + "' restored",
 			Log.DEBUGLEVEL08);
-		final String msg = LangModelGeneral.getString("Text.InfoMessage.ConnectionWith.ConnectionWith") 
+		final String msg = I18N.getString("Common.ClientServantManager.ConnectionWith.ConnectionWith") 
 			+ " '" + servantName 
-			+ "' " + LangModelGeneral.getString("Text.InfoMessage.ConnectionWith.Restored");
+			+ "' " + I18N.getString("Common.ClientServantManager.ConnectionWith.Restored");
 		
 		final Boolean lost = this.connectionLostMap.get(servantName);
 		if (lost != null && lost.booleanValue()) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 				msg,
-				LangModelGeneral.getString("Text.InfoMessage.Title"),
+				I18N.getString("Common.ClientServantManager.Title"),
 				JOptionPane.INFORMATION_MESSAGE);
 			this.connectionLostMap.put(servantName, Boolean.valueOf(false));
 		}

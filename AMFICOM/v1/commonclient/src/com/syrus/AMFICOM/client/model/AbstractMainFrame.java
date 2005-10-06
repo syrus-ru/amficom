@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.22 2005/10/06 13:16:33 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.23 2005/10/06 14:34:35 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
@@ -50,7 +49,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/06 13:16:33 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -329,14 +328,14 @@ implements PropertyChangeListener {
 										final Exception exception) {
 		JOptionPane.showMessageDialog(component, 
 			exception.getMessage(),
-			LangModelGeneral.getString("Error.ErrorOccur"),
+			I18N.getString("Error.ErrorOccur"),
 			JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void showErrorMessage(final String errorMessage) {
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 			errorMessage,
-			LangModelGeneral.getString("Error.ErrorOccur"),
+			I18N.getString("Error.ErrorOccur"),
 			JOptionPane.ERROR_MESSAGE);
 	}
 	

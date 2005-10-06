@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.8 2005/09/20 12:39:36 bob Exp $
+ * $Id: IconedTreeUI.java,v 1.9 2005/10/06 14:34:35 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.logic.Populatable;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/09/20 12:39:36 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/06 14:34:35 $
  * @module commonclient
  */
 
@@ -76,7 +76,7 @@ public class IconedTreeUI {
 			this.toolBar = new JToolBar(SwingConstants.HORIZONTAL);
 			final JButton refreshButton = new JButton();
 			refreshButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_REFRESH));
-			refreshButton.setToolTipText(LangModelGeneral.getString("Refresh"));
+			refreshButton.setToolTipText(I18N.getString("Common.IconedTree.Refresh"));
 			refreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			refreshButton.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
@@ -93,7 +93,7 @@ public class IconedTreeUI {
 			
 			final JToggleButton	syncButton = new JToggleButton();
 			syncButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_SYNCHRONIZE));
-			syncButton.setToolTipText(LangModelGeneral.getString("Button.Synchronize"));
+			syncButton.setToolTipText(I18N.getString("Common.IconedTree.Synchronize"));
 			syncButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			syncButton.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {

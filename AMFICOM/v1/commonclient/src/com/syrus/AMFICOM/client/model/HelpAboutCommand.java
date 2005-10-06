@@ -1,5 +1,5 @@
 /*-
-* $Id: HelpAboutCommand.java,v 1.10 2005/09/13 13:37:45 bob Exp $
+* $Id: HelpAboutCommand.java,v 1.11 2005/10/06 14:34:35 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,11 +27,11 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 /**
  * 
- * @version $Revision: 1.10 $, $Date: 2005/09/13 13:37:45 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -109,20 +109,20 @@ public class HelpAboutCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		this.updateAboutInfo();
-		JOptionPane.showMessageDialog(this.parent, this.panel, LangModelGeneral.getString("Text.About"), JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.parent, this.panel, I18N.getString("Common.About"), JOptionPane.PLAIN_MESSAGE);
 	}
 
 	private void updateAboutInfo() {
 		final StringBuffer buffer = new StringBuffer("<html><center><br>");
-		buffer.append(LangModelGeneral.getString("Text.About.AMFICOM"));
+		buffer.append(I18N.getString("Common.About.AMFICOM"));
 		buffer.append("<br><br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version"));
+		buffer.append(I18N.getString("Common.About.Version"));
 		buffer.append(' '); 
-		buffer.append(LangModelGeneral.getString("Text.About.Version.Number"));
+		buffer.append(I18N.getString("Common.About.Version.Number"));
 		buffer.append("<br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version.VersionName"));
+		buffer.append(I18N.getString("Common.About.Version.VersionName"));
 		buffer.append("<br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version.Copyright"));
+		buffer.append(I18N.getString("Common.About.Version.Copyright"));
 		buffer.append("</center></html>");
 		this.about.setToolTipText(null);
 		this.about.setText(buffer.toString());
@@ -131,19 +131,19 @@ public class HelpAboutCommand extends AbstractCommand {
 	
 	void updateCodenameInfo() {
 		final StringBuffer buffer = new StringBuffer("<html><center><br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version.Codename.AMFICOM"));
+		buffer.append(I18N.getString("Common.About.Version.Codename.AMFICOM"));
 		buffer.append("<br><br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version"));
+		buffer.append(I18N.getString("Common.About.Version"));
 		buffer.append(' ');		
-		buffer.append(LangModelGeneral.getString("Text.About.Version.Number"));		
+		buffer.append(I18N.getString("Common.About.Version.Number"));		
 		buffer.append(" \u00AB");
-		buffer.append(LangModelGeneral.getString("Text.About.Version.Codename"));
+		buffer.append(I18N.getString("Common.About.Version.Codename"));
 		buffer.append("\u00BB<br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version.VersionName"));
+		buffer.append(I18N.getString("Common.About.Version.VersionName"));
 		buffer.append("<br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version.Copyright"));
+		buffer.append(I18N.getString("Common.About.Version.Copyright"));
 		buffer.append("<br><br>");
-		buffer.append(LangModelGeneral.getString("Text.About.Version.Codename.info").replaceAll("\n", "<br>"));
+		buffer.append(I18N.getString("Common.About.Version.Codename.info").replaceAll("\n", "<br>"));
 		buffer.append("</center><html>");
 		this.about.setToolTipText("\u0431/\u043f");
 		this.about.setText(buffer.toString());

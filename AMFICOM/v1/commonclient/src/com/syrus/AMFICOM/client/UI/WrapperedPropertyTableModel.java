@@ -6,11 +6,11 @@ import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/28 12:27:35 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -72,9 +72,9 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 		String name;
 
 		if (columnIndex == 0) {
-			name = LangModel.getString(KEY_PROPERTY);
+			name = I18N.getString("Common.WrapperedPropertyTable.Key");
 		} else if (columnIndex == 1) {
-			name = LangModel.getString(KEY_VALUE);
+			name = I18N.getString("Common.WrapperedPropertyTable.Value");
 		} else {
 			name = "";
 		}

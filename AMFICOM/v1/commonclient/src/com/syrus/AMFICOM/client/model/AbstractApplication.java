@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.20 2005/10/06 13:17:08 bob Exp $
+ * $Id: AbstractApplication.java,v 1.21 2005/10/06 14:34:35 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,6 @@ import com.syrus.AMFICOM.client.UI.dialogs.ModuleCodeDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
@@ -53,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/06 13:17:08 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -120,35 +119,27 @@ public abstract class AbstractApplication {
 		}
 	}	
 
-	private void initResources() {
-		if (!resourcesInitialized) {
-			synchronized (this) {
-				if (!resourcesInitialized) {
-					this.initTheme();
-					this.initUIConstats();	
-					UIManager.getDefaults().addResourceBundle("com.syrus.AMFICOM.client.resource.swing");
-					I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.general");
-					resourcesInitialized = true;
-				}
-			}
+	private synchronized void initResources() {
+		if (!resourcesInitialized) {			
+			this.initTheme();
+			I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.general");
+			this.initUIConstats();	
+			UIManager.getDefaults().addResourceBundle("com.syrus.AMFICOM.client.resource.swing");					
+			resourcesInitialized = true;
 		}
 	}
 
-	private void initTheme() {
+	private synchronized void initTheme() {
 		if (!themeInitialized) {
-			synchronized (this) {
-				if (!themeInitialized) {
-					JFrame.setDefaultLookAndFeelDecorated(true);
-					JDialog.setDefaultLookAndFeelDecorated(true);
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
 
-					try {
-						UIManager.setLookAndFeel(this.getLookAndFeel());
-					} catch (UnsupportedLookAndFeelException ulfe) {
-						Log.errorException(ulfe);
-					}
-					themeInitialized = true;
-				}
+			try {
+				UIManager.setLookAndFeel(this.getLookAndFeel());
+			} catch (UnsupportedLookAndFeelException ulfe) {
+				Log.errorException(ulfe);
 			}
+			themeInitialized = true;
 		}
 	}
 
@@ -197,11 +188,11 @@ public abstract class AbstractApplication {
 	private void initUIConstats() {
 		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, 
 			new SimpleDateFormat(
-				LangModel.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
+				I18N.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
 
 		UIManager.put(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT, 
 			new SimpleDateFormat(
-				LangModel.getString(
+				I18N.getString(
 					ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT)));
 
 		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, 

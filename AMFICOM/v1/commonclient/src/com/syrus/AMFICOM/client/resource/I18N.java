@@ -1,5 +1,5 @@
 /*-
-* $Id: I18N.java,v 1.1 2005/10/06 13:15:27 bob Exp $
+* $Id: I18N.java,v 1.2 2005/10/06 14:34:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 
 /**
  * Internationalization
- * @version $Revision: 1.1 $, $Date: 2005/10/06 13:15:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -40,7 +40,14 @@ public final class I18N {
 	 * @return i18n string
 	 */
 	public static String getString(final String key) {
-		return UIManager.getString(key);
+		final String string = UIManager.getString(key);
+		assert Log.debugMessage("I18N.getString | key:'" 
+				+ key 
+				+ "', value:'"
+				+ string 
+				+ '\'', 
+			Log.DEBUGLEVEL09);
+		return string;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.7 2005/08/09 17:06:37 arseniy Exp $
+* $Id: LoginRestoreCommand.java,v 1.8 2005/10/06 14:34:35 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client.model;
 
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -22,12 +22,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/09 17:06:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/10/06 14:34:35 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
-public class LoginRestoreCommand extends OpenSessionCommand 
+public final class LoginRestoreCommand extends OpenSessionCommand 
 implements LoginRestorer{
 	
 	public LoginRestoreCommand(Dispatcher dispatcher) {
@@ -47,7 +47,7 @@ implements LoginRestorer{
 
 	@Override
 	protected String getDialogTitle() {
-		return LangModelGeneral.getString("Login.ReLogin");
+		return I18N.getString("Common.Login.ReLogin");
 	}	
 
 	public String getLogin() {

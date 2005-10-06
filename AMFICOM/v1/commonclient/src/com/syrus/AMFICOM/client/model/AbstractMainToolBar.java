@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.13 2005/09/08 09:31:16 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.14 2005/10/06 14:34:35 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/08 09:31:16 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/06 14:34:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -62,21 +62,21 @@ public abstract class AbstractMainToolBar extends JToolBar {
 
 		this.openSessionButton = new JButton();
 		this.openSessionButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
-		this.openSessionButton.setToolTipText(LangModelGeneral.getString("Menu.Session.NewSession"));
+		this.openSessionButton.setToolTipText(I18N.getString(ApplicationModel.MENU_SESSION_NEW));
 		this.openSessionButton.setName(ApplicationModel.MENU_SESSION_NEW);
 		this.openSessionButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));		
 		this.openSessionButton.addActionListener(this.actionListener);
 
 		this.closeSessionButton = new JButton();
 		this.closeSessionButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_CLOSE_SESSION));
-		this.closeSessionButton.setToolTipText(LangModelGeneral.getString("Menu.Session.CloseSession"));
+		this.closeSessionButton.setToolTipText(I18N.getString(ApplicationModel.MENU_SESSION_CLOSE));
 		this.closeSessionButton.setName(ApplicationModel.MENU_SESSION_CLOSE);
 		this.closeSessionButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.closeSessionButton.addActionListener(this.actionListener);
 
 		this.sessionDomainButton = new JButton();
 		this.sessionDomainButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DOMAIN_SELECTION));
-		this.sessionDomainButton.setToolTipText(LangModelGeneral.getString("Menu.Session.SelectDomain"));
+		this.sessionDomainButton.setToolTipText(I18N.getString(ApplicationModel.MENU_SESSION_DOMAIN));
 		this.sessionDomainButton.setName(ApplicationModel.MENU_SESSION_DOMAIN);
 		this.sessionDomainButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.sessionDomainButton.addActionListener(this.actionListener);

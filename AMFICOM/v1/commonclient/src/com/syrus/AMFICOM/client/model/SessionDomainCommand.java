@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -48,8 +47,8 @@ public class SessionDomainCommand extends AbstractCommand {
 			availableDomains = LoginManager.getAvailableDomains();
 			if (availableDomains == null || availableDomains.isEmpty()) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						LangModelGeneral.getString("Error.NoDomains"),
-						LangModelGeneral.getString("Error.ErrorOccur"),
+						I18N.getString("Error.NoDomains"),
+						I18N.getString("Error.ErrorOccur"),
 						JOptionPane.ERROR_MESSAGE,
 						null);
 				return;
@@ -59,8 +58,8 @@ public class SessionDomainCommand extends AbstractCommand {
 					StatusMessageEvent.STATUS_MESSAGE,
 					I18N.getString("Common.StatusBar.NoSession")));
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					LangModelGeneral.getString("Error.ServerConnection"),
-					LangModelGeneral.getString("Error.ErrorOccur"),
+					I18N.getString("Error.ServerConnection"),
+					I18N.getString("Error.ErrorOccur"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;
@@ -69,8 +68,8 @@ public class SessionDomainCommand extends AbstractCommand {
 					StatusMessageEvent.STATUS_MESSAGE,
 					I18N.getString("Common.StatusBar.NoSession")));
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					LangModelGeneral.getString("Error.WrongLogin"),
-					LangModelGeneral.getString("Error.ErrorOccur"),
+					I18N.getString("Error.WrongLogin"),
+					I18N.getString("Error.ErrorOccur"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return;
@@ -91,8 +90,8 @@ public class SessionDomainCommand extends AbstractCommand {
 					objComboBox.setSelectedItem(StorableObjectPool.getStorableObject(domainId, true));
 				} catch (ApplicationException e) {
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-							LangModelGeneral.getString("Error.ServerConnection"),
-							LangModelGeneral.getString("Error.ErrorOccur"),
+							I18N.getString("Error.ServerConnection"),
+							I18N.getString("Error.ErrorOccur"),
 							JOptionPane.ERROR_MESSAGE,
 							null);
 				}
@@ -101,12 +100,13 @@ public class SessionDomainCommand extends AbstractCommand {
 
 		final int result1 = JOptionPane.showOptionDialog(Environment.getActiveWindow(),
 				objComboBox,
-				LangModelGeneral.getString("SelectDomain.Title"),
+				I18N.getString("Common.SelectDomain.Title"),
 				JOptionPane.OK_CANCEL_OPTION,
 				JOptionPane.PLAIN_MESSAGE,
 				null,
-				new Object[] { LangModelGeneral.getString("Button.Select"), LangModelGeneral.getString("Button.Cancel") },
-				LangModelGeneral.getString("Button.Select"));
+				new Object[] { I18N.getString("Common.Button.Select"),
+						I18N.getString("Common.Button.Cancel") },
+				I18N.getString("Common.Button.Select"));
 		if (result1 == JOptionPane.OK_OPTION) {
 			final Domain selectedDomain = (Domain) objComboBox.getSelectedItem();
 			if (selectedDomain != null) {
@@ -122,8 +122,8 @@ public class SessionDomainCommand extends AbstractCommand {
 							StatusMessageEvent.STATUS_MESSAGE,
 							I18N.getString("Common.StatusBar.ConnectionError")));
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-							LangModelGeneral.getString("Error.ServerConnection"),
-							LangModelGeneral.getString("Error.ErrorOccur"),
+							I18N.getString("Error.ServerConnection"),
+							I18N.getString("Error.ErrorOccur"),
 							JOptionPane.ERROR_MESSAGE,
 							null);
 					return;
