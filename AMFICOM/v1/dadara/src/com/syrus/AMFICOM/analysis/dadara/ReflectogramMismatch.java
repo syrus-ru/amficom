@@ -6,7 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.syrus.AMFICOM.analysis.SOAnchor;
+import com.syrus.AMFICOM.analysis.SOAnchorImpl;
 import com.syrus.io.DataFormatException;
 import com.syrus.io.SignatureMismatchException;
 
@@ -61,7 +61,7 @@ import com.syrus.io.SignatureMismatchException;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/06 14:32:34 $
  * @module dadara
  */
 public class ReflectogramMismatch {
@@ -87,9 +87,9 @@ public class ReflectogramMismatch {
 	private double deltaX = 0.0;
 
 	// информация о (максимум двух) ближайших привязанных объектах
-	private SOAnchor ref1Id = null; // null, если привязка #1 не определена
+	private SOAnchorImpl ref1Id = null; // null, если привязка #1 не определена
 	private int ref1Coord = 0; // оптическая дистанция обьъекта #1, не определено, если ref1Id == null
-	private SOAnchor ref2Id = null; // null, если привязка #2 не определена
+	private SOAnchorImpl ref2Id = null; // null, если привязка #2 не определена
 	private int ref2Coord = 0; // оптическая дистанция обьъекта #2, не определено, если ref2Id == null
 
 	// оценка степени превышения предупр. порога по сравнению с тревожным
@@ -161,8 +161,8 @@ public class ReflectogramMismatch {
 	public double getDistance() {
 		return getDeltaX() * getCoord();
 	}
-	public void setAnchors(SOAnchor anchor1, int coord1,
-			SOAnchor anchor2, int coord2) {
+	public void setAnchors(SOAnchorImpl anchor1, int coord1,
+			SOAnchorImpl anchor2, int coord2) {
 		if (anchor1 == null || anchor2 == null) {
 			throw new IllegalArgumentException("null anchor in setAnchor");
 		}
@@ -180,13 +180,13 @@ public class ReflectogramMismatch {
 	public boolean hasAnchors() {
 		return this.ref1Id != null && this.ref2Id != null;
 	}
-	public SOAnchor getAnchor1Id() {
+	public SOAnchorImpl getAnchor1Id() {
 		if (! hasAnchors()) {
 			throw new IllegalStateException();
 		}
 		return this.ref1Id;
 	}
-	public SOAnchor getAnchor2Id() {
+	public SOAnchorImpl getAnchor2Id() {
 		if (! hasAnchors()) {
 			throw new IllegalStateException();
 		}
@@ -232,8 +232,8 @@ public class ReflectogramMismatch {
 			ret.maxMismatch = 0.0;
 		}
 		if(dis.readBoolean()) {
-			ret.ref1Id = SOAnchor.createFromDIS(dis);
-			ret.ref2Id = SOAnchor.createFromDIS(dis);
+			ret.ref1Id = SOAnchorImpl.createFromDIS(dis);
+			ret.ref2Id = SOAnchorImpl.createFromDIS(dis);
 			ret.ref1Coord = dis.readInt();
 			ret.ref2Coord = dis.readInt();
 		} else {

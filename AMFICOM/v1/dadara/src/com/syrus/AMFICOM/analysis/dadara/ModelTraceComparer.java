@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.32 2005/09/14 11:37:17 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.33 2005/10/06 14:32:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
-import com.syrus.AMFICOM.analysis.SOAnchor;
+import com.syrus.AMFICOM.analysis.SOAnchorImpl;
 import com.syrus.util.Log;
 
 /**
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.32 $, $Date: 2005/09/14 11:37:17 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/06 14:32:34 $
  * @module
  */
 public class ModelTraceComparer
@@ -361,8 +361,8 @@ public class ModelTraceComparer
 	 */
 	public static void setAlarmAnchors(ReflectogramMismatch ra, Etalon et) {
 		int distance = ra.getCoord();
-		SOAnchor ref1Id = null; // устанавливаем в "пока не найдено"
-		SOAnchor ref2Id = null;
+		SOAnchorImpl ref1Id = null; // устанавливаем в "пока не найдено"
+		SOAnchorImpl ref2Id = null;
 		int ref1Coord = 0; // это делать не обязательно
 		int ref2Coord = 0;
 		ModelTraceAndEvents mtae = et.getMTM().getMTAE();
@@ -370,7 +370,7 @@ public class ModelTraceComparer
 		int len = mtae.getNEvents();
 		if (anc != null) {
 			for (int i = 0; i < len; i++) {
-				SOAnchor ea = anc.getEventAnchor(i);
+				SOAnchorImpl ea = anc.getEventAnchor(i);
 				SimpleReflectogramEvent se = mtae.getSimpleEvent(i);
 	
 				// пропускаем события, по которым не может быть привязки
@@ -389,7 +389,7 @@ public class ModelTraceComparer
 	
 				// пропускаем события, для которых привязка не определена
 	
-				if (ea == SOAnchor.VOID_ANCHOR)
+				if (ea == SOAnchorImpl.VOID_ANCHOR)
 					continue;
 	
 				// итак, это событие может быть использовано для привязки

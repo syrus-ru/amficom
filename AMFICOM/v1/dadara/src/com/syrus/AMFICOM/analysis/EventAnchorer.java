@@ -1,5 +1,5 @@
 /*-
- * $Id: EventAnchorer.java,v 1.6 2005/10/06 13:34:02 saa Exp $
+ * $Id: EventAnchorer.java,v 1.7 2005/10/06 14:32:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,20 +21,20 @@ public class EventAnchorer implements DataStreamable {
 	// DIS reader singleton object
 	private static DataStreamable.Reader dsReader = null;
 
-	private SOAnchor[] anchorArray;
+	private SOAnchorImpl[] anchorArray;
 
 	public EventAnchorer(int len) {
-		this.anchorArray = new SOAnchor[len];
+		this.anchorArray = new SOAnchorImpl[len];
 		for (int i = 0; i < this.anchorArray.length; i++) {
-			this.anchorArray[i] = SOAnchor.VOID_ANCHOR;
+			this.anchorArray[i] = SOAnchorImpl.VOID_ANCHOR;
 		}
 	}
 
-	public SOAnchor getEventAnchor(int nEvent) {
+	public SOAnchorImpl getEventAnchor(int nEvent) {
 		return this.anchorArray[nEvent];
 	}
 
-	public void setEventAnchor(int nEvent, SOAnchor anchor) {
+	public void setEventAnchor(int nEvent, SOAnchorImpl anchor) {
 		this.anchorArray[nEvent] = anchor;
 	}
 
@@ -65,9 +65,10 @@ public class EventAnchorer implements DataStreamable {
 			throw new SignatureMismatchException();
 		}
 		int len = dis.readInt();
+		// FIXME
 		SOAnchor[] anchors = new SOAnchor[len];
 		for (int i = 0; i < anchors.length; i++) {
-			anchors[i] = SOAnchor.createFromDIS(dis);
+			anchors[i] = SOAnchorImpl.createFromDIS(dis);
 		}
 	}
 }
