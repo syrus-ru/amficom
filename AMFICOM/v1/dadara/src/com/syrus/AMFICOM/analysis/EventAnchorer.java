@@ -1,5 +1,5 @@
 /*-
- * $Id: EventAnchorer.java,v 1.7 2005/10/06 14:32:34 saa Exp $
+ * $Id: EventAnchorer.java,v 1.8 2005/10/06 14:57:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,10 +65,10 @@ public class EventAnchorer implements DataStreamable {
 			throw new SignatureMismatchException();
 		}
 		int len = dis.readInt();
-		// FIXME
-		SOAnchor[] anchors = new SOAnchor[len];
+		SOAnchorImpl[] anchors = new SOAnchorImpl[len];
 		for (int i = 0; i < anchors.length; i++) {
 			anchors[i] = SOAnchorImpl.createFromDIS(dis);
 		}
+		this.anchorArray = anchors;
 	}
 }
