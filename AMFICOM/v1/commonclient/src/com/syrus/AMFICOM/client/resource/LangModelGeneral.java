@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelGeneral.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: LangModelGeneral.java,v 1.5 2005/10/06 13:15:08 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:15:08 $
  * @module commonclient
+ * 
+ * @deprecated use {@link com.syrus.AMFICOM.client.resource.I18N}
  */
-
+@Deprecated
 public class LangModelGeneral {
 	private static final String BUNDLE_NAME			= "com.syrus.AMFICOM.client.resource.general";
 
@@ -26,6 +28,10 @@ public class LangModelGeneral {
 		//nothing
 	}
 
+	/**
+	 * @deprecated use {@link com.syrus.AMFICOM.client.resource.I18N}
+	 */
+	@Deprecated
 	public static String getString(String keyName) {
 		keyName = keyName.replaceAll(" ", "_");
 		String string;

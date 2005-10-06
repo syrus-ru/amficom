@@ -5,11 +5,13 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:15:08 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
+ * @deprecated use {@link com.syrus.AMFICOM.client.resource.I18N}
  */
+@Deprecated
 public class LangModel {
 
 	private static final String			BUNDLE_NAME		= "com.syrus.AMFICOM.client.resource.generalclient";
@@ -21,6 +23,10 @@ public class LangModel {
 		assert false;
 	}
 
+	/**
+	 * @deprecated use {@link com.syrus.AMFICOM.client.resource.I18N}
+	 */
+	@Deprecated
 	public static String getString(String keyName) {
 		String keyName1 = keyName.replaceAll(" ", "_");
 		String string;
