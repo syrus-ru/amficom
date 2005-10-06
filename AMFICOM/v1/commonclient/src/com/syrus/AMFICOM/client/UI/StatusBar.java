@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.8 2005/09/09 18:54:27 arseniy Exp $
+ * $Id: StatusBar.java,v 1.9 2005/10/06 13:16:51 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/09 18:54:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/10/06 13:16:51 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -234,7 +234,7 @@ public class StatusBar implements PropertyChangeListener {
 // private void addStatusBarField(final String fieldId) {
 //
 //		JProgressBar progressBar = new JProgressBar();
-//		progressBar.setString(LangModelGeneral.getString("StatusBar.PleaseWait"));
+//		progressBar.setString(I18N.getString("Common.StatusBar.PleaseWait"));
 //		progressBar.setIndeterminate(true);
 //		progressBar.setStringPainted(true);
 //

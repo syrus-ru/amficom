@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.21 2005/09/28 10:09:00 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.22 2005/10/06 13:16:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.client.UI.StatusBar;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/28 10:09:00 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/06 13:16:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -148,7 +149,7 @@ implements PropertyChangeListener {
 			if (cce.isSessionOpened()) {
 				this.setSessionOpened();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
 
 				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 				final Identifier userId = LoginManager.getUserId();
@@ -167,29 +168,29 @@ implements PropertyChangeListener {
 			if (cce.isSessionClosed()) {
 				this.setSessionClosed();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
-				this.statusBar.setText(StatusBar.FIELD_SESSION, LangModelGeneral.getString("StatusBar.NoSession"));
-				this.statusBar.setText(StatusBar.FIELD_USER, LangModelGeneral.getString("StatusBar.NoUser"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
+				this.statusBar.setText(StatusBar.FIELD_SESSION, I18N.getString("Common.StatusBar.NoSession"));
+				this.statusBar.setText(StatusBar.FIELD_USER, I18N.getString("Common.StatusBar.NoUser"));
 			}
 			if (cce.isConnectionOpened()) {
 				this.setConnectionOpened();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
 				final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 				this.statusBar.setText(StatusBar.FIELD_SERVER, clientSessionEnvironment.getServerName());
 			}
 			if (cce.isConnectionClosed()) {
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.ConnectionError"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Disconnected"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.NoConnection"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Disconnected"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.NoConnection"));
 
 				this.setConnectionClosed();
 			}
 			if (cce.isConnectionFailed()) {
-				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.ConnectionError"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
 
 				this.setConnectionFailed();
 			}
@@ -288,7 +289,7 @@ implements PropertyChangeListener {
 		aModel.fireModelChanged();
 
 		this.statusBar.setText(StatusBar.FIELD_DOMAIN, 
-				LangModelGeneral.getString("StatusBar.NoDomain"));
+				I18N.getString("Common.StatusBar.NoDomain"));
 	}
 
 	public void setSessionOpened() {
@@ -362,15 +363,15 @@ implements PropertyChangeListener {
 		this.statusBar.setWidth(StatusBar.FIELD_TIME, 50);
 
 		this.statusBar.setText(StatusBar.FIELD_STATUS, 
-				LangModelGeneral.getString("StatusBar.Ready"));
+				I18N.getString("Common.StatusBar.Ready"));
 		this.statusBar.setText(StatusBar.FIELD_SERVER, 
-				LangModelGeneral.getString("StatusBar.NoConnection"));
+				I18N.getString("Common.StatusBar.NoConnection"));
 		this.statusBar.setText(StatusBar.FIELD_SESSION, 
-				LangModelGeneral.getString("StatusBar.NoSession"));
+				I18N.getString("Common.StatusBar.NoSession"));
 		this.statusBar.setText(StatusBar.FIELD_USER, 
-				LangModelGeneral.getString("StatusBar.NoUser"));
+				I18N.getString("Common.StatusBar.NoUser"));
 		this.statusBar.setText(StatusBar.FIELD_DOMAIN, 
-				LangModelGeneral.getString("StatusBar.NoDomain"));
+				I18N.getString("Common.StatusBar.NoDomain"));
 		this.statusBar.setText(StatusBar.FIELD_TIME, " ");
 
 		this.aContext.setDispatcher(this.dispatcher);

@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.56 2005/09/30 12:40:33 bob Exp $
+ * $Id: PlanPanel.java,v 1.57 2005/10/06 13:18:02 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,13 +39,12 @@ import javax.swing.JScrollPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -55,7 +54,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/09/30 12:40:33 $
+ * @version $Revision: 1.57 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -91,12 +90,12 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		}
 	}
 	static final String[]	SCALES				= new String[] {
-			"Text.Plan.Toolbar.Scope.10Minutes", 
-			"Text.Plan.Toolbar.Scope.1Hour", 
-			"Text.Plan.Toolbar.Scope.6Hours", 
-			"Text.Plan.Toolbar.Scope.1Day", 
-			"Text.Plan.Toolbar.Scope.1Week", 
-			"Text.Plan.Toolbar.Scope.1Month"};
+			"Scheduler.Text.Plan.Toolbar.Scope.10Minutes", 
+			"Scheduler.Text.Plan.Toolbar.Scope.1Hour", 
+			"Scheduler.Text.Plan.Toolbar.Scope.6Hours", 
+			"Scheduler.Text.Plan.Toolbar.Scope.1Day", 
+			"Scheduler.Text.Plan.Toolbar.Scope.1Week", 
+			"Scheduler.Text.Plan.Toolbar.Scope.1Month"};
 
 	private static final  String[] SCALE_PATTERNS = new String[] {"HH:mm:ss", 
 			"HH:mm", 
@@ -393,7 +392,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			updateTestLines();
 		} catch (final ApplicationException e) {
 			e.printStackTrace();
-			AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotRefreshTests"));
+			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotRefreshTests"));
 		}
 
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -690,8 +689,8 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		} catch (final ApplicationException e) {
 			
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModelGeneral.getString("Error.CannotAcquireObject"),
-				LangModelGeneral.getString("Error"),
+				I18N.getString("Error.CannotAcquireObject"),
+				I18N.getString("Error"),
 				JOptionPane.OK_OPTION);
 			return;
 		}

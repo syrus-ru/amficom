@@ -30,13 +30,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -211,10 +210,10 @@ final class TestLine extends TimeLine {
 								TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
 								TestLine.this.skip = false;
 							}
-						}, LangModelGeneral.getString("Message.Information.PlsWait"));
+						}, I18N.getString("Message.Information.PlsWait"));
 					} catch (final ApplicationException e) {
 						AbstractMainFrame.showErrorMessage(
-							LangModelSchedule.getString("Error.CannotSelectTest"));
+							I18N.getString("Scheduler.Error.CannotSelectTest"));
 						return false;
 					}
 					
@@ -473,7 +472,7 @@ final class TestLine extends TimeLine {
 								continue;
 							}
 						} catch (final ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+							AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 						}
 						
 						testTimeItem.x += dx;
@@ -666,7 +665,7 @@ final class TestLine extends TimeLine {
 //				}
 			}
 		} catch (final ApplicationException e) {
-			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+			AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 		}
 
 		this.updateScale();
@@ -755,7 +754,7 @@ final class TestLine extends TimeLine {
 					}
 				}
 			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
 		}
 		super.repaint();
@@ -798,7 +797,7 @@ final class TestLine extends TimeLine {
 							+ testTimeItem.testTimeLine.title
 							+ "</html>";
 				} catch (ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+					AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				}
 			}
 		}

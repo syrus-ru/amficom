@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.48 2005/09/23 08:42:11 bob Exp $
+ * $Id: TableFrame.java,v 1.49 2005/10/06 13:18:02 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.JTableHeader;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
@@ -44,7 +43,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -55,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/09/23 08:42:11 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -113,7 +112,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					}
 				}
 			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				return;
 			}
 		}
@@ -185,7 +184,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 								final WrapperedTableModel<Test> model = TableFrame.this.listTable.getModel();
 								TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, model.getObject(selectedRow));
 							}
-						}, LangModelGeneral.getString("Message.Information.PlsWait"));
+						}, I18N.getString("Message.Information.PlsWait"));
 					} else {
 						TableFrame.this.schedulerModel.unselectTests(TableFrame.this);
 					}
@@ -250,9 +249,9 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 //						enableDeleting = enableStopping = enableResuming = true;
 
 						if (enableDeleting) {
-							final JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString(rowIndices.length == 1
-									? "Text.Table.DeleteTest"
-										: "Text.Table.DeleteTests"));
+							final JMenuItem deleteTestMenuItem = new JMenuItem(I18N.getString(rowIndices.length == 1
+							? "Text.Table.DeleteTest"
+								: "Text.Table.DeleteTests"));
 							if (TableFrame.this.deleteIcon != null) {
 								deleteTestMenuItem.setIcon(TableFrame.this.deleteIcon);
 							}
@@ -261,8 +260,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 								public void actionPerformed(final ActionEvent e) {
 									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-											LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmMessage"),
-											LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmTitle"),
+											I18N.getString("Scheduler.Text.Table.DeleteTest.ConfirmMessage"),
+											I18N.getString("Scheduler.Text.Table.DeleteTest.ConfirmTitle"),
 											JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {										
 										for (int i = 0; i < rowIndices.length; i++) {
@@ -270,7 +269,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 											try {
 												TableFrame.this.schedulerModel.removeTest(test);
 											} catch (final ApplicationException e1) {
-												AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotRemoveTest") 
+												AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotRemoveTest") 
 													+ " " 
 													+ test.getDescription());
 												return;
@@ -289,7 +288,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 						}
 						
 						if (enableResuming) {
-							final JMenuItem resumeTestingMenuItem = new JMenuItem(LangModelSchedule.getString("Text.Table.ResumeTesting"));
+							final JMenuItem resumeTestingMenuItem = new JMenuItem(I18N.getString("Scheduler.Text.Table.ResumeTesting"));
 							if (TableFrame.this.resumeIcon != null) {
 								resumeTestingMenuItem.setIcon(TableFrame.this.resumeIcon);
 							}
@@ -312,7 +311,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 						}
 
 						if (enableStopping) {
-							final JMenuItem stopTestMenuItem = new JMenuItem(LangModelSchedule.getString("Text.Table.StopTesting"));
+							final JMenuItem stopTestMenuItem = new JMenuItem(I18N.getString("Scheduler.Text.Table.StopTesting"));
 							if (TableFrame.this.pauseIcon != null) {
 								stopTestMenuItem.setIcon(TableFrame.this.pauseIcon);
 							}
@@ -320,8 +319,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 								public void actionPerformed(final ActionEvent e) {
 									final Object reason = JOptionPane.showInputDialog(Environment.getActiveWindow(),
-											LangModelSchedule.getString("Text.Table.StopTesting.StoppingReason"),
-											LangModelSchedule.getString("Text.Table.StopTesting.Title"),
+											I18N.getString("Scheduler.Text.Table.StopTesting.StoppingReason"),
+											I18N.getString("Scheduler.Text.Table.StopTesting.Title"),
 											JOptionPane.PLAIN_MESSAGE,
 											null,
 											null,
@@ -373,7 +372,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	}
 	
 	private void init() {
-		super.setTitle(LangModelSchedule.getString("Text.Table.Title")); //$NON-NLS-1$
+		super.setTitle(I18N.getString("Scheduler.Text.Table.Title")); //$NON-NLS-1$
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		super.setResizable(true);
 		super.setClosable(false);

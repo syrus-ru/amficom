@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.19 2005/10/04 10:55:52 bob Exp $
+ * $Id: AbstractApplication.java,v 1.20 2005/10/06 13:17:08 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.client.UI.AMFICOMMetalTheme;
 import com.syrus.AMFICOM.client.UI.dialogs.ModuleCodeDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.LangModel;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
@@ -53,7 +53,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/04 10:55:52 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/06 13:17:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -85,18 +85,23 @@ public abstract class AbstractApplication {
 	private static boolean			resourcesInitialized		= false;
 	private static boolean			themeInitialized			= false;
 
-	public AbstractApplication(String applicationName, String applicationCode) {
-		Application.init(applicationName);
+	
+	public AbstractApplication(final String applicationName, 
+	                           final String applicationCode) {
+		this(applicationName);
 		this.setApplicationCode(applicationCode);
 	}
 
-	public AbstractApplication(String applicationName) {
-		Application.init(applicationName);
+	public AbstractApplication(final String applicationName) {
+		Application.init(applicationName);		
+		
+		I18N.addResourceBundle(ApplicationProperties.getString(I18N.RESOURCE_BUNDLE_KEY, null));
+		
 		this.setApplicationCode(
 			ApplicationProperties.getString(KEY_MODULE_CODE, null));
 	}
 	
-	private void setApplicationCode(String applicationCode) {
+	private void setApplicationCode(final String applicationCode) {
 		this.applicationCode = applicationCode;
 		this.initTheme();
 		if (this.isLaunchable()) {
@@ -120,7 +125,9 @@ public abstract class AbstractApplication {
 			synchronized (this) {
 				if (!resourcesInitialized) {
 					this.initTheme();
-					this.initUIConstats();
+					this.initUIConstats();	
+					UIManager.getDefaults().addResourceBundle("com.syrus.AMFICOM.client.resource.swing");
+					I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.general");
 					resourcesInitialized = true;
 				}
 			}
@@ -380,12 +387,12 @@ public abstract class AbstractApplication {
 			} catch (final CommunicationException ce) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_SERVER,
-						LangModelGeneral.getString("StatusBar.ConnectionError")));				
+						I18N.getString("Common.StatusBar.ConnectionError")));				
 				throw ce;				
 			} catch (final IllegalDataException ide) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_SERVER,
-						LangModelGeneral.getString("StatusBar.IllegalSessionKind")));
+						I18N.getString("Common.StatusBar.IllegalSessionKind")));
 				
 				throw ide;
 			}
@@ -403,7 +410,7 @@ public abstract class AbstractApplication {
 					} else {
 						AbstractApplication.this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
 							StatusMessageEvent.STATUS_SERVER,
-							LangModelGeneral.getString("StatusBar.ConnectionError")));
+							I18N.getString("Common.StatusBar.ConnectionError")));
 					}
 
 				}
@@ -424,7 +431,7 @@ public abstract class AbstractApplication {
 		}
 
 		ModuleCodeDialog sDialog = new ModuleCodeDialog(this.applicationCode, 
-				LangModelGeneral.getString(
+				I18N.getString(
 					ApplicationProperties.getString(KEY_MODULE_TITLE, "")));
 
 		return sDialog.getResult() == JOptionPane.OK_OPTION;

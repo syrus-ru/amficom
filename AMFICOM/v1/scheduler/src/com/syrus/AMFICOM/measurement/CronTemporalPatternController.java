@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternController.java,v 1.3 2005/05/19 14:32:22 bob Exp $
+ * $Id: CronTemporalPatternController.java,v 1.4 2005/10/06 13:18:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,11 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/19 14:32:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @module module
  */
@@ -60,7 +60,7 @@ public class CronTemporalPatternController implements Wrapper {
 	public String getName(String key) {
 		String name = null;
 		if (key.equals(KEY_NAME))
-			name = LangModelSchedule.getString("Name"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Name"); //$NON-NLS-1$
 		return name;
 	}
 

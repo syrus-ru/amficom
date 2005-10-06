@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.16 2005/09/18 13:11:45 bass Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.17 2005/10/06 13:18:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.Set;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/18 13:11:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/10/06 13:18:02 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -123,7 +123,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 			}
 		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(
-				LangModelSchedule.getString("Error.CannotCreateTreeItems"));
+				I18N.getString("Scheduler.Error.CannotCreateTreeItems"));
 			return;
 		}		
 	}

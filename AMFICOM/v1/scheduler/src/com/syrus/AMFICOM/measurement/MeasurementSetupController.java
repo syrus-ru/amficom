@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupController.java,v 1.6 2005/09/06 07:46:42 bob Exp $
+ * $Id: MeasurementSetupController.java,v 1.7 2005/10/06 13:18:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,11 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/06 07:46:42 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @module module
  */
@@ -60,7 +60,7 @@ public class MeasurementSetupController implements Wrapper {
 	public String getName(String key) {
 		String name = null;
 		if (key.equals(KEY_NAME))
-			name = LangModelSchedule.getString("Name"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Name"); //$NON-NLS-1$
 		return name;
 	}
 

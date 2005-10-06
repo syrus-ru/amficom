@@ -13,13 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -57,7 +56,7 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel panel = new JPanel(new GridLayout(0, 2));
-		JLabel titleLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel titleLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(titleLabel);
 		panel.add(this.nameTextField);
 		this.nameTextField.setEditable(true);
@@ -69,7 +68,7 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 				try {
 					selectedTest = TestRequestPanel.this.schedulerModel.getSelectedTest();
 				} catch (final ApplicationException e1) {
-					AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+					AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 					return; 
 				}
 				if (selectedTest != null && selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
@@ -80,15 +79,15 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 				}
 			}
 		});
-		JLabel ownerLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel ownerLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(ownerLabel);
 		panel.add(this.ownerTextField);
 
-		JLabel typeLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.MeasurementType") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel typeLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.MeasurementType") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(typeLabel);
 		panel.add(this.typeTextField);
 
-		JLabel objectLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel objectLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(objectLabel);
 		panel.add(this.portTextField);
 		this.add(panel);
@@ -103,7 +102,7 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 			try {
 				this.setTest(this.schedulerModel.getSelectedTest());
 			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				return;
 			}
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_NAME)) {

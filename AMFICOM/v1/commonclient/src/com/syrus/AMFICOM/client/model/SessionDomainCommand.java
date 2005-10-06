@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -56,7 +57,7 @@ public class SessionDomainCommand extends AbstractCommand {
 		} catch (CommunicationException e) {
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelGeneral.getString("StatusBar.NoSession")));
+					I18N.getString("Common.StatusBar.NoSession")));
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelGeneral.getString("Error.ServerConnection"),
 					LangModelGeneral.getString("Error.ErrorOccur"),
@@ -66,7 +67,7 @@ public class SessionDomainCommand extends AbstractCommand {
 		} catch (LoginException e) {
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelGeneral.getString("StatusBar.NoSession")));
+					I18N.getString("Common.StatusBar.NoSession")));
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelGeneral.getString("Error.WrongLogin"),
 					LangModelGeneral.getString("Error.ErrorOccur"),
@@ -77,7 +78,7 @@ public class SessionDomainCommand extends AbstractCommand {
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelGeneral.getString("StatusBar.DomainSelection")));
+				I18N.getString("Common.StatusBar.DomainSelection")));
 
 		final WrapperedComboBox objComboBox = new WrapperedComboBox<Domain>(DomainWrapper.getInstance(),
 				new ArrayList<Domain>(availableDomains),
@@ -114,12 +115,12 @@ public class SessionDomainCommand extends AbstractCommand {
 					LoginManager.selectDomain(domainId);
 					this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("StatusBar.NewDomainSelected")));
+							I18N.getString("Common.StatusBar.NewDomainSelected")));
 					this.dispatcher.firePropertyChange(new ContextChangeEvent(domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 				} catch (CommunicationException e) {
 					this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("StatusBar.ConnectionError")));
+							I18N.getString("Common.StatusBar.ConnectionError")));
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 							LangModelGeneral.getString("Error.ServerConnection"),
 							LangModelGeneral.getString("Error.ErrorOccur"),
@@ -131,7 +132,7 @@ public class SessionDomainCommand extends AbstractCommand {
 		} else {
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelGeneral.getString("StatusBar.Aborted")));
+					I18N.getString("Common.StatusBar.Aborted")));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.116 2005/10/05 09:44:10 bob Exp $
+ * $Id: SchedulerModel.java,v 1.117 2005/10/06 13:18:02 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,12 +31,11 @@ import java.util.logging.Level;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -71,7 +70,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/10/05 09:44:10 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -273,7 +272,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					this.testIds.removeAll(testIdsToRemove);
 					StorableObjectPool.delete(testIdsToRemove);
 				} catch (final ApplicationException e) {
-					throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+					throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 				}
 		} else {
 			Identifier testId = test.getId();
@@ -383,7 +382,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public void updateTests(final long startTime, final long endTime) throws ApplicationException {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelSchedule.getString("StatusMessage.UpdatingTests"))); //$NON-NLS-1$
+				I18N.getString("Scheduler.StatusMessage.UpdatingTests"))); //$NON-NLS-1$
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
@@ -438,12 +437,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.testIds.clear();
 			this.testIds.addAll(Identifier.createIdentifiers(StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true)));
 		} catch (final ApplicationException e) {
-			throw new ApplicationException(LangModelSchedule.getString("Error.CannotRefreshTests"));
+			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"));
 		}
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelSchedule.getString("StatusMessage.TestsUpdated"))); //$NON-NLS-1$
+				I18N.getString("Scheduler.StatusMessage.TestsUpdated"))); //$NON-NLS-1$
 		this.refreshTests();
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
@@ -468,7 +467,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					? (Test) StorableObjectPool.getStorableObject(this.selectedFirstTestId, true)
 						: null;
 		} catch (final ApplicationException e) {
-			throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+			throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 		}
 	}
 
@@ -611,7 +610,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				}
 				return measurementSetups;
 			} catch (final ApplicationException e) {
-				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 			}				
 		}
 
@@ -659,7 +658,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				boolean canBeApplied = this.isValid(test, measurementSetup);
 				if (!canBeApplied) {
 					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_MEASUREMENT_SETUP, null, null));
-					throw new IllegalDataException(LangModelSchedule.getString("Error.CannotApplyMeasurementSetup"));
+					throw new IllegalDataException(I18N.getString("Scheduler.Error.CannotApplyMeasurementSetup"));
 				}
 			}
 		}							
@@ -704,7 +703,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 								this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
 								measurementSetupIds);						
 					} catch (final CreateObjectException e) {
-						throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
+						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
 					}
 
 					if (this.groupTest) {
@@ -722,9 +721,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					}
 					this.testIds.add(test.getId());
 				} else {
-					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest") 
+					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") 
 						+ ':'
-						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
+						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest"));
 				} 
 				
 			} else {
@@ -747,8 +746,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 							this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
 							test.getNumberOfMeasurements());
 				} else {
-					throw new ApplicationException(LangModelSchedule.getString("Error.CannotUpdateTest") + ':'
-						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
+					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotUpdateTest") + ':'
+						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest"));
 				}
 			}
 
@@ -780,7 +779,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			try {
 				tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 			} catch (final ApplicationException e) {
-				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 			}
 
 			Date firstStartDate = null;
@@ -811,7 +810,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			try {
 				selectedTests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 			} catch (final ApplicationException e) {
-				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 			}
 
 			boolean correct = true;
@@ -819,7 +818,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				if (selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 					correct = this.isValid(selectedTest, offset);
 					if (!correct) {
-						throw new ApplicationException(LangModelSchedule.getString("Error.CannotMoveTests"));
+						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotMoveTests"));
 					}
 					
 				}
@@ -867,7 +866,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			try {
 				testGroup = (Test) StorableObjectPool.getStorableObject(testGroupId, true);
 			} catch (final ApplicationException e) {
-				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 			}
 			if (this.aloneGroupTest) {					
 //				if (this.isValid(this.startGroupDate, null, testGroup.getMonitoredElement().getId())) {
@@ -892,11 +891,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						}
 						this.selectedTestIds.add(test.getId());
 					} catch (final CreateObjectException coe) {
-						throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
+						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
 					}
 				} else {
-					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest") + ':'
-						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
+					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") + ':'
+						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest"));
 				}
 			}
 			
@@ -917,7 +916,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 				selectedTests.addAll(tests);
 			} catch (final ApplicationException e) {
-				throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 			}
 			final Test firstTest = selectedTests.first();
 			final Test lastTest = selectedTests.last();
@@ -946,8 +945,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 //				correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
 				correct = (this.isValid(this.monitoredElement.getId(), startDate, endDate, selectedTest.getTemporalPatternId(), this.measurementSetup)); 
 				if (!correct) {
-					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest") + ':'
-						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
+					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") + ':'
+						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest"));
 				}
 			}
 
@@ -982,7 +981,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()
 								+ " at " + startDate + "," + endDate, Level.FINEST);
 					} catch (final CreateObjectException e) {
-						throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
+						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
 					}
 				}
 			}
@@ -1052,7 +1051,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				}
 			}
 		} catch (final ApplicationException e) {
-			throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+			throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 		}
 		Log.debugMessage("SchedulerModel.isValid0 | return " + result, Log.DEBUGLEVEL10);
 		return result;
@@ -1299,19 +1298,19 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public static String getStatusName(final TestStatus testStatus) {
 		switch(testStatus.value()) {
 		case TestStatus._TEST_STATUS_ABORTED: 
-			return LangModelSchedule.getString("Text.Test.Status.Aborted");
+			return I18N.getString("Scheduler.Text.Test.Status.Aborted");
 		case TestStatus._TEST_STATUS_COMPLETED: 
-			return LangModelSchedule.getString("Text.Test.Status.Completed");
+			return I18N.getString("Scheduler.Text.Test.Status.Completed");
 		case TestStatus._TEST_STATUS_NEW: 
-			return LangModelSchedule.getString("Text.Test.Status.New");
+			return I18N.getString("Scheduler.Text.Test.Status.New");
 		case TestStatus._TEST_STATUS_PROCESSING: 
-			return LangModelSchedule.getString("Text.Test.Status.Processing");
+			return I18N.getString("Scheduler.Text.Test.Status.Processing");
 		case TestStatus._TEST_STATUS_SCHEDULED: 
-			return LangModelSchedule.getString("Text.Test.Status.Scheduled");
+			return I18N.getString("Scheduler.Text.Test.Status.Scheduled");
 		case TestStatus._TEST_STATUS_STOPPING: 
-			return LangModelSchedule.getString("Text.Test.Status.Stopping");
+			return I18N.getString("Scheduler.Text.Test.Status.Stopping");
 		case TestStatus._TEST_STATUS_STOPPED: 
-			return LangModelSchedule.getString("Text.Test.Status.Stopped");
+			return I18N.getString("Scheduler.Text.Test.Status.Stopped");
 		}
 		return null;
 	}

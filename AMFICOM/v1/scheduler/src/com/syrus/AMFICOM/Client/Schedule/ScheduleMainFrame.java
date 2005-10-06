@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.39 2005/09/14 17:39:22 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.40 2005/10/06 13:18:02 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.UIDefaults;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TableFrame;
@@ -34,11 +33,12 @@ import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/14 17:39:22 $
+ * @version $Revision: 1.40 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -63,7 +63,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 	@SuppressWarnings("serial")
 	public ScheduleMainFrame(final ApplicationContext aContext) {
-		super(aContext, LangModelSchedule.getString("Text.Scheduler.Title"), new ScheduleMainMenuBar(aContext
+		super(aContext, I18N.getString("Scheduler.Text.Scheduler.Title"), new ScheduleMainMenuBar(aContext
 				.getApplicationModel()), new AbstractMainToolBar() {
 			// nothing
 		});

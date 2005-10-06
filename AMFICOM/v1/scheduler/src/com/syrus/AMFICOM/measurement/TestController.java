@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.27 2005/10/06 04:53:07 bob Exp $
+ * $Id: TestController.java,v 1.28 2005/10/06 13:18:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,9 +19,9 @@ import java.util.Map;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.ComparableLabel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/06 04:53:07 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @module module
  */
@@ -79,11 +79,11 @@ public class TestController implements Wrapper<Test> {
 
 		this.temporalTypeMap = new HashMap<TestTemporalType, String>();
 		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, 
-			LangModelSchedule.getString("Text.Test.TemporalType.Onetime"));
+			I18N.getString("Scheduler.Text.Test.TemporalType.Onetime"));
 		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, 
-			LangModelSchedule.getString("Text.Test.TemporalType.Periodical"));
+			I18N.getString("Scheduler.Text.Test.TemporalType.Periodical"));
 //		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS, 
-//			LangModelSchedule.getString("Text.Test.TemporalType.Continual"));
+//			I18N.getString("Scheduler.Text.Test.TemporalType.Continual"));
 	}
 
 	private Component getStatusComponent(final TestStatus testStatus) {
@@ -123,25 +123,25 @@ public class TestController implements Wrapper<Test> {
 	public String getName(final String key) {
 		String name = null;
 		if (key.equals(KEY_TEMPORAL_TYPE)) {
-			name = LangModelSchedule.getString("Text.Test.Field.TemporalType"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Text.Test.Field.TemporalType"); //$NON-NLS-1$
 		}
 		else if (key.equals(KEY_KIS)) {
-			name = LangModelSchedule.getString("Text.Test.Field.RTU"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Text.Test.Field.RTU"); //$NON-NLS-1$
 		}
 		else if (key.equals(KEY_MONITORED_ELEMENT)) {
-			name = LangModelSchedule.getString("Text.Test.Field.Port"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Text.Test.Field.Port"); //$NON-NLS-1$
 		}
 		else if (key.equals(KEY_TEST_OBJECT)) {
-			name = LangModelSchedule.getString("Text.Test.Field.TestingObject"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Text.Test.Field.TestingObject"); //$NON-NLS-1$
 		}
 		else if (key.equals(KEY_MEASUREMENT_TYPE)) {
-			name = LangModelSchedule.getString("Text.Test.Field.MeasurementType"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Text.Test.Field.MeasurementType"); //$NON-NLS-1$
 		}
 		else if (key.equals(KEY_START_TIME)) {
-			name = LangModelSchedule.getString("Text.Test.Field.TimeOfTheFirstMeasurement"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Text.Test.Field.TimeOfTheFirstMeasurement"); //$NON-NLS-1$
 		}
 		else if (key.equals(KEY_STATUS)) {
-			name = LangModelSchedule.getString("Text.Test.Field.Status"); //$NON-NLS-1$
+			name = I18N.getString("Scheduler.Text.Test.Field.Status"); //$NON-NLS-1$
 		}
 
 		return name;
@@ -174,7 +174,7 @@ public class TestController implements Wrapper<Test> {
 				if (test.getGroupTestId().isVoid()) {
 					value = this.temporalTypeMap.get(test.getTemporalType());
 				} else {
-					value = LangModelSchedule.getString("Text.Test.TemporalType.Sectional");
+					value = I18N.getString("Scheduler.Text.Test.TemporalType.Sectional");
 				}
 			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
 				if (test.getGroupTestId().isVoid()) {
@@ -187,7 +187,7 @@ public class TestController implements Wrapper<Test> {
 							try {
 								final PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 										true);
-								value = value + ", " + LangModelSchedule.getString("Text.TimePanel.Period") + ": " + periodicalTemporalPattern.getPeriodDescription();
+								value = value + ", " + I18N.getString("Scheduler.Text.TimePanel.Period") + ": " + periodicalTemporalPattern.getPeriodDescription();
 							} catch (ApplicationException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -195,7 +195,7 @@ public class TestController implements Wrapper<Test> {
 						}
 					}
 				} else {
-					value = LangModelSchedule.getString("Text.Test.TemporalType.Sectional");
+					value = I18N.getString("Scheduler.Text.Test.TemporalType.Sectional");
 				}
 			} else if (key.equals(KEY_KIS)) {
 				try {

@@ -1,5 +1,5 @@
 /*-
-* $Id: Launcher.java,v 1.5 2005/09/14 11:45:52 bob Exp $
+* $Id: Launcher.java,v 1.6 2005/10/06 13:17:18 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,13 +22,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Log;
 
 
 /**
  * local implementation of Винтилйатар
- * @version $Revision: 1.5 $, $Date: 2005/09/14 11:45:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/06 13:17:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -98,7 +98,7 @@ public final class Launcher {
 			System.exit(CANNOT_RUN_EXIT);
 		} catch (final InvocationTargetException e) {
 			// too unlikely 
-			new Launcher.DefaultThrowableHandler(LangModelGeneral.getString("Error")).handle(e.getCause());
+			new Launcher.DefaultThrowableHandler(I18N.getString("Error")).handle(e.getCause());
 		} 
 	}
 	
@@ -123,7 +123,7 @@ public final class Launcher {
 		 * <p><b>Clients must never explicitly call this method. Only for AWT Thread purposes</b></p>
 		 */
 		public DefaultThrowableHandler() {
-			this(LangModelGeneral.getString("Error.AWTThread"));
+			this(I18N.getString("Common.Launcher.AWTThread"));
 		}
 		
 		public void handle(final Throwable thrown) {
@@ -147,7 +147,7 @@ public final class Launcher {
 			tree.collapsePath(new TreePath(root));
 			
 			final JPanel panel = new JPanel(new BorderLayout());
-			final JLabel label = new JLabel(LangModelGeneral.getString("Error.GetUncatchedException") + ":");
+			final JLabel label = new JLabel(I18N.getString("Common.Launcher.GetUncatchedException") + ":");
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			
 			
@@ -156,7 +156,7 @@ public final class Launcher {
 			panel.add(new JScrollPane(tree), BorderLayout.CENTER);
 
 			final JLabel label2 = new JLabel(
-				LangModelGeneral.getString("Message.Information.ApplicationWillBeTerminated"));
+				I18N.getString("Common.Launcher.ApplicationWillBeTerminated"));
 			label2.setHorizontalAlignment(SwingConstants.CENTER);
 			panel.add(label2, BorderLayout.SOUTH);
 

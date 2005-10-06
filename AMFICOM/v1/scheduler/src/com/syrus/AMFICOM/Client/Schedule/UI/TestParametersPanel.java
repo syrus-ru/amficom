@@ -29,7 +29,6 @@ import javax.swing.UIDefaults;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
@@ -38,7 +37,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
@@ -152,7 +151,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.patternPanel.setBorder(BorderFactory.createEtchedBorder());
 		this.switchPanel.setBorder(BorderFactory.createEtchedBorder());
 
-		this.useSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.UseSetup"));
+		this.useSetupsCheckBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.UseSetup"));
 		this.useSetupsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				JCheckBox checkBox = (JCheckBox) e.getSource();
@@ -165,7 +164,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		});
 		this.patternPanel.add(this.useSetupsCheckBox, gbc);
 
-		this.useAnalysisSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.WithAnalysisParameters"));
+		this.useAnalysisSetupsCheckBox = new JCheckBox(I18N.getString("Scheduler.Text.MeasurementParameter.WithAnalysisParameters"));
 		this.useAnalysisSetupsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				final JCheckBox checkBox = (JCheckBox) e.getSource();
@@ -177,7 +176,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 //						assert Log.debugMessage(".actionPerformed | " + TestParametersPanel.this.measurementSetupId, Log.DEBUGLEVEL10);
 //						selectedValue = StorableObjectPool.getStorableObject(TestParametersPanel.this.measurementSetupId, true);
 //					} catch (final ApplicationException e1) {
-//						AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+//						AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 //						return;
 //					}
 //				}
@@ -211,10 +210,10 @@ final class TestParametersPanel implements PropertyChangeListener {
 
 		this.patternPanel.add(this.useAnalysisSetupsCheckBox, gbc);
 
-		this.analysisLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Analysis")); //$NON-NLS-1$
+		this.analysisLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Analysis")); //$NON-NLS-1$
 		this.patternPanel.add(this.analysisLabel, gbc);
 		this.patternPanel.add(this.analysisComboBox, gbc);
-		this.patternsLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Patterns"));
+		this.patternsLabel = new JLabel(I18N.getString("Scheduler.Text.MeasurementParameter.Patterns"));
 		this.patternPanel.add(this.patternsLabel, gbc);
 
 		this.analysisComboBox.addActionListener(new ActionListener() {
@@ -313,7 +312,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			final MeasurementSetup measurementSetup = (MeasurementSetup) this.testSetups.getSelectedValue();
 			if (measurementSetup == null) {
 				JOptionPane.showMessageDialog(this.patternPanel,
-						LangModelSchedule.getString("Error.HaveNotChoosenMeasurementPattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+						I18N.getString("Scheduler.Error.HaveNotChoosenMeasurementPattern"), I18N.getString("Scheduler.Error"), //$NON-NLS-1$ //$NON-NLS-2$
 						JOptionPane.OK_OPTION);
 				this.schedulerModel.setBreakData();
 				return null;
@@ -327,7 +326,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			return this.parametersTestPanel != null ? this.parametersTestPanel.getMeasurementSetup() : null;
 		} catch (final CreateObjectException e) {
 			this.schedulerModel.setBreakData();
-			AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotCreateMeasurementSetup"));
+			AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotCreateMeasurementSetup"));
 			return null;
 		}
 	}
@@ -446,8 +445,8 @@ final class TestParametersPanel implements PropertyChangeListener {
 				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true), true);
 			} catch (final ApplicationException e) {
 				JOptionPane.showMessageDialog(this.patternPanel,
-					LangModelGeneral.getString("Error.CannotAcquireObject"), 
-					LangModelGeneral.getString("Error"),
+					I18N.getString("Error.CannotAcquireObject"), 
+					I18N.getString("Error"),
 					JOptionPane.OK_OPTION);
 			}
 		}		
@@ -464,7 +463,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				}
 			}
 			
-		}, LangModelGeneral.getString("Message.Information.PlsWait"));
+		}, I18N.getString("Message.Information.PlsWait"));
 	}
 	
 	private void refreshMeasurementSetup() throws ApplicationException {
@@ -506,7 +505,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			try {
 				this.changeMonitoredElement((Identifier) evt.getNewValue());
 			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
 		} else if (propertyName == SchedulerModel.COMMAND_SET_ANALYSIS_TYPE) {
 			this.selectAnalysisType(this.analysisComboBox, (AnalysisType) newValue, true);
@@ -514,7 +513,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			try {
 				this.refreshMeasurementSetup();
 			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}					
 		} else if (propertyName == SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP) {
 			this.setMeasurementSetup((MeasurementSetup) newValue, true);

@@ -21,27 +21,27 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/21 12:15:00 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/06 13:18:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
 final class TimeStampUI {
 
-	public static final String[]		SHORT_DAY_OF_WEEK_NAMES	= new String[] { LangModelSchedule.getString("mon"),
-			LangModelSchedule.getString("tue"), LangModelSchedule.getString("wed"), LangModelSchedule.getString("thu"),
-			LangModelSchedule.getString("fri"), LangModelSchedule.getString("sat"), LangModelSchedule.getString("sun")};
+	public static final String[]		SHORT_DAY_OF_WEEK_NAMES	= new String[] { I18N.getString("Scheduler.mon"),
+			I18N.getString("Scheduler.tue"), I18N.getString("Scheduler.wed"), I18N.getString("Scheduler.thu"),
+			I18N.getString("Scheduler.fri"), I18N.getString("Scheduler.sat"), I18N.getString("Scheduler.sun")};
 
-	public static final String[]		SHORT_MONTH_NAMES		= new String[] { LangModelSchedule.getString("jan"),
-			LangModelSchedule.getString("feb"), LangModelSchedule.getString("mar"), LangModelSchedule.getString("apr"),
-			LangModelSchedule.getString("may"), LangModelSchedule.getString("jun"), LangModelSchedule.getString("jul"),
-			LangModelSchedule.getString("aug"), LangModelSchedule.getString("sep"), LangModelSchedule.getString("oct"),
-			LangModelSchedule.getString("nov"), LangModelSchedule.getString("dec")};
+	public static final String[]		SHORT_MONTH_NAMES		= new String[] { I18N.getString("Scheduler.jan"),
+			I18N.getString("Scheduler.feb"), I18N.getString("Scheduler.mar"), I18N.getString("Scheduler.apr"),
+			I18N.getString("Scheduler.may"), I18N.getString("Scheduler.jun"), I18N.getString("Scheduler.jul"),
+			I18N.getString("Scheduler.aug"), I18N.getString("Scheduler.sep"), I18N.getString("Scheduler.oct"),
+			I18N.getString("Scheduler.nov"), I18N.getString("Scheduler.dec")};
 
 	private static final String			MINPANEL_EXTENDED		= "extended";												//$NON-NLS-1$
 
@@ -100,7 +100,7 @@ final class TimeStampUI {
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.weighty = 0.0;
 
-		final JButton checkButton = new JButton(LangModelSchedule.getString("Check"));
+		final JButton checkButton = new JButton(I18N.getString("Scheduler.Check"));
 		checkButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		checkButton.addActionListener(new ActionListener() {
 
@@ -110,7 +110,7 @@ final class TimeStampUI {
 				try {
 					description = CronTemporalPattern.getCronStringsDescription(new String[] { getTemplate()});
 				} catch (IllegalArgumentException iae) {
-					description = LangModelSchedule.getString("Some paremeters are not set");
+					description = I18N.getString("Scheduler.Some paremeters are not set");
 					type = JOptionPane.ERROR_MESSAGE;
 				}
 
@@ -120,12 +120,12 @@ final class TimeStampUI {
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		duringDayPanel.add(checkButton, gbc);
 
-		this.eachDayCheckBox = new JCheckBox(LangModelSchedule.getString("each_day"), false); //$NON-NLS-1$
+		this.eachDayCheckBox = new JCheckBox(I18N.getString("Scheduler.each_day"), false); //$NON-NLS-1$
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		duringDayPanel.add(this.eachDayCheckBox, gbc);
-		duringDayPanel.add(new JLabel(LangModelSchedule.getString("Hours") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
+		duringDayPanel.add(new JLabel(I18N.getString("Scheduler.Hours") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
 		gbc.gridwidth = 1;
-		this.hourCheckBox = new JCheckBox(LangModelSchedule.getString("each"), true); //$NON-NLS-1$
+		this.hourCheckBox = new JCheckBox(I18N.getString("Scheduler.each"), true); //$NON-NLS-1$
 		this.hourSpinnder = new JSpinner(new SpinnerNumberModel(1, 1, 23, 1));
 		this.hourCheckBox.addActionListener(new ActionListener() {
 
@@ -141,10 +141,10 @@ final class TimeStampUI {
 		//gbc.gridwidth = GridBagConstraints.RELATIVE;
 		duringDayPanel.add(this.hourSpinnder, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		duringDayPanel.add(new JLabel(LangModelSchedule.getString("hour_s")), gbc); //$NON-NLS-1$
+		duringDayPanel.add(new JLabel(I18N.getString("Scheduler.hour_s")), gbc); //$NON-NLS-1$
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		//duringDayPanel.add(new JLabel(), gbc);
-		duringDayPanel.add(new JLabel(LangModelSchedule.getString("and")), gbc); //$NON-NLS-1$
+		duringDayPanel.add(new JLabel(I18N.getString("Scheduler.and")), gbc); //$NON-NLS-1$
 
 		gbc.gridwidth = 1;
 		gbc.weightx = 0.0;
@@ -165,8 +165,8 @@ final class TimeStampUI {
 		duringDayPanel.add(hourPanel, gbc);
 
 		gbc.weightx = 1.0;
-		duringDayPanel.add(new JLabel(LangModelSchedule.getString("Minutes") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
-		this.minuteCheckBox = new JCheckBox(LangModelSchedule.getString("each"), true);
+		duringDayPanel.add(new JLabel(I18N.getString("Scheduler.Minutes") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
+		this.minuteCheckBox = new JCheckBox(I18N.getString("Scheduler.each"), true);
 		this.minuteSpinnder = new JSpinner(new SpinnerNumberModel(1, 1, 59, 1));
 		this.minuteCheckBox.addActionListener(new ActionListener() {
 
@@ -184,11 +184,11 @@ final class TimeStampUI {
 		duringDayPanel.add(this.minuteCheckBox, gbc);
 		//gbc.weightx = 1.0;
 		duringDayPanel.add(this.minuteSpinnder, gbc);
-		duringDayPanel.add(new JLabel(LangModelSchedule.getString("minute_s")), gbc); //$NON-NLS-1$
+		duringDayPanel.add(new JLabel(I18N.getString("Scheduler.minute_s")), gbc); //$NON-NLS-1$
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		duringDayPanel.add(new JLabel(), gbc);
-		duringDayPanel.add(new JLabel(LangModelSchedule.getString("and")), gbc);
-		this.minExtendedCheckBox = new JCheckBox(LangModelSchedule.getString("extended_min_list")); //$NON-NLS-1$
+		duringDayPanel.add(new JLabel(I18N.getString("Scheduler.and")), gbc);
+		this.minExtendedCheckBox = new JCheckBox(I18N.getString("Scheduler.extended_min_list")); //$NON-NLS-1$
 
 		//gbc.weightx = 11.0;
 		duringDayPanel.add(this.minExtendedCheckBox, gbc);
@@ -273,9 +273,9 @@ final class TimeStampUI {
 		//gbc.weightx = 11.0;
 
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		duringMonthPanel.add(new JLabel(LangModelSchedule.getString("Days") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
+		duringMonthPanel.add(new JLabel(I18N.getString("Scheduler.Days") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
 		gbc.gridwidth = 1;
-		this.dayCheckBox = new JCheckBox(LangModelSchedule.getString("each"), true);
+		this.dayCheckBox = new JCheckBox(I18N.getString("Scheduler.each"), true);
 		this.daySpinnder = new JSpinner(new SpinnerNumberModel(1, 1, 31, 1));
 		this.dayCheckBox.addActionListener(new ActionListener() {
 
@@ -293,8 +293,8 @@ final class TimeStampUI {
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		duringMonthPanel.add(this.daySpinnder, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		duringMonthPanel.add(new JLabel(LangModelSchedule.getString("day_s")), gbc); //$NON-NLS-1$
-		duringMonthPanel.add(new JLabel(LangModelSchedule.getString("and")), gbc);
+		duringMonthPanel.add(new JLabel(I18N.getString("Scheduler.day_s")), gbc); //$NON-NLS-1$
+		duringMonthPanel.add(new JLabel(I18N.getString("Scheduler.and")), gbc);
 		gbc.gridwidth = 1;
 		gbc.weightx = 0.0;
 		JPanel dayOfMonthPanel = new JPanel(new GridBagLayout());
@@ -314,7 +314,7 @@ final class TimeStampUI {
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		duringMonthPanel.add(dayOfMonthPanel, gbc);
 
-		duringMonthPanel.add(new JLabel(LangModelSchedule.getString("DayOfWeek") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
+		duringMonthPanel.add(new JLabel(I18N.getString("Scheduler.DayOfWeek") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
 
 		gbc.gridwidth = 1;
 		gbc.weightx = 0.0;
@@ -335,9 +335,9 @@ final class TimeStampUI {
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		duringMonthPanel.add(dayOfWeekPanel, gbc);
 
-		duringMonthPanel.add(new JLabel(LangModelSchedule.getString("Month") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
+		duringMonthPanel.add(new JLabel(I18N.getString("Scheduler.Month") + ":"), gbc); //$NON-NLS-1$ //$NON-NLS-2$
 		this.monthSpinnder = new JSpinner(new SpinnerNumberModel(1, 1, 12, 1));
-		this.monthCheckBox = new JCheckBox(LangModelSchedule.getString("each"), true);
+		this.monthCheckBox = new JCheckBox(I18N.getString("Scheduler.each"), true);
 		this.monthCheckBox.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -353,8 +353,8 @@ final class TimeStampUI {
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		duringMonthPanel.add(this.monthSpinnder, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		duringMonthPanel.add(new JLabel(LangModelSchedule.getString("month_s")), gbc); //$NON-NLS-1$
-		duringMonthPanel.add(new JLabel(LangModelSchedule.getString("and")), gbc);
+		duringMonthPanel.add(new JLabel(I18N.getString("Scheduler.month_s")), gbc); //$NON-NLS-1$
+		duringMonthPanel.add(new JLabel(I18N.getString("Scheduler.and")), gbc);
 		gbc.gridwidth = 1;
 		gbc.weightx = 0.0;
 		JPanel monthsPanel = new JPanel(new GridBagLayout());

@@ -42,7 +42,6 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.AComboBox;
@@ -52,7 +51,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -120,7 +119,7 @@ final class PlanToolBar {
 
 		final String[] scales = new String[PlanPanel.SCALES.length];
 		for (int i = 0; i < scales.length; i++) {
-			scales[i] = new String(LangModelSchedule.getString(PlanPanel.SCALES[i]));
+			scales[i] = new String(I18N.getString(PlanPanel.SCALES[i]));
 		}
 		this.scaleComboBox = new AComboBox(scales);
 		this.scaleComboBox.addItemListener(new ItemListener() {
@@ -140,7 +139,7 @@ final class PlanToolBar {
 				}
 			}
 		});
-		this.scaleComboBox.setSelectedItem(LangModelSchedule.getString(PlanPanel.SCALES[PlanPanel.SCALES.length - 2]));
+		this.scaleComboBox.setSelectedItem(I18N.getString(PlanPanel.SCALES[PlanPanel.SCALES.length - 2]));
 
 		
 		final ChangeListener timeListener = new ChangeListener() {
@@ -160,11 +159,11 @@ final class PlanToolBar {
 		this.dateSpinner.addChangeListener(timeListener);
 		this.timeSpinner.addChangeListener(timeListener);
 
-		this.toolBar.add(new JLabel(LangModelSchedule.getString("Text.Plan.Toolbar.Scope") + ':')); //$NON-NLS-1$
+		this.toolBar.add(new JLabel(I18N.getString("Scheduler.Text.Plan.Toolbar.Scope") + ':')); //$NON-NLS-1$
 		CommonUIUtilities.fixHorizontalSize(this.scaleComboBox);
 		this.toolBar.add(this.scaleComboBox);
 		this.toolBar.addSeparator();
-		this.toolBar.add(new JLabel(LangModelSchedule.getString("Text.Plan.Toolbar.Date") + ':')); //$NON-NLS-1$
+		this.toolBar.add(new JLabel(I18N.getString("Scheduler.Text.Plan.Toolbar.Date") + ':')); //$NON-NLS-1$
 		
 		CommonUIUtilities.fixHorizontalSize(this.dateSpinner);
 		this.toolBar.add(this.dateSpinner);
@@ -175,7 +174,7 @@ final class PlanToolBar {
 			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		}
 		this.toolBar.addSeparator();
-		this.toolBar.add(new JLabel(LangModelSchedule.getString("Text.Plan.Toolbar.Time") + ':')); //$NON-NLS-1$
+		this.toolBar.add(new JLabel(I18N.getString("Scheduler.Text.Plan.Toolbar.Time") + ':')); //$NON-NLS-1$
 
 		CommonUIUtilities.fixHorizontalSize(this.timeSpinner);
 		this.toolBar.add(this.timeSpinner);
@@ -229,7 +228,7 @@ final class PlanToolBar {
 			}
 		};
 		showCalendar.putValue(Action.SHORT_DESCRIPTION, 
-			LangModelSchedule.getString("Text.Plan.Toolbar.Calendar"));
+			I18N.getString("Scheduler.Text.Plan.Toolbar.Calendar"));
 		return showCalendar;
 	}	
 
@@ -243,7 +242,7 @@ final class PlanToolBar {
 			}
 		};
 		currentDate.putValue(Action.SHORT_DESCRIPTION, 
-			LangModelSchedule.getString("Text.Plan.Toolbar.CurrentTime"));
+			I18N.getString("Scheduler.Text.Plan.Toolbar.CurrentTime"));
 		return currentDate;
 	}
 
@@ -276,13 +275,13 @@ final class PlanToolBar {
 							button.setEnabled(true);
 						} catch (final ApplicationException e1) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-								LangModelSchedule.getString("Error.CannotRefreshTests"),
-								LangModelGeneral.getString("Error"),
+								I18N.getString("Scheduler.Error.CannotRefreshTests"),
+								I18N.getString("Error"),
 								JOptionPane.OK_OPTION);
 							return;
 						}
 					}
-				}, LangModelSchedule.getString("StatusMessage.UpdatingTests"));
+				}, I18N.getString("Scheduler.StatusMessage.UpdatingTests"));
 			}
 		};
 		
@@ -290,7 +289,7 @@ final class PlanToolBar {
 		
 		apply.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK));
 		apply.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_R));
-		apply.putValue(Action.SHORT_DESCRIPTION, LangModelSchedule.getString("Text.Plan.Toolbar.Apply")); 
+		apply.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Scheduler.Text.Plan.Toolbar.Apply")); 
 		return apply;
 	}
 	
@@ -304,7 +303,7 @@ final class PlanToolBar {
 			}
 		};
 		zoomActions[0].putValue(Action.SHORT_DESCRIPTION, 
-			LangModelSchedule.getString("Text.Plan.Toolbar.ZoomIn"));
+			I18N.getString("Scheduler.Text.Plan.Toolbar.ZoomIn"));
 		zoomActions[0].putValue(Action.MNEMONIC_KEY, 
 			Integer.valueOf(KeyEvent.VK_PLUS));
 		zoomActions[0].putValue(Action.ACCELERATOR_KEY, 
@@ -316,7 +315,7 @@ final class PlanToolBar {
 			}
 		};
 		zoomActions[1].putValue(Action.SHORT_DESCRIPTION, 
-			LangModelSchedule.getString("Text.Plan.Toolbar.ZoomOut"));
+			I18N.getString("Scheduler.Text.Plan.Toolbar.ZoomOut"));
 		zoomActions[1].putValue(Action.MNEMONIC_KEY, 
 			Integer.valueOf(KeyEvent.VK_MINUS));
 		zoomActions[1].putValue(Action.ACCELERATOR_KEY, 
@@ -328,7 +327,7 @@ final class PlanToolBar {
 			}
 		};
 		zoomActions[2].putValue(Action.SHORT_DESCRIPTION, 
-			LangModelSchedule.getString("Text.Plan.Toolbar.ActualSize"));
+			I18N.getString("Scheduler.Text.Plan.Toolbar.ActualSize"));
 		zoomActions[2].putValue(Action.MNEMONIC_KEY, 
 			Integer.valueOf(KeyEvent.VK_ASTERISK));
 		zoomActions[2].putValue(Action.ACCELERATOR_KEY, 
@@ -351,7 +350,7 @@ final class PlanToolBar {
 		final JDialog dialog = new JDialog();
 		
 		final Action apply = new AbstractAction(
-			LangModelSchedule.getString("Text.Plan.Toolbar.Legend")) {
+			I18N.getString("Scheduler.Text.Plan.Toolbar.Legend")) {
 			public void actionPerformed(final ActionEvent e) {
 				final JButton button = (JButton) e.getSource();
 				dialog.setLocationRelativeTo(button);
@@ -361,11 +360,11 @@ final class PlanToolBar {
 			}
 		};
 		
-		dialog.setTitle(LangModelSchedule.getString("Text.Plan.Toolbar.Legend"));
+		dialog.setTitle(I18N.getString("Scheduler.Text.Plan.Toolbar.Legend"));
 		JPanel legendPanel = new JPanel(new GridLayout(0, 1));
 		legendPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 		final FlashIcon flashIcon = new FlashIcon();
-		final JLabel flashLabel = new JLabel(LangModelSchedule.getString("Text.Test.Status.NotSaved"), flashIcon,
+		final JLabel flashLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Status.NotSaved"), flashIcon,
 												SwingConstants.LEFT);
 		final Timer timer = new Timer(PlanPanel.TIME_OUT, new ActionListener() {
 
@@ -379,21 +378,21 @@ final class PlanToolBar {
 		timer.start();
 
 		legendPanel.add(flashLabel);
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Scheduled"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Scheduled"), this
 				.getColorIcon(SchedulerModel.COLOR_SCHEDULED), SwingConstants.LEFT));
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Completed"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Completed"), this
 				.getColorIcon(SchedulerModel.COLOR_COMPLETED), SwingConstants.LEFT));
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Processing"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Processing"), this
 				.getColorIcon(SchedulerModel.COLOR_PROCCESSING), SwingConstants.LEFT));
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Aborted"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Aborted"), this
 				.getColorIcon(SchedulerModel.COLOR_ABORDED), SwingConstants.LEFT));
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Stopped"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Stopped"), this
 			.getColorIcon(SchedulerModel.COLOR_STOPPED), SwingConstants.LEFT));
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Alarm"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Alarm"), this
 				.getColorIcon(SchedulerModel.COLOR_ALARM), SwingConstants.LEFT));
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Warning"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Warning"), this
 				.getColorIcon(SchedulerModel.COLOR_WARNING), SwingConstants.LEFT));
-		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Unrecognized"), this
+		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Unrecognized"), this
 				.getColorIcon(SchedulerModel.COLOR_UNRECOGNIZED), SwingConstants.LEFT));
 		dialog.getContentPane().add(legendPanel);
 		dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);

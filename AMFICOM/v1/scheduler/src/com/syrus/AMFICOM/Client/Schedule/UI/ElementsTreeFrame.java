@@ -16,12 +16,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -51,13 +50,13 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 
 	ApplicationContext aContext;
 
-	private ServiceItem rootItem = new ServiceItem(LangModelSchedule.getString("Text.ElementsTree.MeasurementTypes"));
+	private ServiceItem rootItem = new ServiceItem(I18N.getString("Scheduler.Text.ElementsTree.MeasurementTypes"));
 
 	private Dispatcher dispatcher;
 
 	public ElementsTreeFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
-		super.setTitle(LangModelSchedule.getString("Text.ElementsTree.Title")); //$NON-NLS-1$
+		super.setTitle(I18N.getString("Scheduler.Text.ElementsTree.Title")); //$NON-NLS-1$
 		super.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 		super.setResizable(true);
 		super.setClosable(false);
@@ -83,7 +82,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 			}
 		}
 		this.schedulerModel.setBreakData();
-		AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"));		
+		AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.HaveNotChoosenMeasurementElement"));		
 		return null;
 	}
 	
@@ -103,7 +102,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 			}
 		}
 		this.schedulerModel.setBreakData();
-		AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"));		
+		AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.HaveNotChoosenMeasurementElement"));		
 		return MeasurementType.UNKNOWN;
 	}
 
@@ -112,7 +111,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 			return (KIS) StorableObjectPool.getStorableObject(this.getObject(ObjectEntities.KIS_CODE), true);
 		} catch (final ApplicationException e) {
 			this.schedulerModel.setBreakData();
-			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+			AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			return null;
 		}
 	}
@@ -128,7 +127,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 			return me;
 		} catch (final ApplicationException e) {
 			this.schedulerModel.setBreakData();
-			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+			AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			return null;
 		}
 	}
@@ -265,7 +264,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 														true),
 														parent != null ? (MeasurementType) parent.getObject() : null);
 											} catch (final ApplicationException e) {
-												AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+												AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 												return;
 											}
 										}

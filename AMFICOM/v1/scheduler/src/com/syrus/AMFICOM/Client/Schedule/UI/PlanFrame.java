@@ -10,8 +10,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 @SuppressWarnings("serial")
@@ -21,7 +21,7 @@ public final class PlanFrame extends JInternalFrame {
 	private PlanPanel	mainPanel;
 
 	public PlanFrame(ApplicationContext aContext) {
-		super.setTitle(LangModelSchedule.getString("Text.Plan.Title")); //$NON-NLS-1$
+		super.setTitle(I18N.getString("Scheduler.Text.Plan.Title")); //$NON-NLS-1$
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		super.setResizable(true);
 		super.setClosable(false);

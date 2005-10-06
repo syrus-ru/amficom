@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.22 2005/09/26 07:30:41 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.23 2005/10/06 13:16:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.22 $, $Date: 2005/09/26 07:30:41 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/06 13:16:33 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -126,7 +127,7 @@ public class OpenSessionCommand extends AbstractCommand {
 	protected boolean logging() throws CommunicationException, LoginException {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelGeneral.getString("StatusBar.OpeningSession")));
+				I18N.getString("Common.StatusBar.OpeningSession")));
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
 
 		if (!this.logged) {
@@ -134,7 +135,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			if (wannaNotLogin) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("StatusBar.Aborted")));
+						I18N.getString("Common.StatusBar.Aborted")));
 				return wannaNotLogin;
 			}
 		}
@@ -148,7 +149,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelGeneral.getString("StatusBar.InitStartupData")));
+				I18N.getString("Common.StatusBar.InitStartupData")));
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
