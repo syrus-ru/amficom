@@ -22,6 +22,7 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
+$LIB/resource.jar:\
 $LIB/report.jar:\
 $LIB/csbridge.jar:\
 $LIB/leserver_interface.jar:\
