@@ -34,9 +34,9 @@ AMFICOM_v1	&tools\
 		&csbridge \
 		&commonclient \
 		&generalclient \
-		&admin \
+		&administration \
 		&adminclient \
-		&config \
+		&configuration \
 		&configclient \
 		&optimize \
 		&main \
@@ -90,6 +90,7 @@ AMFICOM_v1	&tools\
 		&test \
 		&mapper-servlet \
 		&bugs \
+		&reflectometry \
 		&manager \
 		&манагер
 
@@ -113,13 +114,15 @@ commonclient_v1		AMFICOM/v1/commonclient
 #M	generalclient	Client common classes. Deprecated, use commonclient
 generalclient		AMFICOM/v1/generalclient
 generalclient_v1	AMFICOM/v1/generalclient
-#M	admin		Administrative module
+#M	administration	Administrative module
+administration		AMFICOM/v1/admin
 admin			AMFICOM/v1/admin
 admin_v1		AMFICOM/v1/admin
 #M	adminclient	Client administrative module
 adminclient		AMFICOM/v1/adminclient
 adminclient_v1		AMFICOM/v1/adminclient
-#M	config		Common configuring module
+#M	configuration	Common configuring module
+configuration		AMFICOM/v1/config
 config			AMFICOM/v1/config
 config_v1		AMFICOM/v1/config
 #M	configclient	Client configuring module
@@ -272,6 +275,8 @@ mapper-servlet		AMFICOM/v1/mapper-servlet
 mapper-servlet_v1	AMFICOM/v1/mapper-servlet
 #M	bugs		See bug #121
 bugs			AMFICOM/v1/bugs
+#M	reflectometry
+reflectometry		AMFICOM/v1/reflectometry
 #M	manager
 manager			AMFICOM/v1/manager
 #M	манагер
