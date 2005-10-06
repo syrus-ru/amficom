@@ -18,8 +18,7 @@ OBJS := ByteArray.o \
 
 ARCHFILE := akp.tar.gz
 
-
-.PHONY:	clean arch
+all:	$(OUT)
 
 $(OUT):	$(OBJS)
 	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
@@ -30,8 +29,10 @@ $(OUTSO):	$(OBJS)
 #%.o:	%.cpp
 #	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
+.PHONY:	clean
 clean:
 	$(RM) $(OUT) $(OUTSO) $(OBJS)
 
+.PHONY:	arch
 arch:
 	tar -czvf $(ARCHFILE) *.cpp *.h Makefile
