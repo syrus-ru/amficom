@@ -2,15 +2,14 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,12 +17,10 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -35,6 +32,7 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -43,6 +41,8 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
+import com.syrus.AMFICOM.general.DescribableWrapper;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Plugger;
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
+import com.syrus.util.WrapperComparator;
 
 final class TestParametersPanel implements PropertyChangeListener {
 
@@ -70,7 +71,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	private JCheckBox useSetupsCheckBox;
 	private JLabel analysisLabel;
 	private JCheckBox useAnalysisSetupsCheckBox;
-	JComboBox analysisComboBox;
+	WrapperedComboBox<Describable> analysisComboBox;
 	private JLabel patternsLabel;
 	WrapperedList<MeasurementSetup> testSetups;
 	// UI components end
@@ -125,32 +126,19 @@ final class TestParametersPanel implements PropertyChangeListener {
 	@SuppressWarnings("serial")
 	private void createGUI() {
 		final AnalysisType[] analysisTypes = AnalysisType.values();
+		
+		Arrays.sort(analysisTypes, 
+			new WrapperComparator<Describable>(DescribableWrapper.getInstance(), 
+					DescribableWrapper.COLUMN_DESCRIPTION));
+		
+		final List<Describable> analysisTypeList = 
+			new ArrayList<Describable>(Arrays.asList(analysisTypes));		
 
-		final Comparator<AnalysisType> comparator = new Comparator<AnalysisType>() {
-			public int compare(AnalysisType at1, AnalysisType at2) {
-				return at1.getDescription().compareTo(at2.getDescription());
-			}
-		};
-
-		Arrays.sort(analysisTypes, comparator);
-
-		this.analysisComboBox = new JComboBox(analysisTypes);
-
-		this.analysisComboBox.setRenderer(new DefaultListCellRenderer() {
-			@Override
-			public Component getListCellRendererComponent(final JList list,
-					final Object value,
-					final int index,
-					final boolean isSelected,
-					final boolean cellHasFocus) {
-				final AnalysisType analysisType = ((AnalysisType) value);
-				return super.getListCellRendererComponent(list,
-						(analysisType != null) ? analysisType.getDescription() : null,
-						index,
-						isSelected,
-						cellHasFocus);
-			}
-		});
+		this.analysisComboBox = new WrapperedComboBox<Describable>(DescribableWrapper.getInstance(),  
+			analysisTypeList,
+			DescribableWrapper.COLUMN_DESCRIPTION,
+			null
+			);
 
 		this.switchPanel = new JPanel(new CardLayout());
 
@@ -183,31 +171,33 @@ final class TestParametersPanel implements PropertyChangeListener {
 				final JCheckBox checkBox = (JCheckBox) e.getSource();
 		
 				final WrapperedListModel<MeasurementSetup> wrapperedListModel = TestParametersPanel.this.testSetups.getModel();
-				Object selectedValue = null;
-				if (!TestParametersPanel.this.measurementSetupId.isVoid()) {
-					try {
-						assert Log.debugMessage(".actionPerformed | " + TestParametersPanel.this.measurementSetupId, Log.DEBUGLEVEL10);
-						selectedValue = StorableObjectPool.getStorableObject(TestParametersPanel.this.measurementSetupId, true);
-					} catch (final ApplicationException e1) {
-						AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
-						return;
-					}
-				}
+				MeasurementSetup selectedMeasurementSetup = (MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
+//				if (!TestParametersPanel.this.measurementSetupId.isVoid()) {
+//					try {
+//						assert Log.debugMessage(".actionPerformed | " + TestParametersPanel.this.measurementSetupId, Log.DEBUGLEVEL10);
+//						selectedValue = StorableObjectPool.getStorableObject(TestParametersPanel.this.measurementSetupId, true);
+//					} catch (final ApplicationException e1) {
+//						AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+//						return;
+//					}
+//				}
 				
 				TestParametersPanel.this.testSetups.clearSelection();
 
 				final List<MeasurementSetup> list;
-				final boolean selected = checkBox.isSelected();
+				boolean selected = checkBox.isSelected();
 				if (selected) {
 					list = TestParametersPanel.this.msListAnalysisOnly;
 				} else {
 					list = TestParametersPanel.this.msList;
 				}
 				
-				assert Log.debugMessage(".actionPerformed | selectedValue " + selectedValue, Log.DEBUGLEVEL10);
 				wrapperedListModel.setElements(list);
-				if (selectedValue != null) {
-					TestParametersPanel.this.testSetups.setSelectedValue(selectedValue, true);
+				if (selectedMeasurementSetup != null) {
+					TestParametersPanel.this.testSetups.setSelectedValue(selectedMeasurementSetup, true);
+					if (!selected) {
+						selected = isAnalysisEnable(selectedMeasurementSetup);
+					}
 				}
 
 				TestParametersPanel.this.analysisComboBox.setEnabled(selected);
@@ -274,6 +264,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 				}
 
 				if (measurementSetup != null) {
+					final boolean analysisEnable = isAnalysisEnable(measurementSetup);
+					if (!analysisEnable) {
+						TestParametersPanel.this.analysisComboBox.setSelectedItem(AnalysisType.UNKNOWN);
+					}
+					TestParametersPanel.this.analysisComboBox.setEnabled(analysisEnable);
 					if (TestParametersPanel.this.propertyChangeEvent == null) {
 						try {
 							TestParametersPanel.this.schedulerModel.changeMeasurementSetup(measurementSetup);							
@@ -402,6 +397,12 @@ final class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
+	boolean isAnalysisEnable(final MeasurementSetup measurementSetup) {
+		return measurementSetup.getCriteriaSet() != null
+		|| measurementSetup.getEtalon() != null
+		|| measurementSetup.getThresholdSet() != null;
+	}
+	
 	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
 		assert Log.debugMessage("TestParametersPanel.setMeasurementSetups | " + measurementSetups,
 			Log.DEBUGLEVEL10);
@@ -419,9 +420,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		
 		this.msList.addAll(measurementSetups);
 		for (final MeasurementSetup measurementSetup : measurementSetups) {
-			if (measurementSetup.getCriteriaSet() != null
-					|| measurementSetup.getEtalon() != null
-					|| measurementSetup.getThresholdSet() != null) {
+			if (this.isAnalysisEnable(measurementSetup)) {
 				this.msListAnalysisOnly.add(measurementSetup);
 			}
 		}
@@ -440,7 +439,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 //		this.testSetups.setEnabled(true);
 //		this.useAnalysisSetupsCheckBox.setEnabled(true);
 
-		this.selectAnalysisType(this.analysisComboBox, (AnalysisType) this.analysisComboBox.getSelectedItem(), true);
+		this.selectAnalysisType(this.analysisComboBox, this.getAnalysisType(), true);
 		
 		if (!this.measurementSetupId.isVoid()) {
 			try {
