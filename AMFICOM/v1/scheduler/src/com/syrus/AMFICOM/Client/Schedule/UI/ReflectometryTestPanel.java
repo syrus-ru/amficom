@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/10/05 09:44:24 $
+ * @version $Revision: 1.87 $, $Date: 2005/10/06 06:06:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -130,6 +130,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	private Map<ParameterType, String>				unchangedObjects;
 	private final TestParametersPanel	testParametersPanel;
 	private MeasurementSetup	measurementSetup;
+
+	private Parameter[]	lastParameters;
 	
 
 	public ReflectometryTestPanel(final ApplicationContext aContext,
@@ -192,6 +194,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					} else {
 	//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " set.isChanged()");
 						final Parameter[] parameters = parameterSet.getParameters();
+						this.lastParameters = parameters.clone();
 						for (int i = 0; i < parameters.length; i++) {
 							final ParameterType type = parameters[i].getType();
 							Object value = null;
@@ -840,30 +843,60 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 											measurementSetupIds.iterator().next(),
 											true);
 									
-									if (baseMeasurementSetup.isChanged()) {									
+									if (baseMeasurementSetup.isChanged()) {
 										baseMeasurementSetup.setParameterSet(parameterSet);
-										baseMeasurementSetup.setDescription(description);
-										this.testParametersPanel.refreshMeasurementSetup(baseMeasurementSetup);
+										
+										try {
+											final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(baseMeasurementSetup);
+											final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
+											baseMeasurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
+											assert Log.debugMessage("ReflectometryTestPanel.refreshTestsSet | " + baseMeasurementSetup.getMeasurementDuration()/1000 + " sec",
+												Log.DEBUGLEVEL10);
+										} catch (final DataFormatException e) {
+											// TODO
+											throw new CreateObjectException(e);
+										}
+
+										this.skip = true;
+
+										try { 
+											this.schedulerModel.changeMeasurementSetup(baseMeasurementSetup);
+											baseMeasurementSetup.setDescription(description);
+											this.testParametersPanel.refreshMeasurementSetup(baseMeasurementSetup);
+										} catch (final ApplicationException e) {							
+											if (this.lastParameters != null) {
+												baseMeasurementSetup.getParameterSet().setParameters(this.lastParameters);
+												this.refrestParameterSet(this.lastParameters);
+												try {
+													final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(baseMeasurementSetup);
+													final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
+													baseMeasurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));													
+												} catch (final DataFormatException e1) {
+													// TODO
+													throw new CreateObjectException(e1);
+												}
+												this.schedulerModel.changeMeasurementSetup(baseMeasurementSetup);
+											}
+											AbstractMainFrame.showErrorMessage(this, e);
+										}
+										this.skip = false;
+
 									} else {
 										Identifier measurementSetupId = 
 											unchangedMeasurementSetupNewMap.get(baseMeasurementSetup.getId());
 		
-										if (measurementSetupId == null) {										
-											final MeasurementSetup measurementSetup = 
-												MeasurementSetup.createInstance(LoginManager.getUserId(),
-													parameterSet,
-													baseMeasurementSetup.getCriteriaSet(),
-													baseMeasurementSetup.getThresholdSet(),
-													baseMeasurementSetup.getEtalon(),
-													description,
-													baseMeasurementSetup.getMeasurementDuration(),
-													baseMeasurementSetup.getMonitoredElementIds(),
-													baseMeasurementSetup.getMeasurementTypes());
+										if (measurementSetupId == null) {			
+											final MeasurementSetup measurementSetup = this.getMeasurementSetup();
+											measurementSetup.setCriteriaSet(baseMeasurementSetup.getCriteriaSet());
+											measurementSetup.setThresholdSet(baseMeasurementSetup.getThresholdSet());
+											measurementSetup.setEtalon(baseMeasurementSetup.getEtalon());
+											measurementSetup.setMeasurementTypes(baseMeasurementSetup.getMeasurementTypes());											
 											this.skip = true;
 											this.testParametersPanel.setMeasurementSetup(measurementSetup);
 											this.skip = false;
 											measurementSetupId = measurementSetup.getId();
 											unchangedMeasurementSetupNewMap.put(baseMeasurementSetup.getId(), measurementSetupId);
+											this.schedulerModel.changeMeasurementSetup(measurementSetup);
 										}
 									}
 								} else {
@@ -951,10 +984,16 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			return;
 		}
 
+		this.refrestParameterSet(set.getParameters());
+		
+		this.setId = set.getId();
+		this.skip = false;
+	}
+
+	private void refrestParameterSet(final Parameter[] setParameters ) {
 		this.gsOptionBox.setSelected(false);
 		this.lfdOptionBox.setSelected(false);	
-		
-		final Parameter[] setParameters = set.getParameters();
+
 		for (int i = 0; i < setParameters.length; i++) {
 			final ParameterType parameterType = setParameters[i].getType();
 			//				 Log.debugMessage("ReflectometryTestPanel.setSet | codename "
@@ -989,6 +1028,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		for (int i = 0; i < setParameters.length; i++) {
 			final ParameterType parameterType = setParameters[i].getType();
 			final String stringValue = setParameters[i].getStringValue();
+			assert Log.debugMessage("ReflectometryTestPanel.refrestParameterSet | " + stringValue,
+				Log.DEBUGLEVEL10);
 			if (parameterType.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
 				this.refractTextField.setText(stringValue);
 			} else if (parameterType.equals(ParameterType.REF_WAVE_LENGTH)) {
@@ -1010,10 +1051,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			}
 		}
 		this.refreshUnchangedMap();
-		this.setId = set.getId();
-		this.skip = false;
 	}
-
+	
 	private void createUIItems() {
 		this.descriptionField = new JTextField(128);
 		this.refractTextField = new JTextField(8);
