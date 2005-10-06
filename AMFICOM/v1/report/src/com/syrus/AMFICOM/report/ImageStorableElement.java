@@ -82,11 +82,13 @@ public final class ImageStorableElement extends StorableElement {
 			IntPoint location) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert image != null : NON_NULL_EXPECTED;
+		assert location != null : NON_NULL_EXPECTED;
 		try {
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			//TODO: thing about it.
 			ImageIO.write(image, "bmp", baos);
 			final Date created = new Date();
-			return new ImageStorableElement(
+			ImageStorableElement reportImage = new ImageStorableElement(
 					IdentifierPool.getGeneratedIdentifier(REPORTDATA_CODE),
 					created,
 					created,
@@ -97,6 +99,8 @@ public final class ImageStorableElement extends StorableElement {
 					size,
 					VOID_IDENTIFIER,
 					baos.toByteArray());
+			reportImage.markAsChanged();
+			return reportImage;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"ImageStorableElement.createInstance() | cannot generate identifier ", ige);
@@ -162,6 +166,7 @@ public final class ImageStorableElement extends StorableElement {
 	
 	public void setImage(byte[] image) throws ApplicationException {
 		getBitmapImageResource().setImage(image);
+		super.markAsChanged();
 	}
 
 	public BufferedImage getBufferedImage() throws ApplicationException, IOException {
@@ -170,10 +175,10 @@ public final class ImageStorableElement extends StorableElement {
 	
 	public void setBufferedImage(BufferedImage image) throws ApplicationException, IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		// TODO: thing about it.
 		ImageIO.write(image, "bmp", baos);
 		getBitmapImageResource().setImage(baos.toByteArray());
-		baos.flush();
-		baos.close();		
+		super.markAsChanged();
 	}
 	
 	Identifier getBitmapImageResourceId() {

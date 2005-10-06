@@ -263,20 +263,22 @@ public final class AttachedTextStorableElement extends StorableElement
 			else if (attachmentType.equals(TextAttachingType.TO_RIGHT))
 				this.distanceX = this.getX() - (attacher.getX() + attacher.getWidth());
 		}
-		else if (	attachmentType.equals(TextAttachingType.TO_FIELDS_TOP)		
-				||	attachmentType.equals(TextAttachingType.TO_TOP)
-				||	attachmentType.equals(TextAttachingType.TO_BOTTOM)){
-				this.verticalAttacherId = attacher.getId();
-				this.verticalAttachType = attachmentType;
-				//Фиксируем расстояние до соответсвующего края объекта, к которому
-				//осуществлена привязка
-				if (attachmentType.equals(TextAttachingType.TO_FIELDS_TOP))		
-					this.distanceY = this.getY();
-				else if (attachmentType.equals(TextAttachingType.TO_TOP))
-					this.distanceY = this.getY() - attacher.getY();
-				else if (attachmentType.equals(TextAttachingType.TO_BOTTOM))
-					this.distanceY = this.getY() - (attacher.getY() + attacher.getHeight());
-			}
+		else if (attachmentType.equals(TextAttachingType.TO_FIELDS_TOP)
+				|| attachmentType.equals(TextAttachingType.TO_TOP)
+				|| attachmentType.equals(TextAttachingType.TO_BOTTOM)) {
+			this.verticalAttacherId = attacher.getId();
+			this.verticalAttachType = attachmentType;
+			// Фиксируем расстояние до соответсвующего края объекта, к которому
+			// осуществлена привязка
+			if (attachmentType.equals(TextAttachingType.TO_FIELDS_TOP))
+				this.distanceY = this.getY();
+			else if (attachmentType.equals(TextAttachingType.TO_TOP))
+				this.distanceY = this.getY() - attacher.getY();
+			else if (attachmentType.equals(TextAttachingType.TO_BOTTOM))
+				this.distanceY = this.getY()
+						- (attacher.getY() + attacher.getHeight());
+		}
+		super.markAsChanged();
 	}
 	
 	public Font getFont() {
@@ -285,6 +287,7 @@ public final class AttachedTextStorableElement extends StorableElement
 
 	public void setFont(Font font) {
 		this.font = font;
+		super.markAsChanged();
 	}
 
 	Identifier getHorizontalAttacherId() {
@@ -317,13 +320,7 @@ public final class AttachedTextStorableElement extends StorableElement
 
 	public void setText(String text) {
 		this.text = text;
-	}
-
-	/**
-	 * @param text
-	 */
-	public AttachedTextStorableElement(String text) {
-		this.text = text;
+		super.markAsChanged();
 	}
 
 	/**

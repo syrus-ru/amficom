@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.8 2005/10/05 09:39:36 peskovsky Exp $
+ * $Id: TableDataStorableElement.java,v 1.9 2005/10/06 09:09:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: peskovsky $
- * @version $Revision: 1.8 $, $Date: 2005/10/05 09:39:36 $
+ * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/10/06 09:09:20 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
@@ -65,7 +65,7 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 		assert location != null: NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			return new TableDataStorableElement(
+			final TableDataStorableElement tableData = new TableDataStorableElement(
 					IdentifierPool.getGeneratedIdentifier(REPORTTABLEDATA_CODE),
 					created,
 					created,
@@ -78,6 +78,8 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 					reportName,
 					modelClassName,
 					verticalDivisionsCount);
+			tableData.markAsChanged();
+			return tableData;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"DataStorableElement.createInstance() | cannot generate identifier ", ige);
@@ -113,6 +115,7 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 
 	public void setVerticalDivisionsCount(int verticalDivisionsCount) {
 		this.verticalDivisionsCount = verticalDivisionsCount;
+		super.markAsChanged();
 	}
 
 	public Font getFont() {
@@ -121,5 +124,6 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 
 	public void setFont(Font font) {
 		this.font = font;
+		super.markAsChanged();
 	}
 }

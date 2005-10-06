@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.4 2005/10/04 11:04:19 max Exp $
+ * $Id: StorableElement.java,v 1.5 2005/10/06 09:09:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,12 +72,14 @@ public abstract class StorableElement extends StorableObject {
 	
 	public void setLocation (int x, int y){
 		this.location.x = x;
-		this.location.y = y;		
+		this.location.y = y;
+		super.markAsChanged();
 	}
 
 	public void setSize (int width, int height){
 		this.size.setWidth(width);
-		this.size.setHeight(height);		
+		this.size.setHeight(height);
+		super.markAsChanged();
 	}
 	
 	public boolean hasPoint(int x, int y){
@@ -90,8 +92,8 @@ public abstract class StorableElement extends StorableObject {
 		return false;
 	}
 	
-	public StorableElement() {
-		//Empty constructor for serialization
+	StorableElement() {
+		//Empty constructor for transferable
 	}
 
 	/**
@@ -102,7 +104,7 @@ public abstract class StorableElement extends StorableObject {
 	 * @param modifierId
 	 * @param version
 	 */
-	public StorableElement(final Identifier id, 
+	StorableElement(final Identifier id, 
 			final Date created, 
 			final Date modified,
 			final Identifier creatorId, 

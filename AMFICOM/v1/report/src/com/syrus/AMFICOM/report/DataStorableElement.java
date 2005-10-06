@@ -70,7 +70,7 @@ public class DataStorableElement extends StorableElement {
 		assert location != null : NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			return new DataStorableElement(
+			DataStorableElement data = new DataStorableElement(
 					IdentifierPool.getGeneratedIdentifier(REPORTDATA_CODE),
 					created,
 					created,
@@ -82,6 +82,8 @@ public class DataStorableElement extends StorableElement {
 					VOID_IDENTIFIER,
 					reportName,
 					modelClassName);
+			data.markAsChanged();
+			return data;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"DataStorableElement.createInstance() | cannot generate identifier ", ige);
@@ -136,16 +138,12 @@ public class DataStorableElement extends StorableElement {
 		return this.modelClassName;
 	}
 
-	public DataStorableElement(String reportName, String modelClassName) {
-		this.reportName = reportName;
-		this.modelClassName = modelClassName;		
-	}
-
 	public Identifier getReportObjectId() {
 		return this.reportObjectId;
 	}
 
 	public void setReportObjectId(Identifier reportObjectId) {
 		this.reportObjectId = reportObjectId;
+		super.markAsChanged();
 	}
 }

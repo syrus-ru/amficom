@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.12 2005/10/05 09:39:36 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.13 2005/10/06 09:09:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -55,48 +55,42 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.12 $, $Date: 2005/10/05 09:39:36 $
+ * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2005/10/06 09:09:20 $
  * @module generalclient_v1
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
-//	public static final IntDimension A0 = new IntDimension (3360, 4760);
-//	public static final IntDimension A1 = new IntDimension (3360, 2380);
-//	public static final IntDimension A2 = new IntDimension (1680, 2380);
-//	public static final IntDimension A3 = new IntDimension (1680, 1190);
-//	public static final IntDimension A4 = new IntDimension (840, 1190);
-
 	public enum Orientation {PORTRAIT,LANDSCAPE}
 	
 	public static final int STANDART_MARGIN_SIZE = 60;
 
 	//Это хранимое поле	
-	private String name = "";
+	private String name;
 	//Это хранимое поле	
-	private String description = "";
+	private String description;
 
 	//Это хранимое поле
 	/**
 	 * Размер шаблона (его ширина)
 	 */
-	private SheetSize sheetSize = SheetSize.A4;
+	private SheetSize sheetSize;
 	/**
 	 * Размер шаблона (его ширина)
 	 */
-	private Orientation orientation = Orientation.PORTRAIT;
+	private Orientation orientation;
 	//Это хранимое поле
 	/**
 	 * Размер шаблона (его ширина)
 	 */
-	private int marginSize = ReportTemplate.STANDART_MARGIN_SIZE;
+	private int marginSize;
 	
 	//Это хранимое поле
 	/**
 	 * Принадлежность шаблона к модулю
 	 */
-	private String destinationModule = DestinationModules.UNKNOWN_MODULE;
+	private String destinationModule;
 
 	private LinkedIdsCondition	attTextCondition;
 
@@ -109,26 +103,6 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	//чтобы сначала были подгружены элементы хранения данных, а уже потом -
 	//надписи к ним привязанные.
 	//Это хранимое поле	
-	/**
-	 * Список всех элементов шаблона
-	 */
-//	private Set<Identifier> dataStorableElementIds = new HashSet<Identifier>();
-//	//Это хранимое поле	
-//	/**
-//	 * Список фильтров использующихся в шаблоне
-//	 */
-//	private List objectResourceFilters = new ArrayList();
-	//Это хранимое поле	
-	/**
-	 * Список надписей из шаблона
-	 */
-//	private Set<Identifier> textStorableElementIds = new HashSet<Identifier>();
-	//Это хранимое поле
-	/**
-	 * Список картинок из шаблона
-	 */
-//	private Set<Identifier> imageStorableElementIds = new HashSet<Identifier>();
-
 	ReportTemplate(final Identifier id,
 			final Date created,
 			final Date modified,
@@ -361,6 +335,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 
 	public void setDescription(String description) {
 		this.description = description;
+		super.markAsChanged();
 	}
 
 	public Set<DataStorableElement> getDataStorableElements() throws ApplicationException {
@@ -388,10 +363,6 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		return this.name;
 	}
 
-//	public List getObjectResourceFilters() {
-//		return this.objectResourceFilters;
-//	}
-
 	public IntDimension getSize() {
 		return this.sheetSize.getSize();
 	}
@@ -402,6 +373,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	
 	public void setName(String name) {
 		this.name = name;
+		super.markAsChanged();
 	}
 
 	public int getMarginSize() {
@@ -410,6 +382,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 
 	public void setMarginSize(int marginSize) {
 		this.marginSize = marginSize;
+		super.markAsChanged();
 	}
 	
 	public boolean doObjectsIntersect(){
@@ -418,10 +391,12 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 
 	public void setDestinationModule(String destinationModule) {
 		this.destinationModule = destinationModule;
+		super.markAsChanged();
 	}
 
 	public void setSize(SheetSize sheetSize) {
 		this.sheetSize = sheetSize;
+		super.markAsChanged();
 	}
 
 	public Orientation getOrientation() {
@@ -430,10 +405,11 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 
 	public void setOrientation(Orientation orientation) {
 		this.orientation = orientation;
+		super.markAsChanged();
 	}
 	
 	public void addElement(StorableElement element) {
-		element.setReportTemplateId(this.getId());
+		element.setReportTemplateId(this.getId());		
 	}
 
 	public void removeElement(StorableElement element) {
@@ -442,8 +418,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.emptySet();
 	}
 	
 	SheetSize getSheetSize() {

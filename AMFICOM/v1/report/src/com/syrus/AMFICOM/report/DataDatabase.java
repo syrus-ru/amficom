@@ -1,5 +1,5 @@
 /*-
- * $Id: DataDatabase.java,v 1.1 2005/09/30 12:34:07 max Exp $
+ * $Id: DataDatabase.java,v 1.2 2005/10/06 09:09:20 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Maxim Selivanov
  * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 12:34:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/06 09:09:20 $
  * @module report
  */
 
@@ -92,7 +92,7 @@ public class DataDatabase extends StorableObjectDatabase<DataStorableElement> {
 	protected String getUpdateSingleSQLValuesTmpl(DataStorableElement storableObject) 
 	throws IllegalDataException {
 		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getReportName(), 
-				SIZE_REPORT_NAME_COLUMN) + APOSTROPHE + COMMA
+						SIZE_REPORT_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getModelClassName(), 
 						SIZE_MODEL_CLASS_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ storableObject.getLocation().x + COMMA
@@ -164,7 +164,7 @@ public class DataDatabase extends StorableObjectDatabase<DataStorableElement> {
 				resultSet.getInt(COLUMN_SIZE_HEIGHT),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_REPORT_TEMPLATE_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_REPORT_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_REPORT_NAME)));
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MODEL_CLASS_NAME)));
 		return reportData;
 	}
 	

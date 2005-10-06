@@ -1,5 +1,5 @@
 /*-
- * $Id: AttachedTextDatabase.java,v 1.1 2005/09/30 12:34:07 max Exp $
+ * $Id: AttachedTextDatabase.java,v 1.2 2005/10/06 09:09:20 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Maxim Selivanov
  * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 12:34:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/06 09:09:20 $
  * @module report
  */
 
@@ -219,7 +219,7 @@ public class AttachedTextDatabase extends StorableObjectDatabase<AttachedTextSto
 				resultSet.getInt(COLUMN_DISTANCE_Y),
 				new Font(fontName, fontStyle, fontSize),
 				TextAttachingType.fromInt(resultSet.getInt(COLUMN_VERTICAL_ATTACH_TYPE)),
-				TextAttachingType.fromInt(resultSet.getInt(COLUMN_VERTICAL_ATTACH_TYPE)));
+				TextAttachingType.fromInt(resultSet.getInt(COLUMN_HORIZONTAL_ATTACH_TYPE)));
 		return attachedText;
 	}
 }

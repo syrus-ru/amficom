@@ -1,5 +1,5 @@
 /*-
- * $Id: TableDataDatabase.java,v 1.2 2005/10/05 10:46:38 arseniy Exp $
+ * $Id: TableDataDatabase.java,v 1.3 2005/10/06 09:09:20 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import static com.syrus.AMFICOM.report.DataWrapper.COLUMN_MODEL_CLASS_NAME;
 import static com.syrus.AMFICOM.report.DataWrapper.COLUMN_REPORT_NAME;
 import static com.syrus.AMFICOM.report.DataWrapper.SIZE_MODEL_CLASS_NAME_COLUMN;
 import static com.syrus.AMFICOM.report.DataWrapper.SIZE_REPORT_NAME_COLUMN;
-import static com.syrus.AMFICOM.report.TableDataWrapper.COLUMN_VERTICAL_DIVISION_COUNT;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_LOCATION_X;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_LOCATION_Y;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_REPORT_TEMPLATE_ID;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_SIZE_HEIGHT;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_SIZE_WIDTH;
+import static com.syrus.AMFICOM.report.TableDataWrapper.COLUMN_VERTICAL_DIVISION_COUNT;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/10/05 10:46:38 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/10/06 09:09:20 $
  * @module report
  */
 public class TableDataDatabase extends StorableObjectDatabase<TableDataStorableElement> {
