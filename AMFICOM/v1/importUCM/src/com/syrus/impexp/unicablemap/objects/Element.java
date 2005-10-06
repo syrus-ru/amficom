@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.9 2005/09/30 08:36:27 stas Exp $
+ * $Id: Element.java,v 1.10 2005/10/06 10:00:00 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -164,5 +164,9 @@ public class Element {
 			xmlSchemeDevices.setSchemeDeviceArray(new XmlSchemeDevice[] {this.device.toXMLObject()});
 		}
 		return xmlSE;
+	}
+
+	public String getWellId() {
+		return this.wellId;
 	}
 }
