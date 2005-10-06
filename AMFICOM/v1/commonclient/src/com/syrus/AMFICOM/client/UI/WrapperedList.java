@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedList.java,v 1.12 2005/09/15 17:56:37 bob Exp $
+* $Id: WrapperedList.java,v 1.13 2005/10/06 08:07:17 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/15 17:56:37 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/06 08:07:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -61,7 +61,9 @@ public final class WrapperedList<T> extends JList {
 
 	@Override
 	public void setSelectedValue(final Object anObject, final boolean shouldScroll) {
-		final Object anObjectValue = this.model.wrapper.getValue((T) anObject, this.model.compareKey);
+		final Object anObjectValue = this.model.compareKey != null ? 
+				this.model.wrapper.getValue((T) anObject, this.model.compareKey) : 
+				anObject;
 //		 Log.debugMessage("WrapperedList.setSelectedValue | anObject " + anObject, Log.DEBUGLEVEL10);
 //		 Log.debugMessage("WrapperedList.setSelectedValue | this.model.compareKey:" + this.model.compareKey, Log.DEBUGLEVEL10);
 //		 Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " + anObjectValue, Log.DEBUGLEVEL10);
@@ -71,14 +73,20 @@ public final class WrapperedList<T> extends JList {
 			super.removeSelectionInterval(selectedIndex, selectedIndex);
 			super.repaint();
 		} else {
-			Object elementValue = this.model.wrapper.getValue((T) super.getSelectedValue(), this.model.compareKey);
+			final Object selectedValue = super.getSelectedValue();
+			Object elementValue = this.model.compareKey != null ? 
+					this.model.wrapper.getValue((T) selectedValue, this.model.compareKey) :
+					selectedValue;
 			// Log.debugMessage("WrapperedList.setSelectedValue | elementValue " +
 			// elementValue, Level.FINEST);
 			if (!anObjectValue.equals(elementValue)) {
 				int count = this.model.getSize();
 				assert Log.debugMessage("WrapperedList.setSelectedValue | count " + count, Log.DEBUGLEVEL10);
 				for (int i = 0; i < count; i++) {
-					elementValue = this.model.wrapper.getValue((T) this.model.getElementAt(i), this.model.compareKey);
+					final Object elementAt = this.model.getElementAt(i);
+					elementValue = this.model.compareKey != null ? 
+							this.model.wrapper.getValue((T) elementAt, this.model.compareKey) :
+							elementAt;
 					assert Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " 
 							+ anObjectValue 
 							+ " > elementValue " 

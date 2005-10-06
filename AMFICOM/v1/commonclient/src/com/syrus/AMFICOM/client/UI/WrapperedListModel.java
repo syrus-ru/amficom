@@ -18,7 +18,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/15 17:30:25 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/06 08:07:17 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -50,8 +50,13 @@ public final class WrapperedListModel<T> extends AbstractListModel implements Mu
 	}
 	
 	public WrapperedListModel(Wrapper<T> wrapper, List<T> objects, String key, String compareKey) {
+		assert wrapper != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.wrapper = wrapper;
+		
+		assert key != null : ErrorMessages.NON_NULL_EXPECTED;		
 		this.key = key;
+		
+		assert objects != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.ts = objects;
 		this.compareKey = compareKey;
 	}
@@ -138,8 +143,14 @@ public final class WrapperedListModel<T> extends AbstractListModel implements Mu
 		int index = -1;
 		if (this.ts != null) {
 			for (final T element : this.ts) {
-				final Object anObjectValue = this.wrapper.getValue(anObject, this.compareKey);
-				final Object elementValue = this.wrapper.getValue(element, this.compareKey);
+				final Object anObjectValue = 
+					this.compareKey != null ? 
+							this.wrapper.getValue(anObject, this.compareKey) :
+							anObject;
+				final Object elementValue = 
+					this.compareKey != null ?
+						this.wrapper.getValue(element, this.compareKey) :
+						element;
 				if (anObjectValue.equals(elementValue)) {
 					index = this.ts.indexOf(element);
 					break;

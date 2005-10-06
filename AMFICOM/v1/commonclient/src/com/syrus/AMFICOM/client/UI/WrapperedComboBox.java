@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedComboBox.java,v 1.6 2005/09/09 18:54:27 arseniy Exp $
+* $Id: WrapperedComboBox.java,v 1.7 2005/10/06 08:07:17 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/09 18:54:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/10/06 08:07:17 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -52,8 +52,12 @@ public class WrapperedComboBox<T> extends AComboBox {
 
 	@Override
 	public void setSelectedItem(final Object anObject) {
-		final Object anObjectValue = this.model.wrapper.getValue((T) anObject, this.model.compareKey);
-		Object oldSelection = this.model.wrapper.getValue((T) this.selectedItemReminder, this.model.compareKey);
+		final Object anObjectValue = this.model.compareKey != null ? 
+				this.model.wrapper.getValue((T) anObject, this.model.compareKey) :
+				anObject;
+		Object oldSelection = this.model.compareKey != null ? 
+				this.model.wrapper.getValue((T) this.selectedItemReminder, this.model.compareKey) : 
+				this.selectedItemReminder;
 //		Log.debugMessage("WrapperedComboBox.setSelectedItem | anObjectValue " + anObjectValue, Log.FINEST);
 //		Log.debugMessage("WrapperedComboBox.setSelectedItem | oldSelection " + oldSelection, Log.FINEST);
 		if (oldSelection == null || !oldSelection.equals(anObjectValue)) {
@@ -61,7 +65,9 @@ public class WrapperedComboBox<T> extends AComboBox {
 			if (anObjectValue != null && !isEditable()) {
 				for (int i = 0; i < this.model.getSize(); i++) {
 					final Object elementAt = this.model.getElementAt(i);
-					oldSelection = this.model.wrapper.getValue((T) this.model.getElementAt(i), this.model.compareKey);
+					oldSelection = this.model.compareKey != null ?
+							this.model.wrapper.getValue((T) elementAt, this.model.compareKey) :
+							elementAt;
 					if (anObjectValue.equals(oldSelection)) {
 						super.setSelectedItem(elementAt);
 						break;
