@@ -1,5 +1,5 @@
 /*-
- * $Id: ChannelingItem.java,v 1.5 2005/10/04 10:26:58 krupenn Exp $
+ * $Id: ChannelingItem.java,v 1.6 2005/10/06 10:00:23 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -100,5 +100,21 @@ public class ChannelingItem {
 		xmlCCI.setParentSchemeCableLinkId(cableLinkId);
 		
 		return xmlCCI;
+	}
+
+	public String getEndSiteId() {
+		return this.endSiteId;
+	}
+
+	public String getStartSiteId() {
+		return this.startSiteId;
+	}
+
+	public String getTunnelId() {
+		return this.tunnelId;
+	}
+
+	public String getId() {
+		return this.id;
 	}
 }
