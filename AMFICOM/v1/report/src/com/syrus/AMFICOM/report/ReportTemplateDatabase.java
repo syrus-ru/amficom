@@ -1,5 +1,5 @@
 /*-
- * $Id: ReportTemplateDatabase.java,v 1.1 2005/09/30 16:22:15 max Exp $
+ * $Id: ReportTemplateDatabase.java,v 1.2 2005/10/06 12:10:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,20 +39,20 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 16:22:15 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/10/06 12:10:18 $
  * @module report
  */
 public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplate> {
-	
+
 	private static String columns;
 	private static String updateMultipleSQLValues;
-	
+
 	@Override
 	protected short getEntityCode() {
 		return REPORTTEMPLATE_CODE;
 	}
-	
+
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
@@ -65,7 +65,7 @@ public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplat
 		}
 		return columns;
 	}
-	
+
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
@@ -78,21 +78,18 @@ public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplat
 		}
 		return updateMultipleSQLValues;
 	}
-	
+
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(ReportTemplate storableObject) 
 	throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(),
-				SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(),
-				SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ storableObject.getSheetSize().ordinal() + COMMA
 				+ storableObject.getOrientation().ordinal() + COMMA
 				+ storableObject.getMarginSize() + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDestinationModule(),
-				SIZE_DESTINATION_MODULE_COLUMN);
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDestinationModule(), SIZE_DESTINATION_MODULE_COLUMN) + APOSTROPHE;
 	}
-	
+
 	@Override
 	protected int setEntityForPreparedStatementTmpl(ReportTemplate storableObject, 
 			PreparedStatement preparedStatement, 
@@ -103,9 +100,10 @@ public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplat
 		preparedStatement.setInt(++startParameterNumber, storableObject.getSheetSize().ordinal());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getOrientation().ordinal());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getMarginSize());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDestinationModule(), SIZE_DESTINATION_MODULE_COLUMN);
 		return startParameterNumber;
 	}
-	
+
 	@Override
 	protected ReportTemplate updateEntityFromResultSet(ReportTemplate storableObject, 
 			ResultSet resultSet) throws IllegalDataException, 
@@ -125,7 +123,7 @@ public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplat
 						0,
 						null)
 				: storableObject;
-		
+
 		reportTemplate.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -139,5 +137,5 @@ public class ReportTemplateDatabase extends StorableObjectDatabase<ReportTemplat
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESTINATION_MODULE)));
 		return reportTemplate;
 	}
-	
+
 }
