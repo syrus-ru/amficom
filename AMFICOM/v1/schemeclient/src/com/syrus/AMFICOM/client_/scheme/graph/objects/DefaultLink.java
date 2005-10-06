@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.13 2005/10/05 15:49:43 stas Exp $
+ * $Id: DefaultLink.java,v 1.14 2005/10/06 07:19:31 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/10/05 15:49:43 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/06 07:19:31 $
  * @module schemeclient
  */
 
@@ -226,13 +226,13 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 									|| (DefaultLink.this._from.y != from.y && DefaultLink.this._to.y != to.y)) {
 								
 								int delta = from.x - DefaultLink.this._from.x;
-								if (edge.getSource() != null) {
+								if (getSource() != null) {
 									DefaultLink.this.routed[0].x += delta;
 									if (DefaultLink.this.routed.length == 4) {
 										DefaultLink.this.routed[1].x += delta;
 									}
 								}
-								if (edge.getTarget() != null) {
+								if (getTarget() != null) {
 									delta = to.x - DefaultLink.this._to.x;
 									if (DefaultLink.this.routed.length == 2) {
 										DefaultLink.this.routed[1].x += delta;
@@ -241,14 +241,14 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 										DefaultLink.this.routed[3].x += delta;
 									}
 								}
-								if (edge.getSource() != null && edge.getTarget() != null) {
-									int deltay = ((from.y - DefaultLink.this._from.y) +
-											(to.y - DefaultLink.this._to.y)) / 2;
-									if (DefaultLink.this.routed.length == 4) {
-										DefaultLink.this.routed[1].y += deltay;
-										DefaultLink.this.routed[2].y += deltay;
-									}
-								}
+//								if (getSource() != null && getTarget() != null) {
+//									int deltay = ((from.y - DefaultLink.this._from.y) +
+//											(to.y - DefaultLink.this._to.y)) / 2;
+//									if (DefaultLink.this.routed.length == 4) {
+//										DefaultLink.this.routed[1].y += deltay;
+//										DefaultLink.this.routed[2].y += deltay;
+//									}
+//								}
 								
 							/*if (DefaultLink.this._from != null
 									&& (DefaultLink.this._from.x != from.x || DefaultLink.this._from.y != from.y)) {
@@ -281,20 +281,6 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 								Point[] p = DefaultLink.this.routed;
 								Point[] _p = DefaultLink.this._routed;
 								
-								// крайние точки обязаны находиться на одном y с концами
-								if (p[0].y != from.y) {
-									p[0].y = from.y;
-								}
-								if (p[p.length-1].y != to.y) {
-									p[p.length-1].y = to.y;
-								}
-								if (p[0].x <= from.x) {
-									p[0].x = from.x + grid;
-								}
-								if (p[p.length-1].x >= to.x) {
-									p[p.length-1].x = to.x - grid;
-								}
-								
 								// двигать можно только за точку, за линию - игнорим
 								if (p.length == 2) {
 									// только горизонтальные перемещения доступны
@@ -314,48 +300,79 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 										}
 									}
 								} else if (p.length == 4) {
+									boolean changed = false;
 									//	горизонтальные перемещения
+									if (from.x != DefaultLink.this._from.x) { // двигаем начало
+//										if (edge.getSource() != null || edge.getTarget() != null) {
+											int delta = from.x - DefaultLink.this._from.x;
+											p[0].x += delta;
+											p[1].x = p[0].x;
+											changed = true;
+//										}
+									}
+									if (to.x != DefaultLink.this._to.x) { // двигаем конец
+//										if (edge.getTarget() != null || edge.getSource() != null) {
+											int delta = to.x - DefaultLink.this._to.x;
+											p[3].x += delta;
+											p[2].x = p[3].x;
+											changed = true;
+//										}
+									}
 									if (p[0].x != _p[0].x && p[1].x == _p[1].x) { // двигаем точку 0
 										p[1].x = p[0].x;
+										changed = true;
 									} else if (p[1].x != _p[1].x && p[2].x == _p[2].x) { // двигаем точку 1
 										if (p[1].x <= from.x) {
 											p[1].x = from.x + grid;
 										}
 										p[0].x = p[1].x;
-									} else if (p[2].x != _p[2].x && p[1].x == _p[1].x) { // двигаем точку 2
+										changed = true;
+									} 
+									if (p[2].x != _p[2].x && p[1].x == _p[1].x) { // двигаем точку 2
 										if (p[2].x >= to.x) {
 											p[2].x = to.x - grid;
 										}
 										p[3].x = p[2].x;
+										changed = true;
 									} else if (p[3].x != _p[3].x && p[2].x == _p[2].x) { // двигаем точку 3
 										p[2].x = p[3].x;
-									} else if (from.x != DefaultLink.this._from.x) { // двигаем начало
-										if (edge.getSource() != null) {
-											int delta = from.x - DefaultLink.this._from.x;
-											p[0].x += delta;
-											p[1].x += delta;
-										}
-									} else if (to.x != DefaultLink.this._to.x) { // двигаем конец
-										if (edge.getTarget() != null) {
-											int delta = to.x - DefaultLink.this._to.x;
-											p[2].x += delta;
-											p[3].x += delta;
-										}
-									} else { // сбрасываем все изменения по х
+										changed = true;
+									} 
+									// сбрасываем все изменения по х
+									if (!changed) {
 										for (int i = 0; i < p.length; i++) {
 											p[i].x = _p[i].x;
 										}
 									}
-									//	вертикальные перемещения только для точек 1, 2
+									
+									//	вертикальные перемещения для точек 1, 2
 									if (p[1].y != _p[1].y && p[2].y == _p[2].y) { // двигаем точку 1
 										p[2].y = p[1].y;
 									} else if (p[2].y != _p[2].y && p[1].y == _p[1].y) { // двигаем точку 1
 										p[1].y = p[2].y;
+									} else if (from.y != DefaultLink.this._from.y) { // двигаем начало
+										p[0].y = from.y;
+									} else if (to.x != DefaultLink.this._to.y) { // двигаем начало
+										p[3].y = to.y;
 									} else { // сбрасываем все изменения по y
 										for (int i = 1; i < p.length - 1; i++) {
 											p[i].y = _p[i].y;
 										}
 									}
+								}
+								
+								// крайние точки обязаны находиться на одном y с концами
+								if (p[0].y != from.y) {
+									p[0].y = from.y;
+								}
+								if (p[p.length-1].y != to.y) {
+									p[p.length-1].y = to.y;
+								}
+								if (p[0].x <= from.x) {
+									p[0].x = from.x + grid;
+								}
+								if (p[p.length-1].x >= to.x) {
+									p[p.length-1].x = to.x - grid;
 								}
 							}
 						} else {
@@ -385,6 +402,7 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 			DefaultLink.this._from.y = from.y;
 			DefaultLink.this._to.x = to.x;
 			DefaultLink.this._to.y = to.y;
+			GraphConstants.setPoints(DefaultLink.this.getAttributes(), points);
 		}
 	}
 	
