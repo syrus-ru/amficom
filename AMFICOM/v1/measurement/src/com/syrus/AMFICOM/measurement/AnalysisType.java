@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.99 2005/10/06 08:04:20 bob Exp $
+ * $Id: AnalysisType.java,v 1.100 2005/10/06 15:19:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/10/06 08:04:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.100 $, $Date: 2005/10/06 15:19:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum AnalysisType implements TransferableObject, ActionType, Describable {
+public enum AnalysisType implements TransferableObject<IdlAnalysisType>,
+		ActionType<IdlAnalysisType>, Describable {
 	DADARA("dadara",
 			EnumSet.of(ParameterType.REFLECTOGRAMMA),
 			EnumSet.of(ParameterType.DADARA_CRITERIA),

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.102 2005/09/29 06:30:29 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.103 2005/10/06 15:19:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/09/29 06:30:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.103 $, $Date: 2005/10/06 15:19:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum MeasurementType implements ActionType {
+public enum MeasurementType implements ActionType<IdlMeasurementType> {
 	REFLECTOMETRY("reflectometry",
 			EnumSet.of(ParameterType.REF_WAVE_LENGTH,
 					ParameterType.REF_TRACE_LENGTH,

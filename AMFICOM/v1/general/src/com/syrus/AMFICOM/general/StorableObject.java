@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.116 2005/10/05 13:43:32 bass Exp $
+ * $Id: StorableObject.java,v 1.117 2005/10/06 15:19:44 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,12 +35,13 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/10/05 13:43:32 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/06 15:19:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
+public abstract class StorableObject implements Identifiable,
+		TransferableObject<IdlStorableObject> {
 	private static final long serialVersionUID = 3904998894075738999L;
 
 	protected Identifier id;
@@ -638,7 +639,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.116 $, $Date: 2005/10/05 13:43:32 $
+	 * @version $Revision: 1.117 $, $Date: 2005/10/06 15:19:44 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -754,7 +755,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.116 $, $Date: 2005/10/05 13:43:32 $
+	 * @version $Revision: 1.117 $, $Date: 2005/10/06 15:19:44 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

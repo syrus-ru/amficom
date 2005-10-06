@@ -1,5 +1,5 @@
 /*-
- * $Id: TransferableObject.java,v 1.11 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: TransferableObject.java,v 1.12 2005/10/06 15:19:44 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/10/06 15:19:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public interface TransferableObject extends Serializable {
+public interface TransferableObject<T extends IDLEntity> extends Serializable {
 
 	String KEY_VALUE_SEPERATOR = ":";
 	String ID 				= "id" + KEY_VALUE_SEPERATOR;
@@ -37,5 +37,5 @@ public interface TransferableObject extends Serializable {
 	String OPEN_BLOCK			= " { \n";
 	String CLOSE_BLOCK		= "\n}" + EOSL;
 
-	IDLEntity getTransferable(final ORB orb);
+	T getTransferable(final ORB orb);
 }

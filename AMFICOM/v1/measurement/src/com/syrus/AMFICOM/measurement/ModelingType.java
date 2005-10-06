@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.57 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ModelingType.java,v 1.58 2005/10/06 15:19:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/10/06 15:19:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum ModelingType implements TransferableObject, ActionType {
+public enum ModelingType implements TransferableObject<IdlModelingType>,
+		ActionType<IdlModelingType> {
 	DADARA_MODELING("dadara_modeling",
 			EnumSet.noneOf(ParameterType.class),
 			EnumSet.noneOf(ParameterType.class)),

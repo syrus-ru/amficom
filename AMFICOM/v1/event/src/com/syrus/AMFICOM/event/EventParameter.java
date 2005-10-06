@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.26 2005/09/18 12:43:12 bass Exp $
+ * $Id: EventParameter.java,v 1.27 2005/10/06 15:19:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,13 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.TransferableObject;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/18 12:43:12 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/06 15:19:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
-public final class EventParameter implements Identifiable, TransferableObject {
+public final class EventParameter implements Identifiable,
+		TransferableObject<IdlEventParameter> {
 	private static final long serialVersionUID = 4906660762164733352L;
 
 	private Identifier id;

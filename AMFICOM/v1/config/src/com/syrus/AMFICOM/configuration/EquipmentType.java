@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.104 2005/09/30 06:40:49 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.105 2005/10/06 15:19:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,13 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.util.Codeable;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/09/30 06:40:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.105 $, $Date: 2005/10/06 15:19:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public enum EquipmentType implements Namable, Codeable, TransferableObject {
+public enum EquipmentType implements Namable, Codeable,
+		TransferableObject<IdlEquipmentType> {
 	REFLECTOMETER("reflectometer"),
 	OPTICAL_SWITCH("optical_switch"),
 	MUFF("muff"),

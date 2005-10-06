@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.19 2005/09/22 15:16:33 arseniy Exp $
+ * $Id: StorableObjectCondition.java,v 1.20 2005/10/06 15:19:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/22 15:16:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/10/06 15:19:44 $
+ * @author $Author: bass $
  * @module general
  */
-public interface StorableObjectCondition extends TransferableObject {
+public interface StorableObjectCondition
+		extends TransferableObject<IdlStorableObjectCondition> {
 	boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException;
 
 	/**

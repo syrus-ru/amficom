@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.7 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: DataType.java,v 1.8 2005/10/06 15:19:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,12 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/10/06 15:19:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum DataType implements TransferableObject, Codeable {
+public enum DataType implements TransferableObject<IdlDataType>, Codeable {
 	INTEGER("integer"),
 	DOUBLE("double"),
 	STRING("string"),

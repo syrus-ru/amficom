@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.63 2005/09/17 19:57:57 arseniy Exp $
+ * $Id: ParameterType.java,v 1.64 2005/10/06 15:19:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,12 +20,13 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/09/17 19:57:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/10/06 15:19:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum ParameterType implements TransferableObject, Codeable {
+public enum ParameterType implements TransferableObject<IdlParameterType>,
+		Codeable {
 	REF_WAVE_LENGTH("ref_wvlen", DataType.INTEGER, MeasurementUnit.NANOMETER),
 	REF_TRACE_LENGTH("ref_trclen", DataType.DOUBLE, MeasurementUnit.KILOMETER),
 	REF_RESOLUTION("ref_res", DataType.DOUBLE, MeasurementUnit.METER),

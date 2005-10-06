@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.168 2005/10/05 08:08:18 bob Exp $
+ * $Id: Test.java,v 1.169 2005/10/06 15:19:43 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.168 $, $Date: 2005/10/05 08:08:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.169 $, $Date: 2005/10/06 15:19:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -604,7 +604,8 @@ public final class Test extends StorableObject implements Describable {
 		return transferables;
 	}
 
-	public final class TestTimeStamps implements TransferableObject {
+	public final class TestTimeStamps
+			implements TransferableObject<IdlTestTimeStamps> {
 		private static final long serialVersionUID = -3560328752462377043L;
 
 		Date startTime;
