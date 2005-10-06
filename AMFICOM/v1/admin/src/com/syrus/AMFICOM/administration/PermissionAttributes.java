@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.11 2005/09/28 12:29:00 bob Exp $
+* $Id: PermissionAttributes.java,v 1.12 2005/10/06 08:05:41 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/28 12:29:00 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/06 08:05:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -82,7 +82,7 @@ public class PermissionAttributes extends StorableObject {
 			return IdlModule.from_int(this.ordinal());
 		}
 		
-		final String getCodename() {
+		public final String getCodename() {
 			return this.codename;
 		}
 		
@@ -389,7 +389,11 @@ public class PermissionAttributes extends StorableObject {
 		}
 		
 		if (this.module != permissionCode.getModule()) {
-			throw new IllegalArgumentException("This Permission doen't support " + permissionCode.name());
+			throw new IllegalArgumentException("This Permission doen't support " 
+				+ permissionCode.name() 
+				+ ", this.module:" 
+				+ this.module
+				+ ", permissionCode.getModule():" + permissionCode.getModule());
 		}
 		
 		return this.permissions.get(permissionCode.getOrderInGroup());
