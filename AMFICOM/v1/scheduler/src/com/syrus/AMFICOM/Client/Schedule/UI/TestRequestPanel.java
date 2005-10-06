@@ -35,19 +35,19 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3834032471820939824L;
 
-	JTextField					nameTextField		= new JTextField();
+	JTextField					nameTextField;
 
-	private JLabel				ownerTextField		= new JLabel();
+	private JTextField				ownerTextField;
 
-	private JLabel				typeTextField		= new JLabel();
+	private JTextField				typeTextField;
 
-	private JLabel				portTextField		= new JLabel();
+	private JTextField				portTextField;
 
 	SchedulerModel				schedulerModel;
 
 	Dispatcher					dispatcher;
 
-	public TestRequestPanel(ApplicationContext aContext) {
+	public TestRequestPanel(final ApplicationContext aContext) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 
 		this.dispatcher = aContext.getDispatcher();
@@ -55,9 +55,10 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_NAME, this);
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		JPanel panel = new JPanel(new GridLayout(0, 2));
-		JLabel titleLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		final JPanel panel = new JPanel(new GridLayout(0, 2));
+		final JLabel titleLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(titleLabel);
+		this.nameTextField = new JTextField();
 		panel.add(this.nameTextField);
 		this.nameTextField.setEditable(true);
 		this.nameTextField.addActionListener(new ActionListener() {
@@ -81,14 +82,20 @@ final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 		});
 		JLabel ownerLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(ownerLabel);
+		this.ownerTextField = new JTextField();
+		this.ownerTextField.setEditable(false);
 		panel.add(this.ownerTextField);
 
 		JLabel typeLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.MeasurementType") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(typeLabel);
+		this.typeTextField = new JTextField();
+		this.typeTextField.setEditable(false);
 		panel.add(this.typeTextField);
 
 		JLabel objectLabel = new JLabel(I18N.getString("Scheduler.Text.Test.Field.Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(objectLabel);
+		this.portTextField = new JTextField();
+		this.portTextField.setEditable(false);
 		panel.add(this.portTextField);
 		this.add(panel);
 
