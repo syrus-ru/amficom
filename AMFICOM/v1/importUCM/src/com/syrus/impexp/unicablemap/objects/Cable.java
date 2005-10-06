@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.7 2005/10/06 10:02:54 krupenn Exp $
+ * $Id: Cable.java,v 1.8 2005/10/06 10:25:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -244,6 +244,7 @@ public class Cable {
 					System.out.print(" " + channelingItem.getTunnelId());
 				}
 				System.out.println("");
+				this.channelingItems.clear();
 				return;
 			}
 		}

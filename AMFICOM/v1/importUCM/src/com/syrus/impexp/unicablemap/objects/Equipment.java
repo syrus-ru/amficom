@@ -1,5 +1,5 @@
 /*-
- * $Id: Equipment.java,v 1.5 2005/10/03 13:43:27 stas Exp $
+ * $Id: Equipment.java,v 1.6 2005/10/06 10:25:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,10 +47,6 @@ public class Equipment {
 	public XmlEquipment toXMLObject() {
 		XmlEquipment xmlEq = XmlEquipment.Factory.newInstance();
 		
-		if (this.name.length() > 32) {
-			System.out.println("equipment name (" + this.name + ") length greater then 32 symbols. cuting... ");
-			this.name = this.name.substring(0, 31);
-		}
 		
 		XmlIdentifier uid = xmlEq.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
@@ -66,6 +62,11 @@ public class Equipment {
 		
 		double[] d = Site.UTMtoGeo(this.longitude, this.latitude);
 		
+		if (this.name.length() > 32) {
+			System.out.println("equipment name (" + this.name + ") length greater then 32 symbols. Copy to description ");
+			xmlEq.setDescription(this.name);
+			this.name = this.name.substring(0, 31);
+		}
 		xmlEq.setName(this.name);
 		xmlEq.setLongitude((float)d[0]);
 		xmlEq.setLatitude((float)d[1]);
