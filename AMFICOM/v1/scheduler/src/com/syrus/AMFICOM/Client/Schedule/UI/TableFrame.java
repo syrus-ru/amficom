@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.50 2005/10/06 14:34:57 bob Exp $
+ * $Id: TableFrame.java,v 1.51 2005/10/06 15:31:17 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/10/06 14:34:57 $
+ * @version $Revision: 1.51 $, $Date: 2005/10/06 15:31:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -92,25 +92,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			this.listTable.clearSelection();
 		} else {
 			try {
-				final WrapperedTableModel<Test> tableModel = this.listTable.getModel();
 				final Set<Test> tests = this.schedulerModel.getSelectedTests();
-				for (final Test selectedTest : tests) {
-					Identifier identifier = selectedTest.getId();
-					final Identifier groupTestId = selectedTest.getGroupTestId();
-					if (!groupTestId.isVoid()) {
-						identifier = groupTestId;
-					}
-					
-					for (int i = 0; i < tableModel.getRowCount(); i++) {
-						final Test testInTable = tableModel.getObject(i);
-						Identifier testId = testInTable.getGroupTestId();
-						testId = !testId.isVoid() ? testId : testInTable.getId();
-						if (testId.equals(identifier)) {
-							this.listTable.setRowSelectionInterval(i, i);
-							break;
-						}
-					}
-				}
+				this.listTable.setSelectedValues(tests);				
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				return;
@@ -174,15 +157,18 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					if (e.getValueIsAdjusting() || TableFrame.this.propertyChangeEvent != null) {
 						return;
 					}
-					final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-					if (!lsm.isSelectionEmpty()) {
-						final int selectedRow = lsm.getMinSelectionIndex();
+					final Test selectedValue = TableFrame.this.listTable.getSelectedValue();
+					if (selectedValue != null) {
 						new ProcessingDialog(new Runnable() {
 
 							public void run() {
 								TableFrame.this.schedulerModel.unselectTests(TableFrame.this);
-								final WrapperedTableModel<Test> model = TableFrame.this.listTable.getModel();
-								TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, model.getObject(selectedRow));
+								try {
+									TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, TableFrame.this.listTable.getSelectedValue());
+								} catch (final ApplicationException e) {
+									AbstractMainFrame.showErrorMessage(
+										I18N.getString("Scheduler.Error.CannotSelectTest"));
+								}
 							}
 						}, I18N.getString("Common.ProcessingDialog.PlsWait"));
 					} else {
@@ -245,7 +231,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 							}
 						}
 						
-//						// TODO bypass
+//						// bypass
 //						enableDeleting = enableStopping = enableResuming = true;
 
 						if (enableDeleting) {
