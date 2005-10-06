@@ -207,7 +207,12 @@ final class TestLine extends TimeLine {
 	
 							public void run() {
 								TestLine.this.skip = true;
-								TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
+								try {
+									TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
+								} catch (final ApplicationException e) {
+									AbstractMainFrame.showErrorMessage(
+										I18N.getString("Scheduler.Error.CannotSelectTest"));
+								}
 								TestLine.this.skip = false;
 							}
 						}, I18N.getString("Common.ProcessingDialog.PlsWait"));

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.117 2005/10/06 13:18:02 bob Exp $
+ * $Id: SchedulerModel.java,v 1.118 2005/10/06 15:30:54 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.117 $, $Date: 2005/10/06 13:18:02 $
+ * @version $Revision: 1.118 $, $Date: 2005/10/06 15:30:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -471,8 +471,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 	}
 
-	public void addSelectedTest(final Object source, final Test selectedTest) {
-		final Identifier selectedTestId = selectedTest.getId();
+	public void addSelectedTest(final Object source, final Test selectedTest) 
+	throws ApplicationException {
 		synchronized (this) {
 			if (this.selectedTestIds == null) {
 				this.selectedTestIds = new HashSet<Identifier>();
@@ -482,16 +482,30 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					this.selectedFirstTest = selectedTest;
 					this.selectedFirstTestId = selectedTest.getId();
 				}
-				if (!this.selectedTestIds.contains(selectedTestId)) {
-					this.selectedTestIds.add(selectedTestId);
-					this.refreshTest(source);
+				final Identifier groupTestId = selectedTest.getGroupTestId();
+				if (!groupTestId.isVoid()) {
+					final Set<Test> testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
+						new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
+					for (final Test test : testsByCondition) {
+						this.addSelectedSingleTest(test);
+					}
+				} else {
+					this.addSelectedSingleTest(selectedTest);
 				}
+				this.refreshTest(source);
 			} else {
 				Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Level.FINEST);
 			}
 		}
 	}
 
+	private void addSelectedSingleTest(final Test selectedTest) {
+		final Identifier selectedTestId = selectedTest.getId();
+		if (!this.selectedTestIds.contains(selectedTestId)) {
+			this.selectedTestIds.add(selectedTestId);			
+		}
+	}
+	
 	public void unselectTests(final Object source) {
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
