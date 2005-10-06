@@ -1,5 +1,5 @@
 /*-
-* $Id: I18N.java,v 1.2 2005/10/06 14:34:35 bob Exp $
+* $Id: I18N.java,v 1.3 2005/10/06 14:38:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 
 /**
  * Internationalization
- * @version $Revision: 1.2 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/06 14:38:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -46,7 +46,7 @@ public final class I18N {
 				+ "', value:'"
 				+ string 
 				+ '\'', 
-			Log.DEBUGLEVEL09);
+			Log.DEBUGLEVEL10);
 		return string;
 	}
 
