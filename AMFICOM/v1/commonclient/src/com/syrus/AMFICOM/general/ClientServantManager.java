@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.13 2005/10/06 14:34:35 bob Exp $
+ * $Id: ClientServantManager.java,v 1.14 2005/10/06 14:50:53 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,10 +21,11 @@ import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/06 14:50:53 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
