@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.14 2005/10/04 17:06:47 krupenn Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.15 2005/10/06 10:02:54 krupenn Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.xmlbeans.XmlOptions;
 
@@ -38,6 +40,8 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeElementSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort.DirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme.Kind;
+import com.syrus.impexp.unicablemap.map.Link;
+import com.syrus.impexp.unicablemap.map.Site;
 import com.syrus.impexp.unicablemap.objects.Cable;
 import com.syrus.impexp.unicablemap.objects.CableThread;
 import com.syrus.impexp.unicablemap.objects.CableType;
@@ -51,7 +55,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/10/04 17:06:47 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/06 10:02:54 $
  * @module importUCM
  */
 
@@ -68,6 +72,10 @@ public class UCMSchemeExportCommand {
 	HashMap<Integer, Element> muffs = new HashMap<Integer, Element>();
 	HashMap<Integer, Element> buildings = new HashMap<Integer, Element>();
 	HashMap<Integer, Cable> cables = new HashMap<Integer, Cable>();
+	HashMap<Integer, Link> links = new HashMap<Integer, Link>();
+	HashMap<Integer, Site> sites = new HashMap<Integer, Site>();
+	
+	Map<Cable, List<Site>> cableInlets = new HashMap<Cable, List<Site>>();
 	
 	String defaultEqtId;
 	
@@ -87,6 +95,20 @@ public class UCMSchemeExportCommand {
 
 		Collection<UniCableMapObject> cableTypes = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_TYPE));
 		createCableTypes(cableTypes);
+	}
+	
+	public void processMapObjects() throws SQLException {
+		Collection<UniCableMapObject> ucmCableInlets = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_INLET));
+		createCableInlets(ucmCableInlets);
+
+		Collection<UniCableMapObject> ucmTunnels = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_TUNNEL));
+		createLinks(ucmTunnels);
+
+		Collection<UniCableMapObject> ucmCollectorFragments = this.ucmDatabase.getObjects(
+				this.ucmDatabase.getType(UniCableMapType.UCM_COLLECTOR_FRAGMENT));
+		createLinks(ucmCollectorFragments);
 	}
 	
 	public void processSchemeObjects(int cableNumber) throws SQLException {
@@ -111,6 +133,10 @@ public class UCMSchemeExportCommand {
 			Cable cable = new Cable(Integer.toString(ucmObject.un));
 			this.cables.put(Integer.valueOf(ucmObject.un), cable);
 			
+			if(ucmObject.un == 538058L) {
+				int a = 0;
+			}
+			
 			cable.setName(ucmObject.text);
 			int fibers = 0;
 			
@@ -120,7 +146,23 @@ public class UCMSchemeExportCommand {
 				}
 			}
 			
+			String startSiteId = "";
+			String endSiteId = "";
+			
 			CableType type = null;
+			for(UniCableMapLink ucmLink : this.ucmDatabase.getParents(ucmObject)) {
+				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_WELL_CABLE)) {
+					if(ucmLink.parent.typ.text.equals(UniCableMapType.UCM_CABLE_INLET)) {
+						List<Site> list = this.cableInlets.get(cable);
+						if(list == null) {
+							list = new LinkedList<Site>();
+							this.cableInlets.put(cable, list);
+						}
+						list.add(this.sites.get(Integer.valueOf(ucmLink.parent.un)));
+					}
+				}
+			}
+
 			for(UniCableMapLink ucmLink : this.ucmDatabase.getParents(ucmObject)) {
 				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_KIND_HAS_KIND)) {
 					 cable.setTypeId(Integer.valueOf(ucmLink.parent.un));
@@ -143,8 +185,23 @@ public class UCMSchemeExportCommand {
 					//add first CCI
 					if (startObj.typ.text.equals(UniCableMapType.UCM_CABLE_INLET)) {
 						ChannelingItem item = createStartChannelingItem(cable, startObj);
-						cable.addChannelingItem(item);
+						cable.setFirstChannelingItem(item);
+						startSiteId = item.getStartSiteId();
 					}
+					else if (startObj.typ.text.equals(UniCableMapType.UCM_ODF)) {
+						ChannelingItem item = createODFStartChannelingItem(cable, startObj);
+						if(item != null) {
+							cable.setFirstChannelingItem(item);
+							startSiteId = item.getStartSiteId();
+						}
+						else {
+							startSiteId = getSiteId(startObj);
+						}
+					}
+					else {
+						startSiteId = getSiteId(startObj);
+					}
+					cable.setStartSiteId(startSiteId);
 				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
 					UniCableMapObject endObj = ucmLink.parent;
 					cable.setEndPortId(getFreePort(cable, DirectionType.IN, endObj));
@@ -152,11 +209,37 @@ public class UCMSchemeExportCommand {
 					// set last CCI
 					if (endObj.typ.text.equals(UniCableMapType.UCM_CABLE_INLET)) {
 						ChannelingItem item = createEndChannelingItem(cable, endObj);
-						cable.setChannelingItem(item);
+						cable.setLastChannelingItem(item);
+						endSiteId = item.getEndSiteId();
 					}
+					else if (endObj.typ.text.equals(UniCableMapType.UCM_ODF)) {
+						ChannelingItem item = createODFEndChannelingItem(cable, endObj);
+						if(item != null) {
+							cable.setLastChannelingItem(item);
+							endSiteId = item.getEndSiteId();
+						}
+						else {
+							endSiteId = getSiteId(endObj);
+						}
+					}
+					else {
+						endSiteId = getSiteId(endObj);
+					}
+					cable.setEndSiteId(endSiteId);
 				} 
 			}
 			
+			if(startSiteId.length() == 0) {
+				System.out.println("Не определен начальный узел для кабеля "
+						+ cable.getName() + "' (" + cable.getId()
+						+ ")");
+			}
+			if(endSiteId.length() == 0) {
+				System.out.println("Не определен конечный узел для кабеля "
+						+ cable.getName() + "' (" + cable.getId()
+						+ ")");
+			}
+
 			for(UniCableMapLink ucmLink : this.ucmDatabase.getChildren(ucmObject)) {
 				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_CABLE_LAYOUT)) {
 					UniCableMapObject razrez = ucmLink.child;  
@@ -169,9 +252,28 @@ public class UCMSchemeExportCommand {
 					cable.addChannelingItem(item);
 				}
 			}
+			
+			cable.sortChannelingItems(getLinks(ucmObject));
 		}
 	}
+
 	
+	private List<Link> getLinks(UniCableMapObject ucmObject) throws SQLException {
+		List<Link> foundLinks = new LinkedList<Link>(); 
+		
+		for(UniCableMapLink ucmLink : this.ucmDatabase.getParents(ucmObject)) {
+			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_TUNNEL_CABLE)) {
+				UniCableMapObject tunnel = ucmLink.parent;
+				final Link link = this.links.get(Integer.valueOf(tunnel.un));
+				if(link == null) {
+					int a = 0;
+				}
+				foundLinks.add(link);
+			}
+		}
+		return foundLinks;
+	}
+
 	void createThreads(CableType type, Cable cable, UniCableMapObject razrez) throws SQLException {
 		int fiberCount = 0;
 		
@@ -236,7 +338,26 @@ public class UCMSchemeExportCommand {
 				item.setStartSiteId("site" + plan.un);
 			}
 		}
+		if(item.getStartSiteId() == null) {
+			int a = 0;
+		}
 		return item;
+	}
+	
+	ChannelingItem createODFStartChannelingItem(Cable cable, UniCableMapObject odf) throws SQLException {
+		String building = getSiteId(odf);
+		final List<Site> list = this.cableInlets.get(cable);
+		if(list != null) {
+			for(Site site : list) {
+				if(site.getAttachmentSiteNodeId().equals(building)) {
+					UniCableMapObject cableInlet = this.ucmDatabase.getObject(
+							Integer.parseInt(site.getId()));
+					return createStartChannelingItem(cable, cableInlet);
+				}
+			}
+		}
+		System.out.println("Не найден кабельный ввод для ODF " + odf.un);
+		return null;
 	}
 	
 	ChannelingItem createEndChannelingItem(Cable cable, UniCableMapObject inlet) throws SQLException {
@@ -254,7 +375,26 @@ public class UCMSchemeExportCommand {
 				item.setEndSiteId("site" + plan.un);
 			}
 		}
+		if(item.getEndSiteId() == null) {
+			int a = 0;
+		}
 		return item;
+	}
+	
+	ChannelingItem createODFEndChannelingItem(Cable cable, UniCableMapObject odf) throws SQLException {
+		String building = getSiteId(odf);
+		final List<Site> list = this.cableInlets.get(cable);
+		if(list != null) {
+			for(Site site : list) {
+				if(site.getAttachmentSiteNodeId().equals(building)) {
+					UniCableMapObject cableInlet = this.ucmDatabase.getObject(
+							Integer.parseInt(site.getId()));
+					return createEndChannelingItem(cable, cableInlet);
+				}
+			}
+		}
+		System.out.println("Не найден кабельный ввод для ODF " + odf.un);
+		return null;
 	}
 	
 	ChannelingItem createChannelingItem(Cable cable, UniCableMapObject ucmObject) throws SQLException {  // место кабеля
@@ -360,9 +500,23 @@ public class UCMSchemeExportCommand {
 			type.setName(ucmObject.text);
 			this.eqtypes.put(Integer.valueOf(ucmObject.un), type);
 		}
-		defaultEqtId = this.eqtypes.values().iterator().next().getId();
+		this.defaultEqtId = this.eqtypes.values().iterator().next().getId();
 	}
 
+	void createLinks(Collection<UniCableMapObject> objects) throws SQLException {
+		for (UniCableMapObject ucmObject : objects) {
+			Link link = Link.parseLink(this.ucmDatabase, ucmObject, "dummy");
+			this.links.put(Integer.valueOf(ucmObject.un), link);
+		}
+	}
+	
+	void createCableInlets(Collection<UniCableMapObject> objects) throws SQLException {
+		for (UniCableMapObject ucmObject : objects) {
+			Site cableInlet = Site.parseSite(this.ucmDatabase, ucmObject, "dummy");
+			this.sites.put(Integer.valueOf(ucmObject.un), cableInlet);
+		}
+	}
+	
 	void createCableTypes(Collection<UniCableMapObject> objects) {
 		for (UniCableMapObject ucmObject : objects) {
 			CableType type = new CableType(String.valueOf(ucmObject.un));
@@ -520,6 +674,32 @@ public class UCMSchemeExportCommand {
 		return null;
 	}
 	
+	private String getSiteId(UniCableMapObject obj) throws SQLException {
+		if (obj.typ.text.equals(UniCableMapType.UCM_MUFF)) {
+			Element muff = this.muffs.get(Integer.valueOf(obj.un));
+			return muff.getWellId();
+		} else if (obj.typ.text.equals(UniCableMapType.UCM_ODF)) {
+			for(UniCableMapLink ucmLink : this.ucmDatabase.getParents(obj)) {
+				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
+					UniCableMapObject stoika = ucmLink.parent;
+					for(UniCableMapLink ucmLink2 : this.ucmDatabase.getParents(stoika)) {
+						if(ucmLink2.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
+							UniCableMapObject floor = ucmLink2.parent;
+							for(UniCableMapLink ucmLink3 : this.ucmDatabase.getParents(floor)) {
+								if(ucmLink3.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
+									UniCableMapObject plan = ucmLink3.parent;
+									Element building = this.buildings.get(Integer.valueOf(plan.un));
+									return building.getWellId();
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return "";
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void saveConfigXML(String fileName) throws SQLException {
 		System.out.println("Start saving config XML");
@@ -661,16 +841,28 @@ public class UCMSchemeExportCommand {
 	}
 
 	public void execute() {
+		this.cabletypes.clear();
+		this.linktypes.clear();
+		this.eqtypes.clear();
+		this.equipments.clear();
+		this.muffs.clear();
+		this.buildings.clear();
+		this.cables.clear();
+		this.links.clear();
+		this.sites.clear();
+		this.cableInlets.clear();
+
 		try {
 			processTypeObjects();
+			processMapObjects();
 			processSchemeObjects(Integer.MAX_VALUE);
 			
-//			int pos = this.filename.lastIndexOf(".");
-//			if (pos != -1) {
-//				this.filename = this.filename.substring(0, pos);
-//			}
-//			saveConfigXML(this.filename);
-//			saveSchemeXML(this.filename, Integer.MAX_VALUE);
+			int pos = this.filename.lastIndexOf(".");
+			if (pos != -1) {
+				this.filename = this.filename.substring(0, pos);
+			}
+			saveConfigXML(this.filename);
+			saveSchemeXML(this.filename, Integer.MAX_VALUE);
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
