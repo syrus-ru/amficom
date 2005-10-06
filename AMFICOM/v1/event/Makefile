@@ -17,7 +17,8 @@ EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
+ $(wildcard $(SRCDIR)/com/syrus/AMFICOM/eventv2/*.java)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
