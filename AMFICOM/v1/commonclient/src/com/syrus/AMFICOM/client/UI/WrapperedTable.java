@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.20 2005/10/06 15:06:44 bob Exp $
+* $Id: WrapperedTable.java,v 1.21 2005/10/06 15:40:20 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,9 +19,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
@@ -38,7 +40,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/06 15:06:44 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/06 15:40:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -113,6 +115,8 @@ public final class WrapperedTable<T> extends ATable {
 			}
 		}
 	}
+
+	
 	
 	public void setSelectedValue(final T t) {
 		this.clearSelection();
@@ -129,6 +133,51 @@ public final class WrapperedTable<T> extends ATable {
 				break;
 			}
 		}
+	}
+
+	public void setSelectedValues(final Set<T> ts) {
+		this.clearSelection();
+		
+		if (ts == null) {
+			return;
+		}
+		
+		final WrapperedTableModel<T> tableModel = this.getModel();
+		for(final T t : ts) {
+			for (int i = 0; i < tableModel.getRowCount(); i++) {
+				final T tInTable = tableModel.getObject(i);
+				if (tInTable.equals(t)) {
+					this.setRowSelectionInterval(i, i);
+					break;
+				}
+			}
+		}
+	}
+
+	public T getSelectedValue(){
+		final int selectedRow = this.getSelectedRow();
+		
+		if (selectedRow == -1) {
+			return null;
+		}
+		
+		final WrapperedTableModel<T> tableModel = this.getModel();
+		return tableModel.getObject(selectedRow);
+	}
+	
+	public Set<T> getSelectedValues(){
+		final int[] selectedRows = this.getSelectedRows();
+		
+		if (selectedRows.length == 0) {
+			return Collections.emptySet();
+		}
+		
+		final WrapperedTableModel<T> tableModel = this.getModel();
+		final Set<T> selectedTs = new HashSet<T>(selectedRows.length);
+		for (final int index : selectedRows) {
+			selectedTs.add(tableModel.getObject(index));
+		}
+		return selectedTs;
 	}
 	
 	@Override
