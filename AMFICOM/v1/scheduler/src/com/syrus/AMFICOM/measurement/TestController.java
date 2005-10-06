@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.26 2005/09/23 12:29:27 bob Exp $
+ * $Id: TestController.java,v 1.27 2005/10/06 04:53:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/23 12:29:27 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/06 04:53:07 $
  * @author $Author: bob $
  * @module module
  */
@@ -82,8 +82,8 @@ public class TestController implements Wrapper<Test> {
 			LangModelSchedule.getString("Text.Test.TemporalType.Onetime"));
 		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, 
 			LangModelSchedule.getString("Text.Test.TemporalType.Periodical"));
-		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS, 
-			LangModelSchedule.getString("Text.Test.TemporalType.Continual"));
+//		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS, 
+//			LangModelSchedule.getString("Text.Test.TemporalType.Continual"));
 	}
 
 	private Component getStatusComponent(final TestStatus testStatus) {
