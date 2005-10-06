@@ -278,7 +278,6 @@ final class TestLine extends TimeLine {
 	}
 
 	public void updateTest() {
-		assert Log.debugMessage("TestLine.updateTest | ", Log.DEBUGLEVEL09);
 		if (this.skip) { 
 			return; 
 		}
