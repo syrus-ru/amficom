@@ -1,12 +1,16 @@
-/*
- * $Id: Event.java,v 1.42 2005/09/14 18:53:52 arseniy Exp $
+/*-
+ * $Id: Event.java,v 1.43 2005/10/06 12:05:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.event;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,7 +29,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -34,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/09/14 18:53:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/10/06 12:05:21 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -47,14 +50,13 @@ public final class Event extends StorableObject
 	private EventType type;
 	private String description;
 
-	private Set<EventParameter> eventParameters;	//Set <EventParameter>
-	private Set<Identifier> eventSourceIds; //Set <Identifier>
+	private Set<EventParameter> eventParameters;
+	private Set<Identifier> eventSourceIds;
 
-	public Event(final IdlEvent et) throws CreateObjectException {
+	public Event(final IdlEvent event) throws CreateObjectException {
 		try {
-			this.fromTransferable(et);
-		}
-		catch (ApplicationException ae) {
+			this.fromTransferable(event);
+		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -67,18 +69,16 @@ public final class Event extends StorableObject
 			final Set<EventParameter> eventParameters,
 			final Set<Identifier> eventSourceIds) {
 		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+				new Date(),
+				new Date(),
 				creatorId,
 				creatorId,
 				version);
 		this.type = type;
 		this.description = description;
 
-		this.eventParameters = new HashSet<EventParameter>(eventParameters.size());
 		this.setEventParameters0(eventParameters);
-		
-		this.eventSourceIds = new HashSet<Identifier>(eventSourceIds.size());
+
 		this.setEventSourceIds0(eventSourceIds);
 	}
 
@@ -92,15 +92,19 @@ public final class Event extends StorableObject
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
 	public static Event createInstance(final Identifier creatorId,
-			EventType type,
-			String description,
-			Set<EventParameter> eventParameters,
-			Set<Identifier> eventSourceIds) throws CreateObjectException {
-		if (creatorId == null || type == null || description == null || eventParameters == null || eventSourceIds == null)
+			final EventType type,
+			final String description,
+			final Set<EventParameter> eventParameters,
+			final Set<Identifier> eventSourceIds)
+	throws CreateObjectException {
+		if (creatorId == null || type == null || description == null
+				|| eventParameters == null
+				|| eventSourceIds == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
-			final Event event = new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_CODE),
+			final Event event = new Event(IdentifierPool.getGeneratedIdentifier(EVENT_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					type,
@@ -108,35 +112,35 @@ public final class Event extends StorableObject
 					eventParameters,
 					eventSourceIds);
 
-			assert event.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert event.isValid() : OBJECT_STATE_ILLEGAL;
 
 			event.markAsChanged();
-
 			return event;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlEvent et = (IdlEvent) transferable;
+	protected synchronized void fromTransferable(
+			final IdlStorableObject transferable)
+	throws ApplicationException {
+		final IdlEvent event = (IdlEvent) transferable;
 
-		super.fromTransferable(et);
+		super.fromTransferable(event);
 
-		this.type = (EventType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
+		this.type = StorableObjectPool.getStorableObject(new Identifier(event._typeId), true);
 
-		this.description = et.description;
+		this.description = event.description;
 
-		this.eventParameters = new HashSet<EventParameter>(et.parameters.length);
-		for (int i = 0; i < et.parameters.length; i++)
-			this.eventParameters.add(new EventParameter(et.parameters[i]));
+		this.eventParameters = new HashSet<EventParameter>(event.parameters.length);
+		for (final IdlEventParameter eventParameter : event.parameters) {
+			this.eventParameters.add(new EventParameter(eventParameter));
+		}
 
-		this.eventSourceIds = new HashSet<Identifier>(et.eventSourceIds.length);
-		this.setEventSourceIds0(Identifier.fromTransferables(et.eventSourceIds));
+		this.setEventSourceIds0(Identifier.fromTransferables(event.eventSourceIds));
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 	}
 
 	/**
@@ -145,15 +149,15 @@ public final class Event extends StorableObject
 	 */
 	@Override
 	public IdlEvent getTransferable(final ORB orb) {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		int i = 0;
-		final IdlEventParameter[] ept = new IdlEventParameter[this.eventParameters.size()];
+		final IdlEventParameter[] idlEventParameters = new IdlEventParameter[this.eventParameters.size()];
 		for (final EventParameter eventParameter : this.eventParameters) {
-			ept[i] = eventParameter.getTransferable(orb);
+			idlEventParameters[i++] = eventParameter.getTransferable(orb);
 		}
 
-		final IdlIdentifier[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
+		final IdlIdentifier[] idlEventSourceIds = Identifier.createTransferables(this.eventSourceIds);
 
 		return IdlEventHelper.init(orb,
 				this.id.getTransferable(),
@@ -164,8 +168,8 @@ public final class Event extends StorableObject
 				this.version.longValue(),
 				this.type.getId().getTransferable(),
 				this.description,
-				ept,
-				esIdsT);
+				idlEventParameters,
+				idlEventSourceIds);
 	}
 
 	public EventType getType() {
@@ -187,7 +191,8 @@ public final class Event extends StorableObject
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected @Override boolean isValid() {
+	@Override
+	protected boolean isValid() {
 		return super.isValid()
 				&& this.type != null
 				&& this.description != null
@@ -195,7 +200,7 @@ public final class Event extends StorableObject
 				&& this.eventSourceIds != null && this.eventSourceIds != Collections.EMPTY_SET;
 	}
 
-	protected synchronized void setAttributes(final Date created,
+	synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -211,16 +216,30 @@ public final class Event extends StorableObject
 		this.description = description;
 	}
 
-	protected synchronized void setEventParameters0(final Set<EventParameter> eventParameters) {
-		this.eventParameters.clear();
-		if (eventParameters != null)
-			this.eventParameters.addAll(eventParameters);
+	synchronized void setEventParameters0(final Set<EventParameter> eventParameters) {
+		if (eventParameters == null) {
+			throw new NullPointerException();
+		}
+
+		if (this.eventParameters == null) {
+			this.eventParameters = new HashSet<EventParameter>(eventParameters.size());
+		} else {
+			this.eventParameters.clear();
+		}
+		this.eventParameters.addAll(eventParameters);
 	}
 
-	protected synchronized void setEventSourceIds0(final Set<Identifier> eventSourceIds) {
-		this.eventSourceIds.clear();
-		if (eventSourceIds != null)
-			this.eventSourceIds.addAll(eventSourceIds);
+	synchronized void setEventSourceIds0(final Set<Identifier> eventSourceIds) {
+		if (eventSourceIds == null) {
+			throw new NullPointerException();
+		}
+
+		if (this.eventSourceIds == null) {
+			this.eventSourceIds = new HashSet<Identifier>(eventSourceIds.size());
+		} else {
+			this.eventSourceIds.clear();
+		}
+		this.eventSourceIds.addAll(eventSourceIds);
 	}
 
 	/**
@@ -259,7 +278,8 @@ public final class Event extends StorableObject
 		super.markAsChanged();
 	}
 
-	public @Override Set<Identifiable> getDependencies() {
+	@Override
+	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
@@ -267,6 +287,8 @@ public final class Event extends StorableObject
 		for(EventParameter eventParameter: this.eventParameters) {
 			dependencies.add(eventParameter);
 		}
+		dependencies.remove(null);
+		dependencies.remove(VOID_IDENTIFIER);
 
 		return dependencies;
 	}
