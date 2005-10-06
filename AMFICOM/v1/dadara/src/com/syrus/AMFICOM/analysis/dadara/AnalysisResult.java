@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResult.java,v 1.4 2005/09/30 12:56:22 saa Exp $
+ * $Id: AnalysisResult.java,v 1.5 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.io.SignatureMismatchException;
  * поля результатов сравнения модифицируемы и изначально null.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
  * @module dadara
  */
 public class AnalysisResult implements DataStreamable {
@@ -63,16 +63,16 @@ public class AnalysisResult implements DataStreamable {
 	}
 
 	public int getDataLength() {
-		return dataLength;
+		return this.dataLength;
 	}
 	public ModelTraceAndEventsImpl getMTAE() {
-		return mtae;
+		return this.mtae;
 	}
 	public int getTraceLength() {
-		return traceLength;
+		return this.traceLength;
 	}
 	public EventAnchorer getAnchorer() {
-		return anchorer;
+		return this.anchorer;
 	}
 	public void setAnchorer(EventAnchorer anchorer) {
 		this.anchorer = anchorer;
@@ -81,12 +81,12 @@ public class AnalysisResult implements DataStreamable {
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
 		dos.writeLong(SIGNATURE);
-		dos.writeInt(dataLength);
-		dos.writeInt(traceLength);
-		mtae.writeToDOS(dos);
-		dos.writeBoolean(anchorer != null);
-		if (anchorer != null) {
-			anchorer.writeToDOS(dos);
+		dos.writeInt(this.dataLength);
+		dos.writeInt(this.traceLength);
+		this.mtae.writeToDOS(dos);
+		dos.writeBoolean(this.anchorer != null);
+		if (this.anchorer != null) {
+			this.anchorer.writeToDOS(dos);
 		}
 	}
 
@@ -95,14 +95,14 @@ public class AnalysisResult implements DataStreamable {
 		if (dis.readLong() != SIGNATURE) {
 			throw new SignatureMismatchException();
 		}
-		dataLength = dis.readInt();
-		traceLength = dis.readInt();
-		mtae = (ModelTraceAndEventsImpl)
+		this.dataLength = dis.readInt();
+		this.traceLength = dis.readInt();
+		this.mtae = (ModelTraceAndEventsImpl)
 				ModelTraceAndEventsImpl.getReader().readFromDIS(dis);
 		if (dis.readBoolean()) {
-			anchorer = (EventAnchorer) EventAnchorer.getDSReader().readFromDIS(dis);
+			this.anchorer = (EventAnchorer) EventAnchorer.getDSReader().readFromDIS(dis);
 		} else {
-			anchorer = null;
+			this.anchorer = null;
 		}
 	}
 

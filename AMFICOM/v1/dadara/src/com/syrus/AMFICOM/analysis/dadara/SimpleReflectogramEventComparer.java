@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleReflectogramEventComparer.java,v 1.6 2005/07/22 06:39:51 saa Exp $
+ * $Id: SimpleReflectogramEventComparer.java,v 1.7 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
  * <p>
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.6 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class SimpleReflectogramEventComparer {
@@ -87,17 +87,17 @@ public class SimpleReflectogramEventComparer {
 			boolean strict
 			)
 	{
-		probeEvents = _probeEvents;
-		etalonEvents = _etalonEvents;
+		this.probeEvents = _probeEvents;
+		this.etalonEvents = _etalonEvents;
 
 		// начальный анализ - ищем соответствие событий эталона и пробы
-		if (probeEvents != null)
+		if (this.probeEvents != null)
 		{
-			probe2etalon = findNearestOverlappingEvent(probeEvents, etalonEvents);
-			etalon2probe = findNearestOverlappingEvent(etalonEvents, probeEvents);
+			this.probe2etalon = findNearestOverlappingEvent(this.probeEvents, this.etalonEvents);
+			this.etalon2probe = findNearestOverlappingEvent(this.etalonEvents, this.probeEvents);
 			if (strict) {
-				removeNonPaired(probe2etalon, etalon2probe);
-				removeNonPaired(etalon2probe, probe2etalon);
+				removeNonPaired(this.probe2etalon, this.etalon2probe);
+				removeNonPaired(this.etalon2probe, this.probe2etalon);
 			}
 		}
 	}
@@ -109,7 +109,7 @@ public class SimpleReflectogramEventComparer {
 	 */
 	public int getEtalonIdByProbeId(int probeId)
 	{
-		return probe2etalon[probeId] >= 0 ? probe2etalon[probeId] : UNPAIRED;
+		return this.probe2etalon[probeId] >= 0 ? this.probe2etalon[probeId] : UNPAIRED;
 	}
 	
 	/**
@@ -119,30 +119,30 @@ public class SimpleReflectogramEventComparer {
 	 */
 	public int getProbeIdByEtalonId(int etalonId)
 	{
-		return etalon2probe[etalonId] >= 0 ? etalon2probe[etalonId] : UNPAIRED;
+		return this.etalon2probe[etalonId] >= 0 ? this.etalon2probe[etalonId] : UNPAIRED;
 	}
 
 	public boolean isProbeEventNew(int probeId)
 	{
-		int etalonId = probe2etalon[probeId];
+		int etalonId = this.probe2etalon[probeId];
 		return etalonId < 0;
 	}
 
 	public boolean isEtalonEventLost(int etalonId)
 	{
-		int probeId = etalon2probe[etalonId];
+		int probeId = this.etalon2probe[etalonId];
 		return probeId < 0;
 	}
 
 	public boolean isProbeEventReliablyNew(int probeId)
 	{
-		int etalonId = probe2etalon[probeId];
+		int etalonId = this.probe2etalon[probeId];
 		return etalonId == RELIABLY_UNPAIRED;
 	}
 
 	public boolean isEtalonEventReliablyLost(int etalonId)
 	{
-		int probeId = etalon2probe[etalonId];
+		int probeId = this.etalon2probe[etalonId];
 		return probeId == RELIABLY_UNPAIRED;
 	}
 
@@ -151,13 +151,13 @@ public class SimpleReflectogramEventComparer {
 	{
 		// считаем число новых событий
 		int count = 0;
-		for (int i = 0; i < probe2etalon.length; i++)
+		for (int i = 0; i < this.probe2etalon.length; i++)
 			if (isProbeEventNew(i))
 				count++;
 		// создаем и заполняем массив новых событий
 		int[] ret = new int[count];
 		count = 0;
-		for (int i = 0; i < probe2etalon.length; i++)
+		for (int i = 0; i < this.probe2etalon.length; i++)
 			if (isProbeEventNew(i))
 				ret[count++] = i;
 
@@ -236,7 +236,7 @@ public class SimpleReflectogramEventComparer {
 	// в противном случае ответ зависит от реализации
 	public boolean isEtalonEventChanged(int etalonId, int changeType, double changeThreshold)
 	{
-		int probeId = etalon2probe[etalonId];
+		int probeId = this.etalon2probe[etalonId];
 
 		if (changeType == CHANGETYPE_RELIABLY_NEW_OR_LOST)
 			return probeId == RELIABLY_UNPAIRED;
@@ -245,8 +245,8 @@ public class SimpleReflectogramEventComparer {
 			return true;
 
 		return eventsAreDifferent(
-			etalonEvents[etalonId],
-			probeEvents[probeId],
+			this.etalonEvents[etalonId],
+			this.probeEvents[probeId],
 			changeType,
 			changeThreshold);
 	}
@@ -256,7 +256,7 @@ public class SimpleReflectogramEventComparer {
 	// В противном случае - ошибка (для отладки)
 	public boolean isProbeEventChanged(int probeId, int changeType, double changeThreshold)
 	{
-		int etalonId = probe2etalon[probeId];
+		int etalonId = this.probe2etalon[probeId];
 
 		if (changeType == CHANGETYPE_RELIABLY_NEW_OR_LOST)
 			return etalonId == RELIABLY_UNPAIRED;
@@ -265,8 +265,8 @@ public class SimpleReflectogramEventComparer {
 			return true;
 
 		return eventsAreDifferent(
-			etalonEvents[etalonId],
-			probeEvents[probeId],
+			this.etalonEvents[etalonId],
+			this.probeEvents[probeId],
 			changeType,
 			changeThreshold);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ArrayModelTrace.java,v 1.2 2005/07/14 14:28:38 saa Exp $
+ * $Id: ArrayModelTrace.java,v 1.3 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class ArrayModelTrace extends ModelTrace
@@ -23,17 +23,17 @@ public class ArrayModelTrace extends ModelTrace
 	 */
 	public ArrayModelTrace(double[] data)
 	{
-		y = data;
+		this.y = data;
 	}
 	@Override
 	public int getLength()
 	{
-		return y.length;
+		return this.y.length;
 	}
 
 	@Override
 	public double getY(int x)
 	{
-		return y[x];
+		return this.y[x];
 	}
 }

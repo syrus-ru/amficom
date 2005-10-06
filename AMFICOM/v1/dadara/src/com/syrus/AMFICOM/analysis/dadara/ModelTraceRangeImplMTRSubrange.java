@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceRangeImplMTRSubrange.java,v 1.4 2005/07/22 06:39:51 saa Exp $
+ * $Id: ModelTraceRangeImplMTRSubrange.java,v 1.5 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class ModelTraceRangeImplMTRSubrange extends ModelTraceRange {
@@ -54,12 +54,12 @@ public class ModelTraceRangeImplMTRSubrange extends ModelTraceRange {
 
 	@Override
 	public int getBegin() {
-		return begin;
+		return this.begin;
 	}
 
 	@Override
 	public int getEnd() {
-		return end;
+		return this.end;
 	}
 
 	@Override
@@ -67,17 +67,17 @@ public class ModelTraceRangeImplMTRSubrange extends ModelTraceRange {
 		// if zeroPad, we need to perform zero padding because there is no
 		// underlying getYZeroPad().
 		// Note, we do not check if x is within [this.begin,this.end] range. 
-		if (zeroPad && (x < mtr.getBegin() || x > mtr.getEnd()))
+		if (this.zeroPad && (x < this.mtr.getBegin() || x > this.mtr.getEnd()))
 			return 0.0;
 		else
-			return mtr.getY(x);
+			return this.mtr.getY(x);
 	}
 
 	@Override
 	public double[] getYArray(int x0, int N) {
-		if (zeroPad)
-			return mtr.getYArrayZeroPad(x0, N);
+		if (this.zeroPad)
+			return this.mtr.getYArrayZeroPad(x0, N);
 		else
-			return mtr.getYArray(x0, N);
+			return this.mtr.getYArray(x0, N);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: EndOfTraceDetailedEvent.java,v 1.4 2005/07/22 06:39:51 saa Exp $
+ * $Id: EndOfTraceDetailedEvent.java,v 1.5 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * y0 - уровень начала событи€, дЅ (отрицательное значение)
  * y2 - уровень максимума, дЅ (отрицательное значение или ноль)
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class EndOfTraceDetailedEvent extends DetailedEvent {
@@ -45,25 +45,25 @@ public class EndOfTraceDetailedEvent extends DetailedEvent {
 //        this.refl = refl;
 //    }
 	public double getAmpl() {
-		return y2 - y0;
+		return this.y2 - this.y0;
 	}
 	public double getY0() {
-		return y0;
+		return this.y0;
 	}
 	public double getY2() {
-		return y2;
+		return this.y2;
 	}
 	@Override
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(y0);
-		dos.writeDouble(y2);
-//        dos.writeDouble(refl);
+		dos.writeDouble(this.y0);
+		dos.writeDouble(this.y2);
+//        dos.writeDouble(this.refl);
 	}
 
 	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-		y0 = dis.readDouble();
-		y2 = dis.readDouble();
-//        refl = dis.readDouble();
+		this.y0 = dis.readDouble();
+		this.y2 = dis.readDouble();
+//        this.refl = dis.readDouble();
 	}
 }

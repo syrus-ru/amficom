@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.10 2005/09/30 12:56:22 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.11 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright c 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.io.SignatureMismatchException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
@@ -103,7 +103,7 @@ implements ReliabilitySimpleReflectogramEvent {
 	}
 
 	public boolean hasReliability() {
-		return nSigma >= 0;
+		return this.nSigma >= 0;
 	}
 
 	@Override

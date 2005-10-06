@@ -1,5 +1,5 @@
 /*-
- * $Id: LinearDetailedEvent.java,v 1.4 2005/07/22 06:39:51 saa Exp $
+ * $Id: LinearDetailedEvent.java,v 1.5 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * rmsDev - среднеквадратическое отклонение рефлектограммы от аналитической кривой, дЅ
  * maxDev - максимальное отклонение рефлектограммы от аналитической кривой, дЅ
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class LinearDetailedEvent extends DetailedEvent {
@@ -43,37 +43,37 @@ public class LinearDetailedEvent extends DetailedEvent {
 		// empty, for dis reading
 	}
 	public double getMaxDev() {
-		return maxDev;
+		return this.maxDev;
 	}
 	public double getRmsDev() {
-		return rmsDev;
+		return this.rmsDev;
 	}
 	public double getY0() {
-		return y0;
+		return this.y0;
 	}
 	public double getY1() {
-		return y1;
+		return this.y1;
 	}
 	public double getLoss() {
-		return y0 - y1;
+		return this.y0 - this.y1;
 	}
 	public double getAttenuation() {
-		return (y0 - y1) / (end - begin);
+		return (this.y0 - this.y1) / (this.end - this.begin);
 	}
 	//public LinearDetailedEvent(int begin, int end, int eventType,)
 	@Override
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(y0);
-		dos.writeDouble(y1);
-		dos.writeDouble(rmsDev);
-		dos.writeDouble(maxDev);
+		dos.writeDouble(this.y0);
+		dos.writeDouble(this.y1);
+		dos.writeDouble(this.rmsDev);
+		dos.writeDouble(this.maxDev);
 	}
 
 	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-		y0 = dis.readDouble();
-		y1 = dis.readDouble();
-		rmsDev = dis.readDouble();
-		maxDev = dis.readDouble();
+		this.y0 = dis.readDouble();
+		this.y1 = dis.readDouble();
+		this.rmsDev = dis.readDouble();
+		this.maxDev = dis.readDouble();
 	}
 }

@@ -61,7 +61,7 @@ import com.syrus.io.SignatureMismatchException;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/06 13:34:02 $
  * @module dadara
  */
 public class ReflectogramMismatch {
@@ -122,7 +122,7 @@ public class ReflectogramMismatch {
 	 * @return true, если степень превышения предупр. порога определена
 	 */
 	public boolean hasMismatch() {
-		return minMismatch <= maxMismatch;
+		return this.minMismatch <= this.maxMismatch;
 	}
 	/**
 	 * @return нижняя оценка степени превышения предупредительного порога,
@@ -132,7 +132,7 @@ public class ReflectogramMismatch {
 	 */
 	public double getMinMismatch() {
 		if (hasMismatch())
-			return minMismatch;
+			return this.minMismatch;
 		else
 			throw new IllegalArgumentException();
 	}
@@ -144,13 +144,13 @@ public class ReflectogramMismatch {
 	 */
 	public double getMaxMismatch() {
 		if (hasMismatch())
-			return maxMismatch;
+			return this.maxMismatch;
 		else
 			throw new IllegalArgumentException();
 	}
 
 	public int getSeverity() {
-		return severity;
+		return this.severity;
 	}
 	public void setSeverity(int severity) {
 		this.severity = severity;
@@ -166,43 +166,43 @@ public class ReflectogramMismatch {
 		if (anchor1 == null || anchor2 == null) {
 			throw new IllegalArgumentException("null anchor in setAnchor");
 		}
-		ref1Id = anchor1;
-		ref1Coord = coord1;
-		ref2Id = anchor2;
-		ref2Coord = coord2;
+		this.ref1Id = anchor1;
+		this.ref1Coord = coord1;
+		this.ref2Id = anchor2;
+		this.ref2Coord = coord2;
 	}
 	public void unSetAnchors() {
-		ref1Id = null;
-		ref1Coord = 0;
-		ref2Id = null;
-		ref2Coord = 0;
+		this.ref1Id = null;
+		this.ref1Coord = 0;
+		this.ref2Id = null;
+		this.ref2Coord = 0;
 	}
 	public boolean hasAnchors() {
-		return ref1Id != null && ref2Id != null;
+		return this.ref1Id != null && this.ref2Id != null;
 	}
 	public SOAnchor getAnchor1Id() {
 		if (! hasAnchors()) {
 			throw new IllegalStateException();
 		}
-		return ref1Id;
+		return this.ref1Id;
 	}
 	public SOAnchor getAnchor2Id() {
 		if (! hasAnchors()) {
 			throw new IllegalStateException();
 		}
-		return ref2Id;
+		return this.ref2Id;
 	}
 	public int getAnchor1Coord() {
 		if (! hasAnchors()) {
 			throw new IllegalStateException();
 		}
-		return ref1Coord;
+		return this.ref1Coord;
 	}
 	public int getAnchor2Coord() {
 		if (! hasAnchors()) {
 			throw new IllegalStateException();
 		}
-		return ref2Coord;
+		return this.ref2Coord;
 	}
 
 	/**
@@ -262,12 +262,12 @@ public class ReflectogramMismatch {
 		} else {
 			dos.writeBoolean(false);
 		}
-		if (ref1Id != null && ref2Id != null) {
+		if (this.ref1Id != null && this.ref2Id != null) {
 			dos.writeBoolean(true);
-			ref1Id.writeToDOS(dos);
-			ref2Id.writeToDOS(dos);
-			dos.writeInt(ref1Coord);
-			dos.writeInt(ref2Coord);
+			this.ref1Id.writeToDOS(dos);
+			this.ref2Id.writeToDOS(dos);
+			dos.writeInt(this.ref1Coord);
+			dos.writeInt(this.ref2Coord);
 		} else {
 			dos.writeBoolean(false);
 		}
@@ -365,14 +365,14 @@ public class ReflectogramMismatch {
 	@Override
 	public String toString()
 	{
-		return "ReflectogramMismatch(level=" + severity
+		return "ReflectogramMismatch(level=" + this.severity
 		+ ",type=" + getAlarmType()
 		+ ",begin=" + getCoord()
 		+ ",end=" + getEndCoord()
 		+ ",distance=" + getDistance()
 		+ (hasMismatch() ? ",mismatch=" + getMinMismatch() + "-" + getMaxMismatch() : "")
-		+ (ref1Id != null ?  ",anc1=" + ref1Id + "@" + ref1Coord : "")
-		+ (ref2Id != null ?  ",anc2=" + ref2Id + "@" + ref2Coord : "")
+		+ (this.ref1Id != null ?  ",anc1=" + this.ref1Id + "@" + this.ref1Coord : "")
+		+ (this.ref2Id != null ?  ",anc2=" + this.ref2Id + "@" + this.ref2Coord : "")
 		+ ")";
 	}
 

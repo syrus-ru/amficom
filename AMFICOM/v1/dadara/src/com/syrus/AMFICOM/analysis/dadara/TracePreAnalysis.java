@@ -1,5 +1,5 @@
 /*-
- * $Id: TracePreAnalysis.java,v 1.4 2005/08/25 16:53:32 saa Exp $
+ * $Id: TracePreAnalysis.java,v 1.5 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * чувствительностью, определяемой шумом одной рефлектограммы.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/08/25 16:53:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class TracePreAnalysis {
@@ -56,11 +56,11 @@ public class TracePreAnalysis {
 	 */
 	public void checkTracesCompatibility(TracePreAnalysis that)
 	throws IncompatibleTracesException {
-		if (deltaX != that.deltaX)
+		if (this.deltaX != that.deltaX)
 			throw new IncompatibleTracesException("different deltaX");
-		if (pulseWidth != that.pulseWidth)
+		if (this.pulseWidth != that.pulseWidth)
 			throw new IncompatibleTracesException("different pulse width");
-		if (ior != that.ior)
+		if (this.ior != that.ior)
 			throw new IncompatibleTracesException("different IOR");
 	}
 

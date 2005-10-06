@@ -1,5 +1,5 @@
 /*-
- * $Id: NotIdentifiedDetailedEvent.java,v 1.4 2005/07/22 06:39:51 saa Exp $
+ * $Id: NotIdentifiedDetailedEvent.java,v 1.5 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * maxDev - максимальное отклонение рефлектограммы от аналитической кривой, дЅ
  * loss - предполагаемый уровень потерь на событии
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class NotIdentifiedDetailedEvent extends DetailedEvent {
@@ -49,40 +49,40 @@ public class NotIdentifiedDetailedEvent extends DetailedEvent {
 	}
 
 	public double getY0() {
-		return y0;
+		return this.y0;
 	}
 	public double getY1() {
-		return y1;
+		return this.y1;
 	}
 	public double getYMin() {
-		return yMin;
+		return this.yMin;
 	}
 	public double getYMax() {
-		return yMax;
+		return this.yMax;
 	}
 	public double getMaxDev() {
-		return maxDev;
+		return this.maxDev;
 	}
 	public double getLoss() {
-		return loss;
+		return this.loss;
 	}
 	@Override
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(y0);
-		dos.writeDouble(y1);
-		dos.writeDouble(loss);
-		dos.writeDouble(yMin);
-		dos.writeDouble(yMax);
-		dos.writeDouble(maxDev);
+		dos.writeDouble(this.y0);
+		dos.writeDouble(this.y1);
+		dos.writeDouble(this.loss);
+		dos.writeDouble(this.yMin);
+		dos.writeDouble(this.yMax);
+		dos.writeDouble(this.maxDev);
 	}
 
 	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-		y0 = dis.readDouble();
-		y1 = dis.readDouble();
-		loss = dis.readDouble();
-		yMin = dis.readDouble();
-		yMax = dis.readDouble();
-		maxDev = dis.readDouble();
+		this.y0 = dis.readDouble();
+		this.y1 = dis.readDouble();
+		this.loss = dis.readDouble();
+		this.yMin = dis.readDouble();
+		this.yMax = dis.readDouble();
+		this.maxDev = dis.readDouble();
 	}
 }

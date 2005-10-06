@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.21 2005/10/04 14:09:44 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.22 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.SignatureMismatchException;
  * Устанавливаемые параметры вовсе не обязаны иметь точность double,
  * и могут округляться при вызове modifier-методов без каких-либо уведомлений.
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/10/04 14:09:44 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/06 13:34:02 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -92,7 +92,7 @@ implements DataStreamable, Cloneable
 	 * @return {@link AnalysisParametersStorage} для данного объекта
 	 */
 	public AnalysisParametersStorage getStorageClone() {
-		return (AnalysisParametersStorage) this.storage.clone();
+		return this.storage.clone();
 	}
 
 	/**
@@ -112,7 +112,7 @@ implements DataStreamable, Cloneable
 
 	@Override
 	public String toString() {
-		return storage.toString();
+		return this.storage.toString();
 	}
 
 	@Override
@@ -141,7 +141,7 @@ implements DataStreamable, Cloneable
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
-		storage.writeToDOS(dos);
+		this.storage.writeToDOS(dos);
 	}
 	
 	public static DataStreamable.Reader getReader() {
@@ -152,55 +152,55 @@ implements DataStreamable, Cloneable
 	}
 
 	public double getL2rsaBig() {
-		return storage.getL2rsaBig();
+		return this.storage.getL2rsaBig();
 	}
 
 	public double getConnectorTh() {
-		return storage.getConnectorTh();
+		return this.storage.getConnectorTh();
 	}
 
 	public double getEndTh() {
-		return storage.getEndTh();
+		return this.storage.getEndTh();
 	}
 
 	public double getSpliceTh() {
-		return storage.getSpliceTh();
+		return this.storage.getSpliceTh();
 	}
 
 	public double getEventTh() {
-		return storage.getEventTh();
+		return this.storage.getEventTh();
 	}
 
 	public double getNoiseFactor() {
-		return storage.getNoiseFactor();
+		return this.storage.getNoiseFactor();
 	}
 
 	public double getNrs2rsaBig() {
-		return storage.getNrs2rsaBig();
+		return this.storage.getNrs2rsaBig();
 	}
 
 	public double getNrs2rsaSmall() {
-		return storage.getNrs2rsaSmall();
+		return this.storage.getNrs2rsaSmall();
 	}
 
 	public int getNrsMin() {
-		return storage.getNrsMin();
+		return this.storage.getNrsMin();
 	}
 
 	public double getRsaCrit() {
-		return storage.getRsaCrit();
+		return this.storage.getRsaCrit();
 	}
 
 	public double getScaleFactor() {
-		return storage.getScaleFactor();
+		return this.storage.getScaleFactor();
 	}
 
 	public double getSentitivity() {
-		return storage.getSentitivity();
+		return this.storage.getSentitivity();
 	}
 
 	public double getTau2nrs() {
-		return storage.getTau2nrs();
+		return this.storage.getTau2nrs();
 	}
 
 	public void setL2rsaBig(double big)
@@ -320,12 +320,12 @@ implements DataStreamable, Cloneable
 	}
 
 	private AnalysisParametersStorage getTestStorage() {
-		if (testStorage == null) {
-			testStorage = (AnalysisParametersStorage) this.storage.clone();
-			return testStorage;
+		if (this.testStorage == null) {
+			this.testStorage = this.storage.clone();
+			return this.testStorage;
 		}
-		testStorage.setAllFrom(this.storage);
-		return testStorage;
+		this.testStorage.setAllFrom(this.storage);
+		return this.testStorage;
 	}
 
 	private static double round(double v, double d) {
@@ -333,7 +333,7 @@ implements DataStreamable, Cloneable
 	}
 
 	public double getLevelEot() {
-		return storage.getLevelEot();
+		return this.storage.getLevelEot();
 	}
 
 	public void setLevelEot(double levelEot)

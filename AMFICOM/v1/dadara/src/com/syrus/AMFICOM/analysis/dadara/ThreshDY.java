@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.21 2005/10/05 16:36:00 saa Exp $
+ * $Id: ThreshDY.java,v 1.22 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/10/05 16:36:00 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class ThreshDY extends Thresh {
@@ -111,20 +111,20 @@ public class ThreshDY extends Thresh {
 	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
-		values = new double[4];
+		this.values = new double[4];
 		for (int k = 0; k < 4; k++)
-			values[k] = dis.readDouble();
+			this.values[k] = dis.readDouble();
 	}
 	@Override
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException
 	{
 		for (int k = 0; k < 4; k++)
-			dos.writeDouble(values[k]);
+			dos.writeDouble(this.values[k]);
 	}
 
 	protected double getDY(int n)
 	{
-		return values[n];
+		return this.values[n];
 	}
 	protected Type getType()
 	{
@@ -132,20 +132,20 @@ public class ThreshDY extends Thresh {
 	}
 	private void snapAndLimit(int key) // привязать к сетке и скорректировать при неправильном знаке  
 	{
-		if (values[key] * (IS_KEY_UPPER[key] ? 1 : -1) < 0)
-			values[key] = 0;
+		if (this.values[key] * (IS_KEY_UPPER[key] ? 1 : -1) < 0)
+			this.values[key] = 0;
 		if (VALUE_FRACTION > 0)
-			values[key] = Math.rint(values[key] * VALUE_FRACTION) / VALUE_FRACTION;
+			this.values[key] = Math.rint(this.values[key] * VALUE_FRACTION) / VALUE_FRACTION;
 	}
 	private void interLimit(int key) // наложить ограничение согласно LIMIT_KEY
 	{
 		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
-		if (values[key] * compareSign < values[LIMIT_KEY[key]] * compareSign)
-			values[key] = values[LIMIT_KEY[key]];
+		if (this.values[key] * compareSign < this.values[LIMIT_KEY[key]] * compareSign)
+			this.values[key] = this.values[LIMIT_KEY[key]];
 	}
 	protected void setDY(int key, double val)
 	{
-		values[key] = val;
+		this.values[key] = val;
 		snapAndLimit(key);
 		interLimit(key);
 	}
@@ -153,14 +153,14 @@ public class ThreshDY extends Thresh {
 	protected void arrangeLimits(int key)
 	{
 		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
-		if (values[key] * compareSign < values[FORCEMOVE_KEY[key]] * compareSign)
-			values[FORCEMOVE_KEY[key]] = values[key];
+		if (this.values[key] * compareSign < this.values[FORCEMOVE_KEY[key]] * compareSign)
+			this.values[FORCEMOVE_KEY[key]] = this.values[key];
 	}
 	public void changeAllBy(double delta)
 	{
 		for (int key = 0; key < 4; key++)
 		{
-			values[key] += (IS_KEY_UPPER[key] ? delta : -delta) * (IS_KEY_HARD[key] ? 2 : 1);
+			this.values[key] += (IS_KEY_UPPER[key] ? delta : -delta) * (IS_KEY_HARD[key] ? 2 : 1);
 			snapAndLimit(key);
 		}
 		for (int key = 0; key < 4; key++)
@@ -171,7 +171,7 @@ public class ThreshDY extends Thresh {
 	{
 		int sign = IS_KEY_UPPER[key] ? 1 : -1;
 		if (VALUE_FRACTION > 0)
-			values[key] = Math.ceil(values[key] * VALUE_FRACTION * sign) / VALUE_FRACTION / sign;
+			this.values[key] = Math.ceil(this.values[key] * VALUE_FRACTION * sign) / VALUE_FRACTION / sign;
 	}
 
 	/**

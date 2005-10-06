@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.21 2005/09/30 12:56:22 saa Exp $
+ * $Id: Thresh.java,v 1.22 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.io.SignatureMismatchException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 
@@ -104,10 +104,10 @@ implements Cloneable {
 			dos.writeByte('Y');
 		else
 			throw new UnsupportedOperationException("Unknown Thresh implementation");
-		dos.writeInt(eventId0);
-		dos.writeInt(eventId1);
-		dos.writeInt(xMin);
-		dos.writeInt(xMax);
+		dos.writeInt(this.eventId0);
+		dos.writeInt(this.eventId1);
+		dos.writeInt(this.xMin);
+		dos.writeInt(this.xMax);
 		writeSpecificToDOS(dos);
 	}
 
@@ -142,7 +142,7 @@ implements Cloneable {
 	 */
 	public boolean isRelevantToNEvent(int nEvent)
 	{
-		return eventId0 <= nEvent && eventId1 >= nEvent;
+		return this.eventId0 <= nEvent && this.eventId1 >= nEvent;
 	}
 
 	// при необходимости упорядочить все warn/soft параметры, предполагая что редактировался только key 

@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.11 2005/09/30 12:56:22 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.12 2005/10/06 13:34:02 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.io.SignatureMismatchException;
  * there is no need of streaming this (super-)class itself by now.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/06 13:34:02 $
  * @module
  */
 public class SimpleReflectogramEventImpl
@@ -52,17 +52,17 @@ implements SimpleReflectogramEvent {
 
 	public int getBegin()
 	{
-		return begin;
+		return this.begin;
 	}
 
 	public int getEnd()
 	{
-		return end;
+		return this.end;
 	}
 
 	public int getEventType()
 	{
-		return eventType;
+		return this.eventType;
 	}
 
 	/**
@@ -71,9 +71,9 @@ implements SimpleReflectogramEvent {
 	private void writeBaseToDOS(DataOutputStream dos)
 	throws IOException
 	{
-		dos.writeInt(begin);
-		dos.writeInt(end);
-		dos.writeInt(eventType);
+		dos.writeInt(this.begin);
+		dos.writeInt(this.end);
+		dos.writeInt(this.eventType);
 	}
 
 	/**
