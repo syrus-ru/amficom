@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.34 2005/10/06 15:52:57 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.35 2005/10/06 16:10:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.SOAnchorImpl;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.util.Log;
 
 /**
@@ -31,7 +32,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.34 $, $Date: 2005/10/06 15:52:57 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/06 16:10:20 $
  * @module
  */
 public class ModelTraceComparer

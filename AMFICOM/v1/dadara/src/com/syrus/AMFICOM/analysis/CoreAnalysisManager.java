@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.118 2005/10/06 15:52:57 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.119 2005/10/06 16:10:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.118 $, $Date: 2005/10/06 15:52:57 $
+ * @version $Revision: 1.119 $, $Date: 2005/10/06 16:10:20 $
  * @module
  */
 
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -36,6 +35,7 @@ import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDY;
 import com.syrus.AMFICOM.analysis.dadara.TracePreAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.TracesAverages;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.BellcoreStructure;
 
 public class CoreAnalysisManager

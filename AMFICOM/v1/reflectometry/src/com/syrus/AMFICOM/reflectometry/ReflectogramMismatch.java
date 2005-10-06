@@ -1,14 +1,13 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.8 2005/10/06 15:52:57 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.1 2005/10/06 16:06:13 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
-package com.syrus.AMFICOM.analysis.dadara;
+package com.syrus.AMFICOM.reflectometry;
 
-import com.syrus.AMFICOM.analysis.SOAnchor;
 
 /**
  * Описание несоответствия рефлектограммы эталону.
@@ -61,7 +60,7 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * </ol>
  * 
   * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/10/06 15:52:57 $
+ * @version $Revision: 1.1 $, $Date: 2005/10/06 16:06:13 $
  * @module
  */
 public interface ReflectogramMismatch {

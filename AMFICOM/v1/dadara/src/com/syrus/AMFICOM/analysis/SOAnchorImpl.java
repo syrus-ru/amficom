@@ -1,5 +1,5 @@
 /*-
- * $Id: SOAnchorImpl.java,v 1.1 2005/10/06 14:36:05 saa Exp $
+ * $Id: SOAnchorImpl.java,v 1.2 2005/10/06 16:10:20 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.AMFICOM.reflectometry.SOAnchor;
 import com.syrus.io.SignatureMismatchException;
 
 /**
@@ -21,7 +22,7 @@ import com.syrus.io.SignatureMismatchException;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/10/06 14:36:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/06 16:10:20 $
  * @module
  */
 public class SOAnchorImpl implements SOAnchor {

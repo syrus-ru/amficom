@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.SOAnchorImpl;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.DataFormatException;
 import com.syrus.io.SignatureMismatchException;
 
@@ -16,7 +17,7 @@ import com.syrus.io.SignatureMismatchException;
  * @see ReflectogramMismatch
  * 
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/06 15:52:57 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/06 16:10:20 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl implements ReflectogramMismatch {
