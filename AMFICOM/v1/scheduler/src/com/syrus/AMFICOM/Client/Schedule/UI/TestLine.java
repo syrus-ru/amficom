@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.Log;
 
 final class TestLine extends TimeLine {
 
@@ -154,40 +155,77 @@ final class TestLine extends TimeLine {
 		this.setToolTipText("");
 
 	}
+	
+	final void unselect() {
+		assert Log.debugMessage("TestLine.unselect | ", Log.DEBUGLEVEL09);
+		this.selectedItems.clear();
+		if (this.selectedTestIds != null) {
+			this.selectedTestIds.clear();
+		}
+		this.schedulerModel.unselectTests(this);
+	}
 
-	boolean selectTest(final int x, final SortedSet<TestTimeItem> testTimeItems) {
+	final boolean selectTest(final int x, 
+	                   final SortedSet<TestTimeItem> testTimeItems,
+	                   final boolean unselect) {
 		boolean selected = false;
 		for (final TestTimeItem testTimeItem : testTimeItems) {
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 				if (this.selectedTestIds == null) {
 					this.selectedTestIds = new HashSet<Identifier>();
 				}
-				try {
-					final Test test = 
-						StorableObjectPool.getStorableObject(
-							testTimeItem.testTimeLine.testId,
-							true);
-					this.selectedTestIds.add(test.getId());
-					new ProcessingDialog(new Runnable() {
 
-						public void run() {
-							TestLine.this.skip = true;
-							TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
-							TestLine.this.skip = false;
-						}
-					}, LangModelGeneral.getString("Message.Information.PlsWait"));
-				} catch (final ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(
-						LangModelSchedule.getString("Error.CannotSelectTest"));
-					return false;
-				}
-				this.selectedItems.add(testTimeItem);
+				boolean selectTheSameTest = false;
 				
-				for (final TestTimeItem testTimeItem2 : testTimeItems) {
-					if (testTimeItem2.testTimeLine.testId.equals(testTimeItem.testTimeLine.testId)) {
-						this.selectedItems.add(testTimeItem2);
+				for (final TestTimeItem item : this.selectedItems) {
+					if (item.testTimeLine.testId.equals(testTimeItem.testTimeLine.testId)) {
+						assert Log.debugMessage("TestLine.selectTest | was:" + item.testTimeLine.testId
+								+ ", now:" + testTimeItem.testTimeLine.testId,
+							Log.DEBUGLEVEL10);
+						selectTheSameTest = true;
+						break;
 					}
 				}
+				
+				this.selectedItems.add(testTimeItem);
+
+				assert Log.debugMessage("TestLine.selectTest | selectTheSameTest " + selectTheSameTest,
+					Log.DEBUGLEVEL10);
+				
+				if (!selectTheSameTest) {
+					if (unselect) {
+						this.unselect();
+					}
+					
+					this.selectedTestIds.add(testTimeItem.testTimeLine.testId);
+					try {
+						
+						final Test test = 
+							StorableObjectPool.getStorableObject(
+								testTimeItem.testTimeLine.testId,
+								true);
+						new ProcessingDialog(new Runnable() {
+	
+							public void run() {
+								TestLine.this.skip = true;
+								TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
+								TestLine.this.skip = false;
+							}
+						}, LangModelGeneral.getString("Message.Information.PlsWait"));
+					} catch (final ApplicationException e) {
+						AbstractMainFrame.showErrorMessage(
+							LangModelSchedule.getString("Error.CannotSelectTest"));
+						return false;
+					}
+					
+					for (final TestTimeItem testTimeItem2 : testTimeItems) {
+						if (testTimeItem2.testTimeLine.testId.equals(testTimeItem.testTimeLine.testId)) {
+							this.selectedItems.add(testTimeItem2);
+						}
+					}
+				}
+				
+				
 				
 				selected = true;
 				break;
@@ -241,6 +279,7 @@ final class TestLine extends TimeLine {
 	}
 
 	public void updateTest() {
+		assert Log.debugMessage("TestLine.updateTest | ", Log.DEBUGLEVEL09);
 		if (this.skip) { 
 			return; 
 		}
@@ -330,26 +369,22 @@ final class TestLine extends TimeLine {
 						unselect = true;
 					}
 					if (!TestLine.this.timeItems.isEmpty()) {
-						if (!(selected = selectTest(x, TestLine.this.timeItems))) {
-							if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems))) {
-								TestLine.this.schedulerModel.unselectTests(TestLine.this);
+						if (!(selected = selectTest(x, TestLine.this.timeItems, unselect))) {
+							if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
+//								TestLine.this.schedulerModel.unselectTests(TestLine.this);
 								for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
 									mouseListener.mousePressed(e);
 								}
 							}
 						}
-					} else if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems))) {
+					} else if (!(selected = selectTest(x, TestLine.this.unsavedTestTimeItems, unselect))) {
 						for(final MouseListener mouseListener : TestLine.this.getParent().getMouseListeners()) {
 							mouseListener.mousePressed(e);
 						}
 					}
 					
 					if (unselect && !selected){
-						TestLine.this.selectedItems.clear();
-						if (TestLine.this.selectedTestIds != null) {
-							TestLine.this.selectedTestIds.clear();
-						}
-						TestLine.this.schedulerModel.unselectTests(TestLine.this);
+						unselect();
 					}					
 				} else if (SwingUtilities.isRightMouseButton(e)) {
 					// popupRelativeX = x;
