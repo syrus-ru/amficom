@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.6 2005/09/26 12:54:29 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.7 2005/10/06 14:56:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,11 @@ import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
@@ -35,6 +38,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.io.BellcoreCreator;
+import com.syrus.io.DataFormatException;
 import com.syrus.io.SignatureMismatchException;
 
 public class CoreAnalysisManagerTestCase extends TestCase {
@@ -196,7 +200,8 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 	}
 
 	// проверка сравнения масок и определения события, обусловившего аларм
-	public final void testTraceComparison() throws IncompatibleTracesException {
+	public final void testTraceComparison()
+	throws IncompatibleTracesException, DataFormatException {
 		System.out.println("testTraceComparison():");
 		final int N = 10000;
 		final int dist1 = N / 3;
@@ -220,30 +225,72 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 				trace,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare bs: " + res);
-		assertTrue(res == null);
+		assertTrue(res == null); // аларма быть не должно
 
+		PFTrace trace1 = generateTestTrace(N, dist1 - 4, false); 
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				generateTestTrace(N, dist1 - 4, false),
+				trace1,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getCoord() + "==" + dist1, res.getCoord() == dist1); // должна сработать привязка
 
+		PFTrace trace2 = generateTestTrace(N, dist1 - 6, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				generateTestTrace(N, dist1 - 6, false),
+				trace2,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getCoord() + "<" + dist1, res.getCoord() < dist1); // привязки уже быть не должно
 
+		PFTrace trace3 = generateTestTrace(N, dist1 - 5, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				generateTestTrace(N, dist1 - 5, false),
+				trace3,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getCoord() == dist1); // спорный случай. В текущей версии привязка быть должна
+
+		// проверка создания объектов эталона и результата анализа
+		Etalon etalon = new Etalon(mtm, breakThresh,
+				new EventAnchorer(mtm.getMTAE().getNEvents()));
+		assertNotNull(etalon);
+		AnalysisResult ar = CoreAnalysisManager.performAnalysis(
+				trace1, defaultAP);
+		assertNotNull(ar);
+		res = getFirstMismatch(
+				CoreAnalysisManager.compareAndMakeAlarms(ar, etalon));
+		assertTrue(res != null); // должен быть обнаружен аларм
+
+		// проверка с восстановленными эталоном и результатом анализа
+		Etalon etRest =
+			(Etalon)DataStreamableUtil.readDataStreamableFromBA(
+					DataStreamableUtil.writeDataStreamableToBA(etalon),
+					Etalon.getDSReader());
+
+		ar = CoreAnalysisManager.performAnalysis(
+				trace, defaultAP);
+		assertNotNull(ar);
+		AnalysisResult arRest =
+			(AnalysisResult)DataStreamableUtil.readDataStreamableFromBA(
+					ar.toByteArray(),
+					AnalysisResult.getDSReader());
+		res = getFirstMismatch(
+				CoreAnalysisManager.compareAndMakeAlarms(arRest, etRest));
+		assertTrue(res == null); // аларма быть не должно
+
+		ar = CoreAnalysisManager.performAnalysis(
+				trace1, defaultAP);
+		assertNotNull(ar);
+		arRest =
+				(AnalysisResult)DataStreamableUtil.readDataStreamableFromBA(
+						ar.toByteArray(),
+						AnalysisResult.getDSReader());
+		res = getFirstMismatch(
+				CoreAnalysisManager.compareAndMakeAlarms(arRest, etRest));
+		assertTrue(res != null); // должен быть обнаружен аларм
 	}
 }
