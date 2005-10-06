@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.98 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.99 2005/10/06 08:04:20 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,19 @@ import java.util.EnumSet;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.99 $, $Date: 2005/10/06 08:04:20 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public enum AnalysisType implements TransferableObject, ActionType {
+public enum AnalysisType implements TransferableObject, ActionType, Describable {
 	DADARA("dadara",
 			EnumSet.of(ParameterType.REFLECTOGRAMMA),
 			EnumSet.of(ParameterType.DADARA_CRITERIA),
@@ -108,6 +109,21 @@ public enum AnalysisType implements TransferableObject, ActionType {
 
 	public String getDescription() {
 		return this.description;
+	}	
+
+	@Deprecated
+	public String getName() {
+		return this.description;
+	}	
+	
+	public void setDescription(String description) {
+		throw new UnsupportedOperationException(
+				"AnalysisType.setDescription() is unsupported");		
+	}
+	
+	public void setName(String name) {
+		throw new UnsupportedOperationException(
+				"AnalysisType.setName() is unsupported");		
 	}
 
 	@SuppressWarnings("unused")
