@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.19 2005/10/04 14:06:05 bob Exp $
+* $Id: WrapperedTable.java,v 1.20 2005/10/06 15:06:44 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/04 14:06:05 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/06 15:06:44 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -110,6 +110,23 @@ public final class WrapperedTable<T> extends ATable {
 			if (model.keys[mColIndex].equals(key)) {
 				final TableColumn col = this.getColumnModel().getColumn(mColIndex);
 				col.setCellRenderer(renderer);
+			}
+		}
+	}
+	
+	public void setSelectedValue(final T t) {
+		this.clearSelection();
+		
+		if (t == null) {
+			return;
+		}
+		
+		final WrapperedTableModel<T> tableModel = this.getModel();
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+			final T tInTable = tableModel.getObject(i);
+			if (tInTable.equals(t)) {
+				this.setRowSelectionInterval(i, i);
+				break;
 			}
 		}
 	}
