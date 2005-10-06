@@ -1,4 +1,4 @@
--- $Id: attachedtext.sql,v 1.3 2005/09/30 06:44:03 arseniy Exp $
+-- $Id: attachedtext.sql,v 1.4 2005/10/06 11:31:52 max Exp $
 
 CREATE TABLE AttachedText (
  id NUMBER(19),
@@ -38,5 +38,7 @@ CREATE TABLE AttachedText (
 -- CONSTRAINT horizontal_att_id_fk FOREIGN KEY (horizontal_attacher_id)
 -- REFERENCES ReportData (id) ON DELETE CASCADE
 );
+
+COMMENT ON TABLE AttachedText IS '$Id: attachedtext.sql,v 1.4 2005/10/06 11:31:52 max Exp $';
 
 CREATE SEQUENCE AttachedText_Seq ORDER;
