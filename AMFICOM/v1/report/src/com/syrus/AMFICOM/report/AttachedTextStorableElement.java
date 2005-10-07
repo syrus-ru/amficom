@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.report.corba.IdlAbstractReportElement;
 import com.syrus.AMFICOM.report.corba.IdlAttachedText;
 import com.syrus.AMFICOM.report.corba.IdlAttachedTextHelper;
 import com.syrus.AMFICOM.report.corba.IdlAttachedTextPackage.IdlFont;
@@ -139,21 +138,23 @@ public final class AttachedTextStorableElement extends StorableElement
 		this.fromTransferable(transferable);
 	}
 	
-	protected synchronized void fromTransferable(IdlAttachedText transferable) {
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+		IdlAttachedText iat = (IdlAttachedText) transferable;
 		try {
-			super.fromTransferable(transferable);
+			super.fromTransferable(iat);
 		} catch (ApplicationException e) {
 			// this shit cann't happen
 			assert false;
 		}
-		this.text = transferable.text;
-		this.verticalAttacherId = new Identifier(transferable.verticalAttacherId);
-		this.horizontalAttacherId = new Identifier(transferable.horizontalAttacherId);
-		this.font = new Font(transferable.font.name, transferable.font.style, transferable.font.size);
-		this.verticalAttachType = TextAttachingType.fromInt(transferable.verticalAttachType);
-		this.horizontalAttachType = TextAttachingType.fromInt(transferable.horizontalAttachType);
-		this.distanceX = transferable.distanceX;
-		this.distanceY = transferable.distanceY;
+		this.text = iat.text;
+		this.verticalAttacherId = new Identifier(iat.verticalAttacherId);
+		this.horizontalAttacherId = new Identifier(iat.horizontalAttacherId);
+		this.font = new Font(iat.font.name, iat.font.style, iat.font.size);
+		this.verticalAttachType = TextAttachingType.fromInt(iat.verticalAttachType);
+		this.horizontalAttachType = TextAttachingType.fromInt(iat.horizontalAttachType);
+		this.distanceX = iat.distanceX;
+		this.distanceY = iat.distanceY;
 		
 	}
 	

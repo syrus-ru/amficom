@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.10 2005/10/07 07:45:26 max Exp $
+ * $Id: TableDataStorableElement.java,v 1.11 2005/10/07 08:55:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/10/07 07:45:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/07 08:55:04 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
@@ -88,8 +88,7 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 	}
 	
 	public TableDataStorableElement(IdlTableData transferable) {
-		super(transferable);
-		this.verticalDivisionsCount = transferable.verticalDivisionCount;
+		super(transferable);		
 	}
 	
 	@Override

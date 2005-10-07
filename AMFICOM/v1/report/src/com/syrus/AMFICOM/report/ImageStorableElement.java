@@ -114,14 +114,16 @@ public final class ImageStorableElement extends StorableElement {
 		fromTransferable(transferable);		
 	}
 	
-	protected synchronized void fromTransferable(IdlImage transferable) {
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+		IdlImage idlImage = (IdlImage) transferable;
 		try {
-			super.fromTransferable(transferable);
+			super.fromTransferable(idlImage);
 		} catch (ApplicationException e) {
 			// Never can happen
 			assert false;
 		}
-		this.bitmapImageResourceId = new Identifier(transferable.bitmapImageResource);
+		this.bitmapImageResourceId = new Identifier(idlImage.bitmapImageResource);
 	}
 	
 	@Override

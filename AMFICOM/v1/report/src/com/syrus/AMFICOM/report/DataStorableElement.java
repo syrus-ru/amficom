@@ -94,15 +94,17 @@ public class DataStorableElement extends StorableElement {
 		fromTransferable(transferable);
 	}
 	
-	protected synchronized void fromTransferable(IdlData transferable) {
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+		IdlData idlData = (IdlData) transferable;  
 		try {
-			super.fromTransferable(transferable);
+			super.fromTransferable(idlData);
 		} catch (ApplicationException e) {
 			// Never can happen
 			assert false;
 		}
-		this.reportName = transferable.reportName;
-		this.modelClassName = transferable.modelClassName;		
+		this.reportName = idlData.reportName;
+		this.modelClassName = idlData.modelClassName;		
 	}
 	
 	synchronized void setAttributes(Date created, 

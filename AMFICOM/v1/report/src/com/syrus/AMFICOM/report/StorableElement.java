@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.6 2005/10/07 07:47:54 peskovsky Exp $
+ * $Id: StorableElement.java,v 1.7 2005/10/07 08:55:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,11 @@
 package com.syrus.AMFICOM.report;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -122,18 +117,19 @@ public abstract class StorableElement extends StorableObject {
 		this.reportTemplateId = reportTemplateId;
 	}
 	
-	protected synchronized void fromTransferable(IdlAbstractReportElement transferable) throws ApplicationException {
-		
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+		IdlAbstractReportElement iae = (IdlAbstractReportElement) transferable;
 		try {
-			super.fromTransferable(transferable);
+			super.fromTransferable(iae);
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		this.location = new IntPoint(transferable.locationX, transferable.locationY);
-		this.size = new IntDimension(transferable.width, transferable.height);
-		this.reportTemplateId  = new Identifier(transferable.idlReportTemplateId);
+		this.location = new IntPoint(iae.locationX, iae.locationY);
+		this.size = new IntDimension(iae.width, iae.height);
+		this.reportTemplateId  = new Identifier(iae.idlReportTemplateId);
 	}
 	
 	synchronized void setAttributes(final Date created,
