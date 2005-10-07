@@ -19,8 +19,8 @@ import com.syrus.io.SignatureMismatchException;
  * Подробнее см. {@link ReflectogramMismatch}
  * @see ReflectogramMismatch
  * 
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
+ * @author $Author: saa $
+ * @version $Revision: 1.4 $, $Date: 2005/10/07 12:04:17 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl implements ReflectogramMismatch {
@@ -89,9 +89,6 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 	}
 	public void setSeverity(final Severity severity) {
 		this.severity = severity;
-	}
-	public AlarmType getSpecificType() {
-		return getAlarmType();
 	}
 	public double getDistance() {
 		return getDeltaX() * getCoord();
