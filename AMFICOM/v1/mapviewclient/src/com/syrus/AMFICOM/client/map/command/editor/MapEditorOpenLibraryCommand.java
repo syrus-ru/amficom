@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenLibraryCommand.java,v 1.9 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorOpenLibraryCommand.java,v 1.10 2005/10/07 14:20:20 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/07 14:20:20 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,7 +87,7 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 				allLibraries,
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
-				true);
+				false);
 
 		if(this.mapLibrary == null) {
 			this.aContext.getDispatcher().firePropertyChange(
