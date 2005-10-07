@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.8 2005/10/06 10:25:28 stas Exp $
+ * $Id: Cable.java,v 1.9 2005/10/07 08:21:07 krupenn Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,9 @@
 package com.syrus.impexp.unicablemap.objects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -185,33 +187,47 @@ public class Cable {
 
 		List<Link> tempLinks = new LinkedList<Link>(links);
 		LinkedList<ChannelingItem> tempChannelingItems = new LinkedList<ChannelingItem>(this.channelingItems);
-		LinkedList<ChannelingItem> newChannelingItems = new LinkedList<ChannelingItem>();
+		LinkedList<ChannelingItem> newChannelingItemsFromStart = new LinkedList<ChannelingItem>();
+		LinkedList<ChannelingItem> newChannelingItemsFromEnd = new LinkedList<ChannelingItem>();
 
 		String bufStartSiteId = this.startSiteId;
-		String bufEndSiteId = "";
+		String tempEndSiteId = "";
+		String bufEndSiteId = this.endSiteId;
+		String tempStartSiteId = "";
 
-		int i = 0;
 		if(this.first != null) {
-			newChannelingItems.add(this.first);
-			this.first.setNumber(i++);
+			newChannelingItemsFromStart.add(this.first);
 			bufStartSiteId = this.first.getEndSiteId();
+		}
+		if(this.last != null) {
+			newChannelingItemsFromEnd.add(this.last);
+			bufEndSiteId = this.last.getStartSiteId();
 		}
 
 		while(tempLinks.size() != 0) {
-			boolean found = false;
+			boolean foundFromStart = false;
+			boolean foundFromEnd = false;
 			for(Link link : tempLinks) {
 				if(link.getStartNodeId().equals(bufStartSiteId)) {
-					bufEndSiteId = link.getEndNodeId();
-					found = true;
+					tempEndSiteId = link.getEndNodeId();
+					foundFromStart = true;
 				}
 				if(link.getEndNodeId().equals(bufStartSiteId)) {
-					bufEndSiteId = link.getStartNodeId();
-					found = true;
+					tempEndSiteId = link.getStartNodeId();
+					foundFromStart = true;
 				}
-				if(found) {
+				if(link.getStartNodeId().equals(bufEndSiteId)) {
+					tempStartSiteId = link.getEndNodeId();
+					foundFromEnd = true;
+				}
+				if(link.getEndNodeId().equals(bufEndSiteId)) {
+					tempStartSiteId = link.getStartNodeId();
+					foundFromEnd = true;
+				}
+				if(foundFromStart) {
 					ChannelingItem channelingItem = this.channelingItemsMap.get(link.getId());
 					if(channelingItem == null) {
-						System.out.println("Ошибка! не задано место кабеля для кабеля '"
+						System.out.println("Внимание! не задано место кабеля для кабеля '"
 								+ this.name + "' (" + this.id
 								+ "), тоннель '"
 								+ link.getName() + "' (" + link.getId()
@@ -219,21 +235,41 @@ public class Cable {
 					}
 					else {
 						tempChannelingItems.remove(channelingItem);
-						channelingItem.setNumber(i++);
-						channelingItem.setEndSiteId(bufEndSiteId);
+						channelingItem.setEndSiteId(tempEndSiteId);
 						channelingItem.setStartSiteId(bufStartSiteId);
-						newChannelingItems.add(channelingItem);
+						newChannelingItemsFromStart.add(channelingItem);
 					}
 					tempLinks.remove(link);
-					bufStartSiteId = bufEndSiteId;
+					bufStartSiteId = tempEndSiteId;
+					break;
+				}
+				else if(foundFromEnd) {
+					ChannelingItem channelingItem = this.channelingItemsMap.get(link.getId());
+					if(channelingItem == null) {
+						System.out.println("Внимание! не задано место кабеля для кабеля '"
+								+ this.name + "' (" + this.id
+								+ "), тоннель '"
+								+ link.getName() + "' (" + link.getId()
+								+ ")!");
+					}
+					else {
+						tempChannelingItems.remove(channelingItem);
+						channelingItem.setEndSiteId(bufEndSiteId);
+						channelingItem.setStartSiteId(tempStartSiteId);
+						newChannelingItemsFromEnd.add(channelingItem);
+					}
+					tempLinks.remove(link);
+					bufEndSiteId = tempStartSiteId;
 					break;
 				}
 			}
-			if(!found) {
+			if(!foundFromStart && !foundFromEnd) {
 				System.out.println("Ошибка! отсутствует связность прокладки кабеля '"
 						+ this.name + "' (" + this.id
 						+ "), начало " + this.startSiteId
-						+ "), конец " + this.endSiteId);
+						+ ", конец " + this.endSiteId
+						+ "\n		связь отсутствует на участке между " + bufStartSiteId
+						+ " и " + bufEndSiteId);
 				System.out.print("		кабель проходит по тоннелям ");
 				for(Link tempLink : links) {
 					System.out.print(" " + tempLink.getId());
@@ -244,16 +280,11 @@ public class Cable {
 					System.out.print(" " + channelingItem.getTunnelId());
 				}
 				System.out.println("");
-				this.channelingItems.clear();
-				return;
+				break;
 			}
 		}
-		if(this.last != null) {
-			newChannelingItems.add(this.last);
-			this.last.setNumber(i++);
-		}
 		if(tempChannelingItems.size() != 0) {
-			System.out.print("Ошибка! задано место кабеля '"
+			System.out.print("Внимание! задано место кабеля '"
 					+ this.name + "' (" + this.id
 					+ ") без информации о прохождении кабеля по тоннелю! ");
 			for(ChannelingItem channelingItem : tempChannelingItems) {
@@ -261,7 +292,14 @@ public class Cable {
 			}
 			System.out.println("");
 		}
-		this.channelingItems = newChannelingItems;
+		this.channelingItems.clear();
+		this.channelingItems.addAll(newChannelingItemsFromStart);
+		Collections.reverse(newChannelingItemsFromEnd);
+		this.channelingItems.addAll(newChannelingItemsFromEnd);
+		int i = 0;
+		for(ChannelingItem channelingItem : this.channelingItems) {
+			channelingItem.setNumber(i++);
+		}
 	}
 
 	public String getEndSiteId() {
