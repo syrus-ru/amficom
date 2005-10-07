@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.9 2005/10/06 09:09:20 max Exp $
+ * $Id: TableDataStorableElement.java,v 1.10 2005/10/07 07:45:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,13 +21,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlTableData;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: max $
- * @version $Revision: 1.9 $, $Date: 2005/10/06 09:09:20 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/07 07:45:26 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
@@ -89,6 +90,13 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 	public TableDataStorableElement(IdlTableData transferable) {
 		super(transferable);
 		this.verticalDivisionsCount = transferable.verticalDivisionCount;
+	}
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) {
+		IdlTableData tdt = (IdlTableData) transferable;
+		super.fromTransferable(tdt);
+		this.verticalDivisionsCount = tdt.verticalDivisionCount;
 	}
 	
 	synchronized void setAttributes(Date created, 
