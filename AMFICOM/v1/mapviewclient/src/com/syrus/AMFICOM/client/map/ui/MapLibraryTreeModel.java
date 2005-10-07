@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryTreeModel.java,v 1.9 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapLibraryTreeModel.java,v 1.10 2005/10/07 14:24:44 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/07 14:24:44 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -159,7 +159,7 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 
 		for(Iterator it = siteNodeTypeChildren.iterator(); it.hasNext();) {
 			SiteNodeType type = (SiteNodeType )it.next();
-			Item childNode = (Item )nodePresense.get(type);
+			IconedNode childNode = (IconedNode )nodePresense.get(type);
 			if(childNode == null) {
 				Item newItem = new IconedNode(
 						type,
@@ -170,6 +170,14 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 										Image.SCALE_SMOOTH)),
 						false); 
 				node.addChild(newItem);
+			}
+			else {
+				childNode.setIcon(
+						new ImageIcon(NodeTypeController.getImage(type)
+								.getScaledInstance(
+										IMG_SIZE,
+										IMG_SIZE,
+										Image.SCALE_SMOOTH)));
 			}
 		}
 	}
