@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.72 2005/09/29 08:24:24 arseniy Exp $
+# $Id: Makefile,v 1.73 2005/10/07 09:31:12 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -44,7 +44,7 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/reflectometry/*.java)
 
 
-$(LIBNAME): .mach
+$(LIBNAME):	.mach
 	$(CP) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/measurement/
@@ -52,13 +52,13 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
 		-C $(CLASSDIR) com/syrus/AMFICOM/reflectometry
 
-.mach: .corba .ora $(CLASSDIR)
+.mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(EXTCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
-.ora: $(CLASSDIR)
+.ora:	$(CLASSDIR)
 	$(JPUB) $(JPUB_FLAGS) \
 		-sql=CRONSTRINGARRAY:CronStringArray
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
@@ -67,49 +67,49 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ora/*.java
 	touch $@
 
-.PHONY: idlclean
+.PHONY:	idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/measurement/corba && \
 		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/.cvsignore)
 	$(RM) .idl
 
-.PHONY: corba
-corba: .corba
+.PHONY:	corba
+corba:	.corba
 
-.corba: $(CLASSDIR) .idl .ora
+.corba:	$(CLASSDIR) .idl .ora
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(JDBCCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java 
 	touch $@
 
-.PHONY: clean
-clean: cleanmach cleanora cleancorba
+.PHONY:	clean
+clean:	cleanmach cleanora cleancorba
 	$(RM) $(LIBNAME)
 
-.PHONY: cleanmach
+.PHONY:	cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
-.PHONY: cleanora
+.PHONY:	cleanora
 cleanora:
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/ora
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/ora
 	$(RM) .ora
 
-.PHONY: cleancorba
-cleancorba: idlclean
+.PHONY:	cleancorba
+cleancorba:	idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
 	$(RM) .corba
 
 #### Install ####
-.PHONY: install
-install: $(LIBNAME) $(LIBDIR)
+.PHONY:	install
+install:	$(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
 #### Archive ####
-.PHONY: arch
+.PHONY:	arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
@@ -117,6 +117,6 @@ arch:
 		$(SOURCES) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.properties)
 
-.PHONY: pmd
+.PHONY:	pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/measurement text $(PMD_RULES) 
