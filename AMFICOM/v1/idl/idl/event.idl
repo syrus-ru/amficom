@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.24 2005/08/19 16:34:14 arseniy Exp $
+ * $Id: event.idl,v 1.25 2005/10/07 14:58:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@
 #define	EVENT_IDL
 
 #include "general.idl"
+#include "reflectometry.idl"
 
 #ifndef MY_COMPILER_IS_NOT_BRAINDEAD
 module com {
@@ -112,6 +113,84 @@ module event {
 		};
 
 
+	};
+};
+
+module eventv2 {
+	module corba {
+		abstract valuetype IdlEvent {
+			enum IdlEventType {
+				REFLECTOGRAM_MISMATCH,
+				LINE_MISMATCH,
+				NOTIFICATION
+			};
+
+			eventv2::Event getNative();
+		};
+
+		valuetype IdlReflectogramMismatchEvent : IdlEvent {
+			union IdlMismatchData switch (
+				enum IdlMismatch {
+					_FALSE,
+					_TRUE}) {
+				case _TRUE:
+					struct IdlMismatchPair {
+						double minMismatch;
+						double maxMismatch;
+					} mismatchPair;
+			};
+			private IdlMismatchData mismatchData;
+			private reflectometry::corba::IdlSeverity severity;
+			private double distance;
+			union IdlAnchorData switch (
+				enum IdlAnchor {
+					_FALSE,
+					_TRUE}) {
+				case _TRUE:
+					struct IdlAnchorPair {
+						general::corba::IdlIdentifier anchor1Id;
+						general::corba::IdlIdentifier anchor2Id;
+						long anchor1Coord;
+						long anchor2Coord;
+					} anchorPair;
+			};
+			private IdlAnchorData anchorData;
+			private long coord;
+			private long endCoord;
+			private reflectometry::corba::IdlAlarmType alarmType;
+			private double deltaX;
+
+			boolean hasMismatch();
+			double getMinMismatch();
+			double getMaxMismatch();
+			reflectometry::corba::IdlSeverity getSeverity();
+			double getDistance();
+			boolean hasAnchors();
+			general::corba::IdlIdentifier getAnchor1Id();
+			general::corba::IdlIdentifier getAnchor2Id();
+			long getAnchor1Coord();
+			long getAnchor2Coord();
+			long getCoord();
+			long getEndCoord();
+			reflectometry::corba::IdlAlarmType getAlarmType();
+			double getDeltaX();
+
+			factory init(in IdlMismatchData mismatchData,
+					in reflectometry::corba::IdlSeverity severity,
+					in double distance,
+					in IdlAnchorData anchorData,
+					in long coord,
+					in long endCoord,
+					in reflectometry::corba::IdlAlarmType alarmType,
+					in double deltaX);
+		};
+
+		abstract valuetype IdlNotificationEvent : IdlEvent {
+			enum IdlDeliveryMethod {
+				EMAIL,
+				SMS
+			};
+		};
 	};
 };
 

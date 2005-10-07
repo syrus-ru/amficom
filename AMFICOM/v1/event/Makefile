@@ -12,7 +12,18 @@ $(call checkenve,XMLBEANSCLASSPATH)
 
 LIBNAME_GENERALXML=generalxml.jar
 
-APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+
+DEPENDENCIES = \
+administration \
+configuration \
+general \
+util \
+reflectometry
+
+EMPTY =
+SPACE = $(EMPTY) $(EMPTY)
+APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
+
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
@@ -22,7 +33,9 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/event
+		-C $(CLASSDIR) \
+		com/syrus/AMFICOM/event \
+		com/syrus/AMFICOM/eventv2
 
 .mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
@@ -34,6 +47,8 @@ $(LIBNAME): .mach
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/event/corba && \
 		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/event/corba/.cvsignore)
+	cd $(SRCDIR)/com/syrus/AMFICOM/eventv2/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/eventv2/corba/.cvsignore)
 	$(RM) .idl
 
 .PHONY: corba
@@ -43,7 +58,8 @@ corba: .corba
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/eventv2/corba/*.java
 	touch $@
 
 .PHONY: clean
@@ -58,12 +74,13 @@ cleanmach:
 .PHONY: cleancorba
 cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/event/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/eventv2/corba
 	$(RM) .corba
 
 #### Install ####
 .PHONY: install
 install: $(LIBNAME) $(LIBDIR)
-	$(CP) $^
+	install -m 0644 $(LIBNAME) $(LIBDIR)
 
 
 #### Archive ####
@@ -72,7 +89,7 @@ install: $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/event.idl \
+		$(IDL_SOURCES) \
 		$(SOURCES)
 
 .PHONY: pmd
