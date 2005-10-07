@@ -398,12 +398,10 @@ final class PlanToolBar {
 
 			public void focusGained(FocusEvent e) {
 				// nothing
-
 			}
 
 			public void focusLost(FocusEvent e) {
-				dialog.setVisible(!dialog.isVisible());
-
+				dialog.setVisible(false);
 			}
 		});
 		dialog.getContentPane().add(legendPanel);
