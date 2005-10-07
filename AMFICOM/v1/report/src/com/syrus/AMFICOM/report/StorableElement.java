@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.7 2005/10/07 08:55:04 max Exp $
+ * $Id: StorableElement.java,v 1.8 2005/10/07 11:07:15 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -109,9 +109,6 @@ public abstract class StorableElement extends StorableObject {
 			final IntDimension size,
 			final Identifier reportTemplateId) {
 		super(id, created, modified, creatorId, modifierId, version);
-		assert location != null : NON_NULL_EXPECTED;
-		assert size != null : NON_NULL_EXPECTED;
-		assert reportTemplateId != null : NON_NULL_EXPECTED;
 		this.location = location;
 		this.size = size;
 		this.reportTemplateId = reportTemplateId;
