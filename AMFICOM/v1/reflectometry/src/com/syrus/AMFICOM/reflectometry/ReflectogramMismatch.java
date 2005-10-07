@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.4 2005/10/07 10:40:01 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.5 2005/10/07 12:00:40 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.TransferableObject;
  * √де L1 и L2 - схемные (оптические или физические) рассто€ни€ до аларма
  * от соответвующих объектов схемы.
  * <p> ≈сли объекты прив€зки определены, то они лежат по разные стороны
- * от аларма (по оси дистанции).
+ * от аларма (по оси дистанции) или совпадают с ним.
  * <p> ≈сли аларм приходитс€ на точечное событие (сварка, коннектор),
  * уже имеющее прив€зку к схеме, то anchor1Id и anchor2Id совпадают,
  * а соотв. дистанции нулевые.
@@ -65,17 +65,20 @@ import com.syrus.util.TransferableObject;
  * </ol>
  * 
  * @author Old Wise Saa
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/07 10:40:01 $
+ * @author $Author: saa $
+ * @version $Revision: 1.5 $, $Date: 2005/10/07 12:00:40 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
 	/**
-	 * Alarm levels. Must be comparable with >; >=
+	 * ”ровень событи€ (или, иначе, существенность проблемы).
+	 * Must be comparable.
+	 * ¬ насто€щей версии практически полностью определ€ет реакцию системы на
+	 * событие: будет ли создан аларм, или же будет предупреждение.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.4 $, $Date: 2005/10/07 10:40:01 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.5 $, $Date: 2005/10/07 12:00:40 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -112,8 +115,8 @@ public interface ReflectogramMismatch {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.4 $, $Date: 2005/10/07 10:40:01 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.5 $, $Date: 2005/10/07 12:00:40 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
@@ -167,7 +170,7 @@ public interface ReflectogramMismatch {
 	double getMaxMismatch();
 
 	/**
-	 * @return —ущественность проблемы, определ€етс€ константами SEVERITY_*
+	 * @return —ущественность проблемы, see {@link Severity}
 	 */
 	Severity getSeverity();
 
@@ -185,12 +188,28 @@ public interface ReflectogramMismatch {
 	 */
 	boolean hasAnchors();
 
+	/**
+	 * @return ID €кор€ 1. not null.
+	 * @throws IllegalStateException если {@link #hasAnchors()} is false
+	 */
 	SOAnchor getAnchor1Id();
 
+	/**
+	 * @return ID €кор€ 2. not null.
+	 * @throws IllegalStateException если {@link #hasAnchors()} is false
+	 */
 	SOAnchor getAnchor2Id();
 
+	/**
+	 * @return дистанци€(точки) €кор€ 1.
+	 * @throws IllegalStateException если {@link #hasAnchors()} is false
+	 */
 	int getAnchor1Coord();
 
+	/**
+	 * @return дистанци€(точки) €кор€ 2.
+	 * @throws IllegalStateException если {@link #hasAnchors()} is false
+	 */
 	int getAnchor2Coord();
 
 	/**
@@ -199,12 +218,12 @@ public interface ReflectogramMismatch {
 	int getCoord();
 
 	/**
-	 * @return условна€ конечна€ координата аларма (точки)
+	 * @return условна€ координата конечной точки аларма (точки)
 	 */
 	int getEndCoord();
 
 	/**
-	 * @return “ип несоответстви€, см. пол€ TYPE_*
+	 * @return “ип несоответстви€, see {@link AlarmType}
 	 */
 	AlarmType getAlarmType();
 
