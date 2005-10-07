@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.85 2005/10/07 10:04:20 bass Exp $
+ * $Id: Identifier.java,v 1.86 2005/10/07 11:45:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.TransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.85 $, $Date: 2005/10/07 10:04:20 $
+ * @version $Revision: 1.86 $, $Date: 2005/10/07 11:45:10 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -184,6 +184,10 @@ public final class Identifier implements Comparable<Identifier>,
 	@Override
 	public String toString() {
 		return this.getIdentifierString();
+	}
+
+	public static Identifier valueOf(final long identifierCode) {
+		return new Identifier(identifierCode);
 	}
 
 	public static Set<String> createStrings(final Collection<? extends Identifiable> identifiables) {
