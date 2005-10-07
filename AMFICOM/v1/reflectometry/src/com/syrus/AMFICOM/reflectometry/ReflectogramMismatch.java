@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.5 2005/10/07 12:00:40 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.6 2005/10/07 12:19:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,10 +63,13 @@ import com.syrus.util.TransferableObject;
  * <p> Если {@link #hasAnchors()} возвращает false, то привязки
  * нет и нужно использовать первый способ трансляции в схемные дистанции.
  * </ol>
+ * XXX: возможно, имеет смысл разрешить точкам привязки совпадать и при этом
+ * находиться по одну сторону от аларма. Этот случай использовался бы,
+ * если был бы доступен только один якорь.
  * 
  * @author Old Wise Saa
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/07 12:00:40 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/07 12:19:00 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -78,7 +81,7 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.5 $, $Date: 2005/10/07 12:00:40 $
+	 * @version $Revision: 1.6 $, $Date: 2005/10/07 12:19:00 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -116,7 +119,7 @@ public interface ReflectogramMismatch {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.5 $, $Date: 2005/10/07 12:00:40 $
+	 * @version $Revision: 1.6 $, $Date: 2005/10/07 12:19:00 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
@@ -149,40 +152,63 @@ public interface ReflectogramMismatch {
 	}
 
 	/**
-	 * @return true, если степень превышения предупр. порога определена
-	 */
-	boolean hasMismatch();
-
-	/**
-	 * @return нижняя оценка степени превышения предупредительного порога,
-	 *   если степень превышения определена
-	 *   ({@link #hasMismatch() возвращает true})
-	 * @throws IllegalArgumentException, если степень превышения не определена
-	 */
-	double getMinMismatch();
-
-	/**
-	 * @return верхняя оценка степени превышения предупредительного порога,
-	 *   если степень превышения определена
-	 *   ({@link #hasMismatch() возвращает true})
-	 * @throws IllegalArgumentException, если степень превышения не определена
-	 */
-	double getMaxMismatch();
-
-	/**
-	 * @return Существенность проблемы, see {@link Severity}
+	 * @return Существенность проблемы, see {@link Severity}.
 	 */
 	Severity getSeverity();
 
 	/**
-	 * XXX: По-хорошему, этот метод должен быть определен как final в абстрактном классе
+	 * @return Тип несоответствия, see {@link AlarmType}.
+	 */
+	AlarmType getAlarmType();
+
+	/**
+	 * @return координата аларма (точки).
+	 */
+	int getCoord();
+
+	/**
+	 * @return условная координата окончания участка аларма (точки).
+	 */
+	int getEndCoord();
+
+	/**
+	 * @return разрешение, точки/метр.
+	 */
+	double getDeltaX();
+
+	/**
+	 * Дистанция, метры.
+	 * XXX: По-хорошему, этот метод должен быть определен как final в абстрактном классе.
 	 * @return _должен_ возвращать
 	 *   {@link #getDeltaX()} * {@link #getCoord()}
 	 */
 	double getDistance();
 
 	/**
-	 * @return true, если возможно использование привязки
+	 * @return true, если степень превышения предупр. порога определена.
+	 */
+	boolean hasMismatch();
+
+	/**
+	 * @return нижняя оценка степени превышения предупр. порога,
+	 *   если только степень превышения предупр. порога определена.
+	 * Гарантировано, что {@link #getMinMismatch()} &lt;= {@link #getMaxMismatch()}
+	 * @throws IllegalArgumentException степень превышения не определена,
+	 *  ({@link #hasMismatch()} == false)
+	 */
+	double getMinMismatch();
+
+	/**
+	 * @return верхняя оценка степени превышения предупр. порога,
+	 *   если только степень превышения предупр. порога определена.
+	 * Гарантировано, что {@link #getMinMismatch()} &lt;= {@link #getMaxMismatch()}
+	 * @throws IllegalArgumentException степень превышения не определена
+	 *  ({@link #hasMismatch()} == false)
+	 */
+	double getMaxMismatch();
+
+	/**
+	 * @return true, если возможно использование привязки по двум якорям
 	 * {@link #getAnchor1Id} {@link #getAnchor1Coord}
 	 * {@link #getAnchor2Id} {@link #getAnchor2Coord}
 	 */
@@ -211,25 +237,4 @@ public interface ReflectogramMismatch {
 	 * @throws IllegalStateException если {@link #hasAnchors()} is false
 	 */
 	int getAnchor2Coord();
-
-	/**
-	 * @return координата аларма (точки)
-	 */
-	int getCoord();
-
-	/**
-	 * @return условная координата конечной точки аларма (точки)
-	 */
-	int getEndCoord();
-
-	/**
-	 * @return Тип несоответствия, see {@link AlarmType}
-	 */
-	AlarmType getAlarmType();
-
-	/**
-	 * @return разрешение, точки/метр
-	 */
-	double getDeltaX();
-
 }
