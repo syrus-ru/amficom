@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.64 2005/10/06 15:19:44 bass Exp $
+ * $Id: ParameterType.java,v 1.65 2005/10/07 10:04:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,10 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Codeable;
 import com.syrus.util.Log;
+import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/10/06 15:19:44 $
+ * @version $Revision: 1.65 $, $Date: 2005/10/07 10:04:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general

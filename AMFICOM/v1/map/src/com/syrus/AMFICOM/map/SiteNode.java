@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.107 2005/10/05 13:43:32 bass Exp $
+ * $Id: SiteNode.java,v 1.108 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.107 $, $Date: 2005/10/05 13:43:32 $
+ * @version $Revision: 1.108 $, $Date: 2005/10/07 10:04:19 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -199,7 +199,7 @@ public class SiteNode extends AbstractNode
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSiteNode getTransferable(final ORB orb) {

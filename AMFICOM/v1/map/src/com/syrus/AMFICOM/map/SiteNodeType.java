@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.103 2005/10/05 13:43:32 bass Exp $
+ * $Id: SiteNodeType.java,v 1.104 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/10/05 13:43:32 $
+ * @version $Revision: 1.104 $, $Date: 2005/10/07 10:04:19 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -211,7 +211,7 @@ public final class SiteNodeType extends StorableObjectType
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSiteNodeType getTransferable(final ORB orb) {

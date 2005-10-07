@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.113 2005/10/05 07:40:14 bass Exp $
+ * $Id: Scheme.java,v 1.114 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,7 +86,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.113 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.114 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -671,7 +671,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlScheme getTransferable(final ORB orb) {

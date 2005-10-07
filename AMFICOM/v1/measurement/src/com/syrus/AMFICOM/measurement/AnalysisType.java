@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.100 2005/10/06 15:19:43 bass Exp $
+ * $Id: AnalysisType.java,v 1.101 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.util.Log;
+import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/10/06 15:19:43 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/07 10:04:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement

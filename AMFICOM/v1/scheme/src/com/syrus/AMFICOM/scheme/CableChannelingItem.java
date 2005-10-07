@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.75 2005/10/05 05:22:17 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.76 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.76 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -426,7 +426,7 @@ public final class CableChannelingItem
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlCableChannelingItem getTransferable(final ORB orb) {

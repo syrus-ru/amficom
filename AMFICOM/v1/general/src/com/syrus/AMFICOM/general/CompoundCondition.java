@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.40 2005/09/22 15:16:33 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.41 2005/10/07 10:04:20 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.40 $, $Date: 2005/09/22 15:16:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/10/07 10:04:20 $
+ * @author $Author: bass $
  * @module general
  */
 public final class CompoundCondition implements StorableObjectCondition {
@@ -160,7 +160,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	public IdlStorableObjectCondition getTransferable(final ORB orb) {
 		return this.getTransferable();

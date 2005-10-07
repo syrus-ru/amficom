@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.117 2005/10/06 15:19:44 bass Exp $
+ * $Id: StorableObject.java,v 1.118 2005/10/07 10:04:20 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,9 +33,10 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
+import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.117 $, $Date: 2005/10/06 15:19:44 $
+ * @version $Revision: 1.118 $, $Date: 2005/10/07 10:04:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -165,7 +166,7 @@ public abstract class StorableObject implements Identifiable,
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	public IdlStorableObject getTransferable(final ORB orb) {
 		return IdlStorableObjectHelper.init(orb,
@@ -639,7 +640,7 @@ public abstract class StorableObject implements Identifiable,
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.117 $, $Date: 2005/10/06 15:19:44 $
+	 * @version $Revision: 1.118 $, $Date: 2005/10/07 10:04:20 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -755,7 +756,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.117 $, $Date: 2005/10/06 15:19:44 $
+	 * @version $Revision: 1.118 $, $Date: 2005/10/07 10:04:20 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

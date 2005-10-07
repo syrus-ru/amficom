@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.58 2005/10/06 15:19:43 bass Exp $
+ * $Id: ModelingType.java,v 1.59 2005/10/07 10:04:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.util.EnumSet;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.util.Log;
+import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/10/06 15:19:43 $
+ * @version $Revision: 1.59 $, $Date: 2005/10/07 10:04:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement

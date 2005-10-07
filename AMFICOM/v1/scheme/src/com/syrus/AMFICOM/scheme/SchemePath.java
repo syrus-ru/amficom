@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.103 2005/10/05 13:43:35 bass Exp $
+ * $Id: SchemePath.java,v 1.104 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/10/05 13:43:35 $
+ * @version $Revision: 1.104 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -290,7 +290,7 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemePath getTransferable(final ORB orb) {

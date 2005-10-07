@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.51 2005/09/15 17:05:49 bob Exp $
+ * $Id: EventType.java,v 1.52 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/09/15 17:05:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.52 $, $Date: 2005/10/07 10:04:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -144,7 +144,7 @@ public final class EventType extends StorableObjectType {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlEventType getTransferable(final ORB orb) {

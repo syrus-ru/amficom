@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.85 2005/10/01 15:13:17 bass Exp $
+ * $Id: TopologicalNode.java,v 1.86 2005/10/07 10:04:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/10/01 15:13:17 $
+ * @version $Revision: 1.86 $, $Date: 2005/10/07 10:04:18 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -146,7 +146,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlTopologicalNode getTransferable(final ORB orb) {

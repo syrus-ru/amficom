@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.86 2005/10/01 15:13:17 bass Exp $
+ * $Id: LinkType.java,v 1.87 2005/10/07 10:04:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/10/01 15:13:17 $
+ * @version $Revision: 1.87 $, $Date: 2005/10/07 10:04:24 $
  * @author $Author: bass $
  * @module config
  */
@@ -298,7 +298,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlLinkType getTransferable(final ORB orb) {

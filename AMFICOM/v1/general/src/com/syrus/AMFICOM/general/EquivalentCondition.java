@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.17 2005/09/22 15:16:33 arseniy Exp $
+* $Id: EquivalentCondition.java,v 1.18 2005/10/07 10:04:20 bass Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlEqui
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.17 $, $Date: 2005/09/22 15:16:33 $
- * @author ÷÷œ‘ $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/10/07 10:04:20 $
+ * @author ÷÷œ‘ $Author: bass $
  * @module general
  */
 public final class EquivalentCondition implements StorableObjectCondition {
@@ -64,7 +64,7 @@ public final class EquivalentCondition implements StorableObjectCondition {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	public IdlStorableObjectCondition getTransferable(final ORB orb) {
 		return this.getTransferable();

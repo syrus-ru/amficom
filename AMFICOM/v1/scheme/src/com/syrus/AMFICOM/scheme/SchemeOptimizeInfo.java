@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.73 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.74 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.74 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -370,7 +370,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeOptimizeInfo getTransferable(final ORB orb) {

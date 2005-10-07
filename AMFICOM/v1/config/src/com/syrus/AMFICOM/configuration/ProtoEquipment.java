@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.12 2005/10/05 13:43:33 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.13 2005/10/07 10:04:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/05 13:43:33 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/07 10:04:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -235,7 +235,7 @@ public final class ProtoEquipment extends StorableObject
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 * @param orb
 	 */
 	@Override

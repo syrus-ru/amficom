@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.82 2005/10/05 05:22:17 bass Exp $
+ * $Id: PathElement.java,v 1.83 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/10/05 05:22:17 $
+ * @version $Revision: 1.83 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -698,7 +698,7 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlPathElement getTransferable(final ORB orb) {

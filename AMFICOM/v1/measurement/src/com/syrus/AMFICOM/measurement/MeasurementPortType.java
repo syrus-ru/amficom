@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.11 2005/10/05 13:43:32 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.12 2005/10/07 10:04:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/05 13:43:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/07 10:04:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -124,7 +124,7 @@ public final class MeasurementPortType extends StorableObjectType
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlMeasurementPortType getTransferable(final ORB orb) {

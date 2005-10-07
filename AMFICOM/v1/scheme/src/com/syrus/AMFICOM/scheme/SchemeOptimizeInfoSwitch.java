@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.29 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.30 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch extends StorableObject
@@ -203,7 +203,7 @@ public final class SchemeOptimizeInfoSwitch extends StorableObject
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeOptimizeInfoSwitch getTransferable(final ORB orb) {

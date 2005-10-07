@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.23 2005/09/08 18:26:31 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.24 2005/10/07 10:04:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/09/08 18:26:31 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/07 10:04:21 $
  * @module resource
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -69,7 +69,7 @@ public abstract class AbstractImageResource extends StorableObject {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public abstract IdlImageResource getTransferable(final ORB orb);

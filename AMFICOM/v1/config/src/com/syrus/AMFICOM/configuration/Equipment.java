@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.142 2005/10/05 13:43:33 bass Exp $
+ * $Id: Equipment.java,v 1.143 2005/10/07 10:04:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.142 $, $Date: 2005/10/05 13:43:33 $
+ * @version $Revision: 1.143 $, $Date: 2005/10/07 10:04:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -319,7 +319,7 @@ public final class Equipment extends DomainMember
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlEquipment getTransferable(final ORB orb) {

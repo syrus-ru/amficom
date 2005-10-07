@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.96 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeLink.java,v 1.97 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.97 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -739,7 +739,7 @@ public final class SchemeLink extends AbstractSchemeLink
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeLink getTransferable(final ORB orb) {

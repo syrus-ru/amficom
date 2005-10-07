@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.18 2005/10/06 15:19:43 bass Exp $
+ * $Id: Parameter.java,v 1.19 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
+import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/06 15:19:43 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/07 10:04:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.102 2005/10/05 13:43:32 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.103 2005/10/07 10:04:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.102 $, $Date: 2005/10/05 13:43:32 $
+ * @version $Revision: 1.103 $, $Date: 2005/10/07 10:04:18 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -200,7 +200,7 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlPhysicalLinkType getTransferable(final ORB orb) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.111 2005/10/04 17:07:19 krupenn Exp $
+ * $Id: Map.java,v 1.112 2005/10/07 10:04:18 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.111 $, $Date: 2005/10/04 17:07:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.112 $, $Date: 2005/10/07 10:04:18 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -316,7 +316,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlMap getTransferable(final ORB orb) {

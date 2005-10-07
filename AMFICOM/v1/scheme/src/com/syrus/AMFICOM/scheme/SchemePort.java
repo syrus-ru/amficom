@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.76 2005/10/05 08:06:56 bass Exp $
+ * $Id: SchemePort.java,v 1.77 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/10/05 08:06:56 $
+ * @version $Revision: 1.77 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -311,7 +311,7 @@ public final class SchemePort extends AbstractSchemePort
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemePort getTransferable(final ORB orb) {

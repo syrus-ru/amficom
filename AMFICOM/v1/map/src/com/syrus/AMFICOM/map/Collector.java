@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.95 2005/10/05 13:43:32 bass Exp $
+ * $Id: Collector.java,v 1.96 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/10/05 13:43:32 $
+ * @version $Revision: 1.96 $, $Date: 2005/10/07 10:04:19 $
  * @module map
  */
 public final class Collector extends StorableObject
@@ -142,7 +142,7 @@ public final class Collector extends StorableObject
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlCollector getTransferable(final ORB orb) {

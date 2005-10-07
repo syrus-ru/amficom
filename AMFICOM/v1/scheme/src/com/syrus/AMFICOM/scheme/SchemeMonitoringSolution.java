@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.79 2005/10/05 07:40:14 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.80 2005/10/07 10:04:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/10/05 07:40:14 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/07 10:04:23 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -359,7 +359,7 @@ public final class SchemeMonitoringSolution
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeMonitoringSolution getTransferable(final ORB orb) {

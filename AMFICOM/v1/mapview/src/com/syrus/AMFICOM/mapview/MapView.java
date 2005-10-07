@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.69 2005/09/29 11:34:11 krupenn Exp $
+* $Id: MapView.java,v 1.70 2005/10/07 10:04:19 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,9 +57,9 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.69 $, $Date: 2005/09/29 11:34:11 $
+ * @version $Revision: 1.70 $, $Date: 2005/10/07 10:04:19 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -197,7 +197,7 @@ public final class MapView extends DomainMember implements Describable {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlMapView getTransferable(final ORB orb) {

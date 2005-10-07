@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.106 2005/10/01 15:13:18 bass Exp $
+ * $Id: NodeLink.java,v 1.107 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/10/01 15:13:18 $
+ * @version $Revision: 1.107 $, $Date: 2005/10/07 10:04:19 $
  * @module map
  */
 public final class NodeLink extends StorableObject
@@ -151,7 +151,7 @@ public final class NodeLink extends StorableObject
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlNodeLink getTransferable(final ORB orb) {

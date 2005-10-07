@@ -1,5 +1,5 @@
 /*-
- * $Id: Event.java,v 1.43 2005/10/06 12:05:21 bass Exp $
+ * $Id: Event.java,v 1.44 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/10/06 12:05:21 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/07 10:04:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -145,7 +145,7 @@ public final class Event extends StorableObject
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlEvent getTransferable(final ORB orb) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.27 2005/10/06 15:19:44 bass Exp $
+ * $Id: EventParameter.java,v 1.28 2005/10/07 10:04:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,10 +17,10 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.TransferableObject;
+import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/06 15:19:44 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/07 10:04:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -62,7 +62,7 @@ public final class EventParameter implements Identifiable,
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	public IdlEventParameter getTransferable(final ORB orb) {
 		return new IdlEventParameter(this.id.getTransferable(),

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.55 2005/09/30 07:50:08 max Exp $
+ * $Id: TypicalCondition.java,v 1.56 2005/10/07 10:04:20 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,8 +127,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.55 $, $Date: 2005/09/30 07:50:08 $
- * @author $Author: max $
+ * @version $Revision: 1.56 $, $Date: 2005/10/07 10:04:20 $
+ * @author $Author: bass $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -1121,7 +1121,7 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	public final IdlStorableObjectCondition getTransferable(final ORB orb) {
 		return this.getTransferable();

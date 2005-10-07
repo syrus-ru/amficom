@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.169 2005/10/06 15:19:43 bass Exp $
+ * $Id: Test.java,v 1.170 2005/10/07 10:04:20 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
@@ -44,9 +43,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
+import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.169 $, $Date: 2005/10/06 15:19:43 $
+ * @version $Revision: 1.170 $, $Date: 2005/10/07 10:04:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -334,7 +334,7 @@ public final class Test extends StorableObject implements Describable {
 
 	/**
 	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+	 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlTest getTransferable(final ORB orb) {
@@ -667,7 +667,7 @@ public final class Test extends StorableObject implements Describable {
 
 		/**
 		 * @param orb
-		 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
+		 * @see com.syrus.util.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 		 */
 		@SuppressWarnings("unused")
 		public IdlTestTimeStamps getTransferable(final ORB orb) {
