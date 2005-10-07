@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.25 2005/10/07 14:58:58 bass Exp $
+ * $Id: event.idl,v 1.26 2005/10/07 15:40:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -141,7 +141,6 @@ module eventv2 {
 			};
 			private IdlMismatchData mismatchData;
 			private reflectometry::corba::IdlSeverity severity;
-			private double distance;
 			union IdlAnchorData switch (
 				enum IdlAnchor {
 					_FALSE,
@@ -164,7 +163,6 @@ module eventv2 {
 			double getMinMismatch();
 			double getMaxMismatch();
 			reflectometry::corba::IdlSeverity getSeverity();
-			double getDistance();
 			boolean hasAnchors();
 			general::corba::IdlIdentifier getAnchor1Id();
 			general::corba::IdlIdentifier getAnchor2Id();
@@ -177,7 +175,6 @@ module eventv2 {
 
 			factory init(in IdlMismatchData mismatchData,
 					in reflectometry::corba::IdlSeverity severity,
-					in double distance,
 					in IdlAnchorData anchorData,
 					in long coord,
 					in long endCoord,

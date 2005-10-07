@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.1 2005/10/07 14:58:57 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.2 2005/10/07 15:40:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/07 14:58:57 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/07 15:40:16 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -35,7 +35,6 @@ final class IdlReflectogramMismatchEventImpl
 	/**
 	 * @param mismatchData
 	 * @param severity
-	 * @param distance
 	 * @param anchorData
 	 * @param coord
 	 * @param endCoord
@@ -43,13 +42,12 @@ final class IdlReflectogramMismatchEventImpl
 	 * @param deltaX
 	 */
 	IdlReflectogramMismatchEventImpl(final IdlMismatchData mismatchData,
-			final IdlSeverity severity, final double distance,
+			final IdlSeverity severity,
 			final IdlAnchorData anchorData, final int coord,
 			final int endCoord, final IdlAlarmType alarmType,
 			final double deltaX) {
 		this.mismatchData = mismatchData;
 		this.severity = severity;
-		this.distance = distance;
 		this.anchorData = anchorData;
 		this.coord = coord;
 		this.endCoord = endCoord;
@@ -81,11 +79,6 @@ final class IdlReflectogramMismatchEventImpl
 	@Override
 	public IdlSeverity getSeverity() {
 		return this.severity;
-	}
-
-	@Override
-	public double getDistance() {
-		return this.distance;
 	}
 
 	@Override

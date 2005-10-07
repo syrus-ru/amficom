@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.1 2005/10/07 14:58:57 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.2 2005/10/07 15:40:16 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/07 14:58:57 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/07 15:40:16 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -40,8 +40,6 @@ public final class DefaultReflectogramMismatchEvent extends
 	private double maxMismatch;
 
 	private Severity severity;
-
-	private double distance;
 
 	private boolean anchors;
 
@@ -63,16 +61,7 @@ public final class DefaultReflectogramMismatchEvent extends
 
 	private DefaultReflectogramMismatchEvent(
 			final ReflectogramMismatch reflectogramMismatch) {
-		/*
-		 * Бляццкий иклипс ругаецца
-		 */
-/*
-		if (this.mismatch = reflectogramMismatch.hasMismatch())
-/*/
-		this.mismatch = reflectogramMismatch.hasMismatch();
-		if (this.mismatch)
-//*/
-		{
+		if (!!(this.mismatch = reflectogramMismatch.hasMismatch())) {
 			this.minMismatch = reflectogramMismatch.getMinMismatch();
 			this.maxMismatch = reflectogramMismatch.getMaxMismatch();
 
@@ -82,18 +71,8 @@ public final class DefaultReflectogramMismatchEvent extends
 		}
 
 		this.severity = reflectogramMismatch.getSeverity();
-		this.distance = reflectogramMismatch.getDistance();
 
-		/*
-		 * Сдесь бляццкий иклипс ругаецца исчо
-		 */
-/*
-		if (this.anchors = reflectogramMismatch.hasAnchors())
-/*/
-		this.anchors = reflectogramMismatch.hasAnchors();
-		if (this.anchors)
-//*/
-		{
+		if (!!((this.anchors = reflectogramMismatch.hasAnchors()))) {
 			/*
 			 * We can't guarantee foreign anchors to be immutable.
 			 */
@@ -111,8 +90,7 @@ public final class DefaultReflectogramMismatchEvent extends
 
 	private DefaultReflectogramMismatchEvent(
 			final IdlReflectogramMismatchEvent reflectogramMismatchEvent) {
-		this.mismatch = reflectogramMismatchEvent.hasMismatch();
-		if (this.mismatch) {
+		if (!!(this.mismatch = reflectogramMismatchEvent.hasMismatch())) {
 			this.minMismatch = reflectogramMismatchEvent.getMinMismatch();
 			this.maxMismatch = reflectogramMismatchEvent.getMaxMismatch();
 
@@ -122,10 +100,8 @@ public final class DefaultReflectogramMismatchEvent extends
 		}
 
 		this.severity = Severity.valueOf(reflectogramMismatchEvent.getSeverity());
-		this.distance = reflectogramMismatchEvent.getDistance();
 
-		this.anchors = reflectogramMismatchEvent.hasAnchors();
-		if (this.anchors) {
+		if (!!(this.anchors = reflectogramMismatchEvent.hasAnchors())) {
 			this.anchor1Id = new SoAnchorImpl(Identifier.valueOf(reflectogramMismatchEvent.getAnchor1Id()));
 			this.anchor2Id = new SoAnchorImpl(Identifier.valueOf(reflectogramMismatchEvent.getAnchor2Id()));
 			this.anchor1Coord = reflectogramMismatchEvent.getAnchor1Coord();
@@ -164,7 +140,6 @@ public final class DefaultReflectogramMismatchEvent extends
 		return IdlReflectogramMismatchEventHelper.init(orb,
 				mismatchData,
 				this.getSeverity().getTransferable(orb),
-				this.getDistance(),
 				anchorData,
 				this.getCoord(),
 				this.getEndCoord(),
@@ -222,7 +197,7 @@ public final class DefaultReflectogramMismatchEvent extends
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getDistance()
 	 */
 	public double getDistance() {
-		return this.distance;
+		return this.getDeltaX() * this.getCoord();
 	}
 
 	/**
@@ -307,7 +282,7 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.1 $, $Date: 2005/10/07 14:58:57 $
+	 * @version $Revision: 1.2 $, $Date: 2005/10/07 15:40:16 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable {
