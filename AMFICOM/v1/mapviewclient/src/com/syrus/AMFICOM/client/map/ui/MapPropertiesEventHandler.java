@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesEventHandler.java,v 1.8 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapPropertiesEventHandler.java,v 1.9 2005/10/07 14:25:36 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,10 +36,13 @@ import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/07 14:25:36 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -172,15 +175,29 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 		if(this.aContext.getDispatcher() != null) {
 			Object object = e.getSource();
 			this.performProcessing = false;
-			if(object instanceof MapElement)
+			if(object instanceof MapLibrary
+					|| object instanceof SiteNodeType
+					|| object instanceof PhysicalLinkType) {
+				MapFrame mapFrame = MapDesktopCommand.findMapFrame(
+						(JDesktopPane )this.frame.getParent());
+				if(mapFrame != null) {
+					Map map = mapFrame.getMap();
+					this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(this, MapEvent.LIBRARY_SET_CHANGED, map.getMapLibraries()));
+				}
+			}
+			else if(object instanceof MapElement) {
 				this.aContext.getDispatcher().firePropertyChange(
 						new MapEvent(this, MapEvent.MAP_CHANGED, object));
-			else if(object instanceof Map)
+			}
+			else if(object instanceof Map) {
 				this.aContext.getDispatcher().firePropertyChange(
 						new MapEvent(this, MapEvent.MAP_SELECTED, object));
-			else if(object instanceof MapView)
+			}
+			else if(object instanceof MapView) {
 				this.aContext.getDispatcher().firePropertyChange(
 						new MapEvent(this, MapEvent.MAP_VIEW_CHANGED, object));
+			}
 			this.performProcessing = true;
 		}
 	}
