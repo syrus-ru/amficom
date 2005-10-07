@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.51 2005/10/06 15:31:17 bob Exp $
+ * $Id: TableFrame.java,v 1.52 2005/10/07 15:24:10 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,9 +52,10 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/10/06 15:31:17 $
+ * @version $Revision: 1.52 $, $Date: 2005/10/07 15:24:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -123,14 +124,9 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		model.clear();
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
+			assert Log.debugMessage("TableFrame.setTests | " + tests, Log.DEBUGLEVEL09);
 			for (final Test test : tests) {
-				final Identifier groupTestId = test.getGroupTestId();
-				if (!groupTestId.isVoid() && !groupTestId.equals(test)) {
-					continue;
-				}
-				if (model.getIndexOfObject(test) < 0) {
-					model.addObject(test);
-				}
+				model.addObject(test);
 			}
 		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(this, e);
@@ -236,8 +232,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 						if (enableDeleting) {
 							final JMenuItem deleteTestMenuItem = new JMenuItem(I18N.getString(rowIndices.length == 1
-							? "Text.Table.DeleteTest"
-								: "Text.Table.DeleteTests"));
+							? "Scheduler.Text.Table.DeleteTest"
+								: "Scheduler.Text.Table.DeleteTests"));
 							if (TableFrame.this.deleteIcon != null) {
 								deleteTestMenuItem.setIcon(TableFrame.this.deleteIcon);
 							}
