@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.13 2005/09/25 18:00:33 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.14 2005/10/07 13:47:39 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,13 +55,14 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.MonitoredElementWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/25 18:00:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/07 13:47:39 $
  * @module analysis
  */
 
@@ -368,8 +369,17 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 		else if (nodeObject instanceof Test) {
 			try {
 				StorableObjectPool.refresh(Collections.singleton(((Test)nodeObject).getId()));
-				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
-				Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				StorableObjectCondition hzKakoyCondition = ((FiltrableIconedNode)item).getResultingCondition();
+				
+				final StorableObjectCondition measurementStatusCondition = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+						0,
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.MEASUREMENT_CODE,
+						MeasurementWrapper.COLUMN_STATUS);
+				final StorableObjectCondition condition = new CompoundCondition(hzKakoyCondition,
+						CompoundConditionSort.AND,
+						measurementStatusCondition);
+				final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				
 				List<Item> toRemove = super.getItemsToRemove(measurements, items);
 				List<StorableObject> toAdd = super.getObjectsToAdd(measurements, objects);
