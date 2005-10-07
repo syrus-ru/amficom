@@ -6,3 +6,5 @@ classes
 *.gz
 *.jar
 .mach
+.corba
+.idl

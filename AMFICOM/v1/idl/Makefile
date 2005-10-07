@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.30 2005/09/30 10:23:21 max Exp $
+# $Id: Makefile,v 1.31 2005/10/07 10:40:01 bass Exp $
 #
 # vim:ft=make:
 #
@@ -13,6 +13,7 @@ $(call checkenve,JAVA_HOME)
 
 .PHONY: idlclean
 idlclean:
+	$(MAKE) -C ../reflectometry $@
 	$(MAKE) -C ../event $@
 	$(MAKE) -C ../general $@
 	$(MAKE) -C ../resource $@
@@ -41,4 +42,3 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		idl/*.idl \
 		Makefile
-

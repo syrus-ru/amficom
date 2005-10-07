@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2005/10/07 09:30:44 arseniy Exp $
+# $Id: Makefile,v 1.2 2005/10/07 10:40:01 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -9,11 +9,17 @@ MODULE_NAME := reflectometry
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
+IDL_SOURCES = $(IDLDIR)/reflectometry.idl
+
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
+DEPENDENCIES = \
+util
 
-APPCLASSPATH := 
+EMPTY =
+SPACE = $(EMPTY) $(EMPTY)
+APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/reflectometry/*.java)
@@ -22,29 +28,53 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/reflectometry
 
-.mach:	$(CLASSDIR)
+.mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
+.PHONY: idlclean
+idlclean:
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/reflectometry/corba
+	$(RM) .idl
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/reflectometry/corba/*.java
+	touch $@
+
 .PHONY:	clean
-clean:	cleanmach
+clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: distclean
+distclean:
+	$(RM) -r $(wildcard $(CLASSDIR)/*) $(wildcard *.jar) .xml .idl .mach .corba
+
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
+.PHONY: cleancorba
+cleancorba: idlclean
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/reflectometry/corba
+	$(RM) .corba
+
 #### Install ####
-.PHONY:	install
-install:	$(LIBNAME) $(LIBDIR)
-	$(CP) $^
+.PHONY: install
+install: $(LIBNAME) $(LIBDIR)
+	install -m 0644 $(LIBNAME) $(LIBDIR)
 
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
+		$(IDL_SOURCES) \
 		$(SOURCES)
-

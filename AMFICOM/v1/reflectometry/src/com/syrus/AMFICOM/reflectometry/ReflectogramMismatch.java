@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.3 2005/10/07 08:15:12 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.4 2005/10/07 10:40:01 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,12 @@
  */
 
 package com.syrus.AMFICOM.reflectometry;
+
+import org.omg.CORBA.ORB;
+
+import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
+import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
+import com.syrus.util.TransferableObject;
 
 /**
  * Описание несоответствия рефлектограммы эталону.
@@ -60,7 +66,7 @@ package com.syrus.AMFICOM.reflectometry;
  * 
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/07 10:40:01 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -69,15 +75,23 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
+	 * @version $Revision: 1.4 $, $Date: 2005/10/07 10:40:01 $
 	 * @module reflectometry
 	 */
-	enum Severity {
+	enum Severity implements TransferableObject<IdlSeverity> {
 		SEVERITY_NONE, // just a convenience level, not a real alarm
 		SEVERITY_SOFT, // soft alarm ('warning')
 		SEVERITY_HARD;  // hard alarm ('alarm')
 
 		private static Severity[] values = values();
+
+		/**
+		 * @param orb
+		 * @see TransferableObject#getTransferable(ORB)
+		 */
+		public IdlSeverity getTransferable(final ORB orb) {
+			return IdlSeverity.from_int(this.ordinal());
+		}
 
 		/**
 		 * @param i
@@ -86,15 +100,23 @@ public interface ReflectogramMismatch {
 		public static Severity valueOf(final int i) {
 			return values[i];
 		}
+
+		/**
+		 * @param severity
+		 * @throws ArrayIndexOutOfBoundsException
+		 */
+		public static Severity valueOf(final IdlSeverity severity) {
+			return valueOf(severity.value());
+		}
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
+	 * @version $Revision: 1.4 $, $Date: 2005/10/07 10:40:01 $
 	 * @module reflectometry
 	 */
-	enum AlarmType {
+	enum AlarmType implements TransferableObject<IdlAlarmType> {
 		TYPE_UNDEFINED,
 		TYPE_LINEBREAK, // обрыв линии
 		TYPE_OUTOFMASK, // выход за маски
@@ -103,11 +125,23 @@ public interface ReflectogramMismatch {
 		private static AlarmType[] values = values();
 
 		/**
+		 * @param orb
+		 * @see TransferableObject#getTransferable(ORB)
+		 */
+		public IdlAlarmType getTransferable(final ORB orb) {
+			return IdlAlarmType.from_int(this.ordinal());
+		}
+
+		/**
 		 * @param i
 		 * @throws ArrayIndexOutOfBoundsException
 		 */
 		public static AlarmType valueOf(final int i) {
 			return values[i];
+		}
+
+		public static AlarmType valueOf(final IdlAlarmType alarmType) {
+			return valueOf(alarmType.value());
 		}
 	}
 

@@ -1,0 +1,43 @@
+/*-
+ * $Id: reflectometry.idl,v 1.1 2005/10/07 10:40:01 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef REFLECTOMETRY_IDL
+#define REFLECTOMETRY_IDL
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+#pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+module reflectometry {
+	module corba {
+		enum IdlSeverity {
+			SEVERITY_NONE,
+			SEVERITY_SOFT,
+			SEVERITY_HARD
+		};
+
+		enum IdlAlarmType {
+			TYPE_UNDEFINED,
+			TYPE_LINEBREAK,
+			TYPE_OUTOFMASK,
+			TYPE_EVENTLISTCHANGED
+		};
+	};
+};
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+
+#endif // REFLECTOMETRY_IDL
