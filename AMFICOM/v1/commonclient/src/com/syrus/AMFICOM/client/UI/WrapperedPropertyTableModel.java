@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/07 07:06:55 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -69,14 +69,18 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(final int columnIndex) {
-		String name;
+		final String name;
 
-		if (columnIndex == 0) {
+		switch(columnIndex) {
+		case 0:
 			name = I18N.getString("Common.WrapperedPropertyTable.Key");
-		} else if (columnIndex == 1) {
+			break;
+		case 1:
 			name = I18N.getString("Common.WrapperedPropertyTable.Value");
-		} else {
+			break;
+		default:
 			name = "";
+			break;
 		}
 
 		return name;
