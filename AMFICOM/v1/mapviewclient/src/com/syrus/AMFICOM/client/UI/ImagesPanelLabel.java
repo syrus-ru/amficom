@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImagesPanelLabel.java,v 1.5 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: ImagesPanelLabel.java,v 1.6 2005/10/07 14:13:34 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/07 14:13:34 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -64,7 +64,8 @@ public class ImagesPanelLabel extends JLabel
 									ImagesPanelLabel.this,
 									ImagesPanel.SELECT_IMAGE,
 									null,
-									ImagesPanelLabel.this));
+									ImagesPanelLabel.this),
+							true);
 			}
 		});
 		this.setEnabled(true);

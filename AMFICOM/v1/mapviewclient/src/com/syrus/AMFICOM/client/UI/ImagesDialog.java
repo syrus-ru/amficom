@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImagesDialog.java,v 1.7 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: ImagesDialog.java,v 1.8 2005/10/07 14:13:33 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,10 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/07 14:13:33 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -39,8 +40,9 @@ public class ImagesDialog {
 		AbstractImageResource returnObject = null;
 		
 		final ImagesPanel imagesPanel = new ImagesPanel();
-		if(ir != null && ir instanceof BitmapImageResource)
-			imagesPanel.setImageResource((BitmapImageResource)ir);
+		if(ir instanceof BitmapImageResource
+				|| ir instanceof FileImageResource)
+			imagesPanel.setImageResource(ir);
 
 		final JButton cancelButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL));
 		final JButton chooseButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
@@ -51,7 +53,7 @@ public class ImagesDialog {
 				JOptionPane.PLAIN_MESSAGE,
 				JOptionPane.OK_CANCEL_OPTION, 
 				null, 
-				new Object[] { chooseButton, addButton, cancelButton }); 
+				new Object[] { chooseButton, /*addButton,*/ cancelButton }); 
 
 		addButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

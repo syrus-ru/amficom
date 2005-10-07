@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImagesPanel.java,v 1.13 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: ImagesPanel.java,v 1.14 2005/10/07 14:13:33 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,12 +41,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/07 14:13:33 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -57,7 +59,7 @@ public class ImagesPanel extends JPanel
 	public static final String SELECT_IMAGE_RESOURCE = "selectir"; //$NON-NLS-1$
 	public static final String SELECT_IMAGE = "select"; //$NON-NLS-1$
 
-	public BitmapImageResource ir = null;
+	public AbstractImageResource ir = null;
 
 	Dispatcher disp;
 	private JPanel imagesPanel;
@@ -73,7 +75,7 @@ public class ImagesPanel extends JPanel
 		initImages();
 	}
 
-	public BitmapImageResource getImageResource() {
+	public AbstractImageResource getImageResource() {
 		return this.ir;
 	}
 
@@ -108,11 +110,28 @@ public class ImagesPanel extends JPanel
 			Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) {
-				BitmapImageResource ir = (BitmapImageResource)it.next();
-				ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(ir.getImage()).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-				ImagesPanelLabel ipl = new ImagesPanelLabel(this.disp, icon, ir);
+				BitmapImageResource bitmapIR = (BitmapImageResource)it.next();
+				ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(bitmapIR.getImage()).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+				ImagesPanelLabel ipl = new ImagesPanelLabel(this.disp, icon, bitmapIR);
 				this.imagesPanel.add(ipl);
 			}
+
+			condition = new TypicalCondition(
+					ImageResourceSort._FILE,
+					ImageResourceSort._FILE,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.IMAGERESOURCE_CODE,
+					ImageResourceWrapper.COLUMN_SORT);
+				
+				Collection fileMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+				for (Iterator it = fileMaps.iterator(); it.hasNext(); ) {
+					FileImageResource fileIR = (FileImageResource)it.next();
+					ImageIcon icon = new ImageIcon(
+							Toolkit.getDefaultToolkit().createImage(fileIR.getFileName()).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+					ImagesPanelLabel ipl = new ImagesPanelLabel(this.disp, icon, fileIR);
+					this.imagesPanel.add(ipl);
+				}
 		}
 		catch (ApplicationException ex) {
 			ex.printStackTrace();
@@ -120,19 +139,17 @@ public class ImagesPanel extends JPanel
 	}
 
 	public void propertyChange(PropertyChangeEvent pce) {
-//		if(pce.getPropertyName().equals(SELECT_IMAGE)) {
-//			ImagesPanelLabel ipl = (ImagesPanelLabel )pce.getNewValue();
-//			this.ir = (BitmapImageResource )ipl.ir;
-//			this.chooseButton.setEnabled(true);
-//		}
-//		else
-//			if(pce.getPropertyName().equals(SELECT_IMAGE_RESOURCE)) {
-//				this.ir = (BitmapImageResource )pce.getNewValue();
-//				this.chooseButton.setEnabled(true);
-//			}
+		if(pce.getPropertyName().equals(SELECT_IMAGE)) {
+			ImagesPanelLabel ipl = (ImagesPanelLabel )pce.getNewValue();
+			this.ir = ipl.ir;
+		}
+		else
+			if(pce.getPropertyName().equals(SELECT_IMAGE_RESOURCE)) {
+				this.ir = (AbstractImageResource )pce.getNewValue();
+			}
 	}
 
-	public void setImageResource(BitmapImageResource ir) {
+	public void setImageResource(AbstractImageResource ir) {
 		this.disp.firePropertyChange(new PropertyChangeEvent(
 				this,
 				SELECT_IMAGE_RESOURCE,
