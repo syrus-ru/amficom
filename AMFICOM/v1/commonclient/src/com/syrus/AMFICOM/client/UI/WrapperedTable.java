@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.22 2005/10/07 09:03:17 bob Exp $
+* $Id: WrapperedTable.java,v 1.23 2005/10/07 15:00:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/07 09:03:17 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/07 15:00:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -168,6 +168,10 @@ public final class WrapperedTable<T> extends ATable {
 	
 	private void selectIndices(final int[] tsIndices,
 	                           final boolean addSelection) {
+		if (tsIndices.length == 0) {
+			return;
+		}
+		
 		int prevIndex = tsIndices[0];
 		for (int i=1; i < tsIndices.length; i++) {
 			if (tsIndices[i] - prevIndex > 1) {
@@ -187,6 +191,9 @@ public final class WrapperedTable<T> extends ATable {
 	}
 	
 	private int[] indexOfTs(final Set<T> ts) {
+		if (ts.isEmpty()) {
+			return new int[] {};
+		}
 		final int[] indices = new int[ts.size()];
 		int index = 0;
 		final WrapperedTableModel<T> tableModel = this.getModel();
