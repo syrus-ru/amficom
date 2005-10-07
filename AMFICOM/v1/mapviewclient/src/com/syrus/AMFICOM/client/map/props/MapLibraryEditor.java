@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryEditor.java,v 1.7 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: MapLibraryEditor.java,v 1.8 2005/10/07 14:21:56 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,16 +26,19 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/07 14:21:56 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -235,11 +238,16 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 
 	@Override
 	public void commitChanges() {
+		if(this.mapLibrary.equals(MapLibraryController.getDefaultMapLibrary())) {
+			// cannot commit default library
+			return;
+		}
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name)) {
 			try {
 				this.mapLibrary.setName(name);
 				this.mapLibrary.setDescription(this.descTextArea.getText());
+				StorableObjectPool.flush(this.mapLibrary, LoginManager.getUserId(), true);
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
