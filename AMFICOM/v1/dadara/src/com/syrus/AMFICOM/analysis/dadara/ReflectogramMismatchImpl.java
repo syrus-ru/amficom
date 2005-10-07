@@ -20,7 +20,7 @@ import com.syrus.io.SignatureMismatchException;
  * @see ReflectogramMismatch
  * 
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/10/07 12:04:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/07 12:22:31 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl implements ReflectogramMismatch {
@@ -75,13 +75,13 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 		if (hasMismatch())
 			return this.minMismatch;
 		else
-			throw new IllegalArgumentException();
+			throw new IllegalStateException();
 	}
 	public double getMaxMismatch() {
 		if (hasMismatch())
 			return this.maxMismatch;
 		else
-			throw new IllegalArgumentException();
+			throw new IllegalStateException();
 	}
 
 	public Severity getSeverity() {
