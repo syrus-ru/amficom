@@ -444,10 +444,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			try {
 				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true), true);
 			} catch (final ApplicationException e) {
-				JOptionPane.showMessageDialog(this.patternPanel,
-					I18N.getString("Error.CannotAcquireObject"), 
-					I18N.getString("Error"),
-					JOptionPane.OK_OPTION);
+				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
 		}		
 	}
