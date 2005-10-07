@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.34 2005/09/21 10:26:08 arseniy Exp $
+# $Id: Makefile.inc,v 1.35 2005/10/07 10:40:53 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -209,7 +209,22 @@ IDL2JAVAFLAGS := $($(IDL2JAVA)FLAGS)
 IDL2JAVA := $($(IDL2JAVA))
 
 # Modules to build IDL within.
-IDL_MODULES = event general resource admin config measurement map scheme mapview cmserver_interface leserver_interface mcm_interface mscharserver_interface mserver_interface
+IDL_MODULES = \
+reflectometry \
+event \
+general \
+resource \
+admin \
+config \
+measurement \
+map \
+scheme \
+mapview \
+cmserver_interface \
+leserver_interface \
+mcm_interface \
+mscharserver_interface \
+mserver_interface
 
 # Figuring out what command(s) to run for "idl" target.
 ifeq ($(IDL_SOURCES),)
