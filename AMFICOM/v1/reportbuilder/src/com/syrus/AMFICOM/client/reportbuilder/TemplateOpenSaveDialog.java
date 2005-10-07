@@ -1,12 +1,24 @@
 package com.syrus.AMFICOM.client.reportbuilder;
 
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.JScrollPane;
-import javax.swing.JOptionPane;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -17,7 +29,7 @@ import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportTemplateWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -25,12 +37,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import java.awt.event.*;
-import java.awt.*;
 /**
  * <p>Description: Окно для работы с шаблонами (загрузка,
  * сохранение, удаление) при удалении и сохранении -
@@ -145,7 +151,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 		this.openSaveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
 				try {
-					openSaveButton_actionPerformed(e);
+					openSaveButton_actionPerformed();
 				} catch (ApplicationException e1) {
 					Log.errorMessage("TemplateOpenSaveDialog.actionPerformed | " + e1.getMessage());
 					Log.errorException(e1);			
@@ -169,7 +175,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 
 		this.cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cancelButton_actionPerformed(e);
+				cancelButton_actionPerformed();
 			}
 		});
 		
@@ -179,7 +185,17 @@ public class TemplateOpenSaveDialog extends JDialog {
 
 		this.removeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				removeButton_actionPerformed(e);
+				try {
+					removeButton_actionPerformed();
+				} catch (ApplicationException e1) {
+					Log.errorMessage("TemplateOpenSaveDialog.actionPerformed | " + e1.getMessage());
+					Log.errorException(e1);			
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							LangModelReport.getString("report.Exception.deleteTemplateError"),
+							LangModelReport.getString("report.Exception.error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 
@@ -191,7 +207,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 		
 		this.moduleNamesComboBox.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				templateTypesComboBox_actionPerformed(e);
+				templateTypesComboBox_actionPerformed();
 			}
 		});
 
@@ -269,7 +285,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					LangModelReport.getString(DestinationModules.COMBINED));
 	}
 
-	protected void openSaveButton_actionPerformed(ActionEvent e) throws ApplicationException {
+	protected void openSaveButton_actionPerformed() throws ApplicationException {
 		ReportTemplate selectedTemplate =
 			this.templateForName(this.selectedTemplateNameField.getText());
 		
@@ -286,7 +302,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 			this.setVisible(false);
 		}
 		else if (this.mode == SAVE) {
-			if (this.selectedTemplateNameField.getText().equals(""))
+			if (this.selectedTemplateNameField.getText().length() == 0)
 				return;
 			if (selectedTemplate != null) {
 				int replace = JOptionPane.showConfirmDialog(
@@ -298,40 +314,51 @@ public class TemplateOpenSaveDialog extends JDialog {
 				if (replace == JOptionPane.NO_OPTION)
 					return;
 
+				Set<Identifiable> dependencies = selectedTemplate.getReverseDependencies(true);
 				StorableObjectPool.delete(selectedTemplate.getId());
-				StorableObjectPool.flush(selectedTemplate,LoginManager.getUserId(),true);				
+				StorableObjectPool.delete(dependencies);
+				StorableObjectPool.flush(selectedTemplate,LoginManager.getUserId(),true);
+				StorableObjectPool.flush(dependencies,LoginManager.getUserId(),true);				
 			}
 			
 			this.templateProcessed.setName(this.selectedTemplateNameField.getText());
 			this.templateProcessed.setDestinationModule(
 					MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()]);
 
-			StorableObjectPool.putStorableObject(selectedTemplate);
-			StorableObjectPool.flush(selectedTemplate,LoginManager.getUserId(),true);
+			StorableObjectPool.flush(this.templateProcessed,LoginManager.getUserId(),true);
+			StorableObjectPool.flush(
+					this.templateProcessed.getReverseDependencies(true),
+					LoginManager.getUserId(),
+					true);			
 
 			this.setVisible(false);
 		}
 	}
 
-	protected void cancelButton_actionPerformed(ActionEvent e) {
+	protected void cancelButton_actionPerformed() {
 		this.setVisible(false);
 	}
 
-	protected void removeButton_actionPerformed(ActionEvent e) {
+	protected void removeButton_actionPerformed() throws ApplicationException {
 		int[] selectedIndices = this.templatesList.getSelectedIndices();
 		Set<ReportTemplate> selectedTemplates = new HashSet<ReportTemplate>();
 
-		for (int i = 0; i < selectedIndices.length; i++)
+		for (int i = 0; i < selectedIndices.length; i++) {
 			selectedTemplates.add((ReportTemplate)this.templatesList.
 				getModel().getElementAt(selectedIndices[i]));
-
-		StorableObjectPool.delete(selectedTemplates);
-		try {
-			StorableObjectPool.flush(selectedTemplates,LoginManager.getUserId(),true);
-		} catch (ApplicationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
+		
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		for (ReportTemplate reportTemplate : selectedTemplates) {
+			dependencies.addAll(reportTemplate.getReverseDependencies(true));
+		}
+		
+		StorableObjectPool.delete(selectedTemplates);
+		StorableObjectPool.delete(dependencies);		
+		StorableObjectPool.flush(selectedTemplates,LoginManager.getUserId(),true);
+		StorableObjectPool.flush(dependencies,LoginManager.getUserId(),true);			
+
+		this.setListData();
 	}
 
 	protected void templatesList_ItemChanged() {
@@ -355,7 +382,8 @@ public class TemplateOpenSaveDialog extends JDialog {
 		String moduleSelected = MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()];
 		for (ReportTemplate reportTemplate : this.allReportTemplates) {
 			if (	reportTemplate.getName().equals(name)
-				&&	reportTemplate.getDestinationModule().equals(moduleSelected))
+				&&	(	reportTemplate.getDestinationModule().equals(moduleSelected)
+					||	(this.mode == OPEN) && moduleSelected.equals(ALL_TEMPLATES)))
 				return reportTemplate;
 		}
 
@@ -377,7 +405,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 			this.openSaveButton.setEnabled(false);
 	}
 
-	protected void templateTypesComboBox_actionPerformed(ActionEvent e) {
+	protected void templateTypesComboBox_actionPerformed() {
 		this.setListData();
 		this.selectedTemplateNameField.setText("");
 	}
