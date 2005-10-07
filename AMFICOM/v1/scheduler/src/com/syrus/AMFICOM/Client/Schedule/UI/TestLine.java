@@ -11,12 +11,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +116,6 @@ final class TestLine extends TimeLine {
 	// Set selectedTests;
 	Set<Identifier> selectedTestIds;
 
-	final Collection<Identifier> unsavedTestIds = new LinkedList<Identifier>();
 	final SortedSet<TestTimeItem> unsavedTestTimeItems = new TreeSet<TestTimeItem>();
 
 	final Map<Identifier, List<TestTimeLine>> measurements = new HashMap<Identifier, List<TestTimeLine>>();
@@ -156,7 +153,6 @@ final class TestLine extends TimeLine {
 	}
 	
 	final void unselect() {
-		assert Log.debugMessage("TestLine.unselect | ", Log.DEBUGLEVEL09);
 		this.selectedItems.clear();
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
@@ -492,7 +488,6 @@ final class TestLine extends TimeLine {
 	@SuppressWarnings("unchecked")
 	private void acquireTests() {
 		this.testIds.clear();
-		this.unsavedTestIds.clear();
 		this.measurements.clear();
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
@@ -529,7 +524,6 @@ final class TestLine extends TimeLine {
 				final Set<Measurement> testMeasurements;
 				if (newerTest) {
 					testMeasurements = Collections.emptySet();
-					this.unsavedTestIds.add(testId);
 				} else {
 					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(testId, ObjectEntities.MEASUREMENT_CODE);	
 					testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
@@ -557,7 +551,7 @@ final class TestLine extends TimeLine {
 										testMeasurements.remove(measurement);
 										break;
 									}
-								}
+								}								
 								
 								if (!foundMeasurement) {
 									testTimeLine.date = date;
@@ -660,13 +654,7 @@ final class TestLine extends TimeLine {
 						measurementTestList.add(testTimeLine);
 						break;
 				}
-
-
 				Collections.sort(measurementTestList);
-//				for (final TestTimeLine testTimeLine : measurementTestList) {
-//					assert Log.debugMessage("TestLine.acquireTests | " + testTimeLine.testId + " > " + testTimeLine.date,
-//						Log.DEBUGLEVEL09);
-//				}
 			}
 		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
@@ -721,6 +709,7 @@ final class TestLine extends TimeLine {
 	@Override
 	void refreshTimeItems() {
 		synchronized (this) {
+			this.unsavedTestTimeItems.clear();
 			this.timeItems.clear();
 			if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
 				super.scale = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
@@ -730,7 +719,8 @@ final class TestLine extends TimeLine {
 				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
 				for (final Test test : tests) {				
 					final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
-					if (testTimeLineList == null) {
+					if (testTimeLineList == null || testTimeLineList.isEmpty()) {
+						System.err.println("TestLine.refreshTimeItems | List<TestTimeLine> for " + test.getId() + " is null or empty ");
 						continue;
 					}
 	
@@ -745,18 +735,13 @@ final class TestLine extends TimeLine {
 						
 						testTimeItem.testTimeLine = testTimeLine;
 						
-						this.timeItems.add(testTimeItem);
+						if (this.schedulerModel.isTestNewer(test)) {
+							this.unsavedTestTimeItems.add(testTimeItem);
+						} else {
+							this.timeItems.add(testTimeItem);
+						}
 					}	
-				}
-	
-				this.unsavedTestTimeItems.clear();
-				for (final Iterator it = this.timeItems.iterator(); it.hasNext();) {
-					final TestTimeItem testTimeItem = (TestTimeItem) it.next();
-					if (this.schedulerModel.isTestNewer(((Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true)))) {
-						it.remove();
-						this.unsavedTestTimeItems.add(testTimeItem);
-					}
-				}
+				}	
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
