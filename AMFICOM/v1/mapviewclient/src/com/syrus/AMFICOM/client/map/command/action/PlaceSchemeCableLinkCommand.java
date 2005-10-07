@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.48 2005/10/04 17:11:31 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.49 2005/10/07 14:15:01 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.48 $, $Date: 2005/10/04 17:11:31 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/07 14:15:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -172,7 +172,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 										+ "), which is inconsistent with cci (un " + cciUn
 										+ ") with position (" + cci.getRowX()
 										+ ", " + cci.getPlaceY() + ")");
-								e.printStackTrace();
+//								e.printStackTrace();
 							}
 						}
 			
