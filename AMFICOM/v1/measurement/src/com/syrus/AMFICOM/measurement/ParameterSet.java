@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.20 2005/09/15 17:05:55 bob Exp $
+ * $Id: ParameterSet.java,v 1.21 2005/10/07 09:51:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/15 17:05:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/10/07 09:51:16 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -50,10 +50,6 @@ public final class ParameterSet extends StorableObject {
 	private Parameter[] parameters;
 
 	private Set<Identifier> monitoredElementIds;
-
-	protected static final String ID_MONITORED_ELEMENTS_IDS = "monitoredElementId"+KEY_VALUE_SEPERATOR;
-	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
-	protected static final String ID_PARAMETERS = "parameter"+KEY_VALUE_SEPERATOR;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
