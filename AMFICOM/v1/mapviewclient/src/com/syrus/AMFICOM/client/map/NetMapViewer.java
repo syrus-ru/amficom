@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.58 2005/10/04 17:10:27 krupenn Exp $$
+ * $$Id: NetMapViewer.java,v 1.59 2005/10/07 14:14:19 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
@@ -83,7 +82,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.58 $, $Date: 2005/10/04 17:10:27 $
+ * @version $Revision: 1.59 $, $Date: 2005/10/07 14:14:19 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -94,7 +93,7 @@ public abstract class NetMapViewer {
 	protected MapImageRenderer renderer;
 
 	private Dimension lastVisCompSize;
-	private Image mapShotImage;
+	private BufferedImage mapShotImage;
 	
 	/** Флаг того, что контекстное меню отображено. */	
 	protected boolean menuShown = false;
@@ -379,7 +378,7 @@ public abstract class NetMapViewer {
 	 * Получить снимок вида карты с отрисованными объектами.
 	 * @return снимок
 	 */
-	public Image getMapShot() {
+	public BufferedImage getMapShot() {
 		JComponent component = getVisualComponent();
 		int width = component.getWidth();
 		int height = component.getHeight();

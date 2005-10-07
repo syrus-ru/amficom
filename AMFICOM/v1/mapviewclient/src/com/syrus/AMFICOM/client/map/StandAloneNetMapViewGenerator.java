@@ -1,5 +1,5 @@
 /*-
- * $$Id: StandAloneNetMapViewGenerator.java,v 1.2 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: StandAloneNetMapViewGenerator.java,v 1.3 2005/10/07 14:14:19 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.map;
 
 import java.awt.Dimension;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/07 14:14:19 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -32,7 +32,7 @@ public class StandAloneNetMapViewGenerator {
 	private static NetMapViewer netMapViewer;
 	private static MapConnection mapConnection;
 
-	public static Image getMapShot(MapView mapView, MapElement mapElement, Dimension dimension) throws MapConnectionException, MapDataException, ApplicationException {
+	public static BufferedImage getMapShot(MapView mapView, MapElement mapElement, Dimension dimension) throws MapConnectionException, MapDataException, ApplicationException {
 		if(StandAloneNetMapViewGenerator.netMapViewer == null) {
 			initialize();
 		}
