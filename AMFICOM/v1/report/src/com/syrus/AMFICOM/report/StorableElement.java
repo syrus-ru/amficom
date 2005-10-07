@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.5 2005/10/06 09:09:20 max Exp $
+ * $Id: StorableElement.java,v 1.6 2005/10/07 07:47:54 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -122,10 +122,8 @@ public abstract class StorableElement extends StorableObject {
 		this.reportTemplateId = reportTemplateId;
 	}
 	
-	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(IdlAbstractReportElement transferable) throws ApplicationException {
 		
-		IdlAbstractReportElement iare = (IdlAbstractReportElement) transferable;
 		try {
 			super.fromTransferable(transferable);
 		} catch (final CreateObjectException coe) {
@@ -133,9 +131,9 @@ public abstract class StorableElement extends StorableObject {
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		this.location = new IntPoint(iare.locationX, iare.locationY);
-		this.size = new IntDimension(iare.width, iare.height);
-		this.reportTemplateId  = new Identifier(iare.idlReportTemplateId);
+		this.location = new IntPoint(transferable.locationX, transferable.locationY);
+		this.size = new IntDimension(transferable.width, transferable.height);
+		this.reportTemplateId  = new Identifier(transferable.idlReportTemplateId);
 	}
 	
 	synchronized void setAttributes(final Date created,
@@ -162,14 +160,4 @@ public abstract class StorableElement extends StorableObject {
 	void setReportTemplateId(Identifier reportTemplateId) {
 		this.reportTemplateId = reportTemplateId;
 	}
-	
-	@Override
-	public Set<Identifiable> getDependencies() {
-		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.reportTemplateId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
-	}
-	
 }

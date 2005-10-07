@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.13 2005/10/06 09:09:20 max Exp $
+ * $Id: ReportTemplate.java,v 1.14 2005/10/07 07:47:54 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.report;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTEMPLATE_CODE;
 
 import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -28,11 +29,12 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -55,11 +57,11 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: max $
- * @version $Revision: 1.13 $, $Date: 2005/10/06 09:09:20 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.14 $, $Date: 2005/10/07 07:47:54 $
  * @module generalclient_v1
  */
-public class ReportTemplate extends StorableObject implements Namable, Describable {
+public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
 	public enum Orientation {PORTRAIT,LANDSCAPE}
@@ -93,10 +95,9 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	private String destinationModule;
 
 	private LinkedIdsCondition	attTextCondition;
-
 	private LinkedIdsCondition	imageCondition;
-
-	private StorableObjectCondition	dataCondition;
+	private LinkedIdsCondition	dataCondition;
+	private LinkedIdsCondition	tableDataCondition;
 
 	//Приходится хранить элементы в разных списках, несмотря на то, что они
 	//все наследуют StorableElement, поскольку при загрузке (импорте) важно,
@@ -135,7 +136,7 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		try {
 			final Date created = new Date();
 			final ReportTemplate reportTemplate = new ReportTemplate(
-					IdentifierPool.getGeneratedIdentifier(ATTACHEDTEXT_CODE),
+					IdentifierPool.getGeneratedIdentifier(REPORTTEMPLATE_CODE),
 					created,
 					created,
 					creatorId,
@@ -147,12 +148,17 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 					Orientation.PORTRAIT,
 					STANDART_MARGIN_SIZE,
 					DestinationModules.UNKNOWN_MODULE);
-			reportTemplate.markAsChanged();
+			StorableObjectPool.putStorableObject(reportTemplate);
+		
 			return reportTemplate;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"AttachedTextStorableElement.createInstance() | cannot generate identifier ", ige);
 		}
+		catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"AttachedTextStorableElement.createInstance() | error while putting in Pool ", ioee);
+		}		
 	}
 	
 	public ReportTemplate(IdlReportTemplate transferable) {
@@ -342,7 +348,13 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		if(this.dataCondition == null) {
 			this.dataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
 		}
-		return StorableObjectPool.getStorableObjectsByCondition(this.dataCondition, true);
+		if(this.tableDataCondition == null) {
+			this.tableDataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTTABLEDATA_CODE);
+		}
+		Set<DataStorableElement> dataSet = new HashSet<DataStorableElement>();
+		dataSet.addAll(StorableObjectPool.<DataStorableElement>getStorableObjectsByCondition(this.dataCondition, true));
+		dataSet.addAll(StorableObjectPool.<TableDataStorableElement>getStorableObjectsByCondition(this.tableDataCondition, true));
+		return dataSet;
 	}
 
 	public Set<ImageStorableElement> getImageStorableElements() throws ApplicationException {
@@ -416,12 +428,22 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 		element.setReportTemplateId(Identifier.VOID_IDENTIFIER);
 	}
 
+	SheetSize getSheetSize() {
+		return this.sheetSize;
+	}
+
+	public Set<Identifiable> getReverseDependencies(boolean usePool) throws ApplicationException {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.addAll(getAttachedTextStorableElements());
+		dependencies.addAll(getDataStorableElements());
+		dependencies.addAll(getImageStorableElements());
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return dependencies;
+	}
+
 	@Override
 	public Set<Identifiable> getDependencies() {
 		return Collections.emptySet();
-	}
-	
-	SheetSize getSheetSize() {
-		return this.sheetSize;
 	}
 }

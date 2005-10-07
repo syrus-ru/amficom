@@ -4,7 +4,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTIMAGE_CODE;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -89,7 +89,7 @@ public final class ImageStorableElement extends StorableElement {
 			ImageIO.write(image, "bmp", baos);
 			final Date created = new Date();
 			ImageStorableElement reportImage = new ImageStorableElement(
-					IdentifierPool.getGeneratedIdentifier(REPORTDATA_CODE),
+					IdentifierPool.getGeneratedIdentifier(REPORTIMAGE_CODE),
 					created,
 					created,
 					creatorId,
@@ -114,22 +114,19 @@ public final class ImageStorableElement extends StorableElement {
 		fromTransferable(transferable);		
 	}
 	
-	@Override
-	protected synchronized void fromTransferable(IdlStorableObject transferable) {
-		IdlImage idlImage = (IdlImage) transferable;
+	protected synchronized void fromTransferable(IdlImage transferable) {
 		try {
-			super.fromTransferable(idlImage);
+			super.fromTransferable(transferable);
 		} catch (ApplicationException e) {
 			// Never can happen
 			assert false;
 		}
-		this.bitmapImageResourceId = new Identifier(idlImage.bitmapImageResource);
+		this.bitmapImageResourceId = new Identifier(transferable.bitmapImageResource);
 	}
 	
 	@Override
 	public Set<Identifiable> getDependencies() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.addAll(super.getDependencies());
 		dependencies.add(this.bitmapImageResourceId);
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
