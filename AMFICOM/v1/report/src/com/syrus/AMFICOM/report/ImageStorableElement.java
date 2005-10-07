@@ -17,6 +17,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -27,6 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlImage;
+import com.syrus.AMFICOM.report.corba.IdlImageHelper;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
@@ -150,6 +153,23 @@ public final class ImageStorableElement extends StorableElement {
 				locationX, locationY, width, height, reportTemplateId);
 		this.bitmapImageResourceId = bitmapImageResourceId;
 		
+	}
+	
+	@Override
+	public IdlStorableObject getTransferable(ORB orb) {
+		return IdlImageHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version.longValue(),
+				this.location.getX(),
+				this.location.getY(),
+				this.size.getWidth(),
+				this.size.getHeight(),
+				this.reportTemplateId.getTransferable(),
+				this.bitmapImageResourceId.getTransferable());
 	}
 	
 	private BitmapImageResource getBitmapImageResource() throws ApplicationException {

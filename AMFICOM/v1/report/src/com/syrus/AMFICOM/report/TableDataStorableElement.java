@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.11 2005/10/07 08:55:04 max Exp $
+ * $Id: TableDataStorableElement.java,v 1.12 2005/10/07 10:38:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import java.awt.Font;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -23,12 +25,13 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlTableData;
+import com.syrus.AMFICOM.report.corba.IdlTableDataHelper;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: max $
- * @version $Revision: 1.11 $, $Date: 2005/10/07 08:55:04 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/07 10:38:22 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
@@ -114,6 +117,25 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 		super.setAttributes(created, modified, creatorId, modifierId, version,
 				locationX, locationY, width, height, reportTemplateId, reportName, moduleClassName);
 		this.verticalDivisionsCount = verticalDivisionCount;
+	}
+	
+	@Override
+	public IdlStorableObject getTransferable(ORB orb) {
+		return IdlTableDataHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version.longValue(),
+				this.location.getX(),
+				this.location.getY(),
+				this.size.getWidth(),
+				this.size.getHeight(),
+				this.reportTemplateId.getTransferable(),
+				this.reportName,
+				this.modelClassName,
+				this.verticalDivisionsCount);
 	}
 	
 	public int getVerticalDivisionsCount() {

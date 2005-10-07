@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -18,6 +20,8 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlData;
+import com.syrus.AMFICOM.report.corba.IdlDataHelper;
+import com.syrus.AMFICOM.report.corba.IdlReportTemplateHelper;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 
@@ -38,14 +42,14 @@ public class DataStorableElement extends StorableElement {
 	 * Название отображаемого отчёта.
 	 * По этому имени он будет отображаться Renderer'ом с помощью ReportModel.
 	 */
-	private String reportName;
+	protected String reportName;
 
 	/**
 	 * Полное имя класса модели, которая "знает" как строить этот отчёт.
 	 */
-	private String modelClassName;
+	protected String modelClassName;
 	
-	private Identifier reportObjectId = Identifier.VOID_IDENTIFIER;
+	protected Identifier reportObjectId = Identifier.VOID_IDENTIFIER;
 	
 	DataStorableElement(final Identifier id,
 			final Date created,
@@ -123,6 +127,24 @@ public class DataStorableElement extends StorableElement {
 				locationX, locationY, width, height, reportTemplateId);
 		this.reportName = reportName;
 		this.modelClassName = moduleClassName;
+	}
+	
+	@Override
+	public IdlStorableObject getTransferable(ORB orb) {
+		return IdlDataHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version.longValue(),
+				this.location.getX(),
+				this.location.getY(),
+				this.size.getWidth(),
+				this.size.getHeight(),
+				this.reportTemplateId.getTransferable(),
+				this.reportName,
+				this.modelClassName);
 	}
 	
 	@Override

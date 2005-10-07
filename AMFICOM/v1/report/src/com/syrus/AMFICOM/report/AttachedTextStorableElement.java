@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.report.corba.IdlAttachedTextHelper;
 import com.syrus.AMFICOM.report.corba.IdlAttachedTextPackage.IdlFont;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
 
 /**
  * <p>Title: </p>
@@ -232,8 +233,7 @@ public final class AttachedTextStorableElement extends StorableElement
 		this.verticalAttachType = vType;
 		this.horizontalAttachType = hType;
 	}
-			
-
+	
 	/**
 	 * Задаёт привязку.
 	 * @param attacher объект, к которому осуществляется привязка
