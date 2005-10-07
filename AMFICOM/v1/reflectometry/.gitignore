@@ -1,3 +1,8 @@
 classes
 .classpath
 .project
+*.swp
+*.tar
+*.gz
+*.jar
+.mach
