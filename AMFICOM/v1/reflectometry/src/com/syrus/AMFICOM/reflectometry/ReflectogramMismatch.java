@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.6 2005/10/07 12:19:00 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.7 2005/10/07 12:20:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.TransferableObject;
  * 
  * @author Old Wise Saa
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/07 12:19:00 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/07 12:20:14 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -81,7 +81,7 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.6 $, $Date: 2005/10/07 12:19:00 $
+	 * @version $Revision: 1.7 $, $Date: 2005/10/07 12:20:14 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -119,7 +119,7 @@ public interface ReflectogramMismatch {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.6 $, $Date: 2005/10/07 12:19:00 $
+	 * @version $Revision: 1.7 $, $Date: 2005/10/07 12:20:14 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
@@ -193,7 +193,7 @@ public interface ReflectogramMismatch {
 	 * @return нижняя оценка степени превышения предупр. порога,
 	 *   если только степень превышения предупр. порога определена.
 	 * Гарантировано, что {@link #getMinMismatch()} &lt;= {@link #getMaxMismatch()}
-	 * @throws IllegalArgumentException степень превышения не определена,
+	 * @throws IllegalStateException степень превышения не определена,
 	 *  ({@link #hasMismatch()} == false)
 	 */
 	double getMinMismatch();
@@ -202,7 +202,7 @@ public interface ReflectogramMismatch {
 	 * @return верхняя оценка степени превышения предупр. порога,
 	 *   если только степень превышения предупр. порога определена.
 	 * Гарантировано, что {@link #getMinMismatch()} &lt;= {@link #getMaxMismatch()}
-	 * @throws IllegalArgumentException степень превышения не определена
+	 * @throws IllegalStateException степень превышения не определена
 	 *  ({@link #hasMismatch()} == false)
 	 */
 	double getMaxMismatch();
