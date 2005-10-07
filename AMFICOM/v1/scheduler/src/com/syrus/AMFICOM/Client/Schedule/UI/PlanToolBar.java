@@ -348,7 +348,7 @@ final class PlanToolBar {
 	@SuppressWarnings("serial")
 	private Action createLegendAction() {
 		final JDialog dialog = new JDialog();
-		
+		dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		final Action apply = new AbstractAction(
 			I18N.getString("Scheduler.Text.Plan.Toolbar.Legend")) {
 			public void actionPerformed(final ActionEvent e) {
@@ -394,9 +394,6 @@ final class PlanToolBar {
 				.getColorIcon(SchedulerModel.COLOR_WARNING), SwingConstants.LEFT));
 		legendPanel.add(new JLabel(I18N.getString("Scheduler.Text.Test.Status.Unrecognized"), this
 				.getColorIcon(SchedulerModel.COLOR_UNRECOGNIZED), SwingConstants.LEFT));
-		dialog.getContentPane().add(legendPanel);
-		dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		dialog.pack();
 		dialog.addFocusListener(new FocusListener() {
 
 			public void focusGained(FocusEvent e) {
@@ -409,6 +406,10 @@ final class PlanToolBar {
 
 			}
 		});
+		dialog.getContentPane().add(legendPanel);
+		dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		dialog.pack();
+		
 
 		return apply;
 	
