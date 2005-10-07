@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.7 2005/10/04 14:27:53 saa Exp $
+ * $Id: TraceLoadDialog.java,v 1.8 2005/10/07 13:06:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/10/04 14:27:53 $
+ * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/10/07 13:06:38 $
  * @module analysis
  */
 
@@ -92,14 +92,14 @@ public class TraceLoadDialog {
 					TraceLoadDialog.okButton.setEnabled(b);
 				}
 			});
-			okButton = new JButton(LangModelGeneral.getString("Button.OK"));
+			okButton = new JButton(I18N.getString("Common.Button.OK"));
 			okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					result = JOptionPane.OK_OPTION;
 					dialog.dispose();
 				}
 			});
-			cancelButton = new JButton(LangModelGeneral.getString("Button.Cancel"));
+			cancelButton = new JButton(I18N.getString("Common.Button.Cancel"));
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dialog.dispose();
