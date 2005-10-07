@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.21 2005/10/06 15:40:20 bob Exp $
+* $Id: WrapperedTable.java,v 1.22 2005/10/07 09:03:17 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,7 +41,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/06 15:40:20 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/07 09:03:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -116,12 +117,33 @@ public final class WrapperedTable<T> extends ATable {
 		}
 	}
 
-	
-	
-	public void setSelectedValue(final T t) {
-		this.clearSelection();
-		
+	public void addSelectedValue(final T t) {
 		if (t == null) {
+			return;
+		}
+		
+		final WrapperedTableModel<T> tableModel = this.getModel();
+		for (int i = 0; i < tableModel.getRowCount(); i++) {
+			final T tInTable = tableModel.getObject(i);
+			if (tInTable.equals(t)) {
+				this.addRowSelectionInterval(i, i);
+				break;
+			}
+		}
+	}
+
+	public void addSelectedValues(final Set<T> ts) {
+		if (ts == null) {
+			return;
+		}
+		
+		this.selectIndices(this.indexOfTs(ts), true);	
+	}
+	
+	
+	public void setSelectedValue(final T t) {		
+		if (t == null) {
+			this.clearSelection();
 			return;
 		}
 		
@@ -135,23 +157,50 @@ public final class WrapperedTable<T> extends ATable {
 		}
 	}
 
-	public void setSelectedValues(final Set<T> ts) {
-		this.clearSelection();
-		
+	public void setSelectedValues(final Set<T> ts) {		
 		if (ts == null) {
+			this.clearSelection();
 			return;
 		}
 		
+		this.selectIndices(this.indexOfTs(ts), false);		
+	}
+	
+	private void selectIndices(final int[] tsIndices,
+	                           final boolean addSelection) {
+		int prevIndex = tsIndices[0];
+		for (int i=1; i < tsIndices.length; i++) {
+			if (tsIndices[i] - prevIndex > 1) {
+				if (addSelection) {
+					this.addRowSelectionInterval(prevIndex, tsIndices[i - 1]);
+				} else {
+					this.setRowSelectionInterval(prevIndex, tsIndices[i - 1]);
+				}
+				prevIndex = tsIndices[i]; 
+			}
+		}
+		if (addSelection) {
+			this.addRowSelectionInterval(prevIndex, tsIndices[tsIndices.length - 1]);
+		} else {
+			this.setRowSelectionInterval(prevIndex, tsIndices[tsIndices.length - 1]);
+		}
+	}
+	
+	private int[] indexOfTs(final Set<T> ts) {
+		final int[] indices = new int[ts.size()];
+		int index = 0;
 		final WrapperedTableModel<T> tableModel = this.getModel();
 		for(final T t : ts) {
 			for (int i = 0; i < tableModel.getRowCount(); i++) {
 				final T tInTable = tableModel.getObject(i);
 				if (tInTable.equals(t)) {
-					this.setRowSelectionInterval(i, i);
+					indices[index++] = i;
 					break;
 				}
 			}
 		}
+		Arrays.sort(indices);
+		return indices;
 	}
 
 	public T getSelectedValue(){
