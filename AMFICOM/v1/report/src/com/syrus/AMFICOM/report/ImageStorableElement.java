@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.report;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTIMAGE_CODE;
 
 import java.awt.image.BufferedImage;
@@ -72,10 +71,11 @@ public final class ImageStorableElement extends StorableElement {
 			final IntPoint location,
 			final IntDimension size,
 			final Identifier reportTemplateId,
-			final byte[] image) throws IdentifierGenerationException, CreateObjectException {
+			final byte[] image) throws CreateObjectException {
 		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId);
-		this.bitmapImageResourceId = IdentifierPool.getGeneratedIdentifier(IMAGERESOURCE_CODE);
-		this.bitmapImageResource  = BitmapImageResource.createInstance(this.bitmapImageResourceId , this.bitmapImageResourceId.toString(), image);
+		this.bitmapImageResource  = BitmapImageResource.createInstance(creatorId , "ILLEGAL_CODENAME", image);
+		this.bitmapImageResource.setCodename(this.bitmapImageResource.getId().getIdentifierString());
+		this.bitmapImageResourceId = this.bitmapImageResource.getId();
 	}
 	
 	public static ImageStorableElement createInstance(
