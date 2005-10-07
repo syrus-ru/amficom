@@ -19,8 +19,10 @@ import com.syrus.io.SignatureMismatchException;
  * Подробнее см. {@link ReflectogramMismatch}
  * @see ReflectogramMismatch
  * 
+ * XXX: Судя по всему, средства toDOS/fromDIS здесь больше не нужны
+ * 
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/07 12:22:31 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/07 12:24:00 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl implements ReflectogramMismatch {
