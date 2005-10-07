@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMenuBar.java,v 1.29 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapEditorMenuBar.java,v 1.30 2005/10/07 14:21:24 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * Панель меню модуля "Редактор топологических схем".
  * 
- * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/07 14:21:24 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -181,8 +181,8 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuMapLibrarySaveAs.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
 		menuMapLibrarySaveAs.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS);
 		menuMapLibrarySaveAs.addActionListener(super.actionAdapter);
-		menuMapLibraryRemove.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
-		menuMapLibraryRemove.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE);
+		menuMapLibraryRemove.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
+		menuMapLibraryRemove.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE);
 		menuMapLibraryRemove.addActionListener(super.actionAdapter);
 		menuMapLibraryExport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
 		menuMapLibraryExport.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT);
@@ -378,8 +378,8 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 				menuMapLibrarySaveAs.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
 				menuMapLibrarySaveAs.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
 				
-				menuMapLibraryRemove.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
-				menuMapLibraryRemove.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
+				menuMapLibraryRemove.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
+				menuMapLibraryRemove.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
 				
 				menuMapLibraryExport.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
 				menuMapLibraryExport.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));

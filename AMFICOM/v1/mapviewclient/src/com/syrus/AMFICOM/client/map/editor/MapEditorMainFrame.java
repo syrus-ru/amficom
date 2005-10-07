@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMainFrame.java,v 1.63 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapEditorMainFrame.java,v 1.64 2005/10/07 14:21:24 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * @version $Revision: 1.63 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.64 $, $Date: 2005/10/07 14:21:24 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -209,7 +209,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				new MapEditorOpenLibraryCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, 
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE, 
 				new MapEditorRemoveLibraryCommand(
 						this.desktopPane, 
 						this.aContext));
@@ -282,7 +282,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 						new MapMapEditorApplicationModelFactory()));
           
 		aModel.setCommand(MapEditorApplicationModel.ITEM_REPORT_CREATE, 
-				new CreateMapReportCommand(this.aContext));
+				new CreateMapReportCommand(this.desktopPane, this.aContext));
 	}
 
 	@Override
@@ -347,7 +347,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN, true);
-				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, true);
@@ -393,7 +393,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN, false);
-				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, false);
@@ -467,7 +467,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN, true);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, true);
