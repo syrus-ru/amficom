@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.119 2005/10/06 16:10:20 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.120 2005/10/07 08:15:12 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,13 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.119 $, $Date: 2005/10/06 16:10:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.120 $, $Date: 2005/10/07 08:15:12 $
  * @module
  */
+
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_LINEBREAK;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +38,6 @@ import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDY;
 import com.syrus.AMFICOM.analysis.dadara.TracePreAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.TracesAverages;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.BellcoreStructure;
 
 public class CoreAnalysisManager
@@ -782,8 +784,8 @@ public class CoreAnalysisManager
 		if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
 		{
 			ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
-			alarm.setSeverity(ReflectogramMismatch.SEVERITY_HARD);
-			alarm.setAlarmType(ReflectogramMismatch.TYPE_LINEBREAK);
+			alarm.setSeverity(SEVERITY_HARD);
+			alarm.setAlarmType(TYPE_LINEBREAK);
 			alarm.setCoord(etMTM.fixAlarmPos(breakPos, false)); // корректируем с учетом событий
 			alarm.setDeltaX(etMTM.getMTAE().getDeltaX());
 			// конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)

@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_NONE;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_UNDEFINED;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -16,20 +19,20 @@ import com.syrus.io.SignatureMismatchException;
  * ѕодробнее см. {@link ReflectogramMismatch}
  * @see ReflectogramMismatch
  * 
- * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/10/06 16:10:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 	private static final long SIGNATURE = 5490879050929171200L;
 
-	private int severity = SEVERITY_NONE;
+	private Severity severity = SEVERITY_NONE;
 	// оптическа€ дистанци€ (в точках) событи€ эталона или точки на
 	// событии эталона, в котором/которой произошел аларм.
 	// ћожет отличатьс€ от фактической точки выхода за пределы порогов.
 	private int coord = 0;
 	private int endCoord = 0; // дл€ отображени€
-	private int alarmType = TYPE_UNDEFINED;
+	private AlarmType alarmType = TYPE_UNDEFINED;
 	private double deltaX = 0.0;
 
 	// информаци€ о (максимум двух) ближайших прив€занных объектах
@@ -81,13 +84,13 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 			throw new IllegalArgumentException();
 	}
 
-	public int getSeverity() {
+	public Severity getSeverity() {
 		return this.severity;
 	}
-	public void setSeverity(int severity) {
+	public void setSeverity(final Severity severity) {
 		this.severity = severity;
 	}
-	public int getSpecificType() {
+	public AlarmType getSpecificType() {
 		return getAlarmType();
 	}
 	public double getDistance() {
@@ -151,10 +154,10 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 			throw new SignatureMismatchException();
 		}
 		ReflectogramMismatchImpl ret = new ReflectogramMismatchImpl();
-		ret.severity = dis.readInt();
+		ret.severity = Severity.valueOf(dis.readInt());
 		ret.setCoord(dis.readInt());
 		ret.setEndCoord(dis.readInt());
-		ret.setAlarmType(dis.readInt());
+		ret.setAlarmType(AlarmType.valueOf(dis.readInt()));
 		ret.setDeltaX(dis.readDouble());
 		if (dis.readBoolean()) {
 			ret.minMismatch = dis.readDouble(); // XXX: неплохо бы покомпактнее
@@ -182,10 +185,10 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 	{
 		// ориентировочно, занимает суммарно от 34 до 74 байт
 		dos.writeLong(SIGNATURE);
-		dos.writeInt(this.severity);
+		dos.writeInt(this.severity.ordinal());
 		dos.writeInt(this.getCoord());
 		dos.writeInt(this.getEndCoord());
-		dos.writeInt(this.getAlarmType());
+		dos.writeInt(this.getAlarmType().ordinal());
 		dos.writeDouble(this.getDeltaX());
 		if (hasMismatch()) {
 			dos.writeBoolean(true);
@@ -283,7 +286,7 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 	 */
 	public void toHardest(ReflectogramMismatchImpl that)
 	{
-		if (that.severity > this.severity
+		if (that.severity.compareTo(this.severity) > 0
 				|| that.severity == this.severity && that.getCoord() < this.getCoord())
 		{
 			this.severity = that.severity;
@@ -324,11 +327,11 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 		return this.endCoord;
 	}
 
-	public void setAlarmType(int alarmType) {
+	public void setAlarmType(final AlarmType alarmType) {
 		this.alarmType = alarmType;
 	}
 
-	public int getAlarmType() {
+	public AlarmType getAlarmType() {
 		return this.alarmType;
 	}
 

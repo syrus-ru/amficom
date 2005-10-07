@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.2 2005/10/07 07:16:42 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.3 2005/10/07 08:15:12 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,24 +60,56 @@ package com.syrus.AMFICOM.reflectometry;
  * 
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/07 07:16:42 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
-	// Alarm levels. Must be comparable with >; >=
-	int SEVERITY_NONE = 0; // just a convenience level, not a real alarm
+	/**
+	 * Alarm levels. Must be comparable with >; >=
+	 *
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
+	 * @module reflectometry
+	 */
+	enum Severity {
+		SEVERITY_NONE, // just a convenience level, not a real alarm
+		SEVERITY_SOFT, // soft alarm ('warning')
+		SEVERITY_HARD;  // hard alarm ('alarm')
 
-	int SEVERITY_SOFT = 1; // soft alarm ('warning')
+		private static Severity[] values = values();
 
-	int SEVERITY_HARD = 2; // hard alarm ('alarm')
+		/**
+		 * @param i
+		 * @throws ArrayIndexOutOfBoundsException
+		 */
+		public static Severity valueOf(final int i) {
+			return values[i];
+		}
+	}
 
-	int TYPE_UNDEFINED = 0;
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.3 $, $Date: 2005/10/07 08:15:12 $
+	 * @module reflectometry
+	 */
+	enum AlarmType {
+		TYPE_UNDEFINED,
+		TYPE_LINEBREAK, // обрыв линии
+		TYPE_OUTOFMASK, // выход за маски
+		TYPE_EVENTLISTCHANGED; // новое/потерянное событие в пределах масок
 
-	int TYPE_LINEBREAK = 1; // обрыв линии
+		private static AlarmType[] values = values();
 
-	int TYPE_OUTOFMASK = 2; // выход за маски
-
-	int TYPE_EVENTLISTCHANGED = 3; // новое/потерянное событие в пределах масок
+		/**
+		 * @param i
+		 * @throws ArrayIndexOutOfBoundsException
+		 */
+		public static AlarmType valueOf(final int i) {
+			return values[i];
+		}
+	}
 
 	/**
 	 * @return true, если степень превышения предупр. порога определена
@@ -103,7 +135,7 @@ public interface ReflectogramMismatch {
 	/**
 	 * @return Существенность проблемы, определяется константами SEVERITY_*
 	 */
-	int getSeverity();
+	Severity getSeverity();
 
 	/**
 	 * XXX: По-хорошему, этот метод должен быть определен как final в абстрактном классе
@@ -140,7 +172,7 @@ public interface ReflectogramMismatch {
 	/**
 	 * @return Тип несоответствия, см. поля TYPE_*
 	 */
-	int getAlarmType();
+	AlarmType getAlarmType();
 
 	/**
 	 * @return разрешение, точки/метр

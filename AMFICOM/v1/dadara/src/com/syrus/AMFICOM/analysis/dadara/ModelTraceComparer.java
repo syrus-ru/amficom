@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.35 2005/10/06 16:10:20 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.36 2005/10/07 08:15:12 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,18 @@
  */
 package com.syrus.AMFICOM.analysis.dadara;
 
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_NONE;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_SOFT;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_EVENTLISTCHANGED;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK;
+
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.SOAnchorImpl;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.Log;
 
 /**
@@ -31,14 +37,14 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: saa $
- * @version $Revision: 1.35 $, $Date: 2005/10/06 16:10:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/10/07 08:15:12 $
  * @module
  */
 public class ModelTraceComparer
 {
-	private static final int ALARM_LEVEL_FOR_EVENT_CHANGE =
-		ReflectogramMismatch.SEVERITY_SOFT;
+	private static final Severity ALARM_LEVEL_FOR_EVENT_CHANGE =
+		SEVERITY_SOFT;
 	
 	private ModelTraceComparer() {
 		// non-instantiable
@@ -91,7 +97,7 @@ public class ModelTraceComparer
 		SimpleReflectogramEventComparer rc = new SimpleReflectogramEventComparer(events, etEvents);
 		ReflectogramMismatchImpl out = new ReflectogramMismatchImpl();
 		ReflectogramMismatchImpl cur = new ReflectogramMismatchImpl();
-		cur.setAlarmType(ReflectogramMismatch.TYPE_EVENTLISTCHANGED);
+		cur.setAlarmType(TYPE_EVENTLISTCHANGED);
 		cur.setSeverity(ALARM_LEVEL_FOR_EVENT_CHANGE);
 		cur.setDeltaX(mtm.getMTAE().getDeltaX());
 		int i;
@@ -123,7 +129,10 @@ public class ModelTraceComparer
 				out.toHardest(cur);
 			}
 		}
-		return out.getAlarmType() > ReflectogramMismatch.SEVERITY_NONE
+		/**
+		 * @bug Is it ok to compare AlarmType and Severity?
+		 */
+		return out.getAlarmType().ordinal() > SEVERITY_NONE.ordinal()
 			? out
 			: null;
 	}
@@ -249,21 +258,21 @@ public class ModelTraceComparer
 				int alarmCoord = mtm.fixAlarmPos(alarmStart, true);
 				if (alarmEnd < alarmCoord)
 					alarmEnd = alarmCoord;
-				int level = Thresh.IS_KEY_HARD[key]
-					? ReflectogramMismatch.SEVERITY_HARD
-					: ReflectogramMismatch.SEVERITY_SOFT;
+				Severity level = Thresh.IS_KEY_HARD[key]
+					? SEVERITY_HARD
+					: SEVERITY_SOFT;
 				if (level == alarm.getSeverity() && alarmCoord < alarm.getCoord()
-						|| level > alarm.getSeverity())
+						|| level.compareTo(alarm.getSeverity()) > 0)
 				{
 					alarm.setSeverity(level);
 					alarm.setCoord(alarmCoord);
 					alarm.setEndCoord(alarmEnd);
-					alarm.setAlarmType(ReflectogramMismatch.TYPE_OUTOFMASK);
+					alarm.setAlarmType(TYPE_OUTOFMASK);
 					alarm.setDeltaX(mtm.getMTAE().getDeltaX());
 				}
 			}
 		}
-		if (alarm.getSeverity() > ReflectogramMismatch.SEVERITY_NONE) {
+		if (alarm.getSeverity().compareTo(SEVERITY_NONE) > 0) {
 			fillAlarmMismatch(y, mtm, alarm);
 			Log.debugMessage("ModelTraceComparer.compareTraceToMTM | level " + alarm.getSeverity()
 					+ " mismatch "
