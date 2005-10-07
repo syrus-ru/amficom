@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.118 2005/10/06 15:30:54 bob Exp $
+ * $Id: SchedulerModel.java,v 1.119 2005/10/07 15:26:19 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -70,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.118 $, $Date: 2005/10/06 15:30:54 $
+ * @version $Revision: 1.119 $, $Date: 2005/10/07 15:26:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -702,8 +701,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
 			final AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
-//				if (this.isValid(startTime, new Date(endTime.getTime() + this.measurementSetup.getMeasurementDuration()), this.monitoredElement.getId())) {
-				if (this.isValid(this.monitoredElement.getId(), startTime, endTime, temporalPattern, this.measurementSetup)) {
+				if (this.isValid(this.monitoredElement.getId(), 
+						startTime, 
+						endTime, 
+						temporalPattern, this.measurementSetup)) {
 					try {
 						test = Test.createInstance(LoginManager.getUserId(),
 								startTime,
@@ -768,9 +769,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (this.selectedTestIds != null) {
 				this.selectedTestIds.clear();
 			}
-			this.addSelectedTest(this, test);
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
-
+			this.addSelectedTest(this, test);
 		}
 	}
 
@@ -1005,8 +1005,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 	
 	public boolean isTestNewer(final Test test) {
-		return test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) 
-			&& test.getStatus().value() == TestStatus._TEST_STATUS_NEW;
+		return test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION);
 	}
 
 	
@@ -1063,6 +1062,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						break;
 					}
 				}
+				
+				if (!result) {
+					break;
+				}
+
 			}
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
@@ -1093,13 +1097,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final Date startDate,
 		final Date endDate,
 		final long offset) {
-		final SortedSet<Date> times; 
 		
 		final Date startTime0 = offset == 0 ? startDate : new Date(startDate.getTime() + offset);
 		final Date endTime0 = offset == 0 ? endDate : new Date(endDate.getTime() + offset);
 		
-		if (temporalPattern != null) {
-			times = temporalPattern.getTimes(startTime0, endTime0);
+		final SortedSet<Date> times;
+		if (temporalPattern != null) {			
+			times = new TreeSet<Date>(temporalPattern.getTimes(startTime0, endTime0));
 		} else {
 			times = new TreeSet<Date>();
 			times.add(startTime0);
@@ -1131,33 +1135,21 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		final SortedSet<Date> testTimes = this.getTestTimes(test.getTemporalPatternId(), startTime, endTime, 0L);
 		
-		final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
+		assert Log.debugMessage("SchedulerModel.getTestTimes | testTimes:" + testTimes, Log.DEBUGLEVEL10);
 		
-		if (!stoppingMap.isEmpty()) {
-			final SortedSet<Date> measurementDates;
-			if (!this.isTestNewer(test)) {
-				final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE);	
-				final Set<Measurement> testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
-				measurementDates = new TreeSet<Date>();
-				for (final Measurement measurement : testMeasurements) {
-					measurementDates.add(measurement.getStartTime());
-				}
-			} else {
-				measurementDates = null;
-			}
-			
-			for(final Date stopDate : stoppingMap.keySet()) {
-				final SortedSet<Date> tailSet = measurementDates != null ? 
-						measurementDates.tailSet(stopDate) : null;
-				if (tailSet != null && !tailSet.isEmpty()) {					
-					final Date first = tailSet.first();
-					testTimes.subSet(stopDate, first).clear();
-					measurementDates.headSet(first).clear();
-				} else {
-					testTimes.tailSet(stopDate).clear();
-					break;
-				}
-			}			
+		
+		
+		final TestStatus status = test.getStatus();
+		if (status == TestStatus.TEST_STATUS_STOPPED ||  
+				status == TestStatus.TEST_STATUS_STOPPING) {			
+			final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
+			final Date stopDate = stoppingMap.lastKey();
+			assert Log.debugMessage("SchedulerModel.getTestTimes | stopDate:" + stopDate,
+				Log.DEBUGLEVEL10);
+			final SortedSet<Date> tailSet2 = testTimes.tailSet(stopDate);
+			assert Log.debugMessage("SchedulerModel.getTestTimes | clear tailSet from " + stopDate + " : " + tailSet2,
+				Log.DEBUGLEVEL10);
+			tailSet2.clear();			
 		}
 		
 		if (offset != 0 && !testTimes.isEmpty()) {
@@ -1248,6 +1240,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		final SortedSet<Date> testTimes = this.getTestTimes(test, 0);
 		
+		assert Log.debugMessage("SchedulerModel.isIntersect0 | " + testTimes, Log.DEBUGLEVEL10);
+		
 		final SortedSet<Date> tailSet = testTimes.tailSet(startDate0);
 		
 		boolean intersect = false;
@@ -1273,7 +1267,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				+ ", " 
 				+ endDate0 
 				+ ']' , 
-			Log.DEBUGLEVEL09);
+			Log.DEBUGLEVEL10);
 		return intersect;
 	}	
 	
