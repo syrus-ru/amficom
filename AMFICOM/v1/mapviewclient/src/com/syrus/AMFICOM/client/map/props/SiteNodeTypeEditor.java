@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeTypeEditor.java,v 1.18 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: SiteNodeTypeEditor.java,v 1.19 2005/10/07 14:23:45 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,40 +9,50 @@
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.ImagesDialog;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/07 14:23:45 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -59,6 +69,8 @@ public final class SiteNodeTypeEditor
 	private JTextField nameTextField = new JTextField();
 	private JLabel libraryLabel = new JLabel();
 	private WrapperedComboBox libraryComboBox = null;
+	private JLabel sortLabel = new JLabel();
+	private AComboBox sortComboBox = null;
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -66,10 +78,31 @@ public final class SiteNodeTypeEditor
 	private JPanel imagePanel = new JPanel();
 	private JButton imageButton = new JButton();
 
+	private JButton commitButton = new JButton();
+
 	LogicalNetLayer logicalNetLayer;
 
 	private NetMapViewer netMapViewer;
 
+	static String[] sortNames;
+	static {
+		sortNames = new String[7];
+		sortNames[SiteNodeTypeSort._WELL] = 
+			LangModelMap.getString("defaultwell");
+		sortNames[SiteNodeTypeSort._PIQUET] = 
+			LangModelMap.getString("defaultpiquet");
+		sortNames[SiteNodeTypeSort._ATS] = 
+			LangModelMap.getString("defaultats");
+		sortNames[SiteNodeTypeSort._BUILDING] = 
+			LangModelMap.getString("defaultbuilding");
+		sortNames[SiteNodeTypeSort._CABLE_INLET] = 
+			LangModelMap.getString("defaultcableinlet");
+		sortNames[SiteNodeTypeSort._TOWER] = 
+			LangModelMap.getString("defaulttower");
+		sortNames[SiteNodeTypeSort._UNBOUND] = 
+			LangModelMap.getString("unbound");
+	}
+	
 	public SiteNodeTypeEditor() {
 		try {
 			jbInit();
@@ -89,6 +122,33 @@ public final class SiteNodeTypeEditor
 
 		this.libraryComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
+		this.sortComboBox = new AComboBox();
+		this.sortComboBox.addItem(SiteNodeTypeSort.WELL);
+		this.sortComboBox.addItem(SiteNodeTypeSort.PIQUET);
+		this.sortComboBox.addItem(SiteNodeTypeSort.ATS);
+		this.sortComboBox.addItem(SiteNodeTypeSort.BUILDING);
+		this.sortComboBox.addItem(SiteNodeTypeSort.TOWER);
+		this.sortComboBox.setRenderer(new DefaultListCellRenderer() {
+		
+			private static final long serialVersionUID = 2344925204020343951L;
+
+			@Override
+			public Component getListCellRendererComponent(
+					JList list,
+					Object value,
+					int index,
+					boolean isSelected,
+					boolean cellHasFocus) {
+				if(!(value instanceof SiteNodeTypeSort)) {
+					return null;
+				}
+				SiteNodeTypeSort sort = (SiteNodeTypeSort) value;
+				String text = SiteNodeTypeEditor.sortNames[sort.value()];
+				return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+			}
+		
+		});
+
 		this.jPanel.setLayout(this.gridBagLayout1);
 //		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
@@ -96,6 +156,7 @@ public final class SiteNodeTypeEditor
 //		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		this.libraryLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
+		this.sortLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SORT));
 
 		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 //		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -119,6 +180,16 @@ public final class SiteNodeTypeEditor
 					}
 				}
 			});
+
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -148,6 +219,19 @@ public final class SiteNodeTypeEditor
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameTextField, constraints);
 
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.commitButton, constraints);
+
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
@@ -163,7 +247,7 @@ public final class SiteNodeTypeEditor
 
 		constraints.gridx = 1;
 		constraints.gridy = 1;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -185,20 +269,20 @@ public final class SiteNodeTypeEditor
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.imageLabel, constraints);
+		this.jPanel.add(this.sortLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 2;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 2;
-		constraints.weightx = 0.0;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.NONE;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.imagePanel, constraints);
+		this.jPanel.add(this.sortComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 3;
@@ -211,10 +295,37 @@ public final class SiteNodeTypeEditor
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.imageButton, constraints);
+		this.jPanel.add(this.imageLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 3;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 2;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.imagePanel, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		// TODO fix ImagePanel before enabling it
+		this.jPanel.add(this.imageButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -227,8 +338,8 @@ public final class SiteNodeTypeEditor
 		this.jPanel.add(this.descLabel, constraints);
 
 		constraints.gridx = 1;
-		constraints.gridy = 4;
-		constraints.gridwidth = 1;
+		constraints.gridy = 5;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 1.0;
@@ -241,9 +352,9 @@ public final class SiteNodeTypeEditor
 
 		super.addToUndoableListener(this.nameTextField);
 		super.addToUndoableListener(this.libraryComboBox);
+		super.addToUndoableListener(this.sortComboBox);
 		super.addToUndoableListener(this.descTextArea);
 
-		// TODO fix ImagePanelbefore enabling it
 		this.imageButton.setEnabled(false);
 	}
 
@@ -258,6 +369,7 @@ public final class SiteNodeTypeEditor
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.libraryComboBox.setEnabled(false);
+			this.sortComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText(""); //$NON-NLS-1$
 
@@ -274,6 +386,9 @@ public final class SiteNodeTypeEditor
 			this.libraryComboBox.setEnabled(true);
 			this.libraryComboBox.addElements(this.logicalNetLayer.getMapView().getMap().getMapLibraries());
 			this.libraryComboBox.setSelectedItem(this.type.getMapLibrary());
+
+			this.sortComboBox.setEnabled(true);
+			this.sortComboBox.setSelectedItem(this.type.getSort());
 
 			this.imageId = this.type.getImageId();
 			this.imagePanel.removeAll();
@@ -301,7 +416,8 @@ public final class SiteNodeTypeEditor
 
 			this.imagePanel.add(new JLabel(new ImageIcon(im)));
 			this.imagePanel.revalidate();
-//			this.imageButton.setEnabled(true);
+			// TODO fix ImagePanel before enabling it
+			this.imageButton.setEnabled(true);
 		}
 	}
 
@@ -336,13 +452,23 @@ public final class SiteNodeTypeEditor
 
 	@Override
 	public void commitChanges() {
-		try {
-			this.type.setName(this.nameTextField.getText());
-			this.type.setMapLibrary((MapLibrary )this.libraryComboBox.getSelectedItem());
-			this.type.setDescription(this.descTextArea.getText());
-			this.type.setImageId(this.imageId);
-		} catch(Exception ex) {
-			ex.printStackTrace();
+//		if(this.type.getMapLibrary().equals(MapLibraryController.getDefaultMapLibrary())) {
+//			// cannot commit default types
+//			return;
+//		}
+		String name = this.nameTextField.getText();
+		if(MiscUtil.validName(name)) {
+			try {
+				if(!name.equals(this.type.getName()))
+					this.type.setName(name);
+				this.type.setMapLibrary((MapLibrary )this.libraryComboBox.getSelectedItem());
+				this.type.setSort((SiteNodeTypeSort )this.sortComboBox.getSelectedItem());
+				this.type.setDescription(this.descTextArea.getText());
+				this.type.setImageId(this.imageId);
+				StorableObjectPool.flush(this.type, LoginManager.getUserId(), true);
+			} catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		super.commitChanges();
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkTypeEditor.java,v 1.9 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: PhysicalLinkTypeEditor.java,v 1.10 2005/10/07 14:23:45 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,20 +9,24 @@
 package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
@@ -36,11 +40,15 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
+import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/07 14:23:45 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -55,6 +63,8 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 	private JTextField nameTextField = new JTextField();
 	private JLabel libraryLabel = new JLabel();
 	private WrapperedComboBox libraryComboBox = null;
+	private JLabel sortLabel = new JLabel();
+	private AComboBox sortComboBox = null;
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -64,14 +74,34 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 	private JLabel thicknessLabel = new JLabel();
 	private LineThicknessComboBox thicknessComboBox = new LineThicknessComboBox(); 
 	
-	private JLabel styleLabel = new JLabel();
-//	private LineStyleComboBox styleComboBox = new LineStyleComboBox(); 
+	private JLabel dimensionLabel = new JLabel();
+	private JPanel dimensionPanel = new JPanel();
+	private JLabel xLabel = new JLabel();
+	private JTextField mTextField = new JTextField();
+	private JTextField nTextField = new JTextField();
 
 	private JButton commitButton = new JButton();
 
 	private NetMapViewer netMapViewer;
 
 	LogicalNetLayer logicalNetLayer;
+
+	static String[] sortNames;
+	static {
+		sortNames = new String[6];
+		sortNames[PhysicalLinkTypeSort._TUNNEL] = 
+			LangModelMap.getString("defaulttunnel");
+		sortNames[PhysicalLinkTypeSort._COLLECTOR] = 
+			LangModelMap.getString("defaultcollector");
+		sortNames[PhysicalLinkTypeSort._INDOOR] = 
+			LangModelMap.getString("defaultindoor");
+		sortNames[PhysicalLinkTypeSort._SUBMARINE] = 
+			LangModelMap.getString("defaultsubmarine");
+		sortNames[PhysicalLinkTypeSort._OVERHEAD] = 
+			LangModelMap.getString("defaultoverhead");
+		sortNames[PhysicalLinkTypeSort._UNBOUND] = 
+			LangModelMap.getString("cable");
+	}
 	
 	public PhysicalLinkTypeEditor() {
 		jbInit();
@@ -88,15 +118,45 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 
 		this.libraryComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
-		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES)); //$NON-NLS-1$
+		this.sortComboBox = new AComboBox();
+		this.sortComboBox.addItem(PhysicalLinkTypeSort.TUNNEL);
+		this.sortComboBox.addItem(PhysicalLinkTypeSort.COLLECTOR);
+		this.sortComboBox.addItem(PhysicalLinkTypeSort.OVERHEAD);
+		this.sortComboBox.addItem(PhysicalLinkTypeSort.SUBMARINE);
+		this.sortComboBox.setRenderer(new DefaultListCellRenderer() {
+		
+			private static final long serialVersionUID = -1525332344329271848L;
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME)); //$NON-NLS-1$
+			@Override
+			public Component getListCellRendererComponent(
+					JList list,
+					Object value,
+					int index,
+					boolean isSelected,
+					boolean cellHasFocus) {
+				if(!(value instanceof PhysicalLinkTypeSort)) {
+					return null;
+				}
+				PhysicalLinkTypeSort sort = (PhysicalLinkTypeSort) value;
+				String text = PhysicalLinkTypeEditor.sortNames[sort.value()];
+				return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+			}
+		
+		});
+
+		this.jPanel.setLayout(this.gridBagLayout1);
+//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+
+		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
 		this.libraryLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
+		this.sortLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SORT));
 		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 		this.colorLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_COLOR));
 		this.thicknessLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_THICKNESS));
-		this.styleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_STYLE));
+
+		this.dimensionLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DIMENSION));
+		this.xLabel.setText("X"); //$NON-NLS-1$
+		this.dimensionPanel.setLayout(new GridBagLayout());
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -109,6 +169,45 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		});
 
 		GridBagConstraints constraints = new GridBagConstraints();
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.5;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.dimensionPanel.add(this.mTextField, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.dimensionPanel.add(this.xLabel, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.5;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.dimensionPanel.add(this.nTextField, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -186,7 +285,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.colorLabel, constraints);
+		this.jPanel.add(this.sortLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 2;
@@ -194,12 +293,12 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.colorComboBox, constraints);
+		this.jPanel.add(this.sortComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 3;
@@ -212,7 +311,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.thicknessLabel, constraints);
+		this.jPanel.add(this.colorLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 3;
@@ -225,36 +324,62 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
+		this.jPanel.add(this.colorComboBox, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.thicknessLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 4;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
 		this.jPanel.add(this.thicknessComboBox, constraints);
-
-//		constraints.gridx = 0;
-//		constraints.gridy = 4;
-//		constraints.gridwidth = 1;
-//		constraints.gridheight = 1;
-//		constraints.weightx = 0.0;
-//		constraints.weighty = 0.0;
-//		constraints.anchor = GridBagConstraints.WEST;
-//		constraints.fill = GridBagConstraints.NONE;
-//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-//		constraints.ipadx = 0;
-//		constraints.ipady = 0;
-//		this.jPanel.add(this.styleLabel, constraints);
-
-//		constraints.gridx = 1;
-//		constraints.gridy = 4;
-//		constraints.gridwidth = 2;
-//		constraints.gridheight = 1;
-//		constraints.weightx = 1.0;
-//		constraints.weighty = 0.0;
-//		constraints.anchor = GridBagConstraints.CENTER;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-//		constraints.ipadx = 0;
-//		constraints.ipady = 0;
-//		this.jPanel.add(this.styleComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 5;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.dimensionLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 5;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.dimensionPanel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -267,7 +392,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.descLabel, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 6;
+		constraints.gridy = 7;
 		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
@@ -281,10 +406,12 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 
 		super.addToUndoableListener(this.nameTextField);
 		super.addToUndoableListener(this.libraryComboBox);
+		super.addToUndoableListener(this.sortComboBox);
 		super.addToUndoableListener(this.descTextArea);
 		super.addToUndoableListener(this.colorComboBox);
 		super.addToUndoableListener(this.thicknessComboBox);
-//		super.addToUndoableListener(this.styleComboBox);
+		super.addToUndoableListener(this.mTextField);
+		super.addToUndoableListener(this.nTextField);
 	}
 
 	public Object getObject() {
@@ -300,20 +427,28 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.libraryComboBox.setEnabled(false);
+			this.sortComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText(""); //$NON-NLS-1$
 
 			this.colorComboBox.setEnabled(false);
 			this.thicknessComboBox.setEnabled(false);
-//			this.styleComboBox.setEnabled(false);
+			this.mTextField.setText(""); //$NON-NLS-1$
+			this.nTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
+			this.mTextField.setText(String.valueOf(this.type.getBindingDimension().getWidth()));
+			this.nTextField.setText(String.valueOf(this.type.getBindingDimension().getHeight()));
+
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.type.getName());
 			
 			this.libraryComboBox.setEnabled(true);
 			this.libraryComboBox.addElements(this.logicalNetLayer.getMapView().getMap().getMapLibraries());
 			this.libraryComboBox.setSelectedItem(this.type.getMapLibrary());
+
+			this.sortComboBox.setEnabled(true);
+			this.sortComboBox.setSelectedItem(this.type.getSort());
 
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.type.getDescription());
@@ -334,32 +469,40 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 
 	@Override
 	public void commitChanges() {
+//		if(this.type.getMapLibrary().equals(MapLibraryController.getDefaultMapLibrary())) {
+//			// cannot commit default types
+//			return;
+//		}
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name)) {
-		try 
-		{
-			if(!name.equals(this.type.getName()))
-				this.type.setName(name);
-			this.type.setMapLibrary((MapLibrary )this.libraryComboBox.getSelectedItem());
-			this.type.setDescription(this.descTextArea.getText());
+			try 
+			{
+				if(!name.equals(this.type.getName()))
+					this.type.setName(name);
+				this.type.setMapLibrary((MapLibrary )this.libraryComboBox.getSelectedItem());
+				this.type.setDescription(this.descTextArea.getText());
+				this.type.setSort((PhysicalLinkTypeSort )this.sortComboBox.getSelectedItem());
+	
+				LinkTypeController linkTypeController = (LinkTypeController)
+						LinkTypeController.getInstance();
+				Color color = (Color)this.colorComboBox.getSelectedItem();
+				if(! color.equals(linkTypeController.getColor(this.type)))
+					linkTypeController.setColor(this.type, color);
+				int size = this.thicknessComboBox.getSelectedValue();
+				if(size != linkTypeController.getLineSize(this.type))
+					linkTypeController.setLineSize(this.type, size);
 
-			LinkTypeController linkTypeController = (LinkTypeController)
-					LinkTypeController.getInstance();
-			Color color = (Color)this.colorComboBox.getSelectedItem();
-			if(! color.equals(linkTypeController.getColor(this.type)))
-				linkTypeController.setColor(this.type, color);
-			int size = this.thicknessComboBox.getSelectedValue();
-			if(size != linkTypeController.getLineSize(this.type))
-				linkTypeController.setLineSize(this.type, size);
-//			String style = (String)this.styleComboBox.getSelectedItem();
-//			if(! style.equals(linkTypeController(this.type)))
-//				linkTypeController(type, style);
-		} 
-		catch (Exception ex) 
-		{
-			ex.printStackTrace();
+				int m = Integer.parseInt(this.mTextField.getText());
+				int n = Integer.parseInt(this.nTextField.getText());
+				if(!this.type.getBindingDimension().equals(new IntDimension(m, n))) {
+					this.type.setBindingDimension(new IntDimension(m, n));
+				}
+				StorableObjectPool.flush(this.type, LoginManager.getUserId(), true);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
-		}
+		
 		super.commitChanges();
 	}
 }
