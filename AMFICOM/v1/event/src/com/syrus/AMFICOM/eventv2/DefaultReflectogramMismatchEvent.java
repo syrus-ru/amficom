@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.2 2005/10/07 15:40:16 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.3 2005/10/07 15:42:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/07 15:40:16 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/07 15:42:29 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -72,7 +72,7 @@ public final class DefaultReflectogramMismatchEvent extends
 
 		this.severity = reflectogramMismatch.getSeverity();
 
-		if (!!((this.anchors = reflectogramMismatch.hasAnchors()))) {
+		if (!!(this.anchors = reflectogramMismatch.hasAnchors())) {
 			/*
 			 * We can't guarantee foreign anchors to be immutable.
 			 */
@@ -282,7 +282,7 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.2 $, $Date: 2005/10/07 15:40:16 $
+	 * @version $Revision: 1.3 $, $Date: 2005/10/07 15:42:29 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable {
