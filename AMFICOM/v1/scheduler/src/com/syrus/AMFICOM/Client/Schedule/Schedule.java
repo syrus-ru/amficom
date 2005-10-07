@@ -18,7 +18,6 @@ public class Schedule extends AbstractApplication {
 		super.startMainFrame(new ScheduleMainFrame(super.aContext), UIStorage.SCHEDULING_ICON_MINI);
 	}
 
-	//	 Первый русский комментарий
 	public static void main(String[] args) {
 		Launcher.launchApplicationClass(Schedule.class);
 	}
