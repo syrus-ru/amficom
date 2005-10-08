@@ -18,6 +18,7 @@ typedef unsigned int uint32_t;
 
 typedef long long long64;
 #include <netinet/in.h>
+#include <stdlib.h>
 
 #endif
 
