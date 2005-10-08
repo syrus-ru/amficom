@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.cpp,v 1.1 2005/10/06 15:48:55 cvsadmin Exp $
+// $Id: OTAUController.cpp,v 1.2 2005/10/08 23:34:01 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.1 $, $Date: 2005/10/06 15:48:55 $
-// $Author: cvsadmin $
+// $Revision: 1.2 $, $Date: 2005/10/08 23:34:01 $
+// $Author: arseniy $
 //
 // OTAUController.cpp: implementation of the OTAUController class.
 //
@@ -149,7 +149,7 @@ pthread_t OTAUController::getThread() const {
 }
 
 OTAUUId OTAUController::createOTAUUid(const COMPortId comPortId, const OTAUAddress otauAddress) {
-	return comPortId << 16 + otauAddress;
+	return (comPortId << 16) + otauAddress;
 }
 
 BOOL OTAUController::sendCOMPortMessage(const HANDLE cpHandle,
