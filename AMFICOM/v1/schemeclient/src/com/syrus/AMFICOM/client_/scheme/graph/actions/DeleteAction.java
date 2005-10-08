@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.26 2005/10/03 07:44:39 stas Exp $
+ * $Id: DeleteAction.java,v 1.27 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Port;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
@@ -57,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -103,6 +104,7 @@ public class DeleteAction extends AbstractAction {
 
 			delete(graph, cells1);
 			
+			this.pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, Identifier.VOID_IDENTIFIER, SchemeEvent.DELETE_OBJECT));
 			graph.selectionNotify();
 			
 //			if (this.pane instanceof SchemeTabbedPane) {

@@ -30,9 +30,17 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuSchemeLoad");
 		add("menuSchemeSave");
 		add("menuSchemeSaveAs");
-		add("menuSchemeImport");
-		add("menuSchemeImportCommit");
-		add("menuSchemeExport");
+		
+		add("Menu.import");
+		add("Menu.import.scheme");
+		add("Menu.import.config");
+		add("Menu.import.protos");
+		add("Menu.import.commit");
+		
+		add("Menu.export");
+		add("Menu.export.scheme");
+		add("Menu.export.config");
+		add("Menu.export.protos");
 
 		add("menuComponent");
 		add("menuComponentSave");
@@ -42,10 +50,6 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuPathNew");
 		add("menuPathSave");
 		add("menuPathEdit");
-		add("menuPathAddStart");
-		add("menuPathAddEnd");
-		add("menuPathAddLink");
-		add("menuPathRemoveLink");
 		add("menuPathAutoCreate");
 		add("menuPathDelete");
 		add("menuPathCancel");

@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.8 2005/09/29 05:59:38 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.9 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,14 @@
 package com.syrus.AMFICOM.Client.General.Event;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Collections;
+import java.util.Set;
 
 import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/09/29 05:59:38 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -41,18 +43,25 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	public static final long SCHEME_PATH =					0x00020000;
 	
 	public static final long RESULT =								0x00040000;
-	
+
 	public static final long OTHER_OBJECT =					0x00100000;
+	
+	public static final long MULTIPLE =							0x00200000;
+	
 	public static final long ALL_DESELECTED =				0x10000000;
 	
 	public static final String TYPE = ObjectSelectedEvent.class.getName();
 	private long type;
 	private VisualManager manager;
 	
-	public ObjectSelectedEvent(Object source,	Object selectedObject, VisualManager manager, long type) {
-		super(source, TYPE, null, selectedObject);
+	public ObjectSelectedEvent(Object source,	Set<? extends Object> selectedObjects, VisualManager manager, long type) {
+		super(source, TYPE, null, selectedObjects);
 		this.type = type;
 		this.manager = manager;
+	}
+	
+	public ObjectSelectedEvent(Object source,	Object selectedObject, VisualManager manager, long type) {
+		this(source, Collections.singleton(selectedObject), manager, type);
 	}
 
 	public boolean isSelected(long value) {
@@ -63,7 +72,15 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 		return this.manager;
 	}
 	
+	public Set<? extends Object> getSelectedObjects() {
+		return (Set<? extends Object>)getNewValue();
+	}
+	
 	public Object getSelectedObject() {
-		return getNewValue();
+		Set<? extends Object> identifiables = getSelectedObjects();
+		if (identifiables.isEmpty()) {
+			return null;
+		}
+		return identifiables.iterator().next();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.14 2005/10/06 07:19:31 stas Exp $
+ * $Id: DefaultLink.java,v 1.15 2005/10/08 13:49:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeLink;
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/10/06 07:19:31 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/08 13:49:04 $
  * @module schemeclient
  */
 
@@ -49,7 +50,7 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 
 	public static DefaultLink createInstance(Object userObject,
 			PortView firstPort, PortView port, Point p, Point p2, Map viewMap,
-			ConnectionSet cs) {
+			ConnectionSet cs) throws CreateObjectException {
 
 		// we can connect link to PortCell or not connect at all
 		PortCell sourcePortCell = null;
@@ -65,6 +66,15 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 			if (o instanceof PortCell)
 				targetPortCell = (PortCell) o;
 		}
+		
+		if (sourcePortCell == null || targetPortCell == null) {
+			throw new CreateObjectException("Cable must be connected to cable ports");
+		}
+		if (sourcePortCell.getSchemePort().getAbstractSchemeLink() != null ||
+				targetPortCell.getSchemePort().getAbstractSchemeLink() != null) {
+			throw new CreateObjectException("Other cable already connected to port");
+		}
+		
 		DefaultLink cell = new DefaultLink(userObject);
 		
 		int u = GraphConstants.PERCENT;
@@ -402,7 +412,8 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 			DefaultLink.this._from.y = from.y;
 			DefaultLink.this._to.x = to.x;
 			DefaultLink.this._to.y = to.y;
-			GraphConstants.setPoints(DefaultLink.this.getAttributes(), points);
+
+//			GraphConstants.setPoints(edge.getAllAttributes(), points);
 		}
 	}
 	

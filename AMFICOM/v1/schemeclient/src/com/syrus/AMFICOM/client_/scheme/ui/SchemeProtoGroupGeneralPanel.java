@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.10 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.11 2005/10/08 13:49:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/08 13:49:04 $
  * @module schemeclient
  */
 
@@ -276,9 +276,6 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.schemeProtoGroup = SchemeObjectsFactory.createSchemeProtoGroup();
 					this.apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this,
-							this.schemeProtoGroup.getId(),
-							SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
 							this.schemeProtoGroup,
 							SchemeProtoGroupPropertiesManager.getInstance(this.aContext),

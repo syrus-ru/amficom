@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsToolBar.java,v 1.10 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: ElementsToolBar.java,v 1.11 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -45,7 +45,7 @@ public class ElementsToolBar extends UgoToolBar {
 		Constants.LINK, Constants.SEPARATOR, Constants.BLOCK_PORT,
 		Constants.CREATE_UGO, Constants.GROUP,
 		Constants.UNGROUP, Constants.SEPARATOR, Constants.DELETE,
-		Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
+		Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT, Constants.ZOOM_BOX, 
 		Constants.ZOOM_ACTUAL, Constants.HORIZONTAL_GLUE
 	};
 	
@@ -97,6 +97,9 @@ public class ElementsToolBar extends UgoToolBar {
 		bttns.put(Constants.ZOOM_ACTUAL, createToolButton(mh.za, this.btn_size, null,
 				LangModelGraph.getString(Constants.ZOOM_ACTUAL), Constants.ICON_ZOOM_NORMAL,
 				new ZoomActualAction(this.pane), true));
+		bttns.put(Constants.ZOOM_BOX, createToolButton(mh.zb, this.btn_size, null,
+				LangModelGraph.getString(Constants.ZOOM_BOX), Constants.ICON_ZOOM_BOX, null,
+				true));
 		bttns.put(Constants.DELETE, createToolButton(mh.del, this.btn_size, null,
 				LangModelGraph.getString(Constants.DELETE), Constants.ICON_DELETE, new DeleteAction(this.pane), false));
 		// bttns.put(Constants.hierarchyUpKey,

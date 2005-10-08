@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: Constants.java,v 1.9 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -59,6 +59,7 @@ public interface Constants {
 	public static final Icon ICON_ZOOM_IN = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_in.gif")); //$NON-NLS-1$
 	public static final Icon ICON_ZOOM_OUT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_out.gif")); //$NON-NLS-1$
 	public static final Icon ICON_ZOOM_NORMAL = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_actual.gif")); //$NON-NLS-1$
+	public static final Icon ICON_ZOOM_BOX = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_box.gif")); //$NON-NLS-1$
 	public static final Icon ICON_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/port.gif")); //$NON-NLS-1$
 	public static final Icon ICON_CABLE_PORT = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cableport.gif")); //$NON-NLS-1$
 	public static final Icon ICON_GROUP = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/group.gif")); //$NON-NLS-1$
@@ -98,6 +99,7 @@ public interface Constants {
 	public static final String ZOOM_IN = "zoom_in"; //$NON-NLS-1$
 	public static final String ZOOM_OUT = "zoom_out"; //$NON-NLS-1$
 	public static final String ZOOM_ACTUAL = "zoom_actual"; //$NON-NLS-1$
+	public static final String ZOOM_BOX = "zoom_box"; //$NON-NLS-1$
 	public static final String SEPARATOR = "separator";  //$NON-NLS-1$
 	public static final String HORIZONTAL_GLUE = "horizontal_glue";  //$NON-NLS-1$
 

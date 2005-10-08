@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.11 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.12 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -42,7 +42,7 @@ public class SchemeToolBar extends ElementsToolBar {
 			// Constants.undoKey,
 			// Constants.redoKey,
 			Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
-			Constants.ZOOM_ACTUAL, Constants.SEPARATOR, 
+			Constants.ZOOM_BOX, Constants.ZOOM_ACTUAL, Constants.SEPARATOR, 
 			Constants.SEPARATOR, Constants.LINK_MODE, Constants.PATH_MODE,
 			Constants.SEPARATOR, Constants.TOP_LEVEL_MODE, Constants.HORIZONTAL_GLUE 
 	};

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.43 2005/09/29 14:27:58 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.44 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import java.util.SortedSet;
 import java.util.logging.Level;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -78,7 +80,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.43 $, $Date: 2005/09/29 14:27:58 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -90,6 +92,12 @@ public class SchemeObjectsFactory {
 	private static SchemeProtoElement stubProtoElement;
 	private static String stubName = "should not see me";
 	
+	private static ApplicationContext aContext;
+	
+	public static void init(final ApplicationContext aContext1) {
+		aContext = aContext1;
+	}
+	
 	public static CharacteristicType createCharacteristicType(String name, CharacteristicTypeSort sort) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		CharacteristicType type = CharacteristicType.createInstance(userId, name, EMPTY, name, DataType.STRING, sort);
@@ -99,6 +107,9 @@ public class SchemeObjectsFactory {
 	
 	public static ProtoEquipment createProtoEquipment(String name, EquipmentType type) throws CreateObjectException {
 		ProtoEquipment protoEqt = ProtoEquipment.createInstance(LoginManager.getUserId(), type, name, EMPTY, EMPTY, EMPTY);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, protoEqt.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return protoEqt;
 	}
 	
@@ -123,6 +134,10 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		MeasurementPortType type = MeasurementPortType.createInstance(userId, codename, EMPTY, codename, EnumSet.noneOf(MeasurementType.class));
 		type.setCodename(type.getId().getIdentifierString());
+		
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, type.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return type;
 	}
 	
@@ -130,6 +145,9 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		PortType type = PortType.createInstance(userId, codename, EMPTY, codename, PortTypeSort.PORTTYPESORT_OPTICAL, kind);
 		type.setCodename(type.getId().getIdentifierString());
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, type.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return type;
 	}
 	
@@ -137,6 +155,9 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		LinkType type = LinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
 		type.setCodename(type.getId().getIdentifierString());
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, type.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return type;
 	}
 	
@@ -144,6 +165,10 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		CableLinkType type = CableLinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
 		type.setCodename(type.getId().getIdentifierString());
+		
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, type.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return type;
 	}
 	
@@ -285,6 +310,9 @@ public class SchemeObjectsFactory {
 				LoginManager.getUserId(), 
 				LangModelScheme.getString("Title.group") + " (" + counter + ")");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		counter++;
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, group.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return group;
 	}
 	
@@ -312,46 +340,61 @@ public class SchemeObjectsFactory {
 		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(userId, 
 				LangModelScheme.getString("Title.component") + " (" + counter + ")", stubProtoElement);  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		protoElement.setProtoEquipment(protoEq);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, protoElement.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		counter++;
 		return protoElement;
 	}
 
 	public static SchemeElement createSchemeElement(Scheme parentScheme, SchemeProtoElement proto) throws CreateObjectException {
 		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, parentScheme);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeElement.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeElement;
 	}
 	
 	public static SchemeElement createSchemeElement(SchemeElement parentSchemeElement, SchemeProtoElement proto) throws CreateObjectException {
 		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, parentSchemeElement);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeElement.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeElement;
 	}
 	
 	public static SchemeElement createSchemeElement(Scheme parentScheme, Scheme scheme) throws CreateObjectException {
 		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme, parentScheme);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeElement.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeElement;
 	}
 	
 	public static SchemeElement createSchemeElement(Scheme parentScheme) throws CreateObjectException {
-//		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-//		EquipmentType eqt = null;
-//		try {
-//			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//			if (!eqTypes.isEmpty())
-//				eqt = eqTypes.iterator().next();
-//		} catch (ApplicationException e2) {
-//			throw new CreateObjectException(e2);
-//		}
-//		if (eqt == null) {
-//			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
-//			Log.debugMessage(error, Level.WARNING); 
-//			throw new CreateObjectException(error);
-//		}
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PROTOEQUIPMENT_CODE);
+		ProtoEquipment protoEq = null;
+		try {
+			Set<ProtoEquipment> protoEqs = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (!protoEqs.isEmpty())
+				protoEq = protoEqs.iterator().next();
+		} catch (ApplicationException e2) {
+			throw new CreateObjectException(e2);
+		}
+		if (protoEq == null) {
+			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
+			Log.debugMessage(error, Level.WARNING); 
+			throw new CreateObjectException(error);
+		}
 		
 		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(),
 				LangModelScheme.getString("Title.component") + " (" + counter + ")",   //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 				parentScheme);
-//		schemeElement.setEquipmentType(eqt);
+		schemeElement.setProtoEquipment(protoEq);
 		counter++;
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeElement.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeElement;
 	}
 	
@@ -360,6 +403,9 @@ public class SchemeObjectsFactory {
 				LangModelScheme.getString(SchemeResourceKeys.NEW_SCHEME) + (schemeCounter == 1 ? EMPTY : " (" + schemeCounter + ")"),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				IdlKind.NETWORK, LoginManager.getDomainId());
 		schemeCounter++;
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, scheme.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return scheme;
 	}
 
@@ -375,11 +421,17 @@ public class SchemeObjectsFactory {
 	
 	public static SchemePort createSchemePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws CreateObjectException {
 		SchemePort schemePort = SchemePort.createInstance(LoginManager.getUserId(), name, directionType, parent);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemePort.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemePort;
 	}
 	
 	public static SchemeCablePort createSchemeCablePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws CreateObjectException {
 		SchemeCablePort schemePort = SchemeCablePort.createInstance(LoginManager.getUserId(), name, directionType, parent);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemePort.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemePort;
 	}
 	
@@ -389,6 +441,9 @@ public class SchemeObjectsFactory {
 			stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, SchemeProtoGroup.createInstance(userId, stubName));
 		}
 		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, stubProtoElement);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeLink;
 	}
 	
@@ -396,6 +451,9 @@ public class SchemeObjectsFactory {
 		assert schemeElement != null;
 		Identifier userId = LoginManager.getUserId();
 		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, schemeElement);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeLink;
 	}
 	
@@ -403,12 +461,18 @@ public class SchemeObjectsFactory {
 		assert scheme != null;
 		Identifier userId = LoginManager.getUserId();
 		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, scheme);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeLink;
 	}
 	
 	public static SchemeCableLink createSchemeCableLink(String name, Scheme parent) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		SchemeCableLink schemeLink = SchemeCableLink.createInstance(userId, name, parent);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return schemeLink;
 	}
 	
@@ -440,6 +504,9 @@ public class SchemeObjectsFactory {
 		SchemePath path = SchemePath.createInstance(LoginManager.getUserId(), 
 				LangModelScheme.getString("Title.path") + " (" + counter + ")",   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 				solution);
+		if (aContext != null) {
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, path.getId(), SchemeEvent.CREATE_OBJECT));
+		}
 		return path;
 	}
 	

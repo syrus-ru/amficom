@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.30 2005/10/05 15:49:43 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.31 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -55,6 +56,7 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -74,7 +76,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2005/10/05 15:49:43 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -105,6 +107,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	public transient JButton ugr = new JButton(); //ungroupKey
 	public transient JButton undo = new JButton(); //undoKey
 	public transient JButton redo = new JButton(); //redoKey
+	public transient JToggleButton zb = new JToggleButton(); //zoomBoxKey
 	public transient JButton zi = new JButton(); //zoomInKey
 	public transient JButton zo = new JButton(); //zoomOutKey
 	public transient JButton za = new JButton(); //zoomActualKey
@@ -468,7 +471,20 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				graph.snap(graph.fromScreen(this.bounds));
 //				this.bounds.x++;
 //				this.bounds.y++;
-				if (this.dev.isSelected()) {
+				
+				if (this.zb.isSelected()) {
+					if (this.bounds.width != 0 && this.bounds.height != 0) {
+						Rectangle visible = graph.getVisibleRect();
+						double sc = ((double)visible.width / (double)this.bounds.width + 
+								(double)visible.height / (double)this.bounds.height) / 2;
+						graph.setScale(graph.getScale() * sc);
+						Dimension size = graph.getPreferredSize();
+						graph.setPreferredSize(new Dimension((int) (size.width * sc), (int) (size.height * sc)));
+						
+						if (graph.getScale() >= .5)
+							graph.setGridVisible(graph.isGridVisibleAtActualSize());
+					}
+				} else if (this.dev.isSelected()) {
 					
 //					bounds.width += 2;
 //					bounds.height += 2;
@@ -513,13 +529,23 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						if (scheme != null) {
 						
 							try {
-								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("cable" + System.currentTimeMillis(), scheme);
-								link.setAbstractLinkTypeExt(type, LoginManager.getUserId(), false);
-								DefaultCableLink cell = SchemeActions.createCableLink(graph,
-										this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
-										graph.snap(graph.fromScreen(new Point(this.current))), link.getId());
-								link.setName((String)cell.getUserObject());
-								Notifier.notify(graph, this.pane.aContext, link);
+								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("TEMPORARY", scheme);
+								try {
+									DefaultCableLink cell = SchemeActions.createCableLink(graph,
+											this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
+											graph.snap(graph.fromScreen(new Point(this.current))), link.getId());
+									
+									link.setAbstractLinkTypeExt(type, LoginManager.getUserId(), false);
+									link.setName((String)cell.getUserObject());
+									Notifier.notify(graph, this.pane.aContext, link);
+								} catch (CreateObjectException e1) {
+									Log.errorMessage(e1.getMessage());
+									link.setParentScheme(null, false);
+									JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+											LangModelGraph.getString("Error.create_cablelink"), //$NON-NLS-1$
+											LangModelGraph.getString("error"), //$NON-NLS-1$
+											JOptionPane.ERROR_MESSAGE);
+								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}
@@ -547,25 +573,35 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						
 						SchemeLink link;
 						try {
-							link = SchemeObjectsFactory.createSchemeLink("link" + System.currentTimeMillis());
-							link.setAbstractLinkType(type);
+							link = SchemeObjectsFactory.createSchemeLink("TEMPORARY");
 							
-							UgoPanel panel = this.pane.getCurrentPanel();
-							if (panel instanceof SchemePanel) {
-								SchemeResource res = ((SchemePanel)panel).getSchemeResource();
-								if (res.getCellContainerType() == SchemeResource.SCHEME)
-									link.setParentScheme(res.getScheme(), false);
-								else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT)
-									link.setParentSchemeElement(res.getSchemeElement(), false);
-								else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT)
-									link.setParentSchemeProtoElement(res.getSchemeProtoElement(), false);
+							try {
+								DefaultLink cell = SchemeActions.createLink(graph,
+										this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
+										graph.snap(graph.fromScreen(new Point(this.current))), link.getId());
+								
+								link.setName((String)cell.getUserObject());
+								link.setAbstractLinkType(type);
+								
+								UgoPanel panel = this.pane.getCurrentPanel();
+								if (panel instanceof SchemePanel) {
+									SchemeResource res = ((SchemePanel)panel).getSchemeResource();
+									if (res.getCellContainerType() == SchemeResource.SCHEME)
+										link.setParentScheme(res.getScheme(), false);
+									else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT)
+										link.setParentSchemeElement(res.getSchemeElement(), false);
+									else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT)
+										link.setParentSchemeProtoElement(res.getSchemeProtoElement(), false);
+								}
+								Notifier.notify(graph, this.pane.aContext, link);
+							} catch (CreateObjectException e1) {
+								Log.errorMessage(e1.getMessage());
+								link.setParentScheme(null, false);
+								JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+										LangModelGraph.getString("Error.create_link"), //$NON-NLS-1$
+										LangModelGraph.getString("error"), //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
 							}
-							
-							DefaultLink cell = SchemeActions.createLink(graph,
-									this.firstPort, this.port, graph.snap(graph.fromScreen(new Point(this.start))), 
-									graph.snap(graph.fromScreen(new Point(this.current))), link.getId());
-							link.setName((String)cell.getUserObject());
-							Notifier.notify(graph, this.pane.aContext, link);
 						} catch (ApplicationException e1) {
 							Log.errorException(e1);
 							return;

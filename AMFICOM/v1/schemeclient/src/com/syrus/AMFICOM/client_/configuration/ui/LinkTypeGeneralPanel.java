@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.8 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.9 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -282,7 +282,6 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.linkType = SchemeObjectsFactory.createLinkType(this.tfNameText.getText());
 					this.apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
 							this.linkType,
 							LinkTypePropertiesManager.getInstance(this.aContext),

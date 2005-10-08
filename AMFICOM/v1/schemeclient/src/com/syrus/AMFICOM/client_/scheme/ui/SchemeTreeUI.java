@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.23 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.24 2005/10/08 13:49:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,16 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.CableLinkType;
@@ -37,6 +40,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeLink;
@@ -46,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/08 13:49:04 $
  * @module schemeclient
  */
 
@@ -77,6 +81,17 @@ public class SchemeTreeUI extends IconedTreeUI {
 				public void actionPerformed(ActionEvent e) {
 					TreePath[] selectedPaths = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPaths();
 					TreePath selectedPath1 = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPath();
+					
+					if (selectedPath1 != null) {
+						int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), 
+								LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ //$NON-NLS-2$
+								LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
+								JOptionPane.OK_CANCEL_OPTION);
+						if (res == JOptionPane.NO_OPTION) {
+							return;
+						}
+					}
+					
 					for (TreePath selectedPath : selectedPaths) {
 						Item item = (Item)selectedPath.getLastPathComponent();
 						Object object = item.getObject();
@@ -93,14 +108,15 @@ public class SchemeTreeUI extends IconedTreeUI {
 										link.setSourceAbstractSchemePort(null);
 										link.setTargetAbstractSchemePort(null);
 									}
+
+									SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
+											new SchemeEvent(this, scheme.getId(), SchemeEvent.DELETE_OBJECT));
 									
 									Set<Identifiable> ids = scheme.getReverseDependencies(false);
 									StorableObjectPool.delete(ids);
 									
 									Identifier userId = LoginManager.getUserId();
-									for (Identifiable id : ids) {
-										StorableObjectPool.flush(id, userId, false);
-									}
+									StorableObjectPool.flush(ids, userId, false);
 								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
@@ -110,6 +126,10 @@ public class SchemeTreeUI extends IconedTreeUI {
 							try {
 								SchemeProtoElement proto = (SchemeProtoElement)object;
 								Set<Identifiable> ids = proto.getReverseDependencies(false);
+
+								SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
+										new SchemeEvent(this, proto.getId(), SchemeEvent.DELETE_OBJECT));
+								
 								StorableObjectPool.delete(ids);
 								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 							} catch (ApplicationException e1) {
@@ -121,6 +141,10 @@ public class SchemeTreeUI extends IconedTreeUI {
 								if (group.getSchemeProtoElements(false).isEmpty() && 
 									group.getSchemeProtoGroups(false).isEmpty()) {
 									Set<Identifiable> ids = group.getReverseDependencies(false);
+									
+									SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
+											new SchemeEvent(this, group.getId(), SchemeEvent.DELETE_OBJECT));
+									
 									StorableObjectPool.delete(ids);
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 								}

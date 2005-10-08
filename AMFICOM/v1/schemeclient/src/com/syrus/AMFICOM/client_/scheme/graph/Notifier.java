@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.15 2005/10/03 07:44:39 stas Exp $
+ * $Id: Notifier.java,v 1.16 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,23 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.ALL_DESELECTED;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.MULTIPLE;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_CABLELINK;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_CABLEPORT;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_DEVICE;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_ELEMENT;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_LINK;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PATH;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PORT;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PROTOELEMENT;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
-import com.jgraph.graph.DefaultPort;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -48,7 +60,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -60,53 +72,53 @@ public class Notifier {
 	public static void notify(SchemeGraph graph, ApplicationContext aContext, Object object) {
 		Dispatcher dispatcher = aContext.getDispatcher();
 		if (object == null) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null,
-					ObjectSelectedEvent.ALL_DESELECTED));
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, Collections.<Identifiable>emptySet(), null,
+					ALL_DESELECTED));
 			return;
 		}
 
 		if (object instanceof SchemeElement) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeElement)object,
 					SchemeElementPropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_ELEMENT));
+					SCHEME_ELEMENT));
 		} else if (object instanceof SchemeDevice) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeDevice)object,
 					SchemeDevicePropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_DEVICE));
+					SCHEME_DEVICE));
 		} else if (object instanceof SchemeLink) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeLink)object,
 					SchemeLinkPropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_LINK));
+					SCHEME_LINK));
 		} else if (object instanceof SchemeCableLink) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeCableLink)object,
 					SchemeCableLinkPropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_CABLELINK));
+					SCHEME_CABLELINK));
 		} else if (object instanceof SchemePort) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemePort)object,
 					SchemePortPropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_PORT));
+					SCHEME_PORT));
 		} else if (object instanceof SchemeCablePort) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeCablePort)object,
 					SchemeCablePortPropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_CABLEPORT));
+					SCHEME_CABLEPORT));
 		} else if (object instanceof SchemeProtoElement) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeProtoElement)object,
 					SchemeProtoElementPropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_PROTOELEMENT));
+					SCHEME_PROTOELEMENT));
 		} else if (object instanceof SchemePath) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemePath)object,
 					SchemePathPropertiesManager.getInstance(aContext),
-					ObjectSelectedEvent.SCHEME_PATH));
+					SCHEME_PATH));
 		} else if (object instanceof Scheme) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
-					SchemePropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME));
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (Scheme)object,
+					SchemePropertiesManager.getInstance(aContext), SCHEME));
 		}
 //		TODO write visual managers
 		/*
 		else if (object instanceof SchemePath)
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemePathPropertiesManager.getInstance(),
-					ObjectSelectedEvent.SCHEME_PATH));
+					SCHEME_PATH));
 		else
 			Log.debugMessage("unsupported object selection: " + object, Log.WARNING);	
 					*/
@@ -117,10 +129,10 @@ public class Notifier {
 		Dispatcher dispatcher = aContext.getDispatcher();
 		if (cells.length == 0) {
 			Log.debugMessage(Notifier.class.getSimpleName() + " | all deselected", Level.FINEST); //$NON-NLS-1$
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, null, null, ObjectSelectedEvent.ALL_DESELECTED));
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, Collections.<Identifiable>emptySet(), null, ALL_DESELECTED));
 			return;
 		} else if (cells.length == 1) {
-			Object selectedObject = null;
+			Identifiable selectedObject = null;
 			long selectedType = 0;
 			VisualManager manager = null;
 			Object object = cells[0];
@@ -129,74 +141,74 @@ public class Notifier {
 				DeviceGroup dev = (DeviceGroup)object;
 				if (dev.getType() == DeviceGroup.PROTO_ELEMENT) {
 					selectedObject = dev.getProtoElement();
-					selectedType = ObjectSelectedEvent.SCHEME_PROTOELEMENT;
+					selectedType = SCHEME_PROTOELEMENT;
 					manager = SchemeProtoElementPropertiesManager.getInstance(aContext);
 				} else if (dev.getType() == DeviceGroup.SCHEME_ELEMENT) {
 					SchemeElement el = dev.getSchemeElement();
 					if (el.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 						selectedObject = dev.getScheme();
-						selectedType = ObjectSelectedEvent.SCHEME;
+						selectedType = SCHEME;
 						manager = SchemePropertiesManager.getInstance(aContext);
 					} else {
 						selectedObject = dev.getSchemeElement();
-						selectedType = ObjectSelectedEvent.SCHEME_ELEMENT;
+						selectedType = SCHEME_ELEMENT;
 						manager = SchemeElementPropertiesManager.getInstance(aContext);
 					}
 				} 
 //				else if (dev.getType() == DeviceGroup.SCHEME) {
 //					selectedObject = dev.getScheme();
-//					selectedType = ObjectSelectedEvent.SCHEME;
+//					selectedType = SCHEME;
 //					manager = SchemePropertiesManager.getInstance(aContext);
 //				}
 			} else if (object instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)object;
 				if (link.getSchemeLinkId() != null) {
 					selectedObject = link.getSchemeLink();
-					selectedType = ObjectSelectedEvent.SCHEME_LINK;
+					selectedType = SCHEME_LINK;
 					manager = SchemeLinkPropertiesManager.getInstance(aContext);
 				}
 			} else if (object instanceof DefaultCableLink) {
 				DefaultCableLink link = (DefaultCableLink)object;
 				if (link.getSchemeCableLinkId() != null) {
 					selectedObject = link.getSchemeCableLink();
-					selectedType = ObjectSelectedEvent.SCHEME_CABLELINK;
+					selectedType = SCHEME_CABLELINK;
 					manager = SchemeCableLinkPropertiesManager.getInstance(aContext);
 				}
 			} else if (object instanceof PortCell) {
 				PortCell port = (PortCell)object;
 				if (port.getSchemePortId() != null) {
 					selectedObject = port.getSchemePort();
-					selectedType = ObjectSelectedEvent.SCHEME_PORT;
+					selectedType = SCHEME_PORT;
 					manager = SchemePortPropertiesManager.getInstance(aContext);
 				}
 			} else if (object instanceof CablePortCell) {
 				CablePortCell port = (CablePortCell)object;
 				if (port.getSchemeCablePortId() != null) {
 					selectedObject = port.getSchemeCablePort();
-					selectedType = ObjectSelectedEvent.SCHEME_CABLEPORT;
+					selectedType = SCHEME_CABLEPORT;
 					manager = SchemeCablePortPropertiesManager.getInstance(aContext);
 				}
 			} else if (object instanceof DeviceCell) {
 				DeviceCell dev = (DeviceCell)object;
 				if (dev.getSchemeDeviceId() != null) {
 					selectedObject = dev.getSchemeDevice();
-					selectedType = ObjectSelectedEvent.SCHEME_DEVICE;
+					selectedType = SCHEME_DEVICE;
 					manager = SchemeDevicePropertiesManager.getInstance(aContext);
 				}
 			} else if (object instanceof TopLevelElement) {
 				TopLevelElement top = (TopLevelElement)object;
 				if (top.getSchemeId() != null) {
 					selectedObject = top.getScheme();
-					selectedType = ObjectSelectedEvent.SCHEME;
+					selectedType = SCHEME;
 					manager = SchemePropertiesManager.getInstance(aContext);
 				}
 			}  
 			
 			if (selectedType == 0 || selectedObject == null) {
 				Log.debugMessage(Notifier.class.getSimpleName() + " | selected other object " + object.getClass().getSimpleName(), Level.FINEST); //$NON-NLS-1$
-				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, ObjectSelectedEvent.OTHER_OBJECT));
+//				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, OTHER_OBJECT));
 			} else {
-				Log.debugMessage(Notifier.class.getSimpleName() + " | selected object with id " + ((Identifiable)selectedObject).getId() , Level.FINEST); //$NON-NLS-1$
+				Log.debugMessage(Notifier.class.getSimpleName() + " | selected object with id " + selectedObject.getId() , Level.FINEST); //$NON-NLS-1$
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObject, manager, selectedType));
 			}
 		} else if (cells.length > 1) {
@@ -214,7 +226,7 @@ public class Notifier {
 			}
 			if (SchemePort.class.equals(selectedClass)) {
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedPorts, 
-						SchemePortPropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME_PORT));
+						SchemePortPropertiesManager.getInstance(aContext), MULTIPLE + SCHEME_PORT));
 			}
 		}
 		} catch (Exception e) {

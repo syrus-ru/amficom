@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.39 2005/10/04 16:25:54 stas Exp $
+ * $Id: SchemeActions.java,v 1.40 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -94,7 +94,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.39 $, $Date: 2005/10/04 16:25:54 $
+ * @version $Revision: 1.40 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -531,6 +531,13 @@ public class SchemeActions {
 		return placedObjectIds;
 	}
 
+	public static void writeClonedIds(SchemeGraph graph, SchemeImageResource imageResource, Map<Identifier, Identifier> clonedIds) {
+		GraphActions.clearGraph(graph);
+		Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(graph, imageResource, true);
+		SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+		imageResource.setData((List)graph.getArchiveableState());
+	}
+	
 	/**
 	 * @param schemeImageResource Scheme or SchemeElement or SchemeProtoElement SchemeCell or UgoCell
 	 * @param doClone create copy of objects or open themself
@@ -555,18 +562,20 @@ public class SchemeActions {
 	}
 	
 	public static DefaultCableLink createCableLink(SchemeGraph graph, PortView firstPort,
-			PortView port, Point p, Point p2, Identifier linkId) {
+			PortView port, Point p, Point p2, Identifier linkId) throws CreateObjectException {
 		ConnectionSet cs = new ConnectionSet();
 		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+
+		DefaultCableLink cell = DefaultCableLink.createInstance(EMPTY, firstPort, port, p, p2, viewMap, cs);
 		
 		Object[] cells = graph.getAll();
 		int counter = 0;
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DefaultCableLink)
 				counter++;
-		String name = "cl" + String.valueOf(counter+1);
-		
-		DefaultCableLink cell = DefaultCableLink.createInstance(name, firstPort, port, p, p2, viewMap, cs);
+		String name = LangModelScheme.getString("Title.cable") + String.valueOf(counter+1); //$NON-NLS-1$
+
+		cell.setUserObject(name);
 		cell.setSchemeCableLinkId(linkId);
 		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
 		graph.setSelectionCell(cell);
@@ -584,7 +593,7 @@ public class SchemeActions {
 	}
 	
 	public static DefaultLink createLink(SchemeGraph graph, PortView firstPort, 
-			PortView port, Point p, Point p2, Identifier linkId) {
+			PortView port, Point p, Point p2, Identifier linkId) throws CreateObjectException {
 		ConnectionSet cs = new ConnectionSet();
 		Map viewMap = new HashMap();
 		

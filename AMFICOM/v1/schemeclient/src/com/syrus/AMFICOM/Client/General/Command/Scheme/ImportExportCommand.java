@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.10 2005/10/03 07:44:39 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.11 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 
@@ -29,14 +30,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import javax.swing.JFileChooser;
+
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -69,8 +74,11 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.util.Log;
 
@@ -83,9 +91,9 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String UCM_SCHEMED_EQT = "UCM_SCHEMED";
 	
 	protected static final String ID_PREFIX = "id";
-	protected static final String PROTO_ELEMENTS_FILENAME = "protos.xml";
-	protected static final String CONFIGURATION_FILENAME = "config.xml";
-	protected static final String EXPORT_DIRECTORY = "/export";
+//	protected static final String PROTO_ELEMENTS_FILENAME = "protos.xml";
+//	protected static final String CONFIGURATION_FILENAME = "config.xml";
+	protected static File currentDirectory = new File("/export");
 	protected static final String IMAGE_DIRECTORY = "image";
 	
 	protected Identifier userId;
@@ -101,11 +109,112 @@ public abstract class ImportExportCommand extends AbstractCommand {
 			throws CreateObjectException, UpdateObjectException {
 				switch (mode) {
 				case PRE_IMPORT:
-					final XmlScheme scheme = (XmlScheme) storableObject;
-					if (scheme.isSetDomainId()) {
-						scheme.unsetDomainId();
+					// set current domainId
+					final XmlScheme xmlScheme = (XmlScheme) storableObject;
+					if (xmlScheme.isSetDomainId()) {
+						xmlScheme.unsetDomainId();
 					}
-					LoginManager.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
+					LoginManager.getDomainId().getXmlTransferable(xmlScheme.addNewDomainId(), importType);
+					
+					// substitute schemeCell and ugoCells from file
+					try {
+						Identifier schemeId = Identifier.fromXmlTransferable(xmlScheme.getId(), importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+						Scheme scheme = StorableObjectPool.getStorableObject(schemeId, true);
+						if (xmlScheme.isSetSchemeCellFilename()) {
+							// TODO set cell from file
+						} else if (xmlScheme.isSetSchemeCellCodename()) {
+//						 TODO set cell from codename
+						} else if (!xmlScheme.isSetSchemeCellId()) { // if no cell imported 
+							if (scheme != null) { // if exists scheme with cell - leave it
+								SchemeImageResource schemeCell = scheme.getSchemeCell();
+								if (schemeCell != null) {
+									schemeCell.getId().getXmlTransferable(xmlScheme.addNewSchemeCellId(), importType);
+								}	
+							}
+						}
+						if (xmlScheme.isSetUgoCellFilename()) {
+							// TODO set cell from file
+						} else if (xmlScheme.isSetUgoCellCodename()) {
+//						 TODO set cell from codename
+						} else if (!xmlScheme.isSetUgoCellId()) { // no ugo
+							if (scheme != null) {
+								SchemeImageResource ugoCell = scheme.getUgoCell();
+								if (ugoCell != null) {
+								ugoCell.getId().getXmlTransferable(xmlScheme.addNewUgoCellId(), importType);
+								}	
+							}
+						}
+						
+						// check parent, if scheme moved to another scheme - substitute it id to xmlScheme
+						if (scheme != null) {
+							SchemeElement se = scheme.getParentSchemeElement();
+							if (se != null) {
+								if (xmlScheme.isSetParentSchemeElementId()) {
+									xmlScheme.unsetParentSchemeElementId();
+								}
+								se.getId().getXmlTransferable(xmlScheme.addNewParentSchemeElementId(), importType);
+							}
+						}
+					} catch (ObjectNotFoundException e) {
+						throw new UpdateObjectException(e);
+					} catch (ApplicationException e) {
+						throw new UpdateObjectException(e);
+					}
+					break;
+				case POST_IMPORT:
+					break;
+				case EXPORT:
+					break;
+				}
+			}
+		});
+		
+		XmlComplementorRegistry.registerComplementor(SCHEMEELEMENT_CODE, new XmlComplementor() {
+			public void complementStorableObject(
+					final XmlStorableObject storableObject,
+					final String importType,
+					final ComplementationMode mode)
+			throws CreateObjectException, UpdateObjectException {
+				switch (mode) {
+				case PRE_IMPORT:
+					final XmlSchemeElement xmlSchemeElement = (XmlSchemeElement) storableObject;
+					try {
+						Identifier seId = Identifier.fromXmlTransferable(xmlSchemeElement.getId(), importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+						SchemeElement schemeElement = StorableObjectPool.getStorableObject(seId, true);
+						if (xmlSchemeElement.isSetSchemeCellFilename()) {
+							// TODO set cell from file
+						} else if (xmlSchemeElement.isSetSchemeCellCodename()) {
+//						 TODO set cell from codename
+						} else if (!xmlSchemeElement.isSetSchemeCellId()) { // no cell
+							if (schemeElement != null) {
+								SchemeImageResource schemeCell = schemeElement.getSchemeCell();
+								if (schemeCell != null) {
+									schemeCell.getId().getXmlTransferable(xmlSchemeElement.addNewSchemeCellId(), importType);
+								}	
+							}
+						}
+						if (xmlSchemeElement.isSetUgoCellFilename()) {
+							// TODO set cell from file
+						} else if (xmlSchemeElement.isSetUgoCellCodename()) {
+//						 TODO set cell from codename
+						} else if (!xmlSchemeElement.isSetUgoCellId()) { // no ugo
+							if (schemeElement != null) {
+								SchemeImageResource ugoCell = schemeElement.getUgoCell();
+								if (ugoCell != null) {
+									ugoCell.getId().getXmlTransferable(xmlSchemeElement.addNewUgoCellId(), importType);
+								}	
+							}
+						}
+						// TODO if SE moved to another scheme - substitute it id to xmlSE
+						// TODO do it for SCL, SL, SE, S
+						if (schemeElement != null) {
+							
+						}
+					} catch (ObjectNotFoundException e) {
+						throw new UpdateObjectException(e);
+					} catch (ApplicationException e) {
+						throw new UpdateObjectException(e);
+					}
 					break;
 				case POST_IMPORT:
 					break;
@@ -213,12 +322,13 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				switch (mode) {
 				case PRE_IMPORT:
 					try {
+						String exportDirectory = currentDirectory.getPath();
 						if (proto.isSetUgoCellFilename()) {
 							final SchemeImageResource ugoCell = SchemeObjectsFactory.createSchemeImageResource();
-							ugoCell.setImage(readImageResource(EXPORT_DIRECTORY + File.separatorChar + proto.getUgoCellFilename()));
+							ugoCell.setImage(readImageResource(exportDirectory + File.separatorChar + proto.getUgoCellFilename()));
 							
 							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
-									readObject(EXPORT_DIRECTORY + File.separatorChar + proto.getUgoCellFilename() + ID_PREFIX);
+									readObject(exportDirectory + File.separatorChar + proto.getUgoCellFilename() + ID_PREFIX);
 							
 							proto.unsetUgoCellFilename();
 							ugoCell.getId().getXmlTransferable(proto.addNewUgoCellId(), importType);
@@ -227,10 +337,10 @@ public abstract class ImportExportCommand extends AbstractCommand {
 						}
 						if (proto.isSetSchemeCellFilename()) {
 							final SchemeImageResource schemeCell = SchemeObjectsFactory.createSchemeImageResource();
-							schemeCell.setImage(readImageResource(EXPORT_DIRECTORY + File.separatorChar + proto.getSchemeCellFilename()));
+							schemeCell.setImage(readImageResource(exportDirectory + File.separatorChar + proto.getSchemeCellFilename()));
 							
 							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
-									readObject(EXPORT_DIRECTORY + File.separatorChar + proto.getSchemeCellFilename() + ID_PREFIX);
+									readObject(exportDirectory + File.separatorChar + proto.getSchemeCellFilename() + ID_PREFIX);
 							
 							proto.unsetSchemeCellFilename();
 							schemeCell.getId().getXmlTransferable(proto.addNewSchemeCellId(), importType);
@@ -304,7 +414,8 @@ public abstract class ImportExportCommand extends AbstractCommand {
 					break;
 				case EXPORT:
 					try {
-						new File(EXPORT_DIRECTORY + File.separatorChar + IMAGE_DIRECTORY).mkdirs();
+						String exportDirectory = currentDirectory.getPath();
+						new File(exportDirectory + File.separatorChar + IMAGE_DIRECTORY).mkdirs();
 						
 						if (proto.isSetUgoCellId()) {
 							final Identifier ugoCellId = Identifier.fromXmlTransferable(proto.getUgoCellId(), 
@@ -336,8 +447,8 @@ public abstract class ImportExportCommand extends AbstractCommand {
 //							}
 
 							final String fileName = IMAGE_DIRECTORY + File.separatorChar + ugoCellId.getIdentifierString();
-							writeImageResource(EXPORT_DIRECTORY + File.separatorChar + fileName, ugoCell.getImage());
-							writeObject(EXPORT_DIRECTORY + File.separatorChar + fileName + ID_PREFIX, cellIds);
+							writeImageResource(exportDirectory + File.separatorChar + fileName, ugoCell.getImage());
+							writeObject(exportDirectory + File.separatorChar + fileName + ID_PREFIX, cellIds);
 							
 							proto.unsetUgoCellId();
 							proto.setUgoCellFilename(fileName);
@@ -359,8 +470,8 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							}
 							
 							final String fileName = IMAGE_DIRECTORY + File.separatorChar + schemeCellId.getIdentifierString();
-							writeImageResource(EXPORT_DIRECTORY + File.separatorChar + fileName, schemeCell.getImage());
-							writeObject(EXPORT_DIRECTORY + File.separatorChar + fileName + ID_PREFIX, cellIds);
+							writeImageResource(exportDirectory + File.separatorChar + fileName, schemeCell.getImage());
+							writeObject(exportDirectory + File.separatorChar + fileName + ID_PREFIX, cellIds);
 							
 							proto.unsetSchemeCellId();
 							
@@ -416,6 +527,36 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
+	}
+	
+	protected static final String openFile(String title) {
+		String fileName = null;
+		JFileChooser fileChooser = new JFileChooser();
+
+		ChoosableFileFilter xmlFilter = new ChoosableFileFilter(
+				"xml",
+				"XML file");
+		fileChooser.addChoosableFileFilter(xmlFilter);
+
+		fileChooser.setCurrentDirectory(currentDirectory);
+		fileChooser.setDialogTitle(title);
+		fileChooser.setMultiSelectionEnabled(false);
+
+		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
+		currentDirectory = fileChooser.getCurrentDirectory();
+		if(option == JFileChooser.APPROVE_OPTION) {
+			fileName = fileChooser.getSelectedFile().getPath();
+			if(!(fileName.endsWith(".xml")))
+				return null;
+		}
+
+		if(fileName == null)
+			return null;
+
+		if(!(new File(fileName)).exists())
+			return null;
+
+		return fileName;
 	}
 	
 	protected boolean validateXml(XmlObject xml) {

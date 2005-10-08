@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.10 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.11 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -39,9 +39,15 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuSchemeLoad = new JMenuItem();
 		final JMenuItem menuSchemeSave = new JMenuItem();
 		final JMenuItem menuSchemeSaveAs = new JMenuItem();
+		final JMenu menuImport = new JMenu();
 		final JMenuItem menuSchemeImport = new JMenuItem();
+		final JMenuItem menuConfigImport = new JMenuItem();
+		final JMenuItem menuProtosImport = new JMenuItem();
 		final JMenuItem menuSchemeImportCommit = new JMenuItem();
+		final JMenu menuExport = new JMenu();
 		final JMenuItem menuSchemeExport = new JMenuItem();
+		final JMenuItem menuConfigExport = new JMenuItem();
+		final JMenuItem menuProtosExport = new JMenuItem();
 
 		final JMenu menuPath = new JMenu();
 		final JMenuItem menuPathNew = new JMenuItem();
@@ -49,10 +55,6 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuPathSave = new JMenuItem();
 		final JMenuItem menuPathCancel = new JMenuItem();
 		final JMenuItem menuPathDelete = new JMenuItem();
-		final JMenuItem menuPathAddStart = new JMenuItem();
-		final JMenuItem menuPathAddEnd = new JMenuItem();
-		final JMenuItem menuPathAddLink = new JMenuItem();
-		final JMenuItem menuPathRemoveLink = new JMenuItem();
 		final JMenuItem menuPathAutoCreate = new JMenuItem();
 
 		final JMenu menuReport = new JMenu();
@@ -80,15 +82,33 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuSchemeLoad.setText(LangModelSchematics.getString("menuSchemeLoad"));
 		menuSchemeLoad.setName("menuSchemeLoad");
 		menuSchemeLoad.addActionListener(this.actionAdapter);
-		menuSchemeImport.setText(LangModelSchematics.getString("menuSchemeImport"));
-		menuSchemeImport.setName("menuSchemeImport");
+		
+		menuImport.setText(LangModelScheme.getString("Menu.import"));
+		menuImport.setName("Menu.import");
+		menuSchemeImport.setText(LangModelScheme.getString("Menu.import.scheme"));
+		menuSchemeImport.setName("Menu.import.scheme");
 		menuSchemeImport.addActionListener(this.actionAdapter);
-		menuSchemeImportCommit.setText(LangModelScheme.getString("Menu.scheme.import_commit"));
-		menuSchemeImportCommit.setName("menuSchemeImportCommit");
+		menuConfigImport.setText(LangModelScheme.getString("Menu.import.config"));
+		menuConfigImport.setName("Menu.import.config");
+		menuConfigImport.addActionListener(this.actionAdapter);
+		menuProtosImport.setText(LangModelScheme.getString("Menu.import.protos"));
+		menuProtosImport.setName("Menu.import.protos");
+		menuProtosImport.addActionListener(this.actionAdapter);
+		menuSchemeImportCommit.setText(LangModelScheme.getString("Menu.import.commit"));
+		menuSchemeImportCommit.setName("Menu.import.commit");
 		menuSchemeImportCommit.addActionListener(this.actionAdapter);
-		menuSchemeExport.setText(LangModelSchematics.getString("menuSchemeExport"));
-		menuSchemeExport.setName("menuSchemeExport");
+		
+		menuExport.setText(LangModelScheme.getString("Menu.export"));
+		menuExport.setName("Menu.export");
+		menuSchemeExport.setText(LangModelScheme.getString("Menu.export.scheme"));
+		menuSchemeExport.setName("Menu.export.scheme");
 		menuSchemeExport.addActionListener(this.actionAdapter);
+		menuConfigExport.setText(LangModelScheme.getString("Menu.export.config"));
+		menuConfigExport.setName("Menu.export.config");
+		menuConfigExport.addActionListener(this.actionAdapter);
+		menuProtosExport.setText(LangModelScheme.getString("Menu.export.protos"));
+		menuProtosExport.setName("Menu.export.protos");
+		menuProtosExport.addActionListener(this.actionAdapter);
 
 		menuScheme.add(menuSchemeNew);
 		menuScheme.add(menuSchemeLoad);
@@ -96,27 +116,21 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuScheme.add(menuSchemeSave);
 		menuScheme.add(menuSchemeSaveAs);
 		menuScheme.addSeparator();
-		menuScheme.add(menuSchemeExport);
-		menuScheme.add(menuSchemeImport);
-		menuScheme.add(menuSchemeImportCommit);
+		menuScheme.add(menuExport);
+		menuExport.add(menuConfigExport);
+		menuExport.add(menuProtosExport);
+		menuExport.add(menuSchemeExport);
+		menuScheme.add(menuImport);
+		menuImport.add(menuConfigImport);
+		menuImport.add(menuProtosImport);
+		menuImport.add(menuSchemeImport);
+		menuImport.add(menuSchemeImportCommit);
 
 		menuPath.setName("menuPath");
 		menuPath.setText(LangModelSchematics.getString("menuPath"));
 		menuPathNew.setName("menuPathNew");
 		menuPathNew.setText(LangModelSchematics.getString("menuPathNew"));
 		menuPathNew.addActionListener(this.actionAdapter);
-		menuPathAddStart.setName("menuPathAddStart");
-		menuPathAddStart.setText(LangModelSchematics.getString("menuPathAddStart"));
-		menuPathAddStart.addActionListener(this.actionAdapter);
-		menuPathAddEnd.setName("menuPathAddEnd");
-		menuPathAddEnd.setText(LangModelSchematics.getString("menuPathAddEnd"));
-		menuPathAddEnd.addActionListener(this.actionAdapter);
-		menuPathAddLink.setName("menuPathAddLink");
-		menuPathAddLink.setText(LangModelSchematics.getString("menuPathAddLink"));
-		menuPathAddLink.addActionListener(this.actionAdapter);
-		menuPathRemoveLink.setName("menuPathRemoveLink");
-		menuPathRemoveLink.setText(LangModelSchematics.getString("menuPathRemoveLink"));
-		menuPathRemoveLink.addActionListener(this.actionAdapter);
 		menuPathAutoCreate.setName("menuPathAutoCreate");
 		menuPathAutoCreate.setText(LangModelSchematics.getString("menuPathAutoCreate"));
 		menuPathAutoCreate.addActionListener(this.actionAdapter);
@@ -137,12 +151,6 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuPath.add(menuPathSave);
 		menuPath.add(menuPathDelete);
 		menuPath.add(menuPathCancel);
-		//		menuPath.addSeparator();
-		menuPath.add(menuPathAddStart);
-		menuPath.add(menuPathAddEnd);
-		//		menuPath.addSeparator();
-		menuPath.add(menuPathAddLink);
-		menuPath.add(menuPathRemoveLink);
 		//		menuPath.addSeparator();
 		menuPath.add(menuPathAutoCreate);
 
@@ -205,25 +213,29 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 				menuSchemeSaveAs.setEnabled(aModel.isEnabled("menuSchemeSaveAs"));
 				menuSchemeLoad.setVisible(aModel.isVisible("menuSchemeLoad"));
 				menuSchemeLoad.setEnabled(aModel.isEnabled("menuSchemeLoad"));
-				menuSchemeImport.setVisible(aModel.isVisible("menuSchemeImport"));
-				menuSchemeImport.setEnabled(aModel.isEnabled("menuSchemeImport"));
-				menuSchemeImportCommit.setVisible(aModel.isVisible("menuSchemeImportCommit"));
-				menuSchemeImportCommit.setEnabled(aModel.isEnabled("menuSchemeImportCommit"));
-				menuSchemeExport.setVisible(aModel.isVisible("menuSchemeExport"));
-				menuSchemeExport.setEnabled(aModel.isEnabled("menuSchemeExport"));
+				menuImport.setVisible(aModel.isVisible("Menu.import"));
+				menuImport.setEnabled(aModel.isEnabled("Menu.import"));
+				menuSchemeImport.setVisible(aModel.isVisible("Menu.import.scheme"));
+				menuSchemeImport.setEnabled(aModel.isEnabled("Menu.import.scheme"));
+				menuConfigImport.setVisible(aModel.isVisible("Menu.import.config"));
+				menuConfigImport.setEnabled(aModel.isEnabled("Menu.import.config"));
+				menuProtosImport.setVisible(aModel.isVisible("Menu.import.protos"));
+				menuProtosImport.setEnabled(aModel.isEnabled("Menu.import.protos"));
+				menuSchemeImportCommit.setVisible(aModel.isVisible("Menu.import.commit"));
+				menuSchemeImportCommit.setEnabled(aModel.isEnabled("Menu.import.commit"));
+				menuExport.setVisible(aModel.isVisible("Menu.export"));
+				menuExport.setEnabled(aModel.isEnabled("Menu.export"));
+				menuSchemeExport.setVisible(aModel.isVisible("Menu.export.scheme"));
+				menuSchemeExport.setEnabled(aModel.isEnabled("Menu.export.scheme"));
+				menuConfigExport.setVisible(aModel.isVisible("Menu.export.config"));
+				menuConfigExport.setEnabled(aModel.isEnabled("Menu.export.config"));
+				menuProtosExport.setVisible(aModel.isVisible("Menu.export.protos"));
+				menuProtosExport.setEnabled(aModel.isEnabled("Menu.export.protos"));
 
 				menuPath.setVisible(aModel.isVisible("menuPath"));
 				menuPath.setEnabled(aModel.isEnabled("menuPath"));
 				menuPathNew.setVisible(aModel.isVisible("menuPathNew"));
 				menuPathNew.setEnabled(aModel.isEnabled("menuPathNew"));
-				menuPathAddStart.setVisible(aModel.isVisible("menuPathAddStart"));
-				menuPathAddStart.setEnabled(aModel.isEnabled("menuPathAddStart"));
-				menuPathAddEnd.setVisible(aModel.isVisible("menuPathAddEnd"));
-				menuPathAddEnd.setEnabled(aModel.isEnabled("menuPathAddEnd"));
-				menuPathAddLink.setVisible(aModel.isVisible("menuPathAddLink"));
-				menuPathAddLink.setEnabled(aModel.isEnabled("menuPathAddLink"));
-				menuPathRemoveLink.setVisible(aModel.isVisible("menuPathRemoveLink"));
-				menuPathRemoveLink.setEnabled(aModel.isEnabled("menuPathRemoveLink"));
 				menuPathAutoCreate.setVisible(aModel.isVisible("menuPathAutoCreate"));
 				menuPathAutoCreate.setEnabled(aModel.isEnabled("menuPathAutoCreate"));
 				menuPathSave.setVisible(aModel.isVisible("menuPathSave"));

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.25 2005/09/20 10:04:34 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.26 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/09/20 10:04:34 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -29,7 +29,10 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigExportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ProtoElementsImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommitCommand;
@@ -55,13 +58,13 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
-import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.FullSchemeTreeModel;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.ProtoElementsExportCommand;
 import com.syrus.util.Log;
 
 public class SchemeEditorMainFrame extends AbstractMainFrame {
@@ -209,12 +212,12 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	public SchemeEditorMainFrame() {
 		this(new ApplicationContext());
 	}
-
 		
 	@Override
 	public void initModule() {
 		super.initModule();
 		
+		SchemeObjectsFactory.init(this.aContext);
 		initFrames();
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -225,9 +228,14 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(this.aContext, this.schemeTab));
 
 		
-		aModel.setCommand("menuSchemeExport", new SchemeExportCommand(this.schemeTab));
-		aModel.setCommand("menuSchemeImport", new SchemeImportCommand(this.schemeTab));
-		aModel.setCommand("menuSchemeImportCommit", new SchemeImportCommitCommand(this.aContext));
+		aModel.setCommand("Menu.import.protos", new ProtoElementsImportCommand(this.schemeTab));
+		aModel.setCommand("Menu.import.config", new ConfigImportCommand(this.schemeTab));
+		aModel.setCommand("Menu.import.scheme", new SchemeImportCommand(this.schemeTab));
+		aModel.setCommand("Menu.import.commit", new SchemeImportCommitCommand(this.aContext));
+		
+		aModel.setCommand("Menu.export.protos", new ProtoElementsExportCommand(this.schemeTab));
+		aModel.setCommand("Menu.export.config", new ConfigExportCommand(this.schemeTab));
+		aModel.setCommand("Menu.export.scheme", new SchemeExportCommand(this.schemeTab));
 
 		// TODO разобраться с созданием пути
 		
@@ -371,8 +379,6 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		super.setSessionOpened();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuSchemeExport", true);
-		aModel.setEnabled("menuSchemeImport", true);
 
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
@@ -387,6 +393,15 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		super.setDomainSelected();
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
+		aModel.setEnabled("Menu.export", true);
+		aModel.setEnabled("Menu.export.scheme", true);
+		aModel.setEnabled("Menu.export.config", true);
+		aModel.setEnabled("Menu.export.protos", true);
+		aModel.setEnabled("Menu.import", true);
+		aModel.setEnabled("Menu.import.scheme", true);
+		aModel.setEnabled("Menu.import.config", true);
+		aModel.setEnabled("Menu.import.protos", true);
+		
 		aModel.setEnabled("menuSchemeNew", true);
 		aModel.setEnabled("menuSchemeLoad", true);
 		aModel.setEnabled("menuSchemeSave", true);
@@ -411,8 +426,8 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuSchemeLoad", false);
 		aModel.setEnabled("menuSchemeSave", false);
 		aModel.setEnabled("menuSchemeSaveAs", false);
-		aModel.setEnabled("menuSchemeExport", false);
-		aModel.setEnabled("menuSchemeImport", false);
+		aModel.setEnabled("Menu.export", false);
+		aModel.setEnabled("Menu.import", false);
 		aModel.setEnabled("menuPathNew", false);
 		aModel.setEnabled("menuReportCreate", false);
 

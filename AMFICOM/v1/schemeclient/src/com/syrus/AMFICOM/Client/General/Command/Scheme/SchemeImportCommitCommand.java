@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.4 2005/10/01 09:03:29 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.5 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,27 +59,9 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 				StorableObjectPool.flush(ids, userId, false);
 			}
 			LocalXmlIdentifierPool.flush();
-						
-//			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOGROUP_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOELEMENT_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMEDEVICE_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMEPORT_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMECABLEPORT_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMELINK_CODE, userId, false);
 			
-			
-			
-//			StorableObjectPool.flush(ObjectEntities.SCHEME_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMEELEMENT_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMEDEVICE_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMECABLEPORT_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMEPORT_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMELINK_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMECABLELINK_CODE, userId, false);
-//			StorableObjectPool.flush(ObjectEntities.SCHEMECABLETHREAD_CODE, userId, false);
-			
-			ApplicationModel aModel = aContext.getApplicationModel();
-			aModel.setEnabled("menuSchemeImportCommit", false);
+			ApplicationModel aModel = this.aContext.getApplicationModel();
+			aModel.setEnabled("Menu.import.commit", false);
 			aModel.fireModelChanged();
 			
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.21 2005/10/05 15:49:43 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.22 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,13 +58,17 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/10/05 15:49:43 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
 public class SchemeGraphUI extends GPGraphUI {
 	private static final long serialVersionUID = 2929624792764978924L;
 	private Object selected;
+	
+	static {
+		BasicGraphUI.MAXCELLS = 2;
+	}
 	
 	@Override
 	public boolean isConstrainedMoveEvent(MouseEvent event) {
@@ -292,7 +296,7 @@ public class SchemeGraphUI extends GPGraphUI {
 
 	public class SchemeRootHandle extends BasicGraphUI.RootHandle {
 		private static final long serialVersionUID = 6395641791384643788L;
-
+		
 		public SchemeRootHandle(GraphContext ctx) {
 			super(ctx);
 		}
@@ -496,8 +500,8 @@ public class SchemeGraphUI extends GPGraphUI {
 			int w = this.graph.getPreferredSize().width;
 			int h = this.graph.getPreferredSize().height;
 
+			int gs = (int) (this.graph.getGridSize() * this.graph.getScale());
 			if (((SchemeGraph) this.graph).isBorderVisible()) {
-				int gs = (int) (this.graph.getGridSize() * this.graph.getScale());
 				if (gs > 0) {
 
 					g.setColor(Color.lightGray);
@@ -511,10 +515,10 @@ public class SchemeGraphUI extends GPGraphUI {
 					g.drawLine(x0, y0, xe, y0);
 					g.drawLine(xe, y0, xe, ye);
 					g.drawLine(x0, ye, xe, ye);
-					
-					if (this.graph.isGridVisible())
-						paintGrid(gs, g, this.graph.getPreferredSize());
 				}
+			}
+			if (this.graph.isGridVisible()) {
+				paintGrid(gs, g, this.graph.getPreferredSize());
 			}
 		}
 	}
@@ -565,19 +569,21 @@ public class SchemeGraphUI extends GPGraphUI {
 			int w = r.width;
 			int h = r.height;
 
-			gs = (int) (gs * this.graph.getScale());
 			Rectangle r1 = this.graph.getVisibleRect();
 			int x0 = (r1.x / gs + 1) * gs; // - r1.x
 			int y0 = (r1.y / gs + 1) * gs;
 			int xe = r1.x + r1.width;
 			int ye = r1.y + r1.height;
 			if (this.graph instanceof SchemeGraph) {
+				gs = ((SchemeGraph)this.graph).toScreen(gs);
 				if (((SchemeGraph) this.graph).isBorderVisible()) {
 					x0 = Math.max(x0, 10 * gs);
 					y0 = Math.max(y0, 2 * gs);
 					xe = Math.min(xe, (w / gs - 2) * gs);
 					ye = Math.min(ye, (h / gs - 2) * gs);
 				}
+			} else {
+				gs = (int)(this.graph.getScale() * gs);
 			}
 //			g.setColor(this.graph.getGridColor());
 			g.setColor(Color.lightGray);

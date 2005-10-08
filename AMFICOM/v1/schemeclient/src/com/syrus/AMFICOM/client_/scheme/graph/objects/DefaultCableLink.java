@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.15 2005/10/06 07:19:31 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.16 2005/10/08 13:49:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -31,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/06 07:19:31 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/08 13:49:04 $
  * @module schemeclient
  */
 
@@ -50,9 +51,9 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 
 	public static DefaultCableLink createInstance(Object userObject,
 			PortView firstPort, PortView port, Point p, Point p2, Map<Object, Map> viewMap,
-			ConnectionSet cs) {
+			ConnectionSet cs) throws CreateObjectException {
 
-		// we can connect cable to CablePortCell or not connect at all
+		// we must connect cable to free CablePortCells
 		CablePortCell sourceCablePortCell = null;
 		CablePortCell targetCablePortCell = null;
 
@@ -67,6 +68,13 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 				targetCablePortCell = (CablePortCell) o;
 		}
 		
+		if (sourceCablePortCell == null || targetCablePortCell == null) {
+			throw new CreateObjectException("Cable must be connected to cable ports");
+		}
+		if (sourceCablePortCell.getSchemeCablePort().getAbstractSchemeLink() != null ||
+				targetCablePortCell.getSchemeCablePort().getAbstractSchemeLink() != null) {
+			throw new CreateObjectException("Other cable already connected to port");
+		}
 		DefaultCableLink cell = new DefaultCableLink(userObject);
 
 		int u = GraphConstants.PERCENT;
@@ -295,6 +303,16 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 											p[i].x = _p[i].x;
 										}
 									}
+									
+									if (from.y != DefaultCableLink.this._from.y) { // двигаем начало
+										p[0].y = from.y;
+									} else if (to.x != DefaultCableLink.this._to.y) { // двигаем конец
+										p[1].y = to.y;
+									} else { // сбрасываем все изменения по y
+										for (int i = 1; i < p.length - 1; i++) {
+											p[i].y = _p[i].y;
+										}
+									}
 								} else if (p.length == 4) {
 									boolean changed = false;
 									//	горизонтальные перемещения
@@ -398,7 +416,8 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 			DefaultCableLink.this._from.y = from.y;
 			DefaultCableLink.this._to.x = to.x;
 			DefaultCableLink.this._to.y = to.y;
-			GraphConstants.setPoints(DefaultCableLink.this.getAttributes(), points);
+//			GraphConstants.setPoints(edge.getAttributes(), points);
+//			GraphConstants.setPoints(DefaultCableLink.this.getAttributes(), points);
 		}
 	}
 	

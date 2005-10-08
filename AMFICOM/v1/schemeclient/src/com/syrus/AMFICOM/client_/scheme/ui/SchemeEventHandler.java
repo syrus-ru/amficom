@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.6 2005/09/11 16:17:22 stas Exp $
+ * $Id: SchemeEventHandler.java,v 1.7 2005/10/08 13:49:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/08 13:49:04 $
  * @module schemeclient
  */
 
@@ -31,6 +31,7 @@ public class SchemeEventHandler extends AbstractEventHandler {
 		setContext(aContext);
 	}
 
+	@Override
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
 			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);

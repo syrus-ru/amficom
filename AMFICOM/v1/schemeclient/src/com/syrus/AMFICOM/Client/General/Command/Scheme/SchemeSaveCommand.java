@@ -139,34 +139,9 @@ public class SchemeSaveCommand extends AbstractCommand {
 			}
 			this.schemeTab.setGraphChanged(false);
 			return;
-		} else if (res.getCellContainerType() == SchemeResource.SCHEME) // сохраняем схему
-		{
+		} else if (res.getCellContainerType() == SchemeResource.SCHEME) { // сохраняем схему
+
 			Scheme scheme = res.getScheme();
-//			if (scheme.getUgoCell() == null) {
-//				int ret = JOptionPane.showConfirmDialog(
-//								Environment.getActiveWindow(),
-//								LangModelScheme.getString("Message.confirmation.no_ugo"), //$NON-NLS-1$
-//								LangModelScheme.getString("Message.confirmation"),  //$NON-NLS-1$
-//								JOptionPane.YES_NO_OPTION);
-//				if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
-//					return;
-//			}
-			
-			// add internal objects - SL, SCL, SE
-//			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
-//			Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
-//			Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
-//			Object[] objects = graph.getRoots();
-//			for (Object object : objects) {
-//				if (object instanceof DefaultLink)
-//					schemeLinks.add(((DefaultLink)object).getSchemeLink());
-//				if (object instanceof DefaultCableLink)
-//					schemeCableLinks.add(((DefaultCableLink)object).getSchemeCableLink());
-//				else if (object instanceof DeviceGroup) {
-//					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
-//					schemeElements.add(schemeElement);
-//				}
-//			}
 			try {
 //				scheme.setSchemeLinks(schemeLinks);
 //				scheme.setSchemeCableLinks(schemeCableLinks);
@@ -174,14 +149,10 @@ public class SchemeSaveCommand extends AbstractCommand {
 			
 				//	create SchemeImageResource
 				SchemeImageResource schemeIr = scheme.getSchemeCell();
-				if (schemeIr == null)
+				if (schemeIr == null) {
 					schemeIr = SchemeObjectsFactory.createSchemeImageResource();
-				
-//				try {
-//					GraphActions.serialyze((List) graph.getArchiveableState());
-//				} catch (IOException e) {
-//					e.printStackTrace();
-//				}
+				}
+
 				long start = System.currentTimeMillis();
 				schemeIr.setData((List) graph.getArchiveableState());
 				scheme.setSchemeCell(schemeIr);
@@ -205,6 +176,10 @@ public class SchemeSaveCommand extends AbstractCommand {
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (ApplicationException e) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						LangModelScheme.getString("Message.error.save_scheme") + ": " + e.getMessage(), //$NON-NLS-1$ //$NON-NLS-2$
+						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+						JOptionPane.OK_OPTION);
 				Log.errorException(e);
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.16 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.17 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -259,7 +259,6 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.portType = SchemeObjectsFactory.createPortType(this.tfNameText.getText(), this.kind);
 					this.apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
 							this.portType,
 							PortTypePropertiesManager.getInstance(this.aContext, this.kind),

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.26 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.27 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.27 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -272,7 +272,6 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 				try {
 					this.type = SchemeObjectsFactory.createMeasurementPortType(this.tfNameText.getText());
 					this.apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
 							this.type,
 							MeasurementPortTypePropertiesManager.getInstance(this.aContext),

@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.4 2005/10/02 07:11:15 bob Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.5 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/10/02 07:11:15 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -302,7 +302,6 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 					EquipmentType eq = (EquipmentType)this.tfEqtCombo.getSelectedItem();
 					this.protoEq = SchemeObjectsFactory.createProtoEquipment(name, eq);
 					this.apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.protoEq.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
 							this.protoEq,
 							ProtoEquipmentPropertiesManager.getInstance(this.aContext),

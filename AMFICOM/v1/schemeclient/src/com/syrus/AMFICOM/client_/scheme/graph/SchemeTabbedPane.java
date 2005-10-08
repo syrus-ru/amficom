@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.26 2005/10/04 16:25:54 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.27 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,10 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -54,7 +56,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -66,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/10/04 16:25:54 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -234,6 +235,15 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					setLinkMode();
 				} else if (see.isType(SchemeEvent.INSERT_SCHEME)) {
 					Scheme scheme = (Scheme)see.getStorableObject();
+					
+					if (scheme.getUgoCell() == null) {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								LangModelScheme.getString("Message.error.scheme_insert_empty"),  //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
 					SchemeElement parent = scheme.getParentSchemeElement();
 					
 					ElementsPanel panel1 = getCurrentPanel();
@@ -354,10 +364,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						
 						SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
 						SchemeCablePort targetPort = schemeCableLink.getTargetAbstractSchemePort();
+						CablePortCell sourcePortCell = null;
+						CablePortCell targetPortCell = null;
 						PortView sourceView = null;
 						PortView targetView = null;
 						if (sourcePort != null) {
-							CablePortCell sourcePortCell = SchemeActions.findCablePortCellById(graph, sourcePort.getId());
+							sourcePortCell = SchemeActions.findCablePortCellById(graph, sourcePort.getId());
 							try {
 								DefaultPort source = SchemeActions.getSuitablePort(sourcePortCell, schemeCableLink.getId());
 								sourceView = (PortView)graph.getGraphLayoutCache().getMapping(source, false);
@@ -367,7 +379,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							}
 						}
 						if (targetPort != null) {
-							CablePortCell targetPortCell = SchemeActions.findCablePortCellById(graph, targetPort.getId());
+							targetPortCell = SchemeActions.findCablePortCellById(graph, targetPort.getId());
 							try {
 								DefaultPort target = SchemeActions.getSuitablePort(targetPortCell, schemeCableLink.getId());
 								targetView = (PortView)graph.getGraphLayoutCache().getMapping(target, false);
@@ -385,6 +397,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 								sourceView, targetView, graph.snap(graph.fromScreen(p1)), 
 								graph.snap(graph.fromScreen(p2)), schemeCableLink.getId());
 						cell.setUserObject(schemeCableLink.getName());
+						if (sourcePortCell != null) {
+							GraphActions.setObjectBackColor(graph, sourcePortCell, SchemeActions.determinePortColor(sourcePort, schemeCableLink));
+						}
+						if (targetPortCell != null) {
+							GraphActions.setObjectBackColor(graph, targetPortCell, SchemeActions.determinePortColor(targetPort, schemeCableLink));
+						}
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 								LangModelScheme.getString("Message.error.insert_cable_to_other_parent"),  //$NON-NLS-1$
@@ -403,6 +421,25 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 								p.getGraph().setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
 								this.tabs.setTitleAt(i, scheme.getName());
 								setGraphChanged(p.getGraph(), true);
+								break;
+							}							
+						}
+					}
+				}
+				else if (see.isType(SchemeEvent.DELETE_OBJECT)) {
+					Identifier id = see.getIdentifier();
+					if (id.getMajor() == ObjectEntities.SCHEME_CODE) {
+						Scheme scheme = (Scheme)see.getStorableObject();
+						
+						Object[] comp = this.tabs.getComponents();
+						for (int i = 0; i < comp.length; i++) {
+							ElementsPanel p = this.graphPanelsMap.get(comp[i]);
+							if (scheme.equals(p.getSchemeResource().getScheme())) {
+								this.tabs.remove(i);
+								if (this.tabs.getTabCount() == 0) {
+									ApplicationModel aModel = this.aContext.getApplicationModel(); 
+									aModel.getCommand("menuSchemeNew").execute();
+								}
 								break;
 							}							
 						}

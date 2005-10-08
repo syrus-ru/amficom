@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.8 2005/10/04 06:15:38 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.9 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateBlockPortAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
@@ -65,6 +66,7 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
@@ -83,11 +85,11 @@ public class ImportUCMConverter {
 	
 	private Identifier userId;
 	private ApplicationContext aContext;
-	private SchemeGraph graph;
+	private SchemeTabbedPane pane;
 	
-	ImportUCMConverter(ApplicationContext aContext, SchemeGraph graph) {
+	ImportUCMConverter(ApplicationContext aContext, SchemeTabbedPane pane) {
 		this.aContext = aContext;
-		this.graph = graph;
+		this.pane = pane;
 		this.userId = LoginManager.getUserId();
 	}
 	
@@ -223,6 +225,8 @@ public class ImportUCMConverter {
 						// substitute existing cable ports
 						Map<Identifier, Identifier>clonedIds = newSchemeElement.getClonedIdMap();
 						substituteExistingPorts(clonedIds, Collections.singleton(cablePort));
+						
+//						substituteSchemeElement(clonedIds, newSchemeElement, schemeElement);
 
 						// write it to cell
 						SchemeImageResource res1 = newSchemeElement.getSchemeCell();
@@ -245,6 +249,10 @@ public class ImportUCMConverter {
 						} else {
 							outCount++;
 						}
+					}
+					
+					for (SchemeDevice dev : new HashSet<SchemeDevice>(schemeElement.getSchemeDevices(false))) {
+						dev.setParentSchemeElement(null, false);
 					}
 					res.setData((List)schemeGraph.getArchiveableState());
 					// create UGO
@@ -274,7 +282,7 @@ public class ImportUCMConverter {
 						SchemeProtoElement suitableMuff = getSuitableProto(this.straightMuffs, Integer.valueOf(maxFibers));
 						
 						// next create SchemeElement from suitableMuff
-						SchemeElement newSchemeElement = SchemeObjectsFactory.createSchemeElement(scheme, suitableMuff);
+						SchemeElement newSchemeElement = SchemeObjectsFactory.createSchemeElement(schemeElement, suitableMuff);
 
 						SchemeImageResource schemeCell = SchemeObjectsFactory.createSchemeImageResource();  
 						schemeCell.setImage(newSchemeElement.getSchemeCell().getImage());
@@ -331,6 +339,8 @@ public class ImportUCMConverter {
 							Map<Identifier, Identifier>clonedIds = newVrm.getClonedIdMap();
 							substituteExistingPorts(clonedIds, Collections.singleton(cablePort));
 
+//							substituteSchemeElement(clonedIds, newVrm, schemeElement);
+							
 							// write it to cell
 							SchemeImageResource res1 = newVrm.getSchemeCell();
 							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, res1, true);
@@ -353,6 +363,9 @@ public class ImportUCMConverter {
 								outCount++;
 							}
 						}
+						for (SchemeDevice dev : new HashSet<SchemeDevice>(schemeElement.getSchemeDevices(false))) {
+							dev.setParentSchemeElement(null, false);
+						}
 						res.setData((List)schemeGraph.getArchiveableState());
 						// create UGO
 						if (existingCablePorts.size() > 0) {
@@ -364,9 +377,12 @@ public class ImportUCMConverter {
 				e.printStackTrace();
 			}
 			}
+			StorableObjectPool.flush(this.objectsToDelete, this.userId, true);
+			this.objectsToDelete.clear();
 		}
-		StorableObjectPool.flush(this.objectsToDelete, this.userId, true);
+		
 	}
+	
 	private SchemeProtoElement getSuitableProto(Map<Integer, SchemeProtoElement> mapping, Integer num) {
 		//  search for proto with corresponding number of ports, if nothing found search with larger number, 
 		//  if not again - get any
@@ -386,7 +402,6 @@ public class ImportUCMConverter {
 	}
 
 	private void substituteSchemeElement(Map<Identifier, Identifier>clonedIds, SchemeElement seToRemove, SchemeElement seToAdd) throws ApplicationException {
-
 		for (SchemeDevice dev : seToAdd.getSchemeDevices(false)) {
 			if (!dev.getSchemeCablePorts(false).isEmpty()) {
 				Log.errorMessage("Try to delete device with non empty cable ports");
@@ -398,10 +413,26 @@ public class ImportUCMConverter {
 			StorableObjectPool.delete(dev.getId());
 			this.objectsToDelete.add(dev);
 		}
-		seToAdd.setSchemeDevices(seToRemove.getSchemeDevices(false), false);
-		seToAdd.setSchemeElements(seToRemove.getSchemeElements(false), false);
-		seToAdd.setSchemeLinks(seToRemove.getSchemeLinks(false), false);
-
+		Set<SchemeDevice> devices = new HashSet<SchemeDevice>(seToRemove.getSchemeDevices(false));
+		for (SchemeDevice child : devices) {
+			child.setParentSchemeElement(seToAdd, false);
+		}
+		Set<SchemeElement> elements = new HashSet<SchemeElement>(seToRemove.getSchemeElements(false));
+		for (SchemeElement child : elements) {
+			child.setParentSchemeElement(seToAdd, false);
+		}
+		Set<SchemeLink> links = new HashSet<SchemeLink>(seToRemove.getSchemeLinks(false));
+		for (SchemeLink child : links) {
+			child.setParentSchemeElement(seToAdd, false);
+		}
+		substituteIds(clonedIds, seToRemove, seToAdd);
+		
+		StorableObjectPool.delete(seToRemove.getId());
+		
+		this.objectsToDelete.add(seToRemove);
+	}
+	
+	private void substituteIds(Map<Identifier, Identifier>clonedIds, SchemeElement seToRemove, SchemeElement seToAdd) {
 		for (Identifier id : clonedIds.keySet()) {
 			Identifier value = clonedIds.get(id);
 			if (id.equals(seToRemove.getId())) {
@@ -413,8 +444,6 @@ public class ImportUCMConverter {
 				clonedIds.put(id, seToAdd.getId());
 			}
 		}
-		StorableObjectPool.delete(seToRemove.getId());
-		this.objectsToDelete.add(seToRemove);
 	}
 	
 	private void substituteExistingPorts(Map<Identifier, Identifier>clonedIds, Set<SchemeCablePort> existingCablePorts) throws ApplicationException {
@@ -507,7 +536,7 @@ public class ImportUCMConverter {
 	private void initPlacedObjects(Scheme scheme) {
 		Dispatcher internalDispatcher = this.aContext.getDispatcher();
 		internalDispatcher.firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
-		this.placedObjectIds = SchemeActions.getPlacedObjects(this.graph);
+		this.placedObjectIds = SchemeActions.getPlacedObjects(this.pane.getGraph());
 	}
 	
 	private void initMuffs() throws ApplicationException {

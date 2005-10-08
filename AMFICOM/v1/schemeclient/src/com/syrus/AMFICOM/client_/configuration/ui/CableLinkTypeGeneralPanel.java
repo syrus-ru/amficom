@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.17 2005/09/28 07:53:10 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.18 2005/10/08 13:49:03 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/09/28 07:53:10 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/08 13:49:03 $
  * @module schemeclient
  */
 
@@ -570,7 +570,6 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.linkType = SchemeObjectsFactory.createCableLinkType(this.tfNameText.getText());
 					apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType, CableLinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.CABLELINK_TYPE));
 				} 
 				catch (CreateObjectException e) {
@@ -637,10 +636,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				}
 				Log.debugMessage("Will be removed " + removed.size() + " CableThreadTypes", Level.FINEST);
 				StorableObjectPool.delete(removed);
-				Identifier userId = LoginManager.getUserId();
-				for (Identifier id : removed) {
-					StorableObjectPool.flush(id, userId, false);
-				}
+				StorableObjectPool.flush(removed, LoginManager.getUserId(), false);
 			}
 		} catch (ApplicationException e1) {
 			Log.errorException(e1);
