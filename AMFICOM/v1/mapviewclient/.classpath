@@ -22,5 +22,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/filterclient"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/schemexml"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/report"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reportclient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
