@@ -33,9 +33,8 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) \
-		com/syrus/AMFICOM/event \
-		com/syrus/AMFICOM/eventv2
+		-C $(CLASSDIR) com/syrus/AMFICOM/event \
+		-C $(CLASSDIR) com/syrus/AMFICOM/eventv2
 
 .mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
