@@ -1,6 +1,10 @@
 *.a
 *.so
 *.o
+*.lib
+*.dll
+*.obj
+*.exe
 *.swp
 *.tar
 *.gz
