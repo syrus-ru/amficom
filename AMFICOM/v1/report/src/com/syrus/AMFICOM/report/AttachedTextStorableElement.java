@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * <p>Company: Syrus Systems</p>
  * @author Песковский Пётр
  * @version 1.0
+ * @module report
  */
 
 public final class AttachedTextStorableElement extends StorableElement

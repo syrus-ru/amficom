@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.1 2005/10/06 09:49:35 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/10/08 13:16:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/10/06 09:49:35 $
- * @module map
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/10/08 13:16:31 $
+ * @module report
  */
 public class DatabaseLinkedIdsConditionImpl extends
 		AbstractDatabaseLinkedIdsCondition {

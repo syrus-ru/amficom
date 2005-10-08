@@ -1,5 +1,5 @@
 /*
- * $Id: TextAttachingType.java,v 1.4 2005/09/30 12:34:07 max Exp $
+ * $Id: TextAttachingType.java,v 1.5 2005/10/08 13:16:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,9 @@
 package com.syrus.AMFICOM.report;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/09/30 12:34:07 $
- * @module report_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/10/08 13:16:31 $
+ * @module report
  */
 public enum TextAttachingType {
 

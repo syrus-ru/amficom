@@ -1,13 +1,11 @@
 /*
- * $Id: StorableElement.java,v 1.8 2005/10/07 11:07:15 peskovsky Exp $
+ * $Id: StorableElement.java,v 1.9 2005/10/08 13:16:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.report;
-
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
 import java.util.Date;
 
@@ -21,6 +19,12 @@ import com.syrus.AMFICOM.report.corba.IdlAbstractReportElement;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 
+/**
+ * @author Maxim Selivanov
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/10/08 13:16:31 $
+ * @module report
+ */
 public abstract class StorableElement extends StorableObject {
 
 	protected IntPoint location;

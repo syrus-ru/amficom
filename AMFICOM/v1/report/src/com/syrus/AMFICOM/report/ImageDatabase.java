@@ -1,5 +1,5 @@
 /*-
- * $Id: ImageDatabase.java,v 1.3 2005/10/05 10:46:38 arseniy Exp $
+ * $Id: ImageDatabase.java,v 1.4 2005/10/08 13:16:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 import static com.syrus.AMFICOM.report.ImageWrapper.COLUMN_BITMAP_IMAGE_RESOURCE_ID;
-import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_REPORT_TEMPLATE_ID;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_LOCATION_X;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_LOCATION_Y;
+import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_REPORT_TEMPLATE_ID;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_SIZE_HEIGHT;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_SIZE_WIDTH;
 
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Maxim Selivanov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/10/05 10:46:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/08 13:16:31 $
  * @module report
  */
 

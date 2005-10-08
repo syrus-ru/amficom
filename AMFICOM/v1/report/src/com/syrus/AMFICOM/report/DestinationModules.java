@@ -1,5 +1,5 @@
 /*
- * $Id: DestinationModules.java,v 1.5 2005/09/18 13:13:18 peskovsky Exp $
+ * $Id: DestinationModules.java,v 1.6 2005/10/08 13:16:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,9 @@
 package com.syrus.AMFICOM.report;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/09/18 13:13:18 $
- * @module commonreport_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/10/08 13:16:31 $
+ * @module report
  */
 public class DestinationModules {
 	//Эти три модуля - разные варианты анализа

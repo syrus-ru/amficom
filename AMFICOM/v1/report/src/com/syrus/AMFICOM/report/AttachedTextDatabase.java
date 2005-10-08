@@ -1,5 +1,5 @@
 /*-
- * $Id: AttachedTextDatabase.java,v 1.2 2005/10/06 09:09:20 max Exp $
+ * $Id: AttachedTextDatabase.java,v 1.3 2005/10/08 13:16:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,9 +28,9 @@ import static com.syrus.AMFICOM.report.AttachedTextWrapper.COLUMN_VERTICAL_ATTAC
 import static com.syrus.AMFICOM.report.AttachedTextWrapper.SIZE_FONT_NAME_COLUMN;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_LOCATION_X;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_LOCATION_Y;
+import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_REPORT_TEMPLATE_ID;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_SIZE_HEIGHT;
 import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_SIZE_WIDTH;
-import static com.syrus.AMFICOM.report.StorableElementWrapper.COLUMN_REPORT_TEMPLATE_ID;
 
 import java.awt.Font;
 import java.sql.PreparedStatement;
@@ -48,8 +48,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/10/06 09:09:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/10/08 13:16:31 $
  * @module report
  */
 

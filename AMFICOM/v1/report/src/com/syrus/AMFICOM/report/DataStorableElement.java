@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.report.corba.IdlData;
 import com.syrus.AMFICOM.report.corba.IdlDataHelper;
-import com.syrus.AMFICOM.report.corba.IdlReportTemplateHelper;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 
@@ -33,6 +32,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * <p>Company: Syrus Systems</p>
  * @author Песковский Пётр
  * @version 1.0
+ * @module report
  */
 
 public class DataStorableElement extends StorableElement {

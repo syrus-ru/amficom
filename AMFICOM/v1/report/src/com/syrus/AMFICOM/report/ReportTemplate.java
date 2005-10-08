@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.14 2005/10/07 07:47:54 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.15 2005/10/08 13:16:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.report;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTEMPLATE_CODE;
 
 import java.awt.Rectangle;
@@ -57,9 +57,9 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.14 $, $Date: 2005/10/07 07:47:54 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/10/08 13:16:31 $
+ * @module report
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 6270406142449624592L;
