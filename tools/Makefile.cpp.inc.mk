@@ -1,7 +1,14 @@
+########################################################################
+# $Id: Makefile.cpp.inc.mk,v 1.2 2005/10/08 17:02:24 arseniy Exp $
+# $Author: arseniy $
+# Author: Tashoyan Arseniy Feliksovich
+# Description: Include this file to your Makefile of any C++ project
+########################################################################
+
 EMPTY :=
 SPACE := $(EMPTY) $(EMPTY)
 
-# Detect arch
+# Detect arch if not set
 ifeq ($(ARCH),)
 ifeq ($(OS), Windows_NT)
 ARCH := WinNT
