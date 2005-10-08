@@ -4,3 +4,8 @@ classes
 docs
 *.bat
 makereportclient
+*.tar
+*.gz
+*.swp
+*.jar
+.mach
