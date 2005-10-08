@@ -39,7 +39,7 @@ enum RTUState {
 	RTU_RUNNING
 };
 
-class RTU : public OTDRContainer, SegmentProcessor, OTDRReportListener {
+class RTU : public OTDRContainer, public SegmentProcessor, public OTDRReportListener {
 	private:
 		/*	Таблица смотрителей рефлектометров
 			Ключ - уникальный идентификатор, величина - указатель на смотритель*/
