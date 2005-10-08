@@ -1,41 +1,23 @@
-OUT := tcpconnect.a
-OUTSO := libtcpconnect.so
-AKP := ../akp
-AKPA := $(AKP)/akp.a
+AKP_DIR := ../akp
+AKP_LIBAR = akp.$(LIBAR_SUFFIX)
 
-CXX := g++#-3.4.1
-CXXFLAGS := -O3 -Wall -W
+MODULE := tcpconnect
+CXX_SOURCES := tcpconnect \
+	connectX \
+	connectWin \
+	akptcp \
+	SocketReader \
+	SocketWriter \
+	SocketConnectionAcceptor
+INCLUDE_DIRS := $(AKP_DIR)
+ADD_LIBARS = $(LIBAR_SOCKET) $(AKP_DIR)/$(AKP_LIBAR)
 
-CPPFLAGS := -I$(AKP)
-
-AR := ar
-ARFLAGS := rcsv
-
-#OBJS := tcpconnect.o \
-	connectX.o \
-	connectWin.o \
-	akptcp.o \
-	SocketReader.o \
-	SocketWriter.o \
-	SocketConnectionAcceptor.o
-OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-
-ARCHFILE := tcpconnect.tar.gz
+include ../tools/Makefile.cpp.inc.mk
 
 
-.PHONY:	clean arch
+.PHONY:	all
+all:	$(OUT_LIBAR) $(OUT_SO)
 
-$(OUT):	$(OBJS) $(AKPA)
-	$(AR) $(ARFLAGS) $@ $(OBJS)
-
-$(OUTSO):	$(OBJS) $(AKPA)
-	$(CXX) -o $(OUTSO) -shared $(OBJS) $(AKPA)
-
-#%.o:	%.cpp
-#	$(CXX) -c -I$(AKP) $(CXXFLAGS) -o $@ $<
-
+.PHONY:	clean
 clean:
-	$(RM) $(OUT) $(OUTSO) $(OBJS)
-
-arch:
-	tar -czvf $(ARCHFILE) *.cpp *.h Makefile
+	$(RM) $(OUT_LIBAR) $(OUT_SO) $(OBJS)
