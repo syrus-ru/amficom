@@ -1,8 +1,19 @@
 ########################################################################
-# $Id: Makefile.cpp.inc.mk,v 1.2 2005/10/08 17:02:24 arseniy Exp $
+# $Id: Makefile.cpp.inc.mk,v 1.3 2005/10/08 17:08:38 arseniy Exp $
 # $Author: arseniy $
 # Author: Tashoyan Arseniy Feliksovich
 # Description: Include this file to your Makefile of any C++ project
+# Operating system suggested: Any Unix or Windows+Cygwin
+# Software required:
+#  Windows:
+#   Cygwin
+#   GNU Make
+#   GNU Binutils
+#   Microsoft Visual Studio -- compiler, library tool, and static libraries
+#  Unix:
+#   GNU Make
+#   GNU Binutils
+#   GNU GCC
 ########################################################################
 
 EMPTY :=
