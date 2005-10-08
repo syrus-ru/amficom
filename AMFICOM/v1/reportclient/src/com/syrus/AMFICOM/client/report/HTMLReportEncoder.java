@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.6 2005/10/05 09:39:38 peskovsky Exp $
+ * $Id: HTMLReportEncoder.java,v 1.7 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ public class HTMLReportEncoder {
 		this.getAxisValuesMatrices(xs,ys);
 		int[][] componentsMatrix = this.createComponentsMatrix(xs,ys);
 		
-		int mainTableWidth = xs.get(xs.size() - 1);
+		int mainTableWidth = xs.get(xs.size() - 1).intValue();
 		this.encodeHeader(out,mainTableWidth);
 		this.encodeAllComponents(componentsMatrix,xs,ys,out);
 		this.encodeFooter(out);			
@@ -453,7 +453,7 @@ public class HTMLReportEncoder {
 		for (int row = 0; row < ys.size() - 1; row++) {
 			int yValue = (ys.get(row).intValue() + ys.get(row + 1).intValue()) / 2;
 			for (int column = 0; column < xs.size() - 1; column++) {
-				int xValue = (xs.get(column).intValue() + xs.get(column + 1)) / 2;
+				int xValue = (xs.get(column).intValue() + xs.get(column + 1).intValue()) / 2;
 				RenderingComponent componentAtPoint = getComponentAtPoint(xValue, yValue);
 				result[row][column] = (componentAtPoint != null) 
 					? this.components.indexOf(componentAtPoint) : -1;

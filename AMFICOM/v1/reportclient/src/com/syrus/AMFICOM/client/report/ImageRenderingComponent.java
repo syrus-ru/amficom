@@ -1,5 +1,5 @@
 /*
- * $Id: ImageRenderingComponent.java,v 1.6 2005/09/07 14:26:10 peskovsky Exp $
+ * $Id: ImageRenderingComponent.java,v 1.7 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ public class ImageRenderingComponent extends DataRenderingComponent {
 		this.imageToRender = image;		
 	}
 	
+	@Override
 	public void paintComponent(Graphics g) {
 		IntDimension size = this.storableElement.getSize();
 

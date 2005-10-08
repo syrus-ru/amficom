@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.10 2005/10/05 09:39:38 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.11 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
- * @author $Author: peskovsky $
- * @version $Revision: 1.10 $, $Date: 2005/10/05 09:39:38 $
- * @module reportclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/10/08 13:30:14 $
+ * @module reportclient
  */
 public class ReportRenderer extends JPanel {
 	private static final long serialVersionUID = 6316228563298763509L;

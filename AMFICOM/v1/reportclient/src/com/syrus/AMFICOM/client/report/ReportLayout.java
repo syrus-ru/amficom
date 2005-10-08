@@ -1,5 +1,5 @@
 /*
- * $Id: ReportLayout.java,v 1.5 2005/10/05 09:39:38 peskovsky Exp $
+ * $Id: ReportLayout.java,v 1.6 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.report.TextAttachingType;
  * Класс проводит раскладку визульных компонентов с реализованными
  * элементами отчёта так, чтобы расстояния между компонентами были
  * равны расстоянию между компонентами на схеме шаблона отчёта.
- * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/10/05 09:39:38 $
- * @module reportclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/10/08 13:30:14 $
+ * @module reportclient
  */
 public class ReportLayout {
 	private List<RenderingComponent> componentContainer = null;
@@ -70,9 +70,9 @@ public class ReportLayout {
 	 * Выбрасывается при вычислении Y координаты для элемента отображения, 
 	 * в том случае, когда элементы, находящиеся выше на схеме, ещё не
 	 * реализованы.
-	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.5 $, $Date: 2005/10/05 09:39:38 $
-	 * @module reportclient_v1
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.6 $, $Date: 2005/10/08 13:30:14 $
+	 * @module reportclient
 	 */
 	private class NonImplementedElementFoundException extends Exception
 	{

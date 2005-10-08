@@ -1,5 +1,5 @@
 /*
- * $Id: TableModelVerticalDivider.java,v 1.1 2005/09/23 13:20:25 peskovsky Exp $
+ * $Id: TableModelVerticalDivider.java,v 1.2 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,10 @@ import com.syrus.AMFICOM.report.TableDataStorableElement;
 /**
  * Класс для реализации вртикального разбиения исходной табличной
  * модели.
- * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/09/23 13:20:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/10/08 13:30:14 $
  * @author Peskovsky Peter
- * @module reportclient_v1
+ * @module reportclient
  */
 public class TableModelVerticalDivider {
 	private static final int DEFAULT_COLUMN_WIDTH = 100;
@@ -46,13 +46,15 @@ public class TableModelVerticalDivider {
 				int j = 0;
 				j < tableModel.getColumnCount() * vertDivisionsCount;
 				j++)
-			tableColumnWidths.add(DEFAULT_COLUMN_WIDTH);
+			tableColumnWidths.add(new Integer(DEFAULT_COLUMN_WIDTH));
 
 		return tableColumnWidths;
 	}
 }
 
 class TestReportTableModel extends AbstractTableModel {
+	private static final long serialVersionUID = -1354361144242928271L;
+
 	private AbstractTableModel tableModel = null;
 	
 	private static final String EMPTY_STRING = "";
@@ -88,6 +90,7 @@ class TestReportTableModel extends AbstractTableModel {
 		return this.columnCount;
 	}
 
+	@Override
 	public String getColumnName(int columnIndex) {
 		return this.tableModel.getColumnName(
 				columnIndex % this.originalColumnCount);

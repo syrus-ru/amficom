@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataRenderingComponent.java,v 1.5 2005/09/30 08:13:22 peskovsky Exp $
+ * $Id: TableDataRenderingComponent.java,v 1.6 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ public final class TableDataRenderingComponent extends DataRenderingComponent {
 		this.table.setRowHeight(tableFont.getSize() + 2);
 		for (int i = 0; i < this.table.getColumnCount(); i++) {
 			TableColumn tableColumn = this.table.getColumnModel().getColumn(i);
-			tableColumn.setWidth(this.tableColumnWidths.get(i));
-			tableColumn.setPreferredWidth(this.tableColumnWidths.get(i));
+			tableColumn.setWidth(this.tableColumnWidths.get(i).intValue());
+			tableColumn.setPreferredWidth(this.tableColumnWidths.get(i).intValue());
 			tableColumn.setCellRenderer(new ObjectRenderer());
 		}
 		JScrollPane scrollPane = new JScrollPane(this.table);

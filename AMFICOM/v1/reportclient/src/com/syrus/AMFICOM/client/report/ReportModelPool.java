@@ -1,5 +1,5 @@
 /*
- * $Id: ReportModelPool.java,v 1.2 2005/09/16 13:26:29 peskovsky Exp $
+ * $Id: ReportModelPool.java,v 1.3 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import com.syrus.util.Log;
 
 /**
  * Ïףכ הכÿ למהוכוי מעק¸עמג.
- * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/09/16 13:26:29 $
- * @module reportclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/10/08 13:30:14 $
+ * @module reportclient
  */
 public class ReportModelPool {
 	private static Map<String,ReportModel> pool =

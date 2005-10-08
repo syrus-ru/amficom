@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.5 2005/10/05 09:39:38 peskovsky Exp $
+ * $Id: CreateReportDialog.java,v 1.6 2005/10/08 13:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,11 +46,13 @@ import com.syrus.util.Log;
  * Диалог, используемый другими модулями для
  * открытия шаблонов определённого типа.
  *
- * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/10/05 09:39:38 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/10/08 13:30:14 $
+ * @module reportclient
  */
 public class CreateReportDialog extends JDialog {
+	private static final long serialVersionUID = -2916240754709895883L;
+
 	private String moduleName = "";
 	private Map<Object,Object> reportData = null;
 	protected ReportTemplate selectedTemplate = null;
