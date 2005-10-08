@@ -105,7 +105,7 @@ void MeasurementSegment::createSegment() {
 	mile += i;
 
 	//parameters
-	uint32_t nparnumber = htonl(this->parnumber);
+	const uint32_t nparnumber = htonl(this->parnumber);
 	segment1 = (char*) &nparnumber;
 	for (i = 0; i < INTSIZE; i++) {
 		this->data[i + mile] = segment1[i];
@@ -139,11 +139,12 @@ void MeasurementSegment::parseSegment() {
 	p += INTSIZE + this->local_address->getLength();
 
 	//parameters
-	uint_frame uiframe;
+	uint_frame* uiframe = (uint_frame*) malloc(sizeof(uint_frame));
 	for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
-		uiframe.bytes[i] = p[i];
+		uiframe->bytes[i] = p[i];
 	}
-	this->parnumber = ntohl(uiframe.value);
+	this->parnumber = ntohl(uiframe->value);
+	free(uiframe);
 	p += INTSIZE;
 
 	this->parameters = new Parameter*[this->parnumber];

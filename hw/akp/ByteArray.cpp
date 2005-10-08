@@ -16,15 +16,19 @@ ByteArray::ByteArray(unsigned int length, char* data) {
 }
 
 ByteArray::ByteArray(char* ndata) {
-	uint_frame uiframe;
 	unsigned int i;
 
-	for (i = 0; i < sizeof(uint32_t); i++)
-		uiframe.bytes[i] = ndata[i];
-	this->length = ntohl(uiframe.value);
+	uint_frame* uiframe = (uint_frame*) malloc(sizeof(uint_frame));
+	for (i = 0; i < sizeof(uint32_t); i++) {
+		uiframe->bytes[i] = ndata[i];
+	}
+	this->length = ntohl(uiframe->value);
+	free(uiframe);
+
 	this->data = new char[this->length + 1];
-	for (i = 0; i < this->length; i++)
+	for (i = 0; i < this->length; i++) {
 		this->data[i] = ndata[INTSIZE + i];
+	}
 	this->data[this->length] = 0;
 }
 
@@ -43,7 +47,7 @@ unsigned int ByteArray::getLength() const {
 
 char* ByteArray::getSegment() const {
 	char* segment = new char[INTSIZE + this->length];
-	uint32_t nlength = htonl(this->length);
+	const uint32_t nlength = htonl(this->length);
 	unsigned int i;
 	for (i = 0; i < INTSIZE; i++) {
 		segment[i] = ((char*) &nlength)[i];
