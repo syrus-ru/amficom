@@ -1,38 +1,21 @@
-OUT := akp.a
-OUTSO := libakp.so
+include ../tools/Makefile.cpp.inc.mk
 
-CXX := g++#-3.4.1
-CXXFLAGS := -O3 -Wall -W
+OUT := akp.$(LIB_SUFFIX)
+OUTSO := $(SO_PREFIX)akp.$(SO_SUFFIX)
 
-AR := ar
-ARFLAGS := rcsv
-
-OBJS := ByteArray.o \
-	Parameter.o \
-	Segment.o \
-	KISInfoSegment.o \
-	MCMInfoSegment.o \
-	MeasurementSegment.o \
-	ResultSegment.o
-#OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-
-ARCHFILE := akp.tar.gz
-
-all:	$(OUT)
+OBJS := ByteArray.$(OBJ_SUFFIX) \
+	Parameter.$(OBJ_SUFFIX) \
+	Segment.$(OBJ_SUFFIX) \
+	MeasurementSegment.$(OBJ_SUFFIX) \
+	ResultSegment.$(OBJ_SUFFIX) \
+	KISInfoSegment.$(OBJ_SUFFIX) \
+	MCMInfoSegment.$(OBJ_SUFFIX)
 
 $(OUT):	$(OBJS)
-	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
+	$(AR) $(ARFLAGS) $(AR_OUTFILE_FLAG)$@ $(OBJS)
 
 $(OUTSO):	$(OBJS)
-	$(CXX) -o $(OUTSO) -shared $(OBJS)
+	$(LD) $(LDFLAGS) $(LD_SHARED_FLAG) $(OBJS) $(LIB_SOCKET) $(LD_OUTFILE_FLAG)$@
 
-#%.o:	%.cpp
-#	$(CXX) -c $(CXXFLAGS) -o $@ $<
-
-.PHONY:	clean
 clean:
 	$(RM) $(OUT) $(OUTSO) $(OBJS)
-
-.PHONY:	arch
-arch:
-	tar -czvf $(ARCHFILE) *.cpp *.h Makefile
