@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.29 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.30 2005/10/08 13:51:56 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -88,20 +88,6 @@ public class SchemeImportCommand extends ImportExportCommand {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-		
-		//	fix connection - connect threads at scheme
-//		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
-//		SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
-//		if (sourcePort != null) {
-//		Set<SchemeCableThread> threads = this.portThreadsCount.get(sourcePort);
-//		SchemeActions.connect(sourcePort, threads, true);
-//		}
-//		SchemeCablePort targetPort = schemeCableLink.getTargetAbstractSchemePort();
-//		if (targetPort != null) {
-//		Set<SchemeCableThread> threads = this.portThreadsCount.get(targetPort);
-//		SchemeActions.connect(targetPort, threads, false);
-//		}
-//		}
 		catch (ApplicationException e) {
 			Log.errorException(e);
 		} catch (IOException e) {
