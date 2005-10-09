@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.26 2005/09/12 20:54:04 arseniy Exp $
+# $Id: Makefile,v 1.27 2005/10/09 13:07:01 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -28,7 +28,7 @@ SERVER_INCLUDED_CLASSES = \
 	com.syrus.util.corba.AuroraORBUtil \
 	com.syrus.util.database.DatabaseConnection
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
