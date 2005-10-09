@@ -11,6 +11,7 @@ TCPCONNECT_LIBAR = tcpconnect$(LIBAR_SUFFIX)
 TRC_LIBAR = trc$(LIBAR_SUFFIX)
 PTHREAD_LIBAR = pthreadVC2$(LIBAR_SUFFIX)
 PK7600_LIBARS = pk76otdr$(LIBAR_SUFFIX) mkfile32$(LIBAR_SUFFIX) pkltb32$(LIBAR_SUFFIX) pktfault$(LIBAR_SUFFIX)
+QP1640_LIBAR = ont.ut.qpotdr$(LIBAR_SUFFIX)
 
 MODULE := r8
 CXX_SOURCES := r8 \
@@ -18,19 +19,22 @@ CXX_SOURCES := r8 \
 	OTDRController \
 	PK7600OTDRController \
 	PK7600Management \
+	QP1640OTDRController \
 	OTAUController \
 	MCMTransceiver
 INCLUDE_DIRS := $(AKP_DIR) \
 	$(TCPCONNECT_DIR) \
 	$(TRC_DIR) \
 	$(PTHREAD_DIR)/include \
-	$(PK7600_DIR)/Include
+	$(PK7600_DIR)/Include \
+	$(QP1640_DIR)/OEMDemo/qpotdr
 ADD_LIBARS = $(LIBAR_SOCKET) \
 	$(AKP_DIR)/$(AKP_LIBAR) \
 	$(TCPCONNECT_DIR)/$(TCPCONNECT_LIBAR) \
 	$(TRC_DIR)/$(TRC_LIBAR) \
 	$(PTHREAD_DIR)/lib/$(PTHREAD_LIBAR) \
-	$(addprefix $(PK7600_DIR)/Libs/,$(PK7600_LIBARS))
+	$(addprefix $(PK7600_DIR)/Libs/,$(PK7600_LIBARS)) \
+	$(QP1640_DIR)/OEMDemo/qpotdr/$(QP1640_LIBAR)
 
 include ../tools/Makefile.cpp.inc.mk
 

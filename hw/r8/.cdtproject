@@ -66,6 +66,7 @@
 <pathentry include="D:/devel/pthreads-win32/include" kind="inc" path="" system="true"/>
 <pathentry include="D:/devel/Nettest/PK7600/Include" kind="inc" path="" system="true"/>
 <pathentry include="C:/Program Files/Microsoft Visual Studio/VC98/Include" kind="inc" path="" system="true"/>
+<pathentry include="D:/devel/Nettest/QP1640A/OEMDemo/qpotdr" kind="inc" path="" system="true"/>
 <pathentry kind="src" path=""/>
 <pathentry kind="out" path=""/>
 <pathentry kind="con" path="org.eclipse.cdt.make.core.DISCOVERED_SCANNER_INFO"/>
