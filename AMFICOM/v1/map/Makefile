@@ -100,10 +100,6 @@ $(LIBNAME_MAPXML):
 clean: cleanmach cleancorba cleanxml
 	$(RM) $(LIBNAME)
 
-.PHONY: distclean
-distclean:
-	$(RM) -r $(wildcard $(CLASSDIR)/*) $(wildcard *.jar) .xml .idl .mach .corba
-
 .PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))

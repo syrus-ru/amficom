@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.29 2005/10/09 15:23:03 arseniy Exp $
+# $Id: Makefile,v 1.30 2005/10/09 16:12:22 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -29,7 +29,7 @@ export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
 .mach:
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		-classpath "$(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR)" \
 	 	$(SOURCES)
 	touch $@
 
@@ -47,12 +47,6 @@ dist: distclean
 	$(RM) ../$(MODULE_NAME)-$(MODULE_VERSION).tar*
 	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
 	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
-
-.PHONY: distclean
-distclean: clean
-	$(RM) -r \
-		$(CLASSDIR) \
-		*.jar
 
 $(LIBNAME): .mach
 	$(JAR) cf $@ \
@@ -74,6 +68,6 @@ arch:
 		-link "http://$(JAVADOCHOST)/apidocs/oraclejdbc/" \
 		-link "http://$(JAVADOCHOST)/apidocs/junit/" \
 		-sourcepath $(SRCDIR):test \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(JUNIT_HOME)/junit.jar \
+		-classpath "$(APPCLASSPATH):$(JDBCCLASSPATH):$(JUNIT_HOME)/junit.jar" \
 		-subpackages "com.syrus.io:com.syrus.util"
 	touch $@

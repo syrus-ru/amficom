@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.4 2005/10/09 15:00:50 bass Exp $
+# $Id: Makefile,v 1.5 2005/10/09 16:12:22 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -51,10 +51,6 @@ corba: .corba
 .PHONY:	clean
 clean: cleanmach cleancorba javadocsclean
 	$(RM) $(LIBNAME)
-
-.PHONY: distclean
-distclean:
-	$(RM) -r $(wildcard $(CLASSDIR)/*) $(wildcard *.jar) .xml .idl .mach .corba
 
 .PHONY: cleanmach
 cleanmach:
