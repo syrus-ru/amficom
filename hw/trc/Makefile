@@ -22,8 +22,4 @@ IntelDataOutputStream.$(OBJ_SUFFIX):	IntelDataOutputStream.h
 include ../tools/Makefile.cpp.inc.mk
 
 .PHONY:	all
-all:	$(OUT_LIBAR) $(OUT_SO)
-
-.PHONY:	clean
-clean:
-	rm -f $(OBJS) $(OUT_LIBAR) $(OUT_SO)
+all:	$(OUT_LIBAR)

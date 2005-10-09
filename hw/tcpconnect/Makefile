@@ -16,8 +16,5 @@ include ../tools/Makefile.cpp.inc.mk
 
 
 .PHONY:	all
-all:	$(OUT_LIBAR) $(OUT_SO)
+all:	$(OUT_LIBAR)
 
-.PHONY:	clean
-clean:
-	$(RM) $(OUT_LIBAR) $(OUT_SO) $(OBJS)
