@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.87 2005/10/07 14:50:50 bass Exp $
+ * $Id: Identifier.java,v 1.88 2005/10/09 15:45:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.TransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.87 $, $Date: 2005/10/07 14:50:50 $
+ * @version $Revision: 1.88 $, $Date: 2005/10/09 15:45:10 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -488,7 +488,7 @@ public final class Identifier implements Comparable<Identifier>,
 	 * <p>This method is of no use for <code>Identifier</code>s, but the
 	 * formal parameter is still of type <code>Identifiable</code>, since
 	 * we want to be able to pass both {@code StorableObject}s
-	 * and {@Characterizable}s (but, of course, not {@code Identifier}s).</p>
+	 * and {@code Characterizable}s (but, of course, not {@code Identifier}s).</p>
 	 *
 	 * <p><em>Shouldn&apos;t be invoked by clients &amp; mousebusters as
 	 * they should never mess with <code>Identifier</code>s directly.</em></p>
