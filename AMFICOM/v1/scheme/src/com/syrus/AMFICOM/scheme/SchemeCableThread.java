@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.100 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.101 2005/10/09 14:02:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/09 14:02:50 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -583,6 +583,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (!this.targetSchemePortId.isVoid()) {
 			this.targetSchemePortId.getXmlTransferable(schemeCableThread.addNewTargetSchemePortId(), importType);
 		}
+		this.parentSchemeCableLinkId.getXmlTransferable(schemeCableThread.addNewParentSchemeCableLinkId(), importType);
 		if (schemeCableThread.isSetCharacteristics()) {
 			schemeCableThread.unsetCharacteristics();
 		}
