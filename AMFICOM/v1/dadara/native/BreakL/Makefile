@@ -1,4 +1,4 @@
-include ../Makefile.java.inc.mk
+include ../Makefile.inc
 
 OBJS= \
 	BreakL-enh.$(OBJ_EXT) \

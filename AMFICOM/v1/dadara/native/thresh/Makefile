@@ -1,4 +1,4 @@
-include ../Makefile.java.inc.mk
+include ../Makefile.inc
 
 OBJS= \
 	makeThresh.$(OBJ_EXT)

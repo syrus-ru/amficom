@@ -1,4 +1,4 @@
-include ../Makefile.java.inc.mk
+include ../Makefile.inc
 
 OBJS= \
 	dadara-analyse.$(OBJ_EXT) \

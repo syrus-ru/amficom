@@ -1,4 +1,4 @@
-include ../Makefile.java.inc.mk
+include ../Makefile.inc
 
 OBJS= \
 	wavelet.$(OBJ_EXT)

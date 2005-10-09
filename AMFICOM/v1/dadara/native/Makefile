@@ -1,4 +1,4 @@
-include Makefile.java.inc.mk
+include Makefile.inc
 
 .PHONY:	clean common analyse fit an2 JNI thresh BreakL wavelet head
 .PHONY: all
