@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.2 2005/10/09 15:00:50 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.3 2005/10/09 16:11:40 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -291,8 +291,9 @@ javadocs: .javadocs
 
 .PHONY: javadocsclean
 javadocsclean:
-	$(RM) -r $(JAVADOCDIR)/*
-	$(RM) .javadocs
+	$(RM) -r \
+		$(wildcard $(JAVADOCDIR)/*) \
+		.javadocs
 
 .PHONY: javadocsinstall
 javadocsinstall: .javadocs javadocsuninstall
@@ -301,3 +302,13 @@ javadocsinstall: .javadocs javadocsuninstall
 .PHONY: javadocsuninstall
 javadocsuninstall:
 	$(RM) $(HTTP_DOCROOT)/apidocs/amficom-$(MODULE_NAME)
+
+.PHONY: distclean
+distclean: javadocsclean clean
+	$(RM) -r \
+		$(wildcard $(CLASSDIR)/*) \
+		$(wildcard *.jar) \
+		.xml \
+		.idl \
+		.mach \
+		.corba
