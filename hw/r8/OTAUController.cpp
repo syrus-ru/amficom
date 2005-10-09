@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.cpp,v 1.2 2005/10/08 23:34:01 arseniy Exp $
+// $Id: OTAUController.cpp,v 1.3 2005/10/09 13:44:33 arseniy Exp $
 // 
 // Syrus Systems.
 // îÁÕÞÎÏ-ÔÅÈÎÉÞÅÓËÉÊ ÃÅÎÔÒ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/10/08 23:34:01 $
+// $Revision: 1.3 $, $Date: 2005/10/09 13:44:33 $
 // $Author: arseniy $
 //
 // OTAUController.cpp: implementation of the OTAUController class.
@@ -34,6 +34,8 @@ OTAUController::OTAUController(const COMPortId comPortId,
 	this->otauUId = createOTAUUid(this->comPortId, this->otauAddress);
 
 	this->timewait = timewait;
+	
+	this->state = OTAU_STATE_READY;
 }
 
 OTAUController::~OTAUController() {
@@ -61,6 +63,11 @@ OTAUState OTAUController::getState() const {
 }
 
 BOOL OTAUController::start(const OTAUPortId otauPortId) {
+	if (this->state != OTAU_STATE_READY) {
+		printf("OTAUController | ERROR: State %d not legal to start data acquisition\n", this->state);
+		return FALSE;
+	}
+
 	if (otauPortId >= MAX_POSSIBLE_OTAU_PORTS) {
 		printf ("OTAUController | OTAU port should be less than %d! Cannot switch OTAU\n", MAX_POSSIBLE_OTAU_PORTS);
 		return FALSE;
@@ -79,6 +86,10 @@ BOOL OTAUController::start(const OTAUPortId otauPortId) {
 	pthread_attr_setdetachstate(&pt_attr, PTHREAD_CREATE_JOINABLE);
 	pthread_create(&this->thread, &pt_attr, OTAUController::run, (void*) this);
 	pthread_attr_destroy(&pt_attr);
+
+	/*	Èçìåíèòü òåêóùåå ñîñòîÿíèå*/
+	this->state = OTAU_STATE_RUNNING;
+
 	return TRUE;
 }
 
@@ -98,8 +109,11 @@ BOOL OTAUController::switchOTAU() const {
 }
 
 void OTAUController::shutdown() {
-	printf("OTAUController | Shutting down\n");
 	this->running = 0;
+	printf("OTAUController | Shutting down\n");
+
+	/*	Èçìåíèòü òåêóùåå ñîñòîÿíèå*/
+	this->state = OTAU_STATE_READY;
 }
 
 
