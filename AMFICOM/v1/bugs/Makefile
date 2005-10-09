@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/10/09 12:58:12 bass Exp $
+# $Id: Makefile,v 1.4 2005/10/09 16:13:05 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -12,6 +12,13 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
+DEPENDENCIES =
+
+EMPTY =
+SPACE = $(EMPTY) $(EMPTY)
+APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
+
+
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/bugs/*.java)
 
 
@@ -21,6 +28,7 @@ $(LIBNAME): .mach
 
 .mach: $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
+		-classpath "$(APPCLASSPATH)" \
 		$(SOURCES)
 	touch $@
 
@@ -48,3 +56,11 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(SOURCES)
+
+.javadocs: $(JAVADOCDIR)
+	$(JAVADOC) \
+		$(JAVADOCFLAGS) \
+		-sourcepath $(SRCDIR) \
+		-classpath "$(APPCLASSPATH)" \
+		-subpackages "com.syrus.AMFICOM.bugs"
+	touch $@
