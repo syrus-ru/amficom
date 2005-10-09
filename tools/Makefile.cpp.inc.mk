@@ -1,5 +1,5 @@
-#########################################################################################
-# $Id: Makefile.cpp.inc.mk,v 1.8 2005/10/09 01:55:12 arseniy Exp $
+########################################################################################
+# $Id: Makefile.cpp.inc.mk,v 1.9 2005/10/09 11:19:59 arseniy Exp $
 # $Author: arseniy $
 # Author: Tashoyan Arseniy Feliksovich
 # Description: Include this file to your Makefile of any C++ project
@@ -175,6 +175,9 @@ endif
 
 
 # Common targets
+
+.PHONY:	default
+default:	all
 
 %$(OBJ_SUFFIX):	%.cpp
 	$(CXX) $(CXX_COMPILE_ONLY_FLAG) $(CXXFLAGS) $(CXX_INCLUDE_PATHS) $< $(CXX_OUTFILE_FLAG)$@
