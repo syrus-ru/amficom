@@ -21,6 +21,9 @@ typedef int socklen_t;
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#ifdef sparc
+#include <string.h>
+#endif
 
 //Type to describe socket file descriptor
 typedef u_int SOCKET;
