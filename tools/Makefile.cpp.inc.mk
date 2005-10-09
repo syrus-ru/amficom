@@ -1,5 +1,5 @@
 #########################################################################################
-# $Id: Makefile.cpp.inc.mk,v 1.7 2005/10/09 01:14:10 arseniy Exp $
+# $Id: Makefile.cpp.inc.mk,v 1.8 2005/10/09 01:55:12 arseniy Exp $
 # $Author: arseniy $
 # Author: Tashoyan Arseniy Feliksovich
 # Description: Include this file to your Makefile of any C++ project
@@ -34,11 +34,11 @@ endif
 ifeq ($(ARCH),WinNT)
 
 # Various suffixes and prefixes
-OBJ_SUFFIX := obj
-LIBAR_SUFFIX := lib
+OBJ_SUFFIX := .obj
+LIBAR_SUFFIX := .lib
 SO_PREFIX := 
-SO_SUFFIX := dll
-EXE_SUFFIX := exe
+SO_SUFFIX := .dll
+EXE_SUFFIX := .exe
 
 # C++ compiler and options
 CXX := cl
@@ -73,10 +73,10 @@ else
 ifeq ($(ARCH),Linux)
 
 # Various suffixes and prefixes
-OBJ_SUFFIX := o
-LIBAR_SUFFIX := a
+OBJ_SUFFIX := .o
+LIBAR_SUFFIX := .a
 SO_PREFIX := lib
-SO_SUFFIX := so
+SO_SUFFIX := .so
 EXE_SUFFIX :=
 
 # C++ compiler and options
@@ -107,10 +107,10 @@ else
 ifeq ($(ARCH),SunOS)
 
 # Various suffixes and prefixes
-OBJ_SUFFIX := o
-LIBAR_SUFFIX := a
+OBJ_SUFFIX := .o
+LIBAR_SUFFIX := .a
 SO_PREFIX := lib
-SO_SUFFIX := so
+SO_SUFFIX := .so
 EXE_SUFFIX :=
 
 # C++ compiler and options
@@ -157,11 +157,11 @@ ifeq ($(CXX_SOURCES),)
 $(error Variable CXX_SOURCES is undefined)
 endif
 
-OBJS := $(addsuffix .$(OBJ_SUFFIX),$(CXX_SOURCES))
+OBJS := $(addsuffix $(OBJ_SUFFIX),$(CXX_SOURCES))
 
-OUT_LIBAR := $(MODULE).$(LIBAR_SUFFIX)
-OUT_SO := $(SO_PREFIX)$(MODULE).$(SO_SUFFIX)
-OUT_EXE := $(MODULE).$(EXE_SUFFIX)
+OUT_LIBAR := $(MODULE)$(LIBAR_SUFFIX)
+OUT_SO := $(SO_PREFIX)$(MODULE)$(SO_SUFFIX)
+OUT_EXE := $(MODULE)$(EXE_SUFFIX)
 
 ARCHIVE_FILE := $(MODULE).tar.gz
 
@@ -176,7 +176,7 @@ endif
 
 # Common targets
 
-%.$(OBJ_SUFFIX):	%.cpp
+%$(OBJ_SUFFIX):	%.cpp
 	$(CXX) $(CXX_COMPILE_ONLY_FLAG) $(CXXFLAGS) $(CXX_INCLUDE_PATHS) $< $(CXX_OUTFILE_FLAG)$@
 
 $(OUT_LIBAR):	$(OBJS)

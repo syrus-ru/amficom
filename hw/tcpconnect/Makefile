@@ -1,5 +1,5 @@
 AKP_DIR := ../akp
-AKP_LIBAR = akp.$(LIBAR_SUFFIX)
+AKP_LIBAR = akp$(LIBAR_SUFFIX)
 
 MODULE := tcpconnect
 CXX_SOURCES := tcpconnect \
