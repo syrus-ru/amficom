@@ -2,7 +2,7 @@ AKP_DIR := ../akp
 TCPCONNECT_DIR := ../tcpconnect
 TRC_DIR := ../trc
 PTHREAD_DIR := ../../pthreads-win32
-NETTEST_DIR := ../../Nettest/
+NETTEST_DIR := ../../Nettest
 PK7600_DIR := $(NETTEST_DIR)/PK7600
 QP1640_DIR := $(NETTEST_DIR)/QP1640A
 
