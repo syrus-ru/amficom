@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: r8.cpp,v 1.2 2005/10/08 23:38:24 arseniy Exp $
+// $Id: r8.cpp,v 1.3 2005/10/09 12:14:59 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/10/08 23:38:24 $
+// $Revision: 1.3 $, $Date: 2005/10/09 12:14:59 $
 // $Author: arseniy $
 //
 // r8.cpp: main function of application.
@@ -73,7 +73,7 @@ int main(const int argc, const char* argv[]) {
 
 	mcmTransceiver->shutdown();
 	pthread_join(mcmTransceiver->getThread(), NULL);
-	
+
 	rtu->shutdown();
 	pthread_join(rtu->getThread(), NULL);
 
