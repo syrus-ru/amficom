@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.26 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.27 2005/10/09 14:03:51 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/09 14:03:51 $
  * @module schemeclient
  */
 
@@ -32,6 +32,7 @@ import javax.swing.WindowConstants;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.ProtoElementsExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ProtoElementsImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommand;
@@ -64,7 +65,6 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.resource.ProtoElementsExportCommand;
 import com.syrus.util.Log;
 
 public class SchemeEditorMainFrame extends AbstractMainFrame {
@@ -216,8 +216,6 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	@Override
 	public void initModule() {
 		super.initModule();
-		
-		SchemeObjectsFactory.init(this.aContext);
 		initFrames();
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -377,7 +375,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	@Override
 	public void setSessionOpened() {
 		super.setSessionOpened();
-
+		SchemeObjectsFactory.init(this.aContext);
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuWindowTree", true);
