@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.15 2005/10/06 10:02:54 krupenn Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.16 2005/10/09 12:51:31 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.impexp.unicablemap.objects.Port;
 import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/10/06 10:02:54 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2005/10/09 12:51:31 $
  * @module importUCM
  */
 
@@ -324,7 +324,7 @@ public class UCMSchemeExportCommand {
 	}
 	
 	ChannelingItem createStartChannelingItem(Cable cable, UniCableMapObject inlet) throws SQLException {
-		ChannelingItem item = new ChannelingItem("cci" + inlet.un);
+		ChannelingItem item = new ChannelingItem("cci" + inlet.un + "start" + cable.getId());
 		item.setRowX(0);
 		item.setPlaceY(0);
 		item.setLength(0);
@@ -361,7 +361,7 @@ public class UCMSchemeExportCommand {
 	}
 	
 	ChannelingItem createEndChannelingItem(Cable cable, UniCableMapObject inlet) throws SQLException {
-		ChannelingItem item = new ChannelingItem("cci" + inlet.un);
+		ChannelingItem item = new ChannelingItem("cci" + inlet.un + "end" + cable.getId());
 		item.setRowX(0);
 		item.setPlaceY(0);
 		item.setLength(0);
