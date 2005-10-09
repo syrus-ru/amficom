@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/09/14 14:07:21 bass Exp $
+# $Id: Makefile,v 1.4 2005/10/09 12:58:12 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -12,7 +12,7 @@ JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 

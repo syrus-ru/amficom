@@ -8,7 +8,7 @@ IDL_SOURCES = $(IDLDIR)/configuration.idl
 HOST = mongol
 SERVICE_NAME = mongol
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)
 $(call checkenve,SCOMP)

@@ -15,7 +15,7 @@ APPCLASSPATH=$(LIBDIR)/kisserver.jar:$(LIBDIR)/corba.jar:$(LIBDIR)/util.jar:$(LI
 
 JAVAH=javah
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)

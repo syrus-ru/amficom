@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2004/08/04 17:41:25 arseniy Exp $
+# $Id: Makefile,v 1.4 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -17,7 +17,7 @@ APPCLASSPATH = $(LIBDIR)/util.jar
 #SUNJAVACFLAGS = -target 1.2
 #JIKESFLAGS = -target 1.1
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)

@@ -61,7 +61,7 @@ JAVACFLAGS = \
 	-deprecation
 
 
-include Makefile.inc
+include Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)

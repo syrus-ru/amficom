@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2005/10/08 13:38:22 arseniy Exp $
+# $Id: Makefile,v 1.9 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -10,7 +10,7 @@ LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)
 

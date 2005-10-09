@@ -5,7 +5,7 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 NATIVE_DIR := ./native
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/reflectometry.jar
 

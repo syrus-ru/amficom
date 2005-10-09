@@ -3,7 +3,7 @@ MODULE_NAME := commonclient
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 LIBNAME_GENERALXML=generalxml.jar

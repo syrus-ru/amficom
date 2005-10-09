@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.21 2005/09/01 13:26:50 arseniy Exp $
+# $Id: Makefile,v 1.22 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -11,7 +11,7 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDL_SOURCES = $(IDLDIR)/mapview.idl
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)
 

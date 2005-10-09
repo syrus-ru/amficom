@@ -1,4 +1,4 @@
-include ../Makefile.inc
+include ../Makefile.java.inc.mk
 
 OBJS= \
         findLength.$(OBJ_EXT) \

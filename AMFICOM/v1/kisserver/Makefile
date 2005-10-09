@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.9 2004/10/19 15:41:11 bass Exp $
+# $Id: Makefile,v 1.10 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -14,7 +14,7 @@ JIKESFLAGS = -target 1.4.2
 IDLDIR = idl
 IDLJFLAGS = -i $(IDLDIR) -i ../idl_v1/idl
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 

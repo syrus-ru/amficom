@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.73 2005/10/07 09:31:12 arseniy Exp $
+# $Id: Makefile,v 1.74 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -27,7 +27,7 @@ JPUB_FLAGS = \
 	-methods=all
 
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)

@@ -11,7 +11,7 @@ JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4
 JIKESFLAGS = -target 1.4.2
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,PMD_HOME)
 
@@ -35,6 +35,6 @@ clean:
 .PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
-		Makefile Makefile.inc \
+		Makefile Makefile.java.inc.mk \
 		copyjars.sh
 

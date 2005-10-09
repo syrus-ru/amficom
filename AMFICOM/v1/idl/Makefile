@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.31 2005/10/07 10:40:01 bass Exp $
+# $Id: Makefile,v 1.32 2005/10/09 12:58:13 bass Exp $
 #
 # vim:ft=make:
 #
@@ -8,7 +8,7 @@ MODULE_NAME = idl
 ARCHFILE := $(MODULE_NAME).tar.gz
 
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 .PHONY: idlclean

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.17 2005/04/15 10:04:48 arseniy Exp $
+# $Id: Makefile,v 1.18 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -11,7 +11,7 @@ ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 
 APPCLASSPATH=$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/corbaportable.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/event.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mshserver_interface.jar
 EXTCLASSPATH=$(EXTLIBDIR)/kunststoff.jar:$(EXTLIBDIR)/jfreechartK.jar

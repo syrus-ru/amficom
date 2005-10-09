@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2005/10/07 10:40:01 bass Exp $
+# $Id: Makefile,v 1.3 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -11,7 +11,7 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDL_SOURCES = $(IDLDIR)/reflectometry.idl
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 DEPENDENCIES = \

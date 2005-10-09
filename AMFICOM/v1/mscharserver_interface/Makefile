@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/07/10 13:41:30 bass Exp $
+# $Id: Makefile,v 1.4 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -7,7 +7,7 @@
 MODULE_NAME := mscharserver_interface
 IDL_SOURCES = $(IDLDIR)/mscharserver.idl
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 .PHONY: idlclean

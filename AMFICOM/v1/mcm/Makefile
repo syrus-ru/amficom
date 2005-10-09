@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.67 2005/09/29 09:36:31 arseniy Exp $
+# $Id: Makefile,v 1.68 2005/10/09 12:58:13 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -17,7 +17,7 @@ SERVICE_NAME = mongol
 
 TRANSCEIVER_DIR := ./transceiver
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)
 

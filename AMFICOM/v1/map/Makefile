@@ -5,7 +5,7 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDL_SOURCES = $(IDLDIR)/map.idl
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)
 $(call checkenve,SCOMP)

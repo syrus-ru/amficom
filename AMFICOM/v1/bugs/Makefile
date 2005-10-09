@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2005/09/25 16:09:34 bass Exp $
+# $Id: Makefile,v 1.3 2005/10/09 12:58:12 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -9,7 +9,7 @@ MODULE_NAME := bugs
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/bugs/*.java)

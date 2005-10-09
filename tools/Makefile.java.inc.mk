@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.35 2005/10/07 10:40:53 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.1 2005/10/09 12:58:46 bass Exp $
 #
 # vim:set ft=make:
 #

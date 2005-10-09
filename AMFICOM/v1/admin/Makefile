@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.22 2005/09/29 08:18:48 arseniy Exp $
+# $Id: Makefile,v 1.23 2005/10/09 12:58:12 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -14,7 +14,7 @@ IDL_SOURCES = $(IDLDIR)/administration.idl
 HOST = mongol
 SERVICE_NAME = mongol
 
-include ../tools/Makefile.inc
+include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)
 
