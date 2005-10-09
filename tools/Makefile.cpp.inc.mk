@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: Makefile.cpp.inc.mk,v 1.4 2005/10/08 23:30:13 arseniy Exp $
+# $Id: Makefile.cpp.inc.mk,v 1.5 2005/10/09 01:06:41 arseniy Exp $
 # $Author: arseniy $
 # Author: Tashoyan Arseniy Feliksovich
 # Description: Include this file to your Makefile of any C++ project
@@ -46,7 +46,8 @@ CXX_INCLUDE_DIR_FLAG := /I$(SPACE)
 CXX_COMPILE_ONLY_FLAG := /c
 CXX_OUTFILE_FLAG := /o
 CXX_WARN_OFF_FLAG := /w
-CXXFLAGS := /nologo /ML /W3 /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /GX
+CXXFLAGS := /nologo /ML /W3 /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /D "_CONSOLE" /Ze /GX
+# /O1 /Gy /Gf
 
 # Library archive tool and options
 LIBAR := lib
@@ -59,7 +60,8 @@ LD := link
 LD_SHARED_FLAG := /DLL
 LD_LIBDIR_FLAG := /LIBPATH:
 LD_OUTFILE_FLAG := /OUT:
-LDFLAGS := /nologo
+LDFLAGS := /NOLOGO /INCREMENTAL:NO /OPT:REF
+#/DEBUG /PDB:$(MODULE).pdb
 
 # JNI
 JNI_INCLUDE_PATH := $(JAVA_HOME)/include $(JAVA_HOME)/include/win32
