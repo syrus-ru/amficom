@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTU.cpp,v 1.3 2005/10/09 13:48:26 arseniy Exp $
+// $Id: RTU.cpp,v 1.4 2005/10/09 14:14:25 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.3 $, $Date: 2005/10/09 13:48:26 $
+// $Revision: 1.4 $, $Date: 2005/10/09 14:14:25 $
 // $Author: arseniy $
 //
 // RTU.cpp: implementation of the RTU class.
@@ -262,6 +262,9 @@ void* RTU::run(void* args) {
 				rtu->pushFrontMeasurementSegment(measurementSegment);
 				continue;
 			}
+
+			Parameter** parameters = measurementSegment->getParameters();
+			//TODO: Set measurement parameters
 
 			if (!otauController->start(otauPortId)) {
 				printf("RTU | ERROR: Cannot switch OTAU. Measurement cancelled\n");

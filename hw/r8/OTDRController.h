@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.h,v 1.4 2005/10/09 13:47:50 arseniy Exp $
+// $Id: OTDRController.h,v 1.5 2005/10/09 14:14:25 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.4 $, $Date: 2005/10/09 13:47:50 $
+// $Revision: 1.5 $, $Date: 2005/10/09 14:14:25 $
 // $Author: arseniy $
 //
 // OTDRController.h: interface for the OTDRController class.
@@ -83,12 +83,16 @@ class OTDRController {
 		OTDRId getOTDRId() const;
 
 		/*	Получить модель рефлектометра.
-			Реализована в подклассах*/
+		 * 	Реализована в подклассах*/
 		virtual OTDRModel getOTDRModel() const = 0;
 
 		/*	Распечатать допустимые параметры измерений.
-			Реализована в подклассах*/
+		 * 	Реализована в подклассах*/
 		virtual void printAvailableParameters() const = 0;
+
+		/*	Установить параметры измерения.
+		 * 	В случае неправильных значений возвращает FALSE.*/
+		BOOL setMeasurementParameters(Parameter** parameters);
 
 		/*	Получить текущее состояние*/
 		OTDRState getState() const;

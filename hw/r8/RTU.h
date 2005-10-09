@@ -42,18 +42,18 @@ enum RTUState {
 class RTU : public OTDRContainer, public SegmentProcessor, public OTDRReportListener {
 	private:
 		/*	Таблица смотрителей рефлектометров
-			Ключ - уникальный идентификатор, величина - указатель на смотритель*/
+		 * 	Ключ - уникальный идентификатор, величина - указатель на смотритель*/
 		OTDRControllerMapT otdrControllersMap;
 
 		/*	Количество имеющихся последовательных портов*/
 		unsigned short comPortNumber;
 
 		/*	Таблица открытых файловых указателей.
-			Ключ - номер последовательного порта, величина - соответствующий указатель*/
+		 * 	Ключ - номер последовательного порта, величина - соответствующий указатель*/
 		COMPortHandleMapT comPortHandlesMap;
 
 		/*	Таблица смотрящих за оптическими преключателями.
-			Ключ - номер последовательного порта, величина - набор смотрящих на этом порту*/
+		 * 	Ключ - номер последовательного порта, величина - набор смотрящих на этом порту*/
 		OTAUControllerMapT otauControllersMap;
 
 		/* Очереди запросов на измерение и результатов */
@@ -77,23 +77,23 @@ class RTU : public OTDRContainer, public SegmentProcessor, public OTDRReportList
 		virtual ~RTU();
 
 		/*	Зарегистрировать новый рефлектометр.
-			Реализация интерфейса OTDRContainer.*/
+		 * 	Реализация интерфейса OTDRContainer.*/
 		void registerOTDRController(const OTDRController* otdrController);
 
 		/*	Добавить в рассмотрение.
-			Реализация интерфейса SegmentProcessor.*/
+		 * 	Реализация интерфейса SegmentProcessor.*/
 		void addTaskSegment(const Segment* segment);
 
 		/*	Вынуть из очереди.
-			Реализация интерфейса SegmentProcessor.*/
+		 * 	Реализация интерфейса SegmentProcessor.*/
 		const Segment* removeReportSegment();
 
 		/*	Заново добавить в очередь удалённный прежде.
-			Реализация интерфейса SegmentProcessor.*/
+		 * 	Реализация интерфейса SegmentProcessor.*/
 		void reAddReportSegment(const Segment* segment);
 
 		/*	Принять данные с рефлектометра.
-			Реализация интерфейса OTDRReportListener.*/
+		 * 	Реализация интерфейса OTDRReportListener.*/
 		void acceptOTDRReport(const Segment* segment);
 
 		/*	Получить текущее состояние*/
@@ -112,7 +112,7 @@ class RTU : public OTDRContainer, public SegmentProcessor, public OTDRReportList
 		static void* run(void* args);
 
 		/*	Разбор строки местной адресации.
-			Возвращает TRUE, если все величины распознаны без ошибок.*/
+		 * 	Возвращает TRUE, если все величины распознаны без ошибок.*/
 		static BOOL parseLocalAddress(const ByteArray* localAddress,
 			OTDRId& otdrId,
 			COMPortId& comPortId,
@@ -120,12 +120,12 @@ class RTU : public OTDRContainer, public SegmentProcessor, public OTDRReportList
 			OTAUPortId& otauPortId);
 
 		/*	Приготовить смотритель оптического переключателя к началу измерений.
-			Порядок действий:
-			1) поискать в списке уже созданных и зарегистрированных, если найден - вернуть;
-			2) попытаться создать новый, т. е. попытаться проинициализировать оптический переключатель
-				с данным адресом на данном последовательном порту,
-				в случае успеха - зарегистрировать и вернуть ссылку на новый смотритель;
-			3) если предыдущие действия успеха не принесли - вернуть NULL.*/
+		 * 	Порядок действий:
+		 * 	1) поискать в списке уже созданных и зарегистрированных, если найден - вернуть;
+		 * 	2) попытаться создать новый, т. е. попытаться проинициализировать оптический переключатель
+		 * 		с данным адресом на данном последовательном порту,
+		 * 		в случае успеха - зарегистрировать и вернуть ссылку на новый смотритель;
+		 * 	3) если предыдущие действия успеха не принесли - вернуть NULL.*/
 		OTAUController* prepareOTAUController(const COMPortId comPortId,
 			const OTAUAddress otauAddress);
 

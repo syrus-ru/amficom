@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.h,v 1.2 2005/10/09 13:43:44 arseniy Exp $
+// $Id: OTAUController.h,v 1.3 2005/10/09 14:14:25 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/10/09 13:43:44 $
+// $Revision: 1.3 $, $Date: 2005/10/09 14:14:25 $
 // $Author: arseniy $
 //
 // OTAUController.h: interface for the OTAUController class.
@@ -110,12 +110,12 @@ class OTAUController {
 		pthread_t getThread() const;
 
 		/*	Вычислить уникальный идентификатор оптического переключателя
-			по его адресу и номеру его последовательного порта.*/
+		 * 	по его адресу и номеру его последовательного порта.*/
 		static OTAUUId createOTAUUid(const COMPortId comPortId, const OTAUAddress otauAddress);
 
 		/*	Попытаться создать новый смотритель оптического переключателя.
-			Если переключатель обнаружен, возвращается ссылка на новый смотритель.
-			Иначе - NULL.*/
+		 * 	Если переключатель обнаружен, возвращается ссылка на новый смотритель.
+		 * 	Иначе - NULL.*/
 		static OTAUController* createOTAUController(const COMPortId cpId,
 			const HANDLE cpHandle,
 			const OTAUAddress otauAddress,

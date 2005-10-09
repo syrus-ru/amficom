@@ -26,11 +26,11 @@ class PK7600OTDRController : public OTDRController {
 		virtual ~PK7600OTDRController();
 
 		/*	Получить модель рефлектометра.
-			Реализация виртуальной функции класса OTDRController.*/
+		 * 	Реализация виртуальной функции класса OTDRController.*/
 		OTDRModel getOTDRModel() const;
 
 		/*	Распечатать допустимые параметры измерений.
-			Реализация виртуальной функции класса OTDRController.*/
+		 * 	Реализация виртуальной функции класса OTDRController.*/
 		void printAvailableParameters() const;
 
 		/*	Получить тип платы PK7600*/

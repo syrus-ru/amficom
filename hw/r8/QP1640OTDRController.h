@@ -13,11 +13,11 @@ class QP1640OTDRController : public OTDRController {
 		virtual ~QP1640OTDRController();
 
 		/*	Получить модель рефлектометра.
-			Реализация виртуальной функции класса OTDRController.*/
+		 * 	Реализация виртуальной функции класса OTDRController.*/
 		OTDRModel getOTDRModel() const;
 
 		/*	Распечатать допустимые параметры измерений.
-			Реализация виртуальной функции класса OTDRController.*/
+		 * 	Реализация виртуальной функции класса OTDRController.*/
 		void printAvailableParameters() const;
 
 	private:
