@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.h,v 1.2 2005/10/09 12:18:34 arseniy Exp $
+// $Id: OTDRController.h,v 1.3 2005/10/09 13:47:08 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/10/09 12:18:34 $
+// $Revision: 1.3 $, $Date: 2005/10/09 13:47:08 $
 // $Author: arseniy $
 //
 // OTDRController.h: interface for the OTDRController class.
@@ -28,21 +28,22 @@
 
 typedef unsigned short OTDRId;
 
+#define SIZE_MANUFACTORER_NAME 20
+#define SIZE_MODEL_NAME 16
 #define SIZE_SERIAL_NUMBER 32
 #define SIZE_MODEL_NUMBER 32
+#define SIZE_PART_NUMBER 16
 
 typedef struct {
-	char manufacturerName[20];					//Производитель
-	char modelName[16];							//Название модели
-	char serialNumber[SIZE_SERIAL_NUMBER];		//Серийный номер
-	char modelNumber[SIZE_MODEL_NUMBER];		//Номер модели
-	char partNumber[16];						//Номер партии
-	unsigned short revisionId;					//Версия ПО
+	char manufacturerName[SIZE_MANUFACTORER_NAME];	//Производитель
+	char modelName[SIZE_MODEL_NAME];				//Название модели
+	char serialNumber[SIZE_SERIAL_NUMBER];			//Серийный номер
+	char modelNumber[SIZE_MODEL_NUMBER];			//Номер модели
+	char partNumber[SIZE_PART_NUMBER];				//Номер партии
+	unsigned short revisionId;						//Версия ПО
 } OTDRPluginInfo;
 
 enum OTDRState {
-	OTDR_STATE_INITIALIZED,
-	OTDR_STATE_INIT_FAILED,
 	OTDR_STATE_READY,
 	OTDR_STATE_ACUIRING_DATA
 };

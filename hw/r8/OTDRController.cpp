@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.cpp,v 1.2 2005/10/09 12:18:34 arseniy Exp $
+// $Id: OTDRController.cpp,v 1.3 2005/10/09 13:47:08 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/10/09 12:18:34 $
+// $Revision: 1.3 $, $Date: 2005/10/09 13:47:08 $
 // $Author: arseniy $
 //
 // Implementation of the OTDRController class.
@@ -30,14 +30,12 @@ OTDRController::OTDRController(const OTDRId otdrId,
 	this->otdrId = otdrId;
 	this->otdrReportListener = otdrReportListener;
 	this->timewait = timewait;
-	
-	this->otdrPluginInfo = (OTDRPluginInfo*) malloc(sizeof(OTDRPluginInfo));
-	this->retrieveOTDRPluginInfo();
+
+	this->state = OTDR_STATE_READY;
 }
 
 OTDRController::~OTDRController() {
 	printf("OTDRController | Deleting OTDR Controller: %d\n", this->otdrId);
-	free(this->otdrPluginInfo);
 }
 
 OTDRId OTDRController::getOTDRId() const {
@@ -49,19 +47,36 @@ OTDRState OTDRController::getState() const {
 }
 
 void OTDRController::start() {
-	//Создать и запустить главный поток.
+	if (this->state != OTDR_STATE_READY) {
+		printf("OTDRController | ERROR: State %d not legal to start data acquisition\n", this->state);
+		return;
+	}
+
+	/*	Достать сведения о плате рефлектометра.*/
+	this->otdrPluginInfo = (OTDRPluginInfo*) malloc(sizeof(OTDRPluginInfo));
+	this->retrieveOTDRPluginInfo();
+
+	/*	Создать и запустить главный поток.*/
 	this->running = 1;
 	pthread_attr_t pt_attr;
 	pthread_attr_init(&pt_attr);
 	pthread_attr_setdetachstate(&pt_attr, PTHREAD_CREATE_JOINABLE);
 	pthread_create(&this->thread, &pt_attr, OTDRController::run, (void*)this);
 	pthread_attr_destroy(&pt_attr);
-	this->state = OTDR_STATE_READY;
+
+	/*	Изменить текущее состояние*/
+	this->state = OTDR_STATE_ACUIRING_DATA;
 }
 
 void OTDRController::shutdown() {
-	printf("OTDRController | Shutting down\n");
 	this->running = 0;
+	printf("OTDRController | Shutting down\n");
+
+	/*	Очистить структуру со сведениями о плате рефлектометра*/
+	free(this->otdrPluginInfo);
+
+	/*	Изменить текущее состояние*/
+	this->state = OTDR_STATE_READY;
 }
 
 pthread_t OTDRController::getThread() const {
