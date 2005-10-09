@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.28 2005/10/09 15:00:50 bass Exp $
+# $Id: Makefile,v 1.29 2005/10/09 15:23:03 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -35,7 +35,7 @@ export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES))) \
 		.mach
 
 .PHONY:	clean
