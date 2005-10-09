@@ -25,14 +25,14 @@ PK7600OTDRController::~PK7600OTDRController() {
 }
 
 void PK7600OTDRController::retrieveOTDRPluginInfo() {
-	strcpy(this->otdrPluginInfo->manufacturerName, "Nettest");
-	strcpy(this->otdrPluginInfo->modelName, "PK7600");
+	memcpy(this->otdrPluginInfo->manufacturerName, "Nettest", SIZE_MANUFACTORER_NAME);
+	memcpy(this->otdrPluginInfo->modelName, "PK7600", SIZE_MODEL_NAME);
 
 	pPK7600PluginInfo pk7600PluginInfo = (pPK7600PluginInfo) malloc(sizeof(PK7600OTDRPluginInfo));
 	PK7600GetPluginData(this->otdrId, pk7600PluginInfo);
 	memcpy(this->otdrPluginInfo->serialNumber, pk7600PluginInfo->SerialNumber, SIZE_SERIAL_NUMBER);
 	memcpy(this->otdrPluginInfo->modelNumber, pk7600PluginInfo->ModelNumber, SIZE_MODEL_NUMBER);
-	strcpy(this->otdrPluginInfo->partNumber, "0");
+	memcpy(this->otdrPluginInfo->partNumber, "0", SIZE_PART_NUMBER);
 	free(pk7600PluginInfo);
 
 	this->otdrPluginInfo->revisionId = PK7600BoardRevision(this->otdrId);

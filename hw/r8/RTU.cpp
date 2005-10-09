@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTU.cpp,v 1.2 2005/10/09 12:15:25 arseniy Exp $
+// $Id: RTU.cpp,v 1.3 2005/10/09 13:48:26 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/10/09 12:15:25 $
+// $Revision: 1.3 $, $Date: 2005/10/09 13:48:26 $
 // $Author: arseniy $
 //
 // RTU.cpp: implementation of the RTU class.
@@ -37,36 +37,36 @@ RTU::RTU(const unsigned short comPortNumber, const unsigned int timewait) {
 	this->timewait = timewait;
 
 	if (initPK7600Cards(this, this, this->timewait)) {
-		this->state = RTU_OTDR_INITIALIZED;
+		this->state = RTU_STATE_OTDR_INITIALIZED;
 	} else {
-		this->state = RTU_OTDR_INIT_FAILED;
+		this->state = RTU_STATE_OTDR_INIT_FAILED;
 	}
 
 	//TODO: Init OTDR cards of other type
 
 	if (this->otdrControllersMap.empty()) {
 		printf("RTU | ERROR: Found none OTDR cards. Exiting.\n");
-		this->state = RTU_OTDR_INIT_FAILED;
+		this->state = RTU_STATE_OTDR_INIT_FAILED;
 		return;
 	}
 
 	this->initializeCOMPorts();
 	if (this->comPortHandlesMap.empty()) {
 		printf("RTU | ERROR: Found none COM ports. Exiting.\n");
-		this->state = RTU_COM_PORT_INIT_FAILED;
+		this->state = RTU_STATE_COM_PORT_INIT_FAILED;
 		return;
 	}
-	this->state = RTU_COM_PORT_INITIALIZED;
+	this->state = RTU_STATE_COM_PORT_INITIALIZED;
 
 	printf("RTU | Initialization completed\n");
 }
 
 RTU::~RTU() {
-	if (this->state > RTU_COM_PORT_INIT_FAILED) {
+	if (this->state > RTU_STATE_COM_PORT_INIT_FAILED) {
 		this->freeCOMPorts();
 	}
 
-	if (this->state > RTU_OTDR_INIT_FAILED) {
+	if (this->state > RTU_STATE_OTDR_INIT_FAILED) {
 		this->freeOTDRs();
 	}
 
@@ -191,7 +191,7 @@ void RTU::start() {
 	pthread_attr_setdetachstate(&pt_attr, PTHREAD_CREATE_JOINABLE);
 	pthread_create(&this->thread, &pt_attr, RTU::run, (void*) this);
 	pthread_attr_destroy(&pt_attr);
-	this->state = RTU_RUNNING;
+	this->state = RTU_STATE_RUNNING;
 }
 
 void RTU::shutdown() {
@@ -242,8 +242,9 @@ void* RTU::run(void* args) {
 				//TODO: Create special segment to report to MCM.
 				continue;
 			}
-			if (otdrController->getState() == OTDR_STATE_ACUIRING_DATA) {
-				printf("RTU | OTDR controller for card %hd is acquiring data; will try later\n", otdrId);
+			const OTDRState otdrState = otdrController->getState();
+			if (otdrState != OTDR_STATE_READY) {
+				printf("RTU | State %d of OTDR controller for card %hd is not legal to start acquisition; will try later\n", otdrState, otdrId);
 				rtu->pushFrontMeasurementSegment(measurementSegment);
 				continue;
 			}
@@ -255,8 +256,9 @@ void* RTU::run(void* args) {
 				//TODO: Create special segment to report to MCM.
 				continue;
 			}
-			if (otauController->getState() == OTAU_RUNNING) {
-				printf("RTU | OTAU controller on port %hd and address %hd is busy; will try later\n", comPortId, otauAddress);
+			const OTAUState otauState = otauController->getState();
+			if (otauState != OTAU_STATE_READY) {
+				printf("RTU | State %d of OTAU controller on port %hd and address %hd is not legal to start acquisition; will try later\n", otauState, comPortId, otauAddress);
 				rtu->pushFrontMeasurementSegment(measurementSegment);
 				continue;
 			}
