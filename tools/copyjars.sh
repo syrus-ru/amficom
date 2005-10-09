@@ -40,6 +40,7 @@ map.jar \
 mapxml.jar \
 scheme.jar \
 mapview.jar \
+report.jar \
 filter.jar \
 dadara.jar \
 csbridge.jar \
@@ -53,6 +54,7 @@ cmserver_interface.jar \
 cmserver.jar \
 mscharserver_interface.jar \
 mscharserver.jar \
+reflectometry.jar \
 util.jar"
 
 STR=
