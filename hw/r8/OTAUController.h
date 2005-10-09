@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.h,v 1.1 2005/10/06 15:48:55 cvsadmin Exp $
+// $Id: OTAUController.h,v 1.2 2005/10/09 13:43:44 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.1 $, $Date: 2005/10/06 15:48:55 $
-// $Author: cvsadmin $
+// $Revision: 1.2 $, $Date: 2005/10/09 13:43:44 $
+// $Author: arseniy $
 //
 // OTAUController.h: interface for the OTAUController class.
 //
@@ -63,8 +63,8 @@ typedef unsigned short OTAUPortId;
 
 
 enum OTAUState {
-	OTAU_READY,
-	OTAU_RUNNING
+	OTAU_STATE_READY,
+	OTAU_STATE_RUNNING
 };
 
 class OTAUController {
