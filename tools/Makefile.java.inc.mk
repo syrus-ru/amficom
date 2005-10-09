@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.1 2005/10/09 12:58:46 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.2 2005/10/09 15:00:50 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -20,6 +20,7 @@ CLASS_SUFFIXES = \
 IDLDIR := ../idl/idl
 SRCDIR := src
 CLASSDIR := classes
+JAVADOCDIR := docs/api
 
 AMFICOM_HOME := $(shell echo $(AMFICOM_HOME) | sed "s|~|$(HOME)|g")
 
@@ -243,10 +244,39 @@ PMD_JARS = $(shell find $(PMD_HOME) -name '*\.[jz][ai][pr]' -printf '%p:')
 PMD_RULES = rulesets/unusedcode.xml,rulesets/imports.xml,rulesets/basic.xml,rulesets/clone.xml,rulesets/codesize.xml,rulesets/coupling.xml,rulesets/design.xml,rulesets/favorites.xml,rulesets/junit.xml,rulesets/naming.xml,rulesets/newrules.xml,rulesets/scratchpad.xml,rulesets/strictexception.xml,rulesets/strings.xml
 
 #
+# Javadoc
+#
+JAVADOCHOST = bass.science.syrus.ru
+HTTP_DOCROOT = /var/www/html
+JAVADOC = $(JAVA_HOME)/bin/javadoc
+JAVADOCFLAGS = \
+	-locale ru_RU \
+	-private \
+	-quiet \
+	-encoding $(ENCODING) \
+	-d $(JAVADOCDIR) \
+	-use \
+	-version \
+	-author \
+	-splitindex \
+	-windowtitle "$(MODULE_NAME)" \
+	-doctitle "$(MODULE_NAME)" \
+	-linksource \
+	-serialwarn \
+	-charset $(ENCODING) \
+	-docencoding $(ENCODING) \
+	-tag todo:a:"To Do:" \
+	-tag bug:a:"Bug:" \
+	-tag module:t:"Module:" \
+	-notimestamp \
+	$(foreach DEPENDENCY,$(DEPENDENCIES),-link "http://$(JAVADOCHOST)/apidocs/amficom-$(DEPENDENCY)/") \
+	-link "http://$(JAVADOCHOST)/apidocs/jdk/"
+
+#
 # Targets
 #
 
-$(SRCDIR) $(CLASSDIR) $(LIBDIR) $(EXTLIBDIR):
+$(SRCDIR) $(CLASSDIR) $(LIBDIR) $(EXTLIBDIR) $(JAVADOCDIR):
 	mkdir -p $@
 
 .PHONY: idl
@@ -255,3 +285,19 @@ idl: .idl
 .idl: $(SRCDIR) $(IDL_SOURCES)
 	$(IDL_COMMAND)
 	touch $@
+
+.PHONY: javadocs
+javadocs: .javadocs
+
+.PHONY: javadocsclean
+javadocsclean:
+	$(RM) -r $(JAVADOCDIR)/*
+	$(RM) .javadocs
+
+.PHONY: javadocsinstall
+javadocsinstall: .javadocs javadocsuninstall
+	ln -s $(AMFICOM_HOME)/$(MODULE_NAME)/$(JAVADOCDIR) $(HTTP_DOCROOT)/apidocs/amficom-$(MODULE_NAME)
+
+.PHONY: javadocsuninstall
+javadocsuninstall:
+	$(RM) $(HTTP_DOCROOT)/apidocs/amficom-$(MODULE_NAME)

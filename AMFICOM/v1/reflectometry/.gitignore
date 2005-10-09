@@ -8,3 +8,5 @@ classes
 .mach
 .corba
 .idl
+docs
+.javadocs

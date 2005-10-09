@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.4 2005/10/09 15:00:50 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -49,7 +49,7 @@ corba: .corba
 	touch $@
 
 .PHONY:	clean
-clean: cleanmach cleancorba
+clean: cleanmach cleancorba javadocsclean
 	$(RM) $(LIBNAME)
 
 .PHONY: distclean
@@ -78,3 +78,13 @@ arch:
 		Makefile \
 		$(IDL_SOURCES) \
 		$(SOURCES)
+
+.javadocs: .idl $(JAVADOCDIR)
+	$(JAVADOC) \
+		$(JAVADOCFLAGS) \
+		-sourcepath $(SRCDIR) \
+		-classpath $(APPCLASSPATH) \
+		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.reflectometry" \
+		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.reflectometry.corba*" \
+		-subpackages "com.syrus.AMFICOM.reflectometry"
+	touch $@

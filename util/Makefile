@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.27 2005/10/09 13:07:01 bass Exp $
+# $Id: Makefile,v 1.28 2005/10/09 15:00:50 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -9,28 +9,16 @@ MODULE_NAME = util
 LIBNAME = util.jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-CLIENT_EXCLUDED_CLASSES = \
-	com.syrus.util.ServerLogger \
-	com.syrus.util.database.ByteArrayDatabase \
-	com.syrus.util.database.JdbcBlobManager \
-	com.syrus.util.database.Server \
-	com.syrus.util.database.ServerProperties
-
-SERVER_INCLUDED_CLASSES = \
-	$(CLIENT_EXCLUDED_CLASSES) \
-	com.syrus.io.Rewriter \
-	com.syrus.util.ByteArray \
-	com.syrus.util.Log \
-	com.syrus.util.Logger \
-	com.syrus.util.StolenLogger \
-	com.syrus.util.corba.ORBUtil \
-	com.syrus.util.corba.VisiBrokerORBUtil \
-	com.syrus.util.corba.AuroraORBUtil \
-	com.syrus.util.database.DatabaseConnection
-
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
+
+DEPENDENCIES =
+
+EMPTY =
+SPACE = $(EMPTY) $(EMPTY)
+APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
+
 
 SOURCES := $(shell find $(SRCDIR) -name '*.java')
 
@@ -38,37 +26,20 @@ SOURCES := $(shell find $(SRCDIR) -name '*.java')
 .PHONY: export
 export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
 
-.mach:	.sqlj
+.mach:
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(JDBCCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 	 	$(SOURCES)
 	touch $@
 
-.PHONY: sqlj
-sqlj: .sqlj
-
-.sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS) -sourcepath $(SRCDIR)" > sqlj.properties
-	$(RM) \
-		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
-	touch $@
-
-.PHONY: sqljclean
-sqljclean:
-	$(RM) \
-		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.sqlj
-
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 		.mach
 
 .PHONY:	clean
-clean:	sqljclean cleanmach
+clean: cleanmach
 	$(RM) $(LIBNAME)
 
 .PHONY: dist
@@ -81,21 +52,11 @@ dist: distclean
 distclean: clean
 	$(RM) -r \
 		$(CLASSDIR) \
-		SQLChecker.cache \
-		sqlj.properties \
 		*.jar
 
 $(LIBNAME): .mach
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
-
-$(MODULE_NAME)client.jar: .mach
-	$(JAR) cf $@ \
-		$(foreach file, $(filter-out $(foreach class, $(subst .,/, $(CLIENT_EXCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
-
-$(MODULE_NAME)server.jar: .mach
-	$(JAR) cf $@ \
-		$(foreach file, $(filter $(foreach class, $(subst .,/, $(SERVER_INCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
 
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
@@ -106,3 +67,13 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(SOURCES)
+
+.javadocs: $(JAVADOCDIR)
+	$(JAVADOC) \
+		$(JAVADOCFLAGS) \
+		-link "http://$(JAVADOCHOST)/apidocs/oraclejdbc/" \
+		-link "http://$(JAVADOCHOST)/apidocs/junit/" \
+		-sourcepath $(SRCDIR):test \
+		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(JUNIT_HOME)/junit.jar \
+		-subpackages "com.syrus.io:com.syrus.util"
+	touch $@
