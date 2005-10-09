@@ -36,6 +36,10 @@ class PK7600OTDRController : public OTDRController {
 		/*	Получить тип платы PK7600*/
 		tCardType getCardType() const;
 
+	private:
+		/*	Достать сведения о плате рефлектометра.
+		 * 	Реализация виртуальной функции класса OTDRController.*/
+		void retrieveOTDRPluginInfo();
 };
 
 #endif // !defined(AFX_PK7600OTDRCONTROLLER_H__0C8FAC67_365A_4C54_BA86_C6F9D6ED4E7B__INCLUDED_)

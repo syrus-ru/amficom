@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.cpp,v 1.1 2005/10/06 15:48:55 cvsadmin Exp $
+// $Id: OTDRController.cpp,v 1.2 2005/10/09 12:18:34 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.1 $, $Date: 2005/10/06 15:48:55 $
-// $Author: cvsadmin $
+// $Revision: 1.2 $, $Date: 2005/10/09 12:18:34 $
+// $Author: arseniy $
 //
 // Implementation of the OTDRController class.
 //
@@ -30,9 +30,14 @@ OTDRController::OTDRController(const OTDRId otdrId,
 	this->otdrId = otdrId;
 	this->otdrReportListener = otdrReportListener;
 	this->timewait = timewait;
+	
+	this->otdrPluginInfo = (OTDRPluginInfo*) malloc(sizeof(OTDRPluginInfo));
+	this->retrieveOTDRPluginInfo();
 }
 
 OTDRController::~OTDRController() {
+	printf("OTDRController | Deleting OTDR Controller: %d\n", this->otdrId);
+	free(this->otdrPluginInfo);
 }
 
 OTDRId OTDRController::getOTDRId() const {

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.h,v 1.1 2005/10/06 15:48:55 cvsadmin Exp $
+// $Id: OTDRController.h,v 1.2 2005/10/09 12:18:34 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.1 $, $Date: 2005/10/06 15:48:55 $
-// $Author: cvsadmin $
+// $Revision: 1.2 $, $Date: 2005/10/09 12:18:34 $
+// $Author: arseniy $
 //
 // OTDRController.h: interface for the OTDRController class.
 //
@@ -28,6 +28,18 @@
 
 typedef unsigned short OTDRId;
 
+#define SIZE_SERIAL_NUMBER 32
+#define SIZE_MODEL_NUMBER 32
+
+typedef struct {
+	char manufacturerName[20];					//Производитель
+	char modelName[16];							//Название модели
+	char serialNumber[SIZE_SERIAL_NUMBER];		//Серийный номер
+	char modelNumber[SIZE_MODEL_NUMBER];		//Номер модели
+	char partNumber[16];						//Номер партии
+	unsigned short revisionId;					//Версия ПО
+} OTDRPluginInfo;
+
 enum OTDRState {
 	OTDR_STATE_INITIALIZED,
 	OTDR_STATE_INIT_FAILED,
@@ -44,6 +56,9 @@ class OTDRController {
 	protected:
 		/*	Номер платы рефлектометра */
 		OTDRId otdrId;
+
+		/*	Указатель на структуру, содержащую сведения о плате рефлектометра.*/
+		OTDRPluginInfo* otdrPluginInfo;
 
 	private:
 		/*	Ссылка на главный объект приложения*/
@@ -83,6 +98,10 @@ class OTDRController {
 		pthread_t getThread() const;
 
 	private:
+		/*	Достать сведения о плате рефлектометра.
+		 * 	Реализована в подклассах.*/
+		virtual void retrieveOTDRPluginInfo() = 0;
+
 		/*	Главный цикл потока*/
 		static void* run(void* args);
 
