@@ -1,5 +1,5 @@
 #########################################################################################
-# $Id: Makefile.cpp.inc.mk,v 1.6 2005/10/09 01:09:17 arseniy Exp $
+# $Id: Makefile.cpp.inc.mk,v 1.7 2005/10/09 01:14:10 arseniy Exp $
 # $Author: arseniy $
 # Author: Tashoyan Arseniy Feliksovich
 # Description: Include this file to your Makefile of any C++ project
@@ -187,6 +187,10 @@ $(OUT_SO):	$(OBJS)
 
 $(OUT_EXE):	$(OBJS)
 	$(LD) $(LDFLAGS) $(OBJS) $(ADD_LIBARS) $(LD_OUTFILE_FLAG)$@
+
+.PHONY:	clean
+clean:
+	$(RM) $(OUT_LIBAR) $(OUT_SO) $(OUT_EXE) $(OBJS)
 
 .PHONY:	arch
 arch:	$(ARCHIVE_FILE)

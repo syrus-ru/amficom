@@ -37,6 +37,3 @@ include ../tools/Makefile.cpp.inc.mk
 .PHONY:	all
 all:	$(OUT_EXE)
 
-.PHONY:	clean
-clean:
-	rm -f $(OBJS) $(OUT_EXE) 
