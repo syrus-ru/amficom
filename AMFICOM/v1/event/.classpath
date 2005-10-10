@@ -6,5 +6,6 @@
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/ojdbc14_g.jar"/>
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/orai18n.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
