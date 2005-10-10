@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.25 2005/09/23 13:56:32 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.26 2005/10/10 10:06:09 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/23 13:56:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/10/10 10:06:09 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -100,7 +100,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			return objects;
 		}
 
-		final Set<T> loadedObjects = (Set<T>) loadObjectsMap.get(new Integer(0)).get(new Short(entityCode));
+		final Set<T> loadedObjects = (Set<T>) loadObjectsMap.get(Integer.valueOf(0)).get(new Short(entityCode));
 		if (loadedObjects.isEmpty()) {
 			return objects;
 		}
@@ -129,7 +129,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		levelLoadObjectsMap.put(new Short(entityCode), (Set<StorableObject>) loadedObjects);
-		loadObjectsMap.put(new Integer(0), levelLoadObjectsMap);
+		loadObjectsMap.put(Integer.valueOf(0), levelLoadObjectsMap);
 
 		final Map<Short, Set<Identifier>> missingDependencesMap = this.createMissingDependenciesMap((Set<StorableObject>) loadedObjects);
 		for (final Short entityKey : missingDependencesMap.keySet()) {
