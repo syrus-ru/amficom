@@ -1,5 +1,5 @@
 /*
- * $Id: RTEDataRenderingComponent.java,v 1.2 2005/09/22 14:50:03 peskovsky Exp $
+ * $Id: RTEDataRenderingComponent.java,v 1.3 2005/10/10 05:48:40 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -161,7 +161,9 @@ public class RTEDataRenderingComponent extends
 			StorableObject storableObject =
 				StorableObjectPool.getStorableObject(reportObjectId,true);
 			//TODO Здесь костыль. Нужно, чтобы все были Namable
-			if (storableObject instanceof Namable)
+			if (storableObject == null)
+				this.objectName = "";
+			else if (storableObject instanceof Namable)
 				this.objectName = ((Namable)storableObject).getName();
 			else
 				this.objectName = storableObject.getClass().getName();
