@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/10/09 16:12:22 bass Exp $
+# $Id: Makefile,v 1.6 2005/10/10 09:08:05 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -82,5 +82,6 @@ arch:
 		-classpath $(APPCLASSPATH) \
 		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.reflectometry" \
 		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.reflectometry.corba*" \
-		-subpackages "com.syrus.AMFICOM.reflectometry"
+		-subpackages "com.syrus.AMFICOM.reflectometry" \
+		2>&1 | grep -vE '(XMLInputStream|com\.syrus\.AMFICOM\.[a-z]+\.corba\..*@serial)'
 	touch $@
