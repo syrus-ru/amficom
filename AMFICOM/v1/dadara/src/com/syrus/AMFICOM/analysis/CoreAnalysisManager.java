@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.120 2005/10/07 08:15:12 bass Exp $
+ * $Id: CoreAnalysisManager.java,v 1.121 2005/10/10 08:00:43 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.120 $, $Date: 2005/10/07 08:15:12 $
+ * @author $Author: saa $
+ * @version $Revision: 1.121 $, $Date: 2005/10/10 08:00:43 $
  * @module
  */
 
@@ -141,8 +141,10 @@ public class CoreAnalysisManager
 	 * @param yCover целевая кривая, которая должна оказаться внутри порогов
 	 * @param thDX массив изменяемых DX-порогов эталога
 	 * @param thDY массив изменяемых DY-порогов эталога
-	 * @param softKeyToUpdate Thresh.SOFT_UP для расширения верхней кривой, Thresh.SOFT_DOWN - для нижней
-	 * @param hardKeyToUpdate Thresh.HARD_UP для расширения верхней кривой, Thresh.HARD_DOWN - для нижней
+	 * @param softKeyToUpdate Thresh.SOFT_UP для расширения верхней кривой,
+	 *   Thresh.SOFT_DOWN - для нижней
+	 * @param hardKeyToUpdate Thresh.HARD_UP для расширения верхней кривой,
+	 *   Thresh.HARD_DOWN - для нижней
 	 * @param dyFactor Коэффициент запаса DY, не менее 1.0
 	 */
 	private static native void nExtendThreshToCoverCurve(
@@ -196,7 +198,9 @@ public class CoreAnalysisManager
 	 *   outParams[2] = sigma (в sqrt(2) раз большая, чем стандартная)
 	 * @return фирирующая кривая
 	 */
-	public static double[] calcGaussian(double[] y, int maxIndex, double[] outParams) {
+	public static double[] calcGaussian(double[] y,
+			int maxIndex,
+			double[] outParams) {
 		double[] gauss = new double[y.length];
 
 		double maxValue = y[maxIndex];
@@ -245,7 +249,8 @@ public class CoreAnalysisManager
 		return threshold;
 	}
 
-	protected static ReliabilitySimpleReflectogramEventImpl[] createSimpleEvents(
+	protected static
+	ReliabilitySimpleReflectogramEventImpl[] createSimpleEvents(
 			double[] y,
 			double deltaX,
 			double minLevel,
@@ -261,8 +266,7 @@ public class CoreAnalysisManager
 			int traceLength,
 			double[] noiseArray,
 			double scaleFactor
-			)
-	{
+			) {
 		return analyse8(y, deltaX,
 			minLevel, minWeld, minConnector, minEnd, minEotLevel,
 			noiseFactor,
@@ -274,14 +278,17 @@ public class CoreAnalysisManager
 	 * Фитирует р/г
 	 * @param y кривая
 	 * @param traceLength длина, которую надо профитировать
-	 * @param noiseArray шум (1 sigma?), заданный на длине traceLength (not null)
+	 * @param noiseArray шум (1 sigma?), заданный на длине traceLength, not null
 	 * @param sre список событий, полученный в рез. IA,
 	 *   используемый для более точной расстановки позиций узлов при фитировке
 	 * @return mf фитированной кривой
 	 */
-	protected static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray, SimpleReflectogramEvent[] sre)
-	{
-		return ModelFunction.createFitedAsBreakL(y, 0, traceLength - 1, noiseArray, sre);
+	protected static ModelFunction fitTrace(double[] y,
+			int traceLength,
+			double[] noiseArray,
+			SimpleReflectogramEvent[] sre) {
+		return ModelFunction.createFitedAsBreakL(
+				y, 0, traceLength - 1, noiseArray, sre);
 	}
 
 	/**
@@ -409,7 +416,8 @@ public class CoreAnalysisManager
 	 * Собирает информацию о совокупности рефлектограмм, достаточную
 	 * для формирования эталона.
 	 * see {@link TracesAverages}
-	 * @param trColl входная совокупность р/г после пред-фильтрации ({@link PFTrace})
+	 * @param trColl входная совокупность р/г
+	 *   после пред-фильтрации ({@link PFTrace})
 	 * @param needNoiseInfo нужна ли информация о шуме
 	 * @param needMFInfo нужны ли кривые мин./макс. фитированных кривых
 	 * @param ap Параметры анализа, либо null если needMFInfo==false
@@ -557,10 +565,12 @@ public class CoreAnalysisManager
 	 * Создает эталонный MTM по непустому набору рефлектограмм и параметрам
 	 * анализа.
 	 * <ul>
-	 * <li> Если в наборе только одна р/г, строит пороги по исходной р/г (PFTrace),
+	 * <li> Если в наборе только одна р/г,
+	 *   строит пороги по исходной р/г (PFTrace),
 	 * <li> если несколько - по всем их mf,
 	 * <li> если ни одной - бросает IllegalArgumentException
-	 *      (see {@link #findTracesAverages(Collection, boolean, boolean, AnalysisParameters)}).
+	 *      (see {@link #findTracesAverages(Collection, boolean, boolean,
+	 *        AnalysisParameters)}).
 	 * </ul>
 	 * @todo использовать на входе Collection{Trace}
 	 * вместо Collection{PFTrace}, а не проводить анализ заново
@@ -585,11 +595,13 @@ public class CoreAnalysisManager
 		ModelTraceManager mtm = new ModelTraceManager(mtae);
 		if (trColl.size() > 1) {
 			// extend to max dev of _mf_
-			mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED); 
+			mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN,
+					MTM_DY_FACTOR_MF_BASED); 
 		}
 		else {
 			// extend to a single curve: original (noisy) _trace_
-			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN, MTM_DY_FACTOR_TR_BASED);
+			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN,
+					MTM_DY_FACTOR_TR_BASED);
 		}
 		return mtm;
 	}
@@ -620,7 +632,8 @@ public class CoreAnalysisManager
 	throws IncompatibleTracesException, IllegalArgumentException {
 		TracesAverages av = findTracesAverages(trColl, true, true, ap);
 		// extend to max dev of _mf_
-		mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED);
+		mtm.updateThreshToContain(
+				av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED);
 	}
 
 	/**
@@ -628,7 +641,8 @@ public class CoreAnalysisManager
 	 * коллекции значению. Входные р/г должны быть совместны, т.е.
 	 * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
 	 * @param trColl непустая входная коллекция рефлектограмм
-	 * @param av заранее найденное значение по этой коллекции TracesAverages (в нем не нужны ни noiseInfo, ни MFInfo)
+	 * @param av заранее найденное значение по этой коллекции TracesAverages
+	 *   (в нем не нужны ни noiseInfo, ни MFInfo)
 	 * @return самую среднюю рефлектограмму среди входных
 	 */
 	protected static PFTrace getMostTypicalTrace(
@@ -678,7 +692,8 @@ public class CoreAnalysisManager
 	/**
 	 * @throws IllegalArgumentException is possible if ratio is outside [0,1]
 	 */
-	public static double getMedian(double[] y, int iFrom, int iToEx, double ratio)
+	public static double getMedian(double[] y, int iFrom, int iToEx,
+			double ratio)
 	{
 		double[] temp = new double[iToEx - iFrom];
 		System.arraycopy(y, iFrom, temp, 0, temp.length);
@@ -701,7 +716,8 @@ public class CoreAnalysisManager
 
 	/**
 	 * Используется в MTM для создания порогов.
-	 * See specification of {@link #nExtendThreshToCoverCurve(double[], double[], ThreshDX[], ThreshDY[], int, int, double)}
+	 * See specification of {@link #nExtendThreshToCoverCurve(double[],
+	 *   double[], ThreshDX[], ThreshDY[], int, int, double)}
 	 */
 	public static void extendThreshToCoverCurve(
 			double[] yBase,
@@ -722,8 +738,10 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * Проводит анализ рефлектограммы вызовом {@link #performAnalysis(PFTrace, AnalysisParameters)},
-	 * затем сравнивает ее с помощью {@link #compareAndMakeAlarms(AnalysisResult, Etalon)}
+	 * Проводит анализ рефлектограммы вызовом
+	 *   {@link #performAnalysis(PFTrace, AnalysisParameters)},
+	 * затем сравнивает ее с помощью
+	 *   {@link #compareAndMakeAlarms(AnalysisResult, Etalon)}
 	 * @param trace пред-фильтрованная {@link PFTrace} рефлектограмма
 	 * @param ap параметры анализа
 	 * @param breakThresh
@@ -752,10 +770,12 @@ public class CoreAnalysisManager
 	 * @param ar Результаты анализа
 	 * @param etalon параметры эталона
 	 */
-	public static List<ReflectogramMismatchImpl> compareAndMakeAlarms(AnalysisResult ar,
+	public static List<ReflectogramMismatchImpl> compareAndMakeAlarms(
+			AnalysisResult ar,
 			Etalon etalon) {
 		// формируем выходной список
-		List<ReflectogramMismatchImpl> alarmList = new ArrayList<ReflectogramMismatchImpl>();
+		List<ReflectogramMismatchImpl> alarmList =
+			new ArrayList<ReflectogramMismatchImpl>();
 
 		// получаем параметры эталона
 		ModelTraceManager etMTM = etalon.getMTM();
@@ -765,7 +785,8 @@ public class CoreAnalysisManager
 
 		// начало конца волокна по эталону
 		int etMinLength = etMTM.getMTAE().getNEvents() > 0
-				? etMTM.getMTAE().getSimpleEvent(etMTM.getMTAE().getNEvents() - 1).getBegin()
+				? etMTM.getMTAE().getSimpleEvent(
+						etMTM.getMTAE().getNEvents() - 1).getBegin()
 				: 0; // если в эталоне нет событий, считаем его длину нулевой
 
 		// НЕ добавляем к результатам анализа найденную длину р/г и фитированную кривую - это пока не нужно
@@ -773,14 +794,16 @@ public class CoreAnalysisManager
 //	  outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
 
 		// пытаемся обнаружить обрыв волокна:
-		// (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh
+		// (1) на участке (x < traceLength) - по уходу м.ф. ниже breakThresh
 		// XXX - надо ли было предварительно смещать р/г по вертикали?
 		int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
-		// (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала EOT ?
+		// (2) на участке (x >= traceLength) - не ушли ли в шум до начала EOT ?
 		if (breakPos < 0 && ar.getTraceLength() < etMinLength)
 			breakPos = ar.getTraceLength();
 
-		// проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
+		// проблема - breakPos случится при первом же уходе ниже minTraceLevel,
+		// что очень вероятно на последних километрах абс. нормальной р/г
+		// при работе на пределе динамического дипазона (see traces #38, #65)
 		if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
 		{
 			ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
