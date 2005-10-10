@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.56 2005/10/03 09:51:32 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.57 2005/10/10 10:43:42 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,13 +27,25 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/10/03 09:51:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/10/10 10:43:42 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public class CORBAObjectLoader implements ObjectLoader {
 	protected ServerConnectionManager serverConnectionManager;
+	
+	protected static CORBAActionProcessor actionProcessor;
+
+	
+	private static abstract class AbstractLoadAction<T extends StorableObject> 
+	implements CORBAAction {
+		protected Set<T> sett;		
+		
+		public Set<T> getResult() {
+			return this.sett;
+		}
+	}
 
 	public CORBAObjectLoader(final ServerConnectionManager serverConnectionManager) {
 		this.serverConnectionManager = serverConnectionManager;
@@ -63,32 +75,66 @@ public class CORBAObjectLoader implements ObjectLoader {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 		return loadStorableObjectsButIdsByCondition(server, ids, condition);
 	}
-
+	
+	private static synchronized CORBAActionProcessor getCORBAActionProcessor() {
+		if (actionProcessor == null) {
+			actionProcessor = new CORBAActionProcessor() {
+				public void performAction(final CORBAAction action) throws ApplicationException {
+					int numEfforts = 0;
+					while (true) {
+						try {
+							action.performAction();
+							return;
+						} catch (final AMFICOMRemoteException are) {
+							switch (are.errorCode.value()) {
+								case IdlErrorCode._ERROR_NOT_LOGGED_IN:
+									if (++numEfforts == 1) {
+										if (LoginManager.restoreLogin()) {
+											continue;
+										}
+										Log.debugMessage("CORBAObjectLoader.loadStorableObjects | Login not restored", Level.INFO);
+										return;
+									}
+									throw new LoginException(are.message);
+								default:
+									throw new RetrieveObjectException(are.message);
+							}
+						}
+					}
+				}
+			};
+		}
+		
+		return actionProcessor;
+	}
+	
+	public static final void setActionProcessor(final CORBAActionProcessor actionProcessor) {
+		CORBAObjectLoader.actionProcessor = actionProcessor;
+	}
+	
+	private static <T extends StorableObject> Set<T> loading(final AbstractLoadAction<T> loadAction) 
+	throws ApplicationException {
+		getCORBAActionProcessor().performAction(loadAction);
+		
+		final Set<T> result = loadAction.getResult();
+		if (result != null) {
+			return result;
+		}
+		return Collections.emptySet();		
+	}
+	
 	public static final <T extends StorableObject> Set<T> loadStorableObjects(final CommonServer server, final Set<Identifier> ids)
 			throws ApplicationException {
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
-		int numEfforts = 0;
-		while (true) {
-			try {
+		
+		return loading(new AbstractLoadAction<T>() {			
+			public void performAction() 
+			throws AMFICOMRemoteException {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IdlStorableObject[] transferables = server.transmitStorableObjects(idsT, sessionKeyT);
-				return StorableObject.fromTransferables(transferables);
-			} catch (final AMFICOMRemoteException are) {
-				switch (are.errorCode.value()) {
-					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
-						if (++numEfforts == 1) {
-							if (LoginManager.restoreLogin()) {
-								continue;
-							}
-							Log.debugMessage("CORBAObjectLoader.loadStorableObjects | Login not restored", Level.INFO);
-							return Collections.emptySet();
-						}
-						throw new LoginException(are.message);
-					default:
-						throw new RetrieveObjectException(are.message);
-				}
+				this.sett = StorableObject.fromTransferables(transferables);
 			}
-		}
+		});
 	}
 
 	public static final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final CommonServer server,
@@ -96,28 +142,15 @@ public class CORBAObjectLoader implements ObjectLoader {
 			final StorableObjectCondition condition) throws ApplicationException {
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		final IdlStorableObjectCondition conditionT = condition.getTransferable();
-		int numEfforts = 0;
-		while (true) {
-			try {
+		
+		return loading(new AbstractLoadAction<T>() {
+			public void performAction() 
+			throws AMFICOMRemoteException {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				final IdlStorableObject[] transferables = server.transmitStorableObjectsButIdsByCondition(idsT, conditionT, sessionKeyT);
-				return StorableObject.fromTransferables(transferables);
-			} catch (final AMFICOMRemoteException are) {
-				switch (are.errorCode.value()) {
-					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
-						if (++numEfforts == 1) {
-							if (LoginManager.restoreLogin()) {
-								continue;
-							}
-							Log.debugMessage("CORBAObjectLoader.loadStorableObjectsButIdsByCondition | Login not restored", Level.INFO);
-							return Collections.emptySet();
-						}
-						throw new LoginException(are.message);
-					default:
-						throw new RetrieveObjectException(are.message);
-				}
+				this.sett = StorableObject.fromTransferables(transferables);
 			}
-		}
+		});		
 	}
 
 	/**
@@ -128,35 +161,34 @@ public class CORBAObjectLoader implements ObjectLoader {
 		if (ids.isEmpty()) {
 			return Collections.emptyMap();
 		}
-
-		final CommonServer server = this.serverConnectionManager.getServerReference();
-		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
-		int numEfforts = 0;
-		while (true) {
-			try {
-				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
+		
+		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);	
+		
+		class RemoveVersionAction implements CORBAAction {
+			
+			private Map<Identifier, StorableObjectVersion> versionsMap;
+			
+			public void performAction() throws AMFICOMRemoteException, ApplicationException {
+				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
+				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();				
 				final IdVersion[] idVersions = server.transmitRemoteVersions(idsT, sessionKeyT);
-				final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>(idVersions.length);
+				this.versionsMap = new HashMap<Identifier, StorableObjectVersion>(idVersions.length);
 				for (int i = 0; i < idVersions.length; i++) {
-					versionsMap.put(new Identifier(idVersions[i].id), new StorableObjectVersion(idVersions[i].version));
-				}
-				return versionsMap;
-			} catch (final AMFICOMRemoteException are) {
-				switch (are.errorCode.value()) {
-					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
-						if (++numEfforts == 1) {
-							if (LoginManager.restoreLogin()) {
-								continue;
-							}
-							Log.debugMessage("CORBAObjectLoader.getRemoteVersions | Login not restored", Level.INFO);
-							return Collections.emptyMap();
-						}
-						throw new LoginException(are.message);
-					default:
-						throw new RetrieveObjectException(are.message);
+					this.versionsMap.put(new Identifier(idVersions[i].id), new StorableObjectVersion(idVersions[i].version));
 				}
 			}
+			
+			public final Map<Identifier, StorableObjectVersion> getVersionsMap() {
+				return this.versionsMap;
+			}
+			
 		}
+		
+		final RemoveVersionAction removeVersionAction = new RemoveVersionAction();
+		
+		getCORBAActionProcessor().performAction(removeVersionAction);
+		
+		return removeVersionAction.getVersionsMap();
 	}
 
 	/**
@@ -168,31 +200,16 @@ public class CORBAObjectLoader implements ObjectLoader {
 		if (storableObjects.isEmpty()) {
 			return;
 		}
-
-		final CommonServer server = this.serverConnectionManager.getServerReference();
-		final ORB orb = this.serverConnectionManager.getCORBAServer().getOrb();
-		final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, orb);
-		int numEfforts = 0;
-		while (true) {
-			try {
+		
+		getCORBAActionProcessor().performAction(new CORBAAction() {
+			public void performAction() throws AMFICOMRemoteException ,ApplicationException {
+				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
+				final ORB orb = CORBAObjectLoader.this.serverConnectionManager.getCORBAServer().getOrb();
+				final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, orb);
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				server.receiveStorableObjects(transferables, sessionKeyT);
-				return;
-			} catch (final AMFICOMRemoteException are) {
-				switch (are.errorCode.value()) {
-					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
-						if (++numEfforts == 1) {
-							if (LoginManager.restoreLogin()) {
-								continue;
-							}
-							throw new LoginException("Login not restored");
-						}
-						throw new LoginException(are.message);
-					default:
-						throw new UpdateObjectException(are.message);
-				}
 			}
-		}
+		});
 	}
 
 	public final void delete(final Set<? extends Identifiable> identifiables) throws ApplicationException {
@@ -200,30 +217,14 @@ public class CORBAObjectLoader implements ObjectLoader {
 		if (identifiables.isEmpty()) {
 			return;
 		}
-
-		final CommonServer server = this.serverConnectionManager.getServerReference();
-		final IdlIdentifier[] idsT = Identifier.createTransferables(identifiables);
-		int numEfforts = 0;
-		while (true) {
-			try {
+		
+		getCORBAActionProcessor().performAction(new CORBAAction() {
+			public void performAction() throws AMFICOMRemoteException ,ApplicationException {
+				final CommonServer server = CORBAObjectLoader.this.serverConnectionManager.getServerReference();
+				final IdlIdentifier[] idsT = Identifier.createTransferables(identifiables);
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
 				server.delete(idsT, sessionKeyT);
-				return;
-			} catch (final AMFICOMRemoteException are) {
-				switch (are.errorCode.value()) {
-					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
-						if (++numEfforts == 1) {
-							if (LoginManager.restoreLogin()) {
-								continue;
-							}
-							throw new LoginException("Login not restored");
-						}
-						throw new LoginException(are.message);
-					default:
-						throw new ApplicationException(are.message);
-				}
 			}
-		}
+		});
 	}
-
 }

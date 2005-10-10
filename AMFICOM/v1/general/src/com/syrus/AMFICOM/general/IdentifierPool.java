@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.31 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.32 2005/10/10 10:43:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,14 +13,15 @@ import gnu.trove.TShortObjectIterator;
 
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.io.FIFOSaver;
 import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/10/10 10:43:27 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -30,9 +31,11 @@ public class IdentifierPool {
 	private static final double MIN_FILL_FACTOR = 0.2;
 	private static final long MAX_TIME_WAIT = 5 * 1000; /* Maximim time to wait while identifiers are loading*/
 
-	private static IGSConnectionManager igsConnectionMananger;
+	static IGSConnectionManager igsConnectionMananger;
 	private static int capacity;
 
+	protected static CORBAActionProcessor actionProcessor;
+	
 	/* Map <short objectEntity, Fifo idPool> */
 	private static TShortObjectHashMap idPoolMap;
 
@@ -58,7 +61,6 @@ public class IdentifierPool {
 		/* Add new fifo if needed */
 		if (fifo == null) {
 			fifo = new Fifo(capacity);
-			fillFifo(fifo, entityCode);
 			synchronized(idPoolMap) {
 				idPoolMap.put(entityCode, fifo);
 			}
@@ -81,22 +83,56 @@ public class IdentifierPool {
 				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 	}
 
+	public static final void setActionProcessor(final CORBAActionProcessor actionProcessor) {
+		IdentifierPool.actionProcessor = actionProcessor;
+	}
+	
+	private static synchronized CORBAActionProcessor getCORBAActionProcessor() {
+		if (actionProcessor == null) {
+			actionProcessor = new CORBAActionProcessor() {
+				public void performAction(final CORBAAction action) throws ApplicationException {
+					try {
+						action.performAction();
+					} catch (final IdentifierGenerationException e) {
+						throw e; 
+					} catch (final AMFICOMRemoteException e) {
+						throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", e);
+					}
+				}
+			};
+		}
+		
+		return actionProcessor;
+	}
+	
 	private static void fillFifo(final Fifo fifo, final short entityCode) throws IdentifierGenerationException {
-		IdentifierGeneratorServer igServer = null;
 		try {
-			igServer = igsConnectionMananger.getIGSReference();
-		} catch (CommunicationException ce) {
-			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
+			getCORBAActionProcessor().performAction(new CORBAAction() {
+				public void performAction() throws AMFICOMRemoteException ,ApplicationException {
+					IdentifierGeneratorServer igServer = null;
+					try {
+						igServer = igsConnectionMananger.getIGSReference();
+					} catch (CommunicationException ce) {
+						throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
+					}
+			
+					final IdentifierLoader identifierLoader = new IdentifierLoader(igServer, fifo, entityCode);
+					identifierLoader.start();
+					/*	Do not wait more than MAX_TIME_WAIT*/
+					try {
+						identifierLoader.join(MAX_TIME_WAIT);
+					} catch (InterruptedException ie) {
+						Log.errorException(ie);
+					}
+				}
+			});
+		} catch (final ApplicationException e) {
+			if (e instanceof IdentifierGenerationException) {
+				throw (IdentifierGenerationException) e;
+			}
+			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", e);
 		}
-
-		final IdentifierLoader identifierLoader = new IdentifierLoader(igServer, fifo, entityCode);
-		identifierLoader.start();
-		/*	Do not wait more than MAX_TIME_WAIT*/
-		try {
-			identifierLoader.join(MAX_TIME_WAIT);
-		} catch (InterruptedException ie) {
-			Log.errorException(ie);
-		}
+		
 	}
 
 	protected static void serialize() {
