@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.15 2005/10/10 11:07:38 stas Exp $
+ * $Id: CreateGroup.java,v 1.16 2005/10/10 11:43:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/10 11:43:39 $
  * @module schemeclient
  */
 
@@ -275,11 +275,6 @@ public class CreateGroup extends AbstractAction {
 	static DeviceGroup createGroup(SchemeGraph graph, Object[] cells, Identifier id, int type) {
 		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		DeviceGroup group = DeviceGroup.createInstance(null, viewMap, id, type);
-
-		//make group created unresizable
-		Map m = GraphConstants.createMap();
-		GraphConstants.setSizeable(m, false);
-		viewMap.put(group, m);
 		
 		ParentMap map = new ParentMap();
 		for (int i = 0; i < cells.length; i++)
