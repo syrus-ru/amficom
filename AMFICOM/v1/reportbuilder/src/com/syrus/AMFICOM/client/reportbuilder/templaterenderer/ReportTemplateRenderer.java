@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.13 2005/10/05 11:06:07 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.14 2005/10/10 05:49:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -168,6 +168,12 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 						JOptionPane.ERROR_MESSAGE);
 			}
 			
+			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
+			DRIComponentMouseListener.createInstance(this.applicationContext);			
+			ATComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
+			ATComponentMouseListener.createInstance(this.applicationContext);
+			ATComponentKeyListener.createInstance(this.applicationContext);			
+
 			try {
 				this.setTemplate(((UseTemplateEvent)evt).getReportTemplate());
 			} catch (Exception e) {
@@ -180,11 +186,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
-			DRIComponentMouseListener.createInstance(this.applicationContext);			
-			ATComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
-			ATComponentMouseListener.createInstance(this.applicationContext);
-			ATComponentKeyListener.createInstance(this.applicationContext);			
 		}
 		else if (evt instanceof ReportQuickViewEvent){
 			Object reportObject = ((ReportQuickViewEvent)evt).getReportObject();
@@ -318,31 +319,14 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.template = template;
 		this.refreshTemplateBounds();
 		
-		for (DataStorableElement dataElement : this.template.getDataStorableElements()) {
-			this.createReportTemplateDataRenderingComponent(
-					dataElement.getReportName(),
-					dataElement.getModelClassName(),
-					dataElement.getReportObjectId(),
-					new Point(dataElement.getX(),dataElement.getY()),
-					new Dimension(dataElement.getWidth(),dataElement.getHeight()));
-		}
+		for (DataStorableElement dataElement : this.template.getDataStorableElements())
+			this.createReportTemplateDataRenderingComponent(dataElement);
 
-		for (AttachedTextStorableElement textElement : this.template.getAttachedTextStorableElements()) {
-			AttachedTextComponent component = this.createTextRenderingComponent(
-					new Point(textElement.getX(),textElement.getY()));
-			component.setText(textElement.getText());
-			component.setLocation(textElement.getX(),textElement.getY());
-			component.setSize(textElement.getWidth(),textElement.getHeight());
-			component.setBorder(DataRenderingComponent.DEFAULT_BORDER);
-		}
+		for (AttachedTextStorableElement textElement : this.template.getAttachedTextStorableElements())
+			this.createTextRenderingComponent(textElement);
 
-		for (ImageStorableElement imageElement : this.template.getImageStorableElements()) {
-			ImageRenderingComponent component = this.createImageRenderingComponent(
-					new Point(imageElement.getX(),imageElement.getY()));
-			component.setLocation(imageElement.getX(),imageElement.getY());
-			component.setSize(imageElement.getWidth(),imageElement.getHeight());			
-			this.add(component);
-		}
+		for (ImageStorableElement imageElement : this.template.getImageStorableElements())
+			this.createImageRenderingComponent(imageElement);
 	}
 	
 	private void refreshTemplateBounds() {
@@ -462,6 +446,22 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		return component;
 	}
 
+	public ImageRenderingComponent createImageRenderingComponent(ImageStorableElement imageElement) throws ApplicationException, IOException {
+		ImageRenderingComponent component = new ImageRenderingComponent(
+				imageElement,
+				imageElement.getBufferedImage());
+		this.add(component);
+		component.setLocation(imageElement.getX(),imageElement.getY());
+		component.setSize(imageElement.getWidth(),imageElement.getHeight());
+		component.addMouseListener(DRIComponentMouseListener.getInstance());
+		component.addMouseMotionListener(DRIComponentMouseMotionListener.getInstance());
+		
+		this.applicationContext.getDispatcher().firePropertyChange(
+			new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED));
+		
+		return component;
+	}
+	
 	public AttachedTextComponent createTextRenderingComponent(Point point) throws CreateObjectException{
 		AttachedTextStorableElement element = AttachedTextStorableElement.createInstance(
 				LoginManager.getUserId(),
@@ -491,6 +491,53 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.applicationContext.getDispatcher().addPropertyChangeListener(
 				ReportEvent.TYPE,
 				component.getATPropertyChangeListener());
+
+		return component;
+	}
+
+	public AttachedTextComponent createTextRenderingComponent(AttachedTextStorableElement textElement) throws CreateObjectException{
+		AttachedTextComponent component = new AttachedTextComponent(textElement);
+		this.add(component);
+		
+		IntPoint location = textElement.getLocation();
+		component.setLocation(location.x,location.y);
+		component.setSize(textElement.getWidth(),textElement.getHeight());
+		component.setText(textElement.getText());
+		component.setBorder(DataRenderingComponent.DEFAULT_BORDER);
+		
+		component.addMouseListener(ATComponentMouseListener.getInstance());
+		component.addMouseMotionListener(ATComponentMouseMotionListener.getInstance());
+		component.addKeyListener(ATComponentKeyListener.getInstance());
+		component.setATPropertyChangeListener(
+				new ATComponentPropertyChangeListener(
+						component,
+						this.applicationContext,
+						this.marginBounds));
+		
+		this.applicationContext.getDispatcher().addPropertyChangeListener(
+				ReportEvent.TYPE,
+				component.getATPropertyChangeListener());
+
+		return component;
+	}
+	
+	
+	public RTEDataRenderingComponent createReportTemplateDataRenderingComponent(
+			DataStorableElement storableElement) throws CreateModelException, ApplicationException {
+		RTEDataRenderingComponent component =
+			new RTEDataRenderingComponent(storableElement);
+		
+		component.addMouseListener(DRIComponentMouseListener.getInstance());
+		component.addMouseMotionListener(DRIComponentMouseMotionListener.getInstance());
+		
+		this.add(component);
+		component.refreshLabels();
+		
+		IntPoint location = storableElement.getLocation();
+		component.setLocation(location.x,location.y);
+		component.setSize(storableElement.getWidth(),storableElement.getHeight());
+		
+		component.setContext(this.applicationContext);
 
 		return component;
 	}
