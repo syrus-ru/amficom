@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.27 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.28 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -393,15 +393,19 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						int d = graph.getGridSize();
 						Point p1 = sourceView == null ? new Point(p.x - 2 * d, p.y) : sourceView.getBounds().getLocation();
 						Point p2 = targetView == null ? new Point(p.x + 2 * d, p.y) : targetView.getBounds().getLocation();
-						DefaultCableLink cell = SchemeActions.createCableLink(graph,
-								sourceView, targetView, graph.snap(graph.fromScreen(p1)), 
-								graph.snap(graph.fromScreen(p2)), schemeCableLink.getId());
-						cell.setUserObject(schemeCableLink.getName());
-						if (sourcePortCell != null) {
-							GraphActions.setObjectBackColor(graph, sourcePortCell, SchemeActions.determinePortColor(sourcePort, schemeCableLink));
-						}
-						if (targetPortCell != null) {
-							GraphActions.setObjectBackColor(graph, targetPortCell, SchemeActions.determinePortColor(targetPort, schemeCableLink));
+						try {
+							DefaultCableLink cell = SchemeActions.createCableLink(graph,
+									sourceView, targetView, graph.snap(graph.fromScreen(p1)), 
+									graph.snap(graph.fromScreen(p2)), schemeCableLink.getId());
+							cell.setUserObject(schemeCableLink.getName());
+							if (sourcePortCell != null) {
+								GraphActions.setObjectBackColor(graph, sourcePortCell, SchemeActions.determinePortColor(sourcePort, schemeCableLink));
+							}
+							if (targetPortCell != null) {
+								GraphActions.setObjectBackColor(graph, targetPortCell, SchemeActions.determinePortColor(targetPort, schemeCableLink));
+							}
+						} catch (CreateObjectException e) {
+							Log.errorMessage(e.getMessage());
 						}
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -475,7 +479,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 
 	static int counter = 0;
 	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch) {
-//
+
 //		if (counter == 0 && sch.getName().startsWith("UCM")) {
 //			try {
 //				counter++;

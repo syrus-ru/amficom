@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.16 2005/10/08 13:49:04 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.17 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/10/08 13:49:04 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -51,7 +51,7 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 
 	public static DefaultCableLink createInstance(Object userObject,
 			PortView firstPort, PortView port, Point p, Point p2, Map<Object, Map> viewMap,
-			ConnectionSet cs) throws CreateObjectException {
+			ConnectionSet cs, Identifier linkId) throws CreateObjectException {
 
 		// we must connect cable to free CablePortCells
 		CablePortCell sourceCablePortCell = null;
@@ -69,13 +69,18 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 		}
 		
 		if (sourceCablePortCell == null || targetCablePortCell == null) {
-			throw new CreateObjectException("Cable must be connected to cable ports");
+			throw new CreateObjectException("Cable must be connected to cable ports : " + linkId.getIdentifierString());
 		}
-		if (sourceCablePortCell.getSchemeCablePort().getAbstractSchemeLink() != null ||
-				targetCablePortCell.getSchemeCablePort().getAbstractSchemeLink() != null) {
-			throw new CreateObjectException("Other cable already connected to port");
+		SchemeCableLink cl1 = sourceCablePortCell.getSchemeCablePort().getAbstractSchemeLink();
+		SchemeCableLink cl2 = targetCablePortCell.getSchemeCablePort().getAbstractSchemeLink();
+		if (cl1 != null && !cl1.getId().equals(linkId)) {
+			throw new CreateObjectException("Other cable (" + cl1.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
+		}
+		if (cl2 != null && !cl2.getId().equals(linkId)) {
+			throw new CreateObjectException("Other cable (" + cl2.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
 		}
 		DefaultCableLink cell = new DefaultCableLink(userObject);
+		cell.setSchemeCableLinkId(linkId);
 
 		int u = GraphConstants.PERCENT;
 		Map map = new HashMap();

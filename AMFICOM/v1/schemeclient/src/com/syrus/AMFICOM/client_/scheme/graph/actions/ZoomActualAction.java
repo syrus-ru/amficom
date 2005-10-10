@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomActualAction.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: ZoomActualAction.java,v 1.6 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
@@ -17,8 +19,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -33,9 +35,20 @@ public class ZoomActualAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		SchemeGraph graph = this.pane.getGraph();
+		Point oldLocation = graph.getLocation();
+		double oldScale = graph.getScale();
+		Rectangle visibleRect = graph.getVisibleRect();
 		graph.setScale(1);
 		graph.setPreferredSize(graph.getActualSize());
 		graph.setGridVisible(graph.isGridVisibleAtActualSize());
-		//graph.setLocation(0, 0);
+		
+		graph.setLocation((int)(oldLocation.x / oldScale - visibleRect.width / 2 * (1 / oldScale - 1)),
+				(int)(oldLocation.y / oldScale - visibleRect.height / 2 * (1 / oldScale - 1)));
+		
+//		if (oldScale < 1) {
+//			graph.setLocation((int)((oldLocation.x - visibleRect.width / 2) / oldScale), (int)((oldLocation.y - visibleRect.height / 2) / oldScale));
+//		} else {
+//			graph.setLocation((int)((oldLocation.x + visibleRect.width / 2) / oldScale), (int)((oldLocation.y + visibleRect.height / 2) / oldScale));
+//		}
 	}
 }

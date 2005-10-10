@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.7 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeExportCommand.java,v 1.8 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,6 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
-import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.util.Log;
 
@@ -40,7 +38,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 		Scheme scheme = this.pane.getCurrentPanel().getSchemeResource().getScheme();
 		if (scheme != null) {
 
-			final String fileName = openFile(
+			final String fileName = openFileForWriting(
 					LangModelScheme.getString("Title.save.scheme_xml")); //$NON-NLS-1$
 			if(fileName == null)
 				return;

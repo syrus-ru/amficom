@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.9 2005/10/08 13:49:03 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.10 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,6 @@ public class ImportUCMConverter {
 	private Map<Integer, SchemeProtoElement> outVrms;
 	private Set<Identifier> placedObjectIds;
 	private Set<ProtoEquipment> muffProtoTypes;
-	private Map<SchemeCablePort, Set<SchemeCableThread>> portThreadsCount = new HashMap<SchemeCablePort, Set<SchemeCableThread>>();
 	private Set<Identifiable> objectsToDelete;
 	
 	private Identifier userId;
@@ -175,18 +174,7 @@ public class ImportUCMConverter {
 		SchemeGraph invisibleGraph = new UgoTabbedPane(internalContext).getGraph();
 		invisibleGraph.setMakeNotifications(false);
 		Identifier domainId = LoginManager.getDomainId();
-		
-//		Collection<SchemeDevice> devs = new HashSet<SchemeDevice>();
-//		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
-//			Set<SchemeDevice> devs1 = schemeElement.getSchemeDevices(false);
-//			for (SchemeDevice dev : devs1) {
-//				if (devs.contains(dev)) {
-//					System.out.println("!");
-//				}
-//			}
-//			devs.addAll(devs1);
-//		}
-		
+	
 		for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
 			if (!this.placedObjectIds.contains(schemeElement.getId())) {
 			try{
@@ -214,9 +202,11 @@ public class ImportUCMConverter {
 					int inCount = 0, outCount = 0;
 					for (SchemeCablePort cablePort : existingCablePorts) {
 						int fibers = 8;
-						Set<SchemeCableThread> threads = this.portThreadsCount.get(cablePort);
-						if (threads != null) {
-							fibers = threads.size();
+						SchemeCableLink cable = cablePort.getAbstractSchemeLink();
+						if (cable != null) {
+							fibers = cable.getSchemeCableThreads(false).size();
+						} else {
+							Log.debugMessage("No connected cable found", Level.FINE);
 						}
 						boolean isInput = cablePort.getDirectionType() == IdlDirectionType._IN;
 						SchemeProtoElement suitableVrm = getSuitableProto(isInput ? this.inVrms : this.outVrms, Integer.valueOf(fibers));
@@ -263,20 +253,15 @@ public class ImportUCMConverter {
 				} else if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
 //					ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
 					Set<SchemeCablePort> existingCablePorts = schemeElement.getSchemeCablePortsRecursively(false);
-					if (existingCablePorts.isEmpty()) {
-						existingCablePorts = schemeElement.getSchemeCablePortsRecursively(false);
-					}
-					if (existingCablePorts.isEmpty()) {
-						existingCablePorts = schemeElement.getSchemeCablePortsRecursively(true);
-					}
 					if (existingCablePorts.size() < 3) { // straight muff
 						// count how many threads in connected fibers
 						int maxFibers = 8;
 						for (SchemeCablePort cablePort : existingCablePorts) {
-//							SchemeCableLink cableLink = cablePort.getAbstractSchemeLink();
-							Set<SchemeCableThread> threads = this.portThreadsCount.get(cablePort);
-							if (threads != null) {
-								maxFibers = Math.max(maxFibers, threads.size());
+							SchemeCableLink cable = cablePort.getAbstractSchemeLink();
+							if (cable != null) {
+								maxFibers = Math.max(maxFibers, cable.getSchemeCableThreads(false).size());
+							} else {
+								Log.debugMessage("No connected cable found", Level.FINE);
 							}
 						}
 						SchemeProtoElement suitableMuff = getSuitableProto(this.straightMuffs, Integer.valueOf(maxFibers));
@@ -327,9 +312,11 @@ public class ImportUCMConverter {
 						for (SchemeCablePort cablePort : existingCablePorts) {
 //							SchemeCableLink cableLink = cablePort.getAbstractSchemeLink();
 							int fibers = 8;
-							Set<SchemeCableThread> threads = this.portThreadsCount.get(cablePort);
-							if (threads != null) {
-								fibers = threads.size();
+							SchemeCableLink cable = cablePort.getAbstractSchemeLink();
+							if (cable != null) {
+								fibers = cable.getSchemeCableThreads(false).size();
+							} else {
+								Log.debugMessage("No connected cable found", Level.FINE);
 							}
 							boolean isInput = cablePort.getDirectionType() == IdlDirectionType._IN;
 							SchemeProtoElement suitableVrm = getSuitableProto(isInput ? this.inVrms : this.outVrms, Integer.valueOf(fibers));

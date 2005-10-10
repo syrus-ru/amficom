@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.44 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.45 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.44 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -90,12 +90,22 @@ public class SchemeObjectsFactory {
 	private static final String EMPTY = "";  //$NON-NLS-1$
 	
 	private static SchemeProtoElement stubProtoElement;
+	public static SchemeProtoGroup stubProtoGroup;
 	private static String stubName = "should not see me";
 	
 	private static ApplicationContext aContext;
 	
 	public static void init(final ApplicationContext aContext1) {
 		aContext = aContext1;
+		Identifier userId = LoginManager.getUserId();
+		if (stubProtoGroup == null) {
+			try {
+				stubProtoGroup = SchemeProtoGroup.createInstance(userId, stubName);
+				stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, stubProtoGroup);
+			} catch (CreateObjectException e) {
+				Log.errorException(e);
+			}
+		}
 	}
 	
 	public static CharacteristicType createCharacteristicType(String name, CharacteristicTypeSort sort) throws CreateObjectException {
@@ -333,10 +343,6 @@ public class SchemeObjectsFactory {
 		}
 		
 		Identifier userId = LoginManager.getUserId();
-		if (stubProtoElement == null) {
-			stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, SchemeProtoGroup.createInstance(userId, stubName));
-		}
-		
 		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(userId, 
 				LangModelScheme.getString("Title.component") + " (" + counter + ")", stubProtoElement);  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 		protoElement.setProtoEquipment(protoEq);
@@ -411,9 +417,6 @@ public class SchemeObjectsFactory {
 
 	public static SchemeDevice createSchemeDevice(String name) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		if (stubProtoElement == null) {
-			stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, SchemeProtoGroup.createInstance(userId, stubName));
-		}
 
 		SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, name, stubProtoElement);
 		return schemeDevice;
@@ -437,9 +440,6 @@ public class SchemeObjectsFactory {
 	
 	public static SchemeLink createSchemeLink(String name) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		if (stubProtoElement == null) {
-			stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, SchemeProtoGroup.createInstance(userId, stubName));
-		}
 		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, stubProtoElement);
 		if (aContext != null) {
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(aContext, schemeLink.getId(), SchemeEvent.CREATE_OBJECT));

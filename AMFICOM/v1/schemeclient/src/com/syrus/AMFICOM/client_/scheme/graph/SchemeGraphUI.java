@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.22 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.23 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -500,7 +500,7 @@ public class SchemeGraphUI extends GPGraphUI {
 			int w = this.graph.getPreferredSize().width;
 			int h = this.graph.getPreferredSize().height;
 
-			int gs = (int) (this.graph.getGridSize() * this.graph.getScale());
+			int gs = ((SchemeGraph)this.graph).toScreen((int) (this.graph.getGridSize() * this.graph.getScale()));
 			if (((SchemeGraph) this.graph).isBorderVisible()) {
 				if (gs > 0) {
 
@@ -575,7 +575,7 @@ public class SchemeGraphUI extends GPGraphUI {
 			int xe = r1.x + r1.width;
 			int ye = r1.y + r1.height;
 			if (this.graph instanceof SchemeGraph) {
-				gs = ((SchemeGraph)this.graph).toScreen(gs);
+//				gs = ((SchemeGraph)this.graph).toScreen(gs);
 				if (((SchemeGraph) this.graph).isBorderVisible()) {
 					x0 = Math.max(x0, 10 * gs);
 					y0 = Math.max(y0, 2 * gs);

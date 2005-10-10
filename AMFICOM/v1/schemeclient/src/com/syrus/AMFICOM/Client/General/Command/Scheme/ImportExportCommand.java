@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.11 2005/10/08 13:49:03 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.12 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,8 +91,6 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String UCM_SCHEMED_EQT = "UCM_SCHEMED";
 	
 	protected static final String ID_PREFIX = "id";
-//	protected static final String PROTO_ELEMENTS_FILENAME = "protos.xml";
-//	protected static final String CONFIGURATION_FILENAME = "config.xml";
 	protected static File currentDirectory = new File("/export");
 	protected static final String IMAGE_DIRECTORY = "image";
 	
@@ -101,16 +99,29 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	private static boolean inited = false;		
 	
 	private static void init() {
+		final Map<XmlObject, SchemeImageResource> cashedSchemeCells 
+				= new HashMap<XmlObject, SchemeImageResource>();
+		final Map<XmlObject, SchemeImageResource> cashedUgoCells 
+				= new HashMap<XmlObject, SchemeImageResource>();
+		final Map<XmlObject, Map<Identifier, XmlIdentifier>> cashedSchemeIdentifiers 
+				= new HashMap<XmlObject, Map<Identifier, XmlIdentifier>>();
+		final Map<XmlObject, Map<Identifier, XmlIdentifier>> cashedUgoIdentifiers 
+				= new HashMap<XmlObject, Map<Identifier, XmlIdentifier>>();
+		ApplicationContext internalContext =  new ApplicationContext();
+		internalContext.setDispatcher(new Dispatcher());
+		final SchemeGraph invisibleGraph = new UgoTabbedPane(internalContext).getGraph();
+		invisibleGraph.setMakeNotifications(false);
+		
 		XmlComplementorRegistry.registerComplementor(SCHEME_CODE, new XmlComplementor() {
 			public void complementStorableObject(
 					final XmlStorableObject storableObject,
 					final String importType,
 					final ComplementationMode mode)
 			throws CreateObjectException, UpdateObjectException {
+				final XmlScheme xmlScheme = (XmlScheme) storableObject;
 				switch (mode) {
 				case PRE_IMPORT:
 					// set current domainId
-					final XmlScheme xmlScheme = (XmlScheme) storableObject;
 					if (xmlScheme.isSetDomainId()) {
 						xmlScheme.unsetDomainId();
 					}
@@ -121,7 +132,17 @@ public abstract class ImportExportCommand extends AbstractCommand {
 						Identifier schemeId = Identifier.fromXmlTransferable(xmlScheme.getId(), importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 						Scheme scheme = StorableObjectPool.getStorableObject(schemeId, true);
 						if (xmlScheme.isSetSchemeCellFilename()) {
-							// TODO set cell from file
+							String exportDirectory = currentDirectory.getPath();
+							final SchemeImageResource schemeCell = SchemeObjectsFactory.createSchemeImageResource();
+							schemeCell.setImage(readImageResource(exportDirectory + File.separatorChar + xmlScheme.getSchemeCellFilename()));
+							
+							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
+									readObject(exportDirectory + File.separatorChar + xmlScheme.getSchemeCellFilename() + ID_PREFIX);
+							
+							xmlScheme.unsetSchemeCellFilename();
+							schemeCell.getId().getXmlTransferable(xmlScheme.addNewSchemeCellId(), importType);
+							cashedSchemeCells.put(xmlScheme, schemeCell);
+							cashedSchemeIdentifiers.put(xmlScheme, identifierSeq);
 						} else if (xmlScheme.isSetSchemeCellCodename()) {
 //						 TODO set cell from codename
 						} else if (!xmlScheme.isSetSchemeCellId()) { // if no cell imported 
@@ -133,7 +154,26 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							}
 						}
 						if (xmlScheme.isSetUgoCellFilename()) {
-							// TODO set cell from file
+							String exportDirectory = currentDirectory.getPath();
+							final SchemeImageResource ugoCell = SchemeObjectsFactory.createSchemeImageResource();
+							ugoCell.setImage(readImageResource(exportDirectory + File.separatorChar + xmlScheme.getUgoCellFilename()));
+							
+							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
+									readObject(exportDirectory + File.separatorChar + xmlScheme.getUgoCellFilename() + ID_PREFIX);
+							
+							xmlScheme.unsetUgoCellFilename();
+							ugoCell.getId().getXmlTransferable(xmlScheme.addNewUgoCellId(), importType);
+							cashedUgoCells.put(xmlScheme, ugoCell);
+							cashedUgoIdentifiers.put(xmlScheme, identifierSeq);
+						} else if (xmlScheme.isSetUgoCellCodename()) {
+//						 TODO set cell from codename
+						} else if (!xmlScheme.isSetUgoCellId()) { // no ugo
+							if (scheme != null) {
+								SchemeImageResource ugoCell = scheme.getUgoCell();
+								if (ugoCell != null) {
+									ugoCell.getId().getXmlTransferable(xmlScheme.addNewUgoCellId(), importType);
+								}	
+							}
 						} else if (xmlScheme.isSetUgoCellCodename()) {
 //						 TODO set cell from codename
 						} else if (!xmlScheme.isSetUgoCellId()) { // no ugo
@@ -144,7 +184,6 @@ public abstract class ImportExportCommand extends AbstractCommand {
 								}	
 							}
 						}
-						
 						// check parent, if scheme moved to another scheme - substitute it id to xmlScheme
 						if (scheme != null) {
 							SchemeElement se = scheme.getParentSchemeElement();
@@ -159,11 +198,128 @@ public abstract class ImportExportCommand extends AbstractCommand {
 						throw new UpdateObjectException(e);
 					} catch (ApplicationException e) {
 						throw new UpdateObjectException(e);
+					} catch (IOException e) {
+						throw new UpdateObjectException(e);
+					} catch (ClassNotFoundException e) {
+						throw new UpdateObjectException(e);
 					}
 					break;
 				case POST_IMPORT:
+					try {
+						final SchemeImageResource ugoCell1 = cashedUgoCells.get(xmlScheme);
+						final Map<Identifier, XmlIdentifier> ugoIdsSeq = cashedUgoIdentifiers.get(xmlScheme);
+						if (ugoCell1 != null && ugoIdsSeq != null) {
+							final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
+							List<Object> oldSerializable = ugoCell1.getData();
+							Object[] cells = (Object[])oldSerializable.get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									IdentifiableCell identifiableCell = (IdentifiableCell)cell;
+									Identifier id = identifiableCell.getId();
+									XmlIdentifier xmlId = ugoIdsSeq.get(id);
+									try {
+										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+										clonedIds.put(id, newId);
+									} catch (ObjectNotFoundException e) {
+										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+									}
+								}
+							}
+							
+							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, ugoCell1, true);
+							SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+							ugoCell1.setData((List)invisibleGraph.getArchiveableState());
+							GraphActions.clearGraph(invisibleGraph);
+							
+							cashedUgoIdentifiers.remove(xmlScheme);
+						}
+						final SchemeImageResource schemeCell1 = cashedSchemeCells.get(xmlScheme);
+						final Map<Identifier, XmlIdentifier> schemeIdsSeq = cashedSchemeIdentifiers.get(xmlScheme);
+						if (schemeCell1 != null && schemeIdsSeq != null) {
+							final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
+							Object[] cells = (Object[])schemeCell1.getData().get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									IdentifiableCell identifiableCell = (IdentifiableCell)cell;
+									Identifier id = identifiableCell.getId();
+									XmlIdentifier xmlId = schemeIdsSeq.get(id);
+									try {
+										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+										clonedIds.put(id, newId);
+									} catch (ObjectNotFoundException e) {
+										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+									}
+								}
+							}
+							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, schemeCell1, true);
+							SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+							schemeCell1.setData((List)invisibleGraph.getArchiveableState());
+							GraphActions.clearGraph(invisibleGraph);
+							
+							cashedSchemeIdentifiers.remove(xmlScheme);
+						}
+					} catch (Exception e) {
+						throw new UpdateObjectException(e);
+					}
 					break;
 				case EXPORT:
+					try {
+						String exportDirectory = currentDirectory.getPath();
+						new File(exportDirectory + File.separatorChar + IMAGE_DIRECTORY).mkdirs();
+						
+						if (xmlScheme.isSetUgoCellId()) {
+							final Identifier ugoCellId = Identifier.fromXmlTransferable(xmlScheme.getUgoCellId(), 
+									importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+							final SchemeImageResource ugoCell = StorableObjectPool.<SchemeImageResource> getStorableObject(ugoCellId, true);
+
+							Map<Identifier, XmlIdentifier> cellIds = new HashMap<Identifier, XmlIdentifier>();
+							Object[] cells = (Object[])ugoCell.getData().get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									final Identifier id = ((IdentifiableCell)cell).getId();
+									final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
+									id.getXmlTransferable(xmlId, importType);
+									cellIds.put(id, xmlId);
+								}
+							}
+							final String fileName = IMAGE_DIRECTORY + File.separatorChar + ugoCellId.getIdentifierString();
+							writeImageResource(exportDirectory + File.separatorChar + fileName, ugoCell.getImage());
+							writeObject(exportDirectory + File.separatorChar + fileName + ID_PREFIX, cellIds);
+							
+							xmlScheme.unsetUgoCellId();
+							xmlScheme.setUgoCellFilename(fileName);
+						}
+						if (xmlScheme.isSetSchemeCellId()) {
+							final Identifier schemeCellId = Identifier.fromXmlTransferable(xmlScheme.getSchemeCellId(), 
+									importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+							final SchemeImageResource schemeCell = StorableObjectPool.<SchemeImageResource> getStorableObject(schemeCellId, true);
+
+							Map<Identifier, XmlIdentifier> cellIds = new HashMap<Identifier, XmlIdentifier>();
+							Object[] cells = (Object[])schemeCell.getData().get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									final Identifier id = ((IdentifiableCell)cell).getId();
+									final XmlIdentifier xmlIdentifier = XmlIdentifier.Factory.newInstance();
+									id.getXmlTransferable(xmlIdentifier, importType);
+									cellIds.put(id, xmlIdentifier);
+								}
+							}
+							final String fileName = IMAGE_DIRECTORY + File.separatorChar + schemeCellId.getIdentifierString();
+							writeImageResource(exportDirectory + File.separatorChar + fileName, schemeCell.getImage());
+							writeObject(exportDirectory + File.separatorChar + fileName + ID_PREFIX, cellIds);
+							
+							xmlScheme.unsetSchemeCellId();
+							xmlScheme.setSchemeCellFilename(fileName);
+						}
+					} catch (final IOException ioe) {
+						throw new UpdateObjectException(ioe);
+					} catch (final CreateObjectException coe) {
+						throw coe;
+					} catch (final UpdateObjectException uoe) {
+						throw uoe;
+					} catch (final ApplicationException ae) {
+						throw new UpdateObjectException(ae);
+					}
 					break;
 				}
 			}
@@ -175,14 +331,24 @@ public abstract class ImportExportCommand extends AbstractCommand {
 					final String importType,
 					final ComplementationMode mode)
 			throws CreateObjectException, UpdateObjectException {
+				final XmlSchemeElement xmlSchemeElement = (XmlSchemeElement) storableObject;
 				switch (mode) {
 				case PRE_IMPORT:
-					final XmlSchemeElement xmlSchemeElement = (XmlSchemeElement) storableObject;
 					try {
 						Identifier seId = Identifier.fromXmlTransferable(xmlSchemeElement.getId(), importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 						SchemeElement schemeElement = StorableObjectPool.getStorableObject(seId, true);
 						if (xmlSchemeElement.isSetSchemeCellFilename()) {
-							// TODO set cell from file
+							String exportDirectory = currentDirectory.getPath();
+							final SchemeImageResource schemeCell = SchemeObjectsFactory.createSchemeImageResource();
+							schemeCell.setImage(readImageResource(exportDirectory + File.separatorChar + xmlSchemeElement.getSchemeCellFilename()));
+							
+							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
+									readObject(exportDirectory + File.separatorChar + xmlSchemeElement.getSchemeCellFilename() + ID_PREFIX);
+							
+							xmlSchemeElement.unsetSchemeCellFilename();
+							schemeCell.getId().getXmlTransferable(xmlSchemeElement.addNewSchemeCellId(), importType);
+							cashedSchemeCells.put(xmlSchemeElement, schemeCell);
+							cashedSchemeIdentifiers.put(xmlSchemeElement, identifierSeq);
 						} else if (xmlSchemeElement.isSetSchemeCellCodename()) {
 //						 TODO set cell from codename
 						} else if (!xmlSchemeElement.isSetSchemeCellId()) { // no cell
@@ -194,7 +360,17 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							}
 						}
 						if (xmlSchemeElement.isSetUgoCellFilename()) {
-							// TODO set cell from file
+							String exportDirectory = currentDirectory.getPath();
+							final SchemeImageResource ugoCell = SchemeObjectsFactory.createSchemeImageResource();
+							ugoCell.setImage(readImageResource(exportDirectory + File.separatorChar + xmlSchemeElement.getUgoCellFilename()));
+							
+							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
+									readObject(exportDirectory + File.separatorChar + xmlSchemeElement.getUgoCellFilename() + ID_PREFIX);
+							
+							xmlSchemeElement.unsetUgoCellFilename();
+							ugoCell.getId().getXmlTransferable(xmlSchemeElement.addNewUgoCellId(), importType);
+							cashedUgoCells.put(xmlSchemeElement, ugoCell);
+							cashedUgoIdentifiers.put(xmlSchemeElement, identifierSeq);
 						} else if (xmlSchemeElement.isSetUgoCellCodename()) {
 //						 TODO set cell from codename
 						} else if (!xmlSchemeElement.isSetUgoCellId()) { // no ugo
@@ -214,11 +390,129 @@ public abstract class ImportExportCommand extends AbstractCommand {
 						throw new UpdateObjectException(e);
 					} catch (ApplicationException e) {
 						throw new UpdateObjectException(e);
+					} catch (IOException e) {
+						throw new UpdateObjectException(e);
+					} catch (ClassNotFoundException e) {
+						throw new UpdateObjectException(e);
 					}
 					break;
 				case POST_IMPORT:
+					try {
+						final SchemeImageResource ugoCell1 = cashedUgoCells.get(xmlSchemeElement);
+						final Map<Identifier, XmlIdentifier> ugoIdsSeq = cashedUgoIdentifiers.get(xmlSchemeElement);
+						if (ugoCell1 != null && ugoIdsSeq != null) {
+							final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
+							List<Object> oldSerializable = ugoCell1.getData();
+							Object[] cells = (Object[])oldSerializable.get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									IdentifiableCell identifiableCell = (IdentifiableCell)cell;
+									Identifier id = identifiableCell.getId();
+									XmlIdentifier xmlId = ugoIdsSeq.get(id);
+									try {
+										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+										clonedIds.put(id, newId);
+									} catch (ObjectNotFoundException e) {
+										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+									}
+								}
+							}
+							
+							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, ugoCell1, true);
+							SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+							ugoCell1.setData((List)invisibleGraph.getArchiveableState());
+							GraphActions.clearGraph(invisibleGraph);
+							
+							cashedUgoIdentifiers.remove(xmlSchemeElement);
+						}
+						final SchemeImageResource schemeCell1 = cashedSchemeCells.get(xmlSchemeElement);
+						final Map<Identifier, XmlIdentifier> schemeIdsSeq = cashedSchemeIdentifiers.get(xmlSchemeElement);
+						if (schemeCell1 != null && schemeIdsSeq != null) {
+							final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
+							Object[] cells = (Object[])schemeCell1.getData().get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									IdentifiableCell identifiableCell = (IdentifiableCell)cell;
+									Identifier id = identifiableCell.getId();
+									XmlIdentifier xmlId = schemeIdsSeq.get(id);
+									try {
+										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+										clonedIds.put(id, newId);
+									} catch (ObjectNotFoundException e) {
+										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+									}
+								}
+							}
+							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, schemeCell1, true);
+							SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+							schemeCell1.setData((List)invisibleGraph.getArchiveableState());
+							GraphActions.clearGraph(invisibleGraph);
+							
+							cashedSchemeIdentifiers.remove(xmlSchemeElement);
+						}
+					} catch (Exception e) {
+						throw new UpdateObjectException(e);
+					}
 					break;
 				case EXPORT:
+					try {
+						String exportDirectory = currentDirectory.getPath();
+						new File(exportDirectory + File.separatorChar + IMAGE_DIRECTORY).mkdirs();
+						
+						if (xmlSchemeElement.isSetUgoCellId()) {
+							final Identifier ugoCellId = Identifier.fromXmlTransferable(xmlSchemeElement.getUgoCellId(), 
+									importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+							final SchemeImageResource ugoCell = StorableObjectPool.<SchemeImageResource> getStorableObject(ugoCellId, true);
+
+							Map<Identifier, XmlIdentifier> cellIds = new HashMap<Identifier, XmlIdentifier>();
+							Object[] cells = (Object[])ugoCell.getData().get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									final Identifier id = ((IdentifiableCell)cell).getId();
+									final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
+									id.getXmlTransferable(xmlId, importType);
+									cellIds.put(id, xmlId);
+								}
+							}
+							final String fileName = IMAGE_DIRECTORY + File.separatorChar + ugoCellId.getIdentifierString();
+							writeImageResource(exportDirectory + File.separatorChar + fileName, ugoCell.getImage());
+							writeObject(exportDirectory + File.separatorChar + fileName + ID_PREFIX, cellIds);
+							
+							xmlSchemeElement.unsetUgoCellId();
+							xmlSchemeElement.setUgoCellFilename(fileName);
+						}
+						if (xmlSchemeElement.isSetSchemeCellId()) {
+							final Identifier schemeCellId = Identifier.fromXmlTransferable(xmlSchemeElement.getSchemeCellId(), 
+									importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+							final SchemeImageResource schemeCell = StorableObjectPool.<SchemeImageResource> getStorableObject(schemeCellId, true);
+							
+							Map<Identifier, XmlIdentifier> cellIds = new HashMap<Identifier, XmlIdentifier>();
+							Object[] cells = (Object[])schemeCell.getData().get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									final Identifier id = ((IdentifiableCell)cell).getId();
+									final XmlIdentifier xmlIdentifier = XmlIdentifier.Factory.newInstance();
+									id.getXmlTransferable(xmlIdentifier, importType);
+									cellIds.put(id, xmlIdentifier);
+								}
+							}
+							
+							final String fileName = IMAGE_DIRECTORY + File.separatorChar + schemeCellId.getIdentifierString();
+							writeImageResource(exportDirectory + File.separatorChar + fileName, schemeCell.getImage());
+							writeObject(exportDirectory + File.separatorChar + fileName + ID_PREFIX, cellIds);
+							
+							xmlSchemeElement.unsetSchemeCellId();
+							xmlSchemeElement.setSchemeCellFilename(fileName);
+						}
+					} catch (final IOException ioe) {
+						throw new UpdateObjectException(ioe);
+					} catch (final CreateObjectException coe) {
+						throw coe;
+					} catch (final UpdateObjectException uoe) {
+						throw uoe;
+					} catch (final ApplicationException ae) {
+						throw new UpdateObjectException(ae);
+					}
 					break;
 				}
 			}
@@ -299,19 +593,6 @@ public abstract class ImportExportCommand extends AbstractCommand {
 			}
 		});
 		
-		final Map<XmlSchemeProtoElement, SchemeImageResource> cashedSchemeCells 
-				= new HashMap<XmlSchemeProtoElement, SchemeImageResource>();
-		final Map<XmlSchemeProtoElement, SchemeImageResource> cashedUgoCells 
-				= new HashMap<XmlSchemeProtoElement, SchemeImageResource>();
-		final Map<XmlSchemeProtoElement, Map<Identifier, XmlIdentifier>> cashedSchemeIdentifiers 
-				= new HashMap<XmlSchemeProtoElement, Map<Identifier, XmlIdentifier>>();
-		final Map<XmlSchemeProtoElement, Map<Identifier, XmlIdentifier>> cashedUgoIdentifiers 
-				= new HashMap<XmlSchemeProtoElement, Map<Identifier, XmlIdentifier>>();
-		ApplicationContext internalContext =  new ApplicationContext();
-		internalContext.setDispatcher(new Dispatcher());
-		final SchemeGraph invisibleGraph = new UgoTabbedPane(internalContext).getGraph();
-		invisibleGraph.setMakeNotifications(false);
-		
 		XmlComplementorRegistry.registerComplementor(SCHEMEPROTOELEMENT_CODE, new XmlComplementor() {
 			public void complementStorableObject(
 					final XmlStorableObject storableObject,
@@ -323,18 +604,6 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				case PRE_IMPORT:
 					try {
 						String exportDirectory = currentDirectory.getPath();
-						if (proto.isSetUgoCellFilename()) {
-							final SchemeImageResource ugoCell = SchemeObjectsFactory.createSchemeImageResource();
-							ugoCell.setImage(readImageResource(exportDirectory + File.separatorChar + proto.getUgoCellFilename()));
-							
-							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
-									readObject(exportDirectory + File.separatorChar + proto.getUgoCellFilename() + ID_PREFIX);
-							
-							proto.unsetUgoCellFilename();
-							ugoCell.getId().getXmlTransferable(proto.addNewUgoCellId(), importType);
-							cashedUgoCells.put(proto, ugoCell);
-							cashedUgoIdentifiers.put(proto, identifierSeq);
-						}
 						if (proto.isSetSchemeCellFilename()) {
 							final SchemeImageResource schemeCell = SchemeObjectsFactory.createSchemeImageResource();
 							schemeCell.setImage(readImageResource(exportDirectory + File.separatorChar + proto.getSchemeCellFilename()));
@@ -347,6 +616,18 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							cashedSchemeCells.put(proto, schemeCell);
 							cashedSchemeIdentifiers.put(proto, identifierSeq);
 						}
+						if (proto.isSetUgoCellFilename()) {
+							final SchemeImageResource ugoCell = SchemeObjectsFactory.createSchemeImageResource();
+							ugoCell.setImage(readImageResource(exportDirectory + File.separatorChar + proto.getUgoCellFilename()));
+							
+							final Map<Identifier, XmlIdentifier> identifierSeq = (Map<Identifier, XmlIdentifier>)
+									readObject(exportDirectory + File.separatorChar + proto.getUgoCellFilename() + ID_PREFIX);
+							
+							proto.unsetUgoCellFilename();
+							ugoCell.getId().getXmlTransferable(proto.addNewUgoCellId(), importType);
+							cashedUgoCells.put(proto, ugoCell);
+							cashedUgoIdentifiers.put(proto, identifierSeq);
+						}
 					} catch (final ClassNotFoundException e) {
 						throw new UpdateObjectException(e);
 					} catch (final IOException e) {
@@ -355,61 +636,61 @@ public abstract class ImportExportCommand extends AbstractCommand {
 					break;
 				case POST_IMPORT:
 					try {
-							final SchemeImageResource ugoCell1 = cashedUgoCells.get(proto);
-							final Map<Identifier, XmlIdentifier> ugoIdsSeq = cashedUgoIdentifiers.get(proto);
-							if (ugoCell1 != null && ugoIdsSeq != null) {
-								final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
-								List<Object> oldSerializable = ugoCell1.getData();
-								Object[] cells = (Object[])oldSerializable.get(0);
-								for (Object cell : SchemeGraph.getDescendants1(cells)) {
-									if (cell instanceof IdentifiableCell) {
-										IdentifiableCell identifiableCell = (IdentifiableCell)cell;
-										Identifier id = identifiableCell.getId();
-										XmlIdentifier xmlId = ugoIdsSeq.get(id);
-										try {
-											Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
-											clonedIds.put(id, newId);
-										} catch (ObjectNotFoundException e) {
-											Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
-										}
+						final SchemeImageResource ugoCell1 = cashedUgoCells.get(proto);
+						final Map<Identifier, XmlIdentifier> ugoIdsSeq = cashedUgoIdentifiers.get(proto);
+						if (ugoCell1 != null && ugoIdsSeq != null) {
+							final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
+							List<Object> oldSerializable = ugoCell1.getData();
+							Object[] cells = (Object[])oldSerializable.get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									IdentifiableCell identifiableCell = (IdentifiableCell)cell;
+									Identifier id = identifiableCell.getId();
+									XmlIdentifier xmlId = ugoIdsSeq.get(id);
+									try {
+										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+										clonedIds.put(id, newId);
+									} catch (ObjectNotFoundException e) {
+										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 									}
 								}
-								
-								Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, ugoCell1, true);
-								SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-								ugoCell1.setData((List)invisibleGraph.getArchiveableState());
-								GraphActions.clearGraph(invisibleGraph);
-								
-								cashedUgoIdentifiers.remove(proto);
 							}
-							final SchemeImageResource schemeCell1 = cashedSchemeCells.get(proto);
-							final Map<Identifier, XmlIdentifier> schemeIdsSeq = cashedSchemeIdentifiers.get(proto);
-							if (schemeCell1 != null && schemeIdsSeq != null) {
-								final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
-								Object[] cells = (Object[])schemeCell1.getData().get(0);
-								for (Object cell : SchemeGraph.getDescendants1(cells)) {
-									if (cell instanceof IdentifiableCell) {
-										IdentifiableCell identifiableCell = (IdentifiableCell)cell;
-										Identifier id = identifiableCell.getId();
-										XmlIdentifier xmlId = schemeIdsSeq.get(id);
-										try {
-											Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
-											clonedIds.put(id, newId);
-										} catch (ObjectNotFoundException e) {
-											Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
-										}
-									}
-								}
-								Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, schemeCell1, true);
-								SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-								schemeCell1.setData((List)invisibleGraph.getArchiveableState());
-								GraphActions.clearGraph(invisibleGraph);
-								
-								cashedSchemeIdentifiers.remove(proto);
-							}
-						} catch (Exception e) {
-							throw new UpdateObjectException(e);
+							
+							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, ugoCell1, true);
+							SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+							ugoCell1.setData((List)invisibleGraph.getArchiveableState());
+							GraphActions.clearGraph(invisibleGraph);
+							
+							cashedUgoIdentifiers.remove(proto);
 						}
+						final SchemeImageResource schemeCell1 = cashedSchemeCells.get(proto);
+						final Map<Identifier, XmlIdentifier> schemeIdsSeq = cashedSchemeIdentifiers.get(proto);
+						if (schemeCell1 != null && schemeIdsSeq != null) {
+							final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
+							Object[] cells = (Object[])schemeCell1.getData().get(0);
+							for (Object cell : SchemeGraph.getDescendants1(cells)) {
+								if (cell instanceof IdentifiableCell) {
+									IdentifiableCell identifiableCell = (IdentifiableCell)cell;
+									Identifier id = identifiableCell.getId();
+									XmlIdentifier xmlId = schemeIdsSeq.get(id);
+									try {
+										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
+										clonedIds.put(id, newId);
+									} catch (ObjectNotFoundException e) {
+										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+									}
+								}
+							}
+							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, schemeCell1, true);
+							SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+							schemeCell1.setData((List)invisibleGraph.getArchiveableState());
+							GraphActions.clearGraph(invisibleGraph);
+							
+							cashedSchemeIdentifiers.remove(proto);
+						}
+					} catch (Exception e) {
+						throw new UpdateObjectException(e);
+					}
 					
 					break;
 				case EXPORT:
@@ -529,7 +810,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		}
 	}
 	
-	protected static final String openFile(String title) {
+	protected static final String openFileForReading(String title) {
 		String fileName = null;
 		JFileChooser fileChooser = new JFileChooser();
 
@@ -556,6 +837,33 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		if(!(new File(fileName)).exists())
 			return null;
 
+		return fileName;
+	}
+	
+	protected static final String openFileForWriting(String title) {
+		String fileName = null;
+		JFileChooser fileChooser = new JFileChooser();
+
+		ChoosableFileFilter xmlFilter = new ChoosableFileFilter(
+				"xml",
+				"XML file");
+		fileChooser.addChoosableFileFilter(xmlFilter);
+
+		fileChooser.setCurrentDirectory(currentDirectory);
+		fileChooser.setDialogTitle(title);
+		fileChooser.setMultiSelectionEnabled(false);
+
+		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
+		currentDirectory = fileChooser.getCurrentDirectory();
+		if(option == JFileChooser.APPROVE_OPTION) {
+			fileName = fileChooser.getSelectedFile().getPath();
+			if(!(fileName.endsWith(".xml"))) {
+				fileName += ".xml";
+			}
+				
+		}
+		if(fileName == null)
+			return null;
 		return fileName;
 	}
 	

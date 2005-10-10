@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.17 2005/10/08 13:49:03 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.18 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -206,7 +206,6 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	protected void initModule() {
 		super.initModule();
 		
-		SchemeObjectsFactory.init(this.aContext);
 		initFrames();
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -262,7 +261,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	@Override
 	public void setSessionOpened() {
 		super.setSessionOpened();
-		
+		SchemeObjectsFactory.init(this.aContext);
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);

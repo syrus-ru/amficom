@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.7 2005/09/19 13:10:29 stas Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.8 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/09/19 13:10:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -107,6 +108,7 @@ public class ProtoGroupTreeModel extends AbstractChildrenFactory implements Visu
 			Identifier parentId = (node.equals(this.root) ? Identifier.VOID_IDENTIFIER : ((SchemeProtoGroup)node.getObject()).getId());
 			StorableObjectCondition condition1 = new LinkedIdsCondition(parentId, ObjectEntities.SCHEMEPROTOGROUP_CODE); 
 			Collection<StorableObject> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+			groups.remove(SchemeObjectsFactory.stubProtoGroup);
 
 			final Collection<StorableObject> children;
 			//	next add ProtoElements according to FilteredCondition

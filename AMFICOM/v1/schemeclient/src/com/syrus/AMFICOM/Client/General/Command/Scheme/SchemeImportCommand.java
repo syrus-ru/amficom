@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.30 2005/10/08 13:51:56 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.31 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,25 +50,21 @@ public class SchemeImportCommand extends ImportExportCommand {
 	@Override
 	public void execute() {
 		super.execute();
-		
-//		ImportUCMConverter c = new ImportUCMConverter(pane.getContext(), pane.getGraph());
+//
 //		try {
-//			c.initMuffs();
-//		} catch (ApplicationException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
+//			ImportUCMConverter converter = new ImportUCMConverter(this.pane.getContext(), this.pane);
+//			converter.parseSchemeElements(null);
+//		} catch (ApplicationException e) {
+//			Log.errorException(e);
 //		}
 			
-		final String fileName = openFile( 
+		final String fileName = openFileForReading( 
 				LangModelScheme.getString("Title.open.scheme_xml"));
 		if(fileName == null)
 			return;
 
 		try {
 			Scheme scheme = loadSchemeXML(fileName);
-			scheme.setWidth(SCHEME_SIZE.width);
-			scheme.setHeight(SCHEME_SIZE.height);
-			SchemeActions.putToGraph(scheme, this.pane);
 			
 			ApplicationModel aModel = this.pane.getContext().getApplicationModel();
 			aModel.setEnabled("Menu.import.commit", true);
@@ -144,14 +140,19 @@ public class SchemeImportCommand extends ImportExportCommand {
 //				}
 //			}
 			
-			try {
-				ImportUCMConverter converter = new ImportUCMConverter(this.pane.getContext(), this.pane);
-				converter.parseSchemeCableLinks(scheme);
-				converter.parseSchemeElements(scheme);
-			} catch (ApplicationException e) {
-				Log.errorException(e);
+			if (xmlScheme.getImportType().equals(UCM_IMPORT)) {
+				try {
+					ImportUCMConverter converter = new ImportUCMConverter(this.pane.getContext(), this.pane);
+					converter.parseSchemeCableLinks(scheme);
+					converter.parseSchemeElements(scheme);
+					
+					scheme.setWidth(SCHEME_SIZE.width);
+					scheme.setHeight(SCHEME_SIZE.height);
+					SchemeActions.putToGraph(scheme, this.pane);
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
 			}
-			
 			break;
 		}
 		System.setProperty(USER_DIR,  user_dir);

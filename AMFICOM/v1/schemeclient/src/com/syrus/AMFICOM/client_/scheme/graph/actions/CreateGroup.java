@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.14 2005/10/01 09:03:29 stas Exp $
+ * $Id: CreateGroup.java,v 1.15 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,10 +37,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -52,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/10/01 09:03:29 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -71,6 +73,34 @@ public class CreateGroup extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		SchemeGraph graph = this.pane.getGraph();
 
+		for (Object cell : graph.getSelectionCells()) {
+			if (cell instanceof DefaultCableLink) {
+				Log.debugMessage(LangModelGraph.getString("Error.group.cable"), Level.WARNING); //$NON-NLS-1$
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						LangModelGraph.getString("Error.group.cable"), //$NON-NLS-1$
+						LangModelGraph.getString("error"), //$NON-NLS-1$
+						JOptionPane.OK_OPTION);
+				return;
+			} else if (cell instanceof Rack) {
+				Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						LangModelGraph.getString("Error.group.rack"), //$NON-NLS-1$
+						LangModelGraph.getString("error"), //$NON-NLS-1$
+						JOptionPane.OK_OPTION);
+				return;
+			} else if (cell instanceof DeviceGroup) {
+				DeviceGroup group = (DeviceGroup)cell;
+				if (group.getType() == DeviceGroup.SCHEME) {
+					Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							LangModelGraph.getString("Error.group.scheme"), //$NON-NLS-1$
+							LangModelGraph.getString("error"), //$NON-NLS-1$
+							JOptionPane.OK_OPTION);
+					return;
+				}
+			}
+		}
+		
 		Object[] cells = getCellsToAdd(graph);
 		if (cells.length == 0)
 			return;

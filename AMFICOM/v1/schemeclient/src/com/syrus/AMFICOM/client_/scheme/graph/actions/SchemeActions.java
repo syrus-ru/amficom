@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.40 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeActions.java,v 1.41 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -94,7 +94,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.40 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -566,7 +566,7 @@ public class SchemeActions {
 		ConnectionSet cs = new ConnectionSet();
 		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 
-		DefaultCableLink cell = DefaultCableLink.createInstance(EMPTY, firstPort, port, p, p2, viewMap, cs);
+		DefaultCableLink cell = DefaultCableLink.createInstance(EMPTY, firstPort, port, p, p2, viewMap, cs, linkId);
 		
 		Object[] cells = graph.getAll();
 		int counter = 0;
@@ -576,7 +576,6 @@ public class SchemeActions {
 		String name = LangModelScheme.getString("Title.cable") + String.valueOf(counter+1); //$NON-NLS-1$
 
 		cell.setUserObject(name);
-		cell.setSchemeCableLinkId(linkId);
 		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
 		graph.setSelectionCell(cell);
 		return cell;
@@ -602,10 +601,10 @@ public class SchemeActions {
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DefaultLink)
 				counter++;
-		String name = "l" + String.valueOf(counter+1);
+		String name = LangModelScheme.getString("Title.link") + String.valueOf(counter+1); //$NON-NLS-1$
 		
-		DefaultLink cell = DefaultLink.createInstance(name, firstPort, port, p, p2, viewMap, cs);
-		cell.setSchemeLinkId(linkId);
+		DefaultLink cell = DefaultLink.createInstance(name, firstPort, port, p, p2, viewMap, cs, linkId);
+
 		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
 		graph.setSelectionCell(cell);
 		return cell;

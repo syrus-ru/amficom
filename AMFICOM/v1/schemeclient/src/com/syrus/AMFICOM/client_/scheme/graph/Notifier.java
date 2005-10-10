@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.16 2005/10/08 13:49:03 stas Exp $
+ * $Id: Notifier.java,v 1.17 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.IdentifiableCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCableLinkPropertiesManager;
@@ -60,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -205,7 +206,12 @@ public class Notifier {
 			}  
 			
 			if (selectedType == 0 || selectedObject == null) {
-				Log.debugMessage(Notifier.class.getSimpleName() + " | selected other object " + object.getClass().getSimpleName(), Level.FINEST); //$NON-NLS-1$
+				String message = Notifier.class.getSimpleName() + " | selected other object " + 
+						object.getClass().getSimpleName();
+				if (object instanceof IdentifiableCell) {
+					message += " (identifier " + ((IdentifiableCell)object).getId() + ")";
+				}
+				Log.debugMessage(message, Level.FINEST);
 //				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, OTHER_OBJECT));
 			} else {
 				Log.debugMessage(Notifier.class.getSimpleName() + " | selected object with id " + selectedObject.getId() , Level.FINEST); //$NON-NLS-1$
@@ -213,20 +219,42 @@ public class Notifier {
 			}
 		} else if (cells.length > 1) {
 			// only Ports
-			Class selectedClass = null;
-			Set<SchemePort> selectedPorts = new HashSet<SchemePort>();
+			long selectedType = 0;
+			Set<Object> selectedObjects = new HashSet<Object>();
 			for (Object cell : cells) {
 				if (cell instanceof PortCell) {
-					selectedClass = SchemePort.class;
-					selectedPorts.add(((PortCell)cell).getSchemePort());
+					selectedType = ObjectSelectedEvent.SCHEME_PORT;
+					selectedObjects.add(((PortCell)cell).getSchemePort());
 				} else {
-					selectedClass = null;
+					selectedType = 0;
 					break;
 				}
 			}
-			if (SchemePort.class.equals(selectedClass)) {
-				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedPorts, 
-						SchemePortPropertiesManager.getInstance(aContext), MULTIPLE + SCHEME_PORT));
+			if (selectedType == 0) {
+				for (Object cell : cells) {
+					if (cell instanceof CablePortCell) {
+						selectedType = ObjectSelectedEvent.SCHEME_CABLEPORT;
+						selectedObjects.add(((CablePortCell)cell).getSchemeCablePort());
+					} else {
+						selectedType = 0;
+						break;
+					}
+				}
+			}
+			if (selectedType == 0) {
+				for (Object cell : cells) {
+					if (cell instanceof DeviceGroup && ((DeviceGroup)cell).getType() == DeviceGroup.SCHEME_ELEMENT) {
+						selectedType = ObjectSelectedEvent.SCHEME_ELEMENT;
+						selectedObjects.add(((DeviceGroup)cell).getSchemeElement());
+					} else {
+						selectedType = 0;
+						break;
+					}
+				}
+			}
+			if (selectedType != 0) {
+				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObjects, 
+						SchemePortPropertiesManager.getInstance(aContext), MULTIPLE + selectedType));
 			}
 		}
 		} catch (Exception e) {

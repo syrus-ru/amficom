@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsImportCommand.java,v 1.1 2005/10/08 13:51:56 stas Exp $
+ * $Id: ProtoElementsImportCommand.java,v 1.2 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ public class ProtoElementsImportCommand extends ImportExportCommand {
 	public void execute() {
 		super.execute();
 
-		final String fileName = openFile( 
+		final String fileName = openFileForReading( 
 				LangModelScheme.getString("Title.open.protos_xml"));
 		if(fileName == null)
 			return;

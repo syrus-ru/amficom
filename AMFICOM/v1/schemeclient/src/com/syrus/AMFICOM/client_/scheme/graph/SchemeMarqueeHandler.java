@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.31 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.32 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.31 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -474,13 +474,15 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				
 				if (this.zb.isSelected()) {
 					if (this.bounds.width != 0 && this.bounds.height != 0) {
-						Rectangle visible = graph.getVisibleRect();
+						Rectangle visible = graph.fromScreen(graph.getVisibleRect());
 						double sc = ((double)visible.width / (double)this.bounds.width + 
 								(double)visible.height / (double)this.bounds.height) / 2;
 						graph.setScale(graph.getScale() * sc);
 						Dimension size = graph.getPreferredSize();
 						graph.setPreferredSize(new Dimension((int) (size.width * sc), (int) (size.height * sc)));
-						
+						Rectangle bounds2 = new Rectangle(this.bounds);
+						graph.toScreen(bounds2);
+						graph.setLocation(-bounds2.x, -bounds2.y);
 						if (graph.getScale() >= .5)
 							graph.setGridVisible(graph.isGridVisibleAtActualSize());
 					}

@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.9 2005/10/08 13:49:03 stas Exp $
+ * $Id: Constants.java,v 1.10 2005/10/10 11:07:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/10 11:07:38 $
  * @module schemeclient
  */
 
@@ -87,6 +87,7 @@ public interface Constants {
 	// list of button keys
 	public static final String DELETE = "delete"; //$NON-NLS-1$
 	public static final String GROUP = "group"; //$NON-NLS-1$
+	public static final String RACK = "rack"; //$NON-NLS-1$
 	public static final String UNGROUP = "ungroup"; //$NON-NLS-1$
 
 	public static final String CREATE_UGO = "create_ugo"; //$NON-NLS-1$
