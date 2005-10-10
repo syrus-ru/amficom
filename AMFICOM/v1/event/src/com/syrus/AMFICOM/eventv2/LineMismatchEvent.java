@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.4 2005/10/10 11:03:22 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.5 2005/10/10 11:12:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/10 11:03:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/10 11:12:46 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	/**
-	 * @return mismatch type; ses {@link AlarmType},
+	 * @return mismatch type; see {@link AlarmType},
 	 *         {@link com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getAlarmType()}.
 	 * @see AlarmType
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectogramMismatch#getAlarmType()
