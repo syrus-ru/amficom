@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.5 2005/10/10 11:12:46 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.6 2005/10/10 11:18:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/10 11:12:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/10 11:18:44 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
@@ -83,7 +83,7 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 *         {@link #getAffectedPathElementId() affectedPathElementId}
 	 *         has a {@code length} (i. e. {@code physicalLength},
 	 *         {@code opticalLength}) attribute. Currently, this is true for
-	 *         {@code PathElement}s that encloses either a {@code SchemeLink}
+	 *         {@code PathElement}s that enclose either a {@code SchemeLink}
 	 *         or a {@code SchemeCableLink}.
 	 */
 	boolean isAffectedPathElementSpacious();
