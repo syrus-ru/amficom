@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.1 2005/10/10 07:44:38 saa Exp $
+ * $Id: ReflectometryUtil.java,v 1.2 2005/10/10 09:51:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.reflectometry;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/10 07:44:38 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/10 09:51:22 $
  * @module
  */
 public final class ReflectometryUtil {
@@ -27,7 +27,7 @@ public final class ReflectometryUtil {
 	private static final double UPPER_AGENT_TIME = 30.0;
 
 	/**
-	 * Оценивает время проведения измерения на QP1640A
+	 * Оценивает время проведения измерения на QP1640A.
 	 * @param rmp параметры измерения
 	 * @param upper true, если нужна оценка сверху,
 	 *   false, если нужна несмещенная оценка
@@ -56,7 +56,8 @@ public final class ReflectometryUtil {
 	}
 
 	/**
-	 * Оценивает сверху время проведения измерения агентом, включающее:
+	 * Оценивает сверху время проведения измерения агентом.
+	 * Оцениваемое время включает:
 	 * <ul>
 	 * <li> время обработки агентом перед отправкой
 	 * <li> время передачи от агента к КИС

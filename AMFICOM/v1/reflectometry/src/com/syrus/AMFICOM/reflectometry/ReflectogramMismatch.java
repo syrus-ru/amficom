@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.8 2005/10/09 15:04:33 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.9 2005/10/10 09:51:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.TransferableObject;
  * если был бы доступен только один якорь.
  * 
  * @author Old Wise Saa
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/09 15:04:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.9 $, $Date: 2005/10/10 09:51:22 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -80,8 +80,8 @@ public interface ReflectogramMismatch {
 	 * событие: будет ли создан аларм, или же будет предупреждение.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2005/10/09 15:04:33 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.9 $, $Date: 2005/10/10 09:51:22 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -117,16 +117,29 @@ public interface ReflectogramMismatch {
 	}
 
 	/**
+	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2005/10/09 15:04:33 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.9 $, $Date: 2005/10/10 09:51:22 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
+		/**
+		 * не определено
+		 */
 		TYPE_UNDEFINED,
-		TYPE_LINEBREAK, // обрыв линии
-		TYPE_OUTOFMASK, // выход за маски
-		TYPE_EVENTLISTCHANGED; // новое/потерянное событие в пределах масок
+		/**
+		 * обрыв линии
+		 */
+		TYPE_LINEBREAK,
+		/**
+		 * выход за маски
+		 */
+		TYPE_OUTOFMASK,
+		/**
+		 * новое/потерянное событие в пределах масок
+		 */
+		TYPE_EVENTLISTCHANGED;
 
 		private static AlarmType[] values = values();
 
@@ -152,32 +165,37 @@ public interface ReflectogramMismatch {
 	}
 
 	/**
+	 * возвращает существенность проблемы, see {@link Severity}.
 	 * @return Существенность проблемы, see {@link Severity}.
 	 */
 	Severity getSeverity();
 
 	/**
+	 * возвращает тип несоответствия, see {@link AlarmType}.
 	 * @return Тип несоответствия, see {@link AlarmType}.
 	 */
 	AlarmType getAlarmType();
 
 	/**
+	 * возвращает координату аларма (точки).
 	 * @return координата аларма (точки).
 	 */
 	int getCoord();
 
 	/**
+	 * возвращает условную координату окончания участка аларма (точки).
 	 * @return условная координата окончания участка аларма (точки).
 	 */
 	int getEndCoord();
 
 	/**
+	 * возвращает разрешение, точки/метр.
 	 * @return разрешение, точки/метр.
 	 */
 	double getDeltaX();
 
 	/**
-	 * Дистанция, метры.
+	 * Возвращает дистанцию, метры.
 	 * XXX: По-хорошему, этот метод должен быть определен как final в абстрактном классе.
 	 * @return _должен_ возвращать
 	 *   {@link #getDeltaX()} * {@link #getCoord()}
@@ -185,13 +203,16 @@ public interface ReflectogramMismatch {
 	double getDistance();
 
 	/**
-	 * @return true, если степень превышения предупр. порога определена.
+	 * Возвращает, определена ли степень превышения порога.
+	 * @return true, если степень превышения порога определена.
 	 */
 	boolean hasMismatch();
 
 	/**
-	 * @return нижняя оценка степени превышения предупр. порога,
-	 *   если только степень превышения предупр. порога определена.
+	 * Если степень превышения порога определена,
+	 * то возвращает нижнюю оценку степени превышения порога. 
+	 * @return нижняя оценка степени превышения порога,
+	 *   если только степень превышения порога определена.
 	 * Гарантировано, что {@link #getMinMismatch()} &lt;= {@link #getMaxMismatch()}
 	 * @throws IllegalStateException степень превышения не определена,
 	 *  ({@link #hasMismatch()} == false)
@@ -199,8 +220,10 @@ public interface ReflectogramMismatch {
 	double getMinMismatch();
 
 	/**
-	 * @return верхняя оценка степени превышения предупр. порога,
-	 *   если только степень превышения предупр. порога определена.
+	 * Если степень превышения порога определена,
+	 * то возвращает верхнюю оценку степени превышения порога. 
+	 * @return верхняя оценка степени превышения порога,
+	 *   если только степень превышения порога определена.
 	 * Гарантировано, что {@link #getMinMismatch()} &lt;= {@link #getMaxMismatch()}
 	 * @throws IllegalStateException степень превышения не определена
 	 *  ({@link #hasMismatch()} == false)
@@ -208,6 +231,7 @@ public interface ReflectogramMismatch {
 	double getMaxMismatch();
 
 	/**
+	 * Возвращает, возможно ли использование привязки по двум якорям.
 	 * @return true, если возможно использование привязки по двум якорям
 	 * {@link #getAnchor1Id} {@link #getAnchor1Coord}
 	 * {@link #getAnchor2Id} {@link #getAnchor2Coord}
@@ -215,24 +239,28 @@ public interface ReflectogramMismatch {
 	boolean hasAnchors();
 
 	/**
+	 * Возвращает ID якоря 1.
 	 * @return ID якоря 1. not null.
 	 * @throws IllegalStateException если {@link #hasAnchors()} is false
 	 */
 	SOAnchor getAnchor1Id();
 
 	/**
+	 * Возвращает ID якоря 2.
 	 * @return ID якоря 2. not null.
 	 * @throws IllegalStateException если {@link #hasAnchors()} is false
 	 */
 	SOAnchor getAnchor2Id();
 
 	/**
+	 * Возвращает дистанцию(точки) якоря 1.
 	 * @return дистанция(точки) якоря 1.
 	 * @throws IllegalStateException если {@link #hasAnchors()} is false
 	 */
 	int getAnchor1Coord();
 
 	/**
+	 * Возвращает дистанцию(точки) якоря 2.
 	 * @return дистанция(точки) якоря 2.
 	 * @throws IllegalStateException если {@link #hasAnchors()} is false
 	 */
