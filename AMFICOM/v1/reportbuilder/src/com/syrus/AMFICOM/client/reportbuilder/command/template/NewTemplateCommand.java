@@ -1,5 +1,5 @@
 /*
- * $Id: NewTemplateCommand.java,v 1.3 2005/10/05 09:39:37 peskovsky Exp $
+ * $Id: NewTemplateCommand.java,v 1.4 2005/10/10 05:47:14 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,9 +59,9 @@ public class NewTemplateCommand extends AbstractCommand {
 			ReportTemplate reportTemplate = ReportTemplate.createInstance(
 					LoginManager.getUserId(),
 					LangModelReport.getString(NEW_TEMPLATE_NAME),
-					"");
-			reportTemplate.setDestinationModule(DestinationModules.UNKNOWN_MODULE);
-			
+					"",
+					DestinationModules.UNKNOWN_MODULE);
+						
 			ApplicationModel aModel = this.aContext.getApplicationModel(); 
 			aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME).execute();
 			aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TREE).execute();
