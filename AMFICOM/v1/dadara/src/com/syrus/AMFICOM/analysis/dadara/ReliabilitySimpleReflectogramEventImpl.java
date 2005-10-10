@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.11 2005/10/06 13:34:02 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.12 2005/10/10 09:54:19 saa Exp $
  * 
  * Copyright c 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.io.SignatureMismatchException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/10 09:54:19 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
@@ -51,7 +51,7 @@ implements ReliabilitySimpleReflectogramEvent {
 
 	protected void readSpecificFromDIS(DataInputStream dis)
 	throws IOException{
-		this.nSigma = (int)dis.readByte(); // sign-extendive conversion
+		this.nSigma = /*(int)*/ dis.readByte(); // sign-extendive conversion
 	}
 
 	protected void writeSpecificToDOS(DataOutputStream dos)
