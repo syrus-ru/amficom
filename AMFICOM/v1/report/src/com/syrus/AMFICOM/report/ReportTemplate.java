@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.16 2005/10/10 05:45:22 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.17 2005/10/10 09:01:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,9 +57,9 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.16 $, $Date: 2005/10/10 05:45:22 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/10/10 09:01:20 $
+ * @module report
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 6270406142449624592L;
