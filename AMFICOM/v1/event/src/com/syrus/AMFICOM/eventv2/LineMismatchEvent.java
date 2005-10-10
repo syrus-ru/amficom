@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.7 2005/10/10 13:52:40 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.8 2005/10/10 16:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/10 13:52:40 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/10 16:25:47 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
@@ -91,26 +91,62 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	boolean isAffectedPathElementSpacious();
 
 	/**
-	 * @return physical distance in meters from starting point of the
-	 *         {@code PathElement} affected, <em>in case it is spatious</em>,
-	 *         i.&nbsp;e. {@link #isAffectedPathElementSpacious()
-	 *         affectedPathElementSpacious}<code>&nbsp;==&nbsp;true</code>.
+	 * <p>Returns physical distance in meters from the point of occurence of
+	 * this event to the <em>starting point</em> of the {@code PathElement}
+	 * affected, <em>in case it is spacious</em>, i&#46;&nbsp;e&#46; {@link
+	 * #isAffectedPathElementSpacious()
+	 * affectedPathElementSpacious}<code>&nbsp;==&nbsp;true</code>.</p>
+	 *
+	 * <p><em>Starting point</em> is a point where the affected {@code
+	 * PathElement} (with <code>sequentialNumber&nbsp;==&nbsp;N</code>, a
+	 * <em>spacious</em> one) and its predecessor, a <em>non-spacious</em>
+	 * {@code PathElement} with
+	 * <code>sequentialNumber&nbsp;==&nbsp;(N&nbsp;-&nbsp;1)</code>, join
+	 * together.</p>
+	 *
+	 * <p>Since a <em>spacious</em> {@code PathElement} can be neither the
+	 * first nor the last in its parent {@code SchemePath}, its predecessor
+	 * and successor are guaranteed to exist <font color = "white">and be
+	 * non-{@code null} ;-). Even if every <strike>mousebastard</strike>
+	 * mousebuster forgets home his own head.</font></p>
+	 *
+	 * @return physical distance in meters from the point of occurence of
+	 *         this event to the <em>starting point</em> of the
+	 *         {@code PathElement} affected.
 	 * @throws IllegalStateException if {@code PathElement} encloses a
-	 *         {@code SchemeElement} and thus is <em>not&nbsp;spatious</em>,
+	 *         {@code SchemeElement} and thus is <em>not&nbsp;spacious</em>,
 	 *         i.&nbsp;e. {@link #isAffectedPathElementSpacious()
 	 *         affectedPathElementSpacious}<code>&nbsp;==&nbsp;false</code>.
 	 */
-	double getPhysicalDistanceFromStart();
+	double getPhysicalDistanceToStart();
 
 	/**
-	 * @return physical distance in meters from ending point of the
-	 *         {@code PathElement} affected, <em>in case it is spatious</em>,
-	 *         i.&nbsp;e. {@link #isAffectedPathElementSpacious()
-	 *         affectedPathElementSpacious}<code>&nbsp;==&nbsp;true</code>.
+	 * <p>Returns physical distance in meters from the point of occurence of
+	 * this event to the <em>ending point</em> of the {@code PathElement}
+	 * affected, <em>in case it is spacious</em>, i&#46;&nbsp;e&#46; {@link
+	 * #isAffectedPathElementSpacious()
+	 * affectedPathElementSpacious}<code>&nbsp;==&nbsp;true</code>.</p>
+	 *
+	 * <p><em>Ending point</em> is a point where the affected {@code
+	 * PathElement} (with <code>sequentialNumber&nbsp;==&nbsp;N</code>, a
+	 * <em>spacious</em> one) and its successor, a <em>non-spacious</em>
+	 * {@code PathElement} with
+	 * <code>sequentialNumber&nbsp;==&nbsp;(N&nbsp;+&nbsp;1)</code>, join
+	 * together.</p>
+	 *
+	 * <p>Since a <em>spacious</em> {@code PathElement} can be neither the
+	 * first nor the last in its parent {@code SchemePath}, its predecessor
+	 * and successor are guaranteed to exist <font color = "white">and be
+	 * non-{@code null} ;-). Even if every <strike>mousebastard</strike>
+	 * mousebuster forgets home his own head.</font></p>
+	 *
+	 * @return physical distance in meters from the point of occurence of
+	 *         this event to the <em>starting point</em> of the
+	 *         {@code PathElement} affected.
 	 * @throws IllegalStateException if {@code PathElement} encloses a
-	 *         {@code SchemeElement} and thus is <em>not&nbsp;spatious</em>,
+	 *         {@code SchemeElement} and thus is <em>not&nbsp;spacious</em>,
 	 *         i.&nbsp;e. {@link #isAffectedPathElementSpacious()
 	 *         affectedPathElementSpacious}<code>&nbsp;==&nbsp;false</code>.
 	 */
-	double getPhysicalDistanceFromEnd();
+	double getPhysicalDistanceToEnd();
 }

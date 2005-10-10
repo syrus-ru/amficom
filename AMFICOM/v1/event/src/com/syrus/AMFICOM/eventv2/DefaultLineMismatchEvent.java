@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.1 2005/10/10 11:03:22 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.2 2005/10/10 16:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventHelper;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialData;
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
-import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlPhysicalDIstancePair;
+import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlPhysicalDistancePair;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatchPair;
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/10 11:03:22 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/10 16:25:47 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -69,12 +69,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	/**
 	 * @serial include
 	 */
-	private double physicalDistanceFromStart;
+	private double physicalDistanceToStart;
 
 	/**
 	 * @serial include
 	 */
-	private double physicalDistanceFromEnd;
+	private double physicalDistanceToEnd;
 
 	private DefaultLineMismatchEvent(final IdlLineMismatchEvent lineMismatchEvent) {
 		this.alarmType = AlarmType.valueOf(lineMismatchEvent.getAlarmType());
@@ -92,8 +92,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		this.affectedPathElementId = Identifier.valueOf(lineMismatchEvent.getAffectedPathElementId());
 
 		if (!!(this.affectedPathElementSpatious = lineMismatchEvent.isAffectedPathElementSpatious())) {
-			this.physicalDistanceFromStart = lineMismatchEvent.getPhysicalDistanceFromStart();
-			this.physicalDistanceFromEnd = lineMismatchEvent.getPhysicalDistanceFromEnd();
+			this.physicalDistanceToStart = lineMismatchEvent.getPhysicalDistanceToStart();
+			this.physicalDistanceToEnd = lineMismatchEvent.getPhysicalDistanceToEnd();
 		}
 	}
 
@@ -115,9 +115,9 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		if (this.isAffectedPathElementSpacious()) {
 			spatialData.physicalDistancePair(
 					IdlAffectedPathElementSpatious._TRUE,
-					new IdlPhysicalDIstancePair(
-							this.getPhysicalDistanceFromStart(),
-							this.getPhysicalDistanceFromEnd()));
+					new IdlPhysicalDistancePair(
+							this.getPhysicalDistanceToStart(),
+							this.getPhysicalDistanceToEnd()));
 		} else {
 			spatialData._default(IdlAffectedPathElementSpatious._FALSE);
 		}
@@ -169,16 +169,16 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		return this.affectedPathElementSpatious;
 	}
 
-	public double getPhysicalDistanceFromStart() {
+	public double getPhysicalDistanceToStart() {
 		if (this.isAffectedPathElementSpacious()) {
-			return this.physicalDistanceFromStart;
+			return this.physicalDistanceToStart;
 		}
 		throw new IllegalStateException();
 	}
 
-	public double getPhysicalDistanceFromEnd() {
+	public double getPhysicalDistanceToEnd() {
 		if (this.isAffectedPathElementSpacious()) {
-			return this.physicalDistanceFromEnd;
+			return this.physicalDistanceToEnd;
 		}
 		throw new IllegalStateException();
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.1 2005/10/10 11:03:22 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.2 2005/10/10 16:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/10 11:03:22 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/10 16:25:47 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -107,23 +107,23 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	}
 
 	/**
-	 * @see IdlLineMismatchEvent#getPhysicalDistanceFromStart()
+	 * @see IdlLineMismatchEvent#getPhysicalDistanceToStart()
 	 */
 	@Override
-	public double getPhysicalDistanceFromStart() {
+	public double getPhysicalDistanceToStart() {
 		if (this.isAffectedPathElementSpatious()) {
-			return this.spatialData.physicalDistancePair().physicalDistanceFromStart;
+			return this.spatialData.physicalDistancePair().physicalDistanceToStart;
 		}
 		throw new IllegalStateException();
 	}
 
 	/**
-	 * @see IdlLineMismatchEvent#getPhysicalDistanceFromEnd()
+	 * @see IdlLineMismatchEvent#getPhysicalDistanceToEnd()
 	 */
 	@Override
-	public double getPhysicalDistanceFromEnd() {
+	public double getPhysicalDistanceToEnd() {
 		if (this.isAffectedPathElementSpatious()) {
-			return this.spatialData.physicalDistancePair().physicalDistanceFromEnd;
+			return this.spatialData.physicalDistancePair().physicalDistanceToEnd;
 		}
 		throw new IllegalStateException();
 	}
