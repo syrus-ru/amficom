@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.9 2005/10/07 08:21:07 krupenn Exp $
+ * $Id: Cable.java,v 1.10 2005/10/10 15:20:02 krupenn Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -170,13 +170,9 @@ public class Cable {
 		if (!this.channelingItems.isEmpty()) {
 			XmlCableChannelingItemSeq xmlChannelingItems = xmlCL.addNewCableChannelingItems();
 
-			Collection<XmlCableChannelingItem> cis = new ArrayList<XmlCableChannelingItem>(this.channelingItems.size() + (this.last == null ? 0 : 1));
-			for (Object channelingItem : this.channelingItems) {
-				cis.add(((ChannelingItem)channelingItem).toXMLObject());
-			}
-			if (this.last != null) {
-				this.last.setNumber(this.channelingItems.size());
-				cis.add(this.last.toXMLObject());
+			Collection<XmlCableChannelingItem> cis = new ArrayList<XmlCableChannelingItem>(this.channelingItems.size());
+			for (ChannelingItem channelingItem : this.channelingItems) {
+				cis.add(channelingItem.toXMLObject());
 			}
 			xmlChannelingItems.setCableChannelingItemArray(cis.toArray(new XmlCableChannelingItem[cis.size()]));	
 		}
@@ -232,6 +228,12 @@ public class Cable {
 								+ "), тоннель '"
 								+ link.getName() + "' (" + link.getId()
 								+ ")!");
+						channelingItem = new ChannelingItem("cci" + this.id + "tunnel" + link.getId());
+						channelingItem.setEndSiteId(tempEndSiteId);
+						channelingItem.setStartSiteId(bufStartSiteId);
+						channelingItem.setParentId(this.id);
+						channelingItem.setTunnelId(link.getId());
+						newChannelingItemsFromStart.add(channelingItem);
 					}
 					else {
 						tempChannelingItems.remove(channelingItem);
@@ -251,6 +253,12 @@ public class Cable {
 								+ "), тоннель '"
 								+ link.getName() + "' (" + link.getId()
 								+ ")!");
+						channelingItem = new ChannelingItem("cci" + this.id + "tunnel" + link.getId());
+						channelingItem.setEndSiteId(bufEndSiteId);
+						channelingItem.setStartSiteId(tempStartSiteId);
+						channelingItem.setParentId(this.id);
+						channelingItem.setTunnelId(link.getId());
+						newChannelingItemsFromStart.add(channelingItem);
 					}
 					else {
 						tempChannelingItems.remove(channelingItem);
