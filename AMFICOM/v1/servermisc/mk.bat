@@ -1,1 +1,0 @@
-nmake /f makeservermisc %1
