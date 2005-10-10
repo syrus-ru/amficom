@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.3 2005/09/30 14:10:28 saa Exp $
+ * $Id: ReflectometryUtil.java,v 1.1 2005/10/10 07:44:38 saa Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.reflectometry;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/09/30 14:10:28 $
+ * @version $Revision: 1.1 $, $Date: 2005/10/10 07:44:38 $
  * @module
  */
 public final class ReflectometryUtil {
