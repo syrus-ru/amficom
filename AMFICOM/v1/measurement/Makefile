@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.74 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.75 2005/10/10 08:54:53 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -35,7 +35,7 @@ $(call checkenve,XMLBEANSCLASSPATH)
 
 LIBNAME_GENERALXML=generalxml.jar
 
-APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/reflectometry.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
