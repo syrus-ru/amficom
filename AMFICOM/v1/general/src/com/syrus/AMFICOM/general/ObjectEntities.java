@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.89 2005/09/30 13:07:24 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.90 2005/10/10 15:39:37 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/09/30 13:07:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.90 $, $Date: 2005/10/10 15:39:37 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -45,6 +45,7 @@ public final class ObjectEntities {
 	public static final String MCM = "MCM";
 	public static final String SERVERPROCESS = "ServerProcess";
 	public static final String PERMATTR = "PermissionAttributes";
+	public static final String ROLE = "Role";
 
 
 	/*	##################################### Configuration ##################################### */
@@ -220,6 +221,7 @@ public final class ObjectEntities {
 	public static final short MCM_CODE = 0x0104;
 	public static final short SERVERPROCESS_CODE = 0x0105;
 	public static final short PERMATTR_CODE = 0x0106;
+	public static final short ROLE_CODE = 0x0107;
 
 	public static final short ADMINISTRATION_MAX_CODE = 0x0180;
 
@@ -399,6 +401,7 @@ public final class ObjectEntities {
 		registerEntity(MCM_CODE, MCM);
 		registerEntity(SERVERPROCESS_CODE, SERVERPROCESS);
 		registerEntity(PERMATTR_CODE, PERMATTR);
+		registerEntity(ROLE_CODE, ROLE);
 
 		registerEntity(PROTOEQUIPMENT_CODE, PROTOEQUIPMENT);
 		registerEntity(EQUIPMENT_CODE, EQUIPMENT);

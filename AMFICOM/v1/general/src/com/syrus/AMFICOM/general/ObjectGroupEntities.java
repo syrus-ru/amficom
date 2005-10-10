@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.37 2005/09/30 13:07:21 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.38 2005/10/10 15:39:37 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/09/30 13:07:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/10/10 15:39:37 $
+ * @author $Author: bob $
  * @author Selivanov Maksim Fedorovich
  * @module general
  */
@@ -72,7 +72,8 @@ public final class ObjectGroupEntities {
 				SERVER_CODE,
 				MCM_CODE,
 				SERVERPROCESS_CODE,
-				PERMATTR_CODE });
+				PERMATTR_CODE,
+				ROLE_CODE});
 		registerGroup(CONFIGURATION_GROUP_CODE, CONFIGURATION_GROUP, new short[] { PORT_TYPE_CODE,
 				TRANSPATH_TYPE_CODE,
 				LINK_TYPE_CODE,
