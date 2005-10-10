@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.9 2005/10/10 09:51:22 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.10 2005/10/10 10:19:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.TransferableObject;
  * 
  * @author Old Wise Saa
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/10/10 09:51:22 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/10 10:19:45 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -81,7 +81,7 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.9 $, $Date: 2005/10/10 09:51:22 $
+	 * @version $Revision: 1.10 $, $Date: 2005/10/10 10:19:45 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -120,12 +120,13 @@ public interface ReflectogramMismatch {
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.9 $, $Date: 2005/10/10 09:51:22 $
+	 * @version $Revision: 1.10 $, $Date: 2005/10/10 10:19:45 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
 		/**
 		 * не определено
+		 * XXX: не должен использоваться
 		 */
 		TYPE_UNDEFINED,
 		/**
