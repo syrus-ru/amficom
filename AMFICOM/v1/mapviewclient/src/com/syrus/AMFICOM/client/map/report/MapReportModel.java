@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.12 2005/10/07 14:19:03 krupenn Exp $
+ * $Id: MapReportModel.java,v 1.13 2005/10/10 15:25:48 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,14 @@
  */
 package com.syrus.AMFICOM.client.map.report;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
+import com.syrus.AMFICOM.client.map.MapException;
+import com.syrus.AMFICOM.client.map.StandAloneNetMapViewGenerator;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
@@ -22,8 +26,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
@@ -44,6 +50,9 @@ public class MapReportModel extends ReportModel {
 	 * Характеристики объекта
 	 */
 	public static String SELECTED_OBJECT_CHARS = "selectedObjectChars";
+	
+	public static String MAPVIEW_OBJECT = "mapViewObject";
+	public static String SELECTED_MAP_OBJECT = "selectedMapObject";	
 	
 	public MapReportModel(){
 	}
@@ -66,13 +75,38 @@ public class MapReportModel extends ReportModel {
 		String modelClassName = element.getModelClassName();		
 		try {
 			if (reportName.equals(TOPOLOGY_IMAGE)) {
-				if (!(data instanceof BufferedImage))
+				if (!(data instanceof Map))
 					throw new CreateReportException(
 							reportName,
-							modelClassName,
+							modelClassName,							
 							CreateReportException.WRONG_DATA_TO_INSTALL);
-					
-				BufferedImage image = (BufferedImage)data;
+				
+				Map topoImageReportData = (Map)data;
+				MapView mapViewObject = (MapView)topoImageReportData.get(MAPVIEW_OBJECT);
+				MapElement mapElement = (MapElement)topoImageReportData.get(SELECTED_MAP_OBJECT);
+				
+				if (mapViewObject == null || mapElement == null) {
+					Log.errorMessage("MapReportModel.createReport - got null data from Command.");
+					throw new CreateReportException(
+							reportName,
+							modelClassName,					
+							CreateReportException.NO_DATA_TO_INSTALL);
+				}
+				
+				BufferedImage image = null;
+				try {
+					image = StandAloneNetMapViewGenerator.getMapShot(
+							mapViewObject,
+							mapElement,
+							new Dimension(element.getWidth(),element.getHeight()));
+				} catch (MapException e) {
+					Log.errorMessage("MapReportModel.createReport | " + e.getMessage());
+					Log.errorException(e);			
+					throw new CreateReportException(
+							reportName,
+							modelClassName,					
+							CreateReportException.NO_DATA_TO_INSTALL);
+				}
 				result = new ImageRenderingComponent(element,image);
 				result.setWidth(element.getWidth());
 				result.setHeight(element.getHeight());			

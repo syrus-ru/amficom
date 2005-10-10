@@ -1,5 +1,5 @@
 /*-
- * $$Id: StandAloneNetMapViewGenerator.java,v 1.3 2005/10/07 14:14:19 krupenn Exp $$
+ * $$Id: StandAloneNetMapViewGenerator.java,v 1.4 2005/10/10 15:25:48 peskovsky Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.map.command.editor.ViewMapChooserCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/07 14:14:19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/10/10 15:25:48 $
+ * @author $Author: peskovsky $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -38,6 +39,7 @@ public class StandAloneNetMapViewGenerator {
 		}
 
 		StandAloneNetMapViewGenerator.netMapViewer.getLogicalNetLayer().setMapView(mapView);
+		StandAloneNetMapViewGenerator.netMapViewer.getVisualComponent().setSize(dimension);
 		StandAloneNetMapViewGenerator.netMapViewer.centerAndScale(mapElement, dimension);
 		StandAloneNetMapViewGenerator.netMapViewer.repaint(true);
 		return StandAloneNetMapViewGenerator.netMapViewer.getMapShot();
@@ -71,6 +73,7 @@ public class StandAloneNetMapViewGenerator {
 
 		ApplicationContext aContext = new ApplicationContext();
 		aContext.setApplicationModel(new MapReportApplicationModelFactory().create());
+		aContext.setDispatcher(new Dispatcher());
 		
 		final LogicalNetLayer logicalNetLayer = new LogicalNetLayer(aContext, converter, mapContext);
 

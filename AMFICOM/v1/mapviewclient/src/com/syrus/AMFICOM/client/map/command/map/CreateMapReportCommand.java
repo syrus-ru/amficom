@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMapReportCommand.java,v 1.12 2005/10/07 14:20:41 krupenn Exp $$
+ * $$Id: CreateMapReportCommand.java,v 1.13 2005/10/10 15:25:48 peskovsky Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client.map.command.map;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JDesktopPane;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/07 14:20:41 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/10/10 15:25:48 $
+ * @author $Author: peskovsky $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -70,7 +71,11 @@ public class CreateMapReportCommand extends AbstractCommand {
 			SchemeCableLink schemeCableLink = ((CablePath)mapElement).getSchemeCableLink();
 			reportData.put(MapReportModel.CABLE_LAYOUT, schemeCableLink.getId());
 		}
-		reportData.put(MapReportModel.TOPOLOGY_IMAGE, netMapViewer.getMapShot());
+		Map<Object,Object> topologyImageReportData = new HashMap<Object,Object>();
+		topologyImageReportData.put(MapReportModel.MAPVIEW_OBJECT,mapView);
+		topologyImageReportData.put(MapReportModel.SELECTED_MAP_OBJECT,mapElement);
+		
+		reportData.put(MapReportModel.TOPOLOGY_IMAGE, topologyImageReportData);
 		reportData.put(MapReportModel.SELECTED_OBJECT_CHARS, mapElement.getId());
 		try {
 			JDialog dialog = new CreateReportDialog(

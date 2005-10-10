@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.59 2005/10/07 14:14:19 krupenn Exp $$
+ * $$Id: NetMapViewer.java,v 1.60 2005/10/10 15:25:48 peskovsky Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,10 +47,12 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -82,8 +84,8 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.59 $, $Date: 2005/10/07 14:14:19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.60 $, $Date: 2005/10/10 15:25:48 $
+ * @author $Author: peskovsky $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -105,6 +107,7 @@ public abstract class NetMapViewer {
 	protected MouseMotionListener mml;
 	protected MapKeyAdapter mka;
 
+	private static final int DEFAULT_NODE_SCALE = 500;
 	/**
 	 * Timer который отвечает за изменение реЖима отображения графических 
 	 * элементов в состоянии alarmed с периодом DEFAULT_TIME_INTERVAL.
@@ -896,15 +899,16 @@ public abstract class NetMapViewer {
 	}
 
 	public void centerAndScale(MapElement mapElement, Dimension dimension) throws MapConnectionException, MapDataException {
-		double scale = this.getMapContext().getScale();
-
-		Rectangle2D rectangle = this.logicalNetLayer.getMapViewController().getController(mapElement).getBoundingRectangle(mapElement);
-
-		double difx = rectangle.getWidth() / dimension.getWidth();
-		double dify = rectangle.getHeight() / dimension.getHeight();
-		
-		scale /= Math.max(difx, dify);
-		
+		double scale = DEFAULT_NODE_SCALE;
+		if (!(mapElement instanceof AbstractNode)) {
+			scale = this.getMapContext().getScale();
+			Rectangle2D rectangle = this.logicalNetLayer.getMapViewController().getController(mapElement).getBoundingRectangle(mapElement);
+	
+			double difx = rectangle.getWidth() / dimension.getWidth();
+			double dify = rectangle.getHeight() / dimension.getHeight();
+			
+			scale *= Math.max(difx, dify);
+		}
 		this.setScale(scale);
 		this.setCenter(mapElement.getLocation());
 	}
