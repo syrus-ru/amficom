@@ -94,3 +94,14 @@ arch:
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/event text $(PMD_RULES) 
+
+.javadocs: .idl $(JAVADOCDIR)
+	$(JAVADOC) \
+		$(JAVADOCFLAGS) \
+		-sourcepath $(SRCDIR) \
+		-classpath $(APPCLASSPATH) \
+		-group "$(MODULE_NAME)" "com.syrus.AMFICOM.event:com.syrus.AMFICOM.eventv2" \
+		-group "$(MODULE_NAME)-IDL" "com.syrus.AMFICOM.event.corba*:com.syrus.AMFICOM.eventv2.corba*" \
+		-subpackages "com.syrus.AMFICOM.event:com.syrus.AMFICOM.eventv2" \
+		2>&1 | grep -vE '(XMLInputStream|com\.syrus\.AMFICOM\.[a-z0-9]+\.corba\..*@serial)'
+	touch $@
