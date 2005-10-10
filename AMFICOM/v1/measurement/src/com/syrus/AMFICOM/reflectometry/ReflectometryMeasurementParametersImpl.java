@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParameters.java,v 1.2 2005/09/21 16:21:34 bob Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.1 2005/10/10 07:38:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,24 +19,17 @@ import com.syrus.util.Log;
 
 /**
  * Параметры измерения в рефлектометрии.
- * Состоит из:
- * <ul>
- * <li> {@link #getWavelength()} длины волны
- * <li> {@link #getRefractionIndex()} показателя преломления
- * <li> {@link #getPulseWidth()} длительности импульса
- * <li> {@link #getTraceLength()} длины рефлектограммы
- * <li> {@link #getResolution()} разрешения по дистанции
- * <li> {@link #getNumberOfAverages()} числа усреднений
- * </ul>
+ * @see ReflectometryMeasurementParameters
  * <p>
  * На данный момент modifier-методы не поддерживаются.
  * </p>
  * @author saa
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/09/21 16:21:34 $
+ * @author $Author: saa $
+ * @version $Revision: 1.1 $, $Date: 2005/10/10 07:38:51 $
  * @module
  */
-public final class ReflectometryMeasurementParameters {
+public final class ReflectometryMeasurementParametersImpl
+implements ReflectometryMeasurementParameters {
 	private ParameterSet msPars;
 
 	private double traceLength;
@@ -56,7 +49,7 @@ public final class ReflectometryMeasurementParameters {
 	 *   {@link com.syrus.AMFICOM.measurement.MeasurementSetup}
 	 * @throws DataFormatException Неправильный формат входных данных
 	 */
-	 ReflectometryMeasurementParameters(final ParameterSet msPars)
+	 ReflectometryMeasurementParametersImpl(final ParameterSet msPars)
 	 throws DataFormatException {
 		this.msPars = msPars;
 		this.unpack();

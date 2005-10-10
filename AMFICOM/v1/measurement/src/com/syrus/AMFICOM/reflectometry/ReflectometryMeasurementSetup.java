@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementSetup.java,v 1.1 2005/09/01 16:48:31 saa Exp $
+ * $Id: ReflectometryMeasurementSetup.java,v 1.2 2005/10/10 07:38:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.io.DataFormatException;
  * параметров, специфичных для рефлектометрии
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/09/01 16:48:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/10 07:38:51 $
  * @module
  */
 public class ReflectometryMeasurementSetup {
@@ -30,7 +30,7 @@ public class ReflectometryMeasurementSetup {
 	throws DataFormatException {
 		this.ms = ms;
 
-		this.measurementParameters = new ReflectometryMeasurementParameters(
+		this.measurementParameters = new ReflectometryMeasurementParametersImpl(
 				this.ms.getParameterSet());
 
 		ParameterSet set;
@@ -41,7 +41,7 @@ public class ReflectometryMeasurementSetup {
 
 		set = this.ms.getEtalon();
 		this.etalon = set != null
-				? new ReflectometryEtalon(set)
+				? new ReflectometryEtalonImpl(set)
 				: null;
 	}
 

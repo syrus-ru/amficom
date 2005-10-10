@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryEtalon.java,v 1.1 2005/09/01 16:48:31 saa Exp $
+ * $Id: ReflectometryEtalonImpl.java,v 1.1 2005/10/10 07:38:51 saa Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,15 +23,15 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/09/01 16:48:31 $
+ * @version $Revision: 1.1 $, $Date: 2005/10/10 07:38:51 $
  * @module
  */
-public class ReflectometryEtalon {
+public class ReflectometryEtalonImpl implements ReflectometryEtalon {
 	private ParameterSet etalonSet;
 	private byte[] dadaraEtalon;
 	private byte[] reflectogramma;
 
-	ReflectometryEtalon(final ParameterSet etalonSet) {
+	ReflectometryEtalonImpl(final ParameterSet etalonSet) {
 		this.etalonSet = etalonSet;
 		this.unpack();
 	}
