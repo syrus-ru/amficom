@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsCondition.java,v 1.1 2005/08/22 13:54:22 bob Exp $
+* $Id: XMLLinkedIdsCondition.java,v 1.2 2005/10/10 15:40:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 13:54:22 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/10 15:40:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
@@ -128,7 +128,9 @@ extends XMLStorableObjectCondition<LinkedIdsCondition> {
 					+ "']", 
 				true);
 			if (identifiers == null) {
-				identifiers = ids;
+				if (!ids.isEmpty()) {
+					identifiers = ids;
+				}
 			} else {
 				identifiers.addAll(ids);
 			}
