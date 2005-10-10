@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.27 2005/10/10 11:03:22 bass Exp $
+ * $Id: event.idl,v 1.28 2005/10/10 14:28:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -224,8 +224,20 @@ module eventv2 {
 		abstract valuetype IdlNotificationEvent : IdlEvent {
 			enum IdlDeliveryMethod {
 				EMAIL,
-				SMS
+				SMS,
+				POPUP
 			};
+
+			IdlDeliveryMethod getDeliveryMethod();
+		};
+
+		abstract valuetype IdlEmailNotificationEvent : IdlNotificationEvent {
+		};
+
+		abstract valuetype IdlSmsNotificationEvent : IdlNotificationEvent {
+		};
+
+		abstract valuetype IdlPopupNotificationEvent : IdlNotificationEvent {
 		};
 	};
 };
