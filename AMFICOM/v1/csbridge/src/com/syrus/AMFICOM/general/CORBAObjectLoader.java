@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.57 2005/10/10 10:43:42 bob Exp $
+ * $Id: CORBAObjectLoader.java,v 1.58 2005/10/10 11:42:00 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/10/10 10:43:42 $
+ * @version $Revision: 1.58 $, $Date: 2005/10/10 11:42:00 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -92,7 +92,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 										if (LoginManager.restoreLogin()) {
 											continue;
 										}
-										Log.debugMessage("CORBAObjectLoader.loadStorableObjects | Login not restored", Level.INFO);
+										Log.debugMessage("CORBAObjectLoader.CORBAActionProcessor.performAction | Login not restored", Level.INFO);
 										return;
 									}
 									throw new LoginException(are.message);
