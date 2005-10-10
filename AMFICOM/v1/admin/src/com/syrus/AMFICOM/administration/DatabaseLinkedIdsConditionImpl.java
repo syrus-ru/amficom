@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.13 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.14 2005/10/10 15:46:35 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,10 +10,11 @@ package com.syrus.AMFICOM.administration;
 
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 import static com.syrus.AMFICOM.administration.MCMWrapper.COLUMN_SERVER_ID;
-import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_USER_ID;
+import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PARENT_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/10 15:46:35 $
+ * @author $Author: bob $
  * @module administration
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -56,8 +57,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 					case DOMAIN_CODE:
 						return super.getQuery(COLUMN_DOMAIN_ID);
+					case ROLE_CODE:
 					case SYSTEMUSER_CODE:
-						return super.getQuery(COLUMN_USER_ID);
+						return super.getQuery(COLUMN_PARENT_ID);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}

@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.17 2005/09/14 19:01:24 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.18 2005/10/10 15:47:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,20 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.SystemUserWrapper.LINK_COLUMN_ROLE_ID;
+import static com.syrus.AMFICOM.administration.SystemUserWrapper.LINK_COLUMN_SYSTEM_USER_ID;
+import static com.syrus.AMFICOM.general.TableNames.SYSTEM_USER_ROLE_LINK;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -21,12 +29,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/14 19:01:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/10/10 15:47:19 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -122,5 +131,62 @@ public final class SystemUserDatabase extends StorableObjectDatabase<SystemUser>
 			throw new RetrieveObjectException(ide);
 		}
 	}
+	
+	private Map<Identifier, Set<Identifier>> createRoleIdsMap(final Set<SystemUser> systemUsers) {
+		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = 
+			new HashMap<Identifier, Set<Identifier>>();
+		for (final SystemUser systemUser : systemUsers) {
+			measurementSetupIdsMap.put(systemUser.getId(), systemUser.getRoleIds());
+		}
+		return measurementSetupIdsMap;
+	}
+	
+	@Override
+	public void insert(final Set<SystemUser> systemUsers) throws IllegalDataException, CreateObjectException {
+		super.insertEntities(systemUsers);
 
+		final Map<Identifier, Set<Identifier>> roleIdsMap = this.createRoleIdsMap(systemUsers);
+		super.insertLinkedEntityIds(roleIdsMap,
+				SYSTEM_USER_ROLE_LINK,
+				LINK_COLUMN_SYSTEM_USER_ID,
+				LINK_COLUMN_ROLE_ID);
+	}
+
+	@Override
+	public void update(final Set<SystemUser> systemUsers) throws UpdateObjectException {
+		super.update(systemUsers);
+
+		final Map<Identifier, Set<Identifier>> roleIdsMap = this.createRoleIdsMap(systemUsers);
+		super.updateLinkedEntityIds(roleIdsMap,
+				SYSTEM_USER_ROLE_LINK,
+				LINK_COLUMN_SYSTEM_USER_ID,
+				LINK_COLUMN_ROLE_ID);
+	}
+	
+	@Override
+	protected Set<SystemUser> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<SystemUser> systemUsers = super.retrieveByCondition(conditionQuery);
+		
+		this.retrieveLinksByOneQuery(systemUsers);
+		
+		return systemUsers;
+	}
+	
+	private void retrieveLinksByOneQuery(final Set<SystemUser> systemUsers) throws RetrieveObjectException {
+		if ((systemUsers == null) || (systemUsers.isEmpty())) {
+			return;
+		}
+
+		final Map<Identifier, Set<Identifier>> roleIdsMap = this.retrieveLinkedEntityIds(systemUsers,
+			SYSTEM_USER_ROLE_LINK,
+			LINK_COLUMN_SYSTEM_USER_ID,
+			LINK_COLUMN_ROLE_ID);
+
+		for (final SystemUser systemUser : systemUsers) {
+			final Identifier systemUserId = systemUser.getId();
+			
+			final Set<Identifier> roleIds = roleIdsMap.get(systemUserId);
+			systemUser.setRoleIds0(roleIds);
+		}
+	}
 }

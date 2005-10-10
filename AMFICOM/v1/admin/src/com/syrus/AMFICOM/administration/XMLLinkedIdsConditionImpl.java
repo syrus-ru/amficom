@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsConditionImpl.java,v 1.2 2005/09/14 19:01:24 arseniy Exp $
+* $Id: XMLLinkedIdsConditionImpl.java,v 1.3 2005/10/10 15:47:51 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.XMLLinkedIdsCondition;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/14 19:01:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/10/10 15:47:51 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -55,8 +55,9 @@ public class XMLLinkedIdsConditionImpl extends XMLLinkedIdsCondition {
 				switch (super.condition.getLinkedEntityCode()) {
 					case ObjectEntities.DOMAIN_CODE:
 						return super.getIdsByCondition(DomainMember.COLUMN_DOMAIN_ID);
+					case ObjectEntities.ROLE_CODE:
 					case ObjectEntities.SYSTEMUSER_CODE:
-						return super.getIdsByCondition(PermissionAttributesWrapper.COLUMN_USER_ID);
+						return super.getIdsByCondition(PermissionAttributesWrapper.COLUMN_PARENT_ID);
 					default:
 						throw newExceptionLinkedEntityIllegal();
 				}			

@@ -1,10 +1,10 @@
-/*
- * $Id: SystemUser.java,v 1.28 2005/10/05 13:43:31 bass Exp $
- *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
- */
+/*-
+* $Id: SystemUser.java,v 1.29 2005/10/10 15:47:19 bob Exp $
+*
+* Copyright © 2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 
 package com.syrus.AMFICOM.administration;
 
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/05 13:43:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/10/10 15:47:19 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -53,7 +53,8 @@ public final class SystemUser extends StorableObject
 	private int sort;
 	private String name;
 	private String description;
-
+	private Set<Identifier> roleIds;  
+	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @throws CreateObjectException 
@@ -86,6 +87,8 @@ public final class SystemUser extends StorableObject
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
+		
+		this.roleIds = new HashSet<Identifier>();
 	}
 
 	/**
@@ -104,7 +107,7 @@ public final class SystemUser extends StorableObject
 			final String description) throws CreateObjectException {
 		try {
 			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
-			final SystemUser user = new SystemUser(generatedIdentifier,
+			final SystemUser systemUser = new SystemUser(generatedIdentifier,
 					creatorId != null ? creatorId : generatedIdentifier,
 					StorableObjectVersion.createInitial(),
 					login,
@@ -112,11 +115,11 @@ public final class SystemUser extends StorableObject
 					name,
 					description);
 
-			assert user.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert systemUser.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-			user.markAsChanged();
+			systemUser.markAsChanged();
 
-			return user;
+			return systemUser;
 		}
 		catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
@@ -134,7 +137,7 @@ public final class SystemUser extends StorableObject
 		try {
 			super.fromTransferable(ut);
 		}
-		catch (ApplicationException ae) {
+		catch (final ApplicationException ae) {
 			// Never
 			Log.errorException(ae);
 		}
@@ -143,6 +146,8 @@ public final class SystemUser extends StorableObject
 		this.name = ut.name;
 		this.description = ut.description;
 
+		this.setRoleIds0(Identifier.fromTransferables(ut.roleIds));
+		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -163,7 +168,8 @@ public final class SystemUser extends StorableObject
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,
-				this.description);
+				this.description,
+				Identifier.createTransferables(this.roleIds));
 	}
 
 	/**
@@ -174,6 +180,7 @@ public final class SystemUser extends StorableObject
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
+				&& this.roleIds != null 
 				&& this.login != null && this.login.length() != 0
 				&& this.name != null && this.name.length() != 0
 				&& this.description != null;
@@ -230,7 +237,13 @@ public final class SystemUser extends StorableObject
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return Collections.emptySet();
+		final HashSet<Identifiable> dependencies = 
+			new HashSet<Identifiable>(this.roleIds);
+
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		
+		return dependencies;
 	}
 	
 	public void setLogin(final String login) {
@@ -248,6 +261,32 @@ public final class SystemUser extends StorableObject
 		super.markAsChanged();
 	}
 
+	public void addRole(final Role role) {
+		assert role != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.roleIds.add(role.getId());
+	}
+	
+	public Set<Identifier> getRoleIds() {
+		return Collections.unmodifiableSet(this.roleIds);
+	}
+	
+	public void setRoleIds(final Set<Identifier> roleIds) {
+		this.setRoleIds0(roleIds);
+		super.markAsChanged();
+	}
+	
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
+	 */
+	void setRoleIds0(final Set<Identifier> roleIds) {
+		this.roleIds.clear();
+		if (roleIds != null) {
+			this.roleIds.addAll(roleIds);
+		}
+	}
+	
 	/*-********************************************************************
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/

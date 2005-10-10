@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPermissionAttributesImpl.java,v 1.5 2005/09/28 09:20:04 bob Exp $
+ * $Id: IdlPermissionAttributesImpl.java,v 1.6 2005/10/10 15:48:25 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/09/28 09:20:04 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/10 15:48:25 $
  * @module administration
  */
 final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
@@ -39,7 +39,8 @@ final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
 			final IdlIdentifier domainId,
 			final IdlIdentifier userId,
 			final IdlModule _module,  
-			final byte[] permissionMask) {
+			final byte[] permissionMask,
+			final byte[] denyMask) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -50,6 +51,7 @@ final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
 		this.userId = userId;
 		this._module = _module;
 		this.permissionMask = permissionMask;
+		this.denyMask = denyMask;
 	}
 
 	/**

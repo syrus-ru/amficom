@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.8 2005/09/28 11:00:59 bob Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.9 2005/10/10 15:48:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,16 +19,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/28 11:00:59 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/10 15:48:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 public class PermissionAttributesWrapper extends StorableObjectWrapper<PermissionAttributes> {
 
-	public static final String	COLUMN_USER_ID			= "user_id";
-	public static final String	COLUMN_MODULE		= "module_code";
+	public static final String	COLUMN_PARENT_ID		= "parent_id";
+	public static final String	COLUMN_MODULE			= "module_code";
 	public static final String	COLUMN_PERMISSION_MASK	= "permission_mask";
+	public static final String	COLUMN_DENY_MASK		= "deny_mask";
 	
 	private static PermissionAttributesWrapper instance;
 
@@ -36,9 +37,10 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 
 	private PermissionAttributesWrapper() {
 		final String[] keysArray = new String[] { COLUMN_DOMAIN_ID, 
-				COLUMN_USER_ID, 
+				COLUMN_PARENT_ID, 
 				COLUMN_MODULE,
-				COLUMN_PERMISSION_MASK };
+				COLUMN_PERMISSION_MASK,
+				COLUMN_DENY_MASK};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -66,14 +68,17 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 			if (key.equals(COLUMN_DOMAIN_ID)) {
 				return permissionAttributes.getDomainId();
 			}
-			if (key.equals(COLUMN_USER_ID)) {
-				return permissionAttributes.getUserId();
+			if (key.equals(COLUMN_PARENT_ID)) {
+				return permissionAttributes.getParentId();
 			}
 			if (key.equals(COLUMN_MODULE)) {
 				return permissionAttributes.getModule();
 			}
 			if (key.equals(COLUMN_PERMISSION_MASK)) {
 				return permissionAttributes.getPermissions();
+			}
+			if (key.equals(COLUMN_DENY_MASK)) {
+				return permissionAttributes.getDenyMask();
 			}
 		}
 		return value;
@@ -90,10 +95,12 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 		if (permissionAttributes != null) {
 			if (key.equals(COLUMN_DOMAIN_ID)) {
 				permissionAttributes.setDomainId((Identifier) value);
-			} else if (key.equals(COLUMN_USER_ID)) {
-				permissionAttributes.setUserId((Identifier) value);
+			} else if (key.equals(COLUMN_PARENT_ID)) {
+				permissionAttributes.setParentId((Identifier) value);
 			} else if (key.equals(COLUMN_PERMISSION_MASK)) {
 				permissionAttributes.setPermissions((BigInteger) value);
+			} else if (key.equals(COLUMN_DENY_MASK)) {
+				permissionAttributes.setDenyMask((BigInteger) value);
 			} else if (key.equals(COLUMN_MODULE)) {
 				throw new UnsupportedOperationException(
 					"PermissionAttributesWrapper.setValue() | key " 
@@ -124,13 +131,14 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 			return clazz;
 		}
 		if (key.equals(COLUMN_DOMAIN_ID)
-				|| key.equals(COLUMN_USER_ID)) {
+				|| key.equals(COLUMN_PARENT_ID)) {
 			return Identifier.class;
 		}
 		if (key.equals(COLUMN_MODULE)) {
 			return Integer.class;
 		}
-		if (key.equals(COLUMN_PERMISSION_MASK)) {
+		if (key.equals(COLUMN_PERMISSION_MASK) ||
+				key.equals(COLUMN_DENY_MASK)) {
 			return BigInteger.class;
 		}
 		return null;

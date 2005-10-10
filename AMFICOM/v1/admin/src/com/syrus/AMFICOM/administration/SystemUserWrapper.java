@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.14 2005/09/14 19:01:24 arseniy Exp $
+ * $Id: SystemUserWrapper.java,v 1.15 2005/10/10 15:47:19 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSor
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 19:01:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/10/10 15:47:19 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -29,6 +29,8 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	public static final String CMSERVER_LOGIN = "cmserver";
 	public static final String MSCHARSERVER_LOGIN = "mscharserver";
 	public static final String MCM_LOGIN = "mcm";
+	
+	
 
 	// table :: users
 	// description VARCHAR2(256),
@@ -38,6 +40,10 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	// sort NUMBER(2, 0) NOT NULL,
 	public static final String COLUMN_SORT = "sort";
 
+	public static final String LINK_COLUMN_ROLE_ID = "role_id";
+	
+	public static final String LINK_COLUMN_SYSTEM_USER_ID = "system_user_id";
+	
 	private static SystemUserWrapper instance;
 
 	private List<String> keys;

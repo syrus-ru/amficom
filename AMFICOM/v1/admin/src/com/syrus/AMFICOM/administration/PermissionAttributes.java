@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.12 2005/10/06 08:05:41 bob Exp $
+* $Id: PermissionAttributes.java,v 1.13 2005/10/10 15:48:03 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/06 08:05:41 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/10 15:48:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -187,13 +187,15 @@ public class PermissionAttributes extends StorableObject {
 		}
 	}
 	
-	private Identifier userId;
+	private Identifier parentId;
 	
 	private Identifier domainId;
 	
 	private Module module;
 	
 	private BitSet permissions;
+	
+	private BitSet denyMask;
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -214,9 +216,10 @@ public class PermissionAttributes extends StorableObject {
 			final Identifier creatorId,
 			final StorableObjectVersion version,
 			final Identifier domainId,
-			final Identifier userId,
+			final Identifier parentId,
 			final Module module,
-			final BigInteger permissions) {
+			final BigInteger permissions,
+            final BigInteger denyMask) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -224,11 +227,14 @@ public class PermissionAttributes extends StorableObject {
 				creatorId,
 				version);
 		this.domainId = domainId;
-		this.userId = userId;
+		this.parentId = parentId;
 		this.module = module;
 		
 		this.permissions = new BitSet();
 		this.setPermissions0(permissions);
+		
+		this.denyMask = new BitSet();
+		this.setDenyMask0(denyMask);
 	}
 
 	/**
@@ -239,12 +245,19 @@ public class PermissionAttributes extends StorableObject {
 		final IdlPermissionAttributes pat = (IdlPermissionAttributes)transferable;
 		super.fromTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);
-		this.userId = new Identifier(pat.userId);
+		this.parentId = new Identifier(pat.userId);
 		this.module = Module.valueOf(pat._module);
 		if (this.permissions == null) {
 			this.permissions = new BitSet();
 		}
+		
 		this.setPermissionsByteArray0(pat.permissionMask);
+		
+		if (this.denyMask == null) {
+			this.denyMask = new BitSet();
+		}
+		
+		this.setDenyMaskByteArray0(pat.denyMask);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -263,16 +276,17 @@ public class PermissionAttributes extends StorableObject {
 				super.modifierId.getTransferable(),
 				super.version.longValue(),
 				this.domainId.getTransferable(),
-				this.userId.getTransferable(),
+				this.parentId.getTransferable(),
 				this.module.getTransferable(),
-				this.getPermissionByteArray0());
+				this.getPermissionByteArray0(),
+				this.getDenyMaskByteArray0());
 	}	
 
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.domainId != null && !this.domainId.isVoid()
-				&& this.userId != null && !this.userId.isVoid() 
+				&& this.parentId != null && !this.parentId.isVoid() 
 				&& this.permissions != null;
 	}
 
@@ -289,7 +303,8 @@ public class PermissionAttributes extends StorableObject {
 	                                                  final Identifier domainId,
 	                                                  final Identifier userId,
 	                                                  final Module module,
-	                                                  final BigInteger permissions) 
+	                                                  final BigInteger permissions,
+	                                                  final BigInteger denyMask) 
 	throws CreateObjectException {
 		try {
 			final PermissionAttributes permissionAttributes = 
@@ -300,7 +315,8 @@ public class PermissionAttributes extends StorableObject {
 					domainId,
 					userId,
 					module,
-					permissions);
+					permissions,
+		            denyMask);
 
 			assert permissionAttributes.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -324,14 +340,16 @@ public class PermissionAttributes extends StorableObject {
 			final Identifier modifierId,
 			final StorableObjectVersion version,
 			final Identifier domainId,
-			final Identifier userId,
+			final Identifier parentId,
 			final Module module,
-            final BigInteger permissions) {
+            final BigInteger permissions,
+            final BigInteger denyMask) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.domainId = domainId;
-		this.userId = userId;
+		this.parentId = parentId;
 		this.module = module;
 		this.setPermissions0(permissions);
+		this.setDenyMask0(denyMask);
 	}
 	
 	/**
@@ -345,8 +363,8 @@ public class PermissionAttributes extends StorableObject {
 		if (!this.domainId.isVoid()) {
 			dependencies.add(this.domainId);
 		}
-		if (!this.userId.isVoid()) {
-			dependencies.add(this.userId);
+		if (!this.parentId.isVoid()) {
+			dependencies.add(this.parentId);
 		}
 		return dependencies;
 	}
@@ -446,6 +464,52 @@ public class PermissionAttributes extends StorableObject {
 		}
 	}
 	
+	/**
+	 * @return permission digital form 
+	 */
+	public final BigInteger getDenyMask(){
+		return new BigInteger(this.getDenyMaskByteArray0());
+	}
+
+	/**
+	 * @return permission byte array digital form
+	 */
+	final byte[] getDenyMaskByteArray0() {
+		final byte[] bytes = new byte[this.denyMask.length()/8+1];
+		for (int i=0; i<this.denyMask.length(); i++) {
+		    if (this.denyMask.get(i)) {
+		        bytes[bytes.length-i/8-1] |= 1<<(i%8);
+		    }
+		}
+		return bytes;
+	}
+	
+	/**
+	 * set permission from deny mask digital form
+	 * @param denyMask
+	 */
+	public final void setDenyMask(final BigInteger denyMask) {
+		this.setDenyMask0(denyMask);
+		super.markAsChanged();
+	}
+	
+	final void setDenyMask0(final BigInteger denyMask) {
+		this.setDenyMaskByteArray0(denyMask.toByteArray());
+	}
+
+	/**
+	 * set permission from deny mask byte array digital form
+	 * @param bytes deny mask byte array digital form
+	 */
+	final void setDenyMaskByteArray0(final byte[] bytes) {
+		this.denyMask.clear();
+		for (int i=0; i<bytes.length*8; i++) {
+		    if ((bytes[bytes.length-i/8-1]&(1<<(i%8))) > 0) {
+		        this.denyMask.set(i);
+		    }
+		}
+	}
+	
 	public final Identifier getDomainId() {
 		return this.domainId;
 	}
@@ -455,12 +519,12 @@ public class PermissionAttributes extends StorableObject {
 		super.markAsChanged();
 	}
 	
-	public final Identifier getUserId() {
-		return this.userId;
+	public final Identifier getParentId() {
+		return this.parentId;
 	}
 	
-	public final void setUserId(final Identifier userId) {
-		this.userId = userId;
+	public final void setParentId(final Identifier parentId) {
+		this.parentId = parentId;
 		super.markAsChanged();
 	}
 	
