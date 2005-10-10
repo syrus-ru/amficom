@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateRack.java,v 1.1 2005/10/10 12:40:27 stas Exp $
+ * $Id: CreateRack.java,v 1.2 2005/10/10 14:46:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,9 +84,9 @@ public class CreateRack extends AbstractAction {
 			SchemeResource res = ((ElementsPanel)p).getSchemeResource();
 			try {
 				SchemeElement element = SchemeObjectsFactory.createSchemeElement(res.getScheme());
+				element.setName(LangModelGraph.getString("rack") + counter); //$NON-NLS-1$
 				counter++;
-				element.setName(LangModelGraph.getString("Title.rack") + counter);
-				createRack(graph, cells, element);	
+				createRack(graph, cells, element);
 			} catch (CreateObjectException e1) {
 				Log.errorException(e1);
 				return;
@@ -142,10 +142,6 @@ public class CreateRack extends AbstractAction {
 	static Rack createGroup(SchemeGraph graph, Object[] cells, Identifier id) {
 		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		Rack group = Rack.createInstance(null, viewMap, id);
-		
-		Map m = GraphConstants.createMap();
-		GraphConstants.setSizeable(m, true);
-		viewMap.put(group, m);
 		
 		ParentMap map = new ParentMap();
 		for (int i = 0; i < cells.length; i++)
