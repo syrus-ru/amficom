@@ -6,3 +6,5 @@ _*Stub.java
 IdlEvent.java
 IdlNotificationEvent.java
 IdlReflectogramMismatchEvent.java
+IdlLineMismatchEvent.java
+IdlMismatchContainer.java

@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.3 2005/10/07 15:42:29 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.4 2005/10/10 11:03:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,18 @@
 
 package com.syrus.AMFICOM.eventv2;
 
+import java.io.Serializable;
+
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventHelper;
+import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
+import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
+import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatchPair;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorData;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchData;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchor;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchorPair;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchDataPackage.IdlMismatch;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchDataPackage.IdlMismatchPair;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
@@ -26,37 +28,76 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/07 15:42:29 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/10 11:03:22 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
 		AbstractReflectogramMismatchEvent {
 	private static final long serialVersionUID = -1232479623372509377L;
 
+	/**
+	 * @serial include
+	 */
 	private boolean mismatch;
 
+	/**
+	 * @serial include
+	 */
 	private double minMismatch;
 
+	/**
+	 * @serial include
+	 */
 	private double maxMismatch;
 
+	/**
+	 * @serial include
+	 */
 	private Severity severity;
 
+	/**
+	 * @serial include
+	 */
 	private boolean anchors;
 
+	/**
+	 * @serial include
+	 */
 	private SoAnchorImpl anchor1Id;
 
+	/**
+	 * @serial include
+	 */
 	private SoAnchorImpl anchor2Id;
 
+	/**
+	 * @serial include
+	 */
 	private int anchor1Coord;
 
+	/**
+	 * @serial include
+	 */
 	private int anchor2Coord;
 
+	/**
+	 * @serial include
+	 */
 	private int coord;
 
+	/**
+	 * @serial include
+	 */
 	private int endCoord;
 
+	/**
+	 * @serial include
+	 */
 	private AlarmType alarmType;
 
+	/**
+	 * @serial include
+	 */
 	private double deltaX;
 
 	private DefaultReflectogramMismatchEvent(
@@ -282,10 +323,12 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.3 $, $Date: 2005/10/07 15:42:29 $
+	 * @version $Revision: 1.4 $, $Date: 2005/10/10 11:03:22 $
 	 * @module event
 	 */
-	private class SoAnchorImpl implements SOAnchor, Identifiable {
+	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
+		private static final long serialVersionUID = -3382445238828239272L;
+
 		private Identifier anchorId;
 
 		/**

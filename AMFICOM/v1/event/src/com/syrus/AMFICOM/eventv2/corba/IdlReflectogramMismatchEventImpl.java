@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.2 2005/10/07 15:40:16 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.3 2005/10/10 11:03:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,10 +10,11 @@ package com.syrus.AMFICOM.eventv2.corba;
 
 import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
+import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
+import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
+import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorData;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchData;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchor;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlMismatchDataPackage.IdlMismatch;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
 import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/07 15:40:16 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/10 11:03:22 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -136,6 +137,10 @@ final class IdlReflectogramMismatchEventImpl
 	@Override
 	public double getDeltaX() {
 		return this.deltaX;
+	}
+
+	public IdlEventType getType() {
+		return IdlEventType.REFLECTOGRAM_MISMATCH;
 	}
 
 	public ReflectogramMismatchEvent getNative() {

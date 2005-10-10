@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.26 2005/10/07 15:40:16 bass Exp $
+ * $Id: event.idl,v 1.27 2005/10/10 11:03:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -125,10 +125,12 @@ module eventv2 {
 				NOTIFICATION
 			};
 
+			IdlEventType getType();
+
 			eventv2::Event getNative();
 		};
 
-		valuetype IdlReflectogramMismatchEvent : IdlEvent {
+		abstract valuetype IdlMismatchContainer {
 			union IdlMismatchData switch (
 				enum IdlMismatch {
 					_FALSE,
@@ -139,6 +141,9 @@ module eventv2 {
 						double maxMismatch;
 					} mismatchPair;
 			};
+		};
+
+		valuetype IdlReflectogramMismatchEvent : IdlEvent, IdlMismatchContainer {
 			private IdlMismatchData mismatchData;
 			private reflectometry::corba::IdlSeverity severity;
 			union IdlAnchorData switch (
@@ -180,6 +185,40 @@ module eventv2 {
 					in long endCoord,
 					in reflectometry::corba::IdlAlarmType alarmType,
 					in double deltaX);
+		};
+
+		valuetype IdlLineMismatchEvent : IdlEvent, IdlMismatchContainer {
+			private reflectometry::corba::IdlAlarmType alarmType;
+			private reflectometry::corba::IdlSeverity severity;
+			private IdlMismatchData mismatchData;
+			private general::corba::IdlIdentifier affectedPathElementId;
+			union IdlSpatialData switch (
+				enum IdlAffectedPathElementSpatious {
+					_FALSE,
+					_TRUE}) {
+				case _TRUE:
+					struct IdlPhysicalDIstancePair {
+						double physicalDistanceFromStart;
+						double physicalDistanceFromEnd;
+					} physicalDistancePair;
+			};
+			private IdlSpatialData spatialData;
+
+			reflectometry::corba::IdlAlarmType getAlarmType();
+			reflectometry::corba::IdlSeverity getSeverity();
+			boolean hasMismatch();
+			double getMinMismatch();
+			double getMaxMismatch();
+			general::corba::IdlIdentifier getAffectedPathElementId();
+			boolean isAffectedPathElementSpatious();
+			double getPhysicalDistanceFromStart();
+			double getPhysicalDistanceFromEnd();
+
+			factory init(in reflectometry::corba::IdlAlarmType alarmType,
+					in reflectometry::corba::IdlSeverity severity,
+					in IdlMismatchData mismatchData,
+					in general::corba::IdlIdentifier affectedPathElementId,
+					in IdlSpatialData spatialData);
 		};
 
 		abstract valuetype IdlNotificationEvent : IdlEvent {
