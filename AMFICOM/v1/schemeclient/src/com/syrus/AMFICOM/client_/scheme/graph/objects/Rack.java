@@ -1,5 +1,5 @@
 /*-
- * $Id: Rack.java,v 1.2 2005/10/10 11:43:39 stas Exp $
+ * $Id: Rack.java,v 1.3 2005/10/10 15:36:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,10 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
+import java.util.Map;
+
 import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -19,14 +22,20 @@ public class Rack extends DefaultGraphCell implements IdentifiableCell {
 	private static final long serialVersionUID = -2595641930540047586L;
 	private Identifier seId;
 
-	public static Rack createInstance(Object userObject, Identifier elementId) {
-		Rack cell = new Rack(userObject);
+	public static Rack createInstance(Object userObject, 
+			Map<Object, Map> viewMap, Identifier elementId) {
+		Rack cell = new Rack(userObject, viewMap);
 		cell.seId = elementId;
 		return cell;
 	}
 
-	private Rack(Object userObject) {
+	private Rack(Object userObject, Map<Object, Map> viewMap) {
 		super(userObject);
+		
+		// make group created unresizable
+		Map m = GraphConstants.createMap();
+		GraphConstants.setSizeable(m, false);
+		viewMap.put(this, m);
 	}
 
 	public SchemeElement getSchemeElement() {
