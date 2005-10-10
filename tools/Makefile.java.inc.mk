@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.4 2005/10/10 07:44:04 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.5 2005/10/10 07:46:02 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -269,7 +269,7 @@ JAVADOCFLAGS = \
 	-tag bug:a:"Bug:" \
 	-tag module:t:"Module:" \
 	-notimestamp \
-	$(foreach DEPENDENCY,$(DEPENDENCIES),-link "http://$(JAVADOCHOST)/apidocs/amficom-$(DEPENDENCY)/") \
+	$(foreach DEPENDENCY,$(DEPENDENCIES),-link "http://$(JAVADOCHOST)/apidocs/amficom/$(DEPENDENCY)/") \
 	-link "http://$(JAVADOCHOST)/apidocs/jdk/"
 
 #
