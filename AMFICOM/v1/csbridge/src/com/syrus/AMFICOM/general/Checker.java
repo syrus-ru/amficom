@@ -1,5 +1,5 @@
 /*-
-* $Id: Checker.java,v 1.3 2005/09/27 14:06:04 bob Exp $
+* $Id: Checker.java,v 1.4 2005/10/11 08:06:01 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,13 +8,23 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Set;
+
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
+import com.syrus.AMFICOM.administration.PermissionAttributesWrapper;
+import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/27 14:06:04 $
+ * 
+ * Permission checker for a user logged in 
+ * 
+ * @version $Revision: 1.4 $, $Date: 2005/10/11 08:06:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module csbridge
@@ -36,10 +46,48 @@ public abstract class Checker {
 		final Domain domain = 
 			StorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
 		
-		final PermissionAttributes permissionAttributes = 
-			domain.getPermissionAttributes(LoginManager.getUserId(), codename.getModule());
+		final Identifier userId = LoginManager.getUserId();		
+		final Module module = codename.getModule();
 		
-		return permissionAttributes.isPermissionEnable(codename);
+		final PermissionAttributes permissionAttributes = 
+			domain.getPermissionAttributes(userId, module);
+		
+		if (permissionAttributes.isDenied(codename)) {
+			return false;
+		}
+		
+		if (permissionAttributes.isPermissionEnable(codename)) {
+			return true;
+		}
+		
+		final SystemUser systemUser = 
+			StorableObjectPool.getStorableObject(userId, true);
+		
+		final Set<Identifier> roleIds = systemUser.getRoleIds();
+		
+		final CompoundCondition compoundCondition = 
+			new CompoundCondition(
+				new LinkedIdsCondition(roleIds, ObjectEntities.PERMATTR_CODE), 
+				CompoundConditionSort.AND,
+				new TypicalCondition(module, 
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PERMATTR_CODE,
+					PermissionAttributesWrapper.COLUMN_MODULE));
+		
+		final Set<PermissionAttributes> rolePermissions =
+			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, 
+				true);
+		
+		boolean permitted = false;
+		
+		for (final PermissionAttributes attributes : rolePermissions) {
+			permitted |= attributes.isPermissionEnable(codename);
+			if (permitted) {
+				break;
+			}
+		}
+		
+		return permitted;
 	}
 	
 }
