@@ -1,5 +1,5 @@
 /*-
- * $Id: EmailNotificationEvent.java,v 1.2 2005/10/10 14:30:40 bass Exp $
+ * $Id: EmailNotificationEvent.java,v 1.3 2005/10/11 08:58:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,11 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEmailNotificationEvent;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/10 14:30:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/11 08:58:25 $
  * @module event
  */
 public interface EmailNotificationEvent extends NotificationEvent<IdlEmailNotificationEvent> {
-	// empty
+	String getEmail();
+
+	String getSubject();
 }

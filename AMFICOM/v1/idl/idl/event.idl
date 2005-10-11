@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.29 2005/10/11 04:53:32 bass Exp $
+ * $Id: event.idl,v 1.30 2005/10/11 08:58:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -229,15 +229,38 @@ module eventv2 {
 			};
 
 			IdlDeliveryMethod getDeliveryMethod();
+			string getMessage();
 		};
 
-		abstract valuetype IdlEmailNotificationEvent : IdlNotificationEvent {
+		valuetype IdlEmailNotificationEvent : IdlNotificationEvent {
+			private string email;
+			private string subject;
+			private string message;
+
+			string getEmail();
+			string getSubject();
+
+			factory init(in string email, in string subject,
+					in string message);
 		};
 
-		abstract valuetype IdlSmsNotificationEvent : IdlNotificationEvent {
+		valuetype IdlSmsNotificationEvent : IdlNotificationEvent {
+			private string cellular;
+			private string message;
+
+			string getCellular();
+			
+			factory init(in string cellular, in string message);
 		};
 
-		abstract valuetype IdlPopupNotificationEvent : IdlNotificationEvent {
+		valuetype IdlPopupNotificationEvent : IdlNotificationEvent {
+			private general::corba::IdlIdentifier targetUserId;
+			private string message;
+
+			general::corba::IdlIdentifier getTargetUserId();
+
+			factory init(in general::corba::IdlIdentifier targetUserId,
+					in string message);
 		};
 	};
 };
