@@ -19,10 +19,8 @@ import com.syrus.io.SignatureMismatchException;
  * Подробнее см. {@link ReflectogramMismatch}
  * @see ReflectogramMismatch
  * 
- * XXX: Судя по всему, средства toDOS/fromDIS здесь больше не нужны
- * 
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/07 12:24:00 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/11 11:07:08 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl implements ReflectogramMismatch {
@@ -147,7 +145,7 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 	{ // all initialization is already done
 	}
 
-	public static ReflectogramMismatch createFromDIS(DataInputStream dis)
+	protected static ReflectogramMismatch createFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException {
 		if (dis.readLong() != SIGNATURE) {
 			throw new SignatureMismatchException();
@@ -179,7 +177,7 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 		return ret;
 	}
  
-	public void writeToDOS(DataOutputStream dos)
+	protected void writeToDOS(DataOutputStream dos)
 	throws IOException
 	{
 		// ориентировочно, занимает суммарно от 34 до 74 байт
@@ -207,7 +205,8 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 		}
 	}
 
-	public static ReflectogramMismatch createFromByteArray(byte[] bar) throws DataFormatException
+	@Deprecated
+	protected static ReflectogramMismatch createFromByteArray(byte[] bar) throws DataFormatException
 	{
 			try {
 				DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bar));
