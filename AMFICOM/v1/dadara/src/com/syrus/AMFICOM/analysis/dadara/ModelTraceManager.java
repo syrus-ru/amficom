@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.100 2005/10/05 16:36:00 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.101 2005/10/11 14:28:14 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.io.SignatureMismatchException;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.100 $, $Date: 2005/10/05 16:36:00 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/11 14:28:14 $
  * @module
  */
 public class ModelTraceManager
@@ -1191,5 +1191,37 @@ implements DataStreamable, Cloneable
 		int iLMin = ReflectogramMath.getArrayMinIndex(arr, 0, iMax);
 		int iRMin = ReflectogramMath.getArrayMinIndex(arr, iMax, N - 1);
 		return new int[] {evBegin + iLMin, evBegin + iMax, evBegin + iRMin};
+	}
+
+	/**
+	 * Определяет масштаб DY-порогов на начало данного события.
+	 * FIXME: протестировать
+	 * @param nEvent номер события
+	 * @return полусумма предупредительных DY-порогов на начало указанного события
+	 */
+	public double getDYScaleForEventBeginning(int nEvent) {
+		for (int i = 0; i < this.tDY.length; i++) {
+			if (this.tDY[i].isRelevantToNEvent(nEvent)) {
+				return (Math.abs(this.tDY[i].getDY(Thresh.SOFT_UP))
+						+ Math.abs(this.tDY[i].getDY(Thresh.SOFT_DOWN))) / 2.0;
+			}
+		}
+		return 0.0; // событие не покрыто порогами (в принципе, так быть не должно)
+	}
+	/**
+	 * Определяет масштаб DY-порогов на конец данного события.
+	 * FIXME: протестировать
+	 * @param nEvent номер события
+	 * @return полусумма предупредительных DY-порогов на конец указанного события
+	 */
+	public double getDYScaleForEventEnd(int nEvent) {
+		double ret = 0.0;
+		for (int i = 0; i < this.tDY.length; i++) {
+			if (! this.tDY[i].isRelevantToNEvent(nEvent)) {
+				ret = (Math.abs(this.tDY[i].getDY(Thresh.SOFT_UP))
+						+ Math.abs(this.tDY[i].getDY(Thresh.SOFT_DOWN))) / 2.0;
+			}
+		}
+		return ret;
 	}
 }
