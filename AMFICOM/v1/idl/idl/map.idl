@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.38 2005/10/02 08:23:55 bob Exp $
+ * $Id: map.idl,v 1.39 2005/10/11 07:45:33 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -114,15 +114,15 @@ module map {
 /////////////////////// AbstractNode - SiteNode, TopologicalNode ////////////////////////
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlAbstractNode : general::corba::IdlStorableObject {
-		};
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlSiteNode : IdlAbstractNode {
 			public wstring name;
 			public wstring description;
 
 			public double longitude;	// anchor
 			public double latitude;		// anchor
-
+		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlSiteNode : IdlAbstractNode {
+			
 			public general::corba::IdlIdentifier imageId;
 			public general::corba::IdlIdentifier siteNodeTypeId;
 
@@ -152,12 +152,7 @@ module map {
 		
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlTopologicalNode : IdlAbstractNode {
-			public wstring name;
-			public wstring description;
-
-			public double longitude;	// anchor
-			public double latitude;		// anchor
-
+			
 			public boolean active;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -208,12 +203,8 @@ module map {
 		 * Mark which has coordinates and is bound to a subway (MapLink) by distance.
 		 */
 		/*\u002a\u002f@SuppressWarnings("all")/**/
-		valuetype IdlMark : general::corba::IdlStorableObject {
-			public wstring name;
-			public wstring description;
-			public double longitude;	// anchor
-			public double latitude;		// anchor
-
+		valuetype IdlMark : IdlAbstractNode {
+			
 			public general::corba::IdlIdentifier physicalLinkId;
 
 			public double distance;
