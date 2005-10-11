@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.43 2005/10/11 14:13:52 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.44 2005/10/11 14:28:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,14 +16,18 @@ import static java.util.logging.Level.WARNING;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -37,7 +41,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/10/11 14:13:52 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/11 14:28:35 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -187,13 +191,38 @@ final class AnalysisEvaluationProcessor {
 	@SuppressWarnings("unused")
 	private static void enqueueEvent(final ReflectogramMismatchEvent event)
 	throws QueueFullException {
-		Log.debugMessage("Event: " + event + " added to outbox", INFO);
+		Log.debugMessage("AnalysisEvaluationProcessor.enqueueEvent() | Event: "
+				+ event + " added to outbox",
+				INFO);
+		Log.debugMessage("AnalysisEvaluationProcessor.enqueueEvent() | Bass, implement message queue",
+				SEVERE);
+		try {
+			final MCMSessionEnvironment sessionEnvironment =
+					MCMSessionEnvironment.getInstance();
+			final ORB orb = sessionEnvironment.getConnectionManager()
+					.getCORBAServer().getOrb();
+			sessionEnvironment.getMCMServantManager().getEventServerReference()
+					.yetAnotherEventGeneration(event.getTransferable(orb));
+			Log.debugMessage("AnalysisEvaluationProcessor.enqueueEvent() | Event: "
+					+ event + " delivered successfully",
+					INFO);
+		} catch (final AMFICOMRemoteException are) {
+			Log.debugException(are, SEVERE);
+			Log.debugMessage("AnalysisEvaluationProcessor.enqueueEvent() | Delivery of event: "
+					+ event + " failed due to an exception",
+					SEVERE);
+		} catch (final CommunicationException ce) {
+			Log.debugException(ce, SEVERE);
+			Log.debugMessage("AnalysisEvaluationProcessor.enqueueEvent() | Delivery of event: "
+					+ event + " failed due to an exception",
+					SEVERE);
+		}
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.43 $, $Date: 2005/10/11 14:13:52 $
+	 * @version $Revision: 1.44 $, $Date: 2005/10/11 14:28:35 $
 	 * @module mcm
 	 */
 	private static class QueueFullException extends Exception {
