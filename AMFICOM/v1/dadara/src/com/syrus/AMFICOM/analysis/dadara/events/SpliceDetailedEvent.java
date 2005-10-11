@@ -1,5 +1,5 @@
 /*-
- * $Id: SpliceDetailedEvent.java,v 1.5 2005/10/06 13:34:02 saa Exp $
+ * $Id: SpliceDetailedEvent.java,v 1.6 2005/10/11 13:26:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,11 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * y1 - уровень конца события, дБ (отрицательное значение)
  * loss - уровень потерь на событии (это не совсем то же, что и разница уровня на конце и в начале)
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/11 13:26:14 $
  * @module
  */
-public class SpliceDetailedEvent extends DetailedEvent {
+public class SpliceDetailedEvent extends DetailedEvent
+implements HavingY0, HavingLoss {
 	double y0;
 	double y1;
 	double loss;

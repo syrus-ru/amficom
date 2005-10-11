@@ -1,5 +1,5 @@
 /*-
- * $Id: NotIdentifiedDetailedEvent.java,v 1.5 2005/10/06 13:34:02 saa Exp $
+ * $Id: NotIdentifiedDetailedEvent.java,v 1.6 2005/10/11 13:26:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,10 +23,11 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * maxDev - максимальное отклонение рефлектограммы от аналитической кривой, дЅ
  * loss - предполагаемый уровень потерь на событии
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/11 13:26:14 $
  * @module
  */
-public class NotIdentifiedDetailedEvent extends DetailedEvent {
+public class NotIdentifiedDetailedEvent extends DetailedEvent
+implements HavingY0, HavingLoss {
 	private double y0;
 	private double y1;
 	private double yMin;

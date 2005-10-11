@@ -1,5 +1,5 @@
 /*-
- * $Id: EndOfTraceDetailedEvent.java,v 1.5 2005/10/06 13:34:02 saa Exp $
+ * $Id: EndOfTraceDetailedEvent.java,v 1.6 2005/10/11 13:26:14 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,11 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * y0 - уровень начала событи€, дЅ (отрицательное значение)
  * y2 - уровень максимума, дЅ (отрицательное значение или ноль)
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/11 13:26:14 $
  * @module
  */
-public class EndOfTraceDetailedEvent extends DetailedEvent {
+public class EndOfTraceDetailedEvent extends DetailedEvent
+implements HavingY0 {
 	private double y0;
 	private double y2;
 	//private double refl;
