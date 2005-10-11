@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.22 2005/09/12 12:06:26 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.23 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,8 +40,8 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	private Validator validator;
 	
 	private NetBeanFactory(final ManagerMainFrame graphText) {
-		super("Entity.Net", 
-			"Entity.Net", 
+		super("Manager.Entity.Net", 
+			"Manager.Entity.Net", 
 			"com/syrus/AMFICOM/manager/resources/icons/cloud.gif", 
 			"com/syrus/AMFICOM/manager/resources/cloud.png");
 		super.graphText = graphText;
@@ -64,72 +64,70 @@ public class NetBeanFactory extends AbstractBeanFactory {
 		++super.count;
 		final AbstractBean bean = new NonStorableBean() {
 			
-			@Override
-			public void dispose() throws ApplicationException {
-				super.dispose();
-				
-
-				TypicalCondition typicalCondition = 
+			private Set<LayoutItem> getBeanChildrenLayoutItems() 
+			throws ApplicationException{
+				final TypicalCondition typicalCondition = 
 					new TypicalCondition(this.getCodeName(), 
 						OperationSort.OPERATION_EQUALS, 
 						ObjectEntities.LAYOUT_ITEM_CODE, 
 						StorableObjectWrapper.COLUMN_NAME);
 
-				Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
+				final Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
 					typicalCondition, 
 					true, 
 					true);
 				
-				for(Iterator<LayoutItem> it = beanLayoutItems.iterator(); it.hasNext();) {
-					LayoutItem layoutItem = it.next();
+				for(final Iterator<LayoutItem> it = beanLayoutItems.iterator(); it.hasNext();) {
+					final LayoutItem layoutItem = it.next();
 					if (!layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
 						it.remove();
 					}
 				}
 				
-				if (!beanLayoutItems.isEmpty()) {
-					LinkedIdsCondition linkedIdsCondition = 
-						new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
-							ObjectEntities.LAYOUT_ITEM_CODE);
-					
-					Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
-						linkedIdsCondition, 
-						true, 
-						true);
-					
-					beanChildrenLayoutItems.addAll(beanLayoutItems);
-					
-					for(LayoutItem layoutItem : beanChildrenLayoutItems) {
-						if(layoutItem.getName().startsWith(NET_CODENAME)) {
-							continue;
-						}
-						if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
-							Log.debugMessage("NetBean.dispose | " 
-								+ layoutItem.getId() + ", "
-								+ layoutItem.getName() 
-								+ ", layoutName:" 
-								+ layoutItem.getLayoutName(),							
-							Log.DEBUGLEVEL10);		
-							
-							AbstractBean childBean = this.graphText.getCell(layoutItem);
-							System.out.println(".dispose() | " + childBean);
-							childBean.dispose();
-							childBean.disposeLayoutItem();
-						}
+				final LinkedIdsCondition linkedIdsCondition = 
+					new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
+						ObjectEntities.LAYOUT_ITEM_CODE);
+				
+				final Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
+					linkedIdsCondition, 
+					true, 
+					true);
+				
+				beanChildrenLayoutItems.addAll(beanLayoutItems);
+				return beanChildrenLayoutItems;
+			}
+			
+			@Override
+			public void dispose() throws ApplicationException {
+				super.dispose();
+				
+				for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
+					if(layoutItem.getName().startsWith(NET_CODENAME)) {
+						continue;
+					}
+					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
+						Log.debugMessage("NetBean.dispose | " 
+							+ layoutItem.getId() + ", "
+							+ layoutItem.getName() 
+							+ ", layoutName:" 
+							+ layoutItem.getLayoutName(),							
+						Log.DEBUGLEVEL10);		
+						
+						AbstractBean childBean = this.graphText.getCell(layoutItem);
+						System.out.println(".dispose() | " + childBean);
+						childBean.dispose();
+						childBean.disposeLayoutItem();
 					}
 				}
 				
 				super.disposeLayoutItem();
 				
 				this.graphText.valueChanged(null);
-				
-			
-				
 			}
 			
 			@Override
-			public void applyTargetPort(MPort oldPort, MPort newPort) {
-				Log.debugMessage("NetBeanFactory.createBean() | " + oldPort + ", " + newPort, Log.DEBUGLEVEL10);
+			public void applyTargetPort(MPort oldPort, MPort newPort) throws ApplicationException {
+				assert Log.debugMessage("NetBeanFactory.createBean() | " + oldPort + ", " + newPort, Log.DEBUGLEVEL10);
 
 				Identifier parentDomainId = Identifier.VOID_IDENTIFIER;
 				
@@ -143,71 +141,36 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					oldParentDomainId = ((DomainBean)oldPort.getUserObject()).getId();
 				}
 
-				Log.debugMessage("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
+				assert Log.debugMessage("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
 					+ oldParentDomainId + ", parentDomainId: " + parentDomainId, Log.DEBUGLEVEL10);
-
-				try {
-					TypicalCondition typicalCondition = 
-						new TypicalCondition(this.getCodeName(), 
-							OperationSort.OPERATION_EQUALS, 
-							ObjectEntities.LAYOUT_ITEM_CODE, 
-							StorableObjectWrapper.COLUMN_NAME);
-
-					Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
-						typicalCondition, 
-						true, 
-						true);
-					
-					for(Iterator<LayoutItem> it = beanLayoutItems.iterator(); it.hasNext();) {
-						LayoutItem layoutItem = it.next();
-						if (!layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
-							it.remove();
-						}
-					}
-					
-					LinkedIdsCondition linkedIdsCondition = 
-						new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
-							ObjectEntities.LAYOUT_ITEM_CODE);
-					
-					Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
-						linkedIdsCondition, 
-						true, 
-						true);
-					
-					beanChildrenLayoutItems.addAll(beanLayoutItems);
-					
-					for(LayoutItem layoutItem : beanChildrenLayoutItems) {
-						if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
-							final String layoutName = !parentDomainId.isVoid() ? 
-									parentDomainId.getIdentifierString() : 
-									ObjectEntities.DOMAIN;
-							Log.debugMessage("NetBean.setDomainId | " 
-								+ layoutItem.getId() + ", "
-								+ layoutItem.getName() 
-								+ ", layoutName:" 
-								+ layoutName 
-								+ "\n\toldParentDomainId:" 
-								+ oldParentDomainId
-								+ "\n\tparentDomainId:" 
-								+ parentDomainId,
-								
-							Log.DEBUGLEVEL10);		
-							layoutItem.setLayoutName(layoutName);
+				
+				for(LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
+					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
+						final String layoutName = !parentDomainId.isVoid() ? 
+								parentDomainId.getIdentifierString() : 
+								ObjectEntities.DOMAIN;
+						Log.debugMessage("NetBean.setDomainId | " 
+							+ layoutItem.getId() + ", "
+							+ layoutItem.getName() 
+							+ ", layoutName:" 
+							+ layoutName 
+							+ "\n\toldParentDomainId:" 
+							+ oldParentDomainId
+							+ "\n\tparentDomainId:" 
+							+ parentDomainId,
 							
-							AbstractBean cell = this.graphText.getCell(layoutItem);
-							if (cell instanceof DomainNetworkItem) {
-								DomainNetworkItem portBean = (DomainNetworkItem) cell;						
-								portBean.setDomainId(oldParentDomainId, parentDomainId);
-							}
+						Log.DEBUGLEVEL10);		
+						layoutItem.setLayoutName(layoutName);
+						
+						AbstractBean cell = this.graphText.getCell(layoutItem);
+						if (cell instanceof DomainNetworkItem) {
+							DomainNetworkItem portBean = (DomainNetworkItem) cell;						
+							portBean.setDomainId(oldParentDomainId, parentDomainId);
 						}
 					}
-					
-					this.graphText.valueChanged(null);
-					
-				} catch (ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
+				
+				this.graphText.valueChanged(null); 
 			}
 		};
 		bean.setGraphText(super.graphText);

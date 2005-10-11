@@ -1,5 +1,5 @@
 /*-
-* $Id: TabledBeanFactory.java,v 1.5 2005/09/13 11:07:45 bob Exp $
+* $Id: TabledBeanFactory.java,v 1.6 2005/10/11 15:34:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/13 11:07:45 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -37,6 +37,11 @@ public abstract class TabledBeanFactory extends AbstractBeanFactory {
 	WrapperedPropertyTable	table;
 
 	protected JPanel	panel;
+	
+	protected TabledBeanFactory(final String iconUrl,
+	                              final String imageUrl) {
+		super(iconUrl, imageUrl);
+	}
 	
 	protected TabledBeanFactory(final String nameKey, 
 	                              final String shortNameKey,

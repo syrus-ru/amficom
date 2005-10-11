@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.12 2005/09/12 12:06:26 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.13 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,8 +42,8 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	private static MCMBeanFactory instance;
 	
 	private MCMBeanFactory(final ManagerMainFrame graphText) {
-		super("Entity.MeasurementContolModule", 
-			"Entity.MeasurementContolModule.acronym", 
+		super("Manager.Entity.MeasurementContolModule", 
+			"Manager.Entity.MeasurementContolModule.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/mcm.gif", 
 			"com/syrus/AMFICOM/manager/resources/mcm.png");
 		super.graphText = graphText;
@@ -60,7 +62,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 		
 		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
-		String name = LangModelManager.getString("Entity.MeasurementContolModule") + "-" + (++super.count);
+		String name = I18N.getString("Manager.Entity.MeasurementContolModule") + "-" + (++super.count);
 		
 		MCM mcm = MCM.createInstance(LoginManager.getUserId(), 
 			domainPerpective.getDomainId(),
@@ -89,7 +91,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					bean.table.updateModel();
+					((WrapperedPropertyTable)bean.table).updateModel();
 				}
 			});
 		
@@ -98,7 +100,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					bean.table.updateModel();
+					((WrapperedPropertyTable)bean.table).updateModel();
 				}
 			});
 

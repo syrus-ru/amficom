@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.16 2005/09/28 14:04:22 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.17 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/28 14:04:22 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -29,8 +29,8 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	private static DomainBeanFactory instance;
 	
 	private DomainBeanFactory(final ManagerMainFrame graphText) {
-		super("Entity.Domain", 
-			"Entity.Domain", 
+		super("Manager.Entity.Domain", 
+			"Manager.Entity.Domain", 
 			"com/syrus/AMFICOM/manager/resources/icons/domain.gif", 
 			"com/syrus/AMFICOM/manager/resources/domain2.png");
 		super.graphText = graphText;

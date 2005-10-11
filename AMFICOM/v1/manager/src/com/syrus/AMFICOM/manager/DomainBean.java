@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.13 2005/09/12 11:10:16 bob Exp $
+ * $Id: DomainBean.java,v 1.14 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,12 @@ import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.net.URL;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
@@ -23,14 +26,14 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/12 11:10:16 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,8 +47,10 @@ public class DomainBean extends Bean {
 
 		if (cell != null) {
 			final JPopupMenu popupMenu = new JPopupMenu();
-
-			popupMenu.add(new AbstractAction(LangModelManager.getString("Dialog.EnterIntoDomain")) {
+			
+			
+			
+			final AbstractAction action = new AbstractAction(I18N.getString("Manager.Dialog.EnterIntoDomain")) {
 
 				public void actionPerformed(ActionEvent e) {
 					
@@ -55,8 +60,8 @@ public class DomainBean extends Bean {
 					
 					if (ports.isEmpty()) {
 						JOptionPane.showMessageDialog(popupMenu, 
-							LangModelManager.getString("Error.DomainDoesnotContainNetwork"), 
-							LangModelManager.getString("Error"),
+							I18N.getString("Manager.Error.DomainDoesnotContainNetwork"), 
+							I18N.getString("Manager.Error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -69,8 +74,8 @@ public class DomainBean extends Bean {
 						if (bean2 == null || 
 								!bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
 							JOptionPane.showMessageDialog(popupMenu, 
-								LangModelManager.getString("Error.DomainContainsNotOnlyNetwork"), 
-								LangModelManager.getString("Error"),
+								I18N.getString("Manager.Error.DomainContainsNotOnlyNetwork"), 
+								I18N.getString("Manager.Error"),
 								JOptionPane.ERROR_MESSAGE);
 							return;
 						}
@@ -81,7 +86,18 @@ public class DomainBean extends Bean {
 					
 					
 				}
-			});
+			};
+			
+			Icon icon;
+			URL resource = DomainBean.class.getClassLoader().getResource("com/syrus/AMFICOM/manager/resources/icons/enter.gif");
+			if (resource != null) {
+				icon = new ImageIcon(resource);
+			}
+			
+			// TODO
+			
+			
+			popupMenu.add(action);
 			return popupMenu;
 		}
 

@@ -1,5 +1,5 @@
 /*-
-* $Id: Bean.java,v 1.4 2005/09/07 07:08:02 bob Exp $
+* $Id: Bean.java,v 1.5 2005/10/11 15:34:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,19 +14,20 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JTable;
 
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/07 07:08:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public abstract class Bean extends AbstractBean {
 
-	protected WrapperedPropertyTable	table;
+	protected JTable	table;
 	
 	protected List<PropertyChangeListener>						propertyChangeListeners;
 
@@ -56,9 +57,11 @@ public abstract class Bean extends AbstractBean {
 	
 	@Override
 	public JPanel getPropertyPanel() {
-		WrapperedPropertyTableModel model = 
-			this.table.getModel();
-		model.setObject(this);
+		if (this.table instanceof WrapperedPropertyTable) {
+			WrapperedPropertyTableModel model = 
+				(WrapperedPropertyTableModel) this.table.getModel();
+			model.setObject(this);
+		}
 		return super.getPropertyPanel();
 	}
 

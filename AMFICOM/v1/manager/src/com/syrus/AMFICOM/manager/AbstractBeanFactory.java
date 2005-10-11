@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.10 2005/09/12 12:06:26 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.11 2005/10/11 15:34:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,13 +13,15 @@ import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -38,22 +40,32 @@ public abstract class AbstractBeanFactory {
 	
 	protected ManagerMainFrame graphText;
 	
-	protected AbstractBeanFactory(final String nameKey, 
-	                              final String shortNameKey,
-	                              final String iconUrl,
-	                              final String imageUrl) {
-		this.nameKey = nameKey;
-		this.shortNameKey = shortNameKey;
-		
+	protected  AbstractBeanFactory(final String iconUrl,
+		                              final String imageUrl) {
 		URL resource = AbstractBeanFactory.class.getClassLoader().getResource(iconUrl);
 		if (resource != null) {
 			this.icon = new ImageIcon(resource);
+		} else {
+			assert Log.debugMessage("AbstractBeanFactory.AbstractBeanFactory | " + iconUrl + " not found ",
+				Log.DEBUGLEVEL09);
 		}
 		
 		resource = AbstractBeanFactory.class.getClassLoader().getResource(imageUrl);
 		if (resource != null) {
 			this.image = new ImageIcon(resource);
+		} else {
+			assert Log.debugMessage("AbstractBeanFactory.AbstractBeanFactory | " + imageUrl + " not found ",
+				Log.DEBUGLEVEL09);
 		}
+	}
+	
+	protected AbstractBeanFactory(final String nameKey, 
+	                              final String shortNameKey,
+	                              final String iconUrl,
+	                              final String imageUrl) {
+		this(iconUrl, imageUrl);
+		this.nameKey = nameKey;
+		this.shortNameKey = shortNameKey;
 	}
 	
 	public abstract AbstractBean createBean(Perspective perspective) 
@@ -71,11 +83,11 @@ public abstract class AbstractBeanFactory {
 	}
 	
 	public String getName() {
-		return LangModelManager.getString(this.nameKey);
+		return I18N.getString(this.nameKey);
 	}
 	
 	public String getShortName() {
-		return LangModelManager.getString(this.shortNameKey);
+		return I18N.getString(this.shortNameKey);
 	}	
 	
 	public final ManagerMainFrame getGraphText() {

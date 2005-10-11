@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanWrapper.java,v 1.9 2005/09/08 14:33:50 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.10 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,7 +29,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/08 14:33:50 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -111,15 +112,15 @@ public class RTUBeanWrapper implements Wrapper {
 
 	public String getName(final String key) {
 		if (key.equals(KEY_NAME)) {
-			return LangModelManager.getString("Entity.RTU.attributes.Name");
+			return I18N.getString("Manager.Entity.RTU.attributes.Name");
 		} else if (key.equals(KEY_DESCRIPTION)) { 
-			return LangModelManager.getString("Entity.RTU.attributes.Description"); 
+			return I18N.getString("Manager.Entity.RTU.attributes.Description"); 
 		} else if (key.equals(KEY_HOSTNAME)) { 
-			return LangModelManager.getString("Entity.RTU.attributes.Hostname"); 
+			return I18N.getString("Manager.Entity.RTU.attributes.Hostname"); 
 		} else if (key.equals(KEY_PORT)) { 
-			return LangModelManager.getString("Entity.RTU.attributes.TCPPort"); 
+			return I18N.getString("Manager.Entity.RTU.attributes.TCPPort"); 
 		} else if (key.equals(KEY_MCM_ID)) { 
-			return LangModelManager.getString("Entity.RTU.attributes.MeasurementControlModule"); 
+			return I18N.getString("Manager.Entity.RTU.attributes.MeasurementControlModule"); 
 		} 
 		
 		

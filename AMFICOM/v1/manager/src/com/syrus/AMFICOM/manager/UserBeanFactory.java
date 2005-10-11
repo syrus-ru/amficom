@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.22 2005/09/28 14:05:25 bob Exp $
+* $Id: UserBeanFactory.java,v 1.23 2005/10/11 15:34:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,26 +10,35 @@ package com.syrus.AMFICOM.manager;
 
 import java.beans.PropertyChangeEvent;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
+import com.syrus.AMFICOM.administration.Role;
+import com.syrus.AMFICOM.administration.RoleWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/28 14:05:25 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -38,25 +47,28 @@ public class UserBeanFactory extends TabledBeanFactory {
 
 	private static UserBeanFactory instance;
 	
-	private List<String> names;
+	private SortedSet<Role> roles;
 
 	private UserBeanFactory(final ManagerMainFrame graphText) {
-		super("Entity.User", 
-			"Entity.User", 
+		super("Manager.Entity.User", 
+			"Manager.Entity.User", 
 			"com/syrus/AMFICOM/manager/resources/icons/user.gif", 
 			"com/syrus/AMFICOM/manager/resources/user.gif");
 		super.graphText = graphText;
-		this.names = new ArrayList<String>();
-		this.names.add(LangModelManager.getString("Entity.User.Subscriber"));
-		this.names.add(null);
-		this.names.add(LangModelManager.getString("Entity.User.SystemAdministator"));
-		this.names.add(LangModelManager.getString("Entity.User.MediaMonitoringAdministator"));
-		this.names.add(LangModelManager.getString("Entity.User.Analyst"));
-		this.names.add(LangModelManager.getString("Entity.User.Operator"));
-		this.names.add(null);
-		this.names.add(LangModelManager.getString("Entity.User.Planner"));
-		this.names.add(LangModelManager.getString("Entity.User.Specialist"));
-		this.names.add(null);
+		this.roles = 
+			new TreeSet<Role>(
+				new WrapperComparator<Role>(RoleWrapper.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION));
+		
+		try {
+			final Set<Role> roles1 = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new EquivalentCondition(ObjectEntities.ROLE_CODE), true);
+			this.roles.addAll(roles1);
+		} catch (final ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 	public static final synchronized UserBeanFactory getInstance(final ManagerMainFrame graphText) {
@@ -73,7 +85,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 		
 		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
-		String login = LangModelManager.getString("Entity.User") + "-" + (++super.count);
+		String login = I18N.getString("Manager.Entity.User") + "-" + (++super.count);
 		
 		SystemUser user = SystemUser.createInstance(LoginManager.getUserId(),
 			login,
@@ -98,7 +110,8 @@ public class UserBeanFactory extends TabledBeanFactory {
 						domainId,
 						userId,
 						module,
-						new BigInteger("0"));
+						BigInteger.ZERO,
+						BigInteger.ZERO);
 				}
 			}
 			
@@ -111,7 +124,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 	
 	@Override
 	protected AbstractBean createBean(Identifier identifier) {
-		final UserBean bean = new UserBean(this.names);
+		final UserBean bean = new UserBean(this.roles);
 		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());

@@ -1,5 +1,5 @@
 /*-
-* $Id: FlushCommand.java,v 1.3 2005/09/13 11:29:38 bob Exp $
+* $Id: FlushCommand.java,v 1.4 2005/10/11 15:36:25 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,17 +11,16 @@ package com.syrus.AMFICOM.manager.UI;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.LangModelManager;
 import com.syrus.AMFICOM.manager.Perspective;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/13 11:29:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/11 15:36:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,8 +49,8 @@ public class FlushCommand extends AbstractCommand {
 					StorableObjectPool.flush(ObjectEntities.MCM_CODE, LoginManager.getUserId(), true);
 				} else {
 					JOptionPane.showMessageDialog(this.managerMainFrame.getGraph(), 
-						LangModelManager.getString("Error.LayoutIsInvalid"),
-						LangModelGeneral.getString("Error"),
+						I18N.getString("Manager.Error.LayoutIsInvalid"),
+						I18N.getString("Error"),
 						JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -59,7 +58,7 @@ public class FlushCommand extends AbstractCommand {
 			e1.printStackTrace();
 			JOptionPane.showMessageDialog(null, 
 				e1.getMessage(), 
-				LangModelManager.getString("Error"),
+				I18N.getString("Error"),
 				JOptionPane.ERROR_MESSAGE);
 		}
 	}

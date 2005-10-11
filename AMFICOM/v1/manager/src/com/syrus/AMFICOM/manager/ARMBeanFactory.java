@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.16 2005/09/12 12:06:26 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.17 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -37,8 +37,8 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	private Validator validator;
 	
 	private ARMBeanFactory(final ManagerMainFrame graphText) {
-		super("Entity.AutomatedWorkplace", 
-			"Entity.AutomatedWorkplace.acronym", 
+		super("Manager.Entity.AutomatedWorkplace", 
+			"Manager.Entity.AutomatedWorkplace.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/arm.gif", 
 			"com/syrus/AMFICOM/manager/resources/arm.gif");
 		super.graphText = graphText;
@@ -89,30 +89,32 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	}	
 	
 	private class ARMBean extends NonStorableBean implements DomainNetworkItem {
-		
-		@Override
-		public void dispose() throws ApplicationException {
-			TypicalCondition typicalCondition = 
+		private Set<LayoutItem> getBeanChildrenLayoutItems() 
+		throws ApplicationException{
+			final TypicalCondition typicalCondition = 
 				new TypicalCondition(this.getCodeName(), 
 					OperationSort.OPERATION_EQUALS, 
 					ObjectEntities.LAYOUT_ITEM_CODE, 
 					StorableObjectWrapper.COLUMN_NAME);
 
-			Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
+			final Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
 				typicalCondition, 
 				true, 
 				true);
 			
-			LinkedIdsCondition linkedIdsCondition = 
+			final LinkedIdsCondition linkedIdsCondition = 
 				new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
 					ObjectEntities.LAYOUT_ITEM_CODE);
 			
-			Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
+			return StorableObjectPool.getStorableObjectsByCondition(
 				linkedIdsCondition, 
 				true, 
 				true);
-			
-			for(LayoutItem layoutItem : beanChildrenLayoutItems) {
+		}
+		
+		@Override
+		public void dispose() throws ApplicationException {			
+			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {					
 					Log.debugMessage("ARMBean.dispose | "
 						+ layoutItem.getId() + ", "
@@ -132,27 +134,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		public void setDomainId(Identifier oldDomainId,
 								Identifier newDomainId) {
 			try {
-				TypicalCondition typicalCondition = 
-					new TypicalCondition(this.getCodeName(), 
-						OperationSort.OPERATION_EQUALS, 
-						ObjectEntities.LAYOUT_ITEM_CODE, 
-						StorableObjectWrapper.COLUMN_NAME);
-
-				Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
-					typicalCondition, 
-					true, 
-					true);
-				
-				LinkedIdsCondition linkedIdsCondition = 
-					new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
-						ObjectEntities.LAYOUT_ITEM_CODE);
-				
-				Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
-					linkedIdsCondition, 
-					true, 
-					true);
-				
-				for(LayoutItem layoutItem : beanChildrenLayoutItems) {
+				for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
 						final String layoutName = !newDomainId.isVoid() ? 
 								newDomainId.getIdentifierString() : 

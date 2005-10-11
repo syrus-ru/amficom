@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.10 2005/09/28 14:03:15 bob Exp $
+* $Id: Manager.java,v 1.11 2005/10/11 15:36:25 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,14 +11,17 @@ package com.syrus.AMFICOM.manager.UI;
 import java.awt.Toolkit;
 import java.util.Set;
 
+import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
+import com.syrus.AMFICOM.administration.Role.RoleCodename;
 import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.DataType;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -29,7 +32,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/28 14:03:15 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 15:36:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -54,7 +57,7 @@ public class Manager extends AbstractApplication {
 			
 			LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
 			
-//			createCharacteristicTypes();
+			createCharacteristicTypes();
 			
 		} catch (ApplicationException e) {
 			// TODO Auto-generated catch block
@@ -75,11 +78,21 @@ public class Manager extends AbstractApplication {
 		
 
 
+		final Identifier userId = LoginManager.getUserId();
+		if (false) {
+			for(final RoleCodename roleCodename : RoleCodename.values()) {
+				Role.createInstance(userId, 
+					roleCodename.getCodename(), 
+					roleCodename.getDescription());
+			}
+			
+			StorableObjectPool.flush(ObjectEntities.ROLE_CODE, userId, true);
+		}
 		
 		if (false){
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					LayoutItem.CHARACTERISCTIC_TYPE_X, 
 					"x coordinate", 
 					"x coordinate", 
@@ -89,7 +102,7 @@ public class Manager extends AbstractApplication {
 			}
 
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					LayoutItem.CHARACTERISCTIC_TYPE_Y, 
 					"y coordinate", 
 					"y coordinate", 
@@ -98,7 +111,7 @@ public class Manager extends AbstractApplication {
 				
 			}
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_NATURE, 
 					"Тип должностного лица", 
 					"Тип", 
@@ -108,7 +121,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_FULLNAME, 
 					"Полное имя пользотеля", 
 					"ФИО", 
@@ -118,7 +131,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_POSITION, 
 					"Должность", 
 					"Должность", 
@@ -128,7 +141,7 @@ public class Manager extends AbstractApplication {
 			}
 	
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_DEPARTEMENT, 
 					"Подразделение", 
 					"Подразделение", 
@@ -137,7 +150,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_COMPANY, 
 					"Организация", 
 					"Организация", 
@@ -146,7 +159,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_ROOM_NO, 
 					"Номер комнаты", 
 					"Номер комнаты", 
@@ -155,7 +168,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_CITY, 
 					"Город", 
 					"Город", 
@@ -164,7 +177,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_STREET, 
 					"Улица", 
 					"Улица", 
@@ -173,7 +186,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_BUILDING, 
 					"Дом", 
 					"Дом", 
@@ -182,7 +195,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_EMAIL, 
 					"Адрес электронной почты", 
 					"Электронная почта", 
@@ -191,7 +204,7 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_PHONE, 
 					"Телефон", 
 					"Телефон", 
@@ -200,14 +213,16 @@ public class Manager extends AbstractApplication {
 			}
 			
 			{
-				CharacteristicType.createInstance(LoginManager.getUserId(), 
+				CharacteristicType.createInstance(userId, 
 					CharacteristicTypeCodenames.USER_CELLULAR, 
 					"Сотовый телефон", 
 					"Сотовый телефон", 
 					DataType.STRING, 
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
 			}
+			
+			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, userId, true);
 		}
-		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, LoginManager.getUserId(), true);
+		
 	}
 }

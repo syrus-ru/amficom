@@ -1,5 +1,5 @@
 /*-
- * $Id: NonRootGraphTreeModel.java,v 1.4 2005/09/01 14:33:06 bob Exp $
+ * $Id: NonRootGraphTreeModel.java,v 1.5 2005/10/11 15:36:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/01 14:33:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/11 15:36:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,7 +52,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 	public NonRootGraphTreeModel(final GraphModel model) {
 		this.model = model;
 
-		this.generalRoot = new DefaultMutableTreeNode("'/'");
+		this.generalRoot = new DefaultMutableTreeNode(".");
 		this.firstLevel = new ArrayList<MPort>();
 		
 		this.availableCodenames = new HashSet<String>();

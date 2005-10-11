@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.15 2005/09/12 12:06:26 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.16 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.manager.RTUBeanWrapper.PROPERTY_MCMS_REFRESHED;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -37,8 +38,8 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	private static RTUBeanFactory instance;
 	
 	private RTUBeanFactory(final ManagerMainFrame graphText) {
-		super("Entity.RemoteTestUnit", 
-			"Entity.RemoteTestUnit.acronym", 
+		super("Manager.Entity.RemoteTestUnit", 
+			"Manager.Entity.RemoteTestUnit.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/rtu.gif", 
 			"com/syrus/AMFICOM/manager/resources/rtu.png");
 		super.graphText = graphText;
@@ -92,7 +93,7 @@ public class RTUBeanFactory extends TabledBeanFactory {
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					bean.table.updateModel();
+					((WrapperedPropertyTable)bean.table).updateModel();
 				}
 			});
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanWrapper.java,v 1.6 2005/08/24 14:05:47 bob Exp $
+ * $Id: MCMBeanWrapper.java,v 1.7 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,7 +30,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -135,15 +136,15 @@ public class MCMBeanWrapper implements Wrapper {
 
 	public String getName(final String key) {
 		if (key.equals(KEY_NAME)) {
-			return LangModelManager.getString("Entity.MCM.attributes.Name");
+			return I18N.getString("Manager.Entity.MCM.attributes.Name");
 		} else if (key.equals(KEY_DESCRIPTION)) { 
-			return LangModelManager.getString("Entity.MCM.attributes.Description"); 
+			return I18N.getString("Manager.Entity.MCM.attributes.Description"); 
 		} else if (key.equals(KEY_HOSTNAME)) { 
-			return LangModelManager.getString("Entity.MCM.attributes.Hostname"); 
+			return I18N.getString("Manager.Entity.MCM.attributes.Hostname"); 
 		} else if (key.equals(KEY_SERVER_ID)) { 
-			return LangModelManager.getString("Entity.MCM.attributes.Server"); 
+			return I18N.getString("Manager.Entity.MCM.attributes.Server"); 
 		} else if (key.equals(KEY_USER_ID)) { 
-			return LangModelManager.getString("Entity.MCM.attributes.User"); 
+			return I18N.getString("Manager.Entity.MCM.attributes.User"); 
 		} 
 		
 		

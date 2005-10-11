@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.11 2005/09/28 14:02:51 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.12 2005/10/11 15:36:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -29,18 +28,18 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
@@ -48,6 +47,8 @@ import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.UndoableEditEvent;
@@ -74,6 +75,7 @@ import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -83,7 +85,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -106,10 +108,10 @@ import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
 import com.syrus.AMFICOM.manager.Bean;
 import com.syrus.AMFICOM.manager.DomainBeanFactory;
-import com.syrus.AMFICOM.manager.LangModelManager;
 import com.syrus.AMFICOM.manager.MCMBeanFactory;
 import com.syrus.AMFICOM.manager.MPort;
 import com.syrus.AMFICOM.manager.NetBeanFactory;
+import com.syrus.AMFICOM.manager.PermissionBeanFactory;
 import com.syrus.AMFICOM.manager.Perspective;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
@@ -119,7 +121,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/28 14:02:51 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/11 15:36:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -143,17 +145,6 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 
 	GridBagConstraints	gbc2;
 
-	public JButton				userButton;
-	public JButton				armButton;
-	public JButton				rtuButton;
-	public JButton				serverButton;
-	public JButton				mcmButton;
-	public JButton				netButton;
-	public JButton				domainButton;
-	public JButton				domainsButton;
-	
-	public JLabel				currentPerspectiveLabel;
-
 	Perspective			perspective;
 	
 	Identifier			xTypeId;
@@ -169,9 +160,16 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	
 	UIDefaults					frames;
 	
-	static final String							TREE_FRAME			= "Label.ElementsTree";
-	static final String							GRAPH_FRAME			= "Label.Graph";
-	static final String							PROPERTIES_FRAME	= "Label.Properties";
+	static final String							TREE_FRAME			= "Manager.Label.ElementsTree";
+	static final String							GRAPH_FRAME			= "Manager.Label.Graph";
+	static final String							PROPERTIES_FRAME	= "Manager.Label.Properties";
+
+	private JToolBar	entityToolBar;
+	
+	JScrollPane pane;
+	JTabbedPane tabbedPane;
+
+HashMap<JComponent, Perspective>	perspectiveMap;
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
 		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
@@ -180,27 +178,27 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			@Override
 			protected void addMenuItems() {
 
-				this.menuView = new JMenu(LangModelGeneral.getString(ApplicationModel.MENU_VIEW));
+				this.menuView = new JMenu(I18N.getString(ApplicationModel.MENU_VIEW));
 				this.menuView.setName(ApplicationModel.MENU_VIEW);
 
-				final JMenuItem menuViewTreeItem = new JMenuItem(LangModelManager.getString(TREE_FRAME));
+				final JMenuItem menuViewTreeItem = new JMenuItem(I18N.getString(TREE_FRAME));
 				menuViewTreeItem.setName(TREE_FRAME);
 				menuViewTreeItem.addActionListener(this.actionAdapter);
 				this.menuView.add(menuViewTreeItem);
 
-				final JMenuItem menuViewGraphItem = new JMenuItem(LangModelManager.getString(GRAPH_FRAME));
+				final JMenuItem menuViewGraphItem = new JMenuItem(I18N.getString(GRAPH_FRAME));
 				menuViewGraphItem.setName(GRAPH_FRAME);
 				menuViewGraphItem.addActionListener(this.actionAdapter);
 				this.menuView.add(menuViewGraphItem);
 
-				final JMenuItem menuViewPropertiesItem = new JMenuItem(LangModelManager.getString(PROPERTIES_FRAME));
+				final JMenuItem menuViewPropertiesItem = new JMenuItem(I18N.getString(PROPERTIES_FRAME));
 				menuViewPropertiesItem.setName(PROPERTIES_FRAME);
 				menuViewPropertiesItem.addActionListener(this.actionAdapter);
 				this.menuView.add(menuViewPropertiesItem);
 
 				this.menuView.addSeparator();
 
-				final JMenuItem menuViewArrangeItem = new JMenuItem(LangModelGeneral.getString(ApplicationModel.MENU_VIEW_ARRANGE));
+				final JMenuItem menuViewArrangeItem = new JMenuItem(I18N.getString(ApplicationModel.MENU_VIEW_ARRANGE));
 				menuViewArrangeItem.setName(ApplicationModel.MENU_VIEW_ARRANGE);
 				menuViewArrangeItem.addActionListener(this.actionAdapter);
 				this.menuView.add(menuViewArrangeItem);
@@ -248,7 +246,10 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			final AbstractAction enterDomains = new AbstractAction("D") {			
 				public void actionPerformed(ActionEvent e) {
 					ManagerMainFrame.this.windowArranger.arrange();
-					ManagerMainFrame.this.domainsButton.doClick();				
+					ApplicationContext context = ManagerMainFrame.this.getContext();
+					ApplicationModel applicationModel = context.getApplicationModel();
+					Command command = applicationModel.getCommand(ManagerModel.DOMAINS_COMMAND);
+					command.execute();				
 				}
 			};			
 			enterDomains.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('D'));
@@ -275,14 +276,14 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				normalize(graphFrame);
 				normalize(propertiesFrame);
 				
-				treeFrame.setSize(width, h);
-				graphFrame.setSize(w - 2 * width, h);
-				propertiesFrame.setSize(width, h);
-				
+				treeFrame.setSize(width, h/2);
+				graphFrame.setSize(w - width, h);
+				propertiesFrame.setSize(width, h/2);				
 				
 				treeFrame.setLocation(0, 0);
+				propertiesFrame.setLocation(0, treeFrame.getY() + treeFrame.getHeight());
 				graphFrame.setLocation(treeFrame.getWidth(), 0);
-				propertiesFrame.setLocation(graphFrame.getX() + graphFrame.getWidth(), 0);
+				
 				
 				treeFrame.setVisible(true);
 				graphFrame.setVisible(true);
@@ -309,7 +310,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 
 			public Object createValue(UIDefaults table) {
 				JScrollPane pane = new JScrollPane(ManagerMainFrame.this.tree);
-				JInternalFrame frame = new JInternalFrame(LangModelManager.getString(TREE_FRAME), true);
+				JInternalFrame frame = new JInternalFrame(I18N.getString(TREE_FRAME), true);
 				frame.setIconifiable(true);
 				frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 				desktopPane1.add(frame);
@@ -324,25 +325,14 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			
 			// show graph frame
 			
-			JPanel panel = new JPanel(new GridBagLayout());
+			final JPanel panel = new JPanel(new GridBagLayout());
 			
-			GridBagConstraints gbc = new GridBagConstraints();
+			final GridBagConstraints gbc = new GridBagConstraints();
 			
 			gbc.fill = GridBagConstraints.BOTH;
 			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
-
-			Box box = Box.createHorizontalBox();
-			
-			final JToolBar perspectiveBox = createPerspecives();
-			ManagerMainFrame.this.currentPerspectiveLabel = new JLabel();
-			
-			box.add(new JLabel(LangModelManager.getString("Label.Levels") + ':'));
-			box.add(perspectiveBox);
-			
-			
-			panel.add(box, gbc);
 			
 			gbc.weightx = 1.0;
 
@@ -356,17 +346,36 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			
 			panel.add(createEntityToolBar(), gbc);
 			
-			JScrollPane pane = new JScrollPane(ManagerMainFrame.this.graph);
+			ManagerMainFrame.this.pane = new JScrollPane(ManagerMainFrame.this.graph);
 			
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			
-			panel.add(pane, gbc);
+			ManagerMainFrame.this.tabbedPane = new JTabbedPane();
+			
+			tabbedPane.getModel().addChangeListener(new ChangeListener() {
+					
+				
+					private ChangeEvent	event;
+
+					public void stateChanged(final ChangeEvent evt) {						
+						if (this.event != null) {
+							return;
+						}						
+						this.event = evt;
+						ManagerMainFrame.this.setPerspectiveTab(isPerspectiveValid() ?
+							ManagerMainFrame.this.perspectiveMap.get(
+								ManagerMainFrame.this.tabbedPane.getComponentAt(ManagerMainFrame.this.tabbedPane.getSelectedIndex())) :
+							ManagerMainFrame.this.perspective);
+						this.event = null;
+					}	
+			});
+			
+			panel.add(ManagerMainFrame.this.tabbedPane, gbc);
 			
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.weighty = 0.0;
-			panel.add(ManagerMainFrame.this.currentPerspectiveLabel, gbc);
 			
-			JInternalFrame frame = new JInternalFrame(LangModelManager.getString(GRAPH_FRAME), true);
+			JInternalFrame frame = new JInternalFrame(I18N.getString(GRAPH_FRAME), true);
 			frame.setIconifiable(true);
 			desktopPane1.add(frame);
 			frame.getContentPane().add(panel);
@@ -381,7 +390,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				public Object createValue(UIDefaults table){
 				
 	//			 show property frame
-				JInternalFrame frame = new JInternalFrame(LangModelManager.getString(PROPERTIES_FRAME), true);
+				JInternalFrame frame = new JInternalFrame(I18N.getString(PROPERTIES_FRAME), true);
 				frame.setIconifiable(true);
 				frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 				desktopPane1.add(frame);				
@@ -400,7 +409,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		});	
 		
 		final ApplicationModel applicationModel = this.aContext.getApplicationModel();
-		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspective(this));
+		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspectiveCommand(this));
 		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand(this));	
 		
 		applicationModel.setCommand(TREE_FRAME, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));
@@ -408,7 +417,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		applicationModel.setCommand(PROPERTIES_FRAME, this.getShowWindowLazyCommand(this.frames, PROPERTIES_FRAME));
 		
 		this.beanMap = new HashMap<String, AbstractBean>();
-		this.factoryMap = new HashMap<String, AbstractBeanFactory>();
+		this.initFactories();
 		
 		// Construct Model and Graph
 		this.graphModel = new ManagerGraphModel();
@@ -447,6 +456,29 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		this.graph.getModel().addUndoableEditListener(this.undoManager);
 
 		this.createModelListener();		
+	}
+
+
+	private final void initFactories() {
+		this.factoryMap = new HashMap<String, AbstractBeanFactory>();
+	
+		for(final Module module : Module.getValueList()) {
+			final AbstractBeanFactory factory = PermissionBeanFactory.getInstance(this, module);
+			this.factoryMap.put(factory.getCodename(), factory);				
+		}
+		
+		final AbstractBeanFactory[] factories = new AbstractBeanFactory[] {
+				UserBeanFactory.getInstance(this),
+				DomainBeanFactory.getInstance(this),
+				ARMBeanFactory.getInstance(this),
+				MCMBeanFactory.getInstance(this),
+				NetBeanFactory.getInstance(this),
+				RTUBeanFactory.getInstance(this),
+				ServerBeanFactory.getInstance(this)
+		};
+		for(final AbstractBeanFactory factory : factories) {
+			this.factoryMap.put(factory.getCodename(), factory);
+		}
 	}
 	
 	@Override
@@ -541,7 +573,20 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 								bean.applyTargetPort(target2, target);
 								
 								
-								if (!ManagerMainFrame.this.arranging) {								
+								if (!ManagerMainFrame.this.arranging) {
+									
+									assert Log.debugMessage(
+										"ManagerMainFrame.createModelListener | " + target,
+										Log.DEBUGLEVEL09);
+
+									assert Log.debugMessage(
+										"ManagerMainFrame.createModelListener | " + target.getBean(),
+										Log.DEBUGLEVEL09);
+
+									assert Log.debugMessage(
+										"ManagerMainFrame.createModelListener | " + target.getBean().getCodeName(),
+										Log.DEBUGLEVEL09);
+									
 									String codeName = bean.getCodeName();
 									LayoutItem sourceItem = this.getLayoutItem(codeName);
 									Identifier targetItemId = 
@@ -569,7 +614,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 									if (item == null) {
 										item = LayoutItem.createInstance(LoginManager.getUserId(),
 											Identifier.VOID_IDENTIFIER,
-											ManagerMainFrame.this.perspective.getPerspectiveName(),
+											ManagerMainFrame.this.perspective.getCodename(),
 											codeName);
 										
 										Characteristic.createInstance(LoginManager.getUserId(),
@@ -636,15 +681,13 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	
 								AbstractBean bean = source.getUserObject();
 								bean.applyTargetPort(target, null);
-									final LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
-									Log.debugMessage(".graphChanged | removedObject | layoutItem:" 
-											+ layoutItem.getName() 
-											+ ", layoutName:" 
-											+ layoutItem.getLayoutName(),
-										Log.DEBUGLEVEL10);
-									layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
-									
-									bean.dispose();																
+								final LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
+								Log.debugMessage(".graphChanged | removedObject | layoutItem:" 
+										+ layoutItem.getName() 
+										+ ", layoutName:" 
+										+ layoutItem.getLayoutName(),
+									Log.DEBUGLEVEL10);
+								layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
 							 } 
 						}
 						
@@ -662,7 +705,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 					// TODO Auto-generated catch block
 					exception.printStackTrace();
 					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, exception
-							.getMessage(), LangModelManager.getString("Error"),
+							.getMessage(), I18N.getString("Manager.Error"),
 						JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -670,7 +713,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			private LayoutItem getLayoutItem(final String codename) throws ApplicationException {
 				CompoundCondition compoundCondition = 
 					new CompoundCondition(new TypicalCondition(
-						ManagerMainFrame.this.perspective.getPerspectiveName(), 
+						ManagerMainFrame.this.perspective.getCodename(), 
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.LAYOUT_ITEM_CODE,
 						LayoutItemWrapper.COLUMN_LAYOUT_NAME),
@@ -706,21 +749,11 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		});
 	}
 	
-	JToolBar createPerspecives() {		
+	final JToolBar createPerspecives() {		
 		
-		JToolBar perspectives = new JToolBar();
+		final JToolBar perspectives = new JToolBar();
 		
 		perspectives.setFloatable(false);
-		
-		this.domainsButton = perspectives.add(new AbstractAction(LangModelManager.getString("Action.Domains")) {
-			public void actionPerformed(ActionEvent e) {
-				ApplicationContext context = ManagerMainFrame.this.getContext();
-				ApplicationModel applicationModel = context.getApplicationModel();
-				Command command = applicationModel.getCommand(ManagerModel.DOMAINS_COMMAND);
-				command.execute();
-//					ManagerMainFrame.this.getContext().getApplicationModel().getCommand(ManagerModel.DOMAINS_COMMAND).execute();
-			}
-		});	
 
 		perspectives.addSeparator();
 		
@@ -730,7 +763,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	private void arrangeLayoutItems() throws ApplicationException {
 		this.arranging = true;
 		TypicalCondition typicalCondition = new TypicalCondition(
-			this.perspective.getPerspectiveName(), 
+			this.perspective.getCodename(), 
 			OperationSort.OPERATION_EQUALS,
 			ObjectEntities.LAYOUT_ITEM_CODE,
 			LayoutItemWrapper.COLUMN_LAYOUT_NAME);
@@ -935,11 +968,17 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	}
 	
 	private AbstractBeanFactory getFactory(final String name) {
+		assert Log.debugMessage("ManagerMainFrame.getFactory | name:" + name, Log.DEBUGLEVEL10);
 		for(final String  codename: this.factoryMap.keySet()) {
+			assert Log.debugMessage("ManagerMainFrame.getFactory | " + codename,
+				Log.DEBUGLEVEL10);
 			if (name.startsWith(codename)) {
+				assert Log.debugMessage("ManagerMainFrame.getFactory | found " + codename,
+					Log.DEBUGLEVEL10);
 				return this.factoryMap.get(codename);
 			}
 		}
+		assert Log.debugMessage("ManagerMainFrame.getFactory | factory for " + name + " not found", Log.DEBUGLEVEL02);
 		return null;
 	}
 	
@@ -1028,8 +1067,8 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	}
 	
 	JToolBar createToolBar() {
-		JToolBar toolBar = new JToolBar(SwingConstants.HORIZONTAL);
-		toolBar.setFloatable(false);
+		JToolBar graphToolBar = new JToolBar(SwingConstants.HORIZONTAL);
+		graphToolBar.setFloatable(false);
 		
 		{
 			// Toggle Connect Mode
@@ -1046,15 +1085,18 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				public void actionPerformed(ActionEvent e) {
 					ManagerMainFrame.this.graph.setPortsVisible(!ManagerMainFrame.this.graph.isPortsVisible());
 					this.putValue(SMALL_ICON, ManagerMainFrame.this.graph.isPortsVisible() ? connectonIcon : connectoffIcon);
-					this.putValue(SHORT_DESCRIPTION, LangModelManager.getString(ManagerMainFrame.this.graph.isPortsVisible() ?  "Action.connectionEnable" : "Action.connectionDisable"));
+					this.putValue(SHORT_DESCRIPTION, 
+						I18N.getString(ManagerMainFrame.this.graph.isPortsVisible() ?  
+							"Manager.Action.connectionEnable" : 
+							"Manager.Action.connectionDisable"));
 				}
 			};
 			action.actionPerformed(null);
-			toolBar.add(action);
+			graphToolBar.add(action);
 		}
 		
 //		 Undo
-		toolBar.addSeparator();
+		graphToolBar.addSeparator();
 		URL undoUrl = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/undo.gif");
 		ImageIcon undoIcon = new ImageIcon(undoUrl);
@@ -1063,7 +1105,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				undo();
 			}
 		};
-		this.undo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Undo"));
+		this.undo.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Undo"));
 		this.undo.setEnabled(false);
 //		toolBar.add(this.undo);
 
@@ -1076,14 +1118,14 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				redo();
 			}
 		};
-		this.redo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Redo"));
+		this.redo.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Redo"));
 		this.redo.setEnabled(false);
 //		toolBar.add(this.redo);
 
 		//
 		// Edit Block
 		//
-		toolBar.addSeparator();
+		graphToolBar.addSeparator();
 		Action action;
 		URL url;
 
@@ -1122,10 +1164,10 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			}
 		};
 		this.remove.setEnabled(false);
-		toolBar.add(this.remove);
-		this.remove.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Delete"));
+		graphToolBar.add(this.remove);
+		this.remove.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Delete"));
 		
-		toolBar.addSeparator();
+		graphToolBar.addSeparator();
 		{
 			// Zoom Std
 
@@ -1140,9 +1182,9 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 					ManagerMainFrame.this.graph.setScale(1.0);
 				}
 			};
-			toolBar.add(zoom);
+			graphToolBar.add(zoom);
 			
-			zoom.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ActualSize"));
+			zoom.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.ActualSize"));
 		}
 		
 		{
@@ -1155,8 +1197,8 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 					ManagerMainFrame.this.graph.setScale(2.0 * ManagerMainFrame.this.graph.getScale());
 				}
 			};
-			toolBar.add(zoomIn);
-			zoomIn.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ZoomIn"));
+			graphToolBar.add(zoomIn);
+			zoomIn.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.ZoomIn"));
 		}
 		
 		{
@@ -1169,12 +1211,12 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 					ManagerMainFrame.this.graph.setScale(ManagerMainFrame.this.graph.getScale() / 2.0);
 				}
 			};
-			toolBar.add(zoomOut);
-			zoomOut.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ZoomOut"));
+			graphToolBar.add(zoomOut);
+			zoomOut.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.ZoomOut"));
 		}
 		
 		
-		toolBar.addSeparator();
+		graphToolBar.addSeparator();
 		
 		{
 			
@@ -1184,11 +1226,11 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 					ManagerMainFrame.this.getContext().getApplicationModel().getCommand(ManagerModel.FLUSH_COMMAND).execute();
 					}
 			};
-			toolBar.add(flush);
-			flush.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Save"));
+			graphToolBar.add(flush);
+			flush.putValue(Action.SHORT_DESCRIPTION, I18N.getString("Manager.Action.Save"));
 		}
 		
-		return toolBar;
+		return graphToolBar;
 	}
 	
 	// Undo the last Change to the Model or the View
@@ -1220,24 +1262,13 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		this.redo.setEnabled(this.undoManager.canRedo(this.graph.getGraphLayoutCache()));
 	}
 	
-	JToolBar createEntityToolBar() {
-		JToolBar toolBar = new JToolBar(SwingConstants.VERTICAL);
-		toolBar.setFloatable(false);
-		this.userButton = this.createAction(toolBar, UserBeanFactory.getInstance(this));
-		this.armButton = this.createAction(toolBar, ARMBeanFactory.getInstance(this));
-		toolBar.addSeparator();
-		this.rtuButton = this.createAction(toolBar, RTUBeanFactory.getInstance(this));
-		this.serverButton = this.createAction(toolBar, ServerBeanFactory.getInstance(this));
-		this.mcmButton = this.createAction(toolBar, MCMBeanFactory.getInstance(this));
-		toolBar.addSeparator();
-		this.netButton = this.createAction(toolBar, NetBeanFactory.getInstance(this));
-		toolBar.addSeparator();
-		this.domainButton = this.createAction(toolBar, DomainBeanFactory.getInstance(this));
-		return toolBar;
-	}	
+	final JToolBar createEntityToolBar() {
+		this.entityToolBar = new JToolBar(SwingConstants.VERTICAL);
+		this.entityToolBar.setFloatable(false);
+		return this.entityToolBar;
+	}
 	
-	private JButton createAction(final JToolBar toolBar,
-	                          final AbstractBeanFactory factory) {
+	public final JButton createAction(final AbstractBeanFactory factory) {
 		final String name = factory.getName();
 		Icon icon = factory.getIcon();
 		this.factoryMap.put(factory.getCodename(), factory);
@@ -1258,13 +1289,13 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
 						e1.getMessage(), 
-						LangModelManager.getString("Error"),
+						I18N.getString("Manager.Error"),
 						JOptionPane.ERROR_MESSAGE);
 				} catch (IllegalObjectEntityException e1) {
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
 						e1.getMessage(), 
-						LangModelManager.getString("Error"),
+						I18N.getString("Manager.Error"),
 						JOptionPane.ERROR_MESSAGE);
 
 				}
@@ -1274,7 +1305,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		};		
 	
 		action.putValue(Action.SHORT_DESCRIPTION, name);
-		return toolBar.add(action);
+		return this.entityToolBar.add(action);
 	}
 	
 
@@ -1309,7 +1340,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				try {
 					CompoundCondition compoundCondition = 
 						new CompoundCondition(new TypicalCondition(
-							this.perspective.getPerspectiveName(), 
+							this.perspective.getCodename(), 
 							OperationSort.OPERATION_EQUALS,
 							ObjectEntities.LAYOUT_ITEM_CODE,
 							LayoutItemWrapper.COLUMN_LAYOUT_NAME),
@@ -1354,7 +1385,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 					e.printStackTrace();
 					JOptionPane.showMessageDialog(this.graph, 
 						e.getMessage(), 
-						LangModelManager.getString("Error"),
+						I18N.getString("Manager.Error"),
 						JOptionPane.ERROR_MESSAGE);
 				}
 				
@@ -1391,9 +1422,12 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
  		return cell;
 	}
 
-	public void valueChanged(GraphSelectionEvent e) {		
+	public void valueChanged(GraphSelectionEvent e) {	
+		final JInternalFrame frame = 
+			(JInternalFrame) this.frames.get(PROPERTIES_FRAME);
+		frame.setTitle(I18N.getString(PROPERTIES_FRAME));
 		this.propertyPanel.removeAll();		
-		if (e == null) {
+		if (e == null) {			
 			return;
 		}
 		
@@ -1433,6 +1467,9 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				if (userObject instanceof AbstractBean) {
 					JPanel propertyPanel2 = ((AbstractBean)userObject).getPropertyPanel();
 					if (propertyPanel2 != null) {
+						frame.setTitle(I18N.getString(PROPERTIES_FRAME)
+							+ " : "
+							+ ((AbstractBean)userObject).getName());
 						this.propertyPanel.add(propertyPanel2, this.gbc2);
 					}					
 				}
@@ -1454,7 +1491,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel());
 		this.tree = new JTree(this.treeModel);
 		
-		this.tree.setRootVisible(false);
+		this.tree.setRootVisible(true);
 		
 		this.graph.getSelectionModel().addGraphSelectionListener(this);
 		
@@ -1524,29 +1561,90 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		return this.perspective;
 	}
 	
-	public final boolean setPerspective(final Perspective perspective) {
-		assert perspective != null;		
-		
+	final void setPerspectiveTab(final Perspective perspective) {
+		try {
+			int index = -1;
+			for(int i=0; i < this.tabbedPane.getTabCount(); i++) {
+				if (this.perspectiveMap.get(this.tabbedPane.getComponentAt(i))
+						== perspective) {
+					index = i;
+					break;
+				}
+			}
+			if (index == -1) {				
+				final JPanel panel = new JPanel(new GridBagLayout());
+				GridBagConstraints gbc = new GridBagConstraints();
+				gbc.fill = GridBagConstraints.BOTH;
+				gbc.weightx = 1.0;
+				gbc.weighty = 1.0;
+				gbc.gridwidth = GridBagConstraints.REMAINDER;
+				gbc.gridheight = GridBagConstraints.REMAINDER;				
+				panel.add(this.pane, gbc);
+				
+				if (this.perspectiveMap == null) {
+					this.perspectiveMap = new HashMap<JComponent, Perspective>();
+				}
+				
+				this.perspectiveMap.put(panel, perspective);
+				this.tabbedPane.addTab(perspective.getName(), panel);
+				this.tabbedPane.setSelectedComponent(panel);
+			} else {
+				final JPanel panel = (JPanel) this.tabbedPane.getComponentAt(index);
+				panel.removeAll();
+				final GridBagLayout gridLayout = (GridBagLayout) panel.getLayout();
+				final GridBagConstraints gbc = gridLayout.getConstraints(panel);
+				gbc.fill = GridBagConstraints.BOTH;
+				gbc.weightx = 1.0;
+				gbc.weighty = 1.0;
+				gbc.gridwidth = GridBagConstraints.REMAINDER;
+				gbc.gridheight = GridBagConstraints.REMAINDER;				
+				panel.add(this.pane, gbc);
+				this.tabbedPane.setSelectedIndex(index);
+			}
+			
+			this.perspective = perspective;
+			this.entityToolBar.removeAll();
+			this.perspective.addEntities(this.entityToolBar);
+			this.entityToolBar.revalidate();
+			this.entityToolBar.repaint();
+			this.arrangeLayoutItems();		
+			this.perspective.perspectiveApplied();
+			final JInternalFrame frame = 
+				(JInternalFrame) this.frames.get(GRAPH_FRAME);
+			frame.setTitle(I18N.getString(GRAPH_FRAME) 
+				+ " : " 
+				+ this.perspective.getName());
+						
+		} catch (final ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isPerspectiveValid() {
 		if (this.perspective != null) {
 			if (!this.perspective.isValid()) {
 				JOptionPane.showMessageDialog(this.graph, 
-					LangModelManager.getString("Error.LayoutIsInvalid"),
-					LangModelGeneral.getString("Error"),
+					I18N.getString("Manager.Error.LayoutIsInvalid"),
+					I18N.getString("Error"),
 					JOptionPane.ERROR_MESSAGE);
 				return false;
 			}
 		}
-		
-		try {
-			this.perspective = perspective;
-			this.arrangeLayoutItems();		
-			this.perspective.perspectiveApplied();
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return true;
 	}
+	
+	
+	public final void setPerspective(final Perspective perspective) {
+		assert perspective != null;		
+		if (!this.isPerspectiveValid()) {
+			return;
+//			throw new IllegalStateException(this.perspective.getName() + " isn't valid");
+		}
+		this.setPerspectiveTab(perspective);
+	}
+	
+	
 	
 	public final Dispatcher getDispatcher() {
 		return this.dispatcher;

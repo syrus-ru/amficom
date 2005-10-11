@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.20 2005/09/28 14:05:25 bob Exp $
+ * $Id: UserBean.java,v 1.21 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,34 +11,34 @@ package com.syrus.AMFICOM.manager;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
-import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 
 import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
+import javax.swing.Action;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 
-import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.GraphConstants;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
+import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -47,17 +47,19 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/28 14:05:25 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class UserBean extends Bean implements  ARMItem {
 
-	final List<String>	names;
+	final SortedSet<Role>	roles;
 	
 	final Map<String, String> propertyName;
 	
@@ -71,8 +73,8 @@ public class UserBean extends Bean implements  ARMItem {
 	private Map<Module, PermissionAttributes>	permissionAttributesMap;
 
 	
-	UserBean(final List<String> names) {
-		this.names = names;
+	UserBean(final SortedSet<Role> names) {
+		this.roles = names;
 		
 		this.propertyName = new HashMap<String, String>();
 		this.domainPermissionTable = new HashMap<Identifier, JTable>();	
@@ -88,12 +90,19 @@ public class UserBean extends Bean implements  ARMItem {
 
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("UserBean.dispose | " 
+		assert Log.debugMessage("UserBean.dispose | " 
 				+ Identifier.createIdentifiers(this.user.getCharacteristics(false)),
-			Log.DEBUGLEVEL10);
-		Log.debugMessage("UserBean.dispose | " + this.id, Log.DEBUGLEVEL10);
+			Log.DEBUGLEVEL09);
+		assert Log.debugMessage("UserBean.dispose | " + this.id, Log.DEBUGLEVEL09);		
 		StorableObjectPool.delete(this.user.getCharacteristics(false));
 		StorableObjectPool.delete(this.id);		
+		
+		for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
+			Bean portBean = 
+				(Bean) this.graphText.getCell(layoutItem);
+			portBean.dispose();
+		}
+
 		super.disposeLayoutItem();
 	}
 	
@@ -122,69 +131,74 @@ public class UserBean extends Bean implements  ARMItem {
 	public JPopupMenu getMenu(final Object cell) {
 
 		if (cell != null) {
-			JPopupMenu popupMenu = new JPopupMenu();
-			String lastName = null;
-			for (final String name1 : this.names) {
-				if (name1 != null) {
-					popupMenu.add(new AbstractAction(name1) {
+			final JPopupMenu popupMenu = new JPopupMenu();
+			
+			final Set<Identifier> roleIds = this.user.getRoleIds();
+			
+			for(final Role role : this.roles) {
 
-						public void actionPerformed(ActionEvent e) {
-							try {
-								UserBean.this.setNature(name1);
-								AttributeMap attributeMap = new AttributeMap();
-								GraphConstants.setValue(attributeMap, name1);
-								Map viewMap = new Hashtable();
-								viewMap.put(cell, attributeMap);
-								UserBean.this.graphText.getGraph().getModel().edit(viewMap, null, null, null);
-							} catch (ApplicationException e1) {
-								e1.printStackTrace();
-								JOptionPane.showMessageDialog(UserBean.this.graphText.getGraph(), 
-									e1.getMessage(), 
-									LangModelManager.getString("Error"),
-									JOptionPane.ERROR_MESSAGE);
-							}
+				
+				final Action action = new AbstractAction(role.getDescription()){
+					
+					public void actionPerformed(final ActionEvent e) {
+						final JCheckBoxMenuItem checkBoxMenuItem = 
+							(JCheckBoxMenuItem) e.getSource();
+						
+						if (checkBoxMenuItem.isSelected()) {
+							user.addRole(role);
+						} else {
+							user.removeRole(role);
 						}
-					});
-				} else {
-					popupMenu.addSeparator();
-				}
-
-				lastName = name1;
-			}
-
-			if (lastName != null) {
-				popupMenu.addSeparator();
-			}
-
-			popupMenu.add(new AbstractAction(LangModelManager
-					.getString("Entity.User.new")
-					+ "...") {
-
-				public void actionPerformed(ActionEvent e) {
-					String string = JOptionPane.showInputDialog(null,
-						LangModelManager.getString("Dialog.Add.User"),
-						LangModelManager.getString("Entity.User.new"),
-						JOptionPane.OK_CANCEL_OPTION);
-					if (string == null) { return; }
-					try {
-						UserBean.this.names.add(string);
-						UserBean.this.setNature(string);
-						AttributeMap attributeMap = new AttributeMap();
-						GraphConstants.setValue(attributeMap, string);
-						Map viewMap = new Hashtable();
-						viewMap.put(cell, attributeMap);
-						JGraph graph = UserBean.this.graphText.getGraph();
-						graph.getModel().edit(viewMap, null, null, null);
-						graph.getSelectionModel().setSelectionCell(cell);
-					} catch (ApplicationException e1) {
-						e1.printStackTrace();
-						JOptionPane.showMessageDialog(UserBean.this.graphText.getGraph(), 
-							e1.getMessage(), 
-							LangModelManager.getString("Error"),
-							JOptionPane.ERROR_MESSAGE);
+						
 					}
+				};
+				
+				final JCheckBoxMenuItem checkBoxMenuItem =
+					new JCheckBoxMenuItem(action);
+				checkBoxMenuItem.setSelected(roleIds.contains(role));
+				
+				popupMenu.add(checkBoxMenuItem);
+			}
+
+			//			popupMenu.add(new AbstractAction(I18N
+//					.getString("Manager.Entity.User.new")
+//					+ "...") {
+//
+//				public void actionPerformed(ActionEvent e) {
+//					String string = JOptionPane.showInputDialog(null,
+//						I18N.getString("Manager.Dialog.Add.User"),
+//						I18N.getString("Manager.Entity.User.new"),
+//						JOptionPane.OK_CANCEL_OPTION);
+//					if (string == null) { return; }
+//					try {
+//						UserBean.this.roles.add(string);
+//						UserBean.this.setNature(string);
+//						AttributeMap attributeMap = new AttributeMap();
+//						GraphConstants.setValue(attributeMap, string);
+//						Map viewMap = new Hashtable();
+//						viewMap.put(cell, attributeMap);
+//						JGraph graph = UserBean.this.graphText.getGraph();
+//						graph.getModel().edit(viewMap, null, null, null);
+//						graph.getSelectionModel().setSelectionCell(cell);
+//					} catch (ApplicationException e1) {
+//						e1.printStackTrace();
+//						JOptionPane.showMessageDialog(UserBean.this.graphText.getGraph(), 
+//							e1.getMessage(), 
+//							I18N.getString("Manager.Error"),
+//							JOptionPane.ERROR_MESSAGE);
+//					}
+//				}
+//			});
+			
+			popupMenu.addSeparator();
+			
+			popupMenu.add(new AbstractAction(I18N.getString("Manager.Dialog.GotoUserPermissions")) {
+
+				public void actionPerformed(ActionEvent e) {					
+					UserBean.this.graphText.setPerspective(new SystemUserPerpective(UserBean.this.graphText, UserBean.this, cell));
 				}
 			});
+			
 			return popupMenu;
 		}
 
@@ -416,49 +430,63 @@ public class UserBean extends Bean implements  ARMItem {
 			UserBeanWrapper.USER_STREET);
 	}
 
+	private Set<LayoutItem> getBeanChildrenLayoutItems() 
+	throws ApplicationException{
+		final TypicalCondition typicalCondition = 
+			new TypicalCondition(this.codeName, 
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.LAYOUT_ITEM_CODE, 
+				LayoutItemWrapper.COLUMN_LAYOUT_NAME);
+
+		final Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
+			typicalCondition, 
+			true, 
+			true);
+		
+		final LinkedIdsCondition linkedIdsCondition = 
+			new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
+				ObjectEntities.LAYOUT_ITEM_CODE);
+		
+		return StorableObjectPool.getStorableObjectsByCondition(
+			linkedIdsCondition, 
+			true, 
+			true);
+	}
+	
 	public void setDomainId(final Identifier oldDomainId,
 	                        final Identifier newDomainId) {
-		try {
-			Log.debugMessage("UserBean.setDomainId() | " + this.id + ", oldDomainId:" + oldDomainId + ", newDomainId:" + newDomainId, Log.DEBUGLEVEL09);
-			
-			if (oldDomainId.isVoid()) {
-				for(final Module module : Module.getValueList()) {
-					final PermissionAttributes attributes = 
-						PermissionAttributes.createInstance(LoginManager.getUserId(),
-						newDomainId,
-						this.id,
-						module,
-						new BigInteger("0"));
-					Log.debugMessage("UserBean.setDomainId() | create new PermissionAttributes: " + attributes.getId(), Log.DEBUGLEVEL10);
-				}
-				
-				
-			} else {
-				final  Domain oldDomain = 
-					(Domain) StorableObjectPool.getStorableObject(oldDomainId, true); 
-				for(final Module module : Module.getValueList()) {
-					final PermissionAttributes attributes = 
-						oldDomain.getPermissionAttributes(this.id, module);
-					
-					if (attributes == null) {
-						System.err.println(".applyTargetPort() | permissionAttributes null");
-						return;
-					}
-					
-					if (newDomainId.isVoid()) {
-						Log.debugMessage("UserBean.setDomainId() | delete " + attributes.getId(), Log.DEBUGLEVEL10);
-						StorableObjectPool.delete(attributes.getId());
-					} else {
-						Log.debugMessage("UserBean.setDomainId() | setDomainId " + newDomainId
-							+ " to "
-							+ attributes.getId(), Log.DEBUGLEVEL10);
-						attributes.setDomainId(newDomainId);
-					}
-				}
+		assert Log.debugMessage("UserBean.setDomainId | was:" + oldDomainId
+				+ ", now:" + newDomainId, 
+			Log.DEBUGLEVEL09);
+		try {			
+			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
+				assert Log.debugMessage("UserBean.setDomainId | 1 " + layoutItem.getName() 
+					+ ", " + layoutItem.getLayoutName(), 
+				Log.DEBUGLEVEL09);
+				Log.debugMessage("UserBean.setDomainId | 1 "
+					+ layoutItem.getId() + ", "
+					+ layoutItem.getName() 
+					+ ", layoutName:" 
+					+ layoutItem.getLayoutName()
+					+ ", this.codeName:" + this.codeName, 
+				Log.DEBUGLEVEL09);		
+
+				if (layoutItem.getLayoutName().startsWith(ObjectEntities.SYSTEMUSER)) {
+					final String layoutName = !newDomainId.isVoid() ? 
+							newDomainId.getIdentifierString() : 
+							ObjectEntities.SYSTEMUSER;
+					Log.debugMessage("UserBean.setDomainId | "
+						+ layoutItem.getId() + ", "
+						+ layoutItem.getName() 
+						+ ", layoutName:" 
+						+ layoutName, 
+					Log.DEBUGLEVEL09);		
+					layoutItem.setLayoutName(layoutName);
+					UserItem portBean = 
+						(UserItem) this.graphText.getCell(layoutItem);
+					portBean.setDomainId(oldDomainId, newDomainId);
+				}					
 			}
-		} catch (final CreateObjectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

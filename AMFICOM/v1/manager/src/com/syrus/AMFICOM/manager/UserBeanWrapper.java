@@ -1,31 +1,26 @@
-
-package com.syrus.AMFICOM.manager;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.JOptionPane;
-
-import com.syrus.AMFICOM.administration.PermissionAttributes;
-import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
-import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.util.Wrapper;
-
 /*-
- * $Id: UserBeanWrapper.java,v 1.10 2005/09/28 14:05:25 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.11 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+package com.syrus.AMFICOM.manager;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JOptionPane;
+
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.util.Wrapper;
+
+
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/28 14:05:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,15 +45,12 @@ public class UserBeanWrapper implements Wrapper {
 	private static UserBeanWrapper	instance;
 
 	private List<String>					keys;
-	private Map<String, PermissionCodename> permissionCodenamesMap;
-	private Map<String, Module> modulesMap;
 
 	public String getKey(int index) {
 		return this.keys.get(index);
 	}
 
 	private UserBeanWrapper() {
-		// empty private constructor
 		String[] keysArray = new String[] { NAME, 
 				LOGIN,
 				FULL_NAME, 
@@ -74,27 +66,7 @@ public class UserBeanWrapper implements Wrapper {
 				USER_PHONE,
 				USER_CELLULAR};
 		
-		final List<String> selfUserKeys = new ArrayList<String>(Arrays.asList(keysArray));
-		
-		this.permissionCodenamesMap = new HashMap<String, PermissionCodename>();
-		this.modulesMap = new HashMap<String, Module>();
-		
-		Module prevModule = null; 
-		for(final PermissionCodename codename : PermissionAttributes.PermissionCodename.values()) {
-			if (codename.isEnable()) {
-				this.permissionCodenamesMap.put(codename.name(), codename);				
-				final Module module = codename.getModule();
-				if (prevModule != module) {					
-					final String moduleName = module.name();
-					selfUserKeys.add(moduleName);
-					this.modulesMap.put(moduleName, module);
-					prevModule = module;
-				}
-				selfUserKeys.add(codename.name());
-			}
-		}
-		
-		this.keys = Collections.unmodifiableList(selfUserKeys);
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static synchronized UserBeanWrapper getInstance() {
@@ -110,47 +82,36 @@ public class UserBeanWrapper implements Wrapper {
 
 	public String getName(final String key) {
 		if (key.equals(NAME)) {
-			return LangModelManager.getString("Entity.User.attributes.Name");
+			return I18N.getString("Manager.Entity.User.attributes.Name");
 		}
 		if (key.equals(LOGIN)) {
-			return LangModelManager.getString("Entity.User.attributes.Login");
+			return I18N.getString("Manager.Entity.User.attributes.Login");
 		}
 		if (key.equals(FULL_NAME)) {
-			return LangModelManager.getString("Entity.User.attributes.FullName");
+			return I18N.getString("Manager.Entity.User.attributes.FullName");
 		} else if (key.equals(USER_NATURE)) { 
-			return LangModelManager.getString("Entity.User.attributes.Type"); 
+			return I18N.getString("Manager.Entity.User.attributes.Type"); 
 		} else if (key.equals(USER_POSITION)) { 
-			return LangModelManager.getString("Entity.User.attributes.Position"); 
+			return I18N.getString("Manager.Entity.User.attributes.Position"); 
 		} else if (key.equals(USER_DEPARTEMENT)) { 
-			return LangModelManager.getString("Entity.User.attributes.Departement"); 
+			return I18N.getString("Manager.Entity.User.attributes.Departement"); 
 		} else if (key.equals(USER_COMPANY)) { 
-			return LangModelManager.getString("Entity.User.attributes.Company"); 
+			return I18N.getString("Manager.Entity.User.attributes.Company"); 
 		} else if (key.equals(USER_ROOM_NO)) { 
-			return LangModelManager.getString("Entity.User.attributes.RoomNo"); 
+			return I18N.getString("Manager.Entity.User.attributes.RoomNo"); 
 		} else if (key.equals(USER_CITY)) { 
-			return LangModelManager.getString("Entity.User.attributes.City"); 
+			return I18N.getString("Manager.Entity.User.attributes.City"); 
 		} else if (key.equals(USER_STREET)) { 
-			return LangModelManager.getString("Entity.User.attributes.Street");
+			return I18N.getString("Manager.Entity.User.attributes.Street");
 		} else if (key.equals(USER_BUILDING)) { 
-			return LangModelManager.getString("Entity.User.attributes.Building");
+			return I18N.getString("Manager.Entity.User.attributes.Building");
 		} else if (key.equals(USER_EMAIL)) { 
-			return LangModelManager.getString("Entity.User.attributes.EMail"); 
+			return I18N.getString("Manager.Entity.User.attributes.EMail"); 
 		} else if (key.equals(USER_PHONE)) { 
-			return LangModelManager.getString("Entity.User.attributes.Phone"); 
+			return I18N.getString("Manager.Entity.User.attributes.Phone"); 
 		} else if (key.equals(USER_CELLULAR)) { 
-			return LangModelManager.getString("Entity.User.attributes.Cellular"); 
+			return I18N.getString("Manager.Entity.User.attributes.Cellular"); 
 		}
-		
-		final PermissionCodename codename = this.permissionCodenamesMap.get(key);
-		if (codename != null) {
-			return codename.getDescription();
-		}
-		
-		final Module module = this.modulesMap.get(key);
-		if (module != null) {
-			return "<html><b>" + module.getDescription().replaceAll("\n", "<br>") + "</b></html>";
-		}
-		
 		return null;
 	}
 
@@ -170,14 +131,6 @@ public class UserBeanWrapper implements Wrapper {
 				key.equals(USER_PHONE) ||
 				key.equals(USER_CELLULAR)) { 
 			return String.class; 
-		}
-		
-		if (this.permissionCodenamesMap.containsKey(key)) {
-			return Boolean.class;
-		}
-		
-		if (this.modulesMap.containsKey(key)) {
-			return String.class;
 		}
 		
 		return null;
@@ -221,30 +174,21 @@ public class UserBeanWrapper implements Wrapper {
 					return userBean.getPhone(); 
 				} else if (key.equals(USER_CELLULAR)) { 
 					return userBean.getCellular(); 
-				} else {
-					final PermissionCodename codename = this.permissionCodenamesMap.get(key);
-					if (codename != null) {
-						return Boolean.valueOf(userBean.getPermissionAttributes(codename.getModule()).isPermissionEnable(codename));
-					}
-					if (this.modulesMap.containsKey(key)) {
-						return "";
-					}
 				}
-				
-				
+
 			}
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, 
 				e.getMessage(), 
-				LangModelManager.getString("Error"),
+				I18N.getString("Manager.Error"),
 				JOptionPane.ERROR_MESSAGE);
 		}
 		return null;
 	}
 
 	public boolean isEditable(final String key) {
-		return !key.equals(USER_NATURE) && !this.modulesMap.containsKey(key);
+		return !key.equals(USER_NATURE);
 	} 
 
 	public void setPropertyValue(	final String key,
@@ -288,19 +232,12 @@ public class UserBeanWrapper implements Wrapper {
 					userBean.setPhone((String) value); 
 				} else if (key.equals(USER_CELLULAR)) { 
 					userBean.setCellular((String) value); 
-				} else {
-					final PermissionCodename codename = this.permissionCodenamesMap.get(key);
-					if (codename != null) {
-						Boolean bValue = (Boolean) value;
-						userBean.getPermissionAttributes(codename.getModule()).setPermissionEnable(codename, bValue.booleanValue());
-					}
-				}
-				
+				} 
 			} catch (ApplicationException e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, 
 					e.getMessage(), 
-					LangModelManager.getString("Error"),
+					I18N.getString("Manager.Error"),
 					JOptionPane.ERROR_MESSAGE);
 			}
 		}

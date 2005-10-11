@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.18 2005/09/28 14:03:41 bob Exp $
+ * $Id: AbstractBean.java,v 1.19 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/28 14:03:41 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -70,7 +70,7 @@ public abstract class AbstractBean {
 	}
 	
 	public abstract void applyTargetPort(final MPort oldPort,
-	                                     final MPort newPort); 
+	                                     final MPort newPort) throws ApplicationException; 
 
 	public abstract void dispose() throws ApplicationException;
 	

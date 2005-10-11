@@ -5,10 +5,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: DomainBeanWrapper.java,v 1.1 2005/08/01 11:32:03 bob Exp $
+ * $Id: DomainBeanWrapper.java,v 1.2 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +17,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -56,9 +57,9 @@ public class DomainBeanWrapper implements Wrapper {
 
 	public String getName(final String key) {
 		if (key.equals(KEY_NAME)) {
-			return LangModelManager.getString("Entity.Domain.attributes.Name");
+			return I18N.getString("Manager.Entity.Domain.attributes.Name");
 		} else if (key.equals(KEY_DESCRIPTION)) { 
-			return LangModelManager.getString("Entity.Domain.attributes.Description"); 
+			return I18N.getString("Manager.Entity.Domain.attributes.Description"); 
 		}		
 		return null;
 	}

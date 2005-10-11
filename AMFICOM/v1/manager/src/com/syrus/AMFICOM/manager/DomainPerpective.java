@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.5 2005/09/28 14:04:53 bob Exp $
+* $Id: DomainPerpective.java,v 1.6 2005/10/11 15:34:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.manager;
 
 import java.math.BigInteger;
+
+import javax.swing.JToolBar;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/28 14:04:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -49,8 +51,22 @@ public class DomainPerpective implements Perspective {
 		this.cell = cell;
 	}
 	
-	public String getPerspectiveName() {
+	public void addEntities(final JToolBar entityToolBar) {
+		this.graphText.createAction(UserBeanFactory.getInstance(this.graphText));
+		this.graphText.createAction(ARMBeanFactory.getInstance(this.graphText));
+		entityToolBar.addSeparator();
+		this.graphText.createAction(RTUBeanFactory.getInstance(this.graphText));
+		this.graphText.createAction(ServerBeanFactory.getInstance(this.graphText));
+		this.graphText.createAction(MCMBeanFactory.getInstance(this.graphText));
+		entityToolBar.addSeparator();		
+	}
+	
+	public String getCodename() {
 		return this.getDomainId().getIdentifierString();
+	}
+	
+	public String getName() {		
+		return ((DefaultGraphCell) this.cell).getUserObject().toString();
 	}
 	
 	public final Identifier getDomainId() {
@@ -105,7 +121,8 @@ public class DomainPerpective implements Perspective {
 								this.getDomainId(),
 								userId,
 								module,
-								new BigInteger("0"));
+								BigInteger.ZERO,
+								BigInteger.ZERO);
 						}
 					}
 				}
@@ -118,27 +135,6 @@ public class DomainPerpective implements Perspective {
 
 	
 	public void perspectiveApplied() {
-		this.graphText.currentPerspectiveLabel.setText(
-			LangModelManager.getString("Label.SelectedDomain") 
-			+ ':' 
-			+ ((DefaultGraphCell) this.cell).getUserObject());
-		
-		this.graphText.domainsButton.setEnabled(true);
-		
-		this.graphText.domainButton.setEnabled(false);
-		
-		this.graphText.netButton.setEnabled(false);
-		
-		this.graphText.userButton.setEnabled(true);
-
-		this.graphText.armButton.setEnabled(true);
-
-		this.graphText.rtuButton.setEnabled(true);
-
-		this.graphText.serverButton.setEnabled(true);
-
-		this.graphText.mcmButton.setEnabled(true);
-		
 		this.graphText.showOnlyDescendants((DefaultGraphCell) this.cell);
 		
 		this.graphText.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 

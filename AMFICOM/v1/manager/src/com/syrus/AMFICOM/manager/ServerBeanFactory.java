@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.10 2005/09/12 12:06:26 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.11 2005/10/11 15:34:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_NAME;
 import java.beans.PropertyChangeEvent;
 
 import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 15:34:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -35,8 +36,8 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	private static ServerBeanFactory instance;
 	
 	private ServerBeanFactory(final ManagerMainFrame graphText) {
-		super("Entity.Server", 
-			"Entity.Server", 
+		super("Manager.Entity.Server", 
+			"Manager.Entity.Server", 
 			"com/syrus/AMFICOM/manager/resources/icons/server.gif", 
 			"com/syrus/AMFICOM/manager/resources/server.png");
 		super.graphText = graphText;
@@ -54,7 +55,7 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	throws IllegalObjectEntityException, CreateObjectException {
 		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
-		String name = LangModelManager.getString("Entity.Server") + "-" + (++super.count);
+		String name = I18N.getString("Manager.Entity.Server") + "-" + (++super.count);
 		
 		Server server = Server.createInstance(LoginManager.getUserId(),
 			domainPerpective.getDomainId(),
