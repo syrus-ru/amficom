@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.41 2005/10/11 13:36:50 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.42 2005/10/11 13:49:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.mcm;
+
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -32,10 +36,8 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
-import static java.util.logging.Level.*;
-
 /**
- * @version $Revision: 1.41 $, $Date: 2005/10/11 13:36:50 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/11 13:49:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -181,13 +183,13 @@ final class AnalysisEvaluationProcessor {
 	@SuppressWarnings("unused")
 	private static void enqueueEvent(final ReflectogramMismatchEvent event)
 	throws QueueFullException {
-		// empty
+		Log.debugMessage("Event: " + event + " added to outbox", INFO);
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.41 $, $Date: 2005/10/11 13:36:50 $
+	 * @version $Revision: 1.42 $, $Date: 2005/10/11 13:49:19 $
 	 * @module mcm
 	 */
 	private static class QueueFullException extends Exception {
