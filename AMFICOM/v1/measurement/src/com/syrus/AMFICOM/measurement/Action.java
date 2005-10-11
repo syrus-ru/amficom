@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.39 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: Action.java,v 1.40 2005/10/11 13:32:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/10/11 13:32:48 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -91,7 +91,7 @@ public abstract class Action extends StorableObject {
 				&& (entityCode == ObjectEntities.MEASUREMENT_CODE || entityCode == ObjectEntities.MODELING_CODE || this.parentAction != null);
 	}
 
-	public ActionType getType() {
+	public ActionType<?> getType() {
 		return this.type;
 	}
 
