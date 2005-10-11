@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.29 2005/10/10 15:47:19 bob Exp $
+* $Id: SystemUser.java,v 1.30 2005/10/11 10:37:09 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/10 15:47:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2005/10/11 10:37:09 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -146,8 +146,8 @@ public final class SystemUser extends StorableObject
 		this.name = ut.name;
 		this.description = ut.description;
 
-		this.setRoleIds0(Identifier.fromTransferables(ut.roleIds));
-		
+		this.roleIds = Identifier.fromTransferables(ut.roleIds);
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
