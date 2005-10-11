@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.109 2005/10/11 07:14:29 max Exp $
+ * $Id: SiteNode.java,v 1.110 2005/10/11 09:25:15 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -65,8 +66,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: max $
- * @version $Revision: 1.109 $, $Date: 2005/10/11 07:14:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.110 $, $Date: 2005/10/11 09:25:15 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -139,6 +140,8 @@ public class SiteNode extends AbstractNode
 				|| building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
+		final boolean usePool = false;
+
 		try {
 			final SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(SITENODE_CODE),
 					creatorId,
@@ -153,6 +156,8 @@ public class SiteNode extends AbstractNode
 					street,
 					building);
 
+			siteNode.copyCharacteristics(siteNodeType, usePool);
+
 			assert siteNode.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			siteNode.markAsChanged();
@@ -160,6 +165,21 @@ public class SiteNode extends AbstractNode
 			return siteNode;
 		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+
+	private void copyCharacteristics(SiteNodeType siteNodeType, boolean usePool) throws ApplicationException {
+		try {
+			for (final Characteristic characteristic : siteNodeType.getCharacteristics0(usePool)) {
+				if(characteristic.getType().getSort().value() == CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL) {
+					final Characteristic characteristicClone = characteristic.clone();
+					this.addCharacteristic(characteristicClone, usePool);
+				}
+			}
+		} catch (final CloneNotSupportedException cnse) {
+			throw new CreateObjectException(cnse);
 		}
 	}
 
