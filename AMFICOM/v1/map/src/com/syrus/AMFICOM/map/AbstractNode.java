@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.45 2005/09/29 10:46:15 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.46 2005/10/11 07:14:29 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.map.corba.IdlAbstractNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/09/29 10:46:15 $
+ * @author $Author: max $
+ * @version $Revision: 1.46 $, $Date: 2005/10/11 07:14:29 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -98,7 +99,11 @@ public abstract class AbstractNode extends StorableObject
 
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		super.fromTransferable(transferable);
+		IdlAbstractNode idlAbstractNode = (IdlAbstractNode) transferable;
+		super.fromTransferable(idlAbstractNode);
+		this.name = idlAbstractNode.name;
+		this.description = idlAbstractNode.description;		
+		this.location = new DoublePoint(idlAbstractNode.longitude, idlAbstractNode.latitude);
 	}
 
 	public Identifier getImageId() {

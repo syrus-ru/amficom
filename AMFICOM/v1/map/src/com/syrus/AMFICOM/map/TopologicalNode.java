@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.86 2005/10/07 10:04:18 bass Exp $
+ * $Id: TopologicalNode.java,v 1.87 2005/10/11 07:14:29 max Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
@@ -46,8 +47,8 @@ import com.syrus.util.Log;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/10/07 10:04:18 $
+ * @author $Author: max $
+ * @version $Revision: 1.87 $, $Date: 2005/10/11 07:14:29 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -69,11 +70,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 	private transient boolean canBind = false;
 
 	public TopologicalNode(final IdlTopologicalNode tnt) throws CreateObjectException {
-		super(tnt);
-		super.name = tnt.name;
-		super.description = tnt.description;
-		super.location = new DoublePoint(tnt.longitude, tnt.latitude);
-		this.active = tnt.active;
+		super(tnt);		
 	}
 
 	TopologicalNode(final Identifier id,
@@ -162,6 +159,13 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 				this.location.getX(),
 				this.location.getY(),
 				this.active);
+	}
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+		IdlTopologicalNode idlTopologicalNode = (IdlTopologicalNode) transferable;
+		super.fromTransferable(idlTopologicalNode);
+		this.active = idlTopologicalNode.active;
 	}
 
 	public boolean isActive() {

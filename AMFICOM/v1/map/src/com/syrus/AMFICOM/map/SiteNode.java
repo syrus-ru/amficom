@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.108 2005/10/07 10:04:19 bass Exp $
+ * $Id: SiteNode.java,v 1.109 2005/10/11 07:14:29 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
@@ -64,8 +65,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.108 $, $Date: 2005/10/07 10:04:19 $
+ * @author $Author: max $
+ * @version $Revision: 1.109 $, $Date: 2005/10/11 07:14:29 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -87,20 +88,6 @@ public class SiteNode extends AbstractNode
 
 	public SiteNode(final IdlSiteNode snt) throws CreateObjectException {
 		super(snt);
-		super.name = snt.name;
-		super.description = snt.description;
-		super.location = new DoublePoint(snt.longitude, snt.latitude);
-		this.imageId = new Identifier(snt.imageId);
-		this.city = snt.city;
-		this.street = snt.street;
-		this.building = snt.building;
-		this.attachmentSiteNodeId = new Identifier(snt.attachmentSiteNodeId);
-
-		try {
-			this.type = StorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
 	}
 
 	protected SiteNode(final Identifier id,
@@ -220,6 +207,23 @@ public class SiteNode extends AbstractNode
 				this.street,
 				this.building,
 				this.attachmentSiteNodeId.getTransferable());
+	}
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+		IdlSiteNode idlSiteNode = (IdlSiteNode) transferable; 
+		super.fromTransferable(idlSiteNode);
+		this.imageId = new Identifier(idlSiteNode.imageId);
+		this.city = idlSiteNode.city;
+		this.street = idlSiteNode.street;
+		this.building = idlSiteNode.building;
+		this.attachmentSiteNodeId = new Identifier(idlSiteNode.attachmentSiteNodeId);
+
+		try {
+			this.type = StorableObjectPool.getStorableObject(new Identifier(idlSiteNode.siteNodeTypeId), true);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	public final SiteNodeType getType() {

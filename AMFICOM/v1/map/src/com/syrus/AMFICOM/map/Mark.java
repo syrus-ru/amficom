@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.65 2005/10/07 10:04:19 bass Exp $
+ * $Id: Mark.java,v 1.66 2005/10/11 07:14:29 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlMark;
 import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -39,8 +40,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/10/07 10:04:19 $
+ * @author $Author: max $
+ * @version $Revision: 1.66 $, $Date: 2005/10/11 07:14:29 $
  * @module map
  */
 public final class Mark extends AbstractNode {
@@ -64,22 +65,6 @@ public final class Mark extends AbstractNode {
 
 	public Mark(final IdlMark mt) throws CreateObjectException {
 		super(mt);
-		super.name = mt.name;
-		super.description = mt.description;
-
-		super.location = new DoublePoint(mt.longitude, mt.latitude);
-
-		this.distance = mt.distance;
-
-		this.city = mt.city;
-		this.street = mt.street;
-		this.building = mt.building;
-
-		try {
-			this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
 	}
 
 	Mark(final Identifier id,
@@ -186,6 +171,21 @@ public final class Mark extends AbstractNode {
 				this.city,
 				this.street,
 				this.building);
+	}
+	
+	@Override
+	protected synchronized void fromTransferable(IdlStorableObject transferable) throws ApplicationException {
+		IdlMark idlMark = (IdlMark) transferable; 
+		super.fromTransferable(idlMark);
+		this.distance = idlMark.distance;
+		this.city = idlMark.city;
+		this.street = idlMark.street;
+		this.building = idlMark.building;
+		try {
+			this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(idlMark.physicalLinkId), true);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	public String getBuilding() {
