@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.19 2005/09/14 19:05:23 arseniy Exp $
+ * $Id: DatabaseConnection.java,v 1.20 2005/10/11 14:13:30 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/09/14 19:05:23 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/11 14:13:30 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -128,9 +128,12 @@ public class DatabaseConnection {
 
 
 	public static Connection getConnection() throws SQLException {
-		final Connection connection = dataSource.getConnection();
-		connection.setAutoCommit(false);
-		openConnections++;
-		return connection;
+		if (dataSource != null) {
+			final Connection connection = dataSource.getConnection();
+			connection.setAutoCommit(false);
+			openConnections++;
+			return connection;
+		}
+		throw new SQLException("Connection with database closed");
 	}
 }
