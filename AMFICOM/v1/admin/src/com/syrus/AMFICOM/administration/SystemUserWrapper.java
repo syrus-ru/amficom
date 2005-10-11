@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.15 2005/10/10 15:47:19 bob Exp $
+ * $Id: SystemUserWrapper.java,v 1.16 2005/10/11 11:39:11 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,14 @@ package com.syrus.AMFICOM.administration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/10 15:47:19 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/11 11:39:11 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -44,15 +46,20 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	
 	public static final String LINK_COLUMN_SYSTEM_USER_ID = "system_user_id";
 	
+	public static final String LINK_COLUMN_ROLE_IDS = "role_ids";
+	
 	private static SystemUserWrapper instance;
 
 	private List<String> keys;
 
 	private SystemUserWrapper() {
-		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_LOGIN, COLUMN_NAME, COLUMN_SORT};
-
-		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
+		this.keys = Collections.unmodifiableList(
+			Arrays.asList(
+				new String[] { COLUMN_DESCRIPTION, 
+						COLUMN_LOGIN, 
+						COLUMN_NAME, 
+						COLUMN_SORT, 
+						LINK_COLUMN_ROLE_IDS}));
 	}
 
 	public static SystemUserWrapper getInstance() {
@@ -87,6 +94,9 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 			if (key.equals(COLUMN_SORT)) {
 				return new Integer(user.getSort().value());
 			}
+			if (key.equals(LINK_COLUMN_ROLE_IDS)) {
+				return user.getRoleIds();
+			}
 		}
 		return value;
 	}
@@ -95,6 +105,7 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 		return false;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void setValue(final SystemUser user, final String key, final Object value) {
 		if (user != null) {
@@ -106,6 +117,8 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 				user.setName((String) value);
 			} else if (key.equals(COLUMN_SORT)) {
 				user.setSort(SystemUserSort.from_int(((Integer) value).intValue()));
+			} else if (key.equals(LINK_COLUMN_ROLE_IDS)) {
+				user.setRoleIds((Set<Identifier>)value);
 			}
 		}
 	}
@@ -137,6 +150,11 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 		if (key.equals(COLUMN_SORT)) {
 			return Integer.class;
 		}
+		
+		if (key.equals(LINK_COLUMN_ROLE_IDS)) {
+			return Set.class;
+		}
+		
 		return null;
 	}
 
