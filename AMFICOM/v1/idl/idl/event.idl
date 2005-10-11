@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.28 2005/10/10 14:28:36 bass Exp $
+ * $Id: event.idl,v 1.29 2005/10/11 04:53:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -197,9 +197,9 @@ module eventv2 {
 					_FALSE,
 					_TRUE}) {
 				case _TRUE:
-					struct IdlPhysicalDIstancePair {
-						double physicalDistanceFromStart;
-						double physicalDistanceFromEnd;
+					struct IdlPhysicalDistancePair {
+						double physicalDistanceToStart;
+						double physicalDistanceToEnd;
 					} physicalDistancePair;
 			};
 			private IdlSpatialData spatialData;
@@ -211,8 +211,8 @@ module eventv2 {
 			double getMaxMismatch();
 			general::corba::IdlIdentifier getAffectedPathElementId();
 			boolean isAffectedPathElementSpatious();
-			double getPhysicalDistanceFromStart();
-			double getPhysicalDistanceFromEnd();
+			double getPhysicalDistanceToStart();
+			double getPhysicalDistanceToEnd();
 
 			factory init(in reflectometry::corba::IdlAlarmType alarmType,
 					in reflectometry::corba::IdlSeverity severity,
