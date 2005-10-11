@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.32 2005/10/10 10:43:27 bob Exp $
+ * $Id: IdentifierPool.java,v 1.33 2005/10/11 14:17:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/10 10:43:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/10/11 14:17:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -34,7 +34,7 @@ public class IdentifierPool {
 	static IGSConnectionManager igsConnectionMananger;
 	private static int capacity;
 
-	protected static CORBAActionProcessor actionProcessor;
+	protected static CORBAActionProcessor corbaActionProcessor;
 	
 	/* Map <short objectEntity, Fifo idPool> */
 	private static TShortObjectHashMap idPoolMap;
@@ -43,15 +43,29 @@ public class IdentifierPool {
 		// empty private construcor
 	}
 
+
+	public static void init(final IGSConnectionManager igsConnectionMananger1) {
+		init(igsConnectionMananger1, DEFAULT_CAPACITY, getDefaultCORBAActionProcessor());
+	}
+
+	public static void init(final IGSConnectionManager igsConnectionMananger1, final CORBAActionProcessor corbaActionProcessor1) {
+		init(igsConnectionMananger1, DEFAULT_CAPACITY, corbaActionProcessor1);
+	}
+
 	public static void init(final IGSConnectionManager igsConnectionMananger1, final int capacity1) {
+		init(igsConnectionMananger1, capacity1, getDefaultCORBAActionProcessor());
+	}
+
+	public static void init(final IGSConnectionManager igsConnectionMananger1,
+			final int capacity1,
+			final CORBAActionProcessor corbaActionProcessor1) {
 		igsConnectionMananger = igsConnectionMananger1;
 		capacity = (capacity1 <= MAX_CAPACITY) ? capacity1 : MAX_CAPACITY;
+		corbaActionProcessor = corbaActionProcessor1;
+
 		idPoolMap = new TShortObjectHashMap();
 	}
 
-	public static void init(final IGSConnectionManager igsConnectionMananger1) {
-		init(igsConnectionMananger1, DEFAULT_CAPACITY);
-	}
 
 	public static Identifier getGeneratedIdentifier(final short entityCode) throws IdentifierGenerationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
@@ -83,56 +97,50 @@ public class IdentifierPool {
 				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 	}
 
-	public static final void setActionProcessor(final CORBAActionProcessor actionProcessor) {
-		IdentifierPool.actionProcessor = actionProcessor;
-	}
-	
-	private static synchronized CORBAActionProcessor getCORBAActionProcessor() {
-		if (actionProcessor == null) {
-			actionProcessor = new CORBAActionProcessor() {
-				public void performAction(final CORBAAction action) throws ApplicationException {
-					try {
-						action.performAction();
-					} catch (final IdentifierGenerationException e) {
-						throw e; 
-					} catch (final AMFICOMRemoteException e) {
-						throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", e);
-					}
-				}
-			};
-		}
-		
-		return actionProcessor;
-	}
-	
 	private static void fillFifo(final Fifo fifo, final short entityCode) throws IdentifierGenerationException {
-		try {
-			getCORBAActionProcessor().performAction(new CORBAAction() {
-				public void performAction() throws AMFICOMRemoteException ,ApplicationException {
-					IdentifierGeneratorServer igServer = null;
-					try {
-						igServer = igsConnectionMananger.getIGSReference();
-					} catch (CommunicationException ce) {
-						throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
-					}
-			
-					final IdentifierLoader identifierLoader = new IdentifierLoader(igServer, fifo, entityCode);
-					identifierLoader.start();
-					/*	Do not wait more than MAX_TIME_WAIT*/
-					try {
-						identifierLoader.join(MAX_TIME_WAIT);
-					} catch (InterruptedException ie) {
-						Log.errorException(ie);
-					}
+		final CORBAAction corbaAction = new CORBAAction() {
+			public void perform() throws AMFICOMRemoteException, ApplicationException {
+				IdentifierGeneratorServer igServer = null;
+				try {
+					igServer = igsConnectionMananger.getIGSReference();
+				} catch (CommunicationException ce) {
+					throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
 				}
-			});
-		} catch (final ApplicationException e) {
-			if (e instanceof IdentifierGenerationException) {
-				throw (IdentifierGenerationException) e;
+
+				final IdentifierLoader identifierLoader = new IdentifierLoader(igServer, fifo, entityCode);
+				identifierLoader.start();
+				/*	Do not wait more than MAX_TIME_WAIT*/
+				try {
+					identifierLoader.join(MAX_TIME_WAIT);
+				} catch (InterruptedException ie) {
+					Log.errorException(ie);
+				}
 			}
-			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", e);
+		};
+
+		try {
+			corbaActionProcessor.performAction(corbaAction);
+		} catch (final ApplicationException ae) {
+			if (ae instanceof IdentifierGenerationException) {
+				throw (IdentifierGenerationException) ae;
+			}
+			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ae);
 		}
-		
+
+	}
+
+	private static CORBAActionProcessor getDefaultCORBAActionProcessor() {
+		return new CORBAActionProcessor() {
+			public void performAction(final CORBAAction action) throws ApplicationException {
+				try {
+					action.perform();
+				} catch (final IdentifierGenerationException e) {
+					throw e; 
+				} catch (final AMFICOMRemoteException e) {
+					throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", e);
+				}
+			}
+		};
 	}
 
 	protected static void serialize() {
