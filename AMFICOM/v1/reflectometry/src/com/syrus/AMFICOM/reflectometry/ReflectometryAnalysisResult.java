@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryAnalysisResult.java,v 1.1 2005/10/10 10:16:24 saa Exp $
+ * $Id: ReflectometryAnalysisResult.java,v 1.2 2005/10/11 13:22:40 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,10 @@
 package com.syrus.AMFICOM.reflectometry;
 
 /**
+ * Результаты анализа и оценки.
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/10 10:16:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/11 13:22:40 $
  * @module reflectometry
  */
 public interface ReflectometryAnalysisResult {
@@ -28,34 +29,16 @@ public interface ReflectometryAnalysisResult {
 	 */
 	byte[] getDadaraReflectogramMismatchBytes();
 	/**
-	 * Возвращает byte[]-поток для EvaluationResult из dadara.
-	 * <p>
-	 * Note: для создания EvaluationResult может быть недостаточно
-	 * одного этого потока, а могут понадобиться также D- и Q- параметры.
-	 * </p>
-	 * @return byte[]-поток для EvaluationResult из dadara;
+	 * Возвращает byte[]-поток для EvaluationPerEventResult из dadara.
+	 * @return byte[]-поток для EvaluationPerEventResult из dadara;
 	 *   null, если сравнения не было.
 	 */
-	byte[] getDadaraEvaluationResultBytes();
+	byte[] getDadaraEvaluationPerEventResultBytes();
 	/**
-	 * Возвращает true, если D и Q параметры доступны.
-	 * Параметры могут быть недоступны как из-за того, что сравнение
-	 * не проводилось, так и из-за того, что параметры D и Q определить
-	 * не удалось из-за сильного изменения состояния линии, или
-	 * по каким-то другим причинам.
-	 * @return true, если D и Q параметры доступны.
+	 * Возвращает общие параметры результата сравнения с эталоном.
+	 * @return общие параметры результата сравнения с эталоном;
+	 *   null, если сравнения не было.
 	 */
-	boolean hasDQ();
-	/**
-	 * Возвращает D-параметр результата сравнения.
-	 * @return D-параметр результата сравнения.
-	 * @throws IllegalStateException, если <tt>hasDQParameters() == false</tt>.
-	 */
-	double getD();
-	/**
-	 * Возвращает Q-параметр результата сравнения.
-	 * @return Q-параметр результата сравнения.
-	 * @throws IllegalStateException, если <tt>hasDQParameters() == false</tt>.
-	 */
-	double getQ();
+	ReflectometryEvaluationOverallResult
+			getReflectometryEvaluationOverallResult();
 }
