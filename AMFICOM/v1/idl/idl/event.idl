@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.30 2005/10/11 08:58:26 bass Exp $
+ * $Id: event.idl,v 1.31 2005/10/11 13:16:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -163,6 +163,7 @@ module eventv2 {
 			private long endCoord;
 			private reflectometry::corba::IdlAlarmType alarmType;
 			private double deltaX;
+			private general::corba::IdlIdentifier monitoredElementId;
 
 			boolean hasMismatch();
 			double getMinMismatch();
@@ -177,6 +178,7 @@ module eventv2 {
 			long getEndCoord();
 			reflectometry::corba::IdlAlarmType getAlarmType();
 			double getDeltaX();
+			general::corba::IdlIdentifier getMonitoredElementId();
 
 			factory init(in IdlMismatchData mismatchData,
 					in reflectometry::corba::IdlSeverity severity,
@@ -184,7 +186,8 @@ module eventv2 {
 					in long coord,
 					in long endCoord,
 					in reflectometry::corba::IdlAlarmType alarmType,
-					in double deltaX);
+					in double deltaX,
+					in general::corba::IdlIdentifier monitoredElementId);
 		};
 
 		valuetype IdlLineMismatchEvent : IdlEvent, IdlMismatchContainer {

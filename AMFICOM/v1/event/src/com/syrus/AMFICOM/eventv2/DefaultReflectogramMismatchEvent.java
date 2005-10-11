@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.4 2005/10/10 11:03:22 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.5 2005/10/11 13:16:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.eventv2;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 
 import java.io.Serializable;
 
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/10 11:03:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/11 13:16:34 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -100,8 +102,27 @@ public final class DefaultReflectogramMismatchEvent extends
 	 */
 	private double deltaX;
 
+	/**
+	 * @serial include
+	 */
+	private Identifier monitoredElementId;
+
 	private DefaultReflectogramMismatchEvent(
-			final ReflectogramMismatch reflectogramMismatch) {
+			final ReflectogramMismatch reflectogramMismatch,
+			final Identifier monitoredElementId) {
+		if (monitoredElementId == null) {
+			throw new NullPointerException();
+		}
+		/*
+		 * Currently, the second check is unnecessary. But
+		 * implementation may eventually change.
+		 */
+		if (monitoredElementId.getMajor() != MONITOREDELEMENT_CODE
+				|| monitoredElementId.isVoid()) {
+			throw new IllegalArgumentException();
+		}
+
+
 		if (!!(this.mismatch = reflectogramMismatch.hasMismatch())) {
 			this.minMismatch = reflectogramMismatch.getMinMismatch();
 			this.maxMismatch = reflectogramMismatch.getMaxMismatch();
@@ -127,6 +148,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.endCoord = reflectogramMismatch.getEndCoord();
 		this.alarmType = reflectogramMismatch.getAlarmType();
 		this.deltaX = reflectogramMismatch.getDeltaX();
+		this.monitoredElementId = monitoredElementId;
 	}
 
 	private DefaultReflectogramMismatchEvent(
@@ -153,6 +175,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.endCoord = reflectogramMismatchEvent.getEndCoord();
 		this.alarmType = AlarmType.valueOf(reflectogramMismatchEvent.getAlarmType());
 		this.deltaX = reflectogramMismatchEvent.getDeltaX();
+		this.monitoredElementId = Identifier.valueOf(reflectogramMismatchEvent.getMonitoredElementId());
 	}
 
 	/**
@@ -185,12 +208,15 @@ public final class DefaultReflectogramMismatchEvent extends
 				this.getCoord(),
 				this.getEndCoord(),
 				this.getAlarmType().getTransferable(orb),
-				this.getDeltaX());
+				this.getDeltaX(),
+				this.getMonitoredElementId().getTransferable(orb));
 	}
 
 	public static ReflectogramMismatchEvent valueOf(
-			final ReflectogramMismatch reflectogramMismatch) {
-		return new DefaultReflectogramMismatchEvent(reflectogramMismatch);
+			final ReflectogramMismatch reflectogramMismatch,
+			final Identifier monitoredElementId) {
+		return new DefaultReflectogramMismatchEvent(reflectogramMismatch,
+				monitoredElementId);
 	}
 
 	public static ReflectogramMismatchEvent valueOf(
@@ -321,9 +347,16 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
+	 * @see ReflectogramMismatchEvent#getMonitoredElementId()
+	 */
+	public Identifier getMonitoredElementId() {
+		return this.monitoredElementId;
+	}
+
+	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.4 $, $Date: 2005/10/10 11:03:22 $
+	 * @version $Revision: 1.5 $, $Date: 2005/10/11 13:16:34 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
