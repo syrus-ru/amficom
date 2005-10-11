@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAActionProcessor.java,v 1.1 2005/10/10 10:43:03 bob Exp $
+* $Id: CORBAActionProcessor.java,v 1.2 2005/10/11 14:15:09 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/10 10:43:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/10/11 14:15:09 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module csbridge
  */
 public interface CORBAActionProcessor {
-	
-	void performAction(final CORBAAction action) throws ApplicationException;
-	
-}
 
+	void performAction(final CORBAAction action) throws ApplicationException;
+
+}
