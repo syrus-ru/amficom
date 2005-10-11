@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.22 2005/09/23 13:52:09 bob Exp $
+ * $Id: LoginManager.java,v 1.23 2005/10/11 14:29:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,14 +23,13 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/23 13:52:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/10/11 14:29:26 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public final class LoginManager {
 	private static LoginServerConnectionManager loginServerConnectionManager;
-	private static LoginRestorer loginRestorer;
 	private static SessionKey sessionKey;
 	private static IdlSessionKey sessionKeyT;
 	private static Identifier userId;
@@ -46,9 +45,8 @@ public final class LoginManager {
 		sessionKey = new SessionKey(sessionKeyT);
 	}
 
-	public static void init(final LoginServerConnectionManager loginServerConnectionManager1, LoginRestorer loginRestorer1) {
+	public static void init(final LoginServerConnectionManager loginServerConnectionManager1) {
 		loginServerConnectionManager = loginServerConnectionManager1;
-		loginRestorer = loginRestorer1;
 	}
 
 	/*
@@ -158,22 +156,6 @@ public final class LoginManager {
 
 	public static Identifier getDomainId() {
 		return domainId;
-	}
-
-
-	/**
-	 *
-	 * @return true, only when LoginRestorer.restoreLogin() returned true,
-	 * i.e., when user or application decided to restore login
-	 * @throws LoginException
-	 * @throws CommunicationException
-	 */
-	public static boolean restoreLogin() throws LoginException, CommunicationException {
-		if (loginRestorer != null && loginRestorer.restoreLogin()) {
-			login(loginRestorer.getLogin(), loginRestorer.getPassword());
-			return true;
-		}
-		return false;
 	}
 
 }
