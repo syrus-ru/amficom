@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.30 2005/10/11 10:37:09 arseniy Exp $
+* $Id: SystemUser.java,v 1.31 2005/10/11 11:40:33 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/10/11 10:37:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/10/11 11:40:33 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -147,7 +147,7 @@ public final class SystemUser extends StorableObject
 		this.description = ut.description;
 
 		this.roleIds = Identifier.fromTransferables(ut.roleIds);
-
+		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -264,8 +264,15 @@ public final class SystemUser extends StorableObject
 	public void addRole(final Role role) {
 		assert role != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.roleIds.add(role.getId());
+		super.markAsChanged();
 	}
-	
+
+	public void removeRole(final Role role) {
+		assert role != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.roleIds.remove(role.getId());
+		super.markAsChanged();
+	}
+
 	public Set<Identifier> getRoleIds() {
 		return Collections.unmodifiableSet(this.roleIds);
 	}
