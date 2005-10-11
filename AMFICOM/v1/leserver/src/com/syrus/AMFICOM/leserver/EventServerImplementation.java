@@ -1,20 +1,18 @@
-/*
- * $Id: EventServerImplementation.java,v 1.11 2005/09/14 18:18:39 arseniy Exp $
+/*-
+ * $Id: EventServerImplementation.java,v 1.12 2005/10/11 09:40:30 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.leserver;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import com.syrus.AMFICOM.event.Event;
-import com.syrus.AMFICOM.event.EventType;
-import com.syrus.AMFICOM.event.corba.IdlEvent;
+import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -24,41 +22,57 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/14 18:18:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/10/11 09:40:30 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 public class EventServerImplementation extends EventServerPOA {
 	private static final long serialVersionUID = 3257569516216398643L;
 
-	/*	Map of event queues for every user*/
-	private static Map<Identifier, UserEventNotifier> userEventNotifiersMap;
+	/**
+	 * Map of event queues for every user
+	 */
+	private static final Map<Identifier, UserEventNotifier> USER_EVENT_NOTIFIERS_MAP =
+		Collections.synchronizedMap(new HashMap<Identifier, UserEventNotifier>());
 
-	static {
-		userEventNotifiersMap = Collections.synchronizedMap(new HashMap<Identifier, UserEventNotifier>());
-	}
-
-	public void eventGeneration(IdlEvent et) throws AMFICOMRemoteException {
+	/**
+	 * @param idlEvent
+	 * @throws AMFICOMRemoteException
+	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#eventGeneration(com.syrus.AMFICOM.event.corba.IdlEvent)
+	 */
+	public void eventGeneration(
+			final com.syrus.AMFICOM.event.corba.IdlEvent idlEvent)
+	throws AMFICOMRemoteException {
 		try {
-			final Event event = new Event(et);
-			final EventType eventType = event.getType();
-			for (final Iterator it = eventType.getAlertedUserIds().iterator(); it.hasNext();) {
-				final Identifier userId = (Identifier) it.next();
-				UserEventNotifier userEventNotifier = userEventNotifiersMap.get(userId);
+			final com.syrus.AMFICOM.event.Event event = new com.syrus.AMFICOM.event.Event(idlEvent);
+			final com.syrus.AMFICOM.event.EventType eventType = event.getType();
+			for (final Identifier userId : eventType.getAlertedUserIds()) {
+				UserEventNotifier userEventNotifier = USER_EVENT_NOTIFIERS_MAP.get(userId);
 				if (userEventNotifier == null) {
 					userEventNotifier = new UserEventNotifier(userId);
 					userEventNotifier.start();
-					userEventNotifiersMap.put(userId, userEventNotifier);
+					USER_EVENT_NOTIFIERS_MAP.put(userId, userEventNotifier);
 				}
 				userEventNotifier.addEvent(event);
 			}
-		}
-		catch (CreateObjectException coe) {
+		} catch (final CreateObjectException coe) {
 			Log.errorException(coe);
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, "Cannot create event -- "
-					+ coe.getMessage());
+			throw new AMFICOMRemoteException(
+					IdlErrorCode.ERROR_ILLEGAL_DATA,
+					IdlCompletionStatus.COMPLETED_NO,
+					"Cannot create event -- " + coe.getMessage());
 		}
+	}
+
+	/**
+	 * @param idlEvent
+	 * @throws AMFICOMRemoteException
+	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#yetAnotherEventGeneration(IdlEvent)
+	 */
+	public void yetAnotherEventGeneration(final IdlEvent idlEvent)
+	throws AMFICOMRemoteException {
+		throw new UnsupportedOperationException();
 	}
 
 	public void verify(byte i) {
