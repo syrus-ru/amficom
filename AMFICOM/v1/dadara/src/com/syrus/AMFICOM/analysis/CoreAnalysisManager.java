@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.122 2005/10/11 14:41:20 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.123 2005/10/11 16:00:30 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.122 $, $Date: 2005/10/11 14:41:20 $
+ * @version $Revision: 1.123 $, $Date: 2005/10/11 16:00:30 $
  * @module
  */
 
@@ -32,8 +32,10 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
+import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDY;
 import com.syrus.AMFICOM.analysis.dadara.TracePreAnalysis;
@@ -781,7 +783,8 @@ public class CoreAnalysisManager
 		ModelTraceManager etMTM = etalon.getMTM();
 		double breakThresh = etalon.getMinTraceLevel();
 
-		ModelTrace mt = ar.getMTAE().getModelTrace();
+		final ModelTraceAndEventsImpl mtae = ar.getMTAE();
+		ModelTrace mt = mtae.getModelTrace();
 
 		// начало конца волокна по эталону
 		int etMinLength = etMTM.getMTAE().getNEvents() > 0
@@ -824,11 +827,18 @@ public class CoreAnalysisManager
 		}
 		else // обрыв не обнаружен
 		{
+			ReliabilitySimpleReflectogramEvent[] arEvents =
+				mtae.getSimpleEvents();
+			ReliabilitySimpleReflectogramEvent[] etEvents =
+				etMTM.getMTAE().getSimpleEvents();
+			SimpleReflectogramEventComparer rcomp =
+				new SimpleReflectogramEventComparer(arEvents, etEvents);
 			ReflectogramMismatchImpl alarm =
-					ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
+					ModelTraceComparer.compareMTAEToMTM(mtae,
+							etMTM, rcomp);
 
 			// обеспечиваем EventAnchorer-привязку результатов анализа
-			ModelTraceComparer.createEventAnchor(ar, etalon, null);
+			ModelTraceComparer.createEventAnchor(ar, etalon, rcomp);
 
 			// устанавливаем привязку аларма к событиям
 			if (alarm != null) {
