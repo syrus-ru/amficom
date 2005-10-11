@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.23 2005/09/30 12:56:22 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.24 2005/10/11 14:25:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.io.SignatureMismatchException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.23 $, $Date: 2005/09/30 12:56:22 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/11 14:25:32 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -336,7 +336,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	 * согласно контракту {@link ReliabilityModelTraceAndEvents}
 	 * возвращает массив {@link ReliabilitySimpleReflectogramEvent}
 	 */
-	public SimpleReflectogramEvent[] getSimpleEvents()
+	public ReliabilitySimpleReflectogramEvent[] getSimpleEvents()
 	{
 		// Copy an array and all its references to protect se array.
 		// Array elements are unmodifiable, so no need to clone them.
@@ -376,7 +376,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	 * согласно контракту {@link ReliabilityModelTraceAndEvents}
 	 * возвращает {@link ReliabilitySimpleReflectogramEvent}
 	 */
-	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
+	public ReliabilitySimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
 		return getRSE()[nEvent];
 	}
