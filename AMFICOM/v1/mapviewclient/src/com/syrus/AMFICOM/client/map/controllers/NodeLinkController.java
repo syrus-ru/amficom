@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkController.java,v 1.27 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: NodeLinkController.java,v 1.28 2005/10/11 08:52:25 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контроллер фрагмента линии.
  * 
- * @version $Revision: 1.27 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/11 08:52:25 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -85,7 +85,7 @@ public final class NodeLinkController extends AbstractLinkController {
 			final AbstractNode smne = link.getStartNode();
 			s2 = ":\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString(MapEditorResourceKeys.FROM_LOWERCASE)
+					+ I18N.getString(MapEditorResourceKeys.FROM_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ smne.getName()
 					+ " [" //$NON-NLS-1$
@@ -94,7 +94,7 @@ public final class NodeLinkController extends AbstractLinkController {
 			final AbstractNode emne = link.getEndNode();
 			s3 = "\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString(MapEditorResourceKeys.TO_LOWERCASE)
+					+ I18N.getString(MapEditorResourceKeys.TO_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ emne.getName()
 					+ " [" //$NON-NLS-1$
@@ -130,6 +130,11 @@ public final class NodeLinkController extends AbstractLinkController {
 
 		final NodeLink nodeLink = (NodeLink) mapElement;
 
+		if(!MapPropertiesManager.isLayerVisible(nodeLink.getPhysicalLink().getType())) {
+			return false;
+		}
+
+		
 		return visibleBounds.intersectsLine(nodeLink.getStartNode().getLocation().getX(),
 				nodeLink.getStartNode().getLocation().getY(),
 				nodeLink.getEndNode().getLocation().getX(),
