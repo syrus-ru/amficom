@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.10 2005/10/10 15:20:02 krupenn Exp $
+ * $Id: Cable.java,v 1.11 2005/10/11 16:02:08 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -258,7 +258,7 @@ public class Cable {
 						channelingItem.setStartSiteId(tempStartSiteId);
 						channelingItem.setParentId(this.id);
 						channelingItem.setTunnelId(link.getId());
-						newChannelingItemsFromStart.add(channelingItem);
+						newChannelingItemsFromEnd.add(channelingItem);
 					}
 					else {
 						tempChannelingItems.remove(channelingItem);
