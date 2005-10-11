@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.42 2005/10/11 13:49:19 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.43 2005/10/11 14:13:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.general.ParameterType.DADARA_ALARMS;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -22,7 +23,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -37,7 +37,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/10/11 13:49:19 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/11 14:13:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -144,26 +144,30 @@ final class AnalysisEvaluationProcessor {
 			final ParameterSet etalon)
 	throws AnalysisException {
 		try {
-			final String analysisCodename = analysis.getType().getCodename();
-	
-			loadAnalysisAndEvaluationManager(analysisCodename, measurementResult, analysis, etalon);
+			loadAnalysisAndEvaluationManager(
+					analysis.getType().getCodename(),
+					measurementResult, analysis, etalon);
 	
 			final Parameter[] arParameters = analysisManager.analyse();
+			final Identifier monitoredElementId =
+					measurementResult.getAction().getMonitoredElementId();
 
 			int dadaraAlarmsOccurenceCount = 0;
 			for (final Parameter parameter : arParameters) {
-				if (parameter.getType() != ParameterType.DADARA_ALARMS) {
+				if (parameter.getType() != DADARA_ALARMS) {
 					continue;
 				}
 
 				if (++dadaraAlarmsOccurenceCount != 1) {
-					Log.debugMessage("AnalysisEvaluationProcessor.analyseAndEvaluate() | WARNING: dadaraAlarmsOccurenceCount = " + dadaraAlarmsOccurenceCount + "; should be 1", WARNING);
+					Log.debugMessage("AnalysisEvaluationProcessor.analyseAndEvaluate() | WARNING: dadaraAlarmsOccurenceCount = "
+							+ dadaraAlarmsOccurenceCount
+							+ "; should be 1", WARNING);
 				}
 
 				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue())) {
 					enqueueEvent(DefaultReflectogramMismatchEvent.valueOf(
 							reflectogramMismatch,
-							measurementResult.getAction().getMonitoredElementId()));
+							monitoredElementId));
 				}
 			}
 
@@ -189,7 +193,7 @@ final class AnalysisEvaluationProcessor {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.42 $, $Date: 2005/10/11 13:49:19 $
+	 * @version $Revision: 1.43 $, $Date: 2005/10/11 14:13:52 $
 	 * @module mcm
 	 */
 	private static class QueueFullException extends Exception {
