@@ -1,5 +1,5 @@
 /*-
- * $Id: CompositeEventList.java,v 1.5 2005/07/22 06:56:49 saa Exp $
+ * $Id: CompositeEventList.java,v 1.6 2005/10/11 14:42:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.5 $, $Date: 2005/07/22 06:56:49 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/11 14:42:00 $
  * @module
  */
 public class CompositeEventList {
@@ -41,8 +41,7 @@ public class CompositeEventList {
 		if (getPMTAE() != null && getEMTAE() != null)
 			comp = new SimpleReflectogramEventComparer(
 					getPMTAE().getSimpleEvents(),
-					getEMTAE().getSimpleEvents(),
-					false);
+					getEMTAE().getSimpleEvents());
 		p2c = new int[pNum];
 		e2c = new int[eNum];
 		c2p = new int[pNum + eNum]; // заведомо достаточная длина
@@ -52,9 +51,9 @@ public class CompositeEventList {
 		int pi, ei, ci;
 		for (pi = 0, ei = 0, ci = 0; pi < pNum || ei < eNum; ci++) {
 			int e2p = comp != null && ei < eNum ?
-					comp.getProbeIdByEtalonId(ei) : -1;
+					comp.getProbeIdByEtalonIdNonStrict(ei) : -1;
 			int p2e = comp != null && pi < pNum ?
-					comp.getEtalonIdByProbeId(pi) : -1;
+					comp.getEtalonIdByProbeIdNonStrict(pi) : -1;
 			if (e2p > pi || ei == eNum) {
 				p2c[pi] = ci;
 				c2pEx[ci] = pi;

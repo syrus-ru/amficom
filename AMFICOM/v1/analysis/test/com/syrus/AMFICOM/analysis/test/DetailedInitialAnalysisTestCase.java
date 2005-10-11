@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.9 2005/09/26 11:19:34 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.10 2005/10/11 14:42:00 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -34,7 +34,7 @@ import com.syrus.util.HashCodeGenerator;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/09/26 11:19:34 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/11 14:42:00 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -548,7 +548,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 		// iterate over all etalons
 		for (int i = 0; i < ets.length; i++) {
 			SimpleReflectogramEventComparer rcomp =
-				new SimpleReflectogramEventComparer(re, ets[i], false);
+				new SimpleReflectogramEventComparer(re, ets[i]);
 
 			int worstLevel = NO_ERROR;
 
@@ -558,7 +558,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 			// process new/changed events
 			for (int k = 0; k < re.length; k++) {
 				int level = NO_ERROR; 
-				int et = rcomp.getEtalonIdByProbeId(k);
+				int et = rcomp.getEtalonIdByProbeIdNonStrict(k);
 				if (et < 0) {
 					// new event: etalon does not cover this region
 					level = eventBeyondEtalon;
@@ -569,7 +569,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 								+ " T=" + re[k].getEventType()
 								+ " B=" + re[k].getBegin()
 								+ " km=" + re[k].getBegin()*dxkm);
-				} else if (rcomp.getProbeIdByEtalonId(et) != k) {
+				} else if (rcomp.getProbeIdByEtalonIdNonStrict(et) != k) {
 					// new event: etalon2probe mapping gives another probe event
 					level = ets[i][et].getNewLevel();
 					if (re[k].getEventType() == SimpleReflectogramEvent.LINEAR) {
@@ -733,8 +733,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 				lELcTemp[k] = 0;
 			}
 			for (int et = 0; et < ets[i].length; et++) {
-				int k = rcomp.getProbeIdByEtalonId(et);
-				if (k >= 0 && rcomp.getEtalonIdByProbeId(k) == et)
+				int k = rcomp.getProbeIdByEtalonIdNonStrict(et);
+				if (k >= 0 && rcomp.getEtalonIdByProbeIdNonStrict(k) == et)
 					continue;
 				int level = ets[i][et].getLossLevel();
 				if (verbose)
