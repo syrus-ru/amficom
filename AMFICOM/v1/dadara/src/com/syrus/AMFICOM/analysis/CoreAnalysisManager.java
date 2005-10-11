@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.123 2005/10/11 16:00:30 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.124 2005/10/11 16:42:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.123 $, $Date: 2005/10/11 16:00:30 $
+ * @version $Revision: 1.124 $, $Date: 2005/10/11 16:42:01 $
  * @module
  */
 
@@ -23,12 +23,14 @@ import java.util.List;
 
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
+import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.QualityComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
@@ -40,6 +42,7 @@ import com.syrus.AMFICOM.analysis.dadara.ThreshDX;
 import com.syrus.AMFICOM.analysis.dadara.ThreshDY;
 import com.syrus.AMFICOM.analysis.dadara.TracePreAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.TracesAverages;
+import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.io.BellcoreStructure;
 
 public class CoreAnalysisManager
@@ -751,6 +754,7 @@ public class CoreAnalysisManager
 	 * @param anchorer
 	 * @return список алармов
 	 */
+	@Deprecated
 	public static List analyseCompareAndMakeAlarms(PFTrace trace,
 			AnalysisParameters ap,
 			double breakThresh,
@@ -769,14 +773,33 @@ public class CoreAnalysisManager
 	 * Кроме того, если в эталоне определен EventAnchorer,
 	 * а при сравнении не обнаружено обрыва,
 	 * результаты анализа дополняются привязкой EventAnchorer на основе эталона.
+	 * <p>
+	 * Реализован через {@link #compareToEtalon(AnalysisResult, Etalon)}
+	 * путем отбрасывания параметров качества.
+	 * <p>
+	 * XXX: нужен ли? На пол-пути к состоянию deprecated
 	 * @param ar Результаты анализа
 	 * @param etalon параметры эталона
+	 * @return список полученных несоответствий
 	 */
 	public static List<ReflectogramMismatchImpl> compareAndMakeAlarms(
 			AnalysisResult ar,
 			Etalon etalon) {
+		return compareToEtalon(ar, etalon).getAlarms();
+	}
+
+	/**
+	 * Сравнивает результаты анализа с эталоном, формируя все результаты
+	 * сравнения в виде {@link EtalonComparison}.
+	 * @param ar Результаты анализа
+	 * @param etalon параметры эталона
+	 * @return результат сравнения {@link EtalonComparison}
+	 */
+	public static EtalonComparison compareToEtalon(
+			AnalysisResult ar,
+			Etalon etalon) {
 		// формируем выходной список
-		List<ReflectogramMismatchImpl> alarmList =
+		final List<ReflectogramMismatchImpl> alarmList =
 			new ArrayList<ReflectogramMismatchImpl>();
 
 		// получаем параметры эталона
@@ -824,6 +847,20 @@ public class CoreAnalysisManager
 			// мб, в таком случае не надо игнорировать HARD алармы?
 
 			alarmList.add(alarm);
+
+			final QualityComparer qcomp =
+				new QualityComparer(mtae, etMTM, null, true);
+			return new EtalonComparison() {
+				public List<ReflectogramMismatchImpl> getAlarms() {
+					return alarmList;
+				}
+				public ReflectometryEvaluationOverallResult getOverallResult() {
+					return qcomp;
+				}
+				public EvaluationPerEventResult getPerEventResult() {
+					return qcomp;
+				}
+			};
 		}
 		else // обрыв не обнаружен
 		{
@@ -848,7 +885,20 @@ public class CoreAnalysisManager
 			if (alarm != null) {
 				alarmList.add(alarm);
 			}
+
+			final QualityComparer qcomp =
+				new QualityComparer(mtae, etMTM, rcomp, false);
+			return new EtalonComparison() {
+				public List<ReflectogramMismatchImpl> getAlarms() {
+					return alarmList;
+				}
+				public ReflectometryEvaluationOverallResult getOverallResult() {
+					return qcomp;
+				}
+				public EvaluationPerEventResult getPerEventResult() {
+					return qcomp;
+				}
+			};
 		}
-		return alarmList;
 	}
 }
