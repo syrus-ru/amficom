@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.12 2005/10/09 12:58:12 bass Exp $
+# $Id: Makefile,v 1.13 2005/10/11 14:11:33 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,7 +13,7 @@ include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/reflectometry.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
 
 
 SOURCES := $(shell find $(SRCDIR) -name *.java)

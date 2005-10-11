@@ -21,6 +21,7 @@ $LIB/map.jar:\
 $LIB/scheme.jar:\
 $LIB/mapview.jar:\
 $LIB/filter.jar:\
+$LIB/reflectometry.jar:\
 $LIB/csbridge.jar:\
 $LIB/dadara.jar:\
 $LIB/commonclient.jar:\
