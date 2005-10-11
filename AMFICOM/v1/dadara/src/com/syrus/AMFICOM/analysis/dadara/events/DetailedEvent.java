@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEvent.java,v 1.6 2005/10/06 13:34:02 saa Exp $
+ * $Id: DetailedEvent.java,v 1.7 2005/10/11 13:25:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.io.SignatureMismatchException;
  * {@link #begin}, {@link #end} {@link #eventType} - см.
  * описание {@link SimpleReflectogramEvent}
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/11 13:25:06 $
  * @module
  */
 public abstract class DetailedEvent
@@ -106,4 +106,5 @@ implements SimpleReflectogramEvent, DataStreamable {
 			};
 		}
 		return dsReader;
-	}}
+	}
+}
