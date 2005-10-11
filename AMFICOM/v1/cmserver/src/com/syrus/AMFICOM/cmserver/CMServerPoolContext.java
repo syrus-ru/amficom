@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.15 2005/10/05 10:07:05 max Exp $
+ * $Id: CMServerPoolContext.java,v 1.16 2005/10/11 14:20:33 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LRUMapSaver;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -21,46 +20,30 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/05 10:07:05 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2005/10/11 14:20:33 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
-final class CMServerPoolContext implements PoolContext {
+final class CMServerPoolContext extends PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	private static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
 	private static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
 	private static final String KEY_REPORT_POOL_SIZE = "ReportPoolSize";
-	private static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
-	private static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
 
 	private static final int GENERAL_POOL_SIZE = 1000;
 	private static final int ADMINISTRATION_POOL_SIZE = 1000;
 	private static final int CONFIGURATION_POOL_SIZE = 1000;
 	private static final int MEASUREMENT_POOL_SIZE = 1000;
 	private static final int REPORT_POOL_SIZE = 1000;
-	private static final String DATABASE_LOADER_ONLY = "false";
-	private static final int REFRESH_TIMEOUT = 30; //sec
-
-	private CMServerServantManager cmServerServantManager;
-
-	public CMServerPoolContext(final CMServerServantManager cmServerServantManager) {
-		this.cmServerServantManager = cmServerServantManager;
+	
+	public CMServerPoolContext(final ObjectLoader objectLoader) {
+		super(objectLoader);
 	}
 
+	@Override
 	public void init() {
-		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY,
-				DATABASE_LOADER_ONLY)).booleanValue();
-
-		ObjectLoader objectLoader;
-		if (!databaseLoaderOnly) {
-			final long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, REFRESH_TIMEOUT) * 1000L;
-			objectLoader = new CMServerObjectLoader(this.cmServerServantManager, refreshTimeout);
-		} else {
-			objectLoader = new DatabaseObjectLoader();
-		}
-
 		final Class lruMapClass = StorableObjectResizableLRUMap.class;
 
 		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, GENERAL_POOL_SIZE);
@@ -69,7 +52,7 @@ final class CMServerPoolContext implements PoolContext {
 		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, MEASUREMENT_POOL_SIZE);
 		final int reportPoolSize = ApplicationProperties.getInt(KEY_REPORT_POOL_SIZE, REPORT_POOL_SIZE);
 
-		StorableObjectPool.init(objectLoader, lruMapClass);
+		StorableObjectPool.init(super.objectLoader, lruMapClass);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
@@ -77,6 +60,7 @@ final class CMServerPoolContext implements PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.REPORT_GROUP_CODE, reportPoolSize);
 	}
 
+	@Override
 	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
 		return LRUMapSaver.getInstance();
 	}

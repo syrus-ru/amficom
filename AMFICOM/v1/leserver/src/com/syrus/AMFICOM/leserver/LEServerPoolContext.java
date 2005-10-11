@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.11 2005/09/14 18:18:39 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.12 2005/10/11 14:20:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.leserver;
 
-import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LRUMapSaver;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
@@ -21,12 +20,12 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/14 18:18:39 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/11 14:20:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
-final class LEServerPoolContext implements PoolContext {
+final class LEServerPoolContext extends PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	private static final String KEY_EVENT_POOL_SIZE = "EventPoolSize";
@@ -35,21 +34,25 @@ final class LEServerPoolContext implements PoolContext {
 	private static final int ADMINISTRATION_POOL_SIZE = 1000;
 	private static final int EVENT_POOL_SIZE = 1000;
 
-	public void init() {
-		final ObjectLoader objectLoader = new DatabaseObjectLoader();
+	public LEServerPoolContext(final ObjectLoader objectLoader) {
+		super(objectLoader);
+	}
 
+	@Override
+	public void init() {
 		final Class lruMapClass = StorableObjectResizableLRUMap.class;
 
 		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, GENERAL_POOL_SIZE);
 		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, ADMINISTRATION_POOL_SIZE);
 		final int eventPoolSize = ApplicationProperties.getInt(KEY_EVENT_POOL_SIZE, EVENT_POOL_SIZE);
 
-		StorableObjectPool.init(objectLoader, lruMapClass);
+		StorableObjectPool.init(super.objectLoader, lruMapClass);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize);
 	}
 
+	@Override
 	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
 		return LRUMapSaver.getInstance();
 	}
