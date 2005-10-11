@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.111 2005/10/02 11:59:33 bob Exp $
+ * $Id: configuration.idl,v 1.112 2005/10/11 09:28:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ module configuration {
 			FILTER,
 			OTHER,
 			UNKNOWN,
+			RACK,
 
 			BUG_136
 		};
