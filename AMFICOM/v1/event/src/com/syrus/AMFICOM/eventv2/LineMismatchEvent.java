@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.8 2005/10/10 16:25:47 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.9 2005/10/11 05:02:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/10 16:25:47 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/11 05:02:50 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
@@ -105,8 +105,8 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 * together.</p>
 	 *
 	 * <p>Since a <em>spacious</em> {@code PathElement} can be neither the
-	 * first nor the last in its parent {@code SchemePath}, its predecessor
-	 * and successor are guaranteed to exist <font color = "white">and be
+	 * first nor the last one in its parent {@code SchemePath}, its predecessor
+	 * and successor are guaranteed to exist <font color = "White">and be
 	 * non-{@code null} ;-). Even if every <strike>mousebastard</strike>
 	 * mousebuster forgets home his own head.</font></p>
 	 *
@@ -135,8 +135,8 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 * together.</p>
 	 *
 	 * <p>Since a <em>spacious</em> {@code PathElement} can be neither the
-	 * first nor the last in its parent {@code SchemePath}, its predecessor
-	 * and successor are guaranteed to exist <font color = "white">and be
+	 * first nor the last one in its parent {@code SchemePath}, its predecessor
+	 * and successor are guaranteed to exist <font color = "White">and be
 	 * non-{@code null} ;-). Even if every <strike>mousebastard</strike>
 	 * mousebuster forgets home his own head.</font></p>
 	 *
