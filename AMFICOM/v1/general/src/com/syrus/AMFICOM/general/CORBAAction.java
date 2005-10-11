@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAAction.java,v 1.1 2005/10/10 10:43:03 bob Exp $
+* $Id: CORBAAction.java,v 1.2 2005/10/11 14:14:36 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,14 +12,13 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/10 10:43:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/10/11 14:14:36 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module csbridge
  */
 public interface CORBAAction {
 
-	void performAction() throws AMFICOMRemoteException, ApplicationException;
-	
-}
+	void perform() throws AMFICOMRemoteException, ApplicationException;
 
+}
