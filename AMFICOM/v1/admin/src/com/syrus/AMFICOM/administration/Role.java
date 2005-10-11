@@ -1,5 +1,5 @@
 /*
- * $Id: Role.java,v 1.1 2005/10/10 15:41:59 bob Exp $
+ * $Id: Role.java,v 1.2 2005/10/11 09:34:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/10 15:41:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/11 09:34:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -39,8 +40,29 @@ import com.syrus.util.Log;
 
 public final class Role extends StorableObject
 		implements Describable {
-	private static final long serialVersionUID = 7173419705878464356L;
-
+	
+	public enum RoleCodename {
+		SUBSCRIBER("Subscriber"),
+		SYSTEM_ADMINISTATOR("SystemAdministator"),
+		MEDIA_MONITORING_ADMINISTATOR("MediaMonitoringAdministator"),
+		ANALYST("Analyst"),
+		OPERATOR("Operator"),
+		PLANNER("Planner"),
+		SPECIALIST("Specialist");
+		
+		private static final String KEY_ROOT = "Role.Description."; 
+		
+		private final String codename;
+		
+		private RoleCodename(final String codename) {
+			this.codename = codename;
+		}
+		
+		public final String getDescription() {
+			return LangModelAdministation.getString(KEY_ROOT + this.codename);
+		}
+	}
+	
 	private String codename;
 	private String description;
 
