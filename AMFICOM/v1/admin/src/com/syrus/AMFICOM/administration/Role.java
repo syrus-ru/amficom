@@ -1,5 +1,5 @@
 /*
- * $Id: Role.java,v 1.2 2005/10/11 09:34:51 bob Exp $
+ * $Id: Role.java,v 1.3 2005/10/11 10:38:24 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/11 09:34:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/11 10:38:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -60,6 +59,10 @@ public final class Role extends StorableObject
 		
 		public final String getDescription() {
 			return LangModelAdministation.getString(KEY_ROOT + this.codename);
+		}
+		
+		public final String getCodename() {
+			return this.codename;
 		}
 	}
 	
