@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleReflectogramEventComparer.java,v 1.7 2005/10/06 13:34:02 saa Exp $
+ * $Id: SimpleReflectogramEventComparer.java,v 1.8 2005/10/11 14:41:20 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,16 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
  * этого класса, дав на входе два массива событий
  * SimpleReflectogramEvent[] - один - пробные события, второй - эталонные.
  * Созданный объект находит соответствия событий, и после этого
- * умеет отвечать на вопросы об изменении состава и параметров событий.
+ * умеет отвечать на вопросы о соответствии между списками событий
+ * и об изменении состава и параметров событий.
  * <p>
- * Допускает полиморфизм - некоторые вопросы применимы для любых
+ * Соответствие событий может проводиться в трех режимах:
+ * NonStrict, нормальный, MostStrict.
+ * XXX: названия методов для этого сравнения, довольно корявые, надо переделать.
+ * FIXME: алгоритм MostStrict сравнения {@link #removeNonUnique} не проверен.
+ * <p>
+ * При сравнении допускает полиморфизм событий:
+ * некоторые вопросы применимы для любых
  * SimpleReflectogramEvent,
  * некоторые - только для ComplexReflectogramEvent,
  * а некоторые - только для ReliabilitySimpleReflectogramEvent
@@ -33,8 +40,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
  * <p>
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.7 $, $Date: 2005/10/06 13:34:02 $
- * @module
+ * @version $Revision: 1.8 $, $Date: 2005/10/11 14:41:20 $
+ * @module dadara
  */
 public class SimpleReflectogramEventComparer {
 	private SimpleReflectogramEvent[] probeEvents;
@@ -50,8 +57,12 @@ public class SimpleReflectogramEventComparer {
 	// По мере обработки, достигается взаимная однозначность отображений
 	// probe2etalon и etalon2probe.
 	// NB: входные списки событий должны быть отсортированы заранее.
+	private int[] probe2etalonNonStrict = null;
+	private int[] etalon2probeNonStrict = null;
 	private int[] probe2etalon = null;
 	private int[] etalon2probe = null;
+	private int[] probe2etalonMostStrict = null;
+	private int[] etalon2probeMostStrict = null;
 
 	//public static long COMPARE_ANALYSE = 0x1;
 	//public static long COMPARE_EVALUATE = 0x2;
@@ -64,29 +75,12 @@ public class SimpleReflectogramEventComparer {
 			ModelTraceAndEventsImpl mtaeEtalon)
 	{
 		this(mtaeProbe != null ? mtaeProbe.getRSE() : null,
-				mtaeEtalon.getRSE(),
-				true);
+				mtaeEtalon.getRSE());
 	}
 
 	public SimpleReflectogramEventComparer(
 			SimpleReflectogramEvent[] _probeEvents,
-			SimpleReflectogramEvent[] _etalonEvents
-			)
-	{
-		this(_probeEvents, _etalonEvents, true);
-	}
-
-	/**
-	 * @param strict укажите false, если допускается, чтобы одному событию
-	 * эталона соответствовало несколько событий пробного набора, и наоборот.
-	 * true = нормальное поведение.
-	 */
-	public SimpleReflectogramEventComparer(
-			SimpleReflectogramEvent[] _probeEvents,
-			SimpleReflectogramEvent[] _etalonEvents,
-			boolean strict
-			)
-	{
+			SimpleReflectogramEvent[] _etalonEvents) {
 		this.probeEvents = _probeEvents;
 		this.etalonEvents = _etalonEvents;
 
@@ -95,13 +89,36 @@ public class SimpleReflectogramEventComparer {
 		{
 			this.probe2etalon = findNearestOverlappingEvent(this.probeEvents, this.etalonEvents);
 			this.etalon2probe = findNearestOverlappingEvent(this.etalonEvents, this.probeEvents);
-			if (strict) {
-				removeNonPaired(this.probe2etalon, this.etalon2probe);
-				removeNonPaired(this.etalon2probe, this.probe2etalon);
+
+			this.probe2etalonMostStrict = this.probe2etalon.clone();
+			this.etalon2probeMostStrict = this.etalon2probe.clone();
+
+			this.probe2etalonNonStrict = this.probe2etalon.clone();
+			this.etalon2probeNonStrict = this.etalon2probe.clone();
+
+			// нестрогое сравнение готово
+
+			// готовим стандартное сравнение
+			removeNonPaired(this.probe2etalon, this.etalon2probe);
+			removeNonPaired(this.etalon2probe, this.probe2etalon);
+
+			// готовим наиболее строгое сравнение
+			removeNonUnique(this.probe2etalonNonStrict, this.etalon2probeMostStrict);
+			removeNonUnique(this.etalon2probeNonStrict, this.probe2etalonMostStrict);
+		}
+	}
+
+	private void removeNonUnique(int[] a, int[] b) {
+		for (int i = 0; i < a.length; i++) {
+			int j = a[i];
+			if (j >= 0) {
+				if (b[j] != i) {
+					b[j] = -1;
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Find corresponding etalon event for the specified probe event
 	 * @param probeId probe event #
@@ -111,7 +128,51 @@ public class SimpleReflectogramEventComparer {
 	{
 		return this.probe2etalon[probeId] >= 0 ? this.probe2etalon[probeId] : UNPAIRED;
 	}
-	
+
+	/**
+	 * Find non-strict corresponding probe event for the specified etalon event
+	 * @param etalonId etalon event #
+	 * @return >=0: probe event #; -1: no probe event for this etalon
+	 */
+	public int getProbeIdByEtalonIdNonStrict(int etalonId) {
+		return this.etalon2probeNonStrict[etalonId] >= 0
+				? this.etalon2probeNonStrict[etalonId]
+				: UNPAIRED;
+	}
+
+	/**
+	 * Find most-strict corresponding etalon event for the specified probe event
+	 * @param probeId probe event #
+	 * @return >=0: etalon event #; -1: no etalon event for this probe
+	 */
+	public int getEtalonIdByProbeIdMostStrict(int probeId) {
+		return this.probe2etalonMostStrict[probeId] >= 0
+				? this.probe2etalonMostStrict[probeId]
+				: UNPAIRED;
+	}
+
+	/**
+	 * Find most-strict corresponding probe event for the specified etalon event
+	 * @param etalonId etalon event #
+	 * @return >=0: probe event #; -1: no probe event for this etalon
+	 */
+	public int getProbeIdByEtalonIdMostStrict(int etalonId) {
+		return this.etalon2probeMostStrict[etalonId] >= 0
+				? this.etalon2probeMostStrict[etalonId]
+				: UNPAIRED;
+	}
+
+	/**
+	 * Find non-strict corresponding etalon event for the specified probe event
+	 * @param probeId probe event #
+	 * @return >=0: etalon event #; -1: no etalon event for this probe
+	 */
+	public int getEtalonIdByProbeIdNonStrict(int probeId) {
+		return this.probe2etalonNonStrict[probeId] >= 0
+				? this.probe2etalonNonStrict[probeId]
+				: UNPAIRED;
+	}
+
 	/**
 	 * Find corresponding probe event for the specified etalon event
 	 * @param etalonId etalon event #
@@ -367,7 +428,7 @@ public class SimpleReflectogramEventComparer {
 		if (data == null || etalon == null)
 			return new int[0];
 		SimpleReflectogramEventComparer comparer =
-			new SimpleReflectogramEventComparer(data, etalon, true);
+			new SimpleReflectogramEventComparer(data, etalon);
 		int count = 0;
 		for (int i = 0; i < data.length; i++)
 			if (comparer.isProbeEventChanged(i, changeType, changeThreshold))

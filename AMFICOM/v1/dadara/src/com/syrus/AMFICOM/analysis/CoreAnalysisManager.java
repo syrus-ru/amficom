@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.121 2005/10/10 08:00:43 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.122 2005/10/11 14:41:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.121 $, $Date: 2005/10/10 08:00:43 $
+ * @version $Revision: 1.122 $, $Date: 2005/10/11 14:41:20 $
  * @module
  */
 
@@ -828,7 +828,7 @@ public class CoreAnalysisManager
 					ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
 
 			// обеспечиваем EventAnchorer-привязку результатов анализа
-			ModelTraceComparer.createEventAnchor(ar, etalon);
+			ModelTraceComparer.createEventAnchor(ar, etalon, null);
 
 			// устанавливаем привязку аларма к событиям
 			if (alarm != null) {

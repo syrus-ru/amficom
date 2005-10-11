@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.36 2005/10/07 08:15:12 bass Exp $
+ * $Id: ModelTraceComparer.java,v 1.37 2005/10/11 14:41:20 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/10/07 08:15:12 $
+ * @author $Author: saa $
+ * @version $Revision: 1.37 $, $Date: 2005/10/11 14:41:20 $
  * @module
  */
 public class ModelTraceComparer
@@ -51,23 +51,43 @@ public class ModelTraceComparer
 	}
 
 	/**
-	 * Сравнивает по маскам и по событиям. Выбирает доминирующий аларм.
-	 * Обеспечивает корректную дистанцию аларма (соответствующему
-	 * началу события в эталоне). Не проводит SOAnchor-привязку.
+	 * Сравнивает по маскам и по событиям, создавая
+	 * ReflectogramComparer самостоятельно.
+	 * @see #compareMTAEToMTM(ReliabilityModelTraceAndEvents, ModelTraceManager, SimpleReflectogramEventComparer)
 	 * @param mtae сравниваемая текущая "а/к с событиями"
 	 * @param mtm эталонная "а/к с событиями" с порогами
 	 * @return аларм либо null
 	 */
 	public static ReflectogramMismatchImpl compareMTAEToMTM(
 			ReliabilityModelTraceAndEvents mtae,
-			ModelTraceManager mtm)
-	{
+			ModelTraceManager mtm) {
+		return compareMTAEToMTM(mtae, mtm, null);
+	}
+
+	/**
+	 * Сравнивает по маскам и по событиям; может пользоваться
+	 * заданным извне ReflectogramComparer'ом.
+	 * Выбирает доминирующий аларм.
+	 * Обеспечивает корректную дистанцию аларма (соответствующему
+	 * началу события в эталоне). Не проводит SOAnchor-привязку.
+	 * @param mtae сравниваемая текущая "а/к с событиями"
+	 * @param mtm эталонная "а/к с событиями" с порогами
+	 * @param rcomp заранее вычисленный результат сопоставления событий
+	 *   mtae с mtm либо null, если надо сопоставить самостоятельно
+	 *   XXX: неправильное значение rcomp может привести к сбою
+	 * @return аларм либо null
+	 */
+	public static ReflectogramMismatchImpl compareMTAEToMTM(
+			ReliabilityModelTraceAndEvents mtae,
+			ModelTraceManager mtm,
+			SimpleReflectogramEventComparer rcomp) {
 		ReflectogramMismatchImpl alarmTrace =
 			compareTraceToMTM(mtae.getModelTrace(), mtm);
 		ReflectogramMismatchImpl alarmEvents =
 			compareEventsToMTM(
 				(ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
-				mtm);
+				mtm,
+				rcomp);
 		// FIXME: debug sysout
 		System.out.println(
 				"ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
@@ -85,28 +105,33 @@ public class ModelTraceComparer
 	 * Выходной аларм имеет дистанцию начала отличающегося события.
 	 * @param events сравниваемый список событий
 	 * @param mtm эталон
+	 * @param rcomp заранее вычисленный результат сопоставления событий
+	 *   mtae с mtm либо null, если надо сопоставить самостоятельно
 	 * @return soft type ReflectogramMismatch, если найдены значимые
 	 * отличия в списке событий, либо null, если значимых различий не найдено.
 	 */
 	public static ReflectogramMismatchImpl compareEventsToMTM(
 			ReliabilitySimpleReflectogramEvent[] events,
-			ModelTraceManager mtm)
+			ModelTraceManager mtm,
+			SimpleReflectogramEventComparer rcomp)
 	{
 		ReliabilitySimpleReflectogramEvent[] etEvents =
-			(ReliabilitySimpleReflectogramEvent[])mtm.getMTAE().getSimpleEvents();
-		SimpleReflectogramEventComparer rc = new SimpleReflectogramEventComparer(events, etEvents);
+			mtm.getMTAE().getSimpleEvents();
+		if (rcomp == null) {
+			rcomp = new SimpleReflectogramEventComparer(
+					events,
+					etEvents);
+		}
 		ReflectogramMismatchImpl out = new ReflectogramMismatchImpl();
 		ReflectogramMismatchImpl cur = new ReflectogramMismatchImpl();
 		cur.setAlarmType(TYPE_EVENTLISTCHANGED);
 		cur.setSeverity(ALARM_LEVEL_FOR_EVENT_CHANGE);
 		cur.setDeltaX(mtm.getMTAE().getDeltaX());
 		int i;
-		for (i = 0; i < etEvents.length; i++)
-		{
+		for (i = 0; i < etEvents.length; i++) {
 			// в принципе, проверка "событие не лин." не нужна, т.к. потеря лин. события все равно достоверным не считается
-			if (rc.isEtalonEventReliablyLost(i)
-				&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR)
-			{
+			if (rcomp.isEtalonEventReliablyLost(i)
+				&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR) {
 				cur.setCoord(etEvents[i].getBegin());
 				cur.setEndCoord(etEvents[i].getEnd());
 				System.out.println("MTC: compareEventsToMTM: etalon event #"
@@ -115,12 +140,10 @@ public class ModelTraceComparer
 				out.toHardest(cur);
 			}
 		}
-		for (i = 0; i < events.length; i++)
-		{
+		for (i = 0; i < events.length; i++) {
 			// в принципе, проверка "событие не лин." не нужна, т.к. появление лин. события все равно достоверным не считается
-			if (rc.isProbeEventReliablyNew(i)
-				&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR)
-			{
+			if (rcomp.isProbeEventReliablyNew(i)
+				&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR) {
 				cur.setCoord(events[i].getBegin());
 				cur.setEndCoord(events[i].getEnd());
 				System.out.println("MTC: compareEventsToMTM: probe event #"
@@ -328,8 +351,11 @@ public class ModelTraceComparer
 	 * эталонной привязки и сравнения событий результатов анализа и эталона.
 	 * @param ar результаты анализа (modify)
 	 * @param etalon эталон (read only)
+	 * @param rcomp заранее вычисленный результат сопоставления событий
+	 *   mtae с mtm либо null, если надо сопоставить самостоятельно
 	 */
-	public static void createEventAnchor(AnalysisResult ar, Etalon etalon) {
+	public static void createEventAnchor(AnalysisResult ar,
+			Etalon etalon, SimpleReflectogramEventComparer rcomp) {
 		// берем привязку эталона
 		EventAnchorer etAnc = etalon.getAnc();
 		if (etAnc == null) { // если ее нет - отвязываем ar
@@ -340,10 +366,11 @@ public class ModelTraceComparer
 		// берем события ar, проводим сопоставление
 		SimpleReflectogramEvent[] events = ar.getMTAE().getSimpleEvents();
 		SimpleReflectogramEvent[] etEv = etalon.getMTM().getMTAE().getSimpleEvents();
-		SimpleReflectogramEventComparer rc =
-				new SimpleReflectogramEventComparer(
+		if (rcomp == null) {
+			rcomp = new SimpleReflectogramEventComparer(
 						events,
 						etEv);
+		}
 
 		// устанавливаем "пустую" привязку для ar
 		EventAnchorer anc = new EventAnchorer(events.length);
@@ -352,7 +379,7 @@ public class ModelTraceComparer
 		// привязываем каждое событие ar, имеющее пару в эталоне
 		// XXX: надо ли здесь сверять тип?
 		for (int i = 0; i < events.length; i++) {
-			int etId = rc.getEtalonIdByProbeId(i);
+			int etId = rcomp.getEtalonIdByProbeId(i);
 			if (etId >= 0) {
 				anc.setEventAnchor(i, etAnc.getEventAnchor(etId));
 			}
