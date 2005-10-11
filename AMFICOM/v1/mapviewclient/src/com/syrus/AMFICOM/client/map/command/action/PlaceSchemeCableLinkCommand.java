@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.49 2005/10/07 14:15:01 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.50 2005/10/11 08:50:22 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.SortedSet;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -29,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.49 $, $Date: 2005/10/07 14:15:01 $
+ * @version $Revision: 1.50 $, $Date: 2005/10/11 08:50:22 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -97,7 +98,14 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			// идем по всем узлам кабельного пути от начального
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам привязки кабеля.
-			for(Iterator iter = new LinkedList(this.schemeCableLink.getPathMembers()).iterator(); iter.hasNext();) {
+			XmlIdentifier xmlId1 = XmlIdentifier.Factory.newInstance();
+			this.schemeCableLink.getId().getXmlTransferable(xmlId1, "ucm");
+			if(xmlId1.getStringValue().equals("682647")) {
+				int a = 0;
+			}
+			final SortedSet<CableChannelingItem> pathMembers = this.schemeCableLink.getPathMembers();
+//			System.out.println("SchemeCableLink " + xmlId1.getStringValue() + " has " + pathMembers.size() + " cci's");
+			for(Iterator iter = new LinkedList(pathMembers).iterator(); iter.hasNext();) {
 				CableChannelingItem cci = (CableChannelingItem )iter.next();
 				SiteNode currentStartNode = cci.getStartSiteNode();
 				SiteNode currentEndNode = cci.getEndSiteNode();
@@ -129,13 +137,21 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				// создать на месте разрыва непроложенную линию из одного фрагмента
 				if(!exists) {
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, currentStartNode);
+					System.out.println("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + currentStartNode.getName() + "'");
 					CableChannelingItem newCableChannelingItem = 
 						CableController.generateCCI(
 								this.cablePath, 
 								unbound,
 								bufferStartSite,
 								currentStartNode);
-					newCableChannelingItem.insertSelfBefore(cci);
+					try {
+						newCableChannelingItem.insertSelfBefore(cci);
+					} catch(AssertionError e) {
+						e.printStackTrace();
+						this.schemeCableLink.getPathMembers().first().setParentPathOwner(null, true);
+						bufferStartSite = this.startNode;
+						break;
+					}
  					this.cablePath.addLink(unbound, newCableChannelingItem);
 					unbound.setCablePath(this.cablePath);
 
@@ -149,6 +165,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 					// если линия не существует, опустить данный элемент привязки
 					if(link == null) {
 						UnboundLink unbound = super.createUnboundLinkWithNodeLink(currentStartNode, currentEndNode);
+						System.out.println("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + currentStartNode.getName() + "' and '" + currentEndNode.getName() + "'");
 						this.cablePath.addLink(unbound, cci);
 						unbound.setCablePath(this.cablePath);
 					}
@@ -185,6 +202,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			// линию от текущего до конечного узла
 			if(this.endNode != bufferStartSite) {
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
+				System.out.println("Unbound fragment for Cable " + xmlId1.getStringValue() + " between nodes  '" + bufferStartSite.getName() + "' and '" + this.endNode.getName() + "'");
 				CableChannelingItem newCableChannelingItem = 
 					CableController.generateCCI(
 							this.cablePath, 
