@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.14 2005/09/23 16:02:18 bob Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.15 2005/10/11 10:51:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/23 16:02:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/10/11 10:51:48 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -63,8 +63,9 @@ public class VerifiedConnectionManager {
 		if (this.referencesMap.containsKey(servantName)) {
 			Verifiable reference = this.referencesMap.get(servantName);
 
-			if (reference == null)
+			if (reference == null) {
 				reference = this.activateAndGet(servantName);
+			}
 
 			try {
 				reference.verify((byte) 1);
