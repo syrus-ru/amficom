@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.13 2005/09/21 14:10:22 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.14 2005/10/11 14:33:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/21 14:10:22 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/11 14:33:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -86,7 +86,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 	}
 
 	public MCM getVerifiedMCMReference(final Identifier mcmId) throws CommunicationException, IllegalDataException {
-		Verifiable reference = super.getVerifiableReference(mcmId.toString());
+		final Verifiable reference = super.getVerifiableReference(mcmId.toString());
 		return (MCM) reference;
 	}
 

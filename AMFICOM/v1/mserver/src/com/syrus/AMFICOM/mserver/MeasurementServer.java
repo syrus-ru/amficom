@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.77 2005/09/23 09:52:45 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.78 2005/10/11 14:33:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/09/23 09:52:45 $
+ * @version $Revision: 1.78 $, $Date: 2005/10/11 14:33:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -193,7 +193,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			createTestLoadCondition();
 
 			/*	Create session environment*/
-			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds);
+			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds, new MServerLoginRestorer());
 
 			/*	Login*/
 			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
@@ -249,6 +249,8 @@ final class MeasurementServer extends SleepButWorkThread {
 	@Override
 	public void run() {
 		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
+		final LoginRestorer loginRestorer = new MServerLoginRestorer();
+
 		while (this.running) {
 			/*	Now Measurement Server can get new tests only from database
 			 * (not through direct CORBA operation).
@@ -297,7 +299,7 @@ final class MeasurementServer extends SleepButWorkThread {
 						} catch (AMFICOMRemoteException are) {
 							if (are.errorCode.value() == IdlErrorCode._ERROR_NOT_LOGGED_IN) {
 								try {
-									LoginManager.restoreLogin();
+									LoginManager.login(loginRestorer.getLogin(), loginRestorer.getPassword());
 								} catch (ApplicationException ae) {
 									Log.errorException(ae);
 								}

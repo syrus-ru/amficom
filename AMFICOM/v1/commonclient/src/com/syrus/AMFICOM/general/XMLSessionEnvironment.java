@@ -1,11 +1,13 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.9 2005/10/11 10:42:12 bob Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.10 2005/10/11 14:31:50 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
+
+import java.io.File;
 
 import com.syrus.AMFICOM.administration.DomainXML;
 import com.syrus.AMFICOM.administration.MCMXML;
@@ -15,14 +17,18 @@ import com.syrus.AMFICOM.administration.ServerXML;
 import com.syrus.AMFICOM.administration.SystemUserXML;
 import com.syrus.AMFICOM.measurement.KISXML;
 import com.syrus.AMFICOM.resource.LayoutItemXML;
+import com.syrus.util.ApplicationProperties;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/11 10:42:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/10/11 14:31:50 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
 public final class XMLSessionEnvironment {
+	private static final String KEY_CACHE_PATH = "CachePath";
+	private static final String CACHE_PATH = "cache";
+
 	private XMLPoolContext poolContext;
 
 	private static XMLSessionEnvironment instance;
@@ -125,7 +131,11 @@ public final class XMLSessionEnvironment {
 	}
 
 	public static void createInstance() {
-		instance = new XMLSessionEnvironment(new XMLPoolContext());
+		final File cachePath = new File(ApplicationProperties.getString(KEY_CACHE_PATH, CACHE_PATH));
+		final XMLObjectLoader xmlObjectLoader = new XMLObjectLoader(cachePath);
+
+		final XMLPoolContext xmlPoolContext = new XMLPoolContext(xmlObjectLoader);
+		instance = new XMLSessionEnvironment(xmlPoolContext);
 	}
 
 	public static XMLSessionEnvironment getInstance() {

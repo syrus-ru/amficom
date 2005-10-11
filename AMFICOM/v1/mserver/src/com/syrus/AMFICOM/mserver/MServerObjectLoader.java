@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.9 2005/09/26 14:28:03 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.10 2005/10/11 14:33:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,31 +12,45 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.mcm.corba.MCM;
+import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/26 14:28:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/11 14:33:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
 final class MServerObjectLoader extends DatabaseObjectLoader {
+	private LoginRestorer loginRestorer;
+	private Map<Identifier, CORBAObjectLoader> mcmObjectLoaders;
 	private Identifier preferredMCMId;
+
+	public MServerObjectLoader(final LoginRestorer loginRestorer) {
+		this.loginRestorer = loginRestorer;
+		this.mcmObjectLoaders = new HashMap<Identifier, CORBAObjectLoader>();
+	}
 
 	@Override
 	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
@@ -162,20 +176,12 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 	private final <T extends StorableObject> void loadStorableObjectsFromMCM(final Identifier mcmId,
 			final Set<Identifier> loadIds,
 			final Set<T> loadedObjects) throws ApplicationException {
-		MCM mcmRef = null;
-		try {
-			mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			return;
-		}
-
 		Log.debugMessage("MServerObjectLoader.loadStorableObjectsFromMCM | Loading from MCM '" + mcmId + "' '"
 				+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(loadIds)) + "'s for ids: " + loadIds,
 				Log.DEBUGLEVEL10);
 
-		final Set<T> mcmLoadedObjects = CORBAObjectLoader.loadStorableObjects(mcmRef, loadIds);
+		final CORBAObjectLoader corbaObjectLoader = this.getCORBAObjectLoaderForMCMId(mcmId);
+		final Set<T> mcmLoadedObjects = corbaObjectLoader.loadStorableObjects(loadIds);
 
 		Log.debugMessage("MServerObjectLoader.loadStorableObjectsFromMCM | Loaded: " + Identifier.createStrings(mcmLoadedObjects),
 				Log.DEBUGLEVEL10);
@@ -189,26 +195,53 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 			final StorableObjectCondition condition,
 			final Set<T> loadedObjects)
 			throws ApplicationException {
-		MCM mcmRef = null;
-		try {
-			mcmRef = MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(mcmId);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-			return;
-		}
-
 		Log.debugMessage("MServerObjectLoader.loadStorableObjectsButIdsByConditionFromMCM | Loading from MCM '" + mcmId + "' '"
 				+ ObjectEntities.codeToString(condition.getEntityCode().shortValue()) + "'s but ids: " + loadButIds,
 				Log.DEBUGLEVEL10);
 
-		final Set<T> mcmLoadedObjects = CORBAObjectLoader.loadStorableObjectsButIdsByCondition(mcmRef, loadButIds, condition);
+		final CORBAObjectLoader corbaObjectLoader = this.getCORBAObjectLoaderForMCMId(mcmId);
+		final Set<T> mcmLoadedObjects = corbaObjectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
 
 		Log.debugMessage("MServerObjectLoader.loadStorableObjectsButIdsByConditionFromMCM | Loaded: "
 				+ Identifier.createStrings(mcmLoadedObjects), Log.DEBUGLEVEL10);
 
 		Identifier.addToIdentifiers(loadButIds, mcmLoadedObjects);
 		loadedObjects.addAll(mcmLoadedObjects);
+	}
+
+
+	private class MCMConnectionManager implements ServerConnectionManager {
+		private Identifier mcmId;
+
+		MCMConnectionManager(final Identifier mcmId) {
+			this.mcmId = mcmId;
+		}
+
+		public CommonServer getServerReference() throws CommunicationException {
+			try {
+				return MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(this.mcmId);
+			} catch (IllegalDataException e) {
+				//-Never
+				throw new CommunicationException(e);
+			}
+		}
+
+		public CORBAServer getCORBAServer() {
+			return MServerSessionEnvironment.getInstance().getMServerServantManager().getCORBAServer();
+		}
+	}
+
+	private CORBAObjectLoader getCORBAObjectLoaderForMCMId(final Identifier mcmId) {
+		CORBAObjectLoader corbaObjectLoader = this.mcmObjectLoaders.get(mcmId);
+		if (corbaObjectLoader != null) {
+			return corbaObjectLoader;
+		}
+
+		final ServerConnectionManager serverConnectionManager = new MCMConnectionManager(mcmId);
+
+		corbaObjectLoader = new CORBAObjectLoader(serverConnectionManager, this.loginRestorer);
+		this.mcmObjectLoaders.put(mcmId, corbaObjectLoader);
+		return corbaObjectLoader;
 	}
 
 }

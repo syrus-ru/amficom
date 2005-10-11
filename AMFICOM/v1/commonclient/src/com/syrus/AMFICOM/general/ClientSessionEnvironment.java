@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.21 2005/10/05 10:56:10 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.22 2005/10/11 14:31:50 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.beans.PropertyChangeListener;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/05 10:56:10 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/11 14:31:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -41,8 +41,8 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,
-			final LoginRestorer loginRestorer) {
-		super(clientServantManager, clientPoolContext, loginRestorer);
+			final CORBAActionProcessor corbaActionProcesssor) {
+		super(clientServantManager, clientPoolContext, corbaActionProcesssor);
 	}
 
 	public ClientServantManager getClientServantManager() {
@@ -88,37 +88,67 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private static void createMeasurementSession(final LoginRestorer loginRestorer) throws CommunicationException {
 		final ClientServantManager mClientServantManager = MClientServantManager.create();
+		final ClientCORBAActionProcessor clientCORBAActionProcessor = new ClientCORBAActionProcessor(loginRestorer);
 
 		final MultiServantCORBAObjectLoader objectLoader = new MultiServantCORBAObjectLoader();
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.REPORT_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.REPORT_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
 
 		final ClientPoolContext clientPoolContext = new MClientPoolContext(objectLoader);
 
-		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, loginRestorer);
+		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, clientCORBAActionProcessor);
 	}
 
 	private static void createMapSchemeSession(final LoginRestorer loginRestorer) throws CommunicationException {
 		final MClientServantManager mClientServantManager = MClientServantManager.create();
 		final MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
+		final ClientCORBAActionProcessor clientCORBAActionProcessor = new ClientCORBAActionProcessor(loginRestorer);
 
 		final MultiServantCORBAObjectLoader objectLoader = new MultiServantCORBAObjectLoader();
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, mClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.RESOURCE_GROUP_CODE, mscharClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAP_GROUP_CODE, mscharClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.SCHEME_GROUP_CODE, mscharClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAPVIEW_GROUP_CODE, mscharClientServantManager);
-		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.REPORT_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.RESOURCE_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAP_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.SCHEME_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAPVIEW_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.REPORT_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
 
 		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
 
-		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
+		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, clientCORBAActionProcessor);
 	}
 
 }

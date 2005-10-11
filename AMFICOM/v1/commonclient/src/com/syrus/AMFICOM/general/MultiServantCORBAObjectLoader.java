@@ -1,5 +1,5 @@
 /*-
- * $Id: MultiServantCORBAObjectLoader.java,v 1.5 2005/09/15 00:48:41 arseniy Exp $
+ * $Id: MultiServantCORBAObjectLoader.java,v 1.6 2005/10/11 14:31:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/15 00:48:41 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/11 14:31:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -25,13 +25,30 @@ public final class MultiServantCORBAObjectLoader implements ObjectLoader {
 		this.corbaObjectLoadersMap = new HashMap<Short, CORBAObjectLoader>();
 	}
 
-	public void addCORBAObjectLoader(final Short groupCode, final ServerConnectionManager serverConnectionManager) {
-		final CORBAObjectLoader corbaObjectLoader = new CORBAObjectLoader(serverConnectionManager);
+	public void addCORBAObjectLoader(final short groupCode,
+			final ServerConnectionManager serverConnectionManager,
+			final LoginRestorer loginRestorer) {
+		this.addCORBAObjectLoader(new Short(groupCode), serverConnectionManager, loginRestorer);
+	}
+
+	public void addCORBAObjectLoader(final short groupCode,
+			final ServerConnectionManager serverConnectionManager,
+			final CORBAActionProcessor corbaActionProcessor) {
+		this.addCORBAObjectLoader(new Short(groupCode), serverConnectionManager, corbaActionProcessor);
+	}
+
+	public void addCORBAObjectLoader(final Short groupCode,
+			final ServerConnectionManager serverConnectionManager,
+			final LoginRestorer loginRestorer) {
+		final CORBAObjectLoader corbaObjectLoader = new CORBAObjectLoader(serverConnectionManager, loginRestorer);
 		this.corbaObjectLoadersMap.put(groupCode, corbaObjectLoader);
 	}
 
-	public void addCORBAObjectLoader(final short groupCode, final ServerConnectionManager serverConnectionManager) {
-		this.addCORBAObjectLoader(new Short(groupCode), serverConnectionManager);
+	public void addCORBAObjectLoader(final Short groupCode,
+			final ServerConnectionManager serverConnectionManager,
+			final CORBAActionProcessor corbaActionProcessor) {
+		final CORBAObjectLoader corbaObjectLoader = new CORBAObjectLoader(serverConnectionManager, corbaActionProcessor);
+		this.corbaObjectLoadersMap.put(groupCode, corbaObjectLoader);
 	}
 
 	private CORBAObjectLoader getCORBAObjectLoader(final Set<? extends Identifiable> identifiables) throws IllegalDataException {

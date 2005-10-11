@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.26 2005/10/10 10:06:09 bob Exp $
+ * $Id: MCMObjectLoader.java,v 1.27 2005/10/11 14:33:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -35,16 +36,16 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/10/10 10:06:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/10/11 14:33:51 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 final class MCMObjectLoader extends CORBAObjectLoader {
 	private DatabaseObjectLoader databaseObjectLoader;
 
-	public MCMObjectLoader(final MCMServantManager mcmServantManager) {
-		super(mcmServantManager);
+	public MCMObjectLoader(final MCMServantManager mcmServantManager, final LoginRestorer loginRestorer) {
+		super(mcmServantManager, loginRestorer);
 		this.databaseObjectLoader = new DatabaseObjectLoader();
 	}
 

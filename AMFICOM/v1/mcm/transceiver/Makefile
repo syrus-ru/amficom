@@ -1,32 +1,21 @@
-OUT := libmcmtransceiver.so
+AKP_DIR := ../../../HW/akp
+TCPCONNECT_DIR := ../../../HW/tcpconnect
 
-AKP := ../../../HW/akp
-AKPA := $(AKP)/akp.a
+AKP_LIBAR = akp$(LIBAR_SUFFIX)
+TCPCONNECT_LIBAR = tcpconnect$(LIBAR_SUFFIX)
 
-TCPCONNECT := ../../../HW/tcpconnect
-TCPCONNECTA := $(TCPCONNECT)/tcpconnect.a
+MODULE := mcmtransceiver
+CXX_SOURCES := tcpkisconnection
+INCLUDE_DIRS := $(AKP_DIR) \
+	$(TCPCONNECT_DIR)
+ADD_LIBARS = $(LIBAR_SOCKET) \
+	$(AKP_DIR)/$(AKP_LIBAR) \
+	$(TCPCONNECT_DIR)/$(TCPCONNECT_LIBAR)
+USE_JNI := 1
 
-CXX := g++#-3.3.1
-CXXFLAGS := -O3 -W -Wall 
-
-CPPFLAGS := -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
-
-OBJS := tcpkisconnection.o
+include ../../tools/Makefile.cpp.inc.mk
 
 
-.PHONY:	clean
+.PHONY:	all
+all:	$(OUT_SO)
 
-$(OUT):	$(OBJS) $(AKPA) $(TCPCONNECTA)
-	$(CXX) $(LDFLAGS) -shared -o $(OUT) $(OBJS) $(AKPA) $(TCPCONNECTA)
-
-#.cpp.o:
-#	$(CXX) -c $(CFLAGS) -o $@ $<
-
-$(AKPA):
-	$(MAKE) -C $(AKP)
-
-$(TCPCONNECTA):
-	$(MAKE) -C $(TCPCONNECT)
-
-clean:
-	$(RM) $(OBJS) $(OUT)

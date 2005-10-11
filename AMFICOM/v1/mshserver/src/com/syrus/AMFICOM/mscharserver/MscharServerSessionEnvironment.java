@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.4 2005/09/07 14:23:15 arseniy Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.5 2005/10/11 14:33:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,21 +10,28 @@ package com.syrus.AMFICOM.mscharserver;
 
 import com.syrus.AMFICOM.general.BaseSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.ObjectLoader;
+import com.syrus.util.ApplicationProperties;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/09/07 14:23:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/11 14:33:42 $
  * @module mscharserver
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
+	private static final String KEY_DATABASE_LOADER_ONLY = "DatabaseLoaderOnly";
+	private static final String KEY_REFRESH_TIMEOUT = "RefreshPoolTimeout";
+
+	private static final String DATABASE_LOADER_ONLY = "false";
+	private static final int REFRESH_TIMEOUT = 30; //sec
+
 	private static MscharServerSessionEnvironment instance;
 
 	private MscharServerSessionEnvironment(final MscharServerServantManager mscharServerServantManager,
 			final MscharServerPoolContext mscharServerPoolContext) {
-		super(mscharServerServantManager,
-				mscharServerPoolContext,
-				new MapSchemeAdministrationResourceServer.MscharServerLoginRestorer());
+		super(mscharServerServantManager, mscharServerPoolContext);
 	}
 
 	public MscharServerServantManager getMscharServerServantManager() {
@@ -32,8 +39,20 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public static void createInstance(final String serverHostName) throws CommunicationException {
-		instance = new MscharServerSessionEnvironment(MscharServerServantManager.createAndStart(serverHostName),
-				new MscharServerPoolContext());
+		final MscharServerServantManager mscharServerServantManager = MscharServerServantManager.createAndStart(serverHostName);
+
+		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY,
+				DATABASE_LOADER_ONLY)).booleanValue();
+		ObjectLoader objectLoader;
+		if (!databaseLoaderOnly) {
+			final long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, REFRESH_TIMEOUT) * 1000L;
+			objectLoader = new MscharServerObjectLoader(refreshTimeout);
+		} else {
+			objectLoader = new DatabaseObjectLoader();
+		}
+		final MscharServerPoolContext mscharServerPoolContext = new MscharServerPoolContext(objectLoader);
+
+		instance = new MscharServerSessionEnvironment(mscharServerServantManager, mscharServerPoolContext);
 	}
 
 	public static MscharServerSessionEnvironment getInstance() {
