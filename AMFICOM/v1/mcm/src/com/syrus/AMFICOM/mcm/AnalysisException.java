@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisException.java,v 1.9 2005/09/21 14:57:06 arseniy Exp $
+ * $Id: AnalysisException.java,v 1.10 2005/10/11 13:36:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/21 14:57:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/10/11 13:36:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -24,5 +24,9 @@ final class AnalysisException extends TestProcessingException {
 
 	public AnalysisException(final String message, final Throwable cause) {
 		super(message, cause);
+	}
+
+	public AnalysisException(final Throwable cause) {
+		this(cause == null ? null : cause.toString(), cause);
 	}
 }

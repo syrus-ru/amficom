@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.40 2005/09/21 14:57:06 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.41 2005/10/11 13:36:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,10 +11,14 @@ package com.syrus.AMFICOM.mcm;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
+import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
+import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -24,11 +28,15 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
+import static java.util.logging.Level.*;
+
 /**
- * @version $Revision: 1.40 $, $Date: 2005/09/21 14:57:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/10/11 13:36:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -129,22 +137,60 @@ final class AnalysisEvaluationProcessor {
 		}
 	}
 
-	private static Result analyseAndEvaluate(final Result measurementResult, final Analysis analysis, final ParameterSet etalon)
-			throws AnalysisException {
-
-		final String analysisCodename = analysis.getType().getCodename();
-
-		loadAnalysisAndEvaluationManager(analysisCodename, measurementResult, analysis, etalon);
-
-		Parameter[] arParameters = analysisManager.analyse();
-		Result analysisResult;
+	private static Result analyseAndEvaluate(final Result measurementResult,
+			final Analysis analysis,
+			final ParameterSet etalon)
+	throws AnalysisException {
 		try {
-			analysisResult = analysis.createResult(LoginManager.getUserId(), arParameters);
-		} catch (CreateObjectException coe) {
-			Log.errorException(coe);
-			analysisResult = null;
-		}
+			final String analysisCodename = analysis.getType().getCodename();
+	
+			loadAnalysisAndEvaluationManager(analysisCodename, measurementResult, analysis, etalon);
+	
+			final Parameter[] arParameters = analysisManager.analyse();
 
-		return analysisResult;
+			int dadaraAlarmsOccurenceCount = 0;
+			for (final Parameter parameter : arParameters) {
+				if (parameter.getType() != ParameterType.DADARA_ALARMS) {
+					continue;
+				}
+
+				if (++dadaraAlarmsOccurenceCount != 1) {
+					Log.debugMessage("AnalysisEvaluationProcessor.analyseAndEvaluate() | WARNING: dadaraAlarmsOccurenceCount = " + dadaraAlarmsOccurenceCount + "; should be 1", WARNING);
+				}
+
+				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue())) {
+					enqueueEvent(DefaultReflectogramMismatchEvent.valueOf(
+							reflectogramMismatch,
+							measurementResult.getAction().getMonitoredElementId()));
+				}
+			}
+
+			return analysis.createResult(LoginManager.getUserId(), arParameters);
+		} catch (final QueueFullException qfe) {
+			Log.debugException(qfe, SEVERE);
+			throw new AnalysisException(qfe);
+		} catch (final DataFormatException dfe) {
+			Log.debugException(dfe, SEVERE);
+			throw new AnalysisException(dfe);
+		} catch (final CreateObjectException coe) {
+			Log.debugException(coe, SEVERE);
+			throw new AnalysisException(coe);
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private static void enqueueEvent(final ReflectogramMismatchEvent event)
+	throws QueueFullException {
+		// empty
+	}
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.41 $, $Date: 2005/10/11 13:36:50 $
+	 * @module mcm
+	 */
+	private static class QueueFullException extends Exception {
+		private static final long serialVersionUID = 2816222798157710151L;
 	}
 }
