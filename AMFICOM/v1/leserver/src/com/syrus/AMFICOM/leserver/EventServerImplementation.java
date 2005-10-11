@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.12 2005/10/11 09:40:30 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.13 2005/10/11 14:33:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,13 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import static java.util.logging.Level.INFO;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -22,7 +25,7 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/11 09:40:30 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/11 14:33:28 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -72,8 +75,12 @@ public class EventServerImplementation extends EventServerPOA {
 	 */
 	public void yetAnotherEventGeneration(final IdlEvent idlEvent)
 	throws AMFICOMRemoteException {
-		throw new UnsupportedOperationException();
+		final Event event = idlEvent.getNative();
+		Log.debugMessage("EventServerImplementation.yetAnotherEventGeneration() | Event: "
+				+ event + " delivered successfully",
+				INFO);
 	}
+		
 
 	public void verify(byte i) {
 		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
