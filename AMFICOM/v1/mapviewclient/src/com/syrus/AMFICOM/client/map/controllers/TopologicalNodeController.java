@@ -1,5 +1,5 @@
 /*-
- * $$Id: TopologicalNodeController.java,v 1.24 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: TopologicalNodeController.java,v 1.25 2005/10/11 08:52:56 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Контроллер топологического узла.
  * 
- * @version $Revision: 1.24 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/11 08:52:56 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -182,6 +182,10 @@ public class TopologicalNodeController extends AbstractNodeController {
 			return;
 		}
 		final TopologicalNode node = (TopologicalNode) mapElement;
+
+		if (!MapPropertiesManager.isShowPhysicalNodes()) {
+			return;
+		}
 
 		if (!super.isElementVisible(node, visibleBounds)) {
 			return;
