@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.13 2005/10/10 15:48:03 bob Exp $
+* $Id: PermissionAttributes.java,v 1.14 2005/10/11 08:50:46 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/10 15:48:03 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/11 08:50:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -296,6 +296,7 @@ public class PermissionAttributes extends StorableObject {
 	 * @param domainId
 	 * @param userId
 	 * @param permissions
+	 * @param denyMask
 	 * @return new instance for client
 	 * @throws CreateObjectException
 	 */
@@ -373,11 +374,29 @@ public class PermissionAttributes extends StorableObject {
 	 * @param permissionCode permission codename
 	 * @param enable
 	 * 
-	 * @throws IllegalArgumentException if permission disabled 
-	 * or permission for other module code
+	 * @throws IllegalArgumentException if permission is disabled 
+	 * or permission belongs to other module
 	 */
 	public final void setPermissionEnable(final PermissionCodename permissionCode,
 	                                      final boolean enable) {
+		this.setSet(permissionCode, enable, this.permissions);
+	}
+	
+	/**
+	 * @param permissionCode permission codename
+	 * @param enable
+	 * 
+	 * @throws IllegalArgumentException if permission is disabled 
+	 * or permission belongs to other module
+	 */
+	public final void setDenidEnable(final PermissionCodename permissionCode,
+	                                 final boolean enable) {
+		this.setSet(permissionCode, enable, this.denyMask);
+	}
+	
+	private final void setSet(final PermissionCodename permissionCode,
+                              final boolean enable,
+                              final BitSet bitSet) {
 		if (!permissionCode.isEnable()) {
 			throw new IllegalArgumentException("PermissionCode " + permissionCode.name() + " disabled.");
 		}
@@ -391,17 +410,33 @@ public class PermissionAttributes extends StorableObject {
 				+ " bit in "
 				+ this.module + " group" ,
 			Log.DEBUGLEVEL10);
-		this.permissions.set(permissionCode.getOrderInGroup(), enable);
+		bitSet.set(permissionCode.getOrderInGroup(), enable);
 	}
 	
 	/**
 	 * @param permissionCode
 	 * @return true if permission is enabled for permissioncode 
 	 * 
-	 * @throws IllegalArgumentException if permission disabled 
-	 * or permission for other module code
+	 * @throws IllegalArgumentException if permission is disabled 
+	 * or permission belongs to other module
 	 */
 	public final boolean isPermissionEnable(final PermissionCodename permissionCode) {
+		return this.isSet(permissionCode, this.permissions);
+	}
+	
+	/**
+	 * @param permissionCode
+	 * @return true if permission is denied for permissioncode 
+	 * 
+	 * @throws IllegalArgumentException if permission is disabled 
+	 * or permission belongs to other module
+	 */
+	public final boolean isDenied(final PermissionCodename permissionCode) {
+		return this.isSet(permissionCode, this.denyMask);
+	}
+	
+	private final boolean isSet(final PermissionCodename permissionCode,
+	                            final BitSet bitSet) {
 		if (!permissionCode.isEnable()) {
 			throw new IllegalArgumentException("PermissionCode " + permissionCode.name() + " disabled.");
 		}
@@ -414,9 +449,8 @@ public class PermissionAttributes extends StorableObject {
 				+ ", permissionCode.getModule():" + permissionCode.getModule());
 		}
 		
-		return this.permissions.get(permissionCode.getOrderInGroup());
+		return bitSet.get(permissionCode.getOrderInGroup());
 	}
-	
 	
 	/**
 	 * @return permission digital form 
@@ -429,13 +463,7 @@ public class PermissionAttributes extends StorableObject {
 	 * @return permission byte array digital form
 	 */
 	final byte[] getPermissionByteArray0() {
-		final byte[] bytes = new byte[this.permissions.length()/8+1];
-		for (int i=0; i<this.permissions.length(); i++) {
-		    if (this.permissions.get(i)) {
-		        bytes[bytes.length-i/8-1] |= 1<<(i%8);
-		    }
-		}
-		return bytes;
+		return this.getBitSetMaskByteArray0(this.permissions);
 	}
 	
 	/**
@@ -456,12 +484,7 @@ public class PermissionAttributes extends StorableObject {
 	 * @param bytes permission byte array digital form
 	 */
 	final void setPermissionsByteArray0(final byte[] bytes) {
-		this.permissions.clear();
-		for (int i=0; i<bytes.length*8; i++) {
-		    if ((bytes[bytes.length-i/8-1]&(1<<(i%8))) > 0) {
-		        this.permissions.set(i);
-		    }
-		}
+		this.setBitSetMaskByteArray0(bytes, this.permissions);
 	}
 	
 	/**
@@ -475,9 +498,13 @@ public class PermissionAttributes extends StorableObject {
 	 * @return permission byte array digital form
 	 */
 	final byte[] getDenyMaskByteArray0() {
-		final byte[] bytes = new byte[this.denyMask.length()/8+1];
-		for (int i=0; i<this.denyMask.length(); i++) {
-		    if (this.denyMask.get(i)) {
+		return this.getBitSetMaskByteArray0(this.denyMask);
+	}
+	
+	private final byte[] getBitSetMaskByteArray0(final BitSet bitSet) {
+		final byte[] bytes = new byte[bitSet.length()/8+1];
+		for (int i=0; i<bitSet.length(); i++) {
+		    if (bitSet.get(i)) {
 		        bytes[bytes.length-i/8-1] |= 1<<(i%8);
 		    }
 		}
@@ -502,10 +529,15 @@ public class PermissionAttributes extends StorableObject {
 	 * @param bytes deny mask byte array digital form
 	 */
 	final void setDenyMaskByteArray0(final byte[] bytes) {
-		this.denyMask.clear();
+		this.setBitSetMaskByteArray0(bytes, this.denyMask);
+	}
+	
+	private final void setBitSetMaskByteArray0(final byte[] bytes,
+			final BitSet bitSet) {
+		bitSet.clear();
 		for (int i=0; i<bytes.length*8; i++) {
 		    if ((bytes[bytes.length-i/8-1]&(1<<(i%8))) > 0) {
-		        this.denyMask.set(i);
+		        bitSet.set(i);
 		    }
 		}
 	}
