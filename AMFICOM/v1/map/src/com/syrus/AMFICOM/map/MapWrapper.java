@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.19 2005/08/12 10:05:08 arseniy Exp $
+ * $Id: MapWrapper.java,v 1.20 2005/10/11 10:52:32 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/12 10:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/10/11 10:52:32 $
+ * @author $Author: max $
  * @module map
  */
 public class MapWrapper extends StorableObjectWrapper<Map> {
@@ -44,7 +44,7 @@ public class MapWrapper extends StorableObjectWrapper<Map> {
 	// topological_node_id VARCHAR2(32),
 	public static final String LINK_COLUMN_TOPOLOGICAL_NODE_ID = "topological_node_id";
 	// external_node_id VARCHAR2(32),
-	public static final String LINK_COLUMN_EXTERNAL_NODE_ID = "ext_node_link_id";
+	public static final String LINK_COLUMN_EXTERNAL_NODE_ID = "ext_site_node_id";
 	// external_node_id VARCHAR2(32),
 	public static final String LINK_COLUMN_MAP_LIBRARY_ID	= "map_library_id";
 
