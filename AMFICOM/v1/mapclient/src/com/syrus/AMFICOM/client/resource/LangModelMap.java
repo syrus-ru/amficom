@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelMap.java,v 1.4 2005/09/29 11:32:36 krupenn Exp $
+ * $Id: LangModelMap.java,v 1.5 2005/10/11 08:46:56 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
  * модуль организации многоязыковой поддержки для модуля Редактор топологических
  * схем клиентской части ПО АМФИКОМ
  * 
- * @version $Revision: 1.4 $, $Date: 2005/09/29 11:32:36 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/11 08:46:56 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapclient
