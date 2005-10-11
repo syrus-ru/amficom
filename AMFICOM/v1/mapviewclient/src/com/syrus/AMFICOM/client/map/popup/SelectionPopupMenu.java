@@ -1,5 +1,5 @@
 /*-
- * $$Id: SelectionPopupMenu.java,v 1.32 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: SelectionPopupMenu.java,v 1.33 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Collector;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -80,25 +80,25 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
+		this.removeMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeSelection();
 			}
 		});
-		this.insertSiteMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_PLACE_SITE));
+		this.insertSiteMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_PLACE_SITE));
 		this.insertSiteMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				insertSite();
 			}
 		});
-		this.generateMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
+		this.generateMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCabling();
 			}
 		});
-		this.newCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_CREATE_COLLECTOR));
+		this.newCollectorMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_CREATE_COLLECTOR));
 		this.newCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -115,7 +115,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_COLLECTOR));
+		this.removeCollectorMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_REMOVE_COLLECTOR));
 		this.removeCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -132,7 +132,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.addToCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_ADD_TO_COLLECTOR));
+		this.addToCollectorMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_ADD_TO_COLLECTOR));
 		this.addToCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -149,7 +149,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeFromCollectorMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_REMOVE_FROM_COLLECTOR));
+		this.removeFromCollectorMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_REMOVE_FROM_COLLECTOR));
 		this.removeFromCollectorMenuItem
 				.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

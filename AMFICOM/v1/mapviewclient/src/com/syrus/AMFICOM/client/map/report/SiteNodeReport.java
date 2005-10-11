@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.1 2005/10/07 14:19:03 krupenn Exp $
+ * $Id: SiteNodeReport.java,v 1.2 2005/10/11 08:56:12 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,8 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
-import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -111,17 +109,17 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 			int vertDivisionsCount) throws ApplicationException {
 		this.vertDivisionsCount = vertDivisionsCount;
 
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+		this.propertyNamesColumn.add(I18N.getString(NAME));
 		this.propertyValuesColumn.add(siteNode.getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
+		this.propertyNamesColumn.add(I18N.getString(TYPE));
 		this.propertyValuesColumn.add(siteNode.getType().getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
+		this.propertyNamesColumn.add(I18N.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(siteNode.getDescription());
 		
 		DoublePoint location = siteNode.getLocation();
-		this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.LONGITUDE));
+		this.propertyNamesColumn.add(I18N.getString(SchemeResourceKeys.LONGITUDE));
 		this.propertyValuesColumn.add(Double.toString(location.getX()));
-		this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.LATITUDE));
+		this.propertyNamesColumn.add(I18N.getString(SchemeResourceKeys.LATITUDE));
 		this.propertyValuesColumn.add(Double.toString(location.getY()));
 
 		String cityString = siteNode.getCity();
@@ -130,28 +128,28 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 		String addressString = "";
 		if (!cityString.equals(EMPTY_STRING))
 			addressString += 
-				(LangModelMap.getString(CITY_KURZ)
+				(I18N.getString(CITY_KURZ)
 				+ cityString
 				+ ADDRESS_SEPARATOR);		
 		if (!streetString.equals(EMPTY_STRING))
 			addressString += 
-				(LangModelMap.getString(STREET_KURZ)
+				(I18N.getString(STREET_KURZ)
 				+ streetString
 				+ ADDRESS_SEPARATOR);		
 		if (!buildingString.equals(EMPTY_STRING))
 			addressString += 
-				(LangModelMap.getString(BUILDING_KURZ)
+				(I18N.getString(BUILDING_KURZ)
 				+ buildingString
 				+ ADDRESS_SEPARATOR);		
 
-		this.propertyNamesColumn.add(LangModelReport.getString(ADDRESS));
+		this.propertyNamesColumn.add(I18N.getString(ADDRESS));
 		this.propertyValuesColumn.add(addressString);
 		
 		this.originalRowCount += 6;
 		
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(ATTACHED_SCHEME_ELEMENTS));
+		this.propertyNamesColumn.add(I18N.getString(ATTACHED_SCHEME_ELEMENTS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		
 		this.originalRowCount += 2;
@@ -190,7 +188,7 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 		
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(THROUGH_CABLES));
+		this.propertyNamesColumn.add(I18N.getString(THROUGH_CABLES));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 2;		
 		for (CableChannelingItem ccItem : cableChanellingItemsSet) {
@@ -202,7 +200,7 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 		
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(IN_OUT_CABLES));
+		this.propertyNamesColumn.add(I18N.getString(IN_OUT_CABLES));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 2;		
 		for (CableChannelingItem ccItem : incomingCableLinksSet) {
@@ -231,9 +229,9 @@ class SiteNodeInfoTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % SiteNodeReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");

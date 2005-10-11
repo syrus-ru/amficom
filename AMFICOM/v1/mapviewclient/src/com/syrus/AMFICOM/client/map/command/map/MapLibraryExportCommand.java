@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryExportCommand.java,v 1.14 2005/10/03 10:35:01 krupenn Exp $$
+ * $$Id: MapLibraryExportCommand.java,v 1.15 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapLibraryTableController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.14 $, $Date: 2005/10/03 10:35:01 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -100,7 +100,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 		}
 
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
+				I18N.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
 				allLibraries,
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),

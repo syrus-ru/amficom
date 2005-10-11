@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapExportCommand.java,v 1.31 2005/10/03 10:35:01 krupenn Exp $$
+ * $$Id: MapExportCommand.java,v 1.32 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.31 $, $Date: 2005/10/03 10:35:01 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -126,7 +126,7 @@ public class MapExportCommand extends ExportCommand {
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(), 
 							e.getLocalizedMessage(), 
-							LangModelMap.getString(MapEditorResourceKeys.ERROR_WRITE_ERROR), 
+							I18N.getString(MapEditorResourceKeys.ERROR_WRITE_ERROR), 
 							JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}

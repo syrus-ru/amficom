@@ -1,5 +1,5 @@
 /*-
- * $$Id: EditorDialog.java,v 1.10 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: EditorDialog.java,v 1.11 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -39,8 +39,8 @@ public class EditorDialog {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(editor.getGUI(), BorderLayout.CENTER);
 		
-		final String okButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_OK);
-		final String cancelButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL);
+		final String okButton = I18N.getString(MapEditorResourceKeys.BUTTON_OK);
+		final String cancelButton = I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL);
 		final JOptionPane optionPane = new JOptionPane(
 				mainPanel, 
 				JOptionPane.PLAIN_MESSAGE,

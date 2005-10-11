@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.29 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.30 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
  * создание топологического узла, внесение его в пул и на карту - атомарное
  * действие
  * 
- * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -63,7 +63,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
 		try {
 			this.node = TopologicalNode.createInstance(
 					LoginManager.getUserId(),
-					LangModelMap.getString(MapEditorResourceKeys.NONAME),
+					I18N.getString(MapEditorResourceKeys.NONAME),
 					MapEditorResourceKeys.EMPTY_STRING,
 					this.point);
 

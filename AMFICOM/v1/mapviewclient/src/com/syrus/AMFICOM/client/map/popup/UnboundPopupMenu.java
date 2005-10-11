@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundPopupMenu.java,v 1.27 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: UnboundPopupMenu.java,v 1.28 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,14 @@ import javax.swing.JMenuItem;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.DeleteNodeCommandBundle;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -56,19 +56,19 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
+		this.removeMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeUnbound();
 			}
 		});
-		this.bindMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_BIND));
+		this.bindMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_BIND));
 		this.bindMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bind();
 			}
 		});
-		this.generateMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_GENERATE_SITE));
+		this.generateMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_GENERATE_SITE));
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateSite();

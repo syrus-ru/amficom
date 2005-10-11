@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMainFrame.java,v 1.64 2005/10/07 14:21:24 krupenn Exp $$
+ * $$Id: MapEditorMainFrame.java,v 1.65 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,14 +65,14 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.CloseAllInternalCommand;
 import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * @version $Revision: 1.64 $, $Date: 2005/10/07 14:21:24 $
+ * @version $Revision: 1.65 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,7 +87,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	public MapEditorMainFrame(ApplicationContext aContext) {
 		super(
 			aContext, 
-			LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_EDITOR),
+			I18N.getString(MapEditorResourceKeys.TITLE_MAP_EDITOR),
 			new MapEditorMenuBar(aContext.getApplicationModel()), 
 			new MapEditorToolBar());
 			
@@ -356,7 +356,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, true);
 
 				aModel.fireModelChanged();
-				setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW) + ": " + ((MapView )pce.getNewValue()).getName()); //$NON-NLS-1$
+				setTitle(I18N.getString(MapEditorResourceKeys.TITLE_MAP_VIEW) + ": " + ((MapView )pce.getNewValue()).getName()); //$NON-NLS-1$
 			}
 			else if(mapEventType.equals(MapEvent.MAP_VIEW_CLOSED)) {
 				for(int i = 0; i < this.desktopPane.getComponents().length; i++) {
@@ -402,7 +402,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, false);
 
 				aModel.fireModelChanged();
-				setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW));
+				setTitle(I18N.getString(MapEditorResourceKeys.TITLE_MAP_VIEW));
 			}
 		}
 	}

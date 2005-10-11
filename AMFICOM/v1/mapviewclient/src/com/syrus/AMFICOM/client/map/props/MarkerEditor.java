@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerEditor.java,v 1.15 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: MarkerEditor.java,v 1.16 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,14 +29,13 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.Marker;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -88,16 +87,16 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		this.pathComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
-		this.typeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TYPE));
-		this.distanceLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DISTANCE));
-		this.pathLabel.setText(LangModelMap.getString(MapEditorResourceKeys.ENTITY_MEASUREMENT_PATH));
-		this.longLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
-		this.latLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LATITUDE));
+		this.nameLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.typeLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TYPE));
+		this.distanceLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DISTANCE));
+		this.pathLabel.setText(I18N.getString(MapEditorResourceKeys.ENTITY_MEASUREMENT_PATH));
+		this.longLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
+		this.latLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_LATITUDE));
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

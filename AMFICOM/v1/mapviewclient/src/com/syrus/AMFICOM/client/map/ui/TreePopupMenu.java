@@ -1,5 +1,5 @@
 /*-
- * $$Id: TreePopupMenu.java,v 1.4 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: TreePopupMenu.java,v 1.5 2005/10/11 08:56:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import javax.swing.JPopupMenu;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/11 08:56:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -37,7 +37,7 @@ public class TreePopupMenu extends JPopupMenu {
 		this.object = object;
 		this.aContext = context;
 
-		this.copyMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_COPY));
+		this.copyMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_COPY));
 		this.copyMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)

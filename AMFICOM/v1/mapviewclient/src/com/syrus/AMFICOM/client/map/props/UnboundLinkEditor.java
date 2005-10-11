@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundLinkEditor.java,v 1.15 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: UnboundLinkEditor.java,v 1.16 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,13 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -72,14 +72,14 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
-		this.typeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TYPE));
-		this.cableLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_CABLE));
-		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
-		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
-		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
+		this.nameLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.typeLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TYPE));
+		this.cableLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_CABLE));
+		this.startLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_START_NODE));
+		this.endLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_END_NODE));
+		this.topologicalLengthLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
 
 		GridBagConstraints constraints = new GridBagConstraints();
 

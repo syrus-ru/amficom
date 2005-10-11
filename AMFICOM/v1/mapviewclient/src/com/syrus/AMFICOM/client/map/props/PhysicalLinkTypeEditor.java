@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkTypeEditor.java,v 1.10 2005/10/07 14:23:45 krupenn Exp $$
+ * $$Id: PhysicalLinkTypeEditor.java,v 1.11 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,7 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -48,7 +47,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/07 14:23:45 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -90,17 +89,17 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 	static {
 		sortNames = new String[6];
 		sortNames[PhysicalLinkTypeSort._TUNNEL] = 
-			LangModelMap.getString("defaulttunnel");
+			I18N.getString("defaulttunnel");
 		sortNames[PhysicalLinkTypeSort._COLLECTOR] = 
-			LangModelMap.getString("defaultcollector");
+			I18N.getString("defaultcollector");
 		sortNames[PhysicalLinkTypeSort._INDOOR] = 
-			LangModelMap.getString("defaultindoor");
+			I18N.getString("defaultindoor");
 		sortNames[PhysicalLinkTypeSort._SUBMARINE] = 
-			LangModelMap.getString("defaultsubmarine");
+			I18N.getString("defaultsubmarine");
 		sortNames[PhysicalLinkTypeSort._OVERHEAD] = 
-			LangModelMap.getString("defaultoverhead");
+			I18N.getString("defaultoverhead");
 		sortNames[PhysicalLinkTypeSort._UNBOUND] = 
-			LangModelMap.getString("cable");
+			I18N.getString("cable");
 	}
 	
 	public PhysicalLinkTypeEditor() {
@@ -145,20 +144,20 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		});
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
-		this.libraryLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
-		this.sortLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SORT));
-		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
-		this.colorLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_COLOR));
-		this.thicknessLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_THICKNESS));
+		this.nameLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.libraryLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
+		this.sortLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_SORT));
+		this.descLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.colorLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_COLOR));
+		this.thicknessLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_THICKNESS));
 
-		this.dimensionLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DIMENSION));
+		this.dimensionLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DIMENSION));
 		this.xLabel.setText("X"); //$NON-NLS-1$
 		this.dimensionPanel.setLayout(new GridBagLayout());
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

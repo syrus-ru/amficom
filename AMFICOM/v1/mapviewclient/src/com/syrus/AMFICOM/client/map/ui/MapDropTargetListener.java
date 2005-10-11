@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.42 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.43 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.42 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -212,9 +212,9 @@ public final class MapDropTargetListener implements DropTargetListener {
 				JOptionPane
 						.showMessageDialog(
 								Environment.getActiveWindow(),
-								LangModelMap
+								I18N
 										.getString(MapEditorResourceKeys.ERROR_CABLE_END_ELEMENTS_NOT_PLACED),
-								LangModelMap
+								I18N
 										.getString(MapEditorResourceKeys.MESSAGE_UNABLE_TO_PLACE_CABLE),
 								JOptionPane.ERROR_MESSAGE);
 				return;

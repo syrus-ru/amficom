@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenViewCommand.java,v 1.31 2005/10/03 10:35:01 krupenn Exp $$
+ * $$Id: MapEditorOpenViewCommand.java,v 1.32 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.31 $, $Date: 2005/10/03 10:35:01 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -112,7 +112,7 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 						this.aContext);
 				addCommand.execute();
 			} catch(MapException e) {
-				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 				e.printStackTrace();
 			}
 		}

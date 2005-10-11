@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.13 2005/10/10 15:25:48 peskovsky Exp $
+ * $Id: MapReportModel.java,v 1.14 2005/10/11 08:56:12 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.client.map.StandAloneNetMapViewGenerator;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -173,13 +173,13 @@ public class MapReportModel extends ReportModel {
 	@Override
 	public String getReportElementName(String reportName) {
 		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
+		// других I18N'ах и, соответственно, методы должны
 		//быть в моделях отчётов - наследницах
 		String langReportName = null;
 		if (	reportName.equals(TOPOLOGY_IMAGE)
 			||	reportName.equals(CABLE_LAYOUT)			
 			||	reportName.equals(SELECTED_OBJECT_CHARS))
-			langReportName = LangModelReport.getString("report.Modules.Map." + reportName);
+			langReportName = I18N.getString("report.Modules.Map." + reportName);
 			
 		return langReportName;
 	}

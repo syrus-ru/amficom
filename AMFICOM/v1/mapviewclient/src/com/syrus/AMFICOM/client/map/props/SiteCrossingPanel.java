@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteCrossingPanel.java,v 1.19 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: SiteCrossingPanel.java,v 1.20 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -292,7 +292,7 @@ public class SiteCrossingPanel extends JPanel {
 
 		AbstractNode node = link.getOtherNode(this.site);
 		
-		String text = LangModelMap.getString(MapEditorResourceKeys.TO_SITE_LOWERCASE) + " \"" + node.getName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
+		String text = I18N.getString(MapEditorResourceKeys.TO_SITE_LOWERCASE) + " \"" + node.getName() + "\""; //$NON-NLS-1$ //$NON-NLS-2$
 
 		g2.setColor(LINE_COLOR);
 

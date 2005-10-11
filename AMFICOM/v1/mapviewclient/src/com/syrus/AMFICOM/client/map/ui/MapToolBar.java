@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapToolBar.java,v 1.38 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapToolBar.java,v 1.39 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,14 +36,14 @@ import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * Панель инструментов окна карты
  * 
- * @version $Revision: 1.38 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -102,7 +102,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.zoomInButton.setIcon(new ImageIcon("images/zoom_in.gif")); //$NON-NLS-1$
 		this.zoomInButton.addActionListener(actionAdapter);
-		this.zoomInButton.setToolTipText(LangModelMap
+		this.zoomInButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_ZOOM_IN));
 		this.zoomInButton.setPreferredSize(buttonSize);
 		this.zoomInButton.setMaximumSize(buttonSize);
@@ -111,7 +111,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.zoomOutButton.setIcon(new ImageIcon("images/zoom_out.gif")); //$NON-NLS-1$
 		this.zoomOutButton.addActionListener(actionAdapter);
-		this.zoomOutButton.setToolTipText(LangModelMap
+		this.zoomOutButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_ZOOM_OUT));
 		this.zoomOutButton.setPreferredSize(buttonSize);
 		this.zoomOutButton.setMaximumSize(buttonSize);
@@ -121,7 +121,7 @@ public final class MapToolBar extends JPanel implements
 		this.zoomToPointButton
 				.setIcon(new ImageIcon("images/zoom_to_point.gif")); //$NON-NLS-1$
 		this.zoomToPointButton.addActionListener(actionAdapter);
-		this.zoomToPointButton.setToolTipText(LangModelMap
+		this.zoomToPointButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_ZOOM_TO_POINT));
 		this.zoomToPointButton.setPreferredSize(buttonSize);
 		this.zoomToPointButton.setMaximumSize(buttonSize);
@@ -131,7 +131,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.zoomToRectButton.setIcon(new ImageIcon("images/zoom_area.gif")); //$NON-NLS-1$
 		this.zoomToRectButton.addActionListener(actionAdapter);
-		this.zoomToRectButton.setToolTipText(LangModelMap
+		this.zoomToRectButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_ZOOM_BOX));
 		this.zoomToRectButton.setPreferredSize(buttonSize);
 		this.zoomToRectButton.setMaximumSize(buttonSize);
@@ -140,7 +140,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.moveToCenterButton.setIcon(new ImageIcon("images/map_centr.gif")); //$NON-NLS-1$
 		this.moveToCenterButton.addActionListener(actionAdapter);
-		this.moveToCenterButton.setToolTipText(LangModelMap
+		this.moveToCenterButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_MOVE_TO_CENTER));
 		this.moveToCenterButton.setPreferredSize(buttonSize);
 		this.moveToCenterButton.setMaximumSize(buttonSize);
@@ -150,7 +150,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.moveHandButton.setIcon(new ImageIcon("images/hand.gif")); //$NON-NLS-1$
 		this.moveHandButton.addActionListener(actionAdapter);
-		this.moveHandButton.setToolTipText(LangModelMap
+		this.moveHandButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_HAND_PAN));
 		this.moveHandButton.setPreferredSize(buttonSize);
 		this.moveHandButton.setMaximumSize(buttonSize);
@@ -160,7 +160,7 @@ public final class MapToolBar extends JPanel implements
 		this.measureDistanceButton
 				.setIcon(new ImageIcon("images/distance.gif")); //$NON-NLS-1$
 		this.measureDistanceButton.addActionListener(actionAdapter);
-		this.measureDistanceButton.setToolTipText(LangModelMap
+		this.measureDistanceButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_MEASURE_DISTANCE));
 		this.measureDistanceButton.setPreferredSize(buttonSize);
 		this.measureDistanceButton.setMaximumSize(buttonSize);
@@ -170,7 +170,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.moveFixedButton.setIcon(new ImageIcon("images/movefixed.gif")); //$NON-NLS-1$
 		this.moveFixedButton.addActionListener(actionAdapter);
-		this.moveFixedButton.setToolTipText(LangModelMap
+		this.moveFixedButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_MOVE_FIXED));
 		this.moveFixedButton.setPreferredSize(buttonSize);
 		this.moveFixedButton.setMaximumSize(buttonSize);
@@ -179,7 +179,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif")); //$NON-NLS-1$
 		this.showNodesButton.addActionListener(actionAdapter);
-		this.showNodesButton.setToolTipText(LangModelMap
+		this.showNodesButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_VIEW_NODES));
 		this.showNodesButton.setPreferredSize(buttonSize);
 		this.showNodesButton.setMaximumSize(buttonSize);
@@ -189,7 +189,7 @@ public final class MapToolBar extends JPanel implements
 		this.showIndicationButton.setIcon(new ImageIcon(
 				"images/indication_visible.gif")); //$NON-NLS-1$
 		this.showIndicationButton.addActionListener(actionAdapter);
-		this.showIndicationButton.setToolTipText(LangModelMap
+		this.showIndicationButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_VIEW_INDICATION));
 		this.showIndicationButton.setPreferredSize(buttonSize);
 		this.showIndicationButton.setMaximumSize(buttonSize);
@@ -199,7 +199,7 @@ public final class MapToolBar extends JPanel implements
 		this.showNodeLinkToggleButton.setIcon(new ImageIcon(
 				"images/nodelinkmode.gif")); //$NON-NLS-1$
 		this.showNodeLinkToggleButton.addActionListener(actionAdapter);
-		this.showNodeLinkToggleButton.setToolTipText(LangModelMap
+		this.showNodeLinkToggleButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_NODE_LINK_MODE));
 		this.showNodeLinkToggleButton.setPreferredSize(buttonSize);
 		this.showNodeLinkToggleButton.setMaximumSize(buttonSize);
@@ -210,7 +210,7 @@ public final class MapToolBar extends JPanel implements
 		this.showPhysicalToggleButton.setIcon(new ImageIcon(
 				"images/linkmode.gif")); //$NON-NLS-1$
 		this.showPhysicalToggleButton.addActionListener(actionAdapter);
-		this.showPhysicalToggleButton.setToolTipText(LangModelMap
+		this.showPhysicalToggleButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_PHYSICAL_LINK_MODE));
 		this.showPhysicalToggleButton.setPreferredSize(buttonSize);
 		this.showPhysicalToggleButton.setMaximumSize(buttonSize);
@@ -222,7 +222,7 @@ public final class MapToolBar extends JPanel implements
 		this.showCablePathToggleButton.setIcon(new ImageIcon(
 				"images/pathmode.gif")); //$NON-NLS-1$
 		this.showCablePathToggleButton.addActionListener(actionAdapter);
-		this.showCablePathToggleButton.setToolTipText(LangModelMap
+		this.showCablePathToggleButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_CABLE_MODE));
 		this.showCablePathToggleButton.setPreferredSize(buttonSize);
 		this.showCablePathToggleButton.setMaximumSize(buttonSize);
@@ -234,7 +234,7 @@ public final class MapToolBar extends JPanel implements
 				"images/pathmode.gif")); //$NON-NLS-1$
 		this.showTransPathToggleButton.addActionListener(actionAdapter);
 		this.showTransPathToggleButton
-				.setToolTipText(LangModelMap
+				.setToolTipText(I18N
 						.getString(MapEditorResourceKeys.TOOLTIP_MEASUREMENT_PATH_MODE));
 		this.showTransPathToggleButton.setPreferredSize(buttonSize);
 		this.showTransPathToggleButton.setMaximumSize(buttonSize);
@@ -249,7 +249,7 @@ public final class MapToolBar extends JPanel implements
 			}
 
 		});
-		this.undoButton.setToolTipText(LangModelMap
+		this.undoButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_UNDO));
 		this.undoButton.setPreferredSize(buttonSize);
 		this.undoButton.setMaximumSize(buttonSize);
@@ -263,7 +263,7 @@ public final class MapToolBar extends JPanel implements
 			}
 
 		});
-		this.redoButton.setToolTipText(LangModelMap
+		this.redoButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_REDO));
 		this.redoButton.setPreferredSize(buttonSize);
 		this.redoButton.setMaximumSize(buttonSize);
@@ -271,7 +271,7 @@ public final class MapToolBar extends JPanel implements
 
 		this.centerObjectButton.setIcon(new ImageIcon("images/fit.gif")); //$NON-NLS-1$
 		this.centerObjectButton.addActionListener(actionAdapter);
-		this.centerObjectButton.setToolTipText(LangModelMap
+		this.centerObjectButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_CENTER_SELECTION));
 		this.centerObjectButton.setPreferredSize(buttonSize);
 		this.centerObjectButton.setMaximumSize(buttonSize);
@@ -294,7 +294,7 @@ public final class MapToolBar extends JPanel implements
 							.sendMapEvent(MapEvent.NEED_REPAINT);
 			}
 		});
-		this.optionsButton.setToolTipText(LangModelMap
+		this.optionsButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_MAP_FRAME_OPTIONS));
 		this.optionsButton.setPreferredSize(buttonSize);
 		this.optionsButton.setMaximumSize(buttonSize);
@@ -316,7 +316,7 @@ public final class MapToolBar extends JPanel implements
 							.sendMapEvent(MapEvent.NEED_REPAINT);
 			}
 		});
-		this.layersButton.setToolTipText(LangModelMap
+		this.layersButton.setToolTipText(I18N
 				.getString(MapEditorResourceKeys.TOOLTIP_LAYERS));
 		this.layersButton.setPreferredSize(buttonSize);
 		this.layersButton.setMaximumSize(buttonSize);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSchemeTreeModel.java,v 1.40 2005/10/03 08:19:11 krupenn Exp $$
+ * $$Id: MapSchemeTreeModel.java,v 1.41 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -87,7 +87,7 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path2"
  * </pre>
  * 
- * @version $Revision: 1.40 $, $Date: 2005/10/03 08:19:11 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -160,7 +160,7 @@ public class MapSchemeTreeModel
 
 	public String getObjectName(Object object) {
 		if(object instanceof String)
-			return LangModelMap.getString((String )object);
+			return I18N.getString((String )object);
 		else
 		if(object instanceof Scheme) {
 			Scheme scheme = (Scheme )object;
@@ -186,7 +186,7 @@ public class MapSchemeTreeModel
 			SchemePath schemePath = (SchemePath )object;
 			return schemePath.getName();
 		}
-		return LangModelMap.getString(MapEditorResourceKeys.NONAME);
+		return I18N.getString(MapEditorResourceKeys.NONAME);
 	}
 
 	public void populate(Item node) {

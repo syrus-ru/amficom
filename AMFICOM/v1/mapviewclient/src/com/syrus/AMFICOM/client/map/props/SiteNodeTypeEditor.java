@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeTypeEditor.java,v 1.19 2005/10/07 14:23:45 krupenn Exp $$
+ * $$Id: SiteNodeTypeEditor.java,v 1.20 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,10 +33,8 @@ import com.syrus.AMFICOM.client.UI.ImagesDialog;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -46,13 +44,12 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/07 14:23:45 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -88,19 +85,19 @@ public final class SiteNodeTypeEditor
 	static {
 		sortNames = new String[7];
 		sortNames[SiteNodeTypeSort._WELL] = 
-			LangModelMap.getString("defaultwell");
+			I18N.getString("defaultwell");
 		sortNames[SiteNodeTypeSort._PIQUET] = 
-			LangModelMap.getString("defaultpiquet");
+			I18N.getString("defaultpiquet");
 		sortNames[SiteNodeTypeSort._ATS] = 
-			LangModelMap.getString("defaultats");
+			I18N.getString("defaultats");
 		sortNames[SiteNodeTypeSort._BUILDING] = 
-			LangModelMap.getString("defaultbuilding");
+			I18N.getString("defaultbuilding");
 		sortNames[SiteNodeTypeSort._CABLE_INLET] = 
-			LangModelMap.getString("defaultcableinlet");
+			I18N.getString("defaultcableinlet");
 		sortNames[SiteNodeTypeSort._TOWER] = 
-			LangModelMap.getString("defaulttower");
+			I18N.getString("defaulttower");
 		sortNames[SiteNodeTypeSort._UNBOUND] = 
-			LangModelMap.getString("unbound");
+			I18N.getString("unbound");
 	}
 	
 	public SiteNodeTypeEditor() {
@@ -150,23 +147,23 @@ public final class SiteNodeTypeEditor
 		});
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.nameLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NAME));
 //		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.libraryLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
-		this.sortLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SORT));
+		this.libraryLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_IN_LIBRARY));
+		this.sortLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_SORT));
 
-		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.descLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 //		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.imageLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_IMAGE));
+		this.imageLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_IMAGE));
 //		this.imageLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		this.imagePanel.setLayout(new BorderLayout());
 
-		this.imageButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHANGE));
+		this.imageButton.setText(I18N.getString(MapEditorResourceKeys.BUTTON_CHANGE));
 //		this.imageButton.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		this.imageButton.addActionListener(new ActionListener()
 			{
@@ -181,7 +178,7 @@ public final class SiteNodeTypeEditor
 				}
 			});
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

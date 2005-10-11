@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathEditor.java,v 1.16 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: CablePathEditor.java,v 1.17 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,14 +26,13 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,17 +86,17 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
-		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
-		this.physicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_PHYSICAL_LENGTH));
-		this.opticalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_OPTICAL_LENGTH));
-		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
-		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
-		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.nameLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.topologicalLengthLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
+		this.physicalLengthLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_PHYSICAL_LENGTH));
+		this.opticalLengthLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_OPTICAL_LENGTH));
+		this.startLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_START_NODE));
+		this.endLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_END_NODE));
+		this.descLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

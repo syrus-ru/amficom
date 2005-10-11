@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMenuBar.java,v 1.30 2005/10/07 14:21:24 krupenn Exp $$
+ * $$Id: MapEditorMenuBar.java,v 1.31 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
  * 
- * @version $Revision: 1.30 $, $Date: 2005/10/07 14:21:24 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -83,129 +83,129 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		final JMenu menuReport = new JMenu();
 		final JMenuItem menuReportCreate = new JMenuItem();
 	
-		menuView.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW));
+		menuView.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW));
 		menuView.setName(MapEditorApplicationModel.ITEM_VIEW);
-		menuViewGeneral.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_GENERAL));
+		menuViewGeneral.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_GENERAL));
 		menuViewGeneral.setName(MapEditorApplicationModel.ITEM_VIEW_GENERAL);
 		menuViewGeneral.addActionListener(super.actionAdapter);
-		menuViewAdditional.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL));
+		menuViewAdditional.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL));
 		menuViewAdditional.setName(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL);
 		menuViewAdditional.addActionListener(super.actionAdapter);
-		menuViewCharacteristics.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
+		menuViewCharacteristics.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
 		menuViewCharacteristics.setName(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS);
 		menuViewCharacteristics.addActionListener(super.actionAdapter);
-		menuViewMapChooser.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER));
+		menuViewMapChooser.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER));
 		menuViewMapChooser.setName(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER);
 		menuViewMapChooser.addActionListener(super.actionAdapter);
-		menuViewMapLayers.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
+		menuViewMapLayers.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
 		menuViewMapLayers.setName(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS);
 		menuViewMapLayers.addActionListener(super.actionAdapter);
-		menuViewMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP));
+		menuViewMap.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_MAP));
 		menuViewMap.setName(MapEditorApplicationModel.ITEM_VIEW_MAP);
 		menuViewMap.addActionListener(super.actionAdapter);
-		menuViewNavigator.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR));
+		menuViewNavigator.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR));
 		menuViewNavigator.setName(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR);
 		menuViewNavigator.addActionListener(super.actionAdapter);
-		menuViewAll.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_ALL));
+		menuViewAll.setText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_ALL));
 		menuViewAll.setName(MapEditorApplicationModel.ITEM_VIEW_ALL);
 		menuViewAll.addActionListener(super.actionAdapter);
 
-		menuMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP));
+		menuMap.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP));
 		menuMap.setName(MapEditorApplicationModel.ITEM_MAP);
-		menuMapNew.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_NEW));
+		menuMapNew.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_NEW));
 		menuMapNew.setName(MapEditorApplicationModel.ITEM_MAP_NEW);
 		menuMapNew.addActionListener(super.actionAdapter);
-		menuMapOpen.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_OPEN));
+		menuMapOpen.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_OPEN));
 		menuMapOpen.setName(MapEditorApplicationModel.ITEM_MAP_OPEN);
 		menuMapOpen.addActionListener(super.actionAdapter);
-		menuMapClose.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_CLOSE));
+		menuMapClose.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_CLOSE));
 		menuMapClose.setName(MapEditorApplicationModel.ITEM_MAP_CLOSE);
 		menuMapClose.addActionListener(super.actionAdapter);
-		menuMapSave.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_SAVE));
+		menuMapSave.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_SAVE));
 		menuMapSave.setName(MapEditorApplicationModel.ITEM_MAP_SAVE);
 		menuMapSave.addActionListener(super.actionAdapter);
-		menuMapSaveAs.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_SAVE_AS));
+		menuMapSaveAs.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_SAVE_AS));
 		menuMapSaveAs.setName(MapEditorApplicationModel.ITEM_MAP_SAVE_AS);
 		menuMapSaveAs.addActionListener(super.actionAdapter);
-		menuMapAddMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+		menuMapAddMap.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
 		menuMapAddMap.setName(MapEditorApplicationModel.ITEM_MAP_ADD_MAP);
 		menuMapAddMap.addActionListener(super.actionAdapter);
-		menuMapRemoveMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+		menuMapRemoveMap.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
 		menuMapRemoveMap.setName(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP);
 		menuMapRemoveMap.addActionListener(super.actionAdapter);
-		menuMapAddExternal.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+		menuMapAddExternal.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
 		menuMapAddExternal.setName(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL);
 		menuMapAddExternal.addActionListener(super.actionAdapter);
-		menuMapExport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_EXPORT));
+		menuMapExport.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_EXPORT));
 		menuMapExport.setName(MapEditorApplicationModel.ITEM_MAP_EXPORT);
 		menuMapExport.addActionListener(super.actionAdapter);
-		menuMapImport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_IMPORT));
+		menuMapImport.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_IMPORT));
 		menuMapImport.setName(MapEditorApplicationModel.ITEM_MAP_IMPORT);
 		menuMapImport.addActionListener(super.actionAdapter);
 
-		menuMapView.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW));
+		menuMapView.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW));
 		menuMapView.setName(MapEditorApplicationModel.ITEM_MAP_VIEW);
-		menuMapViewNew.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+		menuMapViewNew.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
 		menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW);
 		menuMapViewNew.addActionListener(super.actionAdapter);
-		menuMapViewOpen.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		menuMapViewOpen.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
 		menuMapViewOpen.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
 		menuMapViewOpen.addActionListener(super.actionAdapter);
-		menuMapViewClose.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE));
+		menuMapViewClose.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE));
 		menuMapViewClose.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE);
 		menuMapViewClose.addActionListener(super.actionAdapter);
-		menuMapViewSave.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+		menuMapViewSave.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
 		menuMapViewSave.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE);
 		menuMapViewSave.addActionListener(super.actionAdapter);
-		menuMapViewSaveAs.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS));
+		menuMapViewSaveAs.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS));
 		menuMapViewSaveAs.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS);
 		menuMapViewSaveAs.addActionListener(super.actionAdapter);
-		menuMapViewAddScheme.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+		menuMapViewAddScheme.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
 		menuMapViewAddScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		menuMapViewAddScheme.addActionListener(super.actionAdapter);
-		menuMapViewRemoveScheme.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+		menuMapViewRemoveScheme.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 		menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		menuMapViewRemoveScheme.addActionListener(super.actionAdapter);
 
-		menuMapLibrary.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY));
+		menuMapLibrary.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY));
 		menuMapLibrary.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY);
-		menuMapLibraryNew.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW));
+		menuMapLibraryNew.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW));
 		menuMapLibraryNew.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW);
 		menuMapLibraryNew.addActionListener(super.actionAdapter);
-		menuMapLibraryOpen.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN));
+		menuMapLibraryOpen.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN));
 		menuMapLibraryOpen.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN);
 		menuMapLibraryOpen.addActionListener(super.actionAdapter);
-		menuMapLibrarySave.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE));
+		menuMapLibrarySave.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE));
 		menuMapLibrarySave.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE);
 		menuMapLibrarySave.addActionListener(super.actionAdapter);
-		menuMapLibrarySaveAs.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
+		menuMapLibrarySaveAs.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
 		menuMapLibrarySaveAs.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS);
 		menuMapLibrarySaveAs.addActionListener(super.actionAdapter);
-		menuMapLibraryRemove.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
+		menuMapLibraryRemove.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
 		menuMapLibraryRemove.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE);
 		menuMapLibraryRemove.addActionListener(super.actionAdapter);
-		menuMapLibraryExport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
+		menuMapLibraryExport.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
 		menuMapLibraryExport.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT);
 		menuMapLibraryExport.addActionListener(super.actionAdapter);
-		menuMapLibraryImport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT));
+		menuMapLibraryImport.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT));
 		menuMapLibraryImport.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT);
 		menuMapLibraryImport.addActionListener(super.actionAdapter);
-		menuMapLibraryNewSiteType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE));
+		menuMapLibraryNewSiteType.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE));
 		menuMapLibraryNewSiteType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE);
 		menuMapLibraryNewSiteType.addActionListener(super.actionAdapter);
-		menuMapLibraryNewLinkType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE));
+		menuMapLibraryNewLinkType.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE));
 		menuMapLibraryNewLinkType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE);
 		menuMapLibraryNewLinkType.addActionListener(super.actionAdapter);
-		menuMapLibraryRemoveSiteType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE));
+		menuMapLibraryRemoveSiteType.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE));
 		menuMapLibraryRemoveSiteType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE);
 		menuMapLibraryRemoveSiteType.addActionListener(super.actionAdapter);
-		menuMapLibraryRemoveLinkType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE));
+		menuMapLibraryRemoveLinkType.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE));
 		menuMapLibraryRemoveLinkType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE);
 		menuMapLibraryRemoveLinkType.addActionListener(super.actionAdapter);
 		
-		menuReport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_REPORT));
+		menuReport.setText(I18N.getString(MapEditorApplicationModel.ITEM_REPORT));
 		menuReport.setName(MapEditorApplicationModel.ITEM_REPORT);
-		menuReportCreate.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_REPORT_CREATE));
+		menuReportCreate.setText(I18N.getString(MapEditorApplicationModel.ITEM_REPORT_CREATE));
 		menuReportCreate.setName(MapEditorApplicationModel.ITEM_REPORT_CREATE);
 		menuReportCreate.addActionListener(super.actionAdapter);
 		menuReport.add(menuReportCreate);

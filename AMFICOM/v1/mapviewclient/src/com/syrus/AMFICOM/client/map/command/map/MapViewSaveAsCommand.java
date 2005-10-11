@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveAsCommand.java,v 1.29 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapViewSaveAsCommand.java,v 1.30 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,7 @@ import com.syrus.AMFICOM.client.map.props.MapViewVisualManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * 
- * @version $Revision: 1.29 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -56,7 +55,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 			this.newMapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
 					userId,
 					domainId,
-					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					I18N.getString(MapEditorResourceKeys.VALUE_NEW),
 					MapEditorResourceKeys.EMPTY_STRING,
 					0.0D,
 					0.0D,
@@ -66,7 +65,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 
 			StorableObjectPool.putStorableObject(this.newMapView);
 
-			this.newMapView.setName(this.mapView.getName() + LangModelMap.getString(MapEditorResourceKeys.IS_ACOPY_IN_PARENTHESIS));
+			this.newMapView.setName(this.mapView.getName() + I18N.getString(MapEditorResourceKeys.IS_ACOPY_IN_PARENTHESIS));
 		} catch(CreateObjectException e) {
 			e.printStackTrace();
 			return;
@@ -77,7 +76,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 		}
 
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW_PROPERTIES),
+				I18N.getString(MapEditorResourceKeys.TITLE_MAP_VIEW_PROPERTIES),
 				this.newMapView,
 				MapViewVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // try
@@ -97,7 +96,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
 					this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_SAVING)));
+					I18N.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_SAVING)));
 			try {
 				// save mapview
 				StorableObjectPool.flush(this.newMapView, userId, true);
@@ -110,7 +109,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
+							I18N.getString("Finished"))); //$NON-NLS-1$
 			setResult(Command.RESULT_OK);
 		}
 		else {
@@ -118,7 +117,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
+							I18N.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 		}
 	}

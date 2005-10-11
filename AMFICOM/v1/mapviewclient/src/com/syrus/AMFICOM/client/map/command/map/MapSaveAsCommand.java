@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSaveAsCommand.java,v 1.30 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapSaveAsCommand.java,v 1.31 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,7 @@ import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.map.Map;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * 
- * @version $Revision: 1.30 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -57,7 +56,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 			this.newMap = Map.createInstance(
 					userId, 
 					domainId, 
-					this.map.getName() + LangModelMap.getString(MapEditorResourceKeys.IS_ACOPY_IN_PARENTHESIS),
+					this.map.getName() + I18N.getString(MapEditorResourceKeys.IS_ACOPY_IN_PARENTHESIS),
 					MapEditorResourceKeys.EMPTY_STRING);
 			this.newMap.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(CreateObjectException e) {
@@ -69,10 +68,10 @@ public class MapSaveAsCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_SAVING)));
+						I18N.getString(MapEditorResourceKeys.STATUS_MAP_SAVING)));
 
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_PROPERTIES),
+				I18N.getString(MapEditorResourceKeys.TITLE_MAP_PROPERTIES),
 				this.newMap,
 				MapVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // try
@@ -100,7 +99,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
+							I18N.getString("Finished"))); //$NON-NLS-1$
 			setResult(Command.RESULT_OK);
 		}
 		else {
@@ -108,7 +107,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
+							I18N.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 		}
 	}

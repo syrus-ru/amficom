@@ -1,5 +1,5 @@
 /*-
- * $$Id: ViewMapChooserCommand.java,v 1.10 2005/10/03 10:35:01 krupenn Exp $$
+ * $$Id: ViewMapChooserCommand.java,v 1.11 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,15 +16,13 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.command.map.MapSaveAsCommand;
 import com.syrus.AMFICOM.client.map.operations.MapChooserPanel;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Log;
 
@@ -33,7 +31,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.10 $, $Date: 2005/10/03 10:35:01 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -88,12 +86,12 @@ public class ViewMapChooserCommand extends AbstractCommand {
 			mapChooserPanel.setMapConnection(connection);
 		}
 
-		final String okButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_OK);
-		final String cancelButton = LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL);
+		final String okButton = I18N.getString(MapEditorResourceKeys.BUTTON_OK);
+		final String cancelButton = I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL);
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mapChooserPanel,
-				LangModelMap.getString(MapEditorResourceKeys.TITLE_CHOOSE_MAP),
+				I18N.getString(MapEditorResourceKeys.TITLE_CHOOSE_MAP),
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

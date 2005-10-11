@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorToolBar.java,v 1.24 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapEditorToolBar.java,v 1.25 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import javax.swing.JButton;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
  * Панель инструментов модуля "Редактор топологических схем".
  *  
- * @version $Revision: 1.24 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -110,7 +110,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapNew.setMaximumSize(buttonSize);
 		this.menuMapNew.setPreferredSize(buttonSize);
-		this.menuMapNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_NEW));
+		this.menuMapNew.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_NEW));
 		this.menuMapNew.setName(MapEditorApplicationModel.ITEM_MAP_NEW);
 		this.menuMapNew.addActionListener(super.actionListener);
 
@@ -118,7 +118,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapOpen.setMaximumSize(buttonSize);
 		this.menuMapOpen.setPreferredSize(buttonSize);
-		this.menuMapOpen.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_OPEN));
+		this.menuMapOpen.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_OPEN));
 		this.menuMapOpen.setName(MapEditorApplicationModel.ITEM_MAP_OPEN);
 		this.menuMapOpen.addActionListener(super.actionListener);
 
@@ -126,7 +126,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapSave.setMaximumSize(buttonSize);
 		this.menuMapSave.setPreferredSize(buttonSize);
-		this.menuMapSave.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_SAVE));
+		this.menuMapSave.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_SAVE));
 		this.menuMapSave.setName(MapEditorApplicationModel.ITEM_MAP_SAVE);
 		this.menuMapSave.addActionListener(super.actionListener);
 
@@ -134,7 +134,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapAddMap.setMaximumSize(buttonSize);
 		this.menuMapAddMap.setPreferredSize(buttonSize);
-		this.menuMapAddMap.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
+		this.menuMapAddMap.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_ADD_MAP));
 		this.menuMapAddMap.setName(MapEditorApplicationModel.ITEM_MAP_ADD_MAP);
 		this.menuMapAddMap.addActionListener(super.actionListener);
 
@@ -142,7 +142,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapRemoveMap.setMaximumSize(buttonSize);
 		this.menuMapRemoveMap.setPreferredSize(buttonSize);
-		this.menuMapRemoveMap.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
+		this.menuMapRemoveMap.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP));
 		this.menuMapRemoveMap.setName(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP);
 		this.menuMapRemoveMap.addActionListener(super.actionListener);
 
@@ -150,7 +150,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapAddExternal.setMaximumSize(buttonSize);
 		this.menuMapAddExternal.setPreferredSize(buttonSize);
-		this.menuMapAddExternal.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
+		this.menuMapAddExternal.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL));
 		this.menuMapAddExternal.setName(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL);
 		this.menuMapAddExternal.addActionListener(super.actionListener);
 
@@ -158,7 +158,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewNew.setMaximumSize(buttonSize);
 		this.menuMapViewNew.setPreferredSize(buttonSize);
-		this.menuMapViewNew.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
+		this.menuMapViewNew.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW));
 		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW);
 		this.menuMapViewNew.addActionListener(super.actionListener);
 
@@ -166,7 +166,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewOpen.setMaximumSize(buttonSize);
 		this.menuMapViewOpen.setPreferredSize(buttonSize);
-		this.menuMapViewOpen.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
+		this.menuMapViewOpen.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN));
 		this.menuMapViewOpen.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
 		this.menuMapViewOpen.addActionListener(super.actionListener);
 
@@ -174,7 +174,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewSave.setMaximumSize(buttonSize);
 		this.menuMapViewSave.setPreferredSize(buttonSize);
-		this.menuMapViewSave.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
+		this.menuMapViewSave.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE));
 		this.menuMapViewSave.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE);
 		this.menuMapViewSave.addActionListener(super.actionListener);
 
@@ -182,7 +182,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewAddScheme.setMaximumSize(buttonSize);
 		this.menuMapViewAddScheme.setPreferredSize(buttonSize);
-		this.menuMapViewAddScheme.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
+		this.menuMapViewAddScheme.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME));
 		this.menuMapViewAddScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		this.menuMapViewAddScheme.addActionListener(super.actionListener);
 
@@ -190,7 +190,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewRemoveScheme.setMaximumSize(buttonSize);
 		this.menuMapViewRemoveScheme.setPreferredSize(buttonSize);
-		this.menuMapViewRemoveScheme.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+		this.menuMapViewRemoveScheme.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		this.menuMapViewRemoveScheme.addActionListener(super.actionListener);
 
@@ -198,7 +198,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuViewMapLayers.setMaximumSize(buttonSize);
 		this.menuViewMapLayers.setPreferredSize(buttonSize);
-		this.menuViewMapLayers.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
+		this.menuViewMapLayers.setToolTipText(I18N.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
 		this.menuViewMapLayers.setName(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS);
 		this.menuViewMapLayers.addActionListener(super.actionListener);
 

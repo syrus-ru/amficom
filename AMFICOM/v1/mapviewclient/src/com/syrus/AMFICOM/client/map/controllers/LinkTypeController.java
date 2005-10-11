@@ -1,5 +1,5 @@
 /*-
- * $$Id: LinkTypeController.java,v 1.61 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: LinkTypeController.java,v 1.62 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Контроллер типа линейного элемента карты.
  * 
- * @version $Revision: 1.61 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.62 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -325,7 +325,7 @@ public final class LinkTypeController extends AbstractLinkController {
 					userId,
 					sort,
 					codename,
-					LangModelMap.getString(codename),
+					I18N.getString(codename),
 					"", //$NON-NLS-1$
 					LinkTypeController.getDefaultBindDimension(codename),
 					topological,

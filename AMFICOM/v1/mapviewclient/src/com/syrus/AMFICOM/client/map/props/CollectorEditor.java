@@ -1,5 +1,5 @@
 /*-
- * $$Id: CollectorEditor.java,v 1.21 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: CollectorEditor.java,v 1.22 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -43,7 +42,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,19 +86,19 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		this.piquetsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
-		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
-		this.piquetsLabel.setText(LangModelMap.getString(MapEditorResourceKeys.ENTITY_PIQUET));
-		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.nameLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.topologicalLengthLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
+		this.piquetsLabel.setText(I18N.getString(MapEditorResourceKeys.ENTITY_PIQUET));
+		this.descLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 
 		this.piquetsScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.piquetsScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.piquetsScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.piquetsScrollPane.getViewport().add(this.piquetsList);
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

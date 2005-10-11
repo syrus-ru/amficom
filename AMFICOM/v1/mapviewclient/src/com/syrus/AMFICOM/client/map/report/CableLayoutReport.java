@@ -8,9 +8,8 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -28,7 +27,7 @@ import com.syrus.util.Log;
 /**
  * Отчёт "Прокладка кабеля"
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/10/07 14:19:03 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/11 08:56:12 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -106,10 +105,10 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 			int vertDivisionsCount) throws ApplicationException{
 		this.vertDivisionsCount = vertDivisionsCount;
 
-		this.siteNodeNameColumn.add(LangModelMap.getString(START_NODE));
-		this.startSpareColumn.add(LangModelMap.getString(START_SPARE));
-		this.endSpareColumn.add(LangModelMap.getString(END_SPARE));
-		this.startLinkColumn.add(LangModelMap.getString(START_LINK));
+		this.siteNodeNameColumn.add(I18N.getString(START_NODE));
+		this.startSpareColumn.add(I18N.getString(START_SPARE));
+		this.endSpareColumn.add(I18N.getString(END_SPARE));
+		this.startLinkColumn.add(I18N.getString(START_LINK));
 		
 		int currentItemIndex = 0;
 		Set<CableChannelingItem> channelingItems = cableLink.getPathMembers();
@@ -149,17 +148,17 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 				//один коллектор.
 				if (collectorsIterator.hasNext()) {
 					Collector collector = collectorsIterator.next();
-					tunnelInfoStringBuffer.append(LangModelMap.getString(COLLECTOR));
+					tunnelInfoStringBuffer.append(I18N.getString(COLLECTOR));
 					tunnelInfoStringBuffer.append(collector.getName());
 				}
 				else {
-					tunnelInfoStringBuffer.append(LangModelMap.getString(TUNNEL));
+					tunnelInfoStringBuffer.append(I18N.getString(TUNNEL));
 					tunnelInfoStringBuffer.append(physicalLink.getName());
 				}
 
 				// Место в тоннеле
 				tunnelInfoStringBuffer.append(",");
-				tunnelInfoStringBuffer.append(LangModelMap.getString(MAP_TUNNEL_POSIT));
+				tunnelInfoStringBuffer.append(I18N.getString(MAP_TUNNEL_POSIT));
 				tunnelInfoStringBuffer.append(": (");
 				tunnelInfoStringBuffer.append(chanellingItem.getRowX());
 				tunnelInfoStringBuffer.append(chanellingItem.getPlaceY());
@@ -168,7 +167,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 				// Длина тоннеля
 				tunnelInfoStringBuffer.append(", L = ");
 				tunnelInfoStringBuffer.append(physicalLink.getLengthLt());
-				tunnelInfoStringBuffer.append(LangModelMap.getString(METRIC));
+				tunnelInfoStringBuffer.append(I18N.getString(METRIC));
 			}
 			this.startLinkColumn.add(tunnelInfoStringBuffer.toString());
 			
@@ -200,9 +199,9 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % CableLayoutReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");

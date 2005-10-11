@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.31 2005/10/03 16:18:43 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.32 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -54,7 +53,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/03 16:18:43 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -137,7 +136,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString(MapEditorResourceKeys.LABEL_CABLES_BINDING));
+		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.LABEL_CABLES_BINDING));
 		this.cableList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if(PhysicalLinkAddEditor.this.processSelection) {
@@ -153,7 +152,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif"))); //$NON-NLS-1$
-		this.bindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_BIND_CABLE_TO_PIPE));
+		this.bindButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_BIND_CABLE_TO_PIPE));
 		this.bindButton.setPreferredSize(buttonSize);
 		this.bindButton.setMaximumSize(buttonSize);
 		this.bindButton.setMinimumSize(buttonSize);
@@ -165,7 +164,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
-		this.unbindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_UNBIND_LINK_BINDING));
+		this.unbindButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_UNBIND_LINK_BINDING));
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -182,7 +181,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.selectButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
+		this.selectButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
 		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);
@@ -195,7 +194,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.dimensionLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DIMENSION));
+		this.dimensionLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DIMENSION));
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
 
@@ -241,11 +240,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		});
 
 		this.horvertLabel.setIcon(horverticon);
-		this.horvertLabel.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_NUMBERING_DIRECTION));
+		this.horvertLabel.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_NUMBERING_DIRECTION));
 		this.topDownLabel.setIcon(topdownicon);
-		this.topDownLabel.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_VERTICAL_ORDER));
+		this.topDownLabel.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_VERTICAL_ORDER));
 		this.leftRightLabel.setIcon(leftrighticon);
-		this.leftRightLabel.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_HORIZONTAL_ORDER));
+		this.leftRightLabel.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_HORIZONTAL_ORDER));
 		
 		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getUgoPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);
@@ -253,7 +252,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.xLabel.setText("X"); //$NON-NLS-1$
 		this.dimensionPanel.setLayout(this.gridBagLayout2);
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

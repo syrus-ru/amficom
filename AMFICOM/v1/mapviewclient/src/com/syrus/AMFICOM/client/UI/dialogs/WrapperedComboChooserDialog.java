@@ -1,5 +1,5 @@
 /*-
- * $$Id: WrapperedComboChooserDialog.java,v 1.7 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: WrapperedComboChooserDialog.java,v 1.8 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,12 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -68,7 +67,7 @@ public class WrapperedComboChooserDialog {
 		Object returnObject = null;
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
-		JLabel jLabel = new JLabel(LangModelGeneral.getString("Element")); //$NON-NLS-1$
+		JLabel jLabel = new JLabel(I18N.getString("Element")); //$NON-NLS-1$
 		WrapperedComboBox comboBox = new WrapperedComboBox(
 				wrapper, 
 				new ArrayList(contents),
@@ -80,13 +79,13 @@ public class WrapperedComboChooserDialog {
 		mainPanel.add(jLabel, BorderLayout.WEST);
 		mainPanel.add(comboBox, BorderLayout.CENTER);
 
-		final String okButton = LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE);
-		final String cancelButton = LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL);
+		final String okButton = I18N.getString(MapEditorResourceKeys.BUTTON_CHOOSE);
+		final String cancelButton = I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL);
 
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mainPanel,
-				LangModelMap.getString(MapEditorResourceKeys.TITLE_SELECT_ELEMENT),
+				I18N.getString(MapEditorResourceKeys.TITLE_SELECT_ELEMENT),
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

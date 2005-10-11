@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImportCommand.java,v 1.12 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: ImportCommand.java,v 1.13 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import javax.swing.JFileChooser;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -32,16 +32,16 @@ public abstract class ImportCommand extends AbstractCommand {
 
 		ChoosableFileFilter esfFilter = new ChoosableFileFilter(
 				MapEditorResourceKeys.EXTENSION_ESF,
-				LangModelMap.getString(MapEditorResourceKeys.FILE_CHOOSER_EXPORT_SAVE_FILE));
+				I18N.getString(MapEditorResourceKeys.FILE_CHOOSER_EXPORT_SAVE_FILE));
 		fileChooser.addChoosableFileFilter(esfFilter);
 
 		ChoosableFileFilter xmlFilter = new ChoosableFileFilter(
 				MapEditorResourceKeys.EXTENSION_XML,
-				LangModelMap.getString(MapEditorResourceKeys.FILE_CHOOSER_EXPORT_SAVE_FILE));
+				I18N.getString(MapEditorResourceKeys.FILE_CHOOSER_EXPORT_SAVE_FILE));
 		fileChooser.addChoosableFileFilter(xmlFilter);
 
 		fileChooser.setCurrentDirectory(new File(path));
-		fileChooser.setDialogTitle(LangModelMap.getString(MapEditorResourceKeys.FILE_CHOOSER_SELECT_FILE_TO_OPEN));
+		fileChooser.setDialogTitle(I18N.getString(MapEditorResourceKeys.FILE_CHOOSER_SELECT_FILE_TO_OPEN));
 		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());

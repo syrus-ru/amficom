@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryEditor.java,v 1.8 2005/10/07 14:21:56 krupenn Exp $$
+ * $$Id: MapLibraryEditor.java,v 1.9 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -38,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/07 14:21:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -75,18 +74,18 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 		this.componentsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.nameLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NAME));
-		this.componentsLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_COMPONENTS));
+		this.nameLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NAME));
+		this.componentsLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_COMPONENTS));
 		this.componentsScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.componentsScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.componentsScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.componentsScrollPane.getViewport().add(this.componentsList);
 
-		this.descLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
+		this.descLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

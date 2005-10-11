@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeModel.java,v 1.31 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapViewTreeModel.java,v 1.32 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -81,7 +81,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 		PopulatableIconedNode root = new PopulatableIconedNode(
 				MapViewTreeModel.getInstance(),
 				MapViewTreeModel.ALL_MAP_VIEWS_BRANCH,
-				LangModelMap.getString(MapViewTreeModel.ALL_MAP_VIEWS_BRANCH),
+				I18N.getString(MapViewTreeModel.ALL_MAP_VIEWS_BRANCH),
 				mapViewIcon, 
 				true);
 		return root;
@@ -202,7 +202,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 			mapNode = new PopulatableIconedNode(
 					this,
 					MapViewTreeModel.MAP_BRANCH,
-					LangModelMap.getString(MapViewTreeModel.MAP_BRANCH),
+					I18N.getString(MapViewTreeModel.MAP_BRANCH),
 					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(mapNode);
@@ -210,7 +210,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 			schemesNode = new PopulatableIconedNode(
 					this,
 					MapViewTreeModel.SCHEMES_BRANCH,
-					LangModelMap.getString(MapViewTreeModel.SCHEMES_BRANCH),
+					I18N.getString(MapViewTreeModel.SCHEMES_BRANCH),
 					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(schemesNode);
@@ -218,7 +218,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 			librariesNode = new PopulatableIconedNode(
 					this,
 					MapViewTreeModel.LIBRARIES_BRANCH,
-					LangModelMap.getString(MapViewTreeModel.LIBRARIES_BRANCH),
+					I18N.getString(MapViewTreeModel.LIBRARIES_BRANCH),
 					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(librariesNode);

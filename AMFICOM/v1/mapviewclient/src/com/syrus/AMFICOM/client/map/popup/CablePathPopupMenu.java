@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathPopupMenu.java,v 1.26 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: CablePathPopupMenu.java,v 1.27 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,14 @@ import java.util.Iterator;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -62,14 +62,14 @@ public class CablePathPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
+		this.removeMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeCablePath();
 			}
 		});
 		this.generateMenuItem
-				.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
+				.setText(I18N.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCabling();

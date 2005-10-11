@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewViewCommand.java,v 1.25 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: MapEditorNewViewCommand.java,v 1.26 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.25 $, $Date: 2005/10/03 10:35:00 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -66,7 +66,7 @@ public class MapEditorNewViewCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							LangModelMap.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
+							I18N.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
 			return;
 		}
 
@@ -92,7 +92,7 @@ public class MapEditorNewViewCommand extends AbstractCommand {
 			mapFrame.setMapView(mapView);
 			setResult(Command.RESULT_OK);
 		} catch(MapException e) {
-			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 			e.printStackTrace();
 		}
 	}

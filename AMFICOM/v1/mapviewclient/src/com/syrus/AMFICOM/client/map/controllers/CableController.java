@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableController.java,v 1.38 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: CableController.java,v 1.39 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Контроллер кабеля.
  * 
- * @version $Revision: 1.38 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -125,7 +125,7 @@ public final class CableController extends AbstractLinkController {
 			final AbstractNode smne = cpath.getStartNode();
 			s2 = ":\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString(MapEditorResourceKeys.FROM_LOWERCASE)
+					+ I18N.getString(MapEditorResourceKeys.FROM_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ smne.getName()
 					+ " [" //$NON-NLS-1$
@@ -134,7 +134,7 @@ public final class CableController extends AbstractLinkController {
 			final AbstractNode emne = cpath.getEndNode();
 			s3 = "\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString(MapEditorResourceKeys.TO_LOWERCASE)
+					+ I18N.getString(MapEditorResourceKeys.TO_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ emne.getName()
 					+ " [" //$NON-NLS-1$

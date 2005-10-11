@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapOptionsDialog.java,v 1.16 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapOptionsDialog.java,v 1.17 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,13 +29,12 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -200,36 +199,36 @@ public class MapOptionsDialog extends JDialog
 		this.canBindColorComboBox.setPreferredSize(fieldDimension);
 		this.spareTextField.setPreferredSize(fieldDimension);
 
-		this.thicknessLanel.setText(LangModelMap.getString("MapOptionsDialog.LineThickness")); //$NON-NLS-1$
-		this.colorLabel.setText(LangModelMap.getString("MapOptionsDialog.LineColor")); //$NON-NLS-1$
-		this.selectionThicknessLabel.setText(LangModelMap.getString("MapOptionsDialog.SelectionLineThickness")); //$NON-NLS-1$
-		this.selectionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.SelectionLineColor")); //$NON-NLS-1$
-		this.selectionStyleLabel.setText(LangModelMap.getString("MapOptionsDialog.SelectionLineStyle")); //$NON-NLS-1$
-		this.styleLabel.setText(LangModelMap.getString("MapOptionsDialog.LineStyle")); //$NON-NLS-1$
-		this.alarmedThicknessLabel.setText(LangModelMap.getString("MapOptionsDialog.AlarmedLineThickness")); //$NON-NLS-1$
-		this.alarmedColorLabel.setText(LangModelMap.getString("MapOptionsDialog.AlarmedLineColor")); //$NON-NLS-1$
-		this.alarmedStyleLabel.setText(LangModelMap.getString("MapOptionsDialog.AlarmedLineStyle")); //$NON-NLS-1$
-		this.borderThicknessLanel.setText(LangModelMap.getString("MapOptionsDialog.FrameThickness")); //$NON-NLS-1$
-		this.borderColorLabel.setText(LangModelMap.getString("MapOptionsDialog.FrameColor")); //$NON-NLS-1$
-		this.textColorLabel.setText(LangModelMap.getString("MapOptionsDialog.TextColor")); //$NON-NLS-1$
-		this.backgroundColorLabel.setText(LangModelMap.getString("MapOptionsDialog.TextBackground")); //$NON-NLS-1$
-		this.fontLabel.setText(LangModelMap.getString("MapOptionsDialog.Font")); //$NON-NLS-1$
-		this.firstSelectionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.LineFirstSelectionColor")); //$NON-NLS-1$
-		this.secondSelectionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.LineSecondSelectionColor")); //$NON-NLS-1$
-		this.metricLabel.setText(LangModelMap.getString("MapOptionsDialog.Metric")); //$NON-NLS-1$
-		this.unboundThicknessLanel.setText(LangModelMap.getString("MapOptionsDialog.UnboundCableThickness")); //$NON-NLS-1$
-		this.unboundLinkColorLabel.setText(LangModelMap.getString("MapOptionsDialog.UnboundCableColor")); //$NON-NLS-1$
-		this.unboundLinkPositionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.UnboundLinkColor")); //$NON-NLS-1$
-		this.unboundElementColorLabel.setText(LangModelMap.getString("MapOptionsDialog.UnboundElementColor")); //$NON-NLS-1$
-		this.canBindColorLabel.setText(LangModelMap.getString("MapOptionsDialog.ElementBindingColor")); //$NON-NLS-1$
-		this.spareLabel.setText(LangModelMap.getString("MapOptionsDialog.DefaultSpare")); //$NON-NLS-1$
-		this.showLengthCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowLength")); //$NON-NLS-1$
-		this.showLinkNamesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowLineNames")); //$NON-NLS-1$
-		this.showNodeNamesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowNodeNames")); //$NON-NLS-1$
+		this.thicknessLanel.setText(I18N.getString("MapOptionsDialog.LineThickness")); //$NON-NLS-1$
+		this.colorLabel.setText(I18N.getString("MapOptionsDialog.LineColor")); //$NON-NLS-1$
+		this.selectionThicknessLabel.setText(I18N.getString("MapOptionsDialog.SelectionLineThickness")); //$NON-NLS-1$
+		this.selectionColorLabel.setText(I18N.getString("MapOptionsDialog.SelectionLineColor")); //$NON-NLS-1$
+		this.selectionStyleLabel.setText(I18N.getString("MapOptionsDialog.SelectionLineStyle")); //$NON-NLS-1$
+		this.styleLabel.setText(I18N.getString("MapOptionsDialog.LineStyle")); //$NON-NLS-1$
+		this.alarmedThicknessLabel.setText(I18N.getString("MapOptionsDialog.AlarmedLineThickness")); //$NON-NLS-1$
+		this.alarmedColorLabel.setText(I18N.getString("MapOptionsDialog.AlarmedLineColor")); //$NON-NLS-1$
+		this.alarmedStyleLabel.setText(I18N.getString("MapOptionsDialog.AlarmedLineStyle")); //$NON-NLS-1$
+		this.borderThicknessLanel.setText(I18N.getString("MapOptionsDialog.FrameThickness")); //$NON-NLS-1$
+		this.borderColorLabel.setText(I18N.getString("MapOptionsDialog.FrameColor")); //$NON-NLS-1$
+		this.textColorLabel.setText(I18N.getString("MapOptionsDialog.TextColor")); //$NON-NLS-1$
+		this.backgroundColorLabel.setText(I18N.getString("MapOptionsDialog.TextBackground")); //$NON-NLS-1$
+		this.fontLabel.setText(I18N.getString("MapOptionsDialog.Font")); //$NON-NLS-1$
+		this.firstSelectionColorLabel.setText(I18N.getString("MapOptionsDialog.LineFirstSelectionColor")); //$NON-NLS-1$
+		this.secondSelectionColorLabel.setText(I18N.getString("MapOptionsDialog.LineSecondSelectionColor")); //$NON-NLS-1$
+		this.metricLabel.setText(I18N.getString("MapOptionsDialog.Metric")); //$NON-NLS-1$
+		this.unboundThicknessLanel.setText(I18N.getString("MapOptionsDialog.UnboundCableThickness")); //$NON-NLS-1$
+		this.unboundLinkColorLabel.setText(I18N.getString("MapOptionsDialog.UnboundCableColor")); //$NON-NLS-1$
+		this.unboundLinkPositionColorLabel.setText(I18N.getString("MapOptionsDialog.UnboundLinkColor")); //$NON-NLS-1$
+		this.unboundElementColorLabel.setText(I18N.getString("MapOptionsDialog.UnboundElementColor")); //$NON-NLS-1$
+		this.canBindColorLabel.setText(I18N.getString("MapOptionsDialog.ElementBindingColor")); //$NON-NLS-1$
+		this.spareLabel.setText(I18N.getString("MapOptionsDialog.DefaultSpare")); //$NON-NLS-1$
+		this.showLengthCheckBox.setText(I18N.getString("MapOptionsDialog.ShowLength")); //$NON-NLS-1$
+		this.showLinkNamesCheckBox.setText(I18N.getString("MapOptionsDialog.ShowLineNames")); //$NON-NLS-1$
+		this.showNodeNamesCheckBox.setText(I18N.getString("MapOptionsDialog.ShowNodeNames")); //$NON-NLS-1$
 		this.showNodeNamesCheckBox.setActionCommand("showNodeNamesCheckBox"); //$NON-NLS-1$
-		this.showPhysicalNodesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowNodes")); //$NON-NLS-1$
+		this.showPhysicalNodesCheckBox.setText(I18N.getString("MapOptionsDialog.ShowNodes")); //$NON-NLS-1$
 
-		this.okButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_APPLY));
+		this.okButton.setText(I18N.getString(MapEditorResourceKeys.BUTTON_APPLY));
 		this.okButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -237,7 +236,7 @@ public class MapOptionsDialog extends JDialog
 					ok();
 				}
 			});
-		this.cancelButton.setText(LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL));
+		this.cancelButton.setText(I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL));
 		this.cancelButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -1130,7 +1129,7 @@ public class MapOptionsDialog extends JDialog
 		}
 		catch(Exception e)
 		{
-			System.out.println(LangModelMap.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
+			System.out.println(I18N.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
 			// cannot parse
 		}
 

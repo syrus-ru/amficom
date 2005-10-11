@@ -1,5 +1,5 @@
 /*-
- * $$Id: AlarmIndicationTimer.java,v 1.4 2005/10/04 17:09:54 krupenn Exp $$
+ * $$Id: AlarmIndicationTimer.java,v 1.5 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,11 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.MapElementController;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.MapTypedElementsContainer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/04 17:09:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient

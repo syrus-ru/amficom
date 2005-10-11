@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPopupMenu.java,v 1.59 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapPopupMenu.java,v 1.60 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.client.map.command.action.RemoveCollectorCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контекстное меню элемента карты
  * 
- * @version $Revision: 1.59 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.60 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -150,8 +150,8 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	protected Collector createCollector() {
 		String inputValue = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(), 
-				LangModelMap.getString(MapEditorResourceKeys.MESSAGE_ENTER_COLLECTOR_NAME),
-				LangModelMap.getString(MapEditorResourceKeys.VALUE_DEFAULT_COLLECTOR_NAME));
+				I18N.getString(MapEditorResourceKeys.MESSAGE_ENTER_COLLECTOR_NAME),
+				I18N.getString(MapEditorResourceKeys.VALUE_DEFAULT_COLLECTOR_NAME));
 		if(inputValue != null) {
 			CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic(inputValue);
 			LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();

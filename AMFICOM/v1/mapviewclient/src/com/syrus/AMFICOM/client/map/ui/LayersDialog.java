@@ -1,5 +1,5 @@
 /*-
- * $$Id: LayersDialog.java,v 1.13 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: LayersDialog.java,v 1.14 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -100,13 +100,13 @@ public class LayersDialog extends JDialog {
 		this.setSize(new Dimension(550, 400));
 		this.getContentPane().setLayout(new BorderLayout());
 
-		this.okButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_APPLY));
+		this.okButton.setText(I18N.getString(MapEditorResourceKeys.BUTTON_APPLY));
 		this.okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ok();
 				}
 			});
-		this.cancelButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL));
+		this.cancelButton.setText(I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL));
 		this.cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					cancel();
@@ -120,7 +120,7 @@ public class LayersDialog extends JDialog {
 			}
 		};
 		siteLabelTableModel.addColumn(""); //$NON-NLS-1$
-		siteLabelTableModel.addRow(new String[] {LangModelMap.getString(MapViewController.ELEMENT_SITENODE)});
+		siteLabelTableModel.addRow(new String[] {I18N.getString(MapViewController.ELEMENT_SITENODE)});
 		this.siteLabelTable.setModel(siteLabelTableModel);
 		this.siteLabelTable.setTableHeader(null);
 
@@ -131,7 +131,7 @@ public class LayersDialog extends JDialog {
 			}
 		};
 		linkLabelTableModel.addColumn(""); //$NON-NLS-1$
-		linkLabelTableModel.addRow(new String[] {LangModelMap.getString(MapViewController.ELEMENT_PHYSICALLINK)});
+		linkLabelTableModel.addRow(new String[] {I18N.getString(MapViewController.ELEMENT_PHYSICALLINK)});
 		this.linkLabelTable.setModel(linkLabelTableModel);
 		this.linkLabelTable.setTableHeader(null);
 
@@ -142,7 +142,7 @@ public class LayersDialog extends JDialog {
 			}
 		};
 		cableLabelTableModel.addColumn(""); //$NON-NLS-1$
-		cableLabelTableModel.addRow(new String[] {LangModelMap.getString(MapViewController.ELEMENT_CABLEPATH)});
+		cableLabelTableModel.addRow(new String[] {I18N.getString(MapViewController.ELEMENT_CABLEPATH)});
 		this.cableLabelTable.setModel(cableLabelTableModel);
 		this.cableLabelTable.setTableHeader(null);
 
@@ -201,9 +201,9 @@ public class LayersDialog extends JDialog {
 		this.siteTableModel.addRow(
 				new Object[] {
 					this.allSitesVisibility, 
-					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL),
+					I18N.getString(MapEditorResourceKeys.LABEL_ALL),
 					this.allSitesVisibility,
-					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL) } );
+					I18N.getString(MapEditorResourceKeys.LABEL_ALL) } );
 		this.siteTable.setModel(this.siteTableModel);
 		this.siteTable.setTableHeader(null);
 		this.siteTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
@@ -264,9 +264,9 @@ public class LayersDialog extends JDialog {
 		this.linkTableModel.addRow(
 				new Object[] {
 					this.allLinksVisibility, 
-					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL),
+					I18N.getString(MapEditorResourceKeys.LABEL_ALL),
 					this.allLinksVisibility,
-					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL) } );
+					I18N.getString(MapEditorResourceKeys.LABEL_ALL) } );
 		this.linkTable.setModel(this.linkTableModel);
 		this.linkTable.setTableHeader(null);
 		this.linkTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
@@ -293,9 +293,9 @@ public class LayersDialog extends JDialog {
 		this.cableTableModel.addRow(
 				new Object[] {
 					this.allCablesVisibility.getVisible(), 
-					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL),
+					I18N.getString(MapEditorResourceKeys.LABEL_ALL),
 					this.allCablesVisibility.getLabelVisible(),
-					LangModelMap.getString(MapEditorResourceKeys.LABEL_ALL) } );
+					I18N.getString(MapEditorResourceKeys.LABEL_ALL) } );
 		this.cableTable.setModel(this.cableTableModel);
 		this.cableTable.setTableHeader(null);
 		this.cableTable.setDefaultRenderer(Boolean.class, LayersTableCellRenderer.getInstance());
@@ -345,7 +345,7 @@ public class LayersDialog extends JDialog {
 						visibility, 
 						type.getName(),
 						visibility,
-						LangModelMap.getString(MapEditorResourceKeys.LABEL_LABEL) } );
+						I18N.getString(MapEditorResourceKeys.LABEL_LABEL) } );
 		}
 		updateAllSitesVisibility();
 
@@ -364,7 +364,7 @@ public class LayersDialog extends JDialog {
 						visibility, 
 						type.getName(),
 						visibility,
-						LangModelMap.getString(MapEditorResourceKeys.LABEL_LABEL) } );
+						I18N.getString(MapEditorResourceKeys.LABEL_LABEL) } );
 		}
 		updateAllLinksVisibility();
 	}

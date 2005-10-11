@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.27 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.28 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -167,8 +167,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.endNodeToComboBox = new WrapperedComboBox(comboController, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString(MapEditorResourceKeys.LABEL_CABLE_BINDING));
-		this.titleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_CABLE_BINDING));
+		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.LABEL_CABLE_BINDING));
+		this.titleLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_CABLE_BINDING));
 		
 		ActionListener lcbal = new ActionListener()
 			{
@@ -254,7 +254,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.bindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_BIND));
+		this.bindButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_BIND));
 		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif"))); //$NON-NLS-1$
 		this.bindButton.setPreferredSize(buttonSize);
 		this.bindButton.setMaximumSize(buttonSize);
@@ -271,7 +271,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.bindChainButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_BIND_CHAIN));
+		this.bindChainButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_BIND_CHAIN));
 		this.bindChainButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindchain.gif"))); //$NON-NLS-1$
 		this.bindChainButton.setPreferredSize(buttonSize);
 		this.bindChainButton.setMaximumSize(buttonSize);
@@ -288,7 +288,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.unbindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_UNBIND));
+		this.unbindButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_UNBIND));
 		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/unbindlink.gif"))); //$NON-NLS-1$
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
@@ -305,7 +305,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.clearBindingButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_UNBIND_CABLE));
+		this.clearBindingButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_UNBIND_CABLE));
 		this.clearBindingButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
 		this.clearBindingButton.setPreferredSize(buttonSize);
 		this.clearBindingButton.setMaximumSize(buttonSize);
@@ -318,7 +318,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				}
 			});
 
-		this.selectButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
+		this.selectButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
 		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);
@@ -332,16 +332,16 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			});
 
 		this.startPanel.setLayout(this.gridBagLayout3);
-		this.startNodeTitleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_FROM_START));
-		this.startNodeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NODE));
-		this.startLinkLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL));
-		this.startNodeToLabel.setText(LangModelMap.getString(MapEditorResourceKeys.TO_LOWERCASE));
+		this.startNodeTitleLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_FROM_START));
+		this.startNodeLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NODE));
+		this.startLinkLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TUNNEL));
+		this.startNodeToLabel.setText(I18N.getString(MapEditorResourceKeys.TO_LOWERCASE));
 
 		this.endPanel.setLayout(this.gridBagLayout2);
-		this.endNodeTitleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_FROM_END));
-		this.endNodeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_NODE));
-		this.endLinkLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL));
-		this.endNodeToLabel.setText(LangModelMap.getString(MapEditorResourceKeys.TO_LOWERCASE));
+		this.endNodeTitleLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_FROM_END));
+		this.endNodeLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_NODE));
+		this.endLinkLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TUNNEL));
+		this.endNodeToLabel.setText(I18N.getString(MapEditorResourceKeys.TO_LOWERCASE));
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
 		this.buttonsPanel.add(this.bindButton);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLinkTypeCommand.java,v 1.13 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorNewLinkTypeCommand.java,v 1.14 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -54,14 +54,14 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 						new StatusMessageEvent(
 								this, 
 								StatusMessageEvent.STATUS_MESSAGE, 
-								LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+								I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 				return;
 			}
 			PhysicalLinkType physicalLinkType = PhysicalLinkType.createInstance(
 					LoginManager.getUserId(), 
 					PhysicalLinkTypeSort.TUNNEL, 
 					"codename", //$NON-NLS-1$
-					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					I18N.getString(MapEditorResourceKeys.VALUE_NEW),
 					MapEditorResourceKeys.EMPTY_STRING,
 					new IntDimension(1, 1),
 					true,
@@ -70,7 +70,7 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
 			physicalLinkTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString(MapEditorResourceKeys.ENTITY_PHYSICAL_LINK_TYPE),
+					I18N.getString(MapEditorResourceKeys.ENTITY_PHYSICAL_LINK_TYPE),
 					physicalLinkType,
 					physicalLinkTypeEditor) ) {
 				StorableObjectPool.flush(physicalLinkType, LoginManager.getUserId(), true);

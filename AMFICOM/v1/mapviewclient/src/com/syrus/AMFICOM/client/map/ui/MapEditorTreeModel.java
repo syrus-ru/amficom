@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorTreeModel.java,v 1.10 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapEditorTreeModel.java,v 1.11 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,14 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -49,7 +49,7 @@ public final class MapEditorTreeModel extends AbstractChildrenFactory {
 			this.root = new PopulatableIconedNode(
 				this,
 				MapEditorTreeModel.MAP_EDITOR_TREE_ROOT,
-				LangModelMap.getString(MapEditorTreeModel.MAP_EDITOR_TREE_ROOT),
+				I18N.getString(MapEditorTreeModel.MAP_EDITOR_TREE_ROOT),
 				UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG), 
 				true);
 		}

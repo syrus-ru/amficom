@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeSizePanel.java,v 1.16 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: NodeSizePanel.java,v 1.17 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,14 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
  * 
- * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -98,8 +98,8 @@ public final class NodeSizePanel extends JPanel
 				}
 			});
 			
-	    this.leftButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.TOOLTIP_REDUCE_ICON));
-	    this.rightButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.TOOLTIP_ENLARGE_ICON));
+	    this.leftButton.setToolTipText(I18N.getString(MapEditorResourceKeys.TOOLTIP_REDUCE_ICON));
+	    this.rightButton.setToolTipText(I18N.getString(MapEditorResourceKeys.TOOLTIP_ENLARGE_ICON));
 		
 		this.add(this.leftButton, BorderLayout.WEST);
 		this.add(this.rightButton, BorderLayout.EAST);

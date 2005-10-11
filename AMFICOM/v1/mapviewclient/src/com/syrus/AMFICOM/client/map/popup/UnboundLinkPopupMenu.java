@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundLinkPopupMenu.java,v 1.22 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: UnboundLinkPopupMenu.java,v 1.23 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,14 @@ import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundLinkToPhysicalLinkCommandBundle;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -56,14 +56,14 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.bindMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_BIND));
+		this.bindMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_BIND));
 		this.bindMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bind();
 			}
 		});
 		this.generateMenuItem
-				.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
+				.setText(I18N.getString(MapEditorResourceKeys.POPUP_GENERATE_CABLING));
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCabling();

@@ -1,5 +1,5 @@
 /*-
- * $$Id: EventMarkerController.java,v 1.19 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: EventMarkerController.java,v 1.20 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.mapview.EventMarker;
 /**
  * Контроллер маркера события.
  * 
- * @version $Revision: 1.19 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -75,8 +75,8 @@ public final class EventMarkerController extends MarkerController {
 
 		final EventMarker marker = (EventMarker )mapElement;
 		
-		final String s1 = LangModelMap.getString(MapEditorResourceKeys.ENTITY_EVENT) + " " + marker.getName()  //$NON-NLS-1$
-			+ " (" + LangModelMap.getString(MapEditorResourceKeys.PATH_LOWERCASE) + " " + marker.getMeasurementPath().getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		final String s1 = I18N.getString(MapEditorResourceKeys.ENTITY_EVENT) + " " + marker.getName()  //$NON-NLS-1$
+			+ " (" + I18N.getString(MapEditorResourceKeys.PATH_LOWERCASE) + " " + marker.getMeasurementPath().getName() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		return s1;
 	}

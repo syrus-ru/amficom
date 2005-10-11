@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.68 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapMouseListener.java,v 1.69 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.client.map.strategy.MapStrategy;
 import com.syrus.AMFICOM.client.map.strategy.MapStrategyManager;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.68 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.69 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -653,13 +653,13 @@ public final class MapMouseListener implements MouseListener {
 		JOptionPane
 				.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelMap
+						I18N
 								.getString(MapEditorResourceKeys.LABEL_DISTANCE)
 								+ " : " //$NON-NLS-1$
 								+ MapPropertiesManager.getDistanceFormat()
 										.format(distance)
 								+ MapPropertiesManager.getMetric(),
-						LangModelMap
+						I18N
 								.getString(MapEditorResourceKeys.TITLE_MEASURE_DISTANCE),
 						JOptionPane.PLAIN_MESSAGE);
 		this.netMapViewer.repaint(false);

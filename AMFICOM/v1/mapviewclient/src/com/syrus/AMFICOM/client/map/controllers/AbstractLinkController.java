@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.45 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: AbstractLinkController.java,v 1.46 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.ui.LineComboBox;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -45,7 +45,7 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.45 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.46 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -86,25 +86,25 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 		this.styleCharType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_STYLE,
-				LangModelMap.getString(MapEditorResourceKeys.VALUE_STYLE));
+				I18N.getString(MapEditorResourceKeys.VALUE_STYLE));
 		this.thicknessCharType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_THICKNESS,
-				LangModelMap.getString(MapEditorResourceKeys.VALUE_THICKNESS));
+				I18N.getString(MapEditorResourceKeys.VALUE_THICKNESS));
 		this.colorCharType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_COLOR,
-				LangModelMap.getString(MapEditorResourceKeys.VALUE_COLOR));
+				I18N.getString(MapEditorResourceKeys.VALUE_COLOR));
 
 		this.alarmedThicknessCharType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS,
-				LangModelMap.getString(MapEditorResourceKeys.VALUE_ALARMED_THICKNESS));
+				I18N.getString(MapEditorResourceKeys.VALUE_ALARMED_THICKNESS));
 
 		this.alarmedColorCharType = getCharacteristicType(
 				userId, 
 				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR,
-				LangModelMap.getString(MapEditorResourceKeys.VALUE_ALARMED_COLOR));
+				I18N.getString(MapEditorResourceKeys.VALUE_ALARMED_COLOR));
 	}
 
 	/**
@@ -145,7 +145,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 		try {
 			final CharacteristicType type = CharacteristicType.createInstance(userId,
 					codename,
-					LangModelMap.getString(MapEditorResourceKeys.VALUE_NO_DESCRIPTION),
+					I18N.getString(MapEditorResourceKeys.VALUE_NO_DESCRIPTION),
 					name,
 					dataType,
 					sort);
@@ -194,7 +194,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.thicknessCharType,
-						LangModelMap.getString(MapEditorResourceKeys.NONAME),
+						I18N.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(size),
 						characterizable,
@@ -242,7 +242,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.styleCharType,
-						LangModelMap.getString(MapEditorResourceKeys.NONAME),
+						I18N.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						style,
 						characterizable,
@@ -328,7 +328,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				attribute = Characteristic.createInstance(
 						LoginManager.getUserId(),
 						this.colorCharType,
-						LangModelMap.getString(MapEditorResourceKeys.NONAME),
+						I18N.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
 						characterizable,
@@ -385,7 +385,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.alarmedColorCharType,
-						LangModelMap.getString(MapEditorResourceKeys.NONAME),
+						I18N.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
 						characterizable,
@@ -441,7 +441,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.alarmedThicknessCharType,
-						LangModelMap.getString(MapEditorResourceKeys.NONAME),
+						I18N.getString(MapEditorResourceKeys.NONAME),
 						"1", //$NON-NLS-1$
 						String.valueOf(size),
 						characterizable,

@@ -1,5 +1,5 @@
 /*-
- * $$Id: AlarmMarkerController.java,v 1.20 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: AlarmMarkerController.java,v 1.21 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.mapview.AlarmMarker;
 /**
  * Контроллер маркера сигнала тревоги.
  * 
- * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -96,9 +96,9 @@ public final class AlarmMarkerController extends MarkerController {
 
 		try {
 			double distance = super.getFromStartLengthLf(marker);
-			final String s1 = LangModelMap.getString(MapEditorResourceKeys.ENTITY_ALARM) + " " + marker.getName() //$NON-NLS-1$
-					+ " (" + LangModelMap.getString(MapEditorResourceKeys.PATH_LOWERCASE) + " " + marker.getMeasurementPath().getName() + ") " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					+ LangModelMap.getString(MapEditorResourceKeys.DISTANCE_LOWERCASE) + " - " + distance; //$NON-NLS-1$ //$NON-NLS-2$
+			final String s1 = I18N.getString(MapEditorResourceKeys.ENTITY_ALARM) + " " + marker.getName() //$NON-NLS-1$
+					+ " (" + I18N.getString(MapEditorResourceKeys.PATH_LOWERCASE) + " " + marker.getMeasurementPath().getName() + ") " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+					+ I18N.getString(MapEditorResourceKeys.DISTANCE_LOWERCASE) + " - " + distance; //$NON-NLS-1$ //$NON-NLS-2$
 
 			return s1;
 		} catch(MapException e) {

@@ -8,9 +8,8 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -123,28 +122,28 @@ class TunnelCableListTableModel extends AbstractTableModel {
 		String descriptionString = null;		
 		if(collector != null) {
 			nameString = collector.getName();
-			typeString = LangModelMap.getString(COLLECTOR);
+			typeString = I18N.getString(COLLECTOR);
 			descriptionString = collector.getDescription();
 		}
 		else {
 			nameString = physicalLink.getName();
-			typeString = LangModelMap.getString(TUNNEL);
+			typeString = I18N.getString(TUNNEL);
 			descriptionString = physicalLink.getDescription();			
 		}
 		
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+		this.propertyNamesColumn.add(I18N.getString(NAME));
 		this.propertyValuesColumn.add(nameString);
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
+		this.propertyNamesColumn.add(I18N.getString(TYPE));
 		this.propertyValuesColumn.add(typeString);
-		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
+		this.propertyNamesColumn.add(I18N.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(descriptionString);
 		
-		this.propertyNamesColumn.add(LangModelMap.getString(START_NODE));
+		this.propertyNamesColumn.add(I18N.getString(START_NODE));
 		this.propertyValuesColumn.add(physicalLink.getStartNode().getName());
-		this.propertyNamesColumn.add(LangModelMap.getString(END_NODE));
+		this.propertyNamesColumn.add(I18N.getString(END_NODE));
 		this.propertyValuesColumn.add(physicalLink.getEndNode().getName());
 		
-		this.propertyNamesColumn.add(LangModelMap.getString(TOPOLOGICAL_LENGTH));
+		this.propertyNamesColumn.add(I18N.getString(TOPOLOGICAL_LENGTH));
 		this.propertyValuesColumn.add(Double.toString(physicalLink.getLengthLt()));
 
 		String cityString = physicalLink.getCity();
@@ -153,36 +152,36 @@ class TunnelCableListTableModel extends AbstractTableModel {
 		String addressString = "";
 		if (!cityString.equals(EMPTY_STRING))
 			addressString += 
-				(LangModelMap.getString(CITY_KURZ)
+				(I18N.getString(CITY_KURZ)
 				+ cityString
 				+ ADDRESS_SEPARATOR);		
 		if (!streetString.equals(EMPTY_STRING))
 			addressString += 
-				(LangModelMap.getString(STREET_KURZ)
+				(I18N.getString(STREET_KURZ)
 				+ streetString
 				+ ADDRESS_SEPARATOR);		
 		if (!buildingString.equals(EMPTY_STRING))
 			addressString += 
-				(LangModelMap.getString(BUILDING_KURZ)
+				(I18N.getString(BUILDING_KURZ)
 				+ buildingString
 				+ ADDRESS_SEPARATOR);		
 
-		this.propertyNamesColumn.add(LangModelReport.getString(ADDRESS));
+		this.propertyNamesColumn.add(I18N.getString(ADDRESS));
 		this.propertyValuesColumn.add(addressString);
 		
 		this.originalRowCount += 7;
 		
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelMap.getString(TUNNEL_CABLE_LIST));
+		this.propertyNamesColumn.add(I18N.getString(TUNNEL_CABLE_LIST));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		
-		this.propertyNamesColumn.add(LangModelMap.getString(CABLE));
+		this.propertyNamesColumn.add(I18N.getString(CABLE));
 		String subTableColumnHeader = null;
 		if(collector != null)
-			subTableColumnHeader = LangModelMap.getString(MAP_TUNNEL_POSIT);
+			subTableColumnHeader = I18N.getString(MAP_TUNNEL_POSIT);
 		else
-			subTableColumnHeader = LangModelMap.getString(MAP_COLLECTOR_POSIT);			
+			subTableColumnHeader = I18N.getString(MAP_COLLECTOR_POSIT);			
 		this.propertyValuesColumn.add(subTableColumnHeader);
 
 		this.originalRowCount += 3;
@@ -223,9 +222,9 @@ class TunnelCableListTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % TunnelCableListReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");

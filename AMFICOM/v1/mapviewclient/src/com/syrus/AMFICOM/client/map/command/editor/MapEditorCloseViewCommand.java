@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorCloseViewCommand.java,v 1.24 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorCloseViewCommand.java,v 1.25 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.24 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -79,7 +79,7 @@ public class MapEditorCloseViewCommand extends AbstractCommand {
 					MapEvent.MAP_VIEW_CLOSED));
 			setResult(Command.RESULT_OK);
 		} catch(MapException e) {
-			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 			e.printStackTrace();
 		}
 	}

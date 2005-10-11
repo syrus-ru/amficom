@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.60 2005/10/10 15:25:48 peskovsky Exp $$
+ * $$Id: NetMapViewer.java,v 1.61 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
 import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -84,8 +84,8 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.60 $, $Date: 2005/10/10 15:25:48 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.61 $, $Date: 2005/10/11 08:56:11 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -527,7 +527,7 @@ public abstract class NetMapViewer {
 								mapView,
 								path,
 								mne.getMeId(),
-								LangModelMap.getString(MapEditorResourceKeys.ENTITY_MARKER));
+								I18N.getString(MapEditorResourceKeys.ENTITY_MARKER));
 						mapView.addMarker(marker);
 
 						MarkerController mc = (MarkerController) 
@@ -553,7 +553,7 @@ public abstract class NetMapViewer {
 								mapView,
 								path,
 								mne.getMeId(),
-								LangModelMap.getString(MapEditorResourceKeys.ENTITY_EVENT));
+								I18N.getString(MapEditorResourceKeys.ENTITY_EVENT));
 						mapView.addMarker(marker);
 
 						MarkerController mc = (MarkerController) 
@@ -589,7 +589,7 @@ public abstract class NetMapViewer {
 									mapView,
 									path,
 									mne.getMeId(),
-									LangModelMap.getString(MapEditorResourceKeys.ENTITY_ALARM));
+									I18N.getString(MapEditorResourceKeys.ENTITY_ALARM));
 							mapView.addMarker(marker);
 						}
 						else {
@@ -690,7 +690,7 @@ public abstract class NetMapViewer {
 					LoginManager.getUserId(), 
 					siteNodeType.getSort(), 
 					"codename",  //$NON-NLS-1$
-					LangModelMap.getString(MapEditorResourceKeys.COPY_OF) 
+					I18N.getString(MapEditorResourceKeys.COPY_OF) 
 						+ " " + siteNodeType.getName(), //$NON-NLS-1$
 					siteNodeType.getDescription(), 
 					siteNodeType.getImageId(), 
@@ -701,7 +701,7 @@ public abstract class NetMapViewer {
 
 			siteNodeTypeEditor.setNetMapViewer(this);
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString(MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE),
+					I18N.getString(MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE),
 					newSiteNodeType,
 					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(newSiteNodeType, LoginManager.getUserId(), true);
@@ -722,7 +722,7 @@ public abstract class NetMapViewer {
 					LoginManager.getUserId(), 
 					physicalLinkType.getSort(), 
 					"codename",  //$NON-NLS-1$
-					LangModelMap.getString(MapEditorResourceKeys.COPY_OF) 
+					I18N.getString(MapEditorResourceKeys.COPY_OF) 
 						+ " " + physicalLinkType.getName(), //$NON-NLS-1$
 					physicalLinkType.getDescription(), 
 					physicalLinkType.getBindingDimension(), 
@@ -732,7 +732,7 @@ public abstract class NetMapViewer {
 			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
 			physicalLinkTypeEditor.setNetMapViewer(this);
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString(MapEditorResourceKeys.ENTITY_PHYSICAL_LINK_TYPE),
+					I18N.getString(MapEditorResourceKeys.ENTITY_PHYSICAL_LINK_TYPE),
 					newPhysicalLinkType,
 					physicalLinkTypeEditor)) {
 				StorableObjectPool.flush(newPhysicalLinkType, LoginManager.getUserId(), true);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.11 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.12 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -53,7 +52,7 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							LangModelMap.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
+							I18N.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
 			return;
 		}
 		Collection<SiteNodeType> topologicalNodeTypes = NodeTypeController.getTopologicalNodeTypes(mapFrame.getMapView().getMap());
@@ -66,7 +65,7 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
+							I18N.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}

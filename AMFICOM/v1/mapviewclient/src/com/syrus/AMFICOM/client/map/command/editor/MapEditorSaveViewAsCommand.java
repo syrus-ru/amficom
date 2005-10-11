@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorSaveViewAsCommand.java,v 1.22 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorSaveViewAsCommand.java,v 1.23 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
  * схемы в модуле "Редактор топологических схем" с новым именем. Использует
  * команду MapSaveAsCommand
  * 
- * @version $Revision: 1.22 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -83,8 +83,8 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 					JOptionPane
 							.showMessageDialog(
 									Environment.getActiveWindow(),
-									LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_VIEW_SAVED_BUT_FAILED_TO_OPEN),
-									LangModelMap.getString(MapEditorResourceKeys.MESASGE_ERROR_OPENING),
+									I18N.getString(MapEditorResourceKeys.ERROR_MAP_VIEW_SAVED_BUT_FAILED_TO_OPEN),
+									I18N.getString(MapEditorResourceKeys.MESASGE_ERROR_OPENING),
 									JOptionPane.WARNING_MESSAGE);
 					setResult(Command.RESULT_OK);
 					e.printStackTrace();
@@ -98,7 +98,7 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 					controller.addScheme((Scheme )it.next());
 				}
 
-				mapFrame.setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW) + " - " //$NON-NLS-1$
+				mapFrame.setTitle(I18N.getString(MapEditorResourceKeys.TITLE_MAP_VIEW) + " - " //$NON-NLS-1$
 						+ newMapView.getName());
 				mapFrame.getMapViewer().getLogicalNetLayer().sendMapEvent(MapEvent.MAP_VIEW_CHANGED);
 			}

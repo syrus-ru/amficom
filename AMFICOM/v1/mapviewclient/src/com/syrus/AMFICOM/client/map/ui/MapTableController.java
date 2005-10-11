@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapTableController.java,v 1.15 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapTableController.java,v 1.16 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -72,7 +72,7 @@ public final class MapTableController implements Wrapper {
 	}
 
 	public String getName(final String key) {
-		String name = LangModelMap.getString(key);
+		String name = I18N.getString(key);
 		return name;
 	}
 

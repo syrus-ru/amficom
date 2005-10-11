@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapImportCommand.java,v 1.55 2005/10/03 10:35:01 krupenn Exp $$
+ * $$Id: MapImportCommand.java,v 1.56 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.55 $, $Date: 2005/10/03 10:35:01 $
+ * @version $Revision: 1.56 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -141,7 +141,7 @@ public class MapImportCommand extends ImportCommand {
 		
 					setResult(Command.RESULT_OK);
 				} catch(MapException e) {
-					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(DatabaseException e) {
@@ -151,7 +151,7 @@ public class MapImportCommand extends ImportCommand {
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(XmlException e) {
-					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_XML_EXCEPTION)));
+					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_XML_EXCEPTION)));
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(IOException e) {
@@ -159,7 +159,7 @@ public class MapImportCommand extends ImportCommand {
 					setResult(Command.RESULT_NO);
 				}
 //			}
-//		}, LangModelMap.getString(MapEditorResourceKeys.MESSAGE_INFORMATION_IMPORTING_PLS_WAIT));
+//		}, I18N.getString(MapEditorResourceKeys.MESSAGE_INFORMATION_IMPORTING_PLS_WAIT));
 	}
 
 	protected Map loadXML(String fileName)
@@ -199,12 +199,12 @@ public class MapImportCommand extends ImportCommand {
 						xmlMap);
 				map.setName(map.getName()
 						+ " (" //$NON-NLS-1$
-						+ LangModelMap.getString(MapEditorResourceKeys.IMPORTED)
+						+ I18N.getString(MapEditorResourceKeys.IMPORTED)
 						+ " " //$NON-NLS-1$
 						+ MapPropertiesManager.getDateFormat()
 							.format(new Date(System.currentTimeMillis())) 
 						+ " " //$NON-NLS-1$
-						+ LangModelMap.getString(MapEditorResourceKeys.OUT_OF_LOWERCASE)
+						+ I18N.getString(MapEditorResourceKeys.OUT_OF_LOWERCASE)
 						+ " \'" //$NON-NLS-1$
 						+ xmlfile.getName() + "\')"); //$NON-NLS-1$
 				

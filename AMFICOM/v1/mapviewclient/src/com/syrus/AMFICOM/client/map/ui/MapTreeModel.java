@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapTreeModel.java,v 1.23 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapTreeModel.java,v 1.24 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.client.map.SiteNodeConditionWrapper;
 import com.syrus.AMFICOM.client.map.controllers.MapElementController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -153,7 +153,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 
 	public String getObjectName(Object object) {
 		if(object instanceof String)
-			return LangModelMap.getString((String )object);
+			return I18N.getString((String )object);
 		else
 		if(object instanceof Map) {
 			Map map = (Map )object;
@@ -169,7 +169,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 			MapElement mapElement = (MapElement )object;
 			return mapElement.getName();
 		}
-		return LangModelMap.getString(MapEditorResourceKeys.NONAME);
+		return I18N.getString(MapEditorResourceKeys.NONAME);
 	}
 
 	public void populate(Item node) {
@@ -658,7 +658,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 			if(childNode == null) {
 				Item newItem = new IconedNode(
 						topologicalNode,
-						LangModelMap.getString(MapEditorResourceKeys.NONAME),
+						I18N.getString(MapEditorResourceKeys.NONAME),
 						nodeIcon,
 						false);
 				// if(node.getChildren().isEmpty())

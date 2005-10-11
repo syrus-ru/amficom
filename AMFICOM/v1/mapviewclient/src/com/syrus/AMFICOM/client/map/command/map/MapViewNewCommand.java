@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewNewCommand.java,v 1.35 2005/09/30 16:08:38 krupenn Exp $$
+ * $$Id: MapViewNewCommand.java,v 1.36 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,7 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -31,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * создать новый вид
  *  
- * @version $Revision: 1.35 $, $Date: 2005/09/30 16:08:38 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -55,7 +54,7 @@ public class MapViewNewCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString(MapEditorResourceKeys.STATUS_CREATING_NEW_MAP_VIEW)));
+						I18N.getString(MapEditorResourceKeys.STATUS_CREATING_NEW_MAP_VIEW)));
 
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
@@ -67,7 +66,7 @@ public class MapViewNewCommand extends AbstractCommand {
 			this.mapView = MapView.createInstance(
 					userId,
 					domainId,
-					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW_MAP_VIEW),
+					I18N.getString(MapEditorResourceKeys.VALUE_NEW_MAP_VIEW),
 					MapEditorResourceKeys.EMPTY_STRING,
 					center.getX(),
 					center.getY(),
@@ -96,13 +95,13 @@ public class MapViewNewCommand extends AbstractCommand {
 //			Map map = mapView.getMap();
 //
 //			mapFrame.setMapView(mv);
-//			mapFrame.setTitle( LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP) + " - " + mv.getName());
+//			mapFrame.setTitle( I18N.getString(MapEditorResourceKeys.TITLE_MAP) + " - " + mv.getName());
 //		}
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
+						I18N.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 

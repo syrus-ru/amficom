@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryController.java,v 1.12 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapLibraryController.java,v 1.13 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.client.map.controllers;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -80,7 +80,7 @@ public class MapLibraryController {
 		if(library == null) {
 			library = MapLibrary.createInstance(
 				userId,
-				LangModelMap.getString(codename),
+				I18N.getString(codename),
 				codename,
 				"", //$NON-NLS-1$
 				null);

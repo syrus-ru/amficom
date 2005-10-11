@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewSiteTypeCommand.java,v 1.10 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorNewSiteTypeCommand.java,v 1.11 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -54,14 +54,14 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 						new StatusMessageEvent(
 								this, 
 								StatusMessageEvent.STATUS_MESSAGE, 
-								LangModelMap.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
+								I18N.getString(MapEditorResourceKeys.MESSAGE_OPEN_MAP_FRAME_FIRST)));
 				return;
 			}
 			SiteNodeType siteNodeType = SiteNodeType.createInstance(
 					LoginManager.getUserId(), 
 					SiteNodeTypeSort.BUILDING, 
 					"codename", //$NON-NLS-1$
-					LangModelMap.getString(MapEditorResourceKeys.VALUE_NEW),
+					I18N.getString(MapEditorResourceKeys.VALUE_NEW),
 					MapEditorResourceKeys.EMPTY_STRING,
 					NodeTypeController.getDefaultImageId(),
 					true,
@@ -70,7 +70,7 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 			SiteNodeTypeEditor siteNodeTypeEditor = new SiteNodeTypeEditor();
 			siteNodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString(MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE),
+					I18N.getString(MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE),
 					siteNodeType,
 					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);

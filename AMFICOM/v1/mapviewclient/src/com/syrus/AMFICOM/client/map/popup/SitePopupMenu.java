@@ -1,5 +1,5 @@
 /*-
- * $$Id: SitePopupMenu.java,v 1.21 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: SitePopupMenu.java,v 1.22 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,14 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -60,7 +60,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.attachCableInletMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_ATTACH_CABLE_INLET));
+		this.attachCableInletMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_ATTACH_CABLE_INLET));
 		this.attachCableInletMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -70,7 +70,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeMenuItem.setText(LangModelMap.getString(MapEditorResourceKeys.POPUP_DELETE));
+		this.removeMenuItem.setText(I18N.getString(MapEditorResourceKeys.POPUP_DELETE));
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeSite();

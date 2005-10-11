@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.79 2005/10/04 17:12:42 krupenn Exp $$
+ * $$Id: MapFrame.java,v 1.80 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -205,7 +205,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.79 $, $Date: 2005/10/04 17:12:42 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -315,7 +315,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		this.setMaximizable(true);
 		this.setResizable(true);
 
-		this.setTitle(LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP));
+		this.setTitle(I18N.getString(MapEditorResourceKeys.TITLE_MAP));
 
 		// визуальный компонент обозревателя карты
 		// обозреватель карты сам по себе не является компонентом, а содержит
@@ -552,11 +552,11 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 			}
 		}
 		if (changesPresent) {
-			final String message = LangModelMap.getString(MapEditorResourceKeys.MESSAGE_UNSAVED_ELEMENTS_PRESENT);
+			final String message = I18N.getString(MapEditorResourceKeys.MESSAGE_UNSAVED_ELEMENTS_PRESENT);
 
 			final int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 					message,
-					LangModelMap.getString(MapEditorResourceKeys.TITLE_OBJECT_WAS_CHANGED),
+					I18N.getString(MapEditorResourceKeys.TITLE_OBJECT_WAS_CHANGED),
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if (ret == JOptionPane.YES_OPTION) {

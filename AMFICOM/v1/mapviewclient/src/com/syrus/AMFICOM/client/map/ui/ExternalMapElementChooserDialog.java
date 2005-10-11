@@ -1,5 +1,5 @@
 /*-
- * $$Id: ExternalMapElementChooserDialog.java,v 1.13 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: ExternalMapElementChooserDialog.java,v 1.14 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
@@ -41,7 +40,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -109,7 +108,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.getContentPane().setLayout(this.borderLayout2);
 		this.topPanel.setLayout(this.borderLayout3);
 		this.topPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		this.buttonCancel.setText(LangModelGeneral.getString(MapEditorResourceKeys.BUTTON_CANCEL));
+		this.buttonCancel.setText(I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL));
 		this.buttonCancel.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -117,7 +116,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 					buttonCancel_actionPerformed(e);
 				}
 			});
-		this.buttonOpen.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
+		this.buttonOpen.setText(I18N.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
 		this.buttonOpen.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -138,7 +137,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 
 		this.model = new MapTreeModel();
 
-		this.root = new IconedNode("root", LangModelMap.getString(MapEditorResourceKeys.TREE_MAP)); //$NON-NLS-1$
+		this.root = new IconedNode("root", I18N.getString(MapEditorResourceKeys.TREE_MAP)); //$NON-NLS-1$
 		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();

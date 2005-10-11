@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.34 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.35 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -62,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -86,9 +85,9 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	private UgoTabbedPane schemePane = new UgoTabbedPane();
 
-	DefaultMutableTreeNode root = new DefaultMutableTreeNode(LangModelMap.getString(MapEditorResourceKeys.TREE_ELEMENTS_IN_NODE));
-	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode(LangModelMap.getString(MapEditorResourceKeys.TREE_SCHEME_ELEMENTS));
-	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode(LangModelMap.getString(MapEditorResourceKeys.TREE_SCHEME_CABLE_LINKS));
+	DefaultMutableTreeNode root = new DefaultMutableTreeNode(I18N.getString(MapEditorResourceKeys.TREE_ELEMENTS_IN_NODE));
+	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode(I18N.getString(MapEditorResourceKeys.TREE_SCHEME_ELEMENTS));
+	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode(I18N.getString(MapEditorResourceKeys.TREE_SCHEME_CABLE_LINKS));
 	
 	private JButton commitButton = new JButton();
 
@@ -122,7 +121,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	private void jbInit() {
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString(MapEditorResourceKeys.LABEL_SITE_BINDING));
+		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.LABEL_SITE_BINDING));
 
 		this.elementsTree = new JTree(createTree(null));
 		this.elementsTree.expandRow(0);
@@ -145,7 +144,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				}
 			});
 
-		this.bindButton.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_BIND));
+		this.bindButton.setText(I18N.getString(MapEditorResourceKeys.BUTTON_BIND));
 		this.bindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -155,7 +154,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				}
 			});
 		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
-		this.unbindButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_UNBIND));
+		this.unbindButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_UNBIND));
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -173,7 +172,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.selectButton.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
+		this.selectButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_SELECT_ELEMENT));
 		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);
@@ -194,7 +193,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 //		this.crossingScrollPane.setMinimumSize(new Dimension(50, 100));
 		this.crossingPanel.setPreferredSize(new Dimension(50, 100));
 
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setToolTipText(I18N.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));

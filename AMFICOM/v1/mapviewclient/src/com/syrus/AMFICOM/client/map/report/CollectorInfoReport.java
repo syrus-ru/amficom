@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorInfoReport.java,v 1.1 2005/10/07 14:19:03 krupenn Exp $
+ * $Id: CollectorInfoReport.java,v 1.2 2005/10/11 08:56:12 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,8 @@ import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
@@ -85,17 +84,17 @@ class CollectorInfoReportTableModel extends AbstractTableModel {
 			int vertDivisionsCount) {
 		this.vertDivisionsCount = vertDivisionsCount;
 
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+		this.propertyNamesColumn.add(I18N.getString(NAME));
 		this.propertyValuesColumn.add(collector.getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
-		this.propertyValuesColumn.add(LangModelMap.getString(COLLECTOR));
-		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
+		this.propertyNamesColumn.add(I18N.getString(TYPE));
+		this.propertyValuesColumn.add(I18N.getString(COLLECTOR));
+		this.propertyNamesColumn.add(I18N.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(collector.getDescription());
 		
-		this.propertyNamesColumn.add(LangModelReport.getString(SUMM_LENGTH));
+		this.propertyNamesColumn.add(I18N.getString(SUMM_LENGTH));
 		this.propertyValuesColumn.add(
 				Double.toString(collector.getLengthLt())
-				+ LangModelMap.getString(METRIC));
+				+ I18N.getString(METRIC));
 		this.originalRowCount += 4;
 
 		Set<SiteNode> collectorNodes = new HashSet<SiteNode>();
@@ -112,7 +111,7 @@ class CollectorInfoReportTableModel extends AbstractTableModel {
 		//Соседние узлы
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(INCLUDING_NODES));
+		this.propertyNamesColumn.add(I18N.getString(INCLUDING_NODES));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 2;		
 		
@@ -129,7 +128,7 @@ class CollectorInfoReportTableModel extends AbstractTableModel {
 		//Пикеты
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(INCLUDING_PIQUETS));
+		this.propertyNamesColumn.add(I18N.getString(INCLUDING_PIQUETS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 2;		
 		
@@ -162,9 +161,9 @@ class CollectorInfoReportTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % CollectorInfoReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");

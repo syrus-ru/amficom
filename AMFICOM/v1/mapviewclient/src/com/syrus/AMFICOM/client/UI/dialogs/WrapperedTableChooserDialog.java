@@ -1,5 +1,5 @@
 /*-
- * $$Id: WrapperedTableChooserDialog.java,v 1.12 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: WrapperedTableChooserDialog.java,v 1.13 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -43,7 +43,7 @@ import com.syrus.util.Wrapper;
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для того, чтобы включить эту возможность, используется параметр canDelete
  *
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -84,9 +84,9 @@ public class WrapperedTableChooserDialog extends JDialog {
 		final JButton buttonCancel = new JButton();
 		final JButton buttonDelete = new JButton();
 
-		buttonOpen.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
-		buttonCancel.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL));
-		buttonDelete.setText(LangModelMap.getString(MapEditorResourceKeys.BUTTON_REMOVE));
+		buttonOpen.setText(I18N.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
+		buttonCancel.setText(I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL));
+		buttonDelete.setText(I18N.getString(MapEditorResourceKeys.BUTTON_REMOVE));
 
 		buttonOpen.setEnabled(false);
 		buttonDelete.setEnabled(false);

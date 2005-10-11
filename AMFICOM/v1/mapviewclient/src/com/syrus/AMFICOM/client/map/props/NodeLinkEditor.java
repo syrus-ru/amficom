@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkEditor.java,v 1.13 2005/09/30 16:08:40 krupenn Exp $$
+ * $$Id: NodeLinkEditor.java,v 1.14 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,13 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.NodeLink;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/30 16:08:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -67,12 +67,12 @@ public class NodeLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-//		this.jPanel.setName(LangModelGeneral.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
+//		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 
-		this.linkLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TUNNEL));
-		this.startLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_START_NODE));
-		this.endLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_END_NODE));
-		this.topologicalLengthLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
+		this.linkLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TUNNEL));
+		this.startLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_START_NODE));
+		this.endLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_END_NODE));
+		this.topologicalLengthLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
 
 		GridBagConstraints constraints = new GridBagConstraints();
 

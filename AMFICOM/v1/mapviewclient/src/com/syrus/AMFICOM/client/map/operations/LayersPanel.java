@@ -1,5 +1,5 @@
 /*-
- * $$Id: LayersPanel.java,v 1.20 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: LayersPanel.java,v 1.21 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,14 +37,14 @@ import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,7 +87,7 @@ public class LayersPanel extends JPanel {
 					netMapViewer.repaint(true);
 				}
 			} catch (MapException e1) {
-				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 				e1.printStackTrace();
 			}
 		}
@@ -102,7 +102,7 @@ public class LayersPanel extends JPanel {
 	}
 
 	private void jbInit() {
-		this.setToolTipText(LangModelMap.getString(MapEditorResourceKeys.TITLE_CONFIGURE_TOPOLOGICAL_LAYERS));
+		this.setToolTipText(I18N.getString(MapEditorResourceKeys.TITLE_CONFIGURE_TOPOLOGICAL_LAYERS));
 
 		this.setLayout(new BorderLayout());
 
@@ -136,7 +136,7 @@ public class LayersPanel extends JPanel {
 		gridbagconstraints.fill = 0;
 		this.titlePanel.add(box, gridbagconstraints);
 
-		JLabel jlabel2 = new JLabel(LangModelMap.getString(MapEditorResourceKeys.LABEL_LAYERS));
+		JLabel jlabel2 = new JLabel(I18N.getString(MapEditorResourceKeys.LABEL_LAYERS));
 		gridbagconstraints.gridx = 2;
 		gridbagconstraints.gridy = 0;
 		gridbagconstraints.weightx = 1.0D;

@@ -1,5 +1,5 @@
 /*-
- * $$Id: TopologyTreeModel.java,v 1.15 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: TopologyTreeModel.java,v 1.16 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.map.TopologyConditionWrapper;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -79,7 +79,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 			this.root = new PopulatableIconedNode(
 					this,
 					TopologyTreeModel.TOPOLOGY_BRANCH,
-					LangModelMap.getString(TopologyTreeModel.TOPOLOGY_BRANCH),
+					I18N.getString(TopologyTreeModel.TOPOLOGY_BRANCH),
 					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);			
 		}
@@ -258,7 +258,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 					}
 					String label = spatialObject.getLabel();
 					if(label == null || label.length() == 0) {
-						label = LangModelMap.getString(MapEditorResourceKeys.NONAME);
+						label = I18N.getString(MapEditorResourceKeys.NONAME);
 					}
 					IconedNode newItem = new IconedNode(
 							spatialObject,
@@ -286,7 +286,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 		private void initialAction() {
 			this.initialName = this.node.getName();
-			String updatingName = this.initialName + " " + LangModelMap.getString(UPDATE_STRUNG); //$NON-NLS-1$
+			String updatingName = this.initialName + " " + I18N.getString(UPDATE_STRUNG); //$NON-NLS-1$
 			this.node.setName(updatingName);
 //			System.out.println("Set temporal name \'" + updatingName + "\'");
 		}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImagesPanel.java,v 1.14 2005/10/07 14:13:33 krupenn Exp $$
+ * $$Id: ImagesPanel.java,v 1.15 2005/10/11 08:56:10 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.BevelBorder;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/07 14:13:33 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/11 08:56:10 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -159,7 +159,7 @@ public class ImagesPanel extends JPanel
 
 	public void showAddImageDialog() {
 		JFileChooser chooser = new JFileChooser();
-		chooser.addChoosableFileFilter(new ChoosableFileFilter(MapEditorResourceKeys.EXTENSION_GIF, LangModelMap.getString(MapEditorResourceKeys.FILE_CHOOSER_PICTURE)));
+		chooser.addChoosableFileFilter(new ChoosableFileFilter(MapEditorResourceKeys.EXTENSION_GIF, I18N.getString(MapEditorResourceKeys.FILE_CHOOSER_PICTURE)));
 		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = chooser.getSelectedFile();

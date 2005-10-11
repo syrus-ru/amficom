@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.33 2005/10/02 12:31:39 krupenn Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.34 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,7 @@ import com.syrus.AMFICOM.client.map.ui.MapViewTableController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -41,7 +40,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.33 $, $Date: 2005/10/02 12:31:39 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -74,7 +73,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_OPENING)));
+						I18N.getString(MapEditorResourceKeys.STATUS_MAP_VIEW_OPENING)));
 
 		Collection mapViews;
 		try {
@@ -100,7 +99,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 			MapViewTableController.getInstance();
 
 		this.mapView = (MapView )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_VIEW),
+				I18N.getString(MapEditorResourceKeys.TITLE_MAP_VIEW),
 				mapViews,
 				mapViewTableController,
 				mapViewTableController.getKeysArray(),
@@ -111,7 +110,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
+							I18N.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}
@@ -131,7 +130,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
+						I18N.getString("Finished"))); //$NON-NLS-1$
 	}
 
 	// TODO think of moving this method to 'Scheme'

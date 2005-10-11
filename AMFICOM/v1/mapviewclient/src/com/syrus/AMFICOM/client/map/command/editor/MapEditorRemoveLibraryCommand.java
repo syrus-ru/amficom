@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveLibraryCommand.java,v 1.9 2005/10/07 14:20:20 krupenn Exp $$
+ * $$Id: MapEditorRemoveLibraryCommand.java,v 1.10 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,13 @@ import com.syrus.AMFICOM.client.map.ui.MapLibraryTableController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/07 14:20:20 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -50,7 +49,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							LangModelMap.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
+							I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
 			return;
 		}
 		MapLibraryTableController mapLibraryTableController = MapLibraryTableController.getInstance();
@@ -58,7 +57,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 		Map map = mapFrame.getMapView().getMap();
 
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
+				I18N.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
 				map.getMapLibraries(),
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
@@ -69,7 +68,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
+							I18N.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeTypeController.java,v 1.53 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: NodeTypeController.java,v 1.54 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.53 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.54 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -217,7 +217,7 @@ public class NodeTypeController extends AbstractNodeController {
 					userId,
 					sort,
 					codename,
-					LangModelMap.getString(codename),
+					I18N.getString(codename),
 					"", //$NON-NLS-1$
 					NodeTypeController.getImageId(codename, NodeTypeController.getImageFileName(codename)),
 					isTopological,

@@ -1,5 +1,5 @@
 /*-
- * $$Id: NamedObjectWrapper.java,v 1.6 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: NamedObjectWrapper.java,v 1.7 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -59,7 +59,7 @@ public class NamedObjectWrapper implements Wrapper {
 	public String getName(final String key) {
 		String name = null;
 		if(key.equals(KEY_NAME))
-			name = LangModelGeneral.getString(MapEditorResourceKeys.LABEL_NAME); //$NON-NLS-1$
+			name = I18N.getString(MapEditorResourceKeys.LABEL_NAME); //$NON-NLS-1$
 		return name;
 	}
 

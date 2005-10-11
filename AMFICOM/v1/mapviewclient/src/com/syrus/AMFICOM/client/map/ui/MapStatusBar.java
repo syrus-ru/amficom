@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapStatusBar.java,v 1.22 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapStatusBar.java,v 1.23 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,13 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -81,7 +81,7 @@ public final class MapStatusBar extends JPanel {
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setLayout(new GridBagLayout());
 
-		this.latitudeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LATITUDE));
+		this.latitudeLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_LATITUDE));
 
 		this.latitudeTextField.setText("0.0000"); //$NON-NLS-1$
 		this.latitudeTextField.setSize(fieldSize);
@@ -89,7 +89,7 @@ public final class MapStatusBar extends JPanel {
 		this.latitudeTextField.setMaximumSize(fieldSize);
 		this.latitudeTextField.setMinimumSize(fieldSize);
 
-		this.longitudeLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
+		this.longitudeLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_LONGITUDE));
 
 		this.longitudeField.setText("0.0000"); //$NON-NLS-1$
 		this.longitudeField.setSize(fieldSize);
@@ -97,7 +97,7 @@ public final class MapStatusBar extends JPanel {
 		this.longitudeField.setMaximumSize(fieldSize);
 		this.longitudeField.setMinimumSize(fieldSize);
 
-		this.scaleLabel.setText(LangModelMap.getString(MapEditorResourceKeys.LABEL_SCALE));
+		this.scaleLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_SCALE));
 
 		this.scaleField.setText("0.0"); //$NON-NLS-1$
 		this.scaleField.setSize(fieldSize);
@@ -116,7 +116,7 @@ public final class MapStatusBar extends JPanel {
 							MapStatusBar.this.netMapViewer.setScale(scale);
 						}
 					} catch(Exception ex) {
-						System.out.println(LangModelMap.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
+						System.out.println(I18N.getString(MapEditorResourceKeys.ERROR_NUMBER_FORMAT));
 					}
 				}
 			}

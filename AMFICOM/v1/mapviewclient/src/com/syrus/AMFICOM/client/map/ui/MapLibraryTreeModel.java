@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryTreeModel.java,v 1.10 2005/10/07 14:24:44 krupenn Exp $$
+ * $$Id: MapLibraryTreeModel.java,v 1.11 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/07 14:24:44 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -106,7 +106,7 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 			siteNodeTypesNode = new PopulatableIconedNode(
 					this,
 					MapLibraryTreeModel.SITENODETYPE_BRANCH,
-					LangModelMap.getString(MapLibraryTreeModel.SITENODETYPE_BRANCH),
+					I18N.getString(MapLibraryTreeModel.SITENODETYPE_BRANCH),
 					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(siteNodeTypesNode);
@@ -114,7 +114,7 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 			physicalLinkTypesNode = new PopulatableIconedNode(
 					this,
 					MapLibraryTreeModel.PHYSICALLINKTYPE_BRANCH,
-					LangModelMap.getString(MapLibraryTreeModel.PHYSICALLINKTYPE_BRANCH),
+					I18N.getString(MapLibraryTreeModel.PHYSICALLINKTYPE_BRANCH),
 					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(physicalLinkTypesNode);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: SimpleMapElementController.java,v 1.17 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: SimpleMapElementController.java,v 1.18 2005/10/11 08:56:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/11 08:56:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -65,9 +65,9 @@ public final class SimpleMapElementController implements Wrapper {
 	public String getName(final String key) {
 		String name = null;
 		if(key.equals(KEY_NAME))
-			name = LangModelGeneral.getString(MapEditorResourceKeys.LABEL_NAME);
+			name = I18N.getString(MapEditorResourceKeys.LABEL_NAME);
 		else if(key.equals(KEY_TYPE))
-			name = LangModelGeneral.getString(MapEditorResourceKeys.LABEL_TYPE);
+			name = I18N.getString(MapEditorResourceKeys.LABEL_TYPE);
 		return name;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathController.java,v 1.43 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MeasurementPathController.java,v 1.44 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Контроллер топологическиго пути.
  * 
- * @version $Revision: 1.43 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -111,7 +111,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 			final AbstractNode smne = mpath.getStartNode();
 			s2 = ":\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString(MapEditorResourceKeys.FROM_LOWERCASE)
+					+ I18N.getString(MapEditorResourceKeys.FROM_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ smne.getName()
 					+ " [" //$NON-NLS-1$
@@ -120,7 +120,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 			final AbstractNode emne = mpath.getEndNode();
 			s3 = "\n" //$NON-NLS-1$
 					+ "   " //$NON-NLS-1$
-					+ LangModelMap.getString(MapEditorResourceKeys.TO_LOWERCASE)
+					+ I18N.getString(MapEditorResourceKeys.TO_LOWERCASE)
 					+ " " //$NON-NLS-1$
 					+ emne.getName()
 					+ " [" //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*-
- * $$Id: ImagesDialog.java,v 1.8 2005/10/07 14:13:33 krupenn Exp $$
+ * $$Id: ImagesDialog.java,v 1.9 2005/10/11 08:56:10 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,14 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/07 14:13:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/11 08:56:10 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -44,9 +44,9 @@ public class ImagesDialog {
 				|| ir instanceof FileImageResource)
 			imagesPanel.setImageResource(ir);
 
-		final JButton cancelButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CANCEL));
-		final JButton chooseButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
-		final JButton addButton = new JButton(LangModelMap.getString(MapEditorResourceKeys.BUTTON_ADD));
+		final JButton cancelButton = new JButton(I18N.getString(MapEditorResourceKeys.BUTTON_CANCEL));
+		final JButton chooseButton = new JButton(I18N.getString(MapEditorResourceKeys.BUTTON_CHOOSE));
+		final JButton addButton = new JButton(I18N.getString(MapEditorResourceKeys.BUTTON_ADD));
 
 		final JOptionPane optionPane = new JOptionPane(
 				imagesPanel,
@@ -74,7 +74,7 @@ public class ImagesDialog {
 		});
 
 		final JDialog dialog = optionPane.createDialog(
-				Environment.getActiveWindow(), LangModelMap.getString(MapEditorResourceKeys.TITLE_IMAGES_DIALOG_IMAGE_SELECTION));
+				Environment.getActiveWindow(), I18N.getString(MapEditorResourceKeys.TITLE_IMAGES_DIALOG_IMAGE_SELECTION));
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = Math.min(screenDim.width / 2, 590);
 		int height = Math.min(screenDim.height / 2, 400);

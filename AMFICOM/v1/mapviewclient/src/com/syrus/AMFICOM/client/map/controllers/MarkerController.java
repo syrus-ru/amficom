@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerController.java,v 1.40 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MarkerController.java,v 1.41 2005/10/11 08:56:11 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.40 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/11 08:56:11 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -113,7 +113,7 @@ public class MarkerController extends AbstractNodeController {
 
 		final Marker marker = (Marker) mapElement;
 
-		final String s1 = marker.getName() + " (" + LangModelMap.getString(MapEditorResourceKeys.PATH_LOWERCASE) + " " //$NON-NLS-1$ //$NON-NLS-2$
+		final String s1 = marker.getName() + " (" + I18N.getString(MapEditorResourceKeys.PATH_LOWERCASE) + " " //$NON-NLS-1$ //$NON-NLS-2$
 				+ marker.getMeasurementPath().getName() + ")"; //$NON-NLS-1$
 
 		return s1;
