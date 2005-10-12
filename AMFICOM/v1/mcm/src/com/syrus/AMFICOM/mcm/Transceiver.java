@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.71 2005/10/12 06:43:13 arseniy Exp $
+ * $Id: Transceiver.java,v 1.72 2005/10/12 07:12:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/10/12 06:43:13 $
+ * @version $Revision: 1.72 $, $Date: 2005/10/12 07:12:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -315,9 +315,10 @@ final class Transceiver extends SleepButWorkThread {
 		}
 	}
 
-	void shutdown() {
+	synchronized void shutdown() {
 		this.scheduledMeasurements.clear();
 		this.running = false;
 		this.kisConnection.drop();
+		this.notifyAll();
 	}
 }
