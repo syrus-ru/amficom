@@ -1,5 +1,5 @@
 /*
- * $Id: CreateModelException.java,v 1.2 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: CreateModelException.java,v 1.3 2005/10/12 13:27:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,7 @@
  */
 package com.syrus.AMFICOM.client.report;
 
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 public final class CreateModelException extends ReportException {
 	private static final long serialVersionUID = 7773133357012231431L;
@@ -20,11 +20,11 @@ public final class CreateModelException extends ReportException {
 
 	@Override
 	public String getMessage() {
-		return LangModelReport.getString("report.reportModel")
+		return I18N.getString("report.reportModel")
 			+ " "
 			+ this.modelName
 			+ " "
-			+ LangModelReport.getString("report.Exception.cantCreateModel")
+			+ I18N.getString("report.Exception.cantCreateModel")
 			+ ".";
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.6 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: CreateReportDialog.java,v 1.7 2005/10/12 13:27:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -46,8 +47,8 @@ import com.syrus.util.Log;
  * Диалог, используемый другими модулями для
  * открытия шаблонов определённого типа.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/10/08 13:30:14 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.7 $, $Date: 2005/10/12 13:27:04 $
  * @module reportclient
  */
 public class CreateReportDialog extends JDialog {
@@ -85,7 +86,7 @@ public class CreateReportDialog extends JDialog {
 
 	private void jbInit() {
 		this.setSize(new Dimension(293, 255));
-		this.setTitle(LangModelReport.getString(
+		this.setTitle(I18N.getString(
 				"report.UI.CreateReportDialog.title"));
 		this.setResizable(true);
 
@@ -97,7 +98,7 @@ public class CreateReportDialog extends JDialog {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
 
-		this.viewButton.setText(LangModelReport.getString(
+		this.viewButton.setText(I18N.getString(
 				"report.UI.CreateReportDialog.viewReport"));
 		this.viewButton.setEnabled(false);
 		buttonPanel.add(this.viewButton, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0
@@ -108,7 +109,7 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 
-		this.cancelButton.setText(LangModelReport.getString("report.UI.cancel"));
+		this.cancelButton.setText(I18N.getString("report.UI.cancel"));
 		buttonPanel.add(this.cancelButton,  new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, defaultMargins, 0, 0));
 		this.cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -117,7 +118,7 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 
-		this.saveButton.setText(LangModelReport.getString(
+		this.saveButton.setText(I18N.getString(
 				"report.UI.InnerToolbar.saveReport"));
 		this.saveButton.setEnabled(false);
 		buttonPanel.add(this.saveButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
@@ -128,7 +129,7 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 		
-		this.printButton.setText(LangModelReport.getString(
+		this.printButton.setText(I18N.getString(
 				"report.UI.InnerToolbar.printReport"));
 		this.printButton.setEnabled(false);
 		buttonPanel.add(this.printButton, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
@@ -141,6 +142,11 @@ public class CreateReportDialog extends JDialog {
 
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
+		this.templatesList = new WrapperedList<ReportTemplate>(
+				ReportTemplateWrapper.getInstance(),
+				ReportTemplateWrapper.COLUMN_NAME,
+				ReportTemplateWrapper.COLUMN_NAME);
+
 		this.templatesList.addListSelectionListener(new ListSelectionListener()	{
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting()) {
@@ -185,14 +191,14 @@ public class CreateReportDialog extends JDialog {
 				new JScrollPane (reportRenderer),
 				BorderLayout.CENTER);
 
-		JButton closeButton = new JButton (LangModelReport.getString("report.UI.close"));
+		JButton closeButton = new JButton (I18N.getString("report.UI.close"));
 		closeButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CreateReportDialog.this.openedViewDialog.dispose();
 			}
 		});
 
-		JButton vSaveButton = new JButton (LangModelReport.getString(
+		JButton vSaveButton = new JButton (I18N.getString(
 				"report.UI.InnerToolbar.saveReport"));
 		vSaveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -201,7 +207,7 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 
-		JButton vPrintButton = new JButton (LangModelReport.getString(
+		JButton vPrintButton = new JButton (I18N.getString(
 				"report.UI.InnerToolbar.printReport"));
 		vPrintButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -219,7 +225,7 @@ public class CreateReportDialog extends JDialog {
 		this.openedViewDialog.getContentPane().add(buttonPanel,BorderLayout.SOUTH);
 
 		IntDimension a4Size = SheetSize.A4.getSize();
-		this.openedViewDialog.setSize(a4Size.getWidth(),a4Size.getHeight());
+		this.openedViewDialog.setSize(a4Size.getWidth() + 20,a4Size.getHeight() / 2);
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.openedViewDialog.setLocation(
@@ -244,8 +250,8 @@ public class CreateReportDialog extends JDialog {
 			Log.errorException(e);
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelReport.getString("report.Exception.errorSavingHTML"),
-					LangModelReport.getString("report.Exception.error"),
+					I18N.getString("report.Exception.errorSavingHTML"),
+					I18N.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -281,7 +287,7 @@ public class CreateReportDialog extends JDialog {
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					cre.getMessage(),
-					LangModelReport.getString("report.Exception.error"),
+					I18N.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 		}
 		return reportRenderer;		

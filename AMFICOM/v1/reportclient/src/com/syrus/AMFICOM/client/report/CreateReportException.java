@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.client.report;
 
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
  * <p>Title: </p>
@@ -42,13 +42,13 @@ public final class CreateReportException extends ReportException {
 		} catch (CreateModelException e) {
 			return e.getMessage();
 		}
-		return LangModelReport.getString("report.reportTemplateElement")
+		return I18N.getString("report.reportTemplateElement")
 			+ " "
 			+ fullReportName
 			+ " "
-			+ LangModelReport.getString("report.Exception.cantImplement")
+			+ I18N.getString("report.Exception.cantImplement")
 			+ " ("
-			+ LangModelReport.getString("report.Exception." + this.reason)
+			+ I18N.getString("report.Exception." + this.reason)
 			+ " ).";
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.7 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: HTMLReportEncoder.java,v 1.8 2005/10/12 13:27:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 public class HTMLReportEncoder {
@@ -308,7 +309,7 @@ public class HTMLReportEncoder {
 		buffer.append("<meta name=\"ProgId\" content=\"AMFICOM report\">\n");
 			
 		buffer.append("<title>");
-		buffer.append(LangModelReport.getString("report.reportForTemplate"));
+		buffer.append(I18N.getString("report.reportForTemplate"));
 		buffer.append(" \"");
 		buffer.append(this.reportTemplate.getName());
 		buffer.append("\"</title>\n");
@@ -399,7 +400,7 @@ public class HTMLReportEncoder {
 				"HTML file formats");
 		fileChooser.addChoosableFileFilter(bmpFilter);
 
-		fileChooser.setDialogTitle(LangModelReport.getString("report.File.selectFileToWrite"));
+		fileChooser.setDialogTitle(I18N.getString("report.File.selectFileToWrite"));
 		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
@@ -417,8 +418,8 @@ public class HTMLReportEncoder {
 		if(new File(fileName).exists()) {
 			int answer = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
-					LangModelReport.getString("report.File.rewriteFile"),
-					LangModelReport.getString("report.File.confirm"),
+					I18N.getString("report.File.rewriteFile"),
+					I18N.getString("report.File.confirm"),
 					JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.WARNING_MESSAGE);
 			if (answer == JOptionPane.CANCEL_OPTION)

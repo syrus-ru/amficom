@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.client.report;
 import java.util.Collection;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 
@@ -46,7 +47,7 @@ public abstract class ReportModel
 	 * (типа "Шаблоны по модулю "Анализ"")
 	 */
 	public String getLocalizedName() {
-		return LangModelReport.getString(this.getName());
+		return I18N.getString(this.getName());
 	}
 
 	/**
@@ -54,7 +55,7 @@ public abstract class ReportModel
 	 * (типа "Анализ")
 	 */
 	public String getLocalizedShortName() {
-		return LangModelReport.getString(
+		return I18N.getString(
 				DestinationModules.getShortName(this.getName()));
 	}
 	

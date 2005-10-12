@@ -1,11 +1,13 @@
 /*
- * $Id: IntervalToDate.java,v 1.1 2005/09/22 14:49:02 peskovsky Exp $
+ * $Id: IntervalToDate.java,v 1.2 2005/10/12 13:27:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.client.report;
+
+import com.syrus.AMFICOM.client.resource.I18N;
 
 public class IntervalToDate {
 	private static final String DAY = "report.Date.day";
@@ -62,7 +64,7 @@ public class IntervalToDate {
 			result =
 				elementsCount
 				+ " "
-				+ LangModelReport.getString(
+				+ I18N.getString(
 						((elementsCount % 10) == 1) 
 						? elementLangKey : elementLangKey + MULTIPLE)
 				+ SEPARATOR;
