@@ -1,3 +1,4 @@
+*.swp
 *Package
 *Helper.java
 *Holder.java
@@ -11,3 +12,4 @@ IdlMismatchContainer.java
 IdlEmailNotificationEvent.java
 IdlSmsNotificationEvent.java
 IdlPopupNotificationEvent.java
+MessageReceiver.java
