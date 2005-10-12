@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.11 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: ReportRenderer.java,v 1.12 2005/10/12 13:26:48 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
@@ -30,8 +32,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/10/08 13:30:14 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.12 $, $Date: 2005/10/12 13:26:48 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -67,7 +69,8 @@ public class ReportRenderer extends JPanel {
 		if (this.reportTemplate == null)
 			throw new AssertionError("Report template is not set!");
 		
-		for (DataStorableElement dataElement : this.reportTemplate.getDataStorableElements()) {
+		Set<DataStorableElement> dataStorableElements = this.reportTemplate.getDataStorableElements();
+		for (DataStorableElement dataElement : dataStorableElements) {
 			String modelName = dataElement.getModelClassName();
 			ReportModel model = ReportModelPool.getModel(modelName);
 
@@ -75,18 +78,17 @@ public class ReportRenderer extends JPanel {
 			//достаём данные (Id объекта) из самого элемента шаблона. Если нет -
 			//достаём их из таблицы.
 			Object dsElementData = dataElement.getReportObjectId();
-			if (dsElementData == null) {
+			if (dsElementData.equals(Identifier.VOID_IDENTIFIER)) {
 				//Иначе - при создании отчёта из другого модуля, где не может
 				//быть двух элементов с одинаковыми именами - достаём по имени
 				//очёта.
 				dsElementData = data.get(dataElement.getReportName());
+				if (dsElementData == null)
+					throw new CreateReportException(
+							dataElement.getReportName(),
+							modelName,
+							CreateReportException.NO_DATA_TO_INSTALL);
 			}
-			
-			if (dsElementData == null)
-				throw new CreateReportException(
-						dataElement.getReportName(),
-						modelName,
-						CreateReportException.NO_DATA_TO_INSTALL);
 			
 			RenderingComponent component = model.createReport(
 					dataElement,
