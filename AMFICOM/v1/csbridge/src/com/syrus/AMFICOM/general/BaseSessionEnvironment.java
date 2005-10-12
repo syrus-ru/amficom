@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.23 2005/10/11 14:25:08 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.24 2005/10/12 12:21:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/11 14:25:08 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/12 12:21:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -83,7 +83,14 @@ public abstract class BaseSessionEnvironment {
 		return this.sessionEstablished;
 	}
 
-	public final void login(final String login, final String password) throws CommunicationException, LoginException {
+	/**
+	 * Overridden in ClientSessionEnvironment
+	 * @param login
+	 * @param password
+	 * @throws CommunicationException
+	 * @throws LoginException
+	 */
+	public void login(final String login, final String password) throws CommunicationException, LoginException {
 		LoginManager.login(login, password);
 		IdentifierPool.deserialize();
 		try {
