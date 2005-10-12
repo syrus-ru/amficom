@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.132 2005/10/12 07:08:29 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.133 2005/10/12 07:14:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.132 $, $Date: 2005/10/12 07:08:29 $
+ * @version $Revision: 1.133 $, $Date: 2005/10/12 07:14:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -135,6 +135,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	Key - kisId, value - corresponding transmitter-receiver*/
 	static Map<Identifier, Transceiver> transceivers;
+
+	/*	Thread with event queue*/
+	static EventThread eventThread;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -221,6 +224,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 			/*	Create and fill testList - sheduled tests ordered by start_time;	*/
 			prepareTestList();
+
+			/*	Create and start event thread*/
+			eventThread = new EventThread();
+			eventThread.start();
 
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
@@ -464,13 +471,17 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	void shutdown() {
 		this.running = false;
+
 		for (final Identifier kisId : transceivers.keySet()) {
 			transceivers.get(kisId).shutdown();
 		}
+
 		for (final Identifier testId : testProcessors.keySet()) {
 			final TestProcessor testProcessor = testProcessors.get(testId);
 			testProcessor.shutdown();
 		}
+
+		eventThread.shutdown();
 
 		DatabaseConnection.closeConnection();
 	}
