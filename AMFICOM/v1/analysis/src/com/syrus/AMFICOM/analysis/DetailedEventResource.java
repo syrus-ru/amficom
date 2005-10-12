@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.12 2005/08/08 11:59:52 arseniy Exp $
+ * $Id: DetailedEventResource.java,v 1.13 2005/10/12 08:16:33 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:59:52 $
+ * @author $Author: saa $
+ * @version $Revision: 1.13 $, $Date: 2005/10/12 08:16:33 $
  * @module analysis
  */
 
@@ -208,7 +208,7 @@ public class DetailedEventResource {
 					+ LangModelAnalyse.getString("m");
 			setLocationDifference(value);
 		} else {
-			setLocationDifference(DASH);
+			setLossDifference(DASH);
 			setLengthDifference(DASH);
 			setLocationDifference(DASH);
 		}
