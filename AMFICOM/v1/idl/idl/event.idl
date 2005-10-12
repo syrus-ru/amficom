@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.31 2005/10/11 13:16:34 bass Exp $
+ * $Id: event.idl,v 1.32 2005/10/12 07:04:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -129,6 +129,7 @@ module eventv2 {
 
 			eventv2::Event getNative();
 		};
+		typedef sequence <IdlEvent> IdlEventSeq;
 
 		abstract valuetype IdlMismatchContainer {
 			union IdlMismatchData switch (
