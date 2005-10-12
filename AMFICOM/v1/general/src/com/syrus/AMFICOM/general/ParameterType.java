@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.65 2005/10/07 10:04:20 bass Exp $
+ * $Id: ParameterType.java,v 1.66 2005/10/12 13:06:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/10/07 10:04:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2005/10/12 13:06:42 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -44,6 +44,9 @@ public enum ParameterType implements TransferableObject<IdlParameterType>,
 	DADARA_CRITERIA("dadara_criteria", DataType.RAW, MeasurementUnit.NONDIMENSIONAL), // Raw
 	DADARA_ANALYSIS_RESULT("dadara_analysis_result", DataType.RAW, MeasurementUnit.NONDIMENSIONAL), // Raw com.syrus.AMFICOM.analysis.dadara.AnalysisResult
 	DADARA_ALARMS("dadara_alarm_array", DataType.RAW, MeasurementUnit.NONDIMENSIONAL),
+	DADARA_QUALITY_PER_EVENT("dadara_quality_per_event", DataType.RAW, MeasurementUnit.NONDIMENSIONAL),
+	DADARA_QUALITY_OVERALL_D("dadara_quality_overall_d", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
+	DADARA_QUALITY_OVERALL_Q("dadara_quality_overall_q", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
 
 	// Prediction
 	PREDICTION_TIME("prediction_time", DataType.DATE, MeasurementUnit.SECOND),

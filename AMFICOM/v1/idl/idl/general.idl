@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.112 2005/09/19 12:37:00 bob Exp $
+ * $Id: general.idl,v 1.113 2005/10/12 13:06:48 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -93,6 +93,9 @@ module general {
 			DADARA_CRITERIA,
 			DADARA_ANALYSIS_RESULT,
 			DADARA_ALARMS,
+			DADARA_QUALITY_PER_EVENT,
+			DADARA_QUALITY_OVERALL_D,
+			DADARA_QUALITY_OVERALL_Q,
 
 			PREDICTION_TIME,
 			PREDICTION_TIME_START,
