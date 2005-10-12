@@ -1,5 +1,5 @@
 /*-
- * $Id: EtalonComparison.java,v 1.1 2005/10/11 16:42:01 saa Exp $
+ * $Id: EtalonComparison.java,v 1.2 2005/10/12 12:06:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,13 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
  * Ќе обеспечивает неизмен€емости - это целиком на совести вызывающего.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/10/11 16:42:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/12 12:06:02 $
  * @module dadara
  */
 public interface EtalonComparison {
 	/**
 	 * ¬озвращает список полученных несоответствий
+	 * XXX: неплохо бы переделать со списка на на массив несоответствий
 	 * @return список полученных несоответствий
 	 */
 	List<ReflectogramMismatchImpl> getAlarms();
