@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.22 2005/10/11 14:31:50 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.23 2005/10/12 12:22:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,10 +10,12 @@ package com.syrus.AMFICOM.general;
 
 import java.beans.PropertyChangeListener;
 
+import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
+import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/11 14:31:50 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/12 12:22:21 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -38,6 +40,8 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	public static final String SESSION_KIND_KEY = "SessionKind";
 
 	private static ClientSessionEnvironment instance;
+
+	private CORBAClientImpl corbaClientImpl;
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,
@@ -76,14 +80,6 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		if (instance != null) {
 			instance.baseConnectionManager.getCORBAServer().printNamingContext();
 		}
-	}
-
-	public void addPropertyListener(final PropertyChangeListener listener) {
-		this.getClientServantManager().addPropertyListener(listener);
-	}
-
-	public void removePropertyListener(final PropertyChangeListener listener) {
-		this.getClientServantManager().removePropertyListener(listener);
 	}
 
 	private static void createMeasurementSession(final LoginRestorer loginRestorer) throws CommunicationException {
@@ -151,4 +147,33 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, clientCORBAActionProcessor);
 	}
 
+	public void addPropertyListener(final PropertyChangeListener listener) {
+		this.getClientServantManager().addPropertyListener(listener);
+	}
+
+	public void removePropertyListener(final PropertyChangeListener listener) {
+		this.getClientServantManager().removePropertyListener(listener);
+	}
+
+	@Override
+	public void login(final String login, final String password) throws CommunicationException, LoginException {
+		super.login(login, password);
+		this.activateServant();
+	}
+
+	private void activateServant() throws CommunicationException {
+		final String servantName = LoginManager.getSessionKey().toString();
+		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
+		this.corbaClientImpl = new CORBAClientImpl();
+		corbaServer.activateServant(new CORBAClientPOATie(this.corbaClientImpl, corbaServer.getPoa()), servantName);
+		corbaServer.printNamingContext();
+	}
+
+	public void addPopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
+		this.corbaClientImpl.addPopupMessageReceiver(popupMessageReceiver);
+	}
+
+	public void removePopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
+		this.corbaClientImpl.removePopupMessageReceiver(popupMessageReceiver);
+	}
 }
