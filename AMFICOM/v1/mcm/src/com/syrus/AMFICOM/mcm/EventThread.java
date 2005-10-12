@@ -1,5 +1,5 @@
 /*-
- * $Id: EventThread.java,v 1.1 2005/10/12 07:14:20 arseniy Exp $
+ * $Id: EventThread.java,v 1.2 2005/10/12 08:29:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.List;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
+import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -24,7 +25,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/12 07:14:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/12 08:29:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -72,7 +73,7 @@ public final class EventThread extends SleepButWorkThread {
 			try {
 				final EventServer eventServer = connectionManager.getEventServerReference();
 
-				final IdlReflectogramMismatchEvent[] idlEvents = this.createIdlEventArray(connectionManager);
+				final IdlEvent[] idlEvents = this.createIdlEventArray(connectionManager);
 				eventServer.receiveEvents(idlEvents);
 				this.eventEqueue.clear();
 			} catch (CommunicationException ce) {
@@ -104,9 +105,9 @@ public final class EventThread extends SleepButWorkThread {
 		}
 	}
 
-	private IdlReflectogramMismatchEvent[] createIdlEventArray(final BaseConnectionManager connectionManager) {
+	private IdlEvent[] createIdlEventArray(final BaseConnectionManager connectionManager) {
 		final ORB orb = connectionManager.getCORBAServer().getOrb();
-		final IdlReflectogramMismatchEvent[] idlEvents = new IdlReflectogramMismatchEvent[this.eventEqueue.size()];
+		final IdlEvent[] idlEvents = new IdlEvent[this.eventEqueue.size()];
 		int i = 0;
 		for (final ReflectogramMismatchEvent event : this.eventEqueue) {
 			idlEvents[i++] = event.getTransferable(orb);
