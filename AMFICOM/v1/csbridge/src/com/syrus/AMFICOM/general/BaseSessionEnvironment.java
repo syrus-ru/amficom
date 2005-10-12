@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.24 2005/10/12 12:21:04 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.25 2005/10/12 15:32:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/12 12:21:04 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/12 15:32:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -109,7 +109,12 @@ public abstract class BaseSessionEnvironment {
 		this.sessionEstablished = true;
 	}
 
-	public final void logout() throws CommunicationException, LoginException {
+	/**
+	 * Overridden in ClientSessionEnvironment
+	 * @throws CommunicationException
+	 * @throws LoginException
+	 */
+	public void logout() throws CommunicationException, LoginException {
 		this.baseConnectionManager.getCORBAServer().removeShutdownHook(this.logoutShutdownHook);
 
 		this.logout0();
