@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.12 2005/10/06 13:34:02 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.13 2005/10/12 13:24:31 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,14 @@
  */
 package com.syrus.AMFICOM.analysis.dadara;
 
+import static java.util.logging.Level.FINEST;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.syrus.io.SignatureMismatchException;
+import com.syrus.util.Log;
 
 /**
  * Just am implementation of SimpleReflectogramEvent
@@ -27,8 +30,8 @@ import com.syrus.io.SignatureMismatchException;
  * Today, both ways are coded within protected visibility because
  * there is no need of streaming this (super-)class itself by now.
  * 
- * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/10/06 13:34:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/10/12 13:24:31 $
  * @module
  */
 public class SimpleReflectogramEventImpl
@@ -133,7 +136,7 @@ implements SimpleReflectogramEvent {
 		}
 		for (int i = 0; i < se.length; i++) {
 			int type = dis.readByte();
-			//System.out.println("["+type+"]");
+			assert Log.debugMessage("["+type+"]", FINEST);
 			if (type == 0) {
 				se[i].readBaseFromDIS(dis);
 			} else {

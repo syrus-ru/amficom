@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.124 2005/10/11 16:42:01 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.125 2005/10/12 13:24:31 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,14 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.124 $, $Date: 2005/10/11 16:42:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.125 $, $Date: 2005/10/12 13:24:31 $
  * @module
  */
 
-import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_LINEBREAK;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
+import static java.util.logging.Level.FINEST;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +45,7 @@ import com.syrus.AMFICOM.analysis.dadara.TracePreAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.TracesAverages;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.util.Log;
 
 public class CoreAnalysisManager
 {
@@ -184,8 +186,8 @@ public class CoreAnalysisManager
 	public static void loadDLL() {
 		try {
 			System.loadLibrary("dadara");
-		} catch (java.lang.UnsatisfiedLinkError ex) {
-			ex.printStackTrace();
+		} catch (final UnsatisfiedLinkError ule) {
+			assert Log.errorException(ule);
 		}
 	}
 
@@ -340,7 +342,7 @@ public class CoreAnalysisManager
 			TracePreAnalysis tpa,
 			AnalysisParameters ap)
 	{
-//		long t0 = System.nanoTime();
+		long t0 = System.nanoTime();
 
 		// определяем reflSize и nReflSize
 		// FIXME: привести reflSize и nReflSize в порядок
@@ -356,7 +358,7 @@ public class CoreAnalysisManager
 		if (rsBig < nReflSize * ap.getNrs2rsaBig())
 			rsBig = (int) (nReflSize * ap.getNrs2rsaBig());
 
-//		long t1 = System.nanoTime();
+		long t1 = System.nanoTime();
 
 		// формирование событий по усредненной кривой
 
@@ -377,10 +379,9 @@ public class CoreAnalysisManager
 				tpa.avNoise,
 				ap.getScaleFactor());
 
-		// FIX//ME: debug output of IA results
-//	  for (int i = 0; i < rse.length; i++)
-//		  System.out.println("rse[" + i + "]:"
-//			  + " " + rse[i].toString());
+		for (int i = 0; i < rse.length; i++) {
+			assert Log.debugMessage("rse[" + i + "]:" + " " + rse[i], FINEST);
+		}
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
 		// (длина может уменьшиться)
@@ -389,13 +390,13 @@ public class CoreAnalysisManager
 			? rse[rse.length - 1].getEnd() + 1
 			: 0;
 
-//		long t2 = System.nanoTime();
+		long t2 = System.nanoTime();
 
 		// фитируем
 
 		ModelFunction mf = fitTrace(tpa.y, traceLength, tpa.noiseAv, rse);
 
-//		long t3 = System.nanoTime();
+		long t3 = System.nanoTime();
 
 		// XXX: надо знать не только усредненную р/г, но и самую типовую,
 		// чтобы по типовой определять rmsDev,maxDev и т.п.
@@ -405,14 +406,13 @@ public class CoreAnalysisManager
 		ModelTraceAndEventsImpl mtae =
 			new ModelTraceAndEventsImpl(rse, mf, tpa.y, tpa.deltaX);
 
-//		long t4 = System.nanoTime();
+		long t4 = System.nanoTime();
 
-		// FIX//ME: debug output of analysis timing
-//	  System.out.println("makeAnalysis: "
-//		  + "getDataAndLengthAndNoise: " + (t1-t0)/1e6
-//		  + "; IA: " + (t2-t1)/1e6 + "; fit: " + (t3-t2)/1e6
-//		  + "; makeMTAE: " + (t4-t3)/1e6
-//		  );
+		assert Log.debugMessage("makeAnalysis: "
+				+ "getDataAndLengthAndNoise: " + (t1-t0)/1e6
+				+ "; IA: " + (t2-t1)/1e6 + "; fit: " + (t3-t2)/1e6
+				+ "; makeMTAE: " + (t4-t3)/1e6,
+				FINEST);
 
 		return mtae;
 	}

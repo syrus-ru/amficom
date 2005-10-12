@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,6 +10,7 @@ import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.io.SignatureMismatchException;
+import com.syrus.util.Log;
 
 /**
  * <p>Represents r/g modelling functions with native implementation.</p>
@@ -27,8 +31,8 @@ import com.syrus.io.SignatureMismatchException;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.33 $, $Date: 2005/09/30 12:56:22 $
- * @author $Author: saa $
+ * @version $Revision: 1.34 $, $Date: 2005/10/12 13:24:31 $
+ * @author $Author: bass $
  * @author saa
  * @module dadara
  */
@@ -231,7 +235,7 @@ public class ModelFunction {
 	 * @return the y-step of the WELD(SPLICE) event; usually it is negative.
 	 */
 	public double getWeldStep0() {
-		System.out.println("weldStep = " + nGetAttr("weldStep", 0)); // FIXIT
+		assert Log.debugMessage("weldStep = " + nGetAttr("weldStep", 0), INFO); // FIXIT
 		return nGetAttr("weldStep", 0);
 	}
 	
@@ -331,7 +335,7 @@ public class ModelFunction {
 	 */
 	public void fit(double y[], int begin, int end, int linkFlags, double linkData0)
 	{
-		//System.out.println("fit-3: linkFlags " + linkFlags);
+		assert Log.debugMessage("fit-3: linkFlags " + linkFlags, FINEST);
 		nFit1(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0);
 	}
 
@@ -351,7 +355,7 @@ public class ModelFunction {
 			int linkFlags, double linkData0,
 			double errorR, double errorA, int maxPoints)
 	{
-		//System.out.println("fit-2: linkFlags " + linkFlags);
+		assert Log.debugMessage("fit-2: linkFlags " + linkFlags, FINEST);
 		nFit2(y, begin, end, FITMODE_VARY_ALL,
 			linkFlags, linkData0,
 			errorR, errorA, maxPoints);
@@ -396,7 +400,7 @@ public class ModelFunction {
 	 */
 	public void fitLinearOnly(double y[], int begin, int end, int linkFlags, double linkData0)
 	{
-		//System.out.println("fit-1(Lin): linkFlags " + linkFlags);
+		assert Log.debugMessage("fit-1(Lin): linkFlags " + linkFlags, FINEST);
 		nFit1(y, begin, end, FITMODE_VARY_LIN, linkFlags, linkData0);
 	}
 

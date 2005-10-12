@@ -1,11 +1,13 @@
 /*
- * $Id: ModelTraceManager.java,v 1.101 2005/10/11 14:28:14 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.102 2005/10/12 13:24:31 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.analysis.dadara;
+
+import static java.util.logging.Level.FINEST;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -16,6 +18,7 @@ import java.util.List;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.io.DataFormatException;
 import com.syrus.io.SignatureMismatchException;
+import com.syrus.util.Log;
 
 /**
  * ќбъект этого класса заведует хранением
@@ -23,8 +26,8 @@ import com.syrus.io.SignatureMismatchException;
  * порогов к событи€ми (пока нет) и модельной кривой (есть),
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
- * @author $Author: saa $
- * @version $Revision: 1.101 $, $Date: 2005/10/11 14:28:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.102 $, $Date: 2005/10/12 13:24:31 $
  * @module
  */
 public class ModelTraceManager
@@ -183,7 +186,8 @@ implements DataStreamable, Cloneable
 				thresholds.add(new ThreshDY(i, ThreshDY.Type.dL, evCenter, evCenter));
 				thresholds.add(new ThreshDX(i, evCenter, evEnd + DELTA, false, false));
 				thresholds.add(last = new ThreshDY(i, ThreshDY.Type.dA, evEnd, evEnd));
-				//System.err.println("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd);
+				assert Log.debugMessage("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd,
+						FINEST);
 				break;
 			}
 		}
@@ -507,7 +511,8 @@ implements DataStreamable, Cloneable
 		if (this.thSingleMTRCacheEventId == nEvent
 				&& this.thSingleMTRCache != null)
 		{
-			//System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache hit");
+			assert Log.debugMessage("getEventThresholdMTR: nEvent " + nEvent + " cache hit",
+					FINEST);
 			return this.thSingleMTRCache;
 		}
 
@@ -536,7 +541,8 @@ implements DataStreamable, Cloneable
 		}
 
 		// make a copy of resulting array for client
-		//System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache miss");
+		assert Log.debugMessage("getEventThresholdMTR: nEvent " + nEvent + " cache miss",
+				FINEST);
 		return this.thSingleMTRCache.clone();
 	}
 
@@ -976,7 +982,8 @@ implements DataStreamable, Cloneable
 		if (this.thSRECacheEventId == nEvent && this.thSRECache != null
 				&& this.thSRECache[key] != null)
 		{
-			//System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit");
+			assert Log.debugMessage("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit",
+					FINEST);
 			return this.thSRECache[key];
 		}
 		
@@ -990,7 +997,8 @@ implements DataStreamable, Cloneable
 			this.thSRECache = new SimpleReflectogramEvent[] {null, null, null, null};
 		this.thSRECacheEventId = nEvent;
 		this.thSRECache[key] = sre;
-		//System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss");
+		assert Log.debugMessage("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss",
+				FINEST);
 		return sre;
 	}
 
@@ -1039,7 +1047,8 @@ implements DataStreamable, Cloneable
 			if (this.tDX[i].xMin + dxMin <= x && this.tDX[i].xMax + dxMax >= x) {
 				// eventId0 и eventId1 дл€ DX-порогов равны, берем eventId0 (?)
 				int nEv = this.tDX[i].eventId0;
-				//System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
+				assert Log.debugMessage("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv,
+						FINEST);
 				int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
 				int curPref = getEventAlarmPref(eventType);
 				if (curPref > pref) {
@@ -1053,7 +1062,8 @@ implements DataStreamable, Cloneable
 		for (int nEv = 0; nEv < nEvents; nEv++) {
 			SimpleReflectogramEvent ev = getMTAE().getSimpleEvent(nEv);
 			if (ev.getBegin() <= x && ev.getEnd() >= x) {
-				//System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
+				assert Log.debugMessage("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv,
+						FINEST);
 				int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
 				int curPref = getEventAlarmPref(eventType);
 				if (curPref > pref) {

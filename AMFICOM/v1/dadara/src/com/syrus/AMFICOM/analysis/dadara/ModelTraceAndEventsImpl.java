@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.24 2005/10/11 14:25:32 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.25 2005/10/12 13:24:31 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.analysis.dadara;
 
+
+import static java.util.logging.Level.FINEST;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -21,10 +23,11 @@ import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.io.SignatureMismatchException;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.24 $, $Date: 2005/10/11 14:25:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/10/12 13:24:31 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -384,19 +387,20 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	public void writeToDOS(DataOutputStream dos) throws IOException
 	{
 		dos.writeLong(SIGNATURE_MTAE);
-//		int pos1 = dos.size();
+		int pos1 = dos.size();
 		this.mf.writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
-//		int pos2 = dos.size();
+		int pos2 = dos.size();
 		ReliabilitySimpleReflectogramEventImpl.writeArrayToDOS(this.rse, dos);
-//		int pos3 = dos.size();
+		int pos3 = dos.size();
 		this.cinfo.writeToDOS(dos);
-//		int pos4 = dos.size();
-//		System.out.println("MTAEI: writeToDOS:"
-//				+ " MT " + (pos2-pos1)     // 66-72% of total
-//				+ ", rse " + (pos3-pos2)   // 15-17% of total
-//				+ ", cinfo " + (pos4-pos3) // 13-17% of total
-//				+ ", total " + (pos4-pos1));
+		int pos4 = dos.size();
+		assert Log.debugMessage("MTAEI: writeToDOS:"
+				+ " MT " + (pos2-pos1)     // 66-72% of total
+				+ ", rse " + (pos3-pos2)   // 15-17% of total
+				+ ", cinfo " + (pos4-pos3) // 13-17% of total
+				+ ", total " + (pos4-pos1),
+				FINEST);
 	}
 
 	public static DataStreamable.Reader getReader()

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.37 2005/10/11 14:41:20 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.38 2005/10/12 13:24:31 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,12 @@
  */
 package com.syrus.AMFICOM.analysis.dadara;
 
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_EVENTLISTCHANGED;
+import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_NONE;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_SOFT;
-import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_EVENTLISTCHANGED;
-import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK;
+import static java.util.logging.Level.INFO;
 
 import java.util.logging.Level;
 
@@ -37,8 +38,8 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: saa $
- * @version $Revision: 1.37 $, $Date: 2005/10/11 14:41:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/10/12 13:24:31 $
  * @module
  */
 public class ModelTraceComparer
@@ -88,13 +89,15 @@ public class ModelTraceComparer
 				(ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
 				mtm,
 				rcomp);
-		// FIXME: debug sysout
-		System.out.println(
-				"ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
-		System.out.println(
-				"ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
-		System.out.println(
-				"ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
+		assert Log.debugMessage(
+				"ModelTraceComparer.compareToMTM: comparing mtae to mtm:",
+				INFO);
+		assert Log.debugMessage(
+				"ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace,
+				INFO);
+		assert Log.debugMessage(
+				"ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents,
+				INFO);
 		if (alarmTrace != null)
 			return alarmTrace;
 		return alarmEvents;
@@ -134,9 +137,10 @@ public class ModelTraceComparer
 				&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR) {
 				cur.setCoord(etEvents[i].getBegin());
 				cur.setEndCoord(etEvents[i].getEnd());
-				System.out.println("MTC: compareEventsToMTM: etalon event #"
+				assert Log.debugMessage("MTC: compareEventsToMTM: etalon event #"
 						+ i + " ( " + cur.getCoord() + " .. "
-						+ cur.getEndCoord() + ") is reliably lost");
+						+ cur.getEndCoord() + ") is reliably lost",
+						INFO);
 				out.toHardest(cur);
 			}
 		}
@@ -146,9 +150,10 @@ public class ModelTraceComparer
 				&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR) {
 				cur.setCoord(events[i].getBegin());
 				cur.setEndCoord(events[i].getEnd());
-				System.out.println("MTC: compareEventsToMTM: probe event #"
+				assert Log.debugMessage("MTC: compareEventsToMTM: probe event #"
 						+ i + " ( " + cur.getCoord() + " .. "
-						+ cur.getEndCoord() + ") is reliably new");
+						+ cur.getEndCoord() + ") is reliably new",
+						INFO);
 				out.toHardest(cur);
 			}
 		}
@@ -297,7 +302,7 @@ public class ModelTraceComparer
 		}
 		if (alarm.getSeverity().compareTo(SEVERITY_NONE) > 0) {
 			fillAlarmMismatch(y, mtm, alarm);
-			Log.debugMessage("ModelTraceComparer.compareTraceToMTM | level " + alarm.getSeverity()
+			assert Log.debugMessage("ModelTraceComparer.compareTraceToMTM | level " + alarm.getSeverity()
 					+ " mismatch "
 					+ (alarm.hasMismatch()
 						? "" + alarm.getMinMismatch() + ".." + alarm.getMaxMismatch()
