@@ -116,9 +116,11 @@ final class TestLine extends TimeLine {
 	// Set selectedTests;
 	Set<Identifier> selectedTestIds;
 
-	final SortedSet<TestTimeItem> unsavedTestTimeItems = new TreeSet<TestTimeItem>();
+	final SortedSet<TestTimeItem> unsavedTestTimeItems = 
+		Collections.synchronizedSortedSet(new TreeSet<TestTimeItem>());
 
-	final Map<Identifier, List<TestTimeLine>> measurements = new HashMap<Identifier, List<TestTimeLine>>();
+	final Map<Identifier, List<TestTimeLine>> measurements = 
+		new HashMap<Identifier, List<TestTimeLine>>();
 	private Identifier monitoredElementId;
 
 	// private static final long ONE_MINUTE = 60L * 1000L;
