@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.77 2005/10/12 10:03:30 bass Exp $
+# $Id: Makefile,v 1.78 2005/10/12 10:52:28 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -55,14 +55,6 @@ $(LIBNAME): .mach
 		$(SOURCES)
 	touch $@
 
-.PHONY: idlclean
-idlclean:
-	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
-	cd $(SRCDIR)/com/syrus/AMFICOM/security/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/security/corba/.cvsignore)
-	$(RM) .idl
-
 .PHONY: corba
 corba: .corba
 
@@ -109,6 +101,14 @@ cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/security/corba
 	$(RM) .corba
+
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
+	cd $(SRCDIR)/com/syrus/AMFICOM/security/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/security/corba/.cvsignore)
+	$(RM) .idl
 
 .PHONY: cleanxml xmlclean
 cleanxml xmlclean:
