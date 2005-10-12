@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.20 2005/10/12 15:32:45 arseniy Exp $
+* $Id: CORBAServer.java,v 1.21 2005/10/12 15:54:39 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/12 15:32:45 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/12 15:54:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -224,6 +224,7 @@ public class CORBAServer {
 				final org.omg.CORBA.Object reference = this.namingContext.resolve(nameComponents);
 
 				this.namingContext.unbind(nameComponents);
+				this.servantNames.remove(name);
 
 				final byte[] id = this.poa.reference_to_id(reference);
 				this.poa.deactivate_object(id);
