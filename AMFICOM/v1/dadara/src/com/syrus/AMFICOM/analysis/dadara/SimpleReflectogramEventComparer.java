@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleReflectogramEventComparer.java,v 1.8 2005/10/11 14:41:20 saa Exp $
+ * $Id: SimpleReflectogramEventComparer.java,v 1.9 2005/10/12 08:04:56 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
  * <p>
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.8 $, $Date: 2005/10/11 14:41:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/12 08:04:56 $
  * @module dadara
  */
 public class SimpleReflectogramEventComparer {
@@ -105,6 +105,8 @@ public class SimpleReflectogramEventComparer {
 			// готовим наиболее строгое сравнение
 			removeNonUnique(this.probe2etalonNonStrict, this.etalon2probeMostStrict);
 			removeNonUnique(this.etalon2probeNonStrict, this.probe2etalonMostStrict);
+			removeNonPaired(this.probe2etalonMostStrict, this.etalon2probeMostStrict);
+			removeNonPaired(this.etalon2probeMostStrict, this.probe2etalonMostStrict);
 		}
 	}
 
