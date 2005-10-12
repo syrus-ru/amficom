@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.52 2005/10/07 15:24:10 bob Exp $
+ * $Id: TableFrame.java,v 1.53 2005/10/12 08:17:32 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/10/07 15:24:10 $
+ * @version $Revision: 1.53 $, $Date: 2005/10/12 08:17:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -93,8 +93,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			this.listTable.clearSelection();
 		} else {
 			try {
-				final Set<Test> tests = this.schedulerModel.getSelectedTests();
-				this.listTable.setSelectedValues(tests);				
+				this.listTable.setSelectedValues(this.schedulerModel.getSelectedTests());				
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				return;
@@ -119,7 +118,6 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	}
 
 	private void setTests() {
-		this.listTable.removeAll();
 		final WrapperedTableModel<Test> model = this.listTable.getModel();
 		model.clear();
 		try {
