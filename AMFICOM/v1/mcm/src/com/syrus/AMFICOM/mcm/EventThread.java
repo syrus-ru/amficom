@@ -1,5 +1,5 @@
 /*-
- * $Id: EventThread.java,v 1.2 2005/10/12 08:29:16 arseniy Exp $
+ * $Id: EventThread.java,v 1.3 2005/10/12 08:29:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
-import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -25,7 +24,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/12 08:29:16 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/12 08:29:52 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
