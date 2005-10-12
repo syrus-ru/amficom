@@ -1,5 +1,5 @@
 /*
- * $Id: RTEComponentDragDropListener.java,v 1.1 2005/09/20 09:25:54 peskovsky Exp $
+ * $Id: RTEComponentDragDropListener.java,v 1.2 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,10 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
-import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
@@ -26,20 +24,12 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.report.DataStorableElement;
-import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
-import com.syrus.AMFICOM.scheme.AbstractSchemePort;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
 public class RTEComponentDragDropListener implements DropTargetListener {
@@ -82,8 +72,8 @@ public class RTEComponentDragDropListener implements DropTargetListener {
 					||	!modelClassName.equals(dsElement.getModelClassName())) {
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.getString("report.Exception.wrongDataToInstall"),
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.wrongDataToInstall"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 					dtde.rejectDrop();
 					return;
@@ -107,7 +97,7 @@ public class RTEComponentDragDropListener implements DropTargetListener {
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
 							e.getMessage(),
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}

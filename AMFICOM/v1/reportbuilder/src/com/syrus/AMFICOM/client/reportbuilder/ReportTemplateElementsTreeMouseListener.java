@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeMouseListener.java,v 1.2 2005/09/22 14:50:03 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeMouseListener.java,v 1.3 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,21 +14,11 @@ import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
-import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.reportbuilder.ModuleMode.MODULE_MODE;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportDataChecker;
-import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
-import com.syrus.AMFICOM.scheme.AbstractSchemePort;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class ReportTemplateElementsTreeMouseListener implements MouseListener{
 	private JTree tree = null;

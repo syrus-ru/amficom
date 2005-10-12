@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererDropTargetListener.java,v 1.6 2005/09/20 09:25:54 peskovsky Exp $
+ * $Id: ReportTemplateRendererDropTargetListener.java,v 1.7 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -97,7 +97,7 @@ public class ReportTemplateRendererDropTargetListener implements DropTargetListe
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
 						e.getMessage(),
-						LangModelReport.getString("report.Exception.error"),
+						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}

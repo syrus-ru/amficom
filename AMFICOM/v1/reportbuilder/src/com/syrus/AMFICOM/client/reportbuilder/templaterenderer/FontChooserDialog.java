@@ -1,15 +1,28 @@
 package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 
-import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 /**
  * <p>Title: </p>
@@ -76,7 +89,7 @@ public class FontChooserDialog extends JDialog
 	private void jbInit()
 	{
 		this.border1 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,Color.white,Color.white,new Color(103, 101, 98),new Color(148, 145, 140));
-		this.setTitle(LangModelReport.getString("report.UI.FontChooserDialog.title"));
+		this.setTitle(I18N.getString("report.UI.FontChooserDialog.title"));
 		this.setResizable(false);
 		this.setSize(new Dimension(299, 287));
 		this.setModal(true);
@@ -88,26 +101,26 @@ public class FontChooserDialog extends JDialog
 
 		this.getContentPane().setLayout(new GridBagLayout());
 		this.fontParamsPanel.setLayout(this.gridBagLayout1);
-		this.fontNameLabel.setText(LangModelReport.getString("report.UI.FontChooserDialog.fontName"));
-		this.fontSizeLabel.setText(LangModelReport.getString("report.UI.FontChooserDialog.fontSize"));
+		this.fontNameLabel.setText(I18N.getString("report.UI.FontChooserDialog.fontName"));
+		this.fontSizeLabel.setText(I18N.getString("report.UI.FontChooserDialog.fontSize"));
 		this.examplePanel.setLayout(this.borderLayout1);
-		this.exampTitleLabel.setText(LangModelReport.getString("report.UI.FontChooserDialog.example"));
+		this.exampTitleLabel.setText(I18N.getString("report.UI.FontChooserDialog.example"));
 		this.exampLabel.setBorder(this.border1);
 		this.exampLabel.setText("aAbBcC123");
 		this.exampLabelPanel.setLayout(this.borderLayout2);
 		this.applyButton.setPreferredSize(new Dimension(99, 24));
-		this.applyButton.setText(LangModelReport.getString("report.UI.apply"));
+		this.applyButton.setText(I18N.getString("report.UI.apply"));
 		this.applyButton.addActionListener(new FontChooserDialog1_applyButton_actionAdapter(this));
 		this.cancelButton.setPreferredSize(new Dimension(79, 24));
-		this.cancelButton.setText(LangModelReport.getString("report.UI.cancel"));
+		this.cancelButton.setText(I18N.getString("report.UI.cancel"));
 		this.cancelButton.addActionListener(new FontChooserDialog1_cancelButton_actionAdapter(this));
 		Font boldFont = this.boldCheckBox.getFont().deriveFont(Font.BOLD);
 		this.boldCheckBox.setFont(boldFont);
-		this.boldCheckBox.setText(LangModelReport.getString("report.UI.FontChooserDialog.styleBold"));
+		this.boldCheckBox.setText(I18N.getString("report.UI.FontChooserDialog.styleBold"));
 		this.boldCheckBox.addActionListener(new FontChooserDialog1_boldCheckBox_actionAdapter(this));
 		Font italicFont = this.boldCheckBox.getFont().deriveFont(Font.ITALIC);		
 		this.italicCheckBox.setFont(italicFont);
-		this.italicCheckBox.setText(LangModelReport.getString("report.UI.FontChooserDialog.styleItalic"));
+		this.italicCheckBox.setText(I18N.getString("report.UI.FontChooserDialog.styleItalic"));
 		this.italicCheckBox.addActionListener(new FontChooserDialog1_italicCheckBox_actionAdapter(this));
 		this.fontNameComboBox.addActionListener(new FontChooserDialog1_fontNameComboBox_actionAdapter(this));
 		this.fontSizeComboBox.addActionListener(new FontChooserDialog1_fontSizeComboBox_actionAdapter(this));

@@ -1,5 +1,5 @@
 /*
- * $Id: SaveReportCommand.java,v 1.3 2005/09/13 14:19:21 peskovsky Exp $
+ * $Id: SaveReportCommand.java,v 1.4 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.HTMLReportEncoder;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportRenderer;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 
@@ -48,11 +48,11 @@ public class SaveReportCommand extends AbstractCommand {
 			Log.errorException(e);			
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelReport.getString("report.Exception.errorSavingHTML")
+					I18N.getString("report.Exception.errorSavingHTML")
 						+ " ("
 						+ e.getMessage()
 						+ ").",
-					LangModelReport.getString("report.Exception.error"),
+					I18N.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}

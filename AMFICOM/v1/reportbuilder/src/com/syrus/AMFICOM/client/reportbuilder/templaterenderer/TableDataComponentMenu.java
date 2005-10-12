@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataComponentMenu.java,v 1.3 2005/10/05 09:39:37 peskovsky Exp $
+ * $Id: TableDataComponentMenu.java,v 1.4 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import javax.swing.JPopupMenu;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 
 public class TableDataComponentMenu extends JPopupMenu {
@@ -32,7 +32,7 @@ public class TableDataComponentMenu extends JPopupMenu {
 		
 		//Установка числа вертикальных разбиений
 		JMenuItem setVertDivisionsCountMenuItem = new JMenuItem();
-		setVertDivisionsCountMenuItem.setText(LangModelReport.getString(
+		setVertDivisionsCountMenuItem.setText(I18N.getString(
 				"report.UI.TableComponentMenu.title"));
 		setVertDivisionsCountMenuItem.addActionListener(
 				new java.awt.event.ActionListener() {
@@ -42,7 +42,7 @@ public class TableDataComponentMenu extends JPopupMenu {
 				
 				String newVertDivCountString = JOptionPane.showInputDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.getString(
+						I18N.getString(
 								"report.UI.TableComponentMenu.tableVertDivCount"));
 				
 				int newVertDivCount = element.getVerticalDivisionsCount();
@@ -51,8 +51,8 @@ public class TableDataComponentMenu extends JPopupMenu {
 				} catch (NumberFormatException e) {
 					JOptionPane.showConfirmDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.getString("report.Exception.valueMustBeIntNumber"),
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.valueMustBeIntNumber"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.OK_OPTION,
 							JOptionPane.ERROR_MESSAGE);
 					return;
@@ -63,7 +63,7 @@ public class TableDataComponentMenu extends JPopupMenu {
 		
 		//Установка шрифта таблицы
 		JMenuItem setFontMenuItem = new JMenuItem();
-		setFontMenuItem.setText(LangModelReport.getString("report.UI.FontChooserDialog.font"));
+		setFontMenuItem.setText(I18N.getString("report.UI.FontChooserDialog.font"));
 		setFontMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent el) {
 				TableDataStorableElement element =

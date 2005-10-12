@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.10 2005/09/22 14:50:03 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.11 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,15 +25,13 @@ import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.map.ui.MapTreeModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.modelling.report.ModelingReportModel;
 import com.syrus.AMFICOM.client.observe.report.ObserveReportModel;
-import com.syrus.AMFICOM.client.prediction.report.PredictionReportModel;
 import com.syrus.AMFICOM.client.report.CreateModelException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTreeItem;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
@@ -82,7 +80,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
 							e.getMessage(),
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -103,7 +101,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 			this.root = new PopulatableIconedNode(
 				this,
 				ReportTemplateElementsTreeModel.TREE_ROOT,
-				LangModelReport.getString(ReportTemplateElementsTreeModel.TREE_ROOT),
+				I18N.getString(ReportTemplateElementsTreeModel.TREE_ROOT),
 				UIManager.getIcon(ICON_CATALOG));
 		}
 		return this.root;
@@ -113,13 +111,13 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		node.addChild(new PopulatableIconedNode(
 				this,
 				ReportTemplateElementsTreeModel.REPORT_DATA_ROOT,
-				LangModelReport.getString(ReportTemplateElementsTreeModel.REPORT_DATA_ROOT),
+				I18N.getString(ReportTemplateElementsTreeModel.REPORT_DATA_ROOT),
 				UIManager.getIcon(ICON_CATALOG)));
 				
 		node.addChild(new PopulatableIconedNode(
 				this,
 				ReportTemplateElementsTreeModel.TEMPLATE_ELEMENTS_ROOT,
-				LangModelReport.getString(ReportTemplateElementsTreeModel.TEMPLATE_ELEMENTS_ROOT),
+				I18N.getString(ReportTemplateElementsTreeModel.TEMPLATE_ELEMENTS_ROOT),
 				UIManager.getIcon(ICON_CATALOG)));
 	}
 	

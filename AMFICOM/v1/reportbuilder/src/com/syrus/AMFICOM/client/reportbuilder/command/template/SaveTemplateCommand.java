@@ -1,5 +1,5 @@
 /*
- * $Id: SaveTemplateCommand.java,v 1.5 2005/10/07 07:49:26 peskovsky Exp $
+ * $Id: SaveTemplateCommand.java,v 1.6 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
 import com.syrus.AMFICOM.client.reportbuilder.TemplateOpenSaveDialog;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -37,7 +37,7 @@ public class SaveTemplateCommand extends AbstractCommand {
 		ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
 		if (	currentTemplate != null
 				&&	currentTemplate.isChanged()) {
-			String defaultLangName = LangModelReport.getString(NewTemplateCommand.NEW_TEMPLATE_NAME);
+			String defaultLangName = I18N.getString(NewTemplateCommand.NEW_TEMPLATE_NAME);
 			if (currentTemplate.getName().equals(defaultLangName)) {
 				TemplateOpenSaveDialog.saveTemplate(currentTemplate);
 			}
@@ -48,16 +48,17 @@ public class SaveTemplateCommand extends AbstractCommand {
 							currentTemplate.getReverseDependencies(true),
 							LoginManager.getUserId(),
 							true);
+					currentTemplate.setNew(false);
 				} catch (ApplicationException e1) {
 					Log.errorMessage("SaveTemplateCommand.execute | " + e1.getMessage());
 					Log.errorException(e1);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.getString("report.Exception.saveTemplateError")
+							I18N.getString("report.Exception.saveTemplateError")
 								+ " ("
 								+ e1.getMessage()
 								+ ").",
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}

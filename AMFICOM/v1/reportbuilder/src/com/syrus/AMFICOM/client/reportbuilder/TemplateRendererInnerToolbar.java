@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateRendererInnerToolbar.java,v 1.3 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: TemplateRendererInnerToolbar.java,v 1.4 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,25 +11,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
-import javax.swing.JToolBar;
+import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
-import javax.swing.AbstractButton;
+import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
@@ -84,37 +83,37 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 		};
 		
 		this.insertLabelButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_INSERT_LABEL));
-		this.insertLabelButton.setToolTipText(LangModelReport.getString("report.UI.InnerToolbar.insertLabel"));
+		this.insertLabelButton.setToolTipText(I18N.getString("report.UI.InnerToolbar.insertLabel"));
 		this.insertLabelButton.setName(ReportBuilderApplicationModel.MENU_INSERT_LABEL);
 		this.insertLabelButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));		
 		this.insertLabelButton.addActionListener(this.actionListener);
 		
 		this.insertImageButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_INSERT_IMAGE));
-		this.insertImageButton.setToolTipText(LangModelReport.getString("report.UI.InnerToolbar.insertImage"));
+		this.insertImageButton.setToolTipText(I18N.getString("report.UI.InnerToolbar.insertImage"));
 		this.insertImageButton.setName(ReportBuilderApplicationModel.MENU_INSERT_IMAGE);
 		this.insertImageButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.insertImageButton.addActionListener(this.actionListener);
 		
 		this.deleteObjectButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_DELETE_OBJECT));
-		this.deleteObjectButton.setToolTipText(LangModelReport.getString("report.UI.InnerToolbar.deleteObject"));
+		this.deleteObjectButton.setToolTipText(I18N.getString("report.UI.InnerToolbar.deleteObject"));
 		this.deleteObjectButton.setName(ReportBuilderApplicationModel.MENU_DELETE_OBJECT);
 		this.deleteObjectButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.deleteObjectButton.addActionListener(this.actionListener);
 
 		this.changeViewButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_VIEW_REPORT));
-		this.changeViewButton.setToolTipText(LangModelReport.getString("report.UI.InnerToolbar.changeView"));
+		this.changeViewButton.setToolTipText(I18N.getString("report.UI.InnerToolbar.changeView"));
 		this.changeViewButton.setName(ReportBuilderApplicationModel.MENU_CHANGE_VIEW);
 		this.changeViewButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.changeViewButton.addActionListener(this.actionListener);
 		
 		this.saveReportButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_SAVE_REPORT));
-		this.saveReportButton.setToolTipText(LangModelReport.getString("report.UI.InnerToolbar.saveReport"));
+		this.saveReportButton.setToolTipText(I18N.getString("report.UI.InnerToolbar.saveReport"));
 		this.saveReportButton.setName(ReportBuilderApplicationModel.MENU_SAVE_REPORT);
 		this.saveReportButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.saveReportButton.addActionListener(this.actionListener);
 
 		this.printReportButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_PRINT_REPORT));
-		this.printReportButton.setToolTipText(LangModelReport.getString("report.UI.InnerToolbar.printReport"));
+		this.printReportButton.setToolTipText(I18N.getString("report.UI.InnerToolbar.printReport"));
 		this.printReportButton.setName(ReportBuilderApplicationModel.MENU_PRINT_REPORT);
 		this.printReportButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.printReportButton.addActionListener(this.actionListener);
@@ -233,8 +232,8 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 //			{
 //				JOptionPane.showMessageDialog(
 //					Environment.getActiveWindow(),
-//					LangModelReport.getString("label_crossesExist"),
-//					LangModelReport.getString("label_error"),
+//					I18N.getString("label_crossesExist"),
+//					I18N.getString("label_error"),
 //					JOptionPane.ERROR_MESSAGE);
 //
 //				return;
@@ -247,8 +246,8 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 //				mainWindow.layoutWOCPanel.imagableRect);
 //
 //			changeViewButton.setToolTipText(
-//				LangModelReport.getString("label_viewTemplatesScheme"));
-//			mainWindow.layoutScrollPane.setTitle(LangModelReport.getString(
+//				I18N.getString("label_viewTemplatesScheme"));
+//			mainWindow.layoutScrollPane.setTitle(I18N.getString(
 //				"label_reportForTemplate"));
 //			changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 //				getImage(
@@ -306,7 +305,7 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 //			JOptionPane.showMessageDialog(
 //				Environment.getActiveWindow(),
 //				cre.getMessage(),
-//				LangModelReport.getString("label_error"),
+//				I18N.getString("label_error"),
 //				JOptionPane.ERROR_MESSAGE);
 //
 //			mainWindow.layoutWOCPanel.repaint();
@@ -319,7 +318,7 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 //  for (ListIterator lIt = objectRenderers.listIterator(); lIt.hasNext();)
 //    ((RenderingObject) lIt.next()).saveColumnWidths();
 //  
-//		changeViewButton.setToolTipText(LangModelReport.getString(
+//		changeViewButton.setToolTipText(I18N.getString(
 //			"label_viewReport"));
 //		changeViewButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 //															getImage(
@@ -327,7 +326,7 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 //															getScaledInstance(16, 16,
 //			Image.SCALE_SMOOTH)));
 //
-//		mainWindow.layoutScrollPane.setTitle(LangModelReport.getString(
+//		mainWindow.layoutScrollPane.setTitle(I18N.getString(
 //			"label_templateScheme"));
 //		mainWindow.layoutScrollPane.getContentPane().removeAll();
 //		mainWindow.layoutScrollPane.getContentPane().add(mainWindow.

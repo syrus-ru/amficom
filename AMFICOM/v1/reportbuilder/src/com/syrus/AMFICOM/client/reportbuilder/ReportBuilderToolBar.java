@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderToolBar.java,v 1.5 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: ReportBuilderToolBar.java,v 1.6 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class ReportBuilderToolBar extends AbstractMainToolBar {
@@ -28,42 +28,42 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 		final JButton newTemplateButton = new JButton();
 		newTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_NEW_TEMPLATE));
 		newTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));		
-		newTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.createNewTemplate"));
+		newTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.createNewTemplate"));
 		newTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW);
 		newTemplateButton.addActionListener(super.actionListener);
 
 		final JButton saveTemplateButton = new JButton();
 		saveTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_SAVE_TEMPLATE));
 		saveTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		saveTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.saveTemplate"));
+		saveTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.saveTemplate"));
 		saveTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE);
 		saveTemplateButton.addActionListener(super.actionListener);
 
 		final JButton saveAsTemplateButton = new JButton();
 		saveAsTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_SAVE_AS_TEMPLATE));
 		saveAsTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		saveAsTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.saveAsTemplate"));
+		saveAsTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.saveAsTemplate"));
 		saveAsTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS);
 		saveAsTemplateButton.addActionListener(super.actionListener);
 		
 		final JButton loadTemplateButton = new JButton();
 		loadTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_LOAD_TEMPLATE));
 		loadTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		loadTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.loadTemplate"));
+		loadTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.loadTemplate"));
 		loadTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD);
 		loadTemplateButton.addActionListener(super.actionListener);
 
 		final JButton importTemplateButton = new JButton();
 		importTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_IMPORT_TEMPLATES));
 		importTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		importTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.importTemplates"));
+		importTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.importTemplates"));
 		importTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT);
 		importTemplateButton.addActionListener(super.actionListener);
 
 		final JButton exportTemplateButton = new JButton();
 		exportTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_EXPORT_TEMPLATES));
 		exportTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		exportTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.exportTemplates"));
+		exportTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.exportTemplates"));
 		exportTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT);
 		exportTemplateButton.addActionListener(super.actionListener);
 		

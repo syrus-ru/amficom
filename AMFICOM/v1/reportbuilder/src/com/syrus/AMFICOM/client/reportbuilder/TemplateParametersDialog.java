@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateParametersDialog.java,v 1.4 2005/10/05 09:39:37 peskovsky Exp $
+ * $Id: TemplateParametersDialog.java,v 1.5 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,20 +25,20 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.report.SheetSize;
 import com.syrus.AMFICOM.report.ReportTemplate.Orientation;
 
 public class TemplateParametersDialog extends JDialog {
-	private static final String TITLE = LangModelReport.getString("report.UI.Menubar.menuTemplateParameters");	
-	private static final String TEMPLATE_SIZE = LangModelReport.getString("report.UI.TemplateParametersDialog.templateSize");
-	private static final String MARGIN_SIZE = LangModelReport.getString("report.UI.TemplateParametersDialog.marginSize");
-	private static final String ORIENTATION_LABEL = LangModelReport.getString("report.UI.TemplateParametersDialog.orientation");
-	private static final String PORTRAIT = LangModelReport.getString("report.UI.TemplateParametersDialog.portraitOrientation");
-	private static final String LANDSCAPE = LangModelReport.getString("report.UI.TemplateParametersDialog.landscapeOrientation");	
-	private static final String APPLY = LangModelReport.getString("report.UI.apply");
-	private static final String CANCEL = LangModelReport.getString("report.UI.cancel");
+	private static final String TITLE = I18N.getString("report.UI.Menubar.menuTemplateParameters");	
+	private static final String TEMPLATE_SIZE = I18N.getString("report.UI.TemplateParametersDialog.templateSize");
+	private static final String MARGIN_SIZE = I18N.getString("report.UI.TemplateParametersDialog.marginSize");
+	private static final String ORIENTATION_LABEL = I18N.getString("report.UI.TemplateParametersDialog.orientation");
+	private static final String PORTRAIT = I18N.getString("report.UI.TemplateParametersDialog.portraitOrientation");
+	private static final String LANDSCAPE = I18N.getString("report.UI.TemplateParametersDialog.landscapeOrientation");	
+	private static final String APPLY = I18N.getString("report.UI.apply");
+	private static final String CANCEL = I18N.getString("report.UI.cancel");
 	
 	private static final String A0 = "A0";
 	private static final String A1 = "A1";
@@ -163,8 +163,8 @@ public class TemplateParametersDialog extends JDialog {
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelReport.getString("report.Exception.marginSizeMustBeNumber"),
-					LangModelReport.getString("report.Exception.error"),
+					I18N.getString("report.Exception.marginSizeMustBeNumber"),
+					I18N.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}

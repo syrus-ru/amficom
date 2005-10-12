@@ -25,8 +25,8 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportTemplateWrapper;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -116,8 +116,6 @@ public class TemplateOpenSaveDialog extends JDialog {
 		try	{
 			this.jbInit();
 			
-			this.getReportTemplatesFromPool();
-
 			this.setComboBoxData();
 			this.setListData();
 
@@ -136,17 +134,17 @@ public class TemplateOpenSaveDialog extends JDialog {
 				ReportTemplateWrapper.COLUMN_NAME);
 		
 		if (this.mode == TemplateOpenSaveDialog.OPEN)
-			this.setTitle(LangModelReport.getString("report.UI.TemplateSaveOpenDialog.openTemplate"));
+			this.setTitle(I18N.getString("report.UI.TemplateSaveOpenDialog.openTemplate"));
 		if (this.mode == TemplateOpenSaveDialog.SAVE)
-			this.setTitle(LangModelReport.getString("report.UI.TemplateSaveOpenDialog.saveTemplate"));
+			this.setTitle(I18N.getString("report.UI.TemplateSaveOpenDialog.saveTemplate"));
 		
 		this.templatesScrollPanel.setBorder(BorderFactory.createEtchedBorder());
 
 		this.openSaveButton.setMargin(new Insets(2, 2, 2, 2));
 		if (this.mode == OPEN)
-			this.openSaveButton.setText(LangModelReport.getString("report.UI.open"));
+			this.openSaveButton.setText(I18N.getString("report.UI.open"));
 		if (this.mode == SAVE)
-			this.openSaveButton.setText(LangModelReport.getString("report.UI.save"));
+			this.openSaveButton.setText(I18N.getString("report.UI.save"));
 		this.openSaveButton.setEnabled(false);
 		this.openSaveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
@@ -157,20 +155,20 @@ public class TemplateOpenSaveDialog extends JDialog {
 					Log.errorException(e1);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.getString(
+							I18N.getString(
 									TemplateOpenSaveDialog.this.mode == SAVE 
 									? "report.Exception.saveTemplateError" 
 											: "report.Exception.openTemplateError")
 								+ " ("
 								+ e1.getMessage()
 								+ ").",
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
 		
-		this.cancelButton.setText(LangModelReport.getString("report.UI.cancel"));
+		this.cancelButton.setText(I18N.getString("report.UI.cancel"));
 		this.cancelButton.setMargin(new Insets(2, 2, 2, 2));
 
 		this.cancelButton.addActionListener(new ActionListener() {
@@ -180,7 +178,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 		});
 		
 		this.removeButton.setMargin(new Insets(2, 2, 2, 2));
-		this.removeButton.setText(LangModelReport.getString("report.UI.remove"));
+		this.removeButton.setText(I18N.getString("report.UI.remove"));
 		this.removeButton.setEnabled(false);
 
 		this.removeButton.addActionListener(new ActionListener() {
@@ -192,8 +190,8 @@ public class TemplateOpenSaveDialog extends JDialog {
 					Log.errorException(e1);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.getString("report.Exception.deleteTemplateError"),
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.deleteTemplateError"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -207,7 +205,17 @@ public class TemplateOpenSaveDialog extends JDialog {
 		
 		this.moduleNamesComboBox.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				templateTypesComboBox_actionPerformed();
+				try {
+					templateTypesComboBox_actionPerformed();
+				} catch (ApplicationException e1) {
+					Log.errorMessage("TemplateOpenSaveDialog.actionPerformed | " + e1.getMessage());
+					Log.errorException(e1);			
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							I18N.getString("report.Exception.deleteTemplateError"),
+							I18N.getString("report.Exception.error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 
@@ -251,9 +259,10 @@ public class TemplateOpenSaveDialog extends JDialog {
 				(int)(screenSize.getHeight() - this.getHeight()) / 2);
 	}
 
-	private void setListData() {
+	private void setListData() throws ApplicationException {
 		this.templatesList.removeAll();
 
+		this.getReportTemplatesFromPool();
 		if (this.allReportTemplates == null)
 			return;
 
@@ -276,13 +285,13 @@ public class TemplateOpenSaveDialog extends JDialog {
 	private void setComboBoxData() {
 		for (int i = 0; i < MODULES_ARRAY.length; i++)
 			this.moduleNamesComboBox.addItem(
-					LangModelReport.getString(MODULES_ARRAY[i]));
+					I18N.getString(MODULES_ARRAY[i]));
 		if (this.mode == OPEN)
 			this.moduleNamesComboBox.setSelectedItem(
-					LangModelReport.getString(ALL_TEMPLATES));
+					I18N.getString(ALL_TEMPLATES));
 		else
 			this.moduleNamesComboBox.setSelectedItem(
-					LangModelReport.getString(DestinationModules.COMBINED));
+					I18N.getString(DestinationModules.COMBINED));
 	}
 
 	protected void openSaveButton_actionPerformed() throws ApplicationException {
@@ -293,8 +302,8 @@ public class TemplateOpenSaveDialog extends JDialog {
 			if (selectedTemplate == null) {
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.getString("report.Exception.noTemplateForName"),
-						LangModelReport.getString("report.Exception.error"),
+						I18N.getString("report.Exception.noTemplateForName"),
+						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -307,9 +316,9 @@ public class TemplateOpenSaveDialog extends JDialog {
 			if (selectedTemplate != null) {
 				int replace = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.getString(
+						I18N.getString(
 								"report.Command.SaveTemplate.templateExists"),
-						LangModelReport.getString("report.File.confirm"),
+						I18N.getString("report.File.confirm"),
 						JOptionPane.YES_NO_OPTION);
 				if (replace == JOptionPane.NO_OPTION)
 					return;
@@ -330,7 +339,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 					this.templateProcessed.getReverseDependencies(true),
 					LoginManager.getUserId(),
 					true);			
-
+			this.templateProcessed.setNew(false);
 			this.setVisible(false);
 		}
 	}
@@ -405,7 +414,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 			this.openSaveButton.setEnabled(false);
 	}
 
-	protected void templateTypesComboBox_actionPerformed() {
+	protected void templateTypesComboBox_actionPerformed() throws ApplicationException{
 		this.setListData();
 		this.selectedTemplateNameField.setText("");
 	}

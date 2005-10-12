@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.15 2005/10/05 09:39:37 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.16 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,9 +36,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
-import com.syrus.AMFICOM.client.report.ReportException;
 import com.syrus.AMFICOM.client.report.ReportRenderer;
 import com.syrus.AMFICOM.client.reportbuilder.ModuleMode.MODULE_MODE;
 import com.syrus.AMFICOM.client.reportbuilder.command.template.NewTemplateCommand;
@@ -51,10 +49,11 @@ import com.syrus.AMFICOM.client.reportbuilder.command.template.TemplateParameter
 import com.syrus.AMFICOM.client.reportbuilder.command.templatescheme.ReportSendEventCommand;
 import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
-import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
@@ -63,7 +62,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.15 $, $Date: 2005/10/05 09:39:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/12 13:29:11 $
  * @author Peskovsky Peter
  * @module reportbuilder_v1
  */
@@ -93,7 +92,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 	public ReportBuilderMainFrame(final ApplicationContext aContext) {
 		super(
 			aContext,
-			LangModelReport.getString("report.UI.mainWindowTitle"), 
+			I18N.getString("report.UI.mainWindowTitle"), 
 			new ReportBuilderMenuBar(aContext.getApplicationModel()), 
 			new ReportBuilderToolBar());
 		
@@ -118,7 +117,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				templateSchemeFrame.setResizable(true);
 				templateSchemeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				templateSchemeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
-				templateSchemeFrame.setTitle(LangModelReport.getString(TEMPLATE_SCHEME_FRAME));
+				templateSchemeFrame.setTitle(I18N.getString(TEMPLATE_SCHEME_FRAME));
 				
 				ReportBuilderMainFrame.this.rendererScrollPane = new JScrollPane();
 				ReportBuilderMainFrame.this.rendererScrollPane.getViewport().add(ReportBuilderMainFrame.this.reportTemplateRenderer);
@@ -148,7 +147,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				treeFrame.setResizable(true);
 				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
-				treeFrame.setTitle(LangModelReport.getString(TREE_FRAME));
+				treeFrame.setTitle(I18N.getString(TREE_FRAME));
 				
 				ReportTemplateElementsTreeModel model = new ReportTemplateElementsTreeModel(
 						ReportBuilderMainFrame.this.aContext);
@@ -436,7 +435,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 						JOptionPane.showMessageDialog(
 								Environment.getActiveWindow(),
 								e.getMessage(),
-								LangModelReport.getString("report.Exception.error"),
+								I18N.getString("report.Exception.error"),
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}

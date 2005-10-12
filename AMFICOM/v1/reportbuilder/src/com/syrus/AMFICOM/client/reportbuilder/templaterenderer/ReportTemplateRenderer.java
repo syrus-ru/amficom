@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.14 2005/10/10 05:49:19 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.15 2005/10/12 13:29:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
@@ -43,16 +42,18 @@ import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
-import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
@@ -143,8 +144,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					Log.errorException(e);			
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.getString("report.Exception.deleteObjectError"),
-							LangModelReport.getString("report.Exception.error"),
+							I18N.getString("report.Exception.deleteObjectError"),
+							I18N.getString("report.Exception.error"),
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
@@ -163,8 +164,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				Log.errorException(e1);			
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.getString("report.Exception.deleteObjectError"),
-						LangModelReport.getString("report.Exception.error"),
+						I18N.getString("report.Exception.deleteObjectError"),
+						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
 			}
 			
@@ -182,7 +183,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
 						e.getMessage(),
-						LangModelReport.getString("report.Exception.error"),
+						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -211,8 +212,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				Log.errorException(e1);			
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.getString("report.Exception.deleteObjectError"),
-						LangModelReport.getString("report.Exception.error"),
+						I18N.getString("report.Exception.deleteObjectError"),
+						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
 			}
 			
@@ -229,7 +230,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
 						e.getMessage(),
-						LangModelReport.getString("report.Exception.error"),
+						I18N.getString("report.Exception.error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -265,9 +266,14 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	}
 
 	private void removeAllComponents() throws ApplicationException {
-		for (int i = 0; i < this.getComponentCount(); i++) {
+//		int componentCount = this.getComponentCount();
+//		for (int i = 0; i < componentCount; i++) {
+//			this.removeRenderingComponent(
+//					(RenderingComponent)this.getComponent(i));
+//		}
+		while (this.getComponentCount() > 0) {
 			this.removeRenderingComponent(
-					(RenderingComponent)this.getComponent(i));
+					(RenderingComponent)this.getComponent(0));
 		}
 	}
 	
@@ -308,7 +314,13 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					atComponent.getATPropertyChangeListener());
 		}
 		this.remove((JComponent)component);
-		this.template.removeElement(component.getElement());
+		StorableElement element = component.getElement();
+		this.template.removeElement(element);
+		StorableObjectPool.delete(element.getId());
+		StorableObjectPool.flush(
+				element.getId(),
+				LoginManager.getUserId(),
+				true);
 	}
 	
 	public ReportTemplate getTemplate() {
@@ -414,8 +426,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		if (!imageReadCorrectly) {
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelReport.getString("report.Exception.errorReadingImage"),
-				LangModelReport.getString("report.Exception.error"),
+				I18N.getString("report.Exception.errorReadingImage"),
+				I18N.getString("report.Exception.error"),
 				JOptionPane.ERROR_MESSAGE);
 				
 			this.applicationContext.getDispatcher().firePropertyChange(
@@ -657,7 +669,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				"Image file formats");
 		fileChooser.addChoosableFileFilter(bmpFilter);
 
-		fileChooser.setDialogTitle(LangModelReport.getString("report.File.selectFileToRead"));
+		fileChooser.setDialogTitle(I18N.getString("report.File.selectFileToRead"));
 		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
