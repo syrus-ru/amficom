@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.12 2005/09/14 18:28:26 arseniy Exp $
+ * $Id: Log.java,v 1.13 2005/10/12 13:25:22 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/14 18:28:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/10/12 13:25:22 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -87,13 +87,14 @@ public class Log {
 		}
 	}
 
-	public static void errorException(Throwable throwable) {
+	public static boolean errorException(final Throwable throwable) {
 		try {
 			logger.errorException(throwable);
-		} catch (NullPointerException npe) {
+		} catch (final NullPointerException npe) {
 			System.out.println(throwable.getMessage());
 			throwable.printStackTrace();
 		}
+		return true;
 	}
 
 	private static class CustomLevel extends Level {
