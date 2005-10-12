@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.131 2005/10/11 14:33:51 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.132 2005/10/12 07:08:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/10/11 14:33:51 $
+ * @version $Revision: 1.132 $, $Date: 2005/10/12 07:08:29 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -125,16 +125,16 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	static String login;
 
 	/*	Scheduled tests transferred from server	*/
-	protected static List<Test> testList;
+	static List<Test> testList;
 
 	/*	key - test_id, value - corresponding test processor	*/
-	protected static Map<Identifier, TestProcessor> testProcessors;
+	static Map<Identifier, TestProcessor> testProcessors;
 
 	/*	Reference to KISConnectionManager*/
-	protected static KISConnectionManager kisConnectionManager;
+	static KISConnectionManager kisConnectionManager;
 
 	/*	Key - kisId, value - corresponding transmitter-receiver*/
-	protected static Map<Identifier, Transceiver> transceivers;
+	static Map<Identifier, Transceiver> transceivers;
 
 	private long forwardProcessing;
 	private boolean running;
