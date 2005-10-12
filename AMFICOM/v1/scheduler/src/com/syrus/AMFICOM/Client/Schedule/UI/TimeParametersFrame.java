@@ -562,27 +562,32 @@ public class TimeParametersFrame extends JInternalFrame {
 																					.getEndDate();
 																			if (startDate.getTime() < endDate.getTime()) {
 //																				Log.debugMessage(".run | 3 ", Log.FINEST);
-																				final boolean valid2;
+																				final String valid2;
 																				try {
-																					valid2 = TimeParametersPanel.this.schedulerModel.isValid(selectedTest, startDate, endDate);
+																					if ((valid2 = TimeParametersPanel.this.schedulerModel.isValid(selectedTest, startDate, endDate)) != null) {
+																						waiting = false;
+																						AbstractMainFrame.showErrorMessage(valid2);
+																						continue;
+																					}
 																				} catch (ApplicationException e) {
 																					waiting = false;
 																					AbstractMainFrame.showErrorMessage(e.getMessage());
 																					continue;
 																				}
-																				if (valid2){
+																				{
 //																					Log.debugMessage(".run | 4 ", Log.FINEST);
 																					selectedTest.setEndTime(endDate);
-																				} else {
-																					JOptionPane
-																							.showMessageDialog(
-																								Environment
-																										.getActiveWindow(),
-																								I18N.getString("Cannot change end test"),
-																								I18N.getString("Error"),
-																								JOptionPane.OK_OPTION);
-
 																				}
+//																				else {
+//																					JOptionPane
+//																							.showMessageDialog(
+//																								Environment
+//																										.getActiveWindow(),
+//																								I18N.getString("Cannot change end test"),
+//																								I18N.getString("Error"),
+//																								JOptionPane.OK_OPTION);
+//
+//																				}
 																			} else {
 //																				Log.debugMessage(".run | 5 ", Log.FINEST);
 																				waiting = false;
