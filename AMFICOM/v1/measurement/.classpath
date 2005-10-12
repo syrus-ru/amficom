@@ -11,5 +11,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
