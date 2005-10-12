@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.70 2005/09/25 17:48:34 arseniy Exp $
+ * $Id: Transceiver.java,v 1.71 2005/10/12 06:43:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/09/25 17:48:34 $
+ * @version $Revision: 1.71 $, $Date: 2005/10/12 06:43:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -266,7 +266,7 @@ final class Transceiver extends SleepButWorkThread {
 				this.abortMeasurementAndReport();
 				break;
 		default:
-				Log.errorMessage("processError | ERROR: Unknown error code: " + super.fallCode);
+				Log.errorMessage("processFall | ERROR: Unknown error code: " + super.fallCode);
 		}
 	}
 
