@@ -27,7 +27,9 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
+$LIB/event.jar:\
 $LIB/csbridge.jar:\
+$LIB/reflectometry.jar:\
 $LIB/dadara.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/mserver_interface.jar:\
@@ -35,5 +37,5 @@ $LIB/util.jar
 
 
 JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"
-$JAVA -server -ea -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH com.syrus.AMFICOM.mcm.MeasurementControlModule
+$JAVA -Xms128m -Xmx256m -server -ea -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH com.syrus.AMFICOM.mcm.MeasurementControlModule
 # -setup
