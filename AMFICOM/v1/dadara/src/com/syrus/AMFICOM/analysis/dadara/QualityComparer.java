@@ -1,5 +1,5 @@
 /*-
- * $Id: QualityComparer.java,v 1.1 2005/10/11 16:42:01 saa Exp $
+ * $Id: QualityComparer.java,v 1.2 2005/10/12 08:06:12 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
  * Определяет параметры качества линии.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/10/11 16:42:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/12 08:06:12 $
  * @module dadara
  */
 public class QualityComparer
@@ -72,6 +72,7 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 						this.dqDefined = true;
 						this.dParam = cY0 - eY0;
 						this.qParam = this.dParam / mtm.getDYScaleForEventBeginning(etalonEot);
+//						System.out.printf("[*]: %g  %g\n", this.dParam, this.qParam);
 					}
 				}
 			}
@@ -88,7 +89,7 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 					continue;
 				}
 				double dyc = ((HavingLoss)ce).getLoss();
-				double dye = ((HavingLoss)ce).getLoss();
+				double dye = ((HavingLoss)ee).getLoss();
 				double delta = Math.abs(dyc - dye);
 				double t = Math.max(mtm.getDYScaleForEventBeginning(etalonEot),
 						mtm.getDYScaleForEventEnd(etalonEot));
@@ -97,7 +98,9 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 				//double ki = delta / (Math.abs(dye) + noise);
 				this.qiValues[i] = qi;
 				this.kiValues[i] = ki;
-				//System.err.printf("[%d]: %g  %g\n", i, qi, ki);
+//				System.out.printf("[%d(%d):%d(%d)]: %g  %g\n",
+//						i, ce.getEventType(),
+//						j, ee.getEventType(), qi, ki);
 			}
 			//выставить Qi, Ki...
 		}
