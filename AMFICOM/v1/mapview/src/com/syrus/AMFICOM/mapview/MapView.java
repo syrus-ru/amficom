@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.70 2005/10/07 10:04:19 bass Exp $
+* $Id: MapView.java,v 1.71 2005/10/12 13:05:01 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,10 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.corba.IdlMapView;
 import com.syrus.AMFICOM.mapview.corba.IdlMapViewHelper;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -57,9 +59,9 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: bass $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.70 $, $Date: 2005/10/07 10:04:19 $
+ * @version $Revision: 1.71 $, $Date: 2005/10/12 13:05:01 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -86,6 +88,10 @@ public final class MapView extends DomainMember implements Describable {
 	 */
 	private Set<Scheme> schemes;
 
+	private transient Set<UnboundNode> unboundNodes = new HashSet<UnboundNode>();
+	private transient Set<UnboundLink> unboundLinks = new HashSet<UnboundLink>();
+	private transient Set<NodeLink> unboundNodeLinks = new HashSet<NodeLink>();
+
 	/** Список кабелей. */
 	private transient Set<CablePath> cablePaths = new HashSet<CablePath>();
 	
@@ -94,6 +100,10 @@ public final class MapView extends DomainMember implements Describable {
 	
 	/** Список маркеров. */
 	private transient Set<Marker> markers = new HashSet<Marker>();
+
+	private transient Set<AbstractNode> nodeElements;
+	private transient Set<PhysicalLink> linkElements;
+	private transient Set<NodeLink> nodeLinkElements;
 
 	public MapView(final IdlMapView mvt) throws CreateObjectException {
 		try {
@@ -498,12 +508,12 @@ public final class MapView extends DomainMember implements Describable {
 	public SiteNode findElement(final SchemeElement schemeElement) {
 		if (schemeElement == null)
 			return null;
-		for (final SiteNode siteNode : this.getMap().getAllSiteNodes()) {
-			if (siteNode instanceof UnboundNode) {
-				if (((UnboundNode) siteNode).getSchemeElement().equals(schemeElement)) {
-					return siteNode;
-				}
+		for (final UnboundNode unboundNode : this.getUnboundNodes()) {
+			if(unboundNode.getSchemeElement().equals(schemeElement)) {
+				return unboundNode;
 			}
+		}
+		for (final SiteNode siteNode : this.getMap().getAllSiteNodes()) {
 			if (siteNode.equals(schemeElement.getSiteNode())) {
 				return siteNode;
 			}
@@ -537,6 +547,139 @@ public final class MapView extends DomainMember implements Describable {
 			}
 		}
 		return null;
+	}
+
+	public Set<UnboundNode> getUnboundNodes() {
+		return this.unboundNodes;
+	}
+
+	public void addUnboundNode(final UnboundNode node) {
+		this.unboundNodes.add(node);
+	}
+	
+	public void removeUnboundNode(final UnboundNode node) {
+		this.unboundNodes.remove(node);
+	}
+	
+	public Set<UnboundLink> getUnboundLinks() {
+		return this.unboundLinks;
+	}
+
+	public void addUnboundLink(final UnboundLink link) {
+		this.unboundLinks.add(link);
+	}
+	
+	public void removeUnboundLink(final UnboundLink link) {
+		this.unboundLinks.remove(link);
+	}
+	
+	public Set<NodeLink> getUnboundNodeLinks() {
+		return this.unboundNodeLinks;
+	}
+
+	public void addUnboundNodeLink(final NodeLink link) {
+		this.unboundNodeLinks.add(link);
+	}
+	
+	public void removeUnboundNodeLink(final NodeLink link) {
+		this.unboundNodeLinks.remove(link);
+	}
+	
+	public Set<AbstractNode> getAllNodes() {
+		if(this.nodeElements == null) {
+			this.nodeElements = new HashSet<AbstractNode>();
+		}
+		this.nodeElements.clear();
+		this.nodeElements.addAll(this.map.getNodes());
+		this.nodeElements.addAll(this.getUnboundNodes());
+		this.nodeElements.addAll(this.getMarkers());
+		return Collections.unmodifiableSet(this.nodeElements);
+	}
+	
+	public Set<PhysicalLink> getAllPhysicalLinks() {
+		if(this.linkElements == null) {
+			this.linkElements = new HashSet<PhysicalLink>();
+		}
+		this.linkElements.clear();
+		this.linkElements.addAll(this.map.getAllPhysicalLinks());
+		this.linkElements.addAll(this.getUnboundLinks());
+		return Collections.unmodifiableSet(this.linkElements);
+	}
+
+	public Set<NodeLink> getAllNodeLinks() {
+		if(this.nodeLinkElements == null) {
+			this.nodeLinkElements = new HashSet<NodeLink>();
+		}
+		this.nodeLinkElements.clear();
+		this.nodeLinkElements.addAll(this.map.getAllNodeLinks());
+		this.nodeLinkElements.addAll(this.getUnboundNodeLinks());
+		return Collections.unmodifiableSet(this.nodeLinkElements);
+	}
+
+	/**
+	 * Получить список фрагментов линий, содержащих заданный узел.
+	 * @param node узел
+	 * @return Список фрагментов
+	 */
+	public Set<NodeLink> getNodeLinks(final AbstractNode node) {
+		final Set<NodeLink> returnNodeLinks = new HashSet<NodeLink>();
+		for (final NodeLink nodeLink : this.getAllNodeLinks()) {
+			if ((nodeLink.getEndNode().equals(node)) || (nodeLink.getStartNode().equals(node))) {
+				returnNodeLinks.add(nodeLink);
+			}
+		}
+
+		return returnNodeLinks;
+	}
+
+	/**
+	 * Получить вектор узлов на противоположных концах всех фрагментов линий
+	 * данного элемента.
+	 * 
+	 * @param node
+	 *        узел
+	 * @return список узлов
+	 */
+	public Set<AbstractNode> getOppositeNodes(final AbstractNode node) {
+		final Set<AbstractNode> returnNodes = new HashSet<AbstractNode>();
+		for (final NodeLink nodeLink : this.getNodeLinks(node)) {
+			if (nodeLink.getEndNode().equals(node)) {
+				returnNodes.add(nodeLink.getStartNode());
+			}
+			else {
+				returnNodes.add(nodeLink.getEndNode());
+			}
+		}
+
+		return returnNodes;
+	}
+
+	/**
+	 * Возвращает фрагмент линии, включающий данный узел, по не равный
+	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую
+	 * точку Т, то вызов метода <code>Т.getOtherNodeLink(А)</code> вернет Б, а вызов
+	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического
+	 * узла возвращает единственный противоположный,
+	 * для сетевого узла их может быть несколько, по этой причине метод
+	 * не должен использоваться и возвращает null
+	 * @param node узел
+	 * @param nodeLink фрагмент линии
+	 * @return другой фрагмент линии
+	 */
+	public NodeLink getOtherNodeLink(final AbstractNode node, NodeLink nodeLink) {
+		if (!node.getClass().equals(TopologicalNode.class)) {
+			return null;
+		}
+
+		NodeLink otherNodeLink = null;
+		for (final NodeLink bufNodeLink : this.getNodeLinks(node)) {
+			if (nodeLink != bufNodeLink) {
+				otherNodeLink = bufNodeLink;
+				break;
+			}
+		}
+
+		return otherNodeLink;
 	}
 
 	/**
@@ -673,7 +816,6 @@ public final class MapView extends DomainMember implements Describable {
 	 */
 	public void removeMarker(final Marker marker) {
 		this.markers.remove(marker);
-		this.map.removeNode(marker);
 		this.map.setSelected(marker, false);
 	}
 
@@ -691,7 +833,6 @@ public final class MapView extends DomainMember implements Describable {
 	 */
 	public void addMarker(final Marker marker) {
 		this.markers.add(marker);
-		this.getMap().addNode(marker);
 	}
 
 	/**
@@ -714,6 +855,9 @@ public final class MapView extends DomainMember implements Describable {
 	 */
 	public void revert() {
 		this.removeMarkers();
+		this.unboundLinks.clear();
+		this.unboundNodeLinks.clear();
+		this.unboundNodes.clear();
 	}
 
 	public static SchemeElement getTopologicalSchemeElement(
@@ -804,4 +948,5 @@ public final class MapView extends DomainMember implements Describable {
 		}
 		return top;
 	}
+
 }

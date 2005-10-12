@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.112 2005/10/07 10:04:18 bass Exp $
+ * $Id: Map.java,v 1.113 2005/10/12 13:04:49 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/10/07 10:04:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.113 $, $Date: 2005/10/12 13:04:49 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -105,19 +105,12 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	private transient Set<SiteNode> externalNodes;
 	private transient Set<MapLibrary> mapLibrarys;
 
-	/**
-	 * Сортированный список всех элементов топологической схемы
-	 */
-	private transient List<MapElement> allElements;
 	private transient Set<AbstractNode> nodeElements;
 	private transient Set<MapElement> selectedElements;
 
 	private transient boolean transientFieldsInitialized = false;
 	
 	private void initialize() {
-		if(this.allElements == null) {
-			this.allElements = new LinkedList<MapElement>();
-		}
 		if(this.nodeElements == null) {
 			this.nodeElements = new HashSet<AbstractNode>();
 		}
@@ -295,6 +288,13 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public void open() {
 		this.initialize();
+		for(PhysicalLink physicalLink : this.physicalLinks) {
+			physicalLink.getBinding().clear();
+		}
+		
+		for(Map map : this.maps) {
+			map.open();
+		}
 	}
 
 	@Override
@@ -1033,72 +1033,72 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		}
 	}
 
-	/**
-	 * Получить список фрагментов линий, содержащих заданный узел.
-	 * @param node узел
-	 * @return Список фрагментов
-	 */
-	public Set<NodeLink> getNodeLinks(final AbstractNode node) {
-		final Set<NodeLink> returnNodeLinks = new HashSet<NodeLink>();
-		for (final NodeLink nodeLink : this.getNodeLinks()) {
-			if ((nodeLink.getEndNode().equals(node)) || (nodeLink.getStartNode().equals(node))) {
-				returnNodeLinks.add(nodeLink);
-			}
-		}
+//	/**
+//	 * Получить список фрагментов линий, содержащих заданный узел.
+//	 * @param node узел
+//	 * @return Список фрагментов
+//	 */
+//	public Set<NodeLink> getNodeLinks(final AbstractNode node) {
+//		final Set<NodeLink> returnNodeLinks = new HashSet<NodeLink>();
+//		for (final NodeLink nodeLink : this.getNodeLinks()) {
+//			if ((nodeLink.getEndNode().equals(node)) || (nodeLink.getStartNode().equals(node))) {
+//				returnNodeLinks.add(nodeLink);
+//			}
+//		}
+//
+//		return returnNodeLinks;
+//	}
 
-		return returnNodeLinks;
-	}
+//	/**
+//	 * Возвращает фрагмент линии, включающий данный узел, по не равный
+//	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую
+//	 * точку Т, то вызов метода <code>Т.getOtherNodeLink(А)</code> вернет Б, а вызов
+//	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического
+//	 * узла возвращает единственный противоположный,
+//	 * для сетевого узла их может быть несколько, по этой причине метод
+//	 * не должен использоваться и возвращает null
+//	 * @param node узел
+//	 * @param nodeLink фрагмент линии
+//	 * @return другой фрагмент линии
+//	 */
+//	public NodeLink getOtherNodeLink(final AbstractNode node, NodeLink nodeLink) {
+//		if (!node.getClass().equals(TopologicalNode.class)) {
+//			return null;
+//		}
+//
+//		NodeLink otherNodeLink = null;
+//		for (final NodeLink bufNodeLink : this.getNodeLinks()) {
+//			if (nodeLink != bufNodeLink) {
+//				otherNodeLink = bufNodeLink;
+//				break;
+//			}
+//		}
+//
+//		return otherNodeLink;
+//	}
 
-	/**
-	 * Возвращает фрагмент линии, включающий данный узел, по не равный
-	 * переданному в параметре. Если фрагмент А и фрагмент Б имеют общую
-	 * точку Т, то вызов метода <code>Т.getOtherNodeLink(А)</code> вернет Б, а вызов
-	 * <code>Т.getOtherNodeLink(Б)</code> вернет А. Таким образом, для топологического
-	 * узла возвращает единственный противоположный,
-	 * для сетевого узла их может быть несколько, по этой причине метод
-	 * не должен использоваться и возвращает null
-	 * @param node узел
-	 * @param nodeLink фрагмент линии
-	 * @return другой фрагмент линии
-	 */
-	public NodeLink getOtherNodeLink(final AbstractNode node, NodeLink nodeLink) {
-		if (!node.getClass().equals(TopologicalNode.class)) {
-			return null;
-		}
-
-		NodeLink otherNodeLink = null;
-		for (final NodeLink bufNodeLink : this.getNodeLinks()) {
-			if (nodeLink != bufNodeLink) {
-				otherNodeLink = bufNodeLink;
-				break;
-			}
-		}
-
-		return otherNodeLink;
-	}
-
-	/**
-	 * Получить вектор узлов на противоположных концах всех фрагментов линий
-	 * данного элемента.
-	 * 
-	 * @param node
-	 *        узел
-	 * @return список узлов
-	 */
-	public Set<AbstractNode> getOppositeNodes(final AbstractNode node) {
-		final Set<AbstractNode> returnNodes = new HashSet<AbstractNode>();
-		for (final NodeLink nodeLink : this.getNodeLinks(node)) {
-			if (nodeLink.getEndNode().equals(node)) {
-				returnNodes.add(nodeLink.getStartNode());
-			}
-			else {
-				returnNodes.add(nodeLink.getEndNode());
-			}
-		}
-
-		return returnNodes;
-	}
-
+//	/**
+//	 * Получить вектор узлов на противоположных концах всех фрагментов линий
+//	 * данного элемента.
+//	 * 
+//	 * @param node
+//	 *        узел
+//	 * @return список узлов
+//	 */
+//	public Set<AbstractNode> getOppositeNodes(final AbstractNode node) {
+//		final Set<AbstractNode> returnNodes = new HashSet<AbstractNode>();
+//		for (final NodeLink nodeLink : this.getNodeLinks(node)) {
+//			if (nodeLink.getEndNode().equals(node)) {
+//				returnNodes.add(nodeLink.getStartNode());
+//			}
+//			else {
+//				returnNodes.add(nodeLink.getEndNode());
+//			}
+//		}
+//
+//		return returnNodes;
+//	}
+//
 	/**
 	 * @param map
 	 * @param importType
