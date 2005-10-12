@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.10 2005/10/10 11:07:38 stas Exp $
+ * $Id: Constants.java,v 1.11 2005/10/12 10:07:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/12 10:07:27 $
  * @module schemeclient
  */
 
@@ -35,6 +35,7 @@ public interface Constants {
 	public static final int HORIZONTAL = 0;
 	public static final int VERTICAL = 1;
 
+	public static final String SELECTABLE = "selectable"; 
 	// list of tools
 	public static final String MARQUEE = "marqueeTool"; //$NON-NLS-1$
 //	public static final String rectangleTool = "rectangleTool"; //$NON-NLS-1$
@@ -109,5 +110,7 @@ public interface Constants {
 
 	public static final String PATH_MODE = "path_mode"; //$NON-NLS-1$
 	public static final String LINK_MODE = "link_mode"; //$NON-NLS-1$
+	public static final String RACK_MODE = "rack_mode"; //$NON-NLS-1$
+	public static final String PROTO_MODE = "proto_mode";
 	public static final String TOP_LEVEL_MODE = "top_level_mode"; //$NON-NLS-1$
 }
