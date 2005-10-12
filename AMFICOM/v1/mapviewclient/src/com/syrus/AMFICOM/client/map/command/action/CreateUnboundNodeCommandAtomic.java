@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateUnboundNodeCommandAtomic.java,v 1.26 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: CreateUnboundNodeCommandAtomic.java,v 1.27 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -26,7 +28,7 @@ import com.syrus.util.Log;
  * –азместить сетевой элемент на карте. используетс€ при переносе (drag/drop), в
  * точке point (в экранных координатах)
  * 
- * @version $Revision: 1.26 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -39,6 +41,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 
 	SchemeElement schemeElement;
 
+	MapView mapView;
 	Map map;
 
 	/**
@@ -70,7 +73,8 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 				MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
 
-		this.map = this.logicalNetLayer.getMapView().getMap();
+		this.mapView = this.logicalNetLayer.getMapView();
+		this.map = this.mapView.getMap();
 
 		try {
 			// создать новый узел
@@ -85,7 +89,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 
 			unc.updateScaleCoefficient(this.unbound);
 
-			this.map.addNode(this.unbound);
+			this.mapView.addUnboundNode(this.unbound);
 			setResult(Command.RESULT_OK);
 		} catch(CreateObjectException e) {
 			setException(e);
@@ -100,11 +104,11 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void undo() {
-		this.map.removeNode(this.unbound);
+		this.mapView.removeUnboundNode(this.unbound);
 	}
 
 	@Override
 	public void redo() {
-		this.map.addNode(this.unbound);
+		this.mapView.addUnboundNode(this.unbound);
 	}
 }

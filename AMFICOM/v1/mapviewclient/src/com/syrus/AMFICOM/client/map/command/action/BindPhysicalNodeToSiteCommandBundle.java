@@ -1,5 +1,5 @@
 /*-
- * $$Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.35 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.36 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -28,7 +27,7 @@ import com.syrus.util.Log;
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
  *  
- * @version $Revision: 1.35 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -73,8 +72,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle 
 			UnboundLink link = (UnboundLink)this.node.getPhysicalLink();
 			// находим "ливый" и "правый" узлы, одновременно обновл€ем
 			// концевые узлы фрагментов
-			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();) {
-				NodeLink nodeLink = (NodeLink)it.next();
+			for(NodeLink nodeLink : this.mapView.getNodeLinks(this.node)) {
 
 				if(nodeLink.getStartNode().equals(this.node))
 					nodeLink.setStartNode(this.site);

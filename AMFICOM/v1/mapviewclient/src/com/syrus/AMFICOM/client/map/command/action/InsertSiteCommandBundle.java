@@ -1,5 +1,5 @@
 /*-
- * $$Id: InsertSiteCommandBundle.java,v 1.36 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: InsertSiteCommandBundle.java,v 1.37 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.36 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -83,7 +83,9 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 				MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 
-		this.map = this.logicalNetLayer.getMapView().getMap();
+		MapView mapView = this.logicalNetLayer.getMapView();
+
+		this.map = mapView.getMap();
 
 		try {
 			this.link = this.node.getPhysicalLink();
@@ -94,7 +96,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 					.getMapViewController().getController(this.site);
 			snc.updateScaleCoefficient(this.site);
 			// обновить концевые узлы фрагментов
-			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();) {
+			for(Iterator it = mapView.getNodeLinks(this.node).iterator(); it.hasNext();) {
 				NodeLink mnle = (NodeLink )it.next();
 
 				MapElementState nls = mnle.getState();
@@ -138,8 +140,6 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 						this.site,
 						null);
 				this.link.setStartNode(this.site);
-
-				MapView mapView = this.logicalNetLayer.getMapView();
 
 				// проверить все кабельные пути, прохидящие по линии,
 				// и добавить новую линию

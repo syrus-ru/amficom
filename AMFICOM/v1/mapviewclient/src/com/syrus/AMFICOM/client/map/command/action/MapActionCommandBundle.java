@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapActionCommandBundle.java,v 1.36 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: MapActionCommandBundle.java,v 1.37 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * 
- * @version $Revision: 1.36 $, $Date: 2005/10/03 10:35:00 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -410,7 +410,7 @@ public class MapActionCommandBundle extends CommandBundle {
 				break;
 			}
 
-			startNodeLink = map.getOtherNodeLink(startNode, startNodeLink);
+			startNodeLink = this.logicalNetLayer.getMapView().getOtherNodeLink(startNode, startNodeLink);
 		}//for(;;)
 		
 		return foundNode;

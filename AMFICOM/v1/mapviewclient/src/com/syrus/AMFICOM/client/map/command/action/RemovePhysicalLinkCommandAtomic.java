@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemovePhysicalLinkCommandAtomic.java,v 1.15 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: RemovePhysicalLinkCommandAtomic.java,v 1.16 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
  * удаление физической линии из карты - атомарное действие
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -43,19 +45,35 @@ public class RemovePhysicalLinkCommandAtomic extends MapActionCommand {
 					+ " (" + this.link.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
-		this.logicalNetLayer.getMapView().getMap()
-				.removePhysicalLink(this.link);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+		if(this.link instanceof UnboundLink) {
+			mapView.removeUnboundLink((UnboundLink) this.link);
+		}
+		else {
+			mapView.getMap().removePhysicalLink(this.link);
+		}
 		setResult(Command.RESULT_OK);
 	}
 
 	@Override
 	public void redo() {
-		this.logicalNetLayer.getMapView().getMap()
-				.removePhysicalLink(this.link);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+		if(this.link instanceof UnboundLink) {
+			mapView.removeUnboundLink((UnboundLink) this.link);
+		}
+		else {
+			mapView.getMap().removePhysicalLink(this.link);
+		}
 	}
 
 	@Override
 	public void undo() {
-		this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+		if(this.link instanceof UnboundLink) {
+			mapView.addUnboundLink((UnboundLink) this.link);
+		}
+		else {
+			mapView.getMap().addPhysicalLink(this.link);
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $$Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.33 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.34 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
  * 
- * @version $Revision: 1.33 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -91,6 +91,8 @@ public class GenerateUnboundLinkCablingCommandBundle extends
 				this.unbound.removeNodeLink(tmpNodeLink);
 				tmpNodeLink.setPhysicalLink(this.link);
 				this.link.addNodeLink(tmpNodeLink);
+				this.mapView.removeUnboundNodeLink(tmpNodeLink);
+				this.map.addNodeLink(tmpNodeLink);
 			}
 
 			CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(this.unbound);

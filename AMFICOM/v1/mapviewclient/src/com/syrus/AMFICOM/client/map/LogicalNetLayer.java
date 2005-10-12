@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.130 2005/10/04 17:09:31 krupenn Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.131 2005/10/12 13:07:07 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.130 $, $Date: 2005/10/04 17:09:31 $
+ * @version $Revision: 1.131 $, $Date: 2005/10/12 13:07:07 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -192,7 +192,7 @@ public final class LogicalNetLayer {
 		}
 		final Map map = this.getMapView().getMap();
 		if (map != null) {
-			for (final AbstractNode curNode : map.getNodes()) {
+			for (final AbstractNode curNode : this.mapView.getAllNodes()) {
 				((AbstractNodeController) this.getMapViewController().getController(curNode)).updateScaleCoefficient(curNode);
 			}
 		}
@@ -445,7 +445,7 @@ public final class LogicalNetLayer {
 		}
 
 		if (this.getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH) {
-			this.elementsToDisplay.addAll(this.getMapView().getMap().getAllPhysicalLinks());
+			this.elementsToDisplay.addAll(this.getMapView().getAllPhysicalLinks());
 			for (final MeasurementPath measurementPath : this.mapView.getMeasurementPaths()) {
 				// if(this.getMapViewController().getController(measurementPath).isElementVisible(measurementPath,
 				// visibleBounds))
@@ -463,7 +463,7 @@ public final class LogicalNetLayer {
 				this.getMapViewController().getController(physicalLink).paint(physicalLink, g, visibleBounds);
 			}
 		} else if (this.getMapState().getShowMode() == MapState.SHOW_CABLE_PATH) {
-			this.elementsToDisplay.addAll(this.getMapView().getMap().getAllPhysicalLinks());
+			this.elementsToDisplay.addAll(this.getMapView().getAllPhysicalLinks());
 			for (final CablePath cablePath : this.mapView.getCablePaths()) {
 				// if(this.getMapViewController().getController(cablePath).isElementVisible(cablePath,
 				// visibleBounds))
@@ -476,13 +476,13 @@ public final class LogicalNetLayer {
 				this.getMapViewController().getController(physicalLink).paint(physicalLink, g, visibleBounds);
 			}
 		} else if (this.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK) {
-			for (final PhysicalLink physicalLink : this.getMapView().getMap().getAllPhysicalLinks()) {
+			for (final PhysicalLink physicalLink : this.getMapView().getAllPhysicalLinks()) {
 				// if(this.getMapViewController().getController(physicalLink).isElementVisible(physicalLink,
 				// visibleBounds))
 				this.getMapViewController().getController(physicalLink).paint(physicalLink, g, visibleBounds);
 			}
 		} else if (this.getMapState().getShowMode() == MapState.SHOW_NODE_LINK) {
-			for (final NodeLink nodeLink : this.getMapView().getMap().getAllNodeLinks()) {
+			for (final NodeLink nodeLink : this.getMapView().getAllNodeLinks()) {
 				// if(this.getMapViewController().getController(nodeLink).isElementVisible(nodeLink,
 				// visibleBounds))
 				this.getMapViewController().getController(nodeLink).paint(nodeLink, g, visibleBounds);
@@ -506,7 +506,7 @@ public final class LogicalNetLayer {
 	public void drawNodes(final Graphics g, final Rectangle2D.Double visibleBounds) throws MapConnectionException, MapDataException {
 		final long f = System.currentTimeMillis();
 		final boolean showNodes = MapPropertiesManager.isShowPhysicalNodes();
-		for (final AbstractNode curNode : this.getMapView().getMap().getNodes()) {
+		for (final AbstractNode curNode : this.getMapView().getAllNodes()) {
 			if (curNode instanceof TopologicalNode) {
 				if (showNodes) {
 					this.getMapViewController().getController(curNode).paint(curNode, g, visibleBounds);
@@ -664,7 +664,7 @@ public final class LogicalNetLayer {
 				if (canFixDist) {
 					this.fixedNode = (AbstractNode) curMapElement;
 					this.fixedNodeList.clear();
-					for (final NodeLink mnle : this.mapView.getMap().getNodeLinks(this.fixedNode)) {
+					for (final NodeLink mnle : this.mapView.getNodeLinks(this.fixedNode)) {
 						this.fixedNodeList.add(mnle.getOtherNode(this.fixedNode));
 					}
 				}
@@ -709,24 +709,20 @@ public final class LogicalNetLayer {
 			if(this.mapViewController.isMouseOnElement(nodeLink, point)) {
 				switch(showMode) {
 					case MapState.SHOW_NODE_LINK:
-						curME = nodeLink;
-						break;
+						return nodeLink;
 					case MapState.SHOW_PHYSICAL_LINK:
-						curME = nodeLink.getPhysicalLink();
-						break;
+						return nodeLink.getPhysicalLink();
 					case MapState.SHOW_CABLE_PATH: {
 						PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 						if(physicalLink instanceof UnboundLink) {
-							curME = ((UnboundLink)physicalLink).getCablePath();
+							return ((UnboundLink)physicalLink).getCablePath();
 						}
-						else {
-							List<Object> bindObjects = physicalLink.getBinding()
-									.getBindObjects();
-							if(bindObjects.isEmpty()) {
-								curME = physicalLink;
-							} else {
-								curME = (MapElement)bindObjects.iterator().next();
-							}
+						List<Object> bindObjects = physicalLink.getBinding()
+								.getBindObjects();
+						if(bindObjects.isEmpty()) {
+							curME = physicalLink;
+						} else {
+							return (MapElement)bindObjects.iterator().next();
 						}
 						break;
 					}
@@ -760,7 +756,7 @@ public final class LogicalNetLayer {
 								e.printStackTrace();
 							}
 							if(doBreak) {
-								break;
+								return curME;
 							}
 						}
 						break;
@@ -769,7 +765,7 @@ public final class LogicalNetLayer {
 						throw new UnsupportedOperationException(
 								"Unknown show mode: " + showMode); //$NON-NLS-1$
 				}
-				break;
+//				break;
 			}
 		}
 		return curME;
@@ -975,7 +971,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.130 $, $Date: 2005/10/04 17:09:31 $
+	 * @version $Revision: 1.131 $, $Date: 2005/10/12 13:07:07 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1059,7 +1055,7 @@ public final class LogicalNetLayer {
 						controller.getStroke(measurementPath.getCharacterizable()),
 						false);
 			}
-			this.calculateVisualElements(map.getNodes(),
+			this.calculateVisualElements(this.mapView.getAllNodes(),
 					allNodeLinks,
 					MapPropertiesManager.getColor(),
 					MapPropertiesManager.getStroke(),
@@ -1078,19 +1074,19 @@ public final class LogicalNetLayer {
 						controller.getStroke(cablePath.getCharacterizable()), 
 						false);
 			}
-			this.calculateVisualElements(map.getNodes(),
+			this.calculateVisualElements(this.mapView.getAllNodes(),
 					allNodeLinks,
 					MapPropertiesManager.getColor(),
 					MapPropertiesManager.getStroke(),
 					true);
 		} else if (this.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK) {
-			this.calculateVisualElements(map.getNodes(),
+			this.calculateVisualElements(this.mapView.getAllNodes(),
 					allNodeLinks,
 					MapPropertiesManager.getColor(),
 					MapPropertiesManager.getStroke(),
 					true);
 		} else if (this.getMapState().getShowMode() == MapState.SHOW_NODE_LINK) {
-			this.calculateVisualElements(map.getNodes(),
+			this.calculateVisualElements(this.mapView.getAllNodes(),
 					allNodeLinks,
 					MapPropertiesManager.getColor(),
 					MapPropertiesManager.getStroke(),
@@ -1579,17 +1575,17 @@ public final class LogicalNetLayer {
 
 	private Set<AbstractNode> getVisibleNodesForOptimization(Rectangle2D.Double visibleBounds) {
 		// TODO return getVisibleNodes(Double visibleBounds)
-		return new HashSet<AbstractNode>(this.mapView.getMap().getNodes());
+		return new HashSet<AbstractNode>(this.mapView.getAllNodes());
 	}
 
 	private Set<NodeLink> getVisibleNodeLinksForOptimization(Rectangle2D.Double visibleBounds) {
 		// TODO return getVisibleNodeLinkss(Double visibleBounds)
-		return new HashSet<NodeLink>(this.mapView.getMap().getAllNodeLinks());
+		return new HashSet<NodeLink>(this.mapView.getAllNodeLinks());
 	}
 
 	public Set<AbstractNode> getVisibleNodes(Rectangle2D.Double visibleBounds) throws MapConnectionException, MapDataException {
 		Set<AbstractNode> hashSet = new HashSet<AbstractNode>();
-		for(AbstractNode abstractNode : this.mapView.getMap().getNodes()) {
+		for(AbstractNode abstractNode : this.mapView.getAllNodes()) {
 			if(this.mapViewController.isElementVisible(abstractNode, visibleBounds)) {
 				hashSet.add(abstractNode);
 			}
@@ -1601,7 +1597,7 @@ public final class LogicalNetLayer {
 	public Set<NodeLink> getVisibleNodeLinks(Rectangle2D.Double visibleBounds) throws MapConnectionException, MapDataException {
 		HashSet<NodeLink> hashSet = new HashSet<NodeLink>();
 		Set<Identifier> physicalLinkIds = new HashSet<Identifier>();
-		for(NodeLink nodeLink : this.mapView.getMap().getAllNodeLinks()) {
+		for(NodeLink nodeLink : this.mapView.getAllNodeLinks()) {
 			if(this.mapViewController.isElementVisible(nodeLink, visibleBounds)) {
 				hashSet.add(nodeLink);
 				physicalLinkIds.add(nodeLink.getPhysicalLinkId());

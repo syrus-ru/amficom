@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.34 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.35 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.34 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -115,15 +115,15 @@ public class MapViewOpenCommand extends AbstractCommand {
 			return;
 		}
 
-		try {
+//		try {
 			this.mapView.getMap().open();
-			for(Scheme scheme : this.mapView.getSchemes()) {
-				MapViewOpenCommand.openScheme(scheme);
-			}
-		} catch(ApplicationException e) {
-			e.printStackTrace();
-			return;
-		}
+//			for(Scheme scheme : this.mapView.getSchemes()) {
+//				MapViewOpenCommand.openScheme(scheme);
+//			}
+//		} catch(ApplicationException e) {
+//			e.printStackTrace();
+//			return;
+//		}
 		setResult(Command.RESULT_OK);
 
 		this.aContext.getDispatcher().firePropertyChange(

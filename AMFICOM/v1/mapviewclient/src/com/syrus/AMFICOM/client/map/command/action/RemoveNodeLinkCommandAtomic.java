@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveNodeLinkCommandAtomic.java,v 1.15 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: RemoveNodeLinkCommandAtomic.java,v 1.16 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
  * удаление фрагмента линии связи из карты - атомарное действие
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -43,19 +45,38 @@ public class RemoveNodeLinkCommandAtomic extends MapActionCommand {
 					+ " (" + this.nodeLink.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
-		this.logicalNetLayer.getMapView().getMap()
-				.removeNodeLink(this.nodeLink);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+
+		if(this.nodeLink.getPhysicalLink() instanceof UnboundLink) {
+			mapView.removeUnboundNodeLink(this.nodeLink);
+		}
+		else {
+			mapView.getMap().removeNodeLink(this.nodeLink);
+		}
 		setResult(Command.RESULT_OK);
 	}
 
 	@Override
 	public void redo() {
-		this.logicalNetLayer.getMapView().getMap()
-				.removeNodeLink(this.nodeLink);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+
+		if(this.nodeLink.getPhysicalLink() instanceof UnboundLink) {
+			mapView.removeUnboundNodeLink(this.nodeLink);
+		}
+		else {
+			mapView.getMap().removeNodeLink(this.nodeLink);
+		}
 	}
 
 	@Override
 	public void undo() {
-		this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+
+		if(this.nodeLink.getPhysicalLink() instanceof UnboundLink) {
+			mapView.addUnboundNodeLink(this.nodeLink);
+		}
+		else {
+			mapView.getMap().addNodeLink(this.nodeLink);
+		}
 	}
 }

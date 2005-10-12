@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.34 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.35 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.34 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -79,7 +79,7 @@ public class MapViewSaveCommand extends AbstractCommand {
 					// save scheme
 					// StorableObjectPool.flush(scheme, userId, true);
 					for(Identifiable schemeElement : scheme
-							.getReverseDependencies(true)) {
+							.getReverseDependencies(false)) {
 						StorableObjectPool.flush(schemeElement, userId, true);
 					}
 				} catch(VersionCollisionException e) {

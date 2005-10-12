@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.32 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.33 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -589,6 +589,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				newCableChannelingItem.insertSelfBefore(cableChannelingItem);
 				cablePath.removeLink(cableChannelingItem);
 				cablePath.addLink(unbound, newCableChannelingItem);
+				cableChannelingItem.setParentPathOwner(null, false);
 			}
 		}
 

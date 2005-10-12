@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeTypeController.java,v 1.54 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: NodeTypeController.java,v 1.55 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 /**
  * контроллер типа сетевого узла.
  * 
- * @version $Revision: 1.54 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.55 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -227,6 +227,7 @@ public class NodeTypeController extends AbstractNodeController {
 		}
 		else {//TODO this is temporal
 			type.setSort(sort);
+			type.setName(I18N.getString(codename));
 		}
 		return type;
 	}

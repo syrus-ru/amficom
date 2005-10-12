@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerController.java,v 1.41 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MarkerController.java,v 1.42 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.CablePath;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.41 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -312,14 +313,15 @@ public class MarkerController extends AbstractNodeController {
 	 *        начальный узел
 	 */
 	public void setRelativeToNode(final Marker marker, AbstractNode node) throws MapConnectionException, MapDataException {
-		final Map map = marker.getMapView().getMap();
+		final MapView mapView = marker.getMapView();
+		final Map map = mapView.getMap();
 		marker.setStartNode(node);
 
 		final MeasurementPath measurementPath = marker.getMeasurementPath();
 
 		NodeLink nodeLink = null;
 
-		for (final NodeLink nlink : map.getNodeLinks(node)) {
+		for (final NodeLink nlink : mapView.getNodeLinks(node)) {
 			if (nodeLink == null
 					|| measurementPath.getSortedNodeLinks().indexOf(nodeLink) > measurementPath.getSortedNodeLinks().indexOf(nlink))
 				nodeLink = nlink;

@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeleteNodeCommandBundle.java,v 1.48 2005/10/04 17:11:09 krupenn Exp $$
+ * $$Id: DeleteNodeCommandBundle.java,v 1.49 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * 
- * @version $Revision: 1.48 $, $Date: 2005/10/04 17:11:09 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -179,7 +179,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle {
 		}
 
 		//При удалении узла удаляются все фрагменты линий, исходящие из него
-		java.util.Set nodeLinksToDelete = this.map.getNodeLinks(site);
+		java.util.Set nodeLinksToDelete = mapView.getNodeLinks(site);
 		Iterator iter = nodeLinksToDelete.iterator();
 
 		// бежим по списку удаляемых фрагментов
@@ -247,12 +247,14 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle {
 			return;
 		}
 
+		MapView mapView = this.logicalNetLayer.getMapView();
+		
 		PhysicalLink physicalLink = topologicalNode.getPhysicalLink();
 
 		// если узел не активен, то есть является концевым узлом физической линии
 		if ( !topologicalNode.isActive() ) {
 			//При удалении узла удаляются все фрагменты линий, исходящие из него
-			java.util.Set nodeLinksToDelete = this.map.getNodeLinks(topologicalNode);
+			java.util.Set nodeLinksToDelete = mapView.getNodeLinks(topologicalNode);
 			Iterator iter = nodeLinksToDelete.iterator();
 	
 			// бежим по списку удаляемых фрагментов (фактически там только 
@@ -310,7 +312,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle {
 			// если узел активен, то при его удалении два фрагмента сливаются в один
 
 			// получить смежные фрагменты линии
-			Iterator nodeLinksIterator = this.map.getNodeLinks(topologicalNode).iterator();
+			Iterator nodeLinksIterator = mapView.getNodeLinks(topologicalNode).iterator();
 			NodeLink nodeLinkLeft = 
 					(NodeLink)nodeLinksIterator.next();
 			NodeLink nodeLinkRight = 

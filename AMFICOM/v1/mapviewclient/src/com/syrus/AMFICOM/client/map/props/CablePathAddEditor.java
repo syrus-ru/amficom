@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.28 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.29 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -668,31 +668,36 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			this.availableLinksFromStart = Collections.emptySet();
 			this.availableNodesFromStart = Collections.emptyList();
 			this.startAvailableLinksCount = 0;
+			
+			this.endNode = (SiteNode) this.cablePath.getStartNode();
+			this.endLastBound = null;
+			this.availableLinksFromEnd = Collections.emptySet();
+			this.availableNodesFromEnd = Collections.emptyList();
+			this.endAvailableLinksCount = 0;
+			return;
 		}
-		else {
-			this.startLastBound = this.cablePath.getStartLastBoundLink();
+		this.startLastBound = this.cablePath.getStartLastBoundLink();
 
-			this.availableLinksFromStart = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.startNode);
-			if(this.startLastBound != null)
-				this.availableLinksFromStart.remove(this.startLastBound.getPhysicalLink());
+		this.availableLinksFromStart = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.startNode);
+		if(this.startLastBound != null)
+			this.availableLinksFromStart.remove(this.startLastBound.getPhysicalLink());
 
-			this.availableNodesFromStart = new LinkedList();
+		this.availableNodesFromStart = new LinkedList();
 
-			this.startAvailableLinksCount = this.availableLinksFromStart.size();
-			for(Iterator it = this.availableLinksFromStart.iterator(); it.hasNext();) {
-				PhysicalLink link = (PhysicalLink)it.next();
-				if(link.getType().equals(unboundType)) {
+		this.startAvailableLinksCount = this.availableLinksFromStart.size();
+		for(Iterator it = this.availableLinksFromStart.iterator(); it.hasNext();) {
+			PhysicalLink link = (PhysicalLink)it.next();
+			if(link.getType().equals(unboundType)) {
+				it.remove();
+				this.startAvailableLinksCount--;
+			}
+			else if(link.getStartNode() instanceof TopologicalNode
+				|| link.getEndNode() instanceof TopologicalNode) {
 					it.remove();
 					this.startAvailableLinksCount--;
-				}
-				else if(link.getStartNode() instanceof TopologicalNode
-					|| link.getEndNode() instanceof TopologicalNode) {
-						it.remove();
-						this.startAvailableLinksCount--;
-				}
-				else {
-					this.availableNodesFromStart.add(link.getOtherNode(this.startNode));
-				}
+			}
+			else {
+				this.availableNodesFromStart.add(link.getOtherNode(this.startNode));
 			}
 		}
 		
@@ -873,10 +878,10 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 	
-	void clearBinding()
-	{
+	void clearBinding() {
 		this.cablePath.clearLinks();
-		this.cablePath.getSchemeCableLink().getPathMembers().iterator().next().setParentPathOwner(null, true);
+		final CableChannelingItem firstCCI = this.cablePath.getSchemeCableLink().getPathMembers().iterator().next();
+		firstCCI.setParentPathOwner(null, true);
 
 		AbstractNode cableStart = this.cablePath.getStartNode();
 		AbstractNode cableEnd = this.cablePath.getEndNode();
@@ -897,6 +902,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 
 		this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 
+		this.model.setValues(this.cablePath.getLinks());
 		this.model.fireTableDataChanged();
 
 		setBindingValues();
@@ -925,6 +931,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			newCableChannelingItem.insertSelfAfter(unboundCableChannelingItem);
 		}
 
+		int a = 0;
+		
 		this.cablePath.addLink(link, newCableChannelingItem);
 		link.getBinding().add(this.cablePath);
 

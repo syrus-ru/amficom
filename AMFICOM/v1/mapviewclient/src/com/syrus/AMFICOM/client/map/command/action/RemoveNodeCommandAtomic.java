@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveNodeCommandAtomic.java,v 1.20 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: RemoveNodeCommandAtomic.java,v 1.21 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,13 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.Marker;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.util.Log;
 
 /**
  * удаление узла из карты - атомарное действие
  * 
- * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -44,20 +45,41 @@ public class RemoveNodeCommandAtomic extends MapActionCommand {
 					+ " (" + this.node.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
-		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
-		if(this.node instanceof Marker) {
+		if(this.node instanceof UnboundNode) {
+			this.logicalNetLayer.getMapView().removeUnboundNode((UnboundNode) this.node);
+		}
+		else if(this.node instanceof Marker) {
 			this.logicalNetLayer.getMapView().removeMarker((Marker) this.node);
+		}
+		else {
+			this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
 		}
 		setResult(Command.RESULT_OK);
 	}
 
 	@Override
 	public void redo() {
-		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
+		if(this.node instanceof UnboundNode) {
+			this.logicalNetLayer.getMapView().removeUnboundNode((UnboundNode) this.node);
+		}
+		else if(this.node instanceof Marker) {
+			this.logicalNetLayer.getMapView().removeMarker((Marker) this.node);
+		}
+		else {
+			this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
+		}
 	}
 
 	@Override
 	public void undo() {
-		this.logicalNetLayer.getMapView().getMap().addNode(this.node);
+		if(this.node instanceof UnboundNode) {
+			this.logicalNetLayer.getMapView().addUnboundNode((UnboundNode) this.node);
+		}
+		else if(this.node instanceof Marker) {
+			this.logicalNetLayer.getMapView().addMarker((Marker) this.node);
+		}
+		else {
+			this.logicalNetLayer.getMapView().getMap().addNode(this.node);
+		}
 	}
 }

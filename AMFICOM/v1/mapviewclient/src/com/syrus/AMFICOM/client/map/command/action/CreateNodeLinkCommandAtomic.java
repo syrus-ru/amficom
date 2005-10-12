@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateNodeLinkCommandAtomic.java,v 1.20 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: CreateNodeLinkCommandAtomic.java,v 1.21 2005/10/12 13:07:08 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,15 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/12 13:07:08 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -64,6 +66,7 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 				+ " (" + this.endNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
+		final MapView mapView = this.logicalNetLayer.getMapView();
 		try {
 			this.nodeLink = NodeLink.createInstance(
 					LoginManager.getUserId(),
@@ -71,8 +74,12 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 					this.startNode,
 					this.endNode);
 
-			this.logicalNetLayer.getMapView().getMap().addNodeLink(
-					this.nodeLink);
+			if(this.physicalLink instanceof UnboundLink) {
+				mapView.addUnboundNodeLink(this.nodeLink);
+			}
+			else {
+				mapView.getMap().addNodeLink(this.nodeLink);
+			}
 			setResult(Command.RESULT_OK);
 		} catch(CreateObjectException e) {
 			setException(e);
@@ -83,12 +90,26 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+
+		if(this.physicalLink instanceof UnboundLink) {
+			mapView.addUnboundNodeLink(this.nodeLink);
+		}
+		else {
+			mapView.getMap().addNodeLink(this.nodeLink);
+		}
 	}
 
 	@Override
 	public void undo() {
-		this.logicalNetLayer.getMapView().getMap().removeNodeLink(this.nodeLink);
+		final MapView mapView = this.logicalNetLayer.getMapView();
+
+		if(this.physicalLink instanceof UnboundLink) {
+			mapView.removeUnboundNodeLink(this.nodeLink);
+		}
+		else {
+			mapView.getMap().removeNodeLink(this.nodeLink);
+		}
 	}
 }
 
