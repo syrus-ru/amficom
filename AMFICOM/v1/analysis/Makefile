@@ -1,11 +1,11 @@
 #
-# $Id: Makefile,v 1.14 2005/10/12 10:03:33 bass Exp $
+# $Id: Makefile,v 1.15 2005/10/12 11:44:57 arseniy Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME := analysis
-LIBNAME := $(MODULE_NAME)\ \\
+LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
 
