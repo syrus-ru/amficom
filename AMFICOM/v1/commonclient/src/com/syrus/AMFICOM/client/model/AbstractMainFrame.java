@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.23 2005/10/06 14:34:35 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.24 2005/10/12 12:39:08 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.StatusBar;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/12 12:39:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -327,14 +328,14 @@ implements PropertyChangeListener {
 	public static void showErrorMessage(final Component component,
 										final Exception exception) {
 		JOptionPane.showMessageDialog(component, 
-			exception.getMessage(),
+			CommonUIUtilities.convertToHTMLString(exception.getMessage()),
 			I18N.getString("Error.ErrorOccur"),
 			JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void showErrorMessage(final String errorMessage) {
 		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-			errorMessage,
+			CommonUIUtilities.convertToHTMLString(errorMessage),
 			I18N.getString("Error.ErrorOccur"),
 			JOptionPane.ERROR_MESSAGE);
 	}
