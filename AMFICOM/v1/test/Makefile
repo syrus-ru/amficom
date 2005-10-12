@@ -5,10 +5,10 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 #TEST_CLASS = TestInitialSetup
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
-TEST_CLASS=TestIdentifier
+#TEST_CLASS=TestIdentifier
+#TEST_PACKAGE=com.syrus.AMFICOM.general
+TEST_CLASS=TestParameterType
 TEST_PACKAGE=com.syrus.AMFICOM.general
-#TEST_CLASS=TestKIS
-#TEST_PACKAGE=com.syrus.AMFICOM.measurement
 #TEST_CLASS=TestSystemUser
 #TEST_PACKAGE=com.syrus.AMFICOM.administration
 #TEST_CLASS=TestEquipmentType
