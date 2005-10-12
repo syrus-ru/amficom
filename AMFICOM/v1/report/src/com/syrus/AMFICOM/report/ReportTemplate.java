@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.17 2005/10/10 09:01:20 arseniy Exp $
+ * $Id: ReportTemplate.java,v 1.18 2005/10/12 13:28:13 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/10/10 09:01:20 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.18 $, $Date: 2005/10/12 13:28:13 $
  * @module report
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer {
@@ -93,6 +93,8 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	 * Принадлежность шаблона к модулю
 	 */
 	private String destinationModule;
+	
+	private boolean isNew = false;
 
 	private LinkedIdsCondition	attTextCondition;
 	private LinkedIdsCondition	imageCondition;
@@ -151,7 +153,6 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 					STANDART_MARGIN_SIZE,
 					destinationModule);
 			StorableObjectPool.putStorableObject(reportTemplate);
-		
 			return reportTemplate;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
@@ -428,7 +429,6 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	}
 
 	public void removeElement(StorableElement element) {
-		element.setReportTemplateId(Identifier.VOID_IDENTIFIER);
 		super.markAsChanged();
 	}
 
@@ -449,5 +449,13 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	@Override
 	public Set<Identifiable> getDependencies() {
 		return Collections.emptySet();
+	}
+
+	public boolean isNew() {
+		return this.isNew;
+	}
+
+	public void setNew(boolean isNew) {
+		this.isNew = isNew;
 	}
 }
