@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.121 2005/10/12 13:06:55 bob Exp $
+ * $Id: SchedulerModel.java,v 1.122 2005/10/12 13:10:17 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/10/12 13:06:55 $
+ * @version $Revision: 1.122 $, $Date: 2005/10/12 13:10:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -744,8 +744,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					this.testIds.add(test.getId());
 				} else {
 					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") 
-						+ ':'
-						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest") 
 						+ "\n" 
 						+ reason);
 				}								
@@ -775,7 +773,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 							test.getNumberOfMeasurements());
 				} else {
 					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotUpdateTest") + ':'
-						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest") 
 						+ "\n" 
 						+ reason);
 				}
@@ -919,8 +916,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					}
 				} else {
 					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") + ':'
-						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest") + 
-						"\n" 
+						+ "\n" 
 						+ reason);
 				}
 			}
@@ -971,9 +967,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 							selectedTest.getTemporalPatternId(), 
 							this.measurementSetup)) 
 						!= null) {
-					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") + ':'
-						+ I18N.getString("Scheduler.Error.AddingTestIntersectWithOtherTest") 
-						+ "\n"
+					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest")
+						+ ":\n"
 						+ reason);
 				}
 			}
