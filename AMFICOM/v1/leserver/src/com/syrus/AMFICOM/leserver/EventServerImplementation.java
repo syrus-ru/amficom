@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.14 2005/10/12 07:23:24 arseniy Exp $
+ * $Id: EventServerImplementation.java,v 1.15 2005/10/12 12:25:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/12 07:23:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/10/12 12:25:13 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -69,25 +69,23 @@ public class EventServerImplementation extends EventServerPOA {
 	}
 
 	/**
-	 * @param idlEvent
+	 * @param idlEvents
 	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#yetAnotherEventGeneration(IdlEvent)
+	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
-	public void yetAnotherEventGeneration(final IdlEvent idlEvent)
-	throws AMFICOMRemoteException {
-		final Event event = idlEvent.getNative();
-		Log.debugMessage("EventServerImplementation.yetAnotherEventGeneration() | Event: "
-				+ event + " delivered successfully",
-				INFO);
-	}
-
 	public void receiveEvents(final IdlEvent[] idlEvents) throws AMFICOMRemoteException {
-		Log.debugMessage("EventServerImplementation.receiveEvents | Received " + idlEvents.length + " events", Log.DEBUGLEVEL09);
+		Log.debugMessage("EventServerImplementation.receiveEvents() | Received "
+				+ idlEvents.length + " event(s)",
+				INFO);
+		for (final IdlEvent idlEvent : idlEvents) {
+			final Event event = idlEvent.getNative();
+			Log.debugMessage("EventServerImplementation.receiveEvents() | Event: "
+					+ event + " delivered successfully",
+					INFO);
+		}
 	}
-		
 
 	public void verify(byte i) {
 		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
-
 }
