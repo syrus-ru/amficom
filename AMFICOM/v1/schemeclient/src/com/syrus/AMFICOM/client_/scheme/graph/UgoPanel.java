@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.16 2005/10/04 16:25:54 stas Exp $
+ * $Id: UgoPanel.java,v 1.17 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -45,7 +44,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/10/04 16:25:54 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -92,13 +91,14 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		this.graph.setGridEnabled(true);
 		this.graph.setGridVisible(false);
 		this.graph.setGridVisibleAtActualSize(false);
-		this.graph.setGridColor(Color.lightGray);
+		this.graph.setGridColor(Color.LIGHT_GRAY);
 		this.graph.setBorderVisible(false);
 		this.graph.setPortsVisible(false);
 		this.graph.setRequestFocusEnabled(false);
 		this.graph.setDragEnabled(false);
 		this.graph.setDropEnabled(false);
 		this.graph.setCloneable(false);
+		this.graph.setAntiAliased(true);
 		// this.graph.setEditable(false);
 		// this.graph.setEnabled(false);
 		this.graph.setBendable(true);
@@ -126,7 +126,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 					Identifier id = see.getIdentifier();
 					if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 						SchemeElement se = (SchemeElement)see.getStorableObject();
-						DeviceGroup group = SchemeActions.findGroupById(this.graph, se.getId());
+						DefaultGraphCell group = SchemeActions.findGroupById(this.graph, se.getId());
 						if (group != null) {
 							if (se.getLabel() != null)
 								GraphActions.updateGroup(this.graph, group, se.getLabel());
@@ -135,7 +135,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 						}
 					} else if (id.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
 						SchemeProtoElement proto = (SchemeProtoElement)see.getStorableObject();
-						DeviceGroup group = SchemeActions.findGroupById(this.graph, proto.getId());
+						DefaultGraphCell group = SchemeActions.findGroupById(this.graph, proto.getId());
 						if (group != null) {
 							if (proto.getLabel() != null)
 								GraphActions.updateGroup(this.graph, group, proto.getLabel());

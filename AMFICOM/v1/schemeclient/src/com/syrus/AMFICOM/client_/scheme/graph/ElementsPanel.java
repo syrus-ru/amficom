@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.13 2005/10/03 07:44:39 stas Exp $
+ * $Id: ElementsPanel.java,v 1.14 2005/10/12 10:08:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/12 10:08:40 $
  * @module schemeclient
  */
 
@@ -69,6 +69,7 @@ public class ElementsPanel extends UgoPanel {
 		this.graph.setBendable(true);
 		this.graph.setEditable(true);
 		this.graph.setEnabled(true);
+		this.graph.setAntiAliased(false);
 		this.graph.make_notifications = true;
 	}
 	

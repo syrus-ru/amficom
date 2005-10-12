@@ -1,5 +1,5 @@
 /*
- * $Id: SetPathModeAction.java,v 1.6 2005/08/19 15:41:34 stas Exp $
+ * $Id: SetPathModeAction.java,v 1.7 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -35,7 +35,7 @@ public class SetPathModeAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		for(ElementsPanel panel : this.pane.getAllPanels()) {
 			SchemeGraph graph = panel.getGraph();
-			graph.setMode(Constants.PATH_MODE);
+			graph.setMode(Constants.RACK_MODE);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.10 2005/09/29 13:20:49 stas Exp $
+ * $Id: CreateUgo.java,v 1.11 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,36 +18,147 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultEdge;
 import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/29 13:20:49 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
 public class CreateUgo {
 	private CreateUgo() {
 		// empty
+	}
+	
+	private static final int rackWidth = 11;
+	private static final int rackHeight = 21;
+	public static void createRackUgo(SchemeElement element, SchemeGraph graph) {
+		// make net WxH
+		int step = graph.getGridSize() * 2;
+		List<Object> toInsert = new LinkedList<Object>();
+		Map<DefaultGraphCell, Map> viewMap = new HashMap<DefaultGraphCell, Map>();
+		ConnectionSet cs = new ConnectionSet();
+				
+		for (int i = 0; i < rackWidth; i++) {
+			List<Point> list = new ArrayList<Point>();
+			list.add(new Point(step * (i + 1), step));
+			list.add(new Point(step * (i + 1), rackHeight * step));
+			
+			Map map = GraphConstants.createMap();
+			map.put(Constants.SELECTABLE, new Boolean(false));
+			GraphConstants.setLineColor(map, Color.LIGHT_GRAY);
+			GraphConstants.setPoints(map, list);
+			GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
+			GraphConstants.setEndFill(map, true);
+			
+			DefaultEdge cell = new DefaultEdge(""); //$NON-NLS-1$
+			viewMap.put(cell, map);
+			toInsert.add(cell);
+		}
+		for (int i = 0; i < rackHeight; i++) {
+			List<Point> list = new ArrayList<Point>();
+			list.add(new Point(step, step * (i + 1)));
+			list.add(new Point(rackWidth * step, step * (i + 1)));
+			
+			Map map = GraphConstants.createMap();
+			map.put(Constants.SELECTABLE, new Boolean(false));
+			GraphConstants.setLineColor(map, Color.LIGHT_GRAY);
+			GraphConstants.setPoints(map, list);
+			GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
+			GraphConstants.setEndFill(map, true);
+			
+			DefaultEdge cell = new DefaultEdge(""); //$NON-NLS-1$
+			viewMap.put(cell, map);
+			toInsert.add(cell);
+		}
+		for (int i = 1; i < rackHeight; i++) {
+			Map map = GraphConstants.createMap();
+			String num = Integer.toString(rackHeight - i);
+			Rectangle bounds = new Rectangle(0, (int)(step * i), step / 2, step / 2);
+			map = GraphConstants.createMap();
+			map.put(Constants.SELECTABLE, new Boolean(false));
+			GraphConstants.setBounds(map, bounds);
+			GraphConstants.setSizeable(map, false);
+			GraphConstants.setAutoSize(map, true);
+			DefaultGraphCell text = new DefaultGraphCell(num);
+			viewMap.put(text, map);
+			toInsert.add(text);
+		}
+		
+		Object[] cells = toInsert.toArray();
+		graph.getModel().insert(cells, viewMap, cs, null, null);
+		
+		int lines = 0;
+		try {
+			for (SchemeElement se : element.getSchemeElements(false)) {
+				lines = createGroup(lines, graph, step, se);
+			}
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
+	}
+	
+	private static int createGroup(int lines, SchemeGraph graph, int step, SchemeElement element) throws ApplicationException {
+		List<Object> toInsert = new LinkedList<Object>();
+		for (SchemeDevice dev : element.getSchemeDevices(false)) {
+			int columns = 0;
+			List<SchemePort> schemePorts = ClientUtils.getSortedPorts(dev.getSchemePorts(false));
+			List<SchemeCablePort> schemeCablePorts = ClientUtils.getSortedCablePorts(dev.getSchemeCablePorts(false));
+			
+			Rectangle bounds = new Rectangle(step, step * (lines + 1), step * (schemePorts.size() + schemeCablePorts.size()), step);
+			DeviceCell cell = SchemeActions.createDevice(graph, "", bounds, dev.getId());  //$NON-NLS-1$
+			toInsert.add(cell);
+			lines++;
+			for (SchemePort port : schemePorts) {
+				Point p = new Point((int)((columns + 1.5) * step), (int)((lines + .7) * step));
+				DefaultGraphCell pcell = SchemeActions.createInternalPort(graph, p, port.getName(), port.getDirectionType(), false, Color.WHITE, port.getId());  //$NON-NLS-1$	
+				toInsert.add(pcell);
+				columns++;
+			}
+			for (SchemeCablePort port : schemeCablePorts) {
+				Point p = new Point((int)((columns + 1.5) * step), (int)((lines + .7) * step));
+				DefaultGraphCell pcell = SchemeActions.createInternalPort(graph, p, port.getName(), port.getDirectionType(), true, Color.WHITE, port.getId());  //$NON-NLS-1$
+				toInsert.add(pcell);
+				columns++;
+			}
+		}
+		Object[] objs = toInsert.toArray();
+		if (objs.length != 0) {
+			CreateGroup.createElementsGroup(graph, objs, element);
+		}
+		for (SchemeElement inner : element.getSchemeElements(false)) {
+			lines = createGroup(lines, graph, step, inner);
+		}
+		return lines;
 	}
 
 	public static void createProtoUgo(SchemeProtoElement proto, SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {

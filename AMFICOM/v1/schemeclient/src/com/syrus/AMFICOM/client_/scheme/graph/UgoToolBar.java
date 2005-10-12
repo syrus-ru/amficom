@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.10 2005/09/06 12:45:57 stas Exp $
+ * $Id: UgoToolBar.java,v 1.11 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,13 @@ import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
 import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomActualAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -44,7 +47,9 @@ public class UgoToolBar extends JToolBar {
 //	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
 	private static String[] buttons = new String[] { Constants.MARQUEE,
 			Constants.SEPARATOR, Constants.RECTANGLE, Constants.ELLIPSE,
-			Constants.LINE, Constants.TEXT, Constants.HORIZONTAL_GLUE };
+			Constants.LINE, Constants.TEXT, Constants.SEPARATOR, Constants.ZOOM_IN,
+			Constants.ZOOM_OUT, Constants.ZOOM_BOX, 
+			Constants.ZOOM_ACTUAL, Constants.HORIZONTAL_GLUE };
 
 	protected UgoToolBar(UgoTabbedPane pane) {
 		this.pane = pane;
@@ -97,6 +102,18 @@ public class UgoToolBar extends JToolBar {
 				LangModelGraph.getString(Constants.ICON), Constants.ICON_TEXT, null, true));
 		bttns.put(Constants.LINE, createToolButton(mh.l, this.btn_size, null,
 				LangModelGraph.getString(Constants.LINE), Constants.ICON_LINE, null, true));
+		bttns.put(Constants.ZOOM_IN, createToolButton(mh.zi, this.btn_size, null,
+				LangModelGraph.getString(Constants.ZOOM_IN), Constants.ICON_ZOOM_IN, new ZoomInAction(this.pane),
+				true));
+		bttns.put(Constants.ZOOM_OUT, createToolButton(mh.zo, this.btn_size, null,
+				LangModelGraph.getString(Constants.ZOOM_OUT), Constants.ICON_ZOOM_OUT, new ZoomOutAction(
+						this.pane), true));
+		bttns.put(Constants.ZOOM_ACTUAL, createToolButton(mh.za, this.btn_size, null,
+				LangModelGraph.getString(Constants.ZOOM_ACTUAL), Constants.ICON_ZOOM_NORMAL,
+				new ZoomActualAction(this.pane), true));
+		bttns.put(Constants.ZOOM_BOX, createToolButton(mh.zb, this.btn_size, null,
+				LangModelGraph.getString(Constants.ZOOM_BOX), Constants.ICON_ZOOM_BOX, null,
+				true));
 		
 		ButtonGroup group = new ButtonGroup();
 		for (Iterator it = bttns.values().iterator(); it.hasNext();) {

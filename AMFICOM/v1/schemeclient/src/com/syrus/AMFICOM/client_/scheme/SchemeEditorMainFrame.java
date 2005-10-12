@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.27 2005/10/09 14:03:51 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.28 2005/10/12 10:08:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2005/10/09 14:03:51 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/12 10:08:40 $
  * @module schemeclient
  */
 
@@ -31,6 +31,7 @@ import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigImportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.CreateSchemeReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ProtoElementsExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ProtoElementsImportCommand;
@@ -261,7 +262,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 //		for (Iterator it = graphs.iterator(); it.hasNext();)
 //			rc.setParameter(CreateSchemeReportCommand.PANEL, it.next());
 //		rc.setParameter(CreateSchemeReportCommand.TYPE, ReportTemplate.rtt_Scheme);
-//		aModel.setCommand("menuReportCreate", rc);
+		aModel.setCommand("menuReportCreate", new CreateSchemeReportCommand(this.aContext, this.schemeTab));
 
 		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
 		aModel.setCommand("menuWindowScheme", this.getLazyCommand(SchemeViewerFrame.NAME));
@@ -405,7 +406,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuSchemeSave", true);
 		aModel.setEnabled("menuSchemeSaveAs", true);
 		aModel.setEnabled("menuPathNew", true);
-//		aModel.setEnabled("menuReportCreate", true);
+		aModel.setEnabled("menuReportCreate", true);
 		aModel.fireModelChanged("");
 		
 		SwingUtilities.invokeLater(new Runnable() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.13 2005/10/10 11:43:39 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.14 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/10/10 11:43:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -39,7 +39,7 @@ public class SchemeToolBar extends ElementsToolBar {
 			Constants.PORT, Constants.CABLE_PORT, Constants.LINK,
 			Constants.CABLE, Constants.SEPARATOR, Constants.BLOCK_PORT,
 			Constants.CREATE_UGO, Constants.GROUP,
-			Constants.UNGROUP, Constants.SEPARATOR, Constants.DELETE,
+			Constants.UNGROUP, Constants.RACK, Constants.SEPARATOR, Constants.DELETE,
 			// Constants.undoKey,
 			// Constants.redoKey,
 			Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
@@ -66,12 +66,10 @@ public class SchemeToolBar extends ElementsToolBar {
 
 		SchemeMarqueeHandler mh = this.pane.getMarqueeHandler();
 
-//		bttns.put(Constants.GROUP, createToolButton(mh.gr2, this.btn_size, null,
-//				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(this.pane, DeviceGroup.SCHEME_ELEMENT), false));
-		
 		bttns.put(Constants.GROUP, createToolButton(mh.gr2, this.btn_size, null,
-				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateRack(this.pane), false));
-		
+				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(this.pane, DeviceGroup.SCHEME_ELEMENT), false));
+		bttns.put(Constants.RACK, createToolButton(mh.gr3, this.btn_size, null,
+				LangModelGraph.getString(Constants.RACK), Constants.ICON_GROUP, new CreateRack(this.pane), false));
 		bttns.put(Constants.CREATE_UGO, createToolButton(
 				mh.scheme_ugo, this.btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), 
 				Constants.ICON_CREATE_UGO,

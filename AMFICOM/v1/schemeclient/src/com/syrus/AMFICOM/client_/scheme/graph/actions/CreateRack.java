@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateRack.java,v 1.2 2005/10/10 14:46:28 stas Exp $
+ * $Id: CreateRack.java,v 1.3 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client_.scheme.graph.actions;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -18,8 +19,9 @@ import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
-import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.ParentMap;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
@@ -33,9 +35,17 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
@@ -54,6 +64,8 @@ public class CreateRack extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		SchemeGraph graph = this.pane.getGraph();
 		
+		Rack oldRack = null;
+		
 		for (Object cell : graph.getSelectionCells()) {
 			if (cell instanceof DeviceGroup) {
 				DeviceGroup group = (DeviceGroup)cell;
@@ -65,13 +77,15 @@ public class CreateRack extends AbstractAction {
 							JOptionPane.OK_OPTION);
 					return;
 				}
-			} else if (cell instanceof Rack) {
-				Log.debugMessage(LangModelGraph.getString("Error.rack.rack"), Level.WARNING); //$NON-NLS-1$
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-						LangModelGraph.getString("Error.group.rack"), //$NON-NLS-1$
-						LangModelGraph.getString("error"), //$NON-NLS-1$
-						JOptionPane.OK_OPTION);
-				return;
+			} 
+			else if (cell instanceof Rack) {
+				oldRack = (Rack)cell;
+//				Log.debugMessage(LangModelGraph.getString("Error.rack.rack"), Level.WARNING); //$NON-NLS-1$
+//				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+//						LangModelGraph.getString("Error.group.rack"), //$NON-NLS-1$
+//						LangModelGraph.getString("error"), //$NON-NLS-1$
+//						JOptionPane.OK_OPTION);
+//				return;
 			}
 		}
 		
@@ -79,14 +93,49 @@ public class CreateRack extends AbstractAction {
 		if (cells.length == 0)
 			return;
 
+		if (oldRack != null) {
+			
+		}
+		
 		UgoPanel p = this.pane.getCurrentPanel();
 		if (p instanceof ElementsPanel) {
 			SchemeResource res = ((ElementsPanel)p).getSchemeResource();
 			try {
 				SchemeElement element = SchemeObjectsFactory.createSchemeElement(res.getScheme());
 				element.setName(LangModelGraph.getString("rack") + counter); //$NON-NLS-1$
+				
+				ProtoEquipment rackProto = null;
+				final TypicalCondition condition = new TypicalCondition(EquipmentType.RACK, 
+						OperationSort.OPERATION_EQUALS, 
+						ObjectEntities.PROTOEQUIPMENT_CODE, 
+						StorableObjectWrapper.COLUMN_TYPE_CODE);
+				try {
+					Set<ProtoEquipment> rackProtos = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+					if (!rackProtos.isEmpty()) {
+						rackProto = rackProtos.iterator().next();
+					}
+				} catch (ApplicationException e1) {
+					Log.errorException(e1);
+				}
+				if (rackProto == null) {
+					rackProto = SchemeObjectsFactory.createProtoEquipment(LangModelGraph.getString("rack"), EquipmentType.RACK);
+				}
+				element.setProtoEquipment(rackProto);
 				counter++;
 				createRack(graph, cells, element);
+				// create ugo
+				ApplicationContext internalContext =  new ApplicationContext();
+				internalContext.setDispatcher(new Dispatcher());
+				SchemeGraph invisibleGraph = new UgoTabbedPane(internalContext).getGraph();
+				invisibleGraph.setMakeNotifications(false);
+				CreateUgo.createRackUgo(element, invisibleGraph);
+				
+				SchemeImageResource imres = element.getUgoCell();
+				if (imres == null) {
+					imres = SchemeObjectsFactory.createSchemeImageResource();
+					element.setUgoCell(imres);
+				}
+				imres.setData((List)invisibleGraph.getArchiveableState());
 			} catch (CreateObjectException e1) {
 				Log.errorException(e1);
 				return;

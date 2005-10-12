@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.9 2005/10/08 13:49:03 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.10 2005/10/12 10:08:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/12 10:08:40 $
  * @module schemeclient
  */
 
@@ -47,6 +47,7 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	public static final long OTHER_OBJECT =					0x00100000;
 	
 	public static final long MULTIPLE =							0x00200000;
+	public static final long INRACK =								0x00400000;
 	
 	public static final long ALL_DESELECTED =				0x10000000;
 	

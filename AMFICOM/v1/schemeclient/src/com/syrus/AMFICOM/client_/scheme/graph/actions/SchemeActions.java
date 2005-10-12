@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.41 2005/10/10 11:07:38 stas Exp $
+ * $Id: SchemeActions.java,v 1.42 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,10 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.IdentifiableCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
@@ -94,7 +96,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.41 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -619,6 +621,22 @@ public class SchemeActions {
 		DefaultGraphCell port = createAbstractPort(graph, deviceCell, p, name, direction, true, color, portId);
 		return (CablePortCell)port;
 	}
+
+	public static DefaultGraphCell createInternalPort(SchemeGraph graph, Point p, String name, IdlDirectionType direction, boolean isCable, Color color, Identifier portId) {
+		Rectangle portCellBounds = new Rectangle(p.x - 3, p.y - 2, 5, 5);
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
+		
+		DefaultGraphCell visualPort;
+		if (!isCable) {
+			visualPort = PortCell.createInstance(name, portCellBounds, viewMap, direction, color);
+			((PortCell)visualPort).setSchemePortId(portId);
+		} else { // cableport
+			visualPort = CablePortCell.createInstance(name, portCellBounds, viewMap, direction, color);
+			((CablePortCell)visualPort).setSchemeCablePortId(portId);
+		}
+		graph.getGraphLayoutCache().insert(new Object[] { visualPort }, viewMap, null, null, null);
+		return visualPort;
+	}
 	
 	private static DefaultGraphCell createAbstractPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, IdlDirectionType direction, boolean isCable, Color color, Identifier portId) {
 		DefaultGraphCell visualPort;
@@ -801,13 +819,20 @@ public class SchemeActions {
 		return null;
 	}
 
-	public static DeviceGroup findGroupById(SchemeGraph graph,
+	public static DefaultGraphCell findGroupById(SchemeGraph graph,
 			Identifier id) {
 		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof DeviceGroup)
-				if (id.equals(((DeviceGroup)cells[i]).getElementId()))
+		for (int i = 0; i < cells.length; i++) {
+			if (cells[i] instanceof DeviceGroup) {
+				if (id.equals(((DeviceGroup)cells[i]).getElementId())) {
 					return (DeviceGroup) cells[i];
+				}
+			} else if (cells[i] instanceof Rack) {
+				if (id.equals(((Rack)cells[i]).getId())) {
+					return (Rack) cells[i];
+				}
+			}
+		}
 		return null;
 	}
 
@@ -875,6 +900,20 @@ public class SchemeActions {
 				if (((DefaultCableLink) cells[i]).getSchemeCableLinkId().equals(
 						scheme_cableLinkId))
 					return (DefaultCableLink) cells[i];
+		return null;
+	}
+	
+	public static DefaultGraphCell findObjectById(SchemeGraph graph,
+			Identifier id) {
+		Object[] cells = graph.getAll();
+		for (int i = 0; i < cells.length; i++)
+			if (cells[i] instanceof IdentifiableCell)
+				if (((IdentifiableCell) cells[i]).getId().equals(id)) {
+					if (cells[i] instanceof DefaultGraphCell) {
+						return (DefaultGraphCell) cells[i];
+					}
+				}
+					
 		return null;
 	}
 

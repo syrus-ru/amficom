@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.23 2005/10/10 11:07:38 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.24 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.jgraph.graph.AbstractCellView;
 import com.jgraph.graph.CellHandle;
 import com.jgraph.graph.CellView;
 import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphContext;
@@ -58,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -117,19 +118,22 @@ public class SchemeGraphUI extends GPGraphUI {
 						final Object transferableObject = transferableObjects.iterator().next();
 						if (transferableObject instanceof Identifiable) {
 							Identifier transferable = ((Identifiable)transferableObject).getId(); 
-							long actionType = 0;
 							if (transferable.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 								ApplicationContext aContext = ((SchemeGraph)SchemeGraphUI.this.graph).aContext; 
 								aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, p, SchemeEvent.INSERT_SCHEME_CABLELINK));
 							} else if (transferable.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
-								actionType = SchemeEvent.INSERT_PROTOELEMENT;
+								SchemeGraph sgraph = (SchemeGraph)SchemeGraphUI.this.graph;
+								JPopupMenu pop = PopupFactory.createProtoOpenPopup(sgraph.aContext, sgraph, transferable, p);
+								if (pop.getSubElements().length != 0) {
+									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
+								}
 							} else if (transferable.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
-								actionType = SchemeEvent.INSERT_SCHEMEELEMENT;
+								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext, transferable, p, SchemeEvent.INSERT_SCHEMEELEMENT);
+								if (pop.getSubElements().length != 0) {
+									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
+								}
 							} else if (transferable.getMajor() == ObjectEntities.SCHEME_CODE) {
-								actionType = SchemeEvent.INSERT_SCHEME;
-							}
-							if (actionType != 0) {
-								JPopupMenu pop = PopupFactory.createOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext, transferable, p, actionType);
+								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext, transferable, p, SchemeEvent.INSERT_SCHEME);
 								if (pop.getSubElements().length != 0) {
 									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
@@ -178,31 +182,43 @@ public class SchemeGraphUI extends GPGraphUI {
 				SchemeGraphUI.this.focus = (SchemeGraphUI.this.focus != null && SchemeGraphUI.this.focus.intersects(graph2.getGraphics(), r)) ? SchemeGraphUI.this.focus : null;
 				this.cell = graph2.getNextViewAt(SchemeGraphUI.this.focus, point.x, point.y);
 
+				
+				if (this.cell != null && this.cell.getCell() instanceof DefaultGraphCell) {
+					Map attributes = ((DefaultGraphCell)this.cell.getCell()).getAttributes();
+					if (attributes.containsKey(Constants.SELECTABLE) 
+							&& attributes.get(Constants.SELECTABLE).equals(Boolean.FALSE)) {
+						this.cell = SchemeGraphUI.this.focus;
+						e.consume();
+					}
+				}
+				
 				if (SchemeGraphUI.this.focus == null)
 					SchemeGraphUI.this.focus = this.cell;
 
-				completeEditing();
-				if (!isForceMarqueeEvent(e)) {
-					if (e.getClickCount() == graph2.getEditClickCount() && SchemeGraphUI.this.focus != null
-							&& SchemeGraphUI.this.focus.isLeaf() && SchemeGraphUI.this.focus.getParentView() == null) {
-						// Start Editing
-						handleEditTrigger(SchemeGraphUI.this.focus.getCell());
-						e.consume();
-						this.cell = null;
-					} else if (!isToggleSelectionEvent(e)) {
-						// Immediate Selection
-						if (SchemeGraphUI.this.handle != null) {
-							SchemeGraphUI.this.handle.mousePressed(e);
-							this.handler = SchemeGraphUI.this.handle;
-						}
-						if (!e.isConsumed() && this.cell != null && !graph2.isCellSelected(this.cell)) {
-							selectCellForEvent(this.cell.getCell(), e);
-							SchemeGraphUI.this.focus = this.cell;
+				if (!e.isConsumed()) {
+					completeEditing();
+					if (!isForceMarqueeEvent(e)) {
+						if (e.getClickCount() == graph2.getEditClickCount() && SchemeGraphUI.this.focus != null
+								&& SchemeGraphUI.this.focus.isLeaf() && SchemeGraphUI.this.focus.getParentView() == null) {
+							// Start Editing
+							handleEditTrigger(SchemeGraphUI.this.focus.getCell());
+							e.consume();
+							this.cell = null;
+						} else if (!isToggleSelectionEvent(e)) {
+							// Immediate Selection
 							if (SchemeGraphUI.this.handle != null) {
 								SchemeGraphUI.this.handle.mousePressed(e);
 								this.handler = SchemeGraphUI.this.handle;
 							}
-							this.cell = null;
+							if (!e.isConsumed() && this.cell != null && !graph2.isCellSelected(this.cell)) {
+								selectCellForEvent(this.cell.getCell(), e);
+								SchemeGraphUI.this.focus = this.cell;
+								if (SchemeGraphUI.this.handle != null) {
+									SchemeGraphUI.this.handle.mousePressed(e);
+									this.handler = SchemeGraphUI.this.handle;
+								}
+								this.cell = null;
+							}
 						}
 					}
 				}

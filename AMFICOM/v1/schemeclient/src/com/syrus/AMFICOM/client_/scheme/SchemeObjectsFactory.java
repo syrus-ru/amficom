@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.45 2005/10/10 11:07:38 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.46 2005/10/12 10:08:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.45 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.46 $, $Date: 2005/10/12 10:08:40 $
  * @module schemeclient
  */
 
@@ -89,7 +89,7 @@ public class SchemeObjectsFactory {
 	private static int schemeCounter = 1;
 	private static final String EMPTY = "";  //$NON-NLS-1$
 	
-	private static SchemeProtoElement stubProtoElement;
+	public static SchemeProtoElement stubProtoElement;
 	public static SchemeProtoGroup stubProtoGroup;
 	private static String stubName = "should not see me";
 	

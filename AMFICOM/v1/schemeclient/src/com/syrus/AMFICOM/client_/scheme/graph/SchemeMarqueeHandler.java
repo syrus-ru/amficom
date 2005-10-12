@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.32 2005/10/10 11:07:38 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.33 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.LinkType;
@@ -76,7 +77,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.32 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -104,6 +105,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	public transient JToggleButton s_cell = new JToggleButton();
 	public transient JButton gr = new JButton(); //groupKey
 	public transient JButton gr2 = new JButton(); //groupSEKey
+	public transient JButton gr3 = new JButton(); //rack
 	public transient JButton ugr = new JButton(); //ungroupKey
 	public transient JButton undo = new JButton(); //undoKey
 	public transient JButton redo = new JButton(); //redoKey
@@ -164,6 +166,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		this.ugr.setEnabled(false);
 		this.gr.setEnabled(false);
 		this.gr2.setEnabled(false);
+		this.gr3.setEnabled(false);
 		this.p1.setEnabled(false);
 		this.p2.setEnabled(false);
 		this.bp.setEnabled(false);
@@ -171,6 +174,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		int ports = 0;
 		int cablePorts = 0;
 		int devices = 0;
+		int racks = 0;
 		DeviceCell device = null;
 		int groups = 0;
 		for (int j = 0; j < cells.length; j++) {
@@ -178,8 +182,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				devices++;
 				device = (DeviceCell) cells[j];
 			} 
-			else if (cells[j] instanceof DeviceGroup) {
+			else if (cells[j] instanceof DeviceGroup && !GraphActions.hasGroupedParent(cells[j])) {
 				groups++;
+			}
+			else if (cells[j] instanceof Rack) {
+				racks++;
 			} 
 			else if (cells[j] instanceof PortCell) {
 				ports++;
@@ -206,12 +213,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		} else if (groups == 1) {
 			// ugo.setEnabled(true);
 		}
-		if (groups > 0) {
+		if (racks > 0 || groups > 0) {
 			this.ugr.setEnabled(true);
 		}
 		if (groups > 1) {
 			this.gr.setEnabled(true);
-			this.gr2.setEnabled(true);
+		}
+		if (groups + racks > 1 && racks < 2) {
+			this.gr3.setEnabled(true);
 		}
 	}
 
@@ -729,7 +738,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		
 		graph.repaint();
 		graph.setCursor(DEFAULT_CURSOR);
-		if (!this.pathButt.isSelected() && notify) {
+		if (!graph.getMode().equals(Constants.PATH_MODE) && notify) {
 			graph.selectionNotify();
 		}
 	}

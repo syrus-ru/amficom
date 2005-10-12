@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.12 2005/09/20 19:47:52 stas Exp $
+ * $Id: PortCell.java,v 1.13 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,12 @@
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.jgraph.graph.DefaultPort;
@@ -26,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/20 19:47:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -46,6 +50,12 @@ public class PortCell extends EllipseCell implements IdentifiableCell {
 		GraphConstants.setOpaque(map, true);
 		GraphConstants.setSizeable(map, false);
 		GraphConstants.setBorderColor(map, Constants.COLOR_BORDER);
+		
+		Font f = new Font("Dialog", Font.PLAIN, 2);
+		GraphConstants.setFontName(map, f.getName());
+		GraphConstants.setFontSize(map, f.getSize());
+		GraphConstants.setFontStyle(map, f.getStyle());
+		
 		viewMap.put(cell, map);
 
 		// Create Ports

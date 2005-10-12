@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.7 2005/10/08 13:49:04 stas Exp $
+ * $Id: SchemeEventHandler.java,v 1.8 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,27 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.event.ChangeEvent;
 
+import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.AbstractEventHandler;
 import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/10/08 13:49:04 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -46,10 +57,62 @@ public class SchemeEventHandler extends AbstractEventHandler {
 		if (e.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent event = (ObjectSelectedEvent) e;
 			
-			this.frame.setVisualManager(event.getVisualManager());
-			StorableObjectEditor editor = this.frame.getCurrentEditor();
-			if (editor != null)
-				editor.setObject(event.getSelectedObject());	
+			/**
+			 * этот костыль сделан для подсветки в шкафу вложенных объектов вместо отображения
+			 * свойств самих объектов
+			 * по идее должно быть так:
+			 * this.frame.setVisualManager(event.getVisualManager());
+			 * StorableObjectEditor editor = this.frame.getCurrentEditor();
+			 * if (editor != null) {
+			 * 		editor.setObject(event.getSelectedObject());
+			 * }
+			 * 
+			 * 
+			 */
+			
+			if (!event.isSelected(ObjectSelectedEvent.INRACK)) {
+				this.frame.setVisualManager(event.getVisualManager());
+				StorableObjectEditor editor = this.frame.getCurrentEditor();
+				if (editor != null)
+					editor.setObject(event.getSelectedObject());
+			} else if (event.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
+				SchemeElement se = (SchemeElement)event.getSelectedObject();
+				try {
+					if (se.getProtoEquipment().getType().equals(EquipmentType.RACK)) {
+						this.frame.setVisualManager(event.getVisualManager());
+						StorableObjectEditor editor = this.frame.getCurrentEditor();
+						if (editor != null)
+							editor.setObject(event.getSelectedObject());
+					} else {
+						StorableObjectEditor editor = this.frame.getCurrentEditor();
+						Object selectedObject = event.getSelectedObject();
+						if (editor instanceof SchemeCellPanel 
+								&& selectedObject instanceof Identifiable) {
+							SchemeCellPanel panel = (SchemeCellPanel)editor;
+							UgoTabbedPane pane = (UgoTabbedPane)panel.getGUI();
+							SchemeGraph graph = pane.getGraph();
+							DefaultGraphCell cell = SchemeActions.findObjectById(graph, ((Identifiable)selectedObject).getId());
+							if (cell instanceof DeviceGroup) {
+								cell = GraphActions.getMainCell((DeviceGroup)cell);
+							}
+							graph.setSelectionCell(cell);
+						}
+					}
+				} catch (ApplicationException e1) {
+					Log.errorException(e1);
+				}
+			} else {
+				StorableObjectEditor editor = this.frame.getCurrentEditor();
+				Object selectedObject = event.getSelectedObject();
+				if (editor instanceof SchemeCellPanel 
+						&& selectedObject instanceof Identifiable) {
+					SchemeCellPanel panel = (SchemeCellPanel)editor;
+					UgoTabbedPane pane = (UgoTabbedPane)panel.getGUI();
+					SchemeGraph graph = pane.getGraph();
+					graph.setSelectionCell(SchemeActions.findObjectById(graph, ((Identifiable)selectedObject).getId()));
+				}
+			}
+			
 		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent event = (SchemeEvent)e;
 			if (event.isType(SchemeEvent.UPDATE_OBJECT)) {

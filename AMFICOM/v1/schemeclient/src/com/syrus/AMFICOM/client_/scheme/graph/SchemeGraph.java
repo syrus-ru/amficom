@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.17 2005/10/05 15:49:43 stas Exp $
+ * $Id: SchemeGraph.java,v 1.18 2005/10/12 10:08:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.LinkView;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.RackView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeEllipseView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
@@ -51,7 +53,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/10/05 15:49:43 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/12 10:08:40 $
  * @module schemeclient
  */
 
@@ -119,6 +121,8 @@ public class SchemeGraph extends GPGraph {
 			return ((DeviceCell)v).getView(this, cm);
 		if (v instanceof EllipseCell || v instanceof TopLevelElement)	//	round view 
 			return new SchemeEllipseView(v, this, cm);
+		if (v instanceof Rack)
+			return new RackView(v, this, cm);
 		return new SchemeVertexView(v, this, cm);	// square view
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceView.java,v 1.7 2005/09/19 13:10:29 stas Exp $
+ * $Id: DeviceView.java,v 1.8 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/09/19 13:10:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -47,10 +47,12 @@ public class DeviceView extends VertexView {
 		super(cell, graph, mapper);
 	}
 
+	@Override
 	public CellViewRenderer getRenderer() {
 		return schemerenderer;
 	}
 
+	@Override
 	public CellHandle getHandle(GraphContext context) {
 		if (GraphConstants.isSizeable(getAllAttributes())
 				&& context.getGraph().isSizeable())
@@ -58,11 +60,13 @@ public class DeviceView extends VertexView {
 		return null;
 	}
 
+	@Override
 	public Map setAttributes(Map map) {
 		Map undo = super.setAttributes(map);
 		return undo;
 	}
 	
+	@Override
 	protected void updateAllAttributes() {
 		this.allAttributes = getModel().getAttributes(this.cell);
 		if (this.allAttributes != null) {
@@ -80,11 +84,13 @@ public class DeviceView extends VertexView {
 			super(vertexview, ctx);
 		}
 
+		@Override
 		public void mousePressed(MouseEvent event) {
 			super.mousePressed(event);
 			DeviceView.this._bounds = this.initialBounds;
 		}
 
+		@Override
 		public void mouseDragged(MouseEvent event) {
 			super.mouseDragged(event);
 
@@ -124,6 +130,7 @@ public class DeviceView extends VertexView {
 	public static class SchemeVertexRenderer extends VertexRenderer {
 		private static final long serialVersionUID = 3257003246202466869L;
 
+		@Override
 		protected void paintSelectionBorder(Graphics g) {
 			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
 			if (this.childrenSelected)

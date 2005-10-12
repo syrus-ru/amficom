@@ -158,8 +158,19 @@ public class SchemeSaveCommand extends AbstractCommand {
 				scheme.setSchemeCell(schemeIr);
 				Log.debugMessage("Scheme cell created for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)", Level.FINER);
 				Identifier userId = LoginManager.getUserId();
+				
+				Set<Scheme> internalSchemes = new HashSet<Scheme>();
+				for (SchemeElement se : scheme.getSchemeElements(false)) {
+					Scheme internal = se.getScheme(false);
+					if (internal != null && internal.isChanged()) {
+						internalSchemes.add(internal);
+					}
+				}
 				StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
-
+				for (Scheme changed : internalSchemes) {
+					StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
+				}
+				
 				LocalXmlIdentifierPool.flush();
 				
 				this.schemeTab.setGraphChanged(false);

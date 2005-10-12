@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.21 2005/09/29 13:20:49 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.22 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/09/29 13:20:49 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -189,9 +189,12 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 			try {
 				if (se.getProtoEquipment().getType().equals(EquipmentType.MUFF)) {
 					CreateUgo.createMuffUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
+				} else if (se.getProtoEquipment().getType().equals(EquipmentType.CABLE_PANEL)) {
+					CreateUgo.createRackUgo(se, graph);
 				} else {
 					CreateUgo.createElementUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
 				}
+				
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

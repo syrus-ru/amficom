@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.14 2005/10/04 08:14:15 stas Exp $
+ * $Id: PopupFactory.java,v 1.15 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraphTransferHandler;
@@ -74,7 +75,21 @@ public class PopupFactory {
 		// no instance allowed
 	}
 	
-	public static JPopupMenu createOpenPopup(final ApplicationContext aContext, final Identifier transferable, final Point p, final long actionType) {
+	public static JPopupMenu createProtoOpenPopup(final ApplicationContext aContext, final SchemeGraph graph, final Identifier transferable, final Point p) {
+		JPopupMenu pop = new JPopupMenu();
+		
+		pop.add(createInsertMenuItem(aContext, transferable, p, SchemeEvent.INSERT_PROTOELEMENT));
+		if (graph.getMode().equals(Constants.PROTO_MODE)) {
+			pop.add(createOpenMenuItem(aContext, transferable, SchemeEvent.INSERT_PROTOELEMENT));
+			pop.add(createOpenAsCopyMenuItem(aContext, transferable));
+		}
+		
+		pop.addSeparator();
+		pop.add(createCancelMenuItem());
+		return pop;
+	}
+	
+	public static JPopupMenu createSEOpenPopup(final ApplicationContext aContext, final Identifier transferable, final Point p, final long actionType) {
 		JPopupMenu pop = new JPopupMenu();
 		pop.add(createInsertMenuItem(aContext, transferable, p, actionType));
 		pop.add(createOpenMenuItem(aContext, transferable, actionType));
@@ -407,6 +422,19 @@ public class PopupFactory {
 		menu.setText(LangModelGraph.getString("insert")); //$NON-NLS-1$
 		return menu;
 	}
+	
+	private static JMenuItem createOpenAsCopyMenuItem(final ApplicationContext aContext, final Identifier transferable) {
+		JMenuItem menu = new JMenuItem(new AbstractAction() {
+			private static final long serialVersionUID = 1023861610666047648L;
+
+			public void actionPerformed(ActionEvent ev) {
+				aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, SchemeEvent.OPEN_PROTOELEMENT_ASCOPY));									
+			}
+		});
+		menu.setText(LangModelGraph.getString("open")); //$NON-NLS-1$
+		return menu;
+	}
+
 	
 	private static JMenuItem createOpenMenuItem(final ApplicationContext aContext, final Identifier transferable, final long actionType) {
 		JMenuItem menu = new JMenuItem(new AbstractAction() {

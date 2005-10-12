@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.18 2005/10/04 16:25:54 stas Exp $
+ * $Id: GraphActions.java,v 1.19 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,12 +46,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/10/04 16:25:54 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -396,7 +397,7 @@ public class GraphActions {
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
 	
-	public static void updateGroup(SchemeGraph graph, DeviceGroup group, String text) {
+	public static void updateGroup(SchemeGraph graph, DefaultGraphCell group, String text) {
 		if (group.getChildCount() > 0) {
 			for (Enumeration en = group.children(); en.hasMoreElements();) {
 				Object child = en.nextElement();
@@ -411,7 +412,7 @@ public class GraphActions {
 		}
 	}
 	
-	public static void updateGroup(SchemeGraph graph, DeviceGroup group, ImageIcon icon) {
+	public static void updateGroup(SchemeGraph graph, DefaultGraphCell group, ImageIcon icon) {
 		if (group.getChildCount() > 0) {
 			for (Enumeration en = group.children(); en.hasMoreElements();) {
 				Object child = en.nextElement();
@@ -467,7 +468,7 @@ public class GraphActions {
 			TreeNode node = (TreeNode) obj;
 			if (node.getParent() == null)
 				return false;
-			if (node.getParent() instanceof DeviceGroup)
+			if (node.getParent() instanceof DeviceGroup || node.getParent() instanceof Rack)
 				return true;
 			return hasGroupedParent(node.getParent());
 		}

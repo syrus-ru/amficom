@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.28 2005/10/10 11:07:38 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.29 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -67,7 +68,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.28 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -195,6 +196,18 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			return false;
 		}
 
+		// undo changes
+		if (p instanceof ElementsPanel) {
+			SchemeResource res = ((ElementsPanel)p).getSchemeResource();
+			if (res.getCellContainerType() == SchemeResource.SCHEME) {
+				StorableObjectPool.cleanChangedStorableObjects(Collections.singleton(res.getScheme()));
+			} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+				StorableObjectPool.cleanChangedStorableObjects(Collections.singleton(res.getSchemeElement()));
+			} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
+				StorableObjectPool.cleanChangedStorableObjects(Collections.singleton(res.getSchemeProtoElement()));
+			}
+		}
+		
 		Object[] comp = this.tabs.getComponents();
 		for (int i = 0; i < comp.length; i++) {
 			UgoPanel p1 = this.graphPanelsMap.get(comp[i]);

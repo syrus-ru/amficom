@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.6 2005/10/03 07:44:39 stas Exp $
+ * $Id: ClientUtils.java,v 1.7 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
@@ -34,8 +33,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeCablePortWrapper;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemePortWrapper;
 
 public class ClientUtils {
 	private ClientUtils() {
@@ -60,6 +63,20 @@ public class ClientUtils {
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_NAME));
 		return threads;
+	}
+	
+	public static List<SchemePort> getSortedPorts(Set<SchemePort> schemePorts) {
+		List<SchemePort> ports = new ArrayList<SchemePort>(schemePorts);
+		Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME));
+		return ports;
+	}
+	
+	public static List<SchemeCablePort> getSortedCablePorts(Set<SchemeCablePort> schemeCablePorts) {
+		List<SchemeCablePort> ports = new ArrayList<SchemeCablePort>(schemeCablePorts);
+		Collections.sort(ports, new NumberedComparator<SchemeCablePort>(SchemeCablePortWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME));
+		return ports;
 	}
 	
 	public static Characteristic getCharacteristic(final Collection<Characteristic> characteristics, final String codename) {
@@ -89,7 +106,7 @@ public class ClientUtils {
 	public static boolean showConfirmDialog(JComponent component, String text) {
 		if (optionPane == null) {
 			JButton okButton = new JButton();
-			okButton.setText(LangModelGeneral.getString("Button.OK")); //$NON-NLS-1$)
+			okButton.setText(LangModelScheme.getString("Button.OK")); //$NON-NLS-1$)
 			okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ClientUtils.result = JOptionPane.OK_OPTION;
@@ -97,7 +114,7 @@ public class ClientUtils {
 				}
 			});
 			JButton cancelButton = new JButton();
-			cancelButton.setText(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
+			cancelButton.setText(LangModelScheme.getString("Button.Cancel")); //$NON-NLS-1$
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ClientUtils.result = JOptionPane.CANCEL_OPTION;

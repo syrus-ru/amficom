@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.14 2005/09/28 07:53:10 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.15 2005/10/12 10:08:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/09/28 07:53:10 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/12 10:08:40 $
  * @module schemeclient
  */
 
@@ -203,6 +204,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		Map<EllipseCell, Map> viewMap = new HashMap<EllipseCell, Map>();
 		EllipseCell cell = new EllipseCell(userObject);
 		Map map = GraphConstants.createMap();
+		map.put(Constants.SELECTABLE, new Boolean(false));
 		GraphConstants.setBounds(map, bounds);
 		GraphConstants.setOpaque(map, true);
 		GraphConstants.setSizeable(map, false);

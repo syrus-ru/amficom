@@ -1,5 +1,5 @@
 /*-
- * $Id: RackView.java,v 1.1 2005/10/10 11:08:13 stas Exp $
+ * $Id: RackView.java,v 1.2 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -53,6 +54,10 @@ public class RackView extends VertexView {
 
 		@Override
 		protected void paintSelectionBorder(Graphics g) {
+			((Graphics2D) g).setStroke(new BasicStroke(1));
+			g.setColor(Color.LIGHT_GRAY);
+			Dimension d = getSize();
+			g.drawRect(0, 0, d.width - 1, d.height - 1);
 			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
 			if (this.childrenSelected)
 				g.setColor(this.graph.getGridColor());
@@ -61,12 +66,9 @@ public class RackView extends VertexView {
 			else if (this.selected)
 				g.setColor(this.graph.getHighlightColor());
 			if (this.childrenSelected || this.selected) {
-				Dimension d = getSize();
 				g.drawRect(0, 0, d.width - 1, d.height - 1);
 			} else {
-				g.setColor(Color.BLUE);
-				Dimension d = getSize();
-				g.drawRect(0, 0, d.width - 1, d.height - 1);
+				
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.16 2005/09/14 10:20:04 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.17 2005/10/12 10:08:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -21,17 +20,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
 import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
@@ -51,7 +45,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/12 10:08:40 $
  * @module schemeclient
  */
 
@@ -91,6 +85,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	protected JComponent createPanel() {
 		this.panel = new ElementsPanel(this.aContext);
 		SchemeGraph graph = this.panel.getGraph();
+		graph.setMode(Constants.PROTO_MODE);
 		graph.setMarqueeHandler(this.marqueeHandler);
 		graph.addKeyListener(this.keyListener);
 		JScrollPane graphView = new JScrollPane(graph);
@@ -107,7 +102,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent) ae;
 			if (see.isType(SchemeEvent.INSERT_PROTOELEMENT) || 
-					see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
+					see.isType(SchemeEvent.OPEN_PROTOELEMENT_ASCOPY)) {
 				
 				try {
 					SchemeProtoElement proto = (SchemeProtoElement) see.getStorableObject();
@@ -127,6 +122,22 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 				} catch (ApplicationException e) {
 					Log.errorException(e);
 				}
+			} else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
+				try {
+					SchemeProtoElement proto = (SchemeProtoElement) see.getStorableObject();
+					ElementsPanel p = getCurrentPanel();
+					SchemeGraph graph = p.getGraph();
+					p.getSchemeResource().setSchemeProtoElement(proto);
+					GraphActions.clearGraph(graph);
+					graph.selectionNotify();
+					
+					SchemeImageResource imageResource = proto.getSchemeCell();
+					SchemeActions.openSchemeImageResource(graph, imageResource, true, see.getInsertionPoint(), false);
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
+				
+				
 			}
 		}
 	}

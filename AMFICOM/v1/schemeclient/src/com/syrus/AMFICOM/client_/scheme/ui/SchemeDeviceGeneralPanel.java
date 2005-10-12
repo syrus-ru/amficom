@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.15 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.16 2005/10/12 10:08:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
@@ -58,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/12 10:08:41 $
  * @module schemeclient
  */
 
@@ -162,14 +163,19 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 						SchemePortWrapper.getInstance(),
 						StorableObjectWrapper.COLUMN_NAME);
 				Collections.sort(sPorts, sorter1);
+				
+				Set<SchemeCablePort> schemeCablePorts = this.schemeDevice.getSchemeCablePorts(false);
 				Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+				for (SchemeCablePort schemeCablePort : schemeCablePorts) {
+					SchemeCableLink scl = schemeCablePort.getAbstractSchemeLink();
+					if (scl != null) {
+						schemeCableLinks.add(scl);
+					}
+				}
 				this.combo.addItem(NULL_PORT);
 				for (int i = 0; i < sPorts.size(); i++) {
 					SchemePort port = sPorts.get(i);
 					this.combo.addItem(port);
-					SchemeCableThread thread = port.getSchemeCableThread();
-					if (thread != null)
-						schemeCableLinks.add(thread.getParentSchemeCableLink());
 				}
 				List<SchemeCableThread> scThreads = new ArrayList<SchemeCableThread>();
 				for (SchemeCableLink scl : schemeCableLinks) {
