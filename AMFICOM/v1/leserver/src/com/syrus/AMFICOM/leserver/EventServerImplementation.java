@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.13 2005/10/11 14:33:28 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.14 2005/10/12 07:23:24 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/11 14:33:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/10/12 07:23:24 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -79,6 +79,10 @@ public class EventServerImplementation extends EventServerPOA {
 		Log.debugMessage("EventServerImplementation.yetAnotherEventGeneration() | Event: "
 				+ event + " delivered successfully",
 				INFO);
+	}
+
+	public void receiveEvents(final IdlEvent[] idlEvents) throws AMFICOMRemoteException {
+		Log.debugMessage("EventServerImplementation.receiveEvents | Received " + idlEvents.length + " events", Log.DEBUGLEVEL09);
 	}
 		
 
