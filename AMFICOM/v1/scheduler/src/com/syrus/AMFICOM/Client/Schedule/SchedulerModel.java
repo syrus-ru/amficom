@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.119 2005/10/07 15:26:19 bob Exp $
+ * $Id: SchedulerModel.java,v 1.120 2005/10/12 10:41:51 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,6 +55,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -69,7 +70,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/10/07 15:26:19 $
+ * @version $Revision: 1.120 $, $Date: 2005/10/12 10:41:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1037,10 +1038,29 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
 			for (final Test test : tests) {
-				if (test.getId().equals(testId) || 
-						!test.getMonitoredElementId().equals(monitoredElementId)) {
+				final Identifier testMonitoredElementId = test.getMonitoredElementId();
+				if (test.getId().equals(testId)) {
 					continue;
-				}				
+				}			
+				
+				{
+					final MonitoredElement monitoredElement = 
+						StorableObjectPool.getStorableObject(monitoredElementId, true);
+					
+					final MonitoredElement testMonitoredElement = 
+						StorableObjectPool.getStorableObject(testMonitoredElementId, true);
+					
+					final MeasurementPort measurementPort = 
+						StorableObjectPool.getStorableObject(monitoredElement.getMeasurementPortId(), true);
+					
+					final MeasurementPort testMeasurementPort = 
+						StorableObjectPool.getStorableObject(testMonitoredElement.getMeasurementPortId(), true);
+				
+					if (!testMeasurementPort.getKISId().equals(measurementPort.getKISId())) {
+						continue;
+					}
+				}
+				
 				
 				// ignore sub group tests,   
 				// since they are taken into account in the main group test 
