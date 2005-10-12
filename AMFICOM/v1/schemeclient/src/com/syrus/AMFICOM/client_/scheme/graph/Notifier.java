@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.17 2005/10/10 11:07:38 stas Exp $
+ * $Id: Notifier.java,v 1.18 2005/10/12 10:05:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PATH;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PORT;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PROTOELEMENT;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.OTHER_OBJECT;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.IdentifiableCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCableLinkPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCablePortPropertiesManager;
@@ -61,7 +63,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/12 10:05:38 $
  * @module schemeclient
  */
 
@@ -71,6 +73,11 @@ public class Notifier {
 	}
 
 	public static void notify(SchemeGraph graph, ApplicationContext aContext, Object object) {
+		if (graph.getMode().equals(Constants.RACK_MODE)) {
+			Log.debugMessage("do not notify in rack mode", Level.FINEST);
+			return;
+		}
+		
 		Dispatcher dispatcher = aContext.getDispatcher();
 		if (object == null) {
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, Collections.<Identifiable>emptySet(), null,
@@ -161,6 +168,11 @@ public class Notifier {
 //					selectedType = SCHEME;
 //					manager = SchemePropertiesManager.getInstance(aContext);
 //				}
+			}	else if (object instanceof Rack) {
+				Rack rack = (Rack)object;
+				selectedObject = rack.getSchemeElement();
+				selectedType = SCHEME_ELEMENT;
+				manager = SchemeElementPropertiesManager.getInstance(aContext);
 			} else if (object instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)object;
 				if (link.getSchemeLinkId() != null) {
@@ -212,18 +224,23 @@ public class Notifier {
 					message += " (identifier " + ((IdentifiableCell)object).getId() + ")";
 				}
 				Log.debugMessage(message, Level.FINEST);
-//				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, OTHER_OBJECT));
+				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, OTHER_OBJECT));
 			} else {
+				if (graph.getMode().equals(Constants.RACK_MODE)) {
+					selectedType += ObjectSelectedEvent.INRACK;
+				}
 				Log.debugMessage(Notifier.class.getSimpleName() + " | selected object with id " + selectedObject.getId() , Level.FINEST); //$NON-NLS-1$
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObject, manager, selectedType));
 			}
 		} else if (cells.length > 1) {
 			// only Ports
 			long selectedType = 0;
+			VisualManager manager = null;
 			Set<Object> selectedObjects = new HashSet<Object>();
 			for (Object cell : cells) {
 				if (cell instanceof PortCell) {
 					selectedType = ObjectSelectedEvent.SCHEME_PORT;
+					manager = SchemePortPropertiesManager.getInstance(aContext);
 					selectedObjects.add(((PortCell)cell).getSchemePort());
 				} else {
 					selectedType = 0;
@@ -234,6 +251,7 @@ public class Notifier {
 				for (Object cell : cells) {
 					if (cell instanceof CablePortCell) {
 						selectedType = ObjectSelectedEvent.SCHEME_CABLEPORT;
+						manager = SchemeCablePortPropertiesManager.getInstance(aContext);
 						selectedObjects.add(((CablePortCell)cell).getSchemeCablePort());
 					} else {
 						selectedType = 0;
@@ -245,6 +263,7 @@ public class Notifier {
 				for (Object cell : cells) {
 					if (cell instanceof DeviceGroup && ((DeviceGroup)cell).getType() == DeviceGroup.SCHEME_ELEMENT) {
 						selectedType = ObjectSelectedEvent.SCHEME_ELEMENT;
+						manager = SchemeElementPropertiesManager.getInstance(aContext);
 						selectedObjects.add(((DeviceGroup)cell).getSchemeElement());
 					} else {
 						selectedType = 0;
@@ -253,8 +272,11 @@ public class Notifier {
 				}
 			}
 			if (selectedType != 0) {
+				if (graph.getMode().equals(Constants.RACK_MODE)) {
+					selectedType += ObjectSelectedEvent.INRACK;
+				}
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObjects, 
-						SchemePortPropertiesManager.getInstance(aContext), MULTIPLE + selectedType));
+						manager, MULTIPLE + selectedType));
 			}
 		}
 		} catch (Exception e) {
