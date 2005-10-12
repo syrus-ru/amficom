@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.19 2005/09/25 11:31:05 arseniy Exp $
+* $Id: CORBAServer.java,v 1.20 2005/10/12 15:32:45 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/25 11:31:05 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/12 15:32:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -213,7 +213,27 @@ public class CORBAServer {
 				throw new CommunicationException("Cannot activate servant '" + name + "' -- " + ue.getMessage(), ue);
 			}
 		} else {
-			throw new IllegalStateException("Cannot resolve reference '" + name + "' -- shutting down");
+			throw new IllegalStateException("Cannot activate '" + name + "' due to shutdown");
+		}
+	}
+
+	public void deactivateServant(final String name) throws CommunicationException {
+		if (this.running) {
+			try {
+				final NameComponent[] nameComponents = this.namingContext.to_name(name);
+				final org.omg.CORBA.Object reference = this.namingContext.resolve(nameComponents);
+
+				this.namingContext.unbind(nameComponents);
+
+				final byte[] id = this.poa.reference_to_id(reference);
+				this.poa.deactivate_object(id);
+
+				Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
+			} catch (UserException ue) {
+				throw new CommunicationException("Cannot deactivate servant '" + name + "' -- " + ue.getMessage(), ue);
+			}
+		} else {
+			throw new IllegalStateException("Cannot deactivate '" + name + "' due to shutdown");
 		}
 	}
 
