@@ -1,5 +1,5 @@
 /*-
- * $Id: commonclient.idl,v 1.1 2005/10/12 10:51:15 arseniy Exp $
+ * $Id: commonclient.idl,v 1.2 2005/10/12 11:12:09 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ module general {
 		/**
 		 * interface for all clients
 		\u002a\u002f@SuppressWarnings("all")/**/
-		interface Client : Verifiable, com::syrus::AMFICOM::eventv2::corba::MessageReceiver {
+		interface CORBAClient : Verifiable, com::syrus::AMFICOM::eventv2::corba::MessageReceiver {
 		};
 
 
