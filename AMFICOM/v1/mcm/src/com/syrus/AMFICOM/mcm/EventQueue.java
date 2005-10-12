@@ -1,11 +1,14 @@
 /*-
- * $Id: EventThread.java,v 1.3 2005/10/12 08:29:52 arseniy Exp $
+ * $Id: EventQueue.java,v 1.1 2005/10/12 12:24:50 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.mcm;
+
+import static java.util.logging.Level.INFO;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -24,30 +27,33 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/12 08:29:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/10/12 12:24:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
-public final class EventThread extends SleepButWorkThread {
+final class EventQueue extends SleepButWorkThread {
 	/*	Error codes for method processFall()	*/
 	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
 	private static final int FALL_CODE_TRANSMIT_EVENTS = 2;
 
 	private List<ReflectogramMismatchEvent> eventEqueue;
-	private boolean running;
+	private volatile boolean running;
 
-	public EventThread() {
+	public EventQueue() {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
 
-		super.setName("EventThread");
+		super.setName("EventQueue");
 
 		this.eventEqueue = Collections.synchronizedList(new LinkedList<ReflectogramMismatchEvent>());
 		this.running = true;
 	}
 
-	synchronized void addEvent(final ReflectogramMismatchEvent event) {
+	@SuppressWarnings("unused")
+	synchronized void addEvent(final ReflectogramMismatchEvent event)
+	throws EventQueueFullException {
+		Log.debugMessage("EventQueue.addEvent() | Event: " + event + " added to outbox", INFO);
 		this.eventEqueue.add(event);
 		this.notifyAll();
 	}
@@ -80,7 +86,7 @@ public final class EventThread extends SleepButWorkThread {
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 				super.sleepCauseOfFall();
 			} catch (AMFICOMRemoteException are) {
-				Log.errorMessage("EventThread | Cannot transmit events -- " + are.message);
+				Log.errorMessage("EventQueue.run() | Cannot transmit events -- " + are.message);
 				super.fallCode = FALL_CODE_TRANSMIT_EVENTS;
 				super.sleepCauseOfFall();
 			}
@@ -94,13 +100,13 @@ public final class EventThread extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			case FALL_CODE_ESTABLISH_CONNECTION:
-				Log.errorMessage("EventThread.processFall | ERROR: Many errors during establishing connection. Чё делать - ума не приложу.");
+				Log.errorMessage("EventQueue.processFall() | ERROR: Many errors during establishing connection. Чё делать - ума не приложу.");
 				break;
 			case FALL_CODE_TRANSMIT_EVENTS:
-				Log.errorMessage("EventThread.processFall | ERROR: Many errors during transmit event. Чё делать - ума не приложу.");
+				Log.errorMessage("EventQueue.processFall() | ERROR: Many errors during transmit event. Чё делать - ума не приложу.");
 				break;
 			default:
-				Log.errorMessage("processFall | ERROR: Unknown error code: " + super.fallCode);
+				Log.errorMessage("EventQueue.processFall() | ERROR: Unknown error code: " + super.fallCode);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.133 2005/10/12 07:14:41 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.134 2005/10/12 12:24:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.133 $, $Date: 2005/10/12 07:14:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.134 $, $Date: 2005/10/12 12:24:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -137,7 +137,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	static Map<Identifier, Transceiver> transceivers;
 
 	/*	Thread with event queue*/
-	static EventThread eventThread;
+	static EventQueue eventQueue;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -226,8 +226,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			prepareTestList();
 
 			/*	Create and start event thread*/
-			eventThread = new EventThread();
-			eventThread.start();
+			eventQueue = new EventQueue();
+			eventQueue.start();
 
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
@@ -481,7 +481,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			testProcessor.shutdown();
 		}
 
-		eventThread.shutdown();
+		eventQueue.shutdown();
 
 		DatabaseConnection.closeConnection();
 	}

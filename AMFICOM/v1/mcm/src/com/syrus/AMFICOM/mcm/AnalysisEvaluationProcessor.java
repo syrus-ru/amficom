@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.45 2005/10/12 07:15:04 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.46 2005/10/12 12:24:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.mcm;
 
 import static com.syrus.AMFICOM.general.ParameterType.DADARA_ALARMS;
-import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -18,7 +17,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
-import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -37,8 +35,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/10/12 07:15:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/10/12 12:24:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -165,16 +163,17 @@ final class AnalysisEvaluationProcessor {
 				}
 
 				for (final ReflectogramMismatch reflectogramMismatch : ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue())) {
-					enqueueEvent(DefaultReflectogramMismatchEvent.valueOf(
-							reflectogramMismatch,
-							monitoredElementId));
+					MeasurementControlModule.eventQueue.addEvent(
+							DefaultReflectogramMismatchEvent.valueOf(
+									reflectogramMismatch,
+									monitoredElementId));
 				}
 			}
 
 			return analysis.createResult(LoginManager.getUserId(), arParameters);
-		} catch (final QueueFullException qfe) {
-			Log.debugException(qfe, SEVERE);
-			throw new AnalysisException(qfe);
+		} catch (final EventQueueFullException eqfe) {
+			Log.debugException(eqfe, SEVERE);
+			throw new AnalysisException(eqfe);
 		} catch (final DataFormatException dfe) {
 			Log.debugException(dfe, SEVERE);
 			throw new AnalysisException(dfe);
@@ -182,22 +181,5 @@ final class AnalysisEvaluationProcessor {
 			Log.debugException(coe, SEVERE);
 			throw new AnalysisException(coe);
 		}
-	}
-
-	@SuppressWarnings("unused")
-	private static void enqueueEvent(final ReflectogramMismatchEvent event) throws QueueFullException {
-		MeasurementControlModule.eventThread.addEvent(event);
-		Log.debugMessage("AnalysisEvaluationProcessor.enqueueEvent() | Event: " + event + " added to outbox", INFO);
-		Log.debugMessage("AnalysisEvaluationProcessor.enqueueEvent() | Bass, ты всё-таки подумай, как implement message queue", SEVERE);
-	}
-
-	/**
-	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.45 $, $Date: 2005/10/12 07:15:04 $
-	 * @module mcm
-	 */
-	private static class QueueFullException extends Exception {
-		private static final long serialVersionUID = 2816222798157710151L;
 	}
 }
