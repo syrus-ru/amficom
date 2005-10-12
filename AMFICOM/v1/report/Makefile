@@ -12,7 +12,11 @@ $(call checkenve,XMLBEANSCLASSPATH)
 
 LIBNAME_GENERALXML=generalxml.jar
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar
+DEPENDENCIES = \
+general \
+resource \
+util
+
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
