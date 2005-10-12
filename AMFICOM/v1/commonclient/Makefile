@@ -8,8 +8,24 @@ $(call checkenve,JAVA_HOME)
 
 LIBNAME_GENERALXML=generalxml.jar
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mscharserver_interface.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar:$(EXTLIBDIR)/trove.jar
+DEPENDENCIES = \
+general \
+administration \
+configuration \
+measurement \
+event \
+resource \
+map \
+mapview \
+scheme \
+csbridge \
+filter \
+leserver_interface \
+cmserver_interface \
+mscharserver_interface \
+util
+
+EXTCLASSPATH := $(EXTLIBDIR)/kunststoff.jar:$(TROVE4JCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 

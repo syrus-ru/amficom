@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.15 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.16 2005/10/12 10:03:33 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -13,7 +13,20 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
+DEPENDENCIES = \
+util \
+general \
+administration \
+configuration \
+measurement \
+resource \
+map \
+scheme \
+filter \
+csbridge \
+commonclient \
+filterclient
+
 XMLCLASSPATH := $(LIBDIR)/configurationxml.jar:$(LIBDIR)/schemexml.jar
 EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
 

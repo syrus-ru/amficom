@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/10/10 09:08:05 bass Exp $
+# $Id: Makefile,v 1.7 2005/10/12 10:03:32 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -16,11 +16,6 @@ $(call checkenve,JAVA_HOME)
 
 DEPENDENCIES = \
 util
-
-EMPTY =
-SPACE = $(EMPTY) $(EMPTY)
-APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
-
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/reflectometry/*.java)
 

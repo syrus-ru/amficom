@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.30 2005/10/09 16:12:22 bass Exp $
+# $Id: Makefile,v 1.31 2005/10/12 10:03:33 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -14,11 +14,6 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
 DEPENDENCIES =
-
-EMPTY =
-SPACE = $(EMPTY) $(EMPTY)
-APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
-
 
 SOURCES := $(shell find $(SRCDIR) -name '*.java')
 

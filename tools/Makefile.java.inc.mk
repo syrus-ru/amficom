@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.5 2005/10/10 07:46:02 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.6 2005/10/12 10:03:31 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -26,6 +26,10 @@ AMFICOM_HOME := $(shell echo $(AMFICOM_HOME) | sed "s|~|$(HOME)|g")
 
 LIBDIR = $(AMFICOM_HOME)/lib
 EXTLIBDIR = $(AMFICOM_HOME)/../extlib
+
+EMPTY =
+SPACE = $(EMPTY) $(EMPTY)
+APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
 
 checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing "$(MAKE)"))
 checkenvw = $(if $($(1)), , $(warning $(1) is undefined. Define it prior to issuing "$(MAKE)"))
@@ -128,6 +132,13 @@ SCOMP=$(XMLBEANS_HOME)/bin/scomp
 endif
 
 SCOMPFLAGS = -javasource 1.5 -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
+
+# Trove4J
+ifeq ($(TROVE4J_HOME),)
+TROVE4JCLASSPATH = $(EXTLIBDIR)/trove.jar
+else
+TROVE4JCLASSPATH = $(TROVE4J_HOME)/lib/trove.jar
+endif
 
 ENCODING ?= KOI8-R
 JAVAC_WARNOFF_FLAG = -nowarn

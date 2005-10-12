@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.69 2005/10/11 14:39:45 arseniy Exp $
+# $Id: Makefile,v 1.70 2005/10/12 10:03:31 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -29,9 +29,20 @@ JAVAH_FLAGS := \
 	-classpath $(APPCLASSPATH):$(CLASSDIR) \
 	-force
 
+DEPENDENCIES = \
+general \
+administration \
+configuration \
+measurement \
+event \
+csbridge \
+reflectometry \
+dadara \
+leserver_interface \
+mserver_interface \
+util
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/reflectometry.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 

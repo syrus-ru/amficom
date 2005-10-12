@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.76 2005/10/09 16:13:05 bass Exp $
+# $Id: Makefile,v 1.77 2005/10/12 10:03:30 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -24,16 +24,7 @@ DEPENDENCIES = \
 util \
 bugs
 
-EMPTY =
-SPACE = $(EMPTY) $(EMPTY)
-APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
-
-
-ifeq ($(TROVE4J_HOME),)
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
-else
-EXTCLASSPATH := $(TROVE4J_HOME)/lib/trove.jar
-endif
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 
 ifeq ($(XALANJ_HOME),)
 EXTCLASSPATH := $(EXTCLASSPATH):$(EXTLIBDIR)/xalan.jar

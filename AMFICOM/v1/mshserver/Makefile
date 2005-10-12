@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.22 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.23 2005/10/12 10:03:31 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -20,9 +20,20 @@ SERVICE_NAME = mongol
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
+DEPENDENCIES = \
+util \
+general \
+resource \
+administration \
+configuration \
+measurement \
+map \
+scheme \
+mapview \
+csbridge \
+leserver_interface
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(MAPINFO_LIBDIR)/jdom.jar:$(MAPINFO_LIBDIR)/micsys.jar:$(MAPINFO_LIBDIR)/miutil.jar:$(MAPINFO_LIBDIR)/mxj.jar:$(MAPINFO_LIBDIR)/mxjgeom.jar:$(EXTLIBDIR)/dom4j-1.6.jar
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(MAPINFO_LIBDIR)/jdom.jar:$(MAPINFO_LIBDIR)/micsys.jar:$(MAPINFO_LIBDIR)/miutil.jar:$(MAPINFO_LIBDIR)/mxj.jar:$(MAPINFO_LIBDIR)/mxjgeom.jar:$(EXTLIBDIR)/dom4j-1.6.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mscharserver/*.java)

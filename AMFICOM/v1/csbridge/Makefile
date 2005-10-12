@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.26 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.27 2005/10/12 10:03:32 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -16,8 +16,13 @@ $(call checkenve,XMLBEANSCLASSPATH)
 
 LIBNAME_GENERALXML=generalxml.jar
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/leserver_interface.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+DEPENDENCIES = \
+util \
+general \
+administration \
+leserver_interface
+
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 

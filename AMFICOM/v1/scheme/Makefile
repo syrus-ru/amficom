@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.45 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.46 2005/10/12 10:03:32 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -38,11 +38,7 @@ resource \
 util \
 bugs
 
-EMPTY =
-SPACE = $(EMPTY) $(EMPTY)
-APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
-
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_SCHEMEXML):$(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
 

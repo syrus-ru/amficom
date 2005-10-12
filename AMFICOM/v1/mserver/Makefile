@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.39 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.40 2005/10/12 10:03:32 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -18,9 +18,17 @@ SERVICE_NAME = mongol
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
+DEPENDENCIES = \
+general \
+administration \
+configuration \
+measurement \
+csbridge \
+leserver_interface \
+mcm_interface \
+util
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mserver/*.java)

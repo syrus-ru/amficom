@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.7 2005/10/12 10:03:30 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -13,7 +13,11 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/commonclient.jar
+DEPENDENCIES = \
+general \
+map \
+filter \
+commonclient
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/event/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/map/*.java) \

@@ -13,9 +13,8 @@ $(call checkenve,SCOMPFLAGS)
 
 
 LIBNAME_GENERALXML = generalxml.jar
-LIBNAME_CONFIGURATIONXML = $(MODULE_NAME)xml.jar
-LIBNAME_MAPXML = mapxml.jar
-
+LIBNAME_CONFIGURATIONXML = configurationxml.jar
+LIBNAME_MAPXML = $(MODULE_NAME)xml.jar
 
 DEPENDENCIES = \
 configuration \
@@ -25,18 +24,9 @@ resource \
 util \
 bugs
 
-EMPTY =
-SPACE = $(EMPTY) $(EMPTY)
-APPCLASSPATH = $(subst $(SPACE),:,$(foreach DEPENDENCY,$(DEPENDENCIES),$(LIBDIR)/$(DEPENDENCY).jar))
-
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
-# If TROVE4J_HOME is defined, search in ${TROVE4J_HOME}/lib
-ifeq ($(TROVE4J_HOME),)
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
-else
-EXTCLASSPATH := $(TROVE4J_HOME)/lib/trove.jar
-endif
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
 

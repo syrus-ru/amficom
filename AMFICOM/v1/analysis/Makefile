@@ -1,11 +1,11 @@
 #
-# $Id: Makefile,v 1.13 2005/10/11 14:11:33 arseniy Exp $
+# $Id: Makefile,v 1.14 2005/10/12 10:03:33 bass Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME := analysis
-LIBNAME := $(MODULE_NAME).jar
+LIBNAME := $(MODULE_NAME)\ \\
 ARCHFILE := $(MODULE_NAME).tar.gz
 
 
@@ -13,8 +13,19 @@ include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/reflectometry.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
-
+DEPENDENCIES = \
+util \
+dadara \
+general \
+administration \
+configuration \
+measurement \
+filter \
+reflectometry \
+scheme \
+csbridge \
+commonclient \
+filterclient
 
 SOURCES := $(shell find $(SRCDIR) -name *.java)
 

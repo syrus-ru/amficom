@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.22 2005/10/09 12:58:13 bass Exp $
+# $Id: Makefile,v 1.23 2005/10/12 10:03:30 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -19,9 +19,17 @@ LIBNAME_GENERALXML=generalxml.jar
 LIBNAME_MAPXML=mapxml.jar
 LIBNAME_SCHEMEXML=schemexml.jar
 
-APPCLASSPATH := $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
+DEPENDENCIES = \
+resource \
+scheme \
+map \
+general \
+administration \
+configuration \
+util
+
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_SCHEMEXML):$(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)

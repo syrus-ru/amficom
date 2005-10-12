@@ -18,9 +18,14 @@ $(call checkenve,SCOMPFLAGS)
 LIBNAME_GENERALXML = generalxml.jar
 LIBNAME_CONFIGURATIONXML = $(MODULE_NAME)xml.jar
 
-APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar:$(LIBDIR)/bugs.jar
+DEPENDENCIES = \
+administration \
+general \
+util \
+bugs
+
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_CONFIGURATIONXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+EXTCLASSPATH := $(TROVE4JCLASSPATH)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java)

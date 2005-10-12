@@ -7,7 +7,9 @@ NATIVE_DIR := ./native
 
 include ../tools/Makefile.java.inc.mk
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/reflectometry.jar
+DEPENDENCIES = \
+util \
+reflectometry
 
 JAVAH := javah
 JAVAH_FLAGS := \
