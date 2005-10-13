@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.14 2005/10/11 08:56:12 krupenn Exp $
+ * $Id: MapReportModel.java,v 1.15 2005/10/13 13:51:16 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
@@ -51,8 +51,11 @@ public class MapReportModel extends ReportModel {
 	 */
 	public static String SELECTED_OBJECT_CHARS = "selectedObjectChars";
 	
+	//Параметры для отображения топографии для элемента
 	public static String MAPVIEW_OBJECT = "mapViewObject";
-	public static String SELECTED_MAP_OBJECT = "selectedMapObject";	
+	public static String CENTER = "center";
+	public static String SCALE = "scale";
+	public static String MAPFRAME_SIZE = "size";	
 	
 	public MapReportModel(){
 	}
@@ -83,9 +86,14 @@ public class MapReportModel extends ReportModel {
 				
 				Map topoImageReportData = (Map)data;
 				MapView mapViewObject = (MapView)topoImageReportData.get(MAPVIEW_OBJECT);
-				MapElement mapElement = (MapElement)topoImageReportData.get(SELECTED_MAP_OBJECT);
+				DoublePoint center = (DoublePoint)topoImageReportData.get(CENTER);
+				Double scale = (Double)topoImageReportData.get(SCALE);
+				Dimension mapFrameSize = (Dimension)topoImageReportData.get(MAPFRAME_SIZE);				
 				
-				if (mapViewObject == null || mapElement == null) {
+				if (	mapViewObject == null
+					||	center == null
+					||	scale == null
+					||	mapFrameSize == null) {
 					Log.errorMessage("MapReportModel.createReport - got null data from Command.");
 					throw new CreateReportException(
 							reportName,
@@ -97,7 +105,8 @@ public class MapReportModel extends ReportModel {
 				try {
 					image = StandAloneNetMapViewGenerator.getMapShot(
 							mapViewObject,
-							mapElement,
+							center,
+							scale.doubleValue() * mapFrameSize.getWidth() / element.getWidth(),
 							new Dimension(element.getWidth(),element.getHeight()));
 				} catch (MapException e) {
 					Log.errorMessage("MapReportModel.createReport | " + e.getMessage());
