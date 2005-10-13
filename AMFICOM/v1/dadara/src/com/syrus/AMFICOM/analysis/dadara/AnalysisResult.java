@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResult.java,v 1.5 2005/10/06 13:34:02 saa Exp $
+ * $Id: AnalysisResult.java,v 1.6 2005/10/13 17:19:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.io.SignatureMismatchException;
  * поля результатов сравнения модифицируемы и изначально null.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/13 17:19:52 $
  * @module dadara
  */
 public class AnalysisResult implements DataStreamable {
@@ -60,6 +60,13 @@ public class AnalysisResult implements DataStreamable {
 	}
 	protected AnalysisResult() {
 		// for dis reading
+	}
+
+	public AnalysisResult(AnalysisResult that) {
+		this.dataLength = that.dataLength;
+		this.traceLength = that.traceLength;
+		this.mtae = new ModelTraceAndEventsImpl(that.mtae);
+		this.anchorer = new EventAnchorer(that.anchorer);
 	}
 
 	public int getDataLength() {
