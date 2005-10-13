@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.h,v 1.5 2005/10/09 14:14:25 arseniy Exp $
+// $Id: OTDRController.h,v 1.6 2005/10/13 16:56:13 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.5 $, $Date: 2005/10/09 14:14:25 $
+// $Revision: 1.6 $, $Date: 2005/10/13 16:56:13 $
 // $Author: arseniy $
 //
 // OTDRController.h: interface for the OTDRController class.
@@ -22,11 +22,16 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include <windows.h>
+#include <map>
 #include "pthread.h"
 #include "OTDRReportListener.h"
+#include "Parameter.h"
 
 
 typedef unsigned short OTDRId;
+using namespace std;
+typedef map<const char*, const ByteArray*> ParametersMapT;
 
 #define SIZE_MANUFACTORER_NAME 20
 #define SIZE_MODEL_NAME 16
@@ -44,6 +49,7 @@ typedef struct {
 } OTDRPluginInfo;
 
 enum OTDRState {
+	OTDR_STATE_NEW,
 	OTDR_STATE_READY,
 	OTDR_STATE_ACUIRING_DATA
 };
@@ -79,6 +85,11 @@ class OTDRController {
 			const unsigned int timewait);
 		virtual ~OTDRController();
 
+		/*	Провести дополнительные действия с объектом, прежде чем он станет готов к работе.
+		 * 	Вызов этой функции возможен только для объекта в состоянии OTDR_STATE_NEW.
+		 * 	После вызова состояние должно быть OTDR_STATE_READY.*/
+		void init();
+
 		/*	Получить уникальный номер платы рефлектометра*/
 		OTDRId getOTDRId() const;
 
@@ -86,13 +97,9 @@ class OTDRController {
 		 * 	Реализована в подклассах*/
 		virtual OTDRModel getOTDRModel() const = 0;
 
-		/*	Распечатать допустимые параметры измерений.
-		 * 	Реализована в подклассах*/
-		virtual void printAvailableParameters() const = 0;
-
 		/*	Установить параметры измерения.
 		 * 	В случае неправильных значений возвращает FALSE.*/
-		BOOL setMeasurementParameters(Parameter** parameters);
+		BOOL setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) const;
 
 		/*	Получить текущее состояние*/
 		OTDRState getState() const;
@@ -106,6 +113,12 @@ class OTDRController {
 		/*	Достать сведения о плате рефлектометра.
 		 * 	Реализована в подклассах.*/
 		virtual void retrieveOTDRPluginInfo() = 0;
+
+		/*	Распечатать допустимые параметры измерений.
+		 * 	Реализована в подклассах*/
+		virtual void printAvailableParameters() const = 0;
+
+		virtual BOOL setMeasurementParameters0(const ParametersMapT parametersMap) const = 0;
 
 		/*	Главный цикл потока*/
 		static void* run(void* args);

@@ -27,10 +27,16 @@ void QP1640OTDRController::retrieveOTDRPluginInfo() {
 	free(qpPluginData);
 }
 
+void QP1640OTDRController::printAvailableParameters() const {
+	printf("QP1640OTDRController | QP1640 card N %d", this->otdrId);
+}
+
 OTDRModel QP1640OTDRController::getOTDRModel() const {
 	return OTDR_MODEL_ONT_UT;
 }
 
-void QP1640OTDRController::printAvailableParameters() const {
-	printf("QP1640OTDRController | QP1640 card N %d", this->otdrId);
+BOOL QP1640OTDRController::setMeasurementParameters0(const ParametersMapT parametersMap) const {
+	printf("QP1640OTDRController | Setting measurement parameters");
+	
+	return FALSE;
 }

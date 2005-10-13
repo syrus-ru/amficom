@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.cpp,v 1.4 2005/10/09 13:47:50 arseniy Exp $
+// $Id: OTDRController.cpp,v 1.5 2005/10/13 16:56:13 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.4 $, $Date: 2005/10/09 13:47:50 $
+// $Revision: 1.5 $, $Date: 2005/10/13 16:56:13 $
 // $Author: arseniy $
 //
 // Implementation of the OTDRController class.
@@ -31,15 +31,42 @@ OTDRController::OTDRController(const OTDRId otdrId,
 	this->otdrReportListener = otdrReportListener;
 	this->timewait = timewait;
 
-	this->state = OTDR_STATE_READY;
+	this->state = OTDR_STATE_NEW;
 }
 
 OTDRController::~OTDRController() {
 	printf("OTDRController | Deleting OTDR Controller: %d\n", this->otdrId);
+
+	/*	Очистить структуру со сведениями о плате рефлектометра*/
+	free(this->otdrPluginInfo);	
+}
+
+void OTDRController::init() {
+	if (this->state == OTDR_STATE_NEW) {
+		/*	Достать сведения о плате рефлектометра.*/
+		this->otdrPluginInfo = (OTDRPluginInfo*) malloc(sizeof(OTDRPluginInfo));
+		this->retrieveOTDRPluginInfo();
+
+//		/*	Вывести допустимые параметры измерений.*/
+//		this->printAvailableParameters();
+
+		/*	Изменить текущее состояние*/
+		this->state = OTDR_STATE_READY;
+	} else {
+		printf("OTDRController | ERROR: Cannot call init in state %d\n", this->state);
+	}
 }
 
 OTDRId OTDRController::getOTDRId() const {
 	return this->otdrId;
+}
+
+BOOL OTDRController::setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) const {
+	ParametersMapT parametersMap;
+	for (int i = 0; i < parNumber; i++) {
+		parametersMap[parameters[i]->getName()->getData()] = parameters[i]->getValue();
+	}
+	return this->setMeasurementParameters0(parametersMap);
 }
 
 OTDRState OTDRController::getState() const {
@@ -51,10 +78,6 @@ void OTDRController::start() {
 		printf("OTDRController | ERROR: State %d not legal to start data acquisition\n", this->state);
 		return;
 	}
-
-	/*	Достать сведения о плате рефлектометра.*/
-	this->otdrPluginInfo = (OTDRPluginInfo*) malloc(sizeof(OTDRPluginInfo));
-	this->retrieveOTDRPluginInfo();
 
 	/*	Создать и запустить главный поток.*/
 	this->running = 1;
@@ -71,9 +94,6 @@ void OTDRController::start() {
 void OTDRController::shutdown() {
 	this->running = 0;
 	printf("OTDRController | Shutting down\n");
-
-	/*	Очистить структуру со сведениями о плате рефлектометра*/
-	free(this->otdrPluginInfo);
 
 	/*	Изменить текущее состояние*/
 	this->state = OTDR_STATE_READY;
