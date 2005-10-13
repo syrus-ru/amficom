@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.141 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemeElement.java,v 1.142 2005/10/13 11:23:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.141 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.142 $, $Date: 2005/10/13 11:23:17 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1370,6 +1370,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {
+		if (parentSchemeElement != null
+				&& parentSchemeElement.getKind() == SCHEME_CONTAINER) {
+			throw new ClassCastException();
+		}
+
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		final boolean thisParentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert super.parentSchemeId.isVoid() ^ thisParentSchemeElementIdVoid: EXACTLY_ONE_PARENT_REQUIRED;

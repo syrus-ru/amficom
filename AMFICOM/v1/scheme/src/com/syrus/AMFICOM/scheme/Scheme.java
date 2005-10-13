@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.114 2005/10/07 10:04:23 bass Exp $
+ * $Id: Scheme.java,v 1.115 2005/10/13 11:23:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 import static java.util.logging.Level.SEVERE;
 
@@ -86,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.114 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.115 $, $Date: 2005/10/13 11:23:17 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1028,6 +1029,11 @@ public final class Scheme extends AbstractCloneableDomainMember
 			final SchemeElement parentSchemeElement,
 			final boolean usePool)
 	throws ApplicationException {
+		if (parentSchemeElement != null
+				&& parentSchemeElement.getKind() == SCHEME_ELEMENT_CONTAINER) {
+			throw new ClassCastException();
+		}
+
 		assert this.parentSchemeElementId != null : OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
