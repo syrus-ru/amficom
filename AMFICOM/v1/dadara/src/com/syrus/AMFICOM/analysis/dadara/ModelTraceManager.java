@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.102 2005/10/12 13:24:31 bass Exp $
+ * $Id: ModelTraceManager.java,v 1.103 2005/10/13 11:45:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  * порогов к событиями (пока нет) и модельной кривой (есть),
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
- * @author $Author: bass $
- * @version $Revision: 1.102 $, $Date: 2005/10/12 13:24:31 $
+ * @author $Author: saa $
+ * @version $Revision: 1.103 $, $Date: 2005/10/13 11:45:39 $
  * @module
  */
 public class ModelTraceManager
@@ -186,8 +186,8 @@ implements DataStreamable, Cloneable
 				thresholds.add(new ThreshDY(i, ThreshDY.Type.dL, evCenter, evCenter));
 				thresholds.add(new ThreshDX(i, evCenter, evEnd + DELTA, false, false));
 				thresholds.add(last = new ThreshDY(i, ThreshDY.Type.dA, evEnd, evEnd));
-				assert Log.debugMessage("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd,
-						FINEST);
+//				assert Log.debugMessage("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd,
+//						FINEST);
 				break;
 			}
 		}
