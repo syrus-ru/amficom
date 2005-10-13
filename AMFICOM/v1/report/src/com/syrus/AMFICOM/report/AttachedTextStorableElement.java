@@ -241,15 +241,12 @@ public final class AttachedTextStorableElement extends StorableElement
 	 */
 	public void setAttachment(
 			DataStorableElement attacher,
-			TextAttachingType attachmentType)
-	{
-		assert attacher != null : NON_NULL_EXPECTED;
-		
+			TextAttachingType attachmentType) {
 		if (	attachmentType.equals(TextAttachingType.TO_FIELDS_LEFT)		
 			||	attachmentType.equals(TextAttachingType.TO_LEFT)
 			||	attachmentType.equals(TextAttachingType.TO_WIDTH_CENTER)			
 			||	attachmentType.equals(TextAttachingType.TO_RIGHT)){
-			this.horizontalAttacherId = attacher.getId();
+			this.horizontalAttacherId = (attacher != null) ? attacher.getId() : Identifier.VOID_IDENTIFIER;
 			this.horizontalAttachType = attachmentType;
 			//Фиксируем расстояние до соответсвующего края объекта, к которому
 			//осуществлена привязка
@@ -265,7 +262,7 @@ public final class AttachedTextStorableElement extends StorableElement
 		else if (attachmentType.equals(TextAttachingType.TO_FIELDS_TOP)
 				|| attachmentType.equals(TextAttachingType.TO_TOP)
 				|| attachmentType.equals(TextAttachingType.TO_BOTTOM)) {
-			this.verticalAttacherId = attacher.getId();
+			this.verticalAttacherId = (attacher != null) ? attacher.getId() : Identifier.VOID_IDENTIFIER;
 			this.verticalAttachType = attachmentType;
 			// Фиксируем расстояние до соответсвующего края объекта, к которому
 			// осуществлена привязка
