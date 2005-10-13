@@ -1,5 +1,5 @@
 ########################################################################################
-# $Id: Makefile.cpp.inc.mk,v 1.9 2005/10/09 11:19:59 arseniy Exp $
+# $Id: Makefile.cpp.inc.mk,v 1.10 2005/10/13 13:36:43 arseniy Exp $
 # $Author: arseniy $
 # Author: Tashoyan Arseniy Feliksovich
 # Description: Include this file to your Makefile of any C++ project
@@ -8,7 +8,6 @@
 #  Windows:
 #   Cygwin
 #   GNU Make
-#   GNU Binutils
 #   Microsoft Visual Studio -- compiler, linker, library tool, includes and libraries
 #  Unix:
 #   GNU Make
