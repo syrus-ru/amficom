@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.42 2005/09/18 12:43:16 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.43 2005/10/13 09:52:34 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,9 @@ import static com.syrus.AMFICOM.mapview.MapViewWrapper.LINK_COLUMN_MAPVIEW_ID;
 import static com.syrus.AMFICOM.mapview.MapViewWrapper.LINK_COLUMN_SCHEME_ID;
 import static com.syrus.AMFICOM.mapview.MapViewWrapper.MAPVIEW_SCHEME;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -32,6 +30,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -45,14 +44,13 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/09/18 12:43:16 $
- * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2005/10/13 09:52:34 $
+ * @author $Author: max $
  * @module mapview
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
@@ -200,50 +198,24 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 
 	@Override
 	public void delete(final Set<? extends Identifiable> ids) {
-		super.delete(ids);
-		this.deleteSchemeIds(ids);
-	}
-
-	private void deleteSchemeIds(final Set<? extends Identifiable> ids) {
-		final Set<Identifier> schemeIds = new HashSet<Identifier>();
-		for (final Identifiable identifiable : ids) {
-			final Identifier mapId = identifiable.getId();
-			try {
-				final MapView mapView = StorableObjectPool.getStorableObject(mapId, true);
-				schemeIds.addAll(Identifier.createIdentifiers(mapView.getSchemes()));
-			} catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-
-		final StringBuffer stringBuffer = idsEnumerationString(schemeIds, LINK_COLUMN_SCHEME_ID, true);
-
-		Statement statement = null;
-		Connection connection = null;
+		
+		Set<MapView> dbMapViews = null;
 		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE + stringBuffer.toString());
-			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
+			dbMapViews = this.retrieveByCondition(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true).toString());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return;
 		}
+		final Set<Identifier> schemeIds = new HashSet<Identifier>();
+		for (final MapView mapView : dbMapViews) {
+			schemeIds.addAll(Identifier.createIdentifiers(mapView.getSchemes()));
+		}
+		if (!schemeIds.isEmpty()) {
+			StorableObjectDatabase<Scheme> database = DatabaseContext.<Scheme>getDatabase(ObjectEntities.SCHEME_CODE);
+			database.delete(schemeIds);
+		}
+		super.delete(ids);
+		
 	}
 
 	@Override
