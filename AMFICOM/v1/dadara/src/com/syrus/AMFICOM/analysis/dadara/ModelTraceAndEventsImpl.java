@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.25 2005/10/12 13:24:31 bass Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.26 2005/10/13 17:19:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.io.SignatureMismatchException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/10/12 13:24:31 $
+ * @author $Author: saa $
+ * @version $Revision: 1.26 $, $Date: 2005/10/13 17:19:00 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -62,17 +62,21 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	}
 
 	public ModelTraceAndEventsImpl(ReliabilitySimpleReflectogramEventImpl[] rse,
-			ModelFunction mf, double[] y, double deltaX)
-	{
+			ModelFunction mf, double[] y, double deltaX) {
 		this(rse, mf, deltaX);
 		this.cinfo = new ComplexInfo(y); // use all our internal fields initialized by this moment
+	}
+
+	public ModelTraceAndEventsImpl(ModelTraceAndEventsImpl that) {
+		// полагаемся на то, что объекты RSE неизменны
+		this(that.getRSE().clone(), that.getMF().copy(), that.deltaX);
+		this.cinfo = new ComplexInfo(that.cinfo);
 	}
 
 	public static ModelTraceAndEventsImpl replaceRSE(
 			ModelTraceAndEventsImpl that,
 			ReliabilitySimpleReflectogramEventImpl[] rse,
-			double[] y)
-	{
+			double[] y) {
 		return new ModelTraceAndEventsImpl(rse, that.mf, y, that.deltaX);
 	}
 			
@@ -131,6 +135,20 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 			this.adz = new int[ModelTraceAndEventsImpl.this.rse.length];
 			this.maxDevI = new int[ModelTraceAndEventsImpl.this.rse.length];
 			this.rmsDevI = new int[ModelTraceAndEventsImpl.this.rse.length];
+		}
+
+		private ModelTraceAndEventsImpl getOwner() {
+			return ModelTraceAndEventsImpl.this;
+		}
+
+		// используется при копировании MTAEI
+		public ComplexInfo(ComplexInfo that) {
+			assert ModelTraceAndEventsImpl.this.rse.length == that.getOwner().rse.length;
+			this.yTop = that.yTop;
+			this.edz = that.edz.clone();
+			this.adz = that.adz.clone();
+			this.rmsDevI = that.rmsDevI;
+			this.maxDevI = that.maxDevI;
 		}
 
 		public ComplexInfo(double[] y) {
