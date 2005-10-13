@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.69 2005/10/06 15:53:21 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.70 2005/10/13 12:03:34 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/10/06 15:53:21 $
+ * @version $Revision: 1.70 $, $Date: 2005/10/13 12:03:34 $
  * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -17,24 +17,26 @@ package com.syrus.AMFICOM.mcm;
 
 //*
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
+import com.syrus.AMFICOM.analysis.dadara.ReflectometryAnalysisResultImpl;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.DataFormatException;
+import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 final class DadaraAnalysisManager implements AnalysisManager {
@@ -147,21 +149,45 @@ final class DadaraAnalysisManager implements AnalysisManager {
 		// проводим анализ
 		final AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
 
-		// если есть эталон, то сравниваем:
-		// дополняем ar результатами сравнения и получаем алармы
-		final List<ReflectogramMismatchImpl> alarmList = (etalon != null) ? CoreAnalysisManager.compareAndMakeAlarms(ar, etalon) : null;
-		Log.debugMessage("DadaraAnalysisManager.analyse | alarmList = " + alarmList, Log.DEBUGLEVEL08);
-
 		// добавляем AnalysisResult в результаты анализа
 		outParameters.put(ParameterType.DADARA_ANALYSIS_RESULT, ar.toByteArray());
 
-		// === Формируем результаты ===
+//		// если есть эталон, то сравниваем:
+//		// дополняем ar результатами сравнения и получаем алармы
+//		final List<ReflectogramMismatchImpl> alarmList = (etalon != null) ? CoreAnalysisManager.compareAndMakeAlarms(ar, etalon) : null;
+//		Log.debugMessage("DadaraAnalysisManager.analyse | alarmList = " + alarmList, Log.DEBUGLEVEL08);
+//
+//
+//		// === Формируем результаты ===
+		//
+//				// если эталон есть, то добавляем алармы в результаты анализа
+//				if (etalon != null) {
+//					final ReflectogramMismatchImpl[] alarms = alarmList.toArray(new ReflectogramMismatchImpl[alarmList.size()]);
+//					outParameters.put(ParameterType.DADARA_ALARMS, ReflectogramMismatchImpl.alarmsToByteArray(alarms));
+//				}
 
-		// если эталон есть, то добавляем алармы в результаты анализа
 		if (etalon != null) {
-			final ReflectogramMismatchImpl[] alarms = alarmList.toArray(new ReflectogramMismatchImpl[alarmList.size()]);
-			outParameters.put(ParameterType.DADARA_ALARMS, ReflectogramMismatchImpl.alarmsToByteArray(alarms));
+			// сравниваем
+			EtalonComparison ec =
+				CoreAnalysisManager.compareToEtalon(ar, etalon);
+			final ReflectometryAnalysisResultImpl rar =
+				new ReflectometryAnalysisResultImpl(ar, ec);
+
+			// сохраняем результаты сравнения
+			outParameters.put(ParameterType.DADARA_ALARMS,
+					rar.getDadaraReflectogramMismatchBytes());
+			outParameters.put(ParameterType.DADARA_QUALITY_PER_EVENT,
+					rar.getDadaraEvaluationPerEventResultBytes());
+			final ReflectometryEvaluationOverallResult overallResult =
+				rar.getReflectometryEvaluationOverallResult();
+			if (overallResult.hasDQ()) {
+				outParameters.put(ParameterType.DADARA_QUALITY_OVERALL_D,
+						ByteArray.toByteArray(overallResult.getD()));
+				outParameters.put(ParameterType.DADARA_QUALITY_OVERALL_Q,
+						ByteArray.toByteArray(overallResult.getQ()));
+			}
 		}
+
 
 		// формируем результаты анализа
 		final Parameter[] ret = new Parameter[outParameters.size()];
