@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.13 2005/10/12 13:24:31 bass Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.14 2005/10/13 17:13:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,10 @@ import com.syrus.util.Log;
  * Just am implementation of SimpleReflectogramEvent
  * with protected-visibility streaming support.
  * <p>
+ * Object state can modifiable only within protected visibility
+ * (via protected method {@link #readArrayBaseFromDIS}), so that
+ * children can ensure unmodifiable behaviour.
+ * <p>
  * <b>NB:</b> Support two *different* ways of streaming:
  * <ul>
  * <li> one-event (see {@link #writeBaseToDOS}, no compression, no signatures)
@@ -30,8 +34,8 @@ import com.syrus.util.Log;
  * Today, both ways are coded within protected visibility because
  * there is no need of streaming this (super-)class itself by now.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/10/12 13:24:31 $
+ * @author $Author: saa $
+ * @version $Revision: 1.14 $, $Date: 2005/10/13 17:13:31 $
  * @module
  */
 public class SimpleReflectogramEventImpl
@@ -51,6 +55,15 @@ implements SimpleReflectogramEvent {
 		this.begin = begin;
 		this.end = end;
 		this.eventType = eventType;
+	}
+
+	/**
+	 * copy-constructor
+	 */
+	public SimpleReflectogramEventImpl(SimpleReflectogramEvent that) {
+		this.begin = that.getBegin();
+		this.end = that.getEnd();
+		this.eventType = that.getEventType();
 	}
 
 	public int getBegin()
