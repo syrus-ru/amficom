@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.12 2005/10/10 09:54:19 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.13 2005/10/13 17:14:53 saa Exp $
  * 
  * Copyright c 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,12 @@ import java.io.IOException;
 import com.syrus.io.SignatureMismatchException;
 
 /**
+ * unmodifiable
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/10/10 09:54:19 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/13 17:14:53 $
  * @module
  */
-public class ReliabilitySimpleReflectogramEventImpl
+public final class ReliabilitySimpleReflectogramEventImpl
 extends SimpleReflectogramEventImpl
 implements ReliabilitySimpleReflectogramEvent {
 	private static final short SIGNATURE_SHORT_ARRAY = 10100;
@@ -47,6 +48,15 @@ implements ReliabilitySimpleReflectogramEvent {
 			int eventType) {
 		super(begin, end, eventType);
 		this.nSigma = -1;
+	}
+
+	/**
+	 * copy-constructor
+	 */
+	public ReliabilitySimpleReflectogramEventImpl(
+			ReliabilitySimpleReflectogramEventImpl that) {
+		super(that);
+		this.nSigma = that.nSigma;
 	}
 
 	protected void readSpecificFromDIS(DataInputStream dis)
