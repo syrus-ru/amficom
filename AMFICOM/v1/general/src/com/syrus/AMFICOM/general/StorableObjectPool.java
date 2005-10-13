@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.191 2005/10/13 11:40:14 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.192 2005/10/13 11:44:42 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.191 $, $Date: 2005/10/13 11:40:14 $
- * @author $Author: bass $
+ * @version $Revision: 1.192 $, $Date: 2005/10/13 11:44:42 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -657,8 +657,7 @@ public final class StorableObjectPool {
 						storableObject.markAsDeleted();
 					} else {
 						Log.debugMessage("StorableObjectPool.markAsDeleted() | Object '" + id
-								+ "' not found in pool, probably already deleted",
-								Log.DEBUGLEVEL08);
+								+ "' not found in pool, probably already deleted", Log.DEBUGLEVEL08);
 					}
 				}
 			}
@@ -677,7 +676,7 @@ public final class StorableObjectPool {
 	public static void delete(final Identifier id) {
 		assert id != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		markAsDeleted(Collections.<Identifiable>singleton(id));
+		markAsDeleted(Collections.singleton(id));
 
 		final short entityCode = id.getMajor();
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
