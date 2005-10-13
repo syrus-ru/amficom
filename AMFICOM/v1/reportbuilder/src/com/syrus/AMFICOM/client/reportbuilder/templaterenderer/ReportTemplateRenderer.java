@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.16 2005/10/13 06:23:18 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.17 2005/10/13 08:50:49 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -67,9 +68,6 @@ import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.Log;
 
 public class ReportTemplateRenderer extends JPanel implements PropertyChangeListener{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1947965880055353754L;
 	private final static int BORDER_MARGIN_SIZE = 2;
 	private static final int HEADER_TOCOMPONENT_DISTANCE = 10;	
@@ -83,6 +81,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private ReportTemplate template = null;
 	
 	private RenderingComponent selectedComponent = null;
+	private Set<StorableElement> intersectingElements = null;
 	
 	private AttachedTextComponent labelToBeAttached = null;
 	private TextAttachingType labelAttachingType = null;
@@ -159,6 +158,9 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			}			
 			else if (eventType.equals(ReportFlagEvent.REPAINT_RENDERER))
 				ReportTemplateRenderer.this.repaint();
+			else
+				//Не обнуляем список взаимопересечённых элементов
+				return;
 		}
 		else if (evt instanceof UseTemplateEvent){
 			try {
@@ -267,6 +269,11 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			this.labelAttachingType = alEvent.getTextAttachingType();
 			RendererMode.setMode(RENDERER_MODE.ATTACH_LABEL);
 		}
+		else
+			//Не обнуляем список
+			return;
+		//Обнуляем список пересекающихся объектов.
+		this.intersectingElements = null;
 	}
 
 	private void removeAllComponents() throws ApplicationException {
@@ -407,6 +414,25 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 						this.selectedComponent.getY() - BORDER_MARGIN_SIZE,
 						this.selectedComponent.getWidth() + 2 * BORDER_MARGIN_SIZE,
 						this.selectedComponent.getHeight() + 2 * BORDER_MARGIN_SIZE);
+			}
+			//Рисуем рамки вокруг пересекающихся элементов
+			if (this.intersectingElements != null) {
+				g.setColor(Color.RED);
+				for (StorableElement element : this.intersectingElements) {
+					Component elementsComponent = null;
+					for (Component component : this.getComponents()) {
+						if (((RenderingComponent)component).getElement().equals(element)) {
+							elementsComponent = component;
+							break;
+						}
+					}
+					if (elementsComponent != null)
+						g.drawRect(
+								elementsComponent.getX() - BORDER_MARGIN_SIZE,
+								elementsComponent.getY() - BORDER_MARGIN_SIZE,
+								elementsComponent.getWidth() + 2 * BORDER_MARGIN_SIZE,
+								elementsComponent.getHeight() + 2 * BORDER_MARGIN_SIZE);
+				}
 			}
 		}
 		
@@ -693,5 +719,9 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			return null;
 
 		return fileName;
+	}
+
+	public void setIntersectingElements(Set<StorableElement> intersectingElements) {
+		this.intersectingElements = intersectingElements;
 	}
 }

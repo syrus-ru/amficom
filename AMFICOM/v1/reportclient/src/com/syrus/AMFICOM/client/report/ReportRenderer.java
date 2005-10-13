@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.12 2005/10/12 13:26:48 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.13 2005/10/13 08:50:48 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,18 +22,20 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.AMFICOM.report.StorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate.Orientation;
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.12 $, $Date: 2005/10/12 13:26:48 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/13 08:50:48 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -65,9 +67,11 @@ public class ReportRenderer extends JPanel {
 	}
 	
 	public void setData(Map<Object, Object> data)
-		throws CreateReportException, CreateModelException, ApplicationException, IOException {
+		throws CreateReportException, CreateModelException, ApplicationException, IOException, ElementsIntersectException {
 		if (this.reportTemplate == null)
 			throw new AssertionError("Report template is not set!");
+		
+		this.checkForIntersections();
 		
 		Set<DataStorableElement> dataStorableElements = this.reportTemplate.getDataStorableElements();
 		for (DataStorableElement dataElement : dataStorableElements) {
@@ -168,17 +172,54 @@ public class ReportRenderer extends JPanel {
 					2,
 					this.templateBounds.getWidth() - 3,
 					this.templateBounds.getHeight() - 3);
-			
-//			//Рисуем поля шаблона
-//			g.setColor(Color.BLACK);
-//			g.drawRect(
-//					marginSize,
-//					marginSize,
-//					templateSize.getWidth() - 2 * marginSize,
-//					this.theLowestBorder - marginSize + 3);
 		}
 		
 		this.paintChildren(g);
+	}
+	
+	/**
+	 * Проверка на пересечения элементов шаблона
+	 * @throws ElementsIntersectException 
+	 * @throws ElementsIntersectException, если на схеме шаблона есть пересечения элементов.
+	 */
+	private void checkForIntersections() throws ApplicationException, ElementsIntersectException{
+		Set<Identifiable> templateElements = null;
+		templateElements = this.reportTemplate.getReverseDependencies(true);
+
+		for (Identifiable element1 : templateElements){
+			for (Identifiable element2 : templateElements){
+				StorableElement se1 = (StorableElement)element1;
+				StorableElement se2 = (StorableElement)element2;
+				if (	(se1 != se2)
+					&&	this.elementsIntersect(se1,se2))
+					throw new ElementsIntersectException(se1,se2);
+			}
+		}
+	}
+	
+	private boolean elementsIntersect(
+			StorableElement element1,
+			StorableElement element2) {
+		int e1w = element1.getWidth();
+		int e1h = element1.getHeight();
+		int e2w = element2.getWidth();
+		int e2h = element2.getHeight();
+		if (e2w <= 0 || e2h <= 0 || e1w <= 0 || e1h <= 0) {
+		    return false;
+		}
+		int e1x = element1.getX();
+		int e1y = element1.getY();
+		int e2x = element2.getX();
+		int e2y = element2.getY();
+		e2w += e2x;
+		e2h += e2y;
+		e1w += e1x;
+		e1h += e1y;
+		//      overflow || intersect
+		return ((e2w < e2x || e2w > e1x) &&
+			(e2h < e2y || e2h > e1y) &&
+			(e1w < e1x || e1w > e2x) &&
+			(e1h < e1y || e1h > e2y));
 	}
 	
 	/**

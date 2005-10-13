@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.16 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.17 2005/10/13 08:50:49 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.report.ElementsIntersectException;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportRenderer;
 import com.syrus.AMFICOM.client.reportbuilder.ModuleMode.MODULE_MODE;
@@ -62,7 +63,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.16 $, $Date: 2005/10/12 13:29:11 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/13 08:50:49 $
  * @author Peskovsky Peter
  * @module reportbuilder_v1
  */
@@ -428,6 +429,15 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 					this.reportPreviewRenderer.setReportTemplate(reportTemplate);
 					try {
 						this.reportPreviewRenderer.setData(EMPTY_REPORT_DATA);
+					} catch (ElementsIntersectException e) {
+						this.reportTemplateRenderer.setIntersectingElements(
+								e.getIntersectingElements());
+						JOptionPane.showMessageDialog(
+								Environment.getActiveWindow(),
+								e.getMessage(),
+								I18N.getString("report.Exception.error"),
+								JOptionPane.ERROR_MESSAGE);
+						return;
 					} catch (Exception e) {
 						Log.errorMessage("ReportBuilderMainFrame.propertyChange | "
 								+ e.getMessage());
