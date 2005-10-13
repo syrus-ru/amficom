@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAClientImpl.java,v 1.1 2005/10/12 12:22:04 arseniy Exp $
+ * $Id: CORBAClientImpl.java,v 1.2 2005/10/13 09:57:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClientOperations;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/12 12:22:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/10/13 09:57:25 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -35,7 +35,7 @@ final class CORBAClientImpl implements CORBAClientOperations {
 	}
 
 	public void receiveMessages(final IdlEvent idlEvent) throws AMFICOMRemoteException {
-		final Event event = idlEvent.getNative();
+		final Event event = idlEvent.getNativeEvent();
 		synchronized (this.popupMessageReceivers) {
 			for (final PopupMessageReceiver popupMessageReceiver : this.popupMessageReceivers) {
 				popupMessageReceiver.receiveMessage(event);

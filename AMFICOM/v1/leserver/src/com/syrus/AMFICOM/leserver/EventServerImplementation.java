@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.15 2005/10/12 12:25:13 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.16 2005/10/13 09:57:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/12 12:25:13 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/13 09:57:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -78,7 +78,7 @@ public class EventServerImplementation extends EventServerPOA {
 				+ idlEvents.length + " event(s)",
 				INFO);
 		for (final IdlEvent idlEvent : idlEvents) {
-			final Event event = idlEvent.getNative();
+			final Event event = idlEvent.getNativeEvent();
 			Log.debugMessage("EventServerImplementation.receiveEvents() | Event: "
 					+ event + " delivered successfully",
 					INFO);

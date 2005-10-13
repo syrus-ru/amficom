@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.4 2005/10/11 13:16:34 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.5 2005/10/13 09:57:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDa
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorData;
 import com.syrus.AMFICOM.eventv2.corba.IdlReflectogramMismatchEventPackage.IdlAnchorDataPackage.IdlAnchor;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
 import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/11 13:16:34 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/13 09:57:25 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -151,7 +153,16 @@ final class IdlReflectogramMismatchEventImpl
 		return IdlEventType.REFLECTOGRAM_MISMATCH;
 	}
 
-	public ReflectogramMismatchEvent getNative() {
+	/**
+	 * @throws IdlCreateObjectException
+	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
+	 */
+	@Override
+	public StorableObject getNative() throws IdlCreateObjectException {
+		throw new UnsupportedOperationException();
+	}
+
+	public ReflectogramMismatchEvent getNativeEvent() {
 		return DefaultReflectogramMismatchEvent.valueOf(this);
 	}
 }

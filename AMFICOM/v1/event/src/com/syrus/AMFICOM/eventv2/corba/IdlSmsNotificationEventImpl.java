@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSmsNotificationEventImpl.java,v 1.1 2005/10/11 08:58:25 bass Exp $
+ * $Id: IdlSmsNotificationEventImpl.java,v 1.2 2005/10/13 09:57:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import com.syrus.AMFICOM.eventv2.DefaultSmsNotificationEvent;
 import com.syrus.AMFICOM.eventv2.SmsNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEventPackage.IdlEventType;
 import com.syrus.AMFICOM.eventv2.corba.IdlNotificationEventPackage.IdlDeliveryMethod;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/11 08:58:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/13 09:57:25 $
  * @module event
  */
 final class IdlSmsNotificationEventImpl extends IdlSmsNotificationEvent {
@@ -61,9 +63,18 @@ final class IdlSmsNotificationEventImpl extends IdlSmsNotificationEvent {
 	}
 
 	/**
-	 * @see IdlEvent#getNative()
+	 * @throws IdlCreateObjectException
+	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
-	public SmsNotificationEvent getNative() {
+	@Override
+	public StorableObject getNative() throws IdlCreateObjectException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IdlEvent#getNativeEvent()
+	 */
+	public SmsNotificationEvent getNativeEvent() {
 		return DefaultSmsNotificationEvent.valueOf(this);
 	}
 }

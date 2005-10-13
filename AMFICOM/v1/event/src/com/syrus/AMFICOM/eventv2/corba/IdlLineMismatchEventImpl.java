@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.2 2005/10/10 16:25:47 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.3 2005/10/13 09:57:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDat
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEventPackage.IdlSpatialDataPackage.IdlAffectedPathElementSpatious;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchData;
 import com.syrus.AMFICOM.eventv2.corba.IdlMismatchContainerPackage.IdlMismatchDataPackage.IdlMismatch;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
 import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/10 16:25:47 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/13 09:57:25 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -136,9 +138,18 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	}
 
 	/**
-	 * @see IdlEvent#getNative()
+	 * @throws IdlCreateObjectException
+	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
-	public LineMismatchEvent getNative() {
+	@Override
+	public StorableObject getNative() throws IdlCreateObjectException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IdlEvent#getNativeEvent()
+	 */
+	public LineMismatchEvent getNativeEvent() {
 		return DefaultLineMismatchEvent.valueOf(this);
 	}
 }
