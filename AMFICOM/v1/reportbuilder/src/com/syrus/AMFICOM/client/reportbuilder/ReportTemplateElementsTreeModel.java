@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.11 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.12 2005/10/13 15:18:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTreeItem;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
-import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
