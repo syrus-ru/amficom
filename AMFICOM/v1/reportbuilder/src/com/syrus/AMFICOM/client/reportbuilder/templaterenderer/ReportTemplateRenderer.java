@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.15 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.16 2005/10/13 06:23:18 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,6 +67,10 @@ import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.util.Log;
 
 public class ReportTemplateRenderer extends JPanel implements PropertyChangeListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1947965880055353754L;
 	private final static int BORDER_MARGIN_SIZE = 2;
 	private static final int HEADER_TOCOMPONENT_DISTANCE = 10;	
 	
@@ -507,7 +511,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		return component;
 	}
 
-	public AttachedTextComponent createTextRenderingComponent(AttachedTextStorableElement textElement) throws CreateObjectException{
+	public AttachedTextComponent createTextRenderingComponent(AttachedTextStorableElement textElement){
 		AttachedTextComponent component = new AttachedTextComponent(textElement);
 		this.add(component);
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModelFactory.java,v 1.5 2005/09/22 14:50:03 peskovsky Exp $
+ * $Id: ReportBuilderApplicationModelFactory.java,v 1.6 2005/10/13 06:23:18 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ public class ReportBuilderApplicationModelFactory
 	public ApplicationModel create() {
 		ApplicationModel aModel = new ReportBuilderApplicationModel();
 		new SchematicsApplicationModel();
-		new AnalyseApplicationModel();		
+		new AnalyseApplicationModel();
 		return aModel;
 	}
 }
