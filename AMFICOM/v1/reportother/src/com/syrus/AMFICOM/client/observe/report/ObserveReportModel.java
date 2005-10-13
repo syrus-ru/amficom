@@ -1,5 +1,5 @@
 /*
- * $Id: ObserveReportModel.java,v 1.5 2005/10/13 06:21:41 peskovsky Exp $
+ * $Id: ObserveReportModel.java,v 1.6 2005/10/13 15:19:59 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
-import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 
@@ -42,7 +42,7 @@ public class ObserveReportModel extends ReportModel {
 		String reportName = element.getReportName();
 		String modelClassName = element.getModelClassName();
 		
-		if (reportName.equals(SchemeReportModel.ON_SCREEN_SCHEME)) {
+		if (reportName.equals(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER)) {
 			SchemeReportModel schemeReportModel =
 				(SchemeReportModel)ReportModelPool.getModel(
 						SchemeReportModel.class.getName());
@@ -75,7 +75,7 @@ public class ObserveReportModel extends ReportModel {
 		if (	reportName.equals(MARKER_INFO)
 			||	reportName.equals(ALARMS_LIST))
 			langReportName = I18N.getString("report.Modules.Observation." + reportName);
-		else if (reportName.equals(SchemeReportModel.ON_SCREEN_SCHEME))
+		else if (reportName.equals(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER))
 			langReportName = I18N.getString("report.Modules.SchemeEditor." + reportName);
 		else if (reportName.equals(MapReportModel.TOPOLOGY_IMAGE))
 			langReportName = I18N.getString("report.Modules.Map." + reportName);
@@ -86,7 +86,7 @@ public class ObserveReportModel extends ReportModel {
 	@Override
 	public ReportType getReportKind(String reportName) {
 		ReportType result = ReportType.TABLE;
-		if (	reportName.equals(SchemeReportModel.ON_SCREEN_SCHEME)
+		if (	reportName.equals(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER)
 			||	reportName.equals(MapReportModel.TOPOLOGY_IMAGE))
 			result = ReportType.GRAPH;
 		
@@ -100,7 +100,7 @@ public class ObserveReportModel extends ReportModel {
 		result.add(MARKER_INFO);
 		result.add(ALARMS_LIST);		
 		result.add(MapReportModel.TOPOLOGY_IMAGE);		
-		result.add(SchemeReportModel.ON_SCREEN_SCHEME);
+		result.add(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER);
 		
 		return result;
 	}
