@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: r8.cpp,v 1.3 2005/10/09 12:14:59 arseniy Exp $
+// $Id: r8.cpp,v 1.4 2005/10/13 16:59:44 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.3 $, $Date: 2005/10/09 12:14:59 $
+// $Revision: 1.4 $, $Date: 2005/10/13 16:59:44 $
 // $Author: arseniy $
 //
 // r8.cpp: main function of application.
@@ -53,7 +53,7 @@ int main(const int argc, const char* argv[]) {
 	printf("Id: %s, timewait: %d, maxMCMTimeout: %d, port: %d, comPortNumber: %d\n", id, timewait, maxMCMTimeout, port, comPortNumber);
 
 	RTU* rtu = new RTU(comPortNumber, timewait);
-	if (rtu->getRTUState() <= RTU_COM_PORT_INIT_FAILED) {
+	if (rtu->getRTUState() <= RTU_STATE_COM_PORT_INIT_FAILED) {
 		delete rtu;
 		return 1;
 	}
