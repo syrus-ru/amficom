@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.43 2005/10/13 09:52:34 max Exp $
+ * $Id: MapViewDatabase.java,v 1.44 2005/10/13 09:54:21 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/10/13 09:52:34 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/13 09:54:21 $
  * @author $Author: max $
  * @module mapview
  */
@@ -206,13 +206,13 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 			Log.errorException(e);
 			return;
 		}
-		final Set<Identifier> schemeIds = new HashSet<Identifier>();
+		final Set<Scheme> schemes = new HashSet<Scheme>();
 		for (final MapView mapView : dbMapViews) {
-			schemeIds.addAll(Identifier.createIdentifiers(mapView.getSchemes()));
+			schemes.addAll(mapView.getSchemes());
 		}
-		if (!schemeIds.isEmpty()) {
+		if (!schemes.isEmpty()) {
 			StorableObjectDatabase<Scheme> database = DatabaseContext.<Scheme>getDatabase(ObjectEntities.SCHEME_CODE);
-			database.delete(schemeIds);
+			database.delete(schemes);
 		}
 		super.delete(ids);
 		
