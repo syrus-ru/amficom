@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.12 2005/10/11 15:36:25 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.13 2005/10/13 15:28:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,7 +103,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.ARMBeanFactory;
+import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
 import com.syrus.AMFICOM.manager.Bean;
@@ -121,7 +121,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/11 15:36:25 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/13 15:28:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -470,7 +470,7 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 		final AbstractBeanFactory[] factories = new AbstractBeanFactory[] {
 				UserBeanFactory.getInstance(this),
 				DomainBeanFactory.getInstance(this),
-				ARMBeanFactory.getInstance(this),
+				WorkstationBeanFactory.getInstance(this),
 				MCMBeanFactory.getInstance(this),
 				NetBeanFactory.getInstance(this),
 				RTUBeanFactory.getInstance(this),
@@ -1525,9 +1525,11 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 
 		
 		AttributeMap attributes = cell.getAttributes();
-		GraphConstants.setIcon(attributes, image);
-		attributes.remove(GraphConstants.BORDER);
-		attributes.remove(GraphConstants.BORDERCOLOR);
+		if (image != null) {
+			GraphConstants.setIcon(attributes, image);
+			attributes.remove(GraphConstants.BORDER);
+			attributes.remove(GraphConstants.BORDERCOLOR);
+		}
 
 		// Add a Port
 		MPort port = new MPort(object);

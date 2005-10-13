@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.17 2005/10/11 15:34:53 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.1 2005/10/13 15:28:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,43 +23,43 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.1 $, $Date: 2005/10/13 15:28:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ARMBeanFactory extends AbstractBeanFactory {
+public class WorkstationBeanFactory extends AbstractBeanFactory {
 	
-	public static final String ARM_CODENAME = "ARM";
+	public static final String WORKSTATION_CODENAME = "Workstation";
 	
-	private static ARMBeanFactory instance;
+	private static WorkstationBeanFactory instance;
 	
 	private Validator validator;
 	
-	private ARMBeanFactory(final ManagerMainFrame graphText) {
-		super("Manager.Entity.AutomatedWorkplace", 
-			"Manager.Entity.AutomatedWorkplace.acronym", 
+	private WorkstationBeanFactory(final ManagerMainFrame graphText) {
+		super("Manager.Entity.Workstation", 
+			"Manager.Entity.Workstation.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/arm.gif", 
 			"com/syrus/AMFICOM/manager/resources/arm.gif");
 		super.graphText = graphText;
 	}
 	
-	public static final synchronized ARMBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized WorkstationBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
-			instance = new ARMBeanFactory(graphText);
+			instance = new WorkstationBeanFactory(graphText);
 		}		
 		return instance;
 	}
 
 	@Override
 	public AbstractBean createBean(Perspective perspective) {
-		return this.createBean(ARM_CODENAME + this.count);
+		return this.createBean(WORKSTATION_CODENAME + this.count);
 	}
 	
 	@Override
 	public AbstractBean createBean(final String codename) {
 		++super.count;
-		final AbstractBean bean = new ARMBean();
+		final AbstractBean bean = new WorkstationBean();
 		bean.setGraphText(super.graphText);
 		bean.setValidator(this.getValidator());
 		bean.setCodeName(codename);
@@ -80,7 +80,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 						Log.DEBUGLEVEL10);
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().startsWith(ARM_CODENAME) &&
+						sourceBean.getCodeName().startsWith(WORKSTATION_CODENAME) &&
 						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
@@ -88,7 +88,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		return this.validator;
 	}	
 	
-	private class ARMBean extends NonStorableBean implements DomainNetworkItem {
+	private class WorkstationBean extends NonStorableBean implements DomainNetworkItem {
 		private Set<LayoutItem> getBeanChildrenLayoutItems() 
 		throws ApplicationException{
 			final TypicalCondition typicalCondition = 
@@ -116,7 +116,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		public void dispose() throws ApplicationException {			
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {					
-					Log.debugMessage("ARMBean.dispose | "
+					Log.debugMessage("WorkstationBean.dispose | "
 						+ layoutItem.getId() + ", "
 						+ layoutItem.getName() 
 						+ ", layoutName:" 
@@ -139,7 +139,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 						final String layoutName = !newDomainId.isVoid() ? 
 								newDomainId.getIdentifierString() : 
 								ObjectEntities.DOMAIN;
-						Log.debugMessage("ARMBean.setDomainId | "
+						Log.debugMessage("WorkstationBean.setDomainId | "
 							+ layoutItem.getId() + ", "
 							+ layoutItem.getName() 
 							+ ", layoutName:" 
@@ -162,6 +162,6 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	
 	@Override
 	public String getCodename() {
-		return ARMBeanFactory.ARM_CODENAME;
+		return WorkstationBeanFactory.WORKSTATION_CODENAME;
 	}
 }

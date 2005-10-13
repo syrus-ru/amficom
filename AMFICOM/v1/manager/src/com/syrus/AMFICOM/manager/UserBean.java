@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.21 2005/10/11 15:34:53 bob Exp $
+ * $Id: UserBean.java,v 1.22 2005/10/13 15:28:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,12 +52,12 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/13 15:28:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class UserBean extends Bean implements  ARMItem {
+public class UserBean extends Bean implements  WorkstationItem {
 
 	final SortedSet<Role>	roles;
 	

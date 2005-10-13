@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.23 2005/10/11 15:34:53 bob Exp $
+* $Id: UserBeanFactory.java,v 1.24 2005/10/13 15:28:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.manager;
 
 import java.beans.PropertyChangeEvent;
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -30,7 +29,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
@@ -38,7 +36,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/13 15:28:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -101,6 +99,9 @@ public class UserBeanFactory extends TabledBeanFactory {
 			final Domain domain = StorableObjectPool.getStorableObject(domainId, true);			
 			
 			for(final Module module : Module.getValueList()) {
+				if (!module.isEnable()) {
+					continue;
+				}
 				final PermissionAttributes permissionAttributes = 
 					domain.getPermissionAttributes(userId, module);
 				
@@ -109,9 +110,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 						LoginManager.getUserId(),
 						domainId,
 						userId,
-						module,
-						BigInteger.ZERO,
-						BigInteger.ZERO);
+						module);
 				}
 			}
 			
@@ -168,7 +167,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 					return sourceBean != null && 
 						targetBean != null && 
 						sourceBean.getCodeName().startsWith(ObjectEntities.SYSTEMUSER) &&
-						targetBean.getCodeName().startsWith(ARMBeanFactory.ARM_CODENAME);
+						targetBean.getCodeName().startsWith(WorkstationBeanFactory.WORKSTATION_CODENAME);
 				}
 			};
 		}

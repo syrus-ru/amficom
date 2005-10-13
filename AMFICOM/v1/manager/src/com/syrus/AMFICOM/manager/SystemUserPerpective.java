@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.1 2005/10/11 15:33:40 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.2 2005/10/13 15:28:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/11 15:33:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/13 15:28:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,6 +44,9 @@ public class SystemUserPerpective implements Perspective {
 	
 	public void addEntities(final JToolBar entityToolBar) {
 		for(final Module module : Module.getValueList()) {
+			if (!module.isEnable()) {
+				continue;
+			}
 			this.graphText.createAction(PermissionBeanFactory.getInstance(this.graphText, module));
 		}
 	}
