@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.15 2005/10/13 10:44:55 bob Exp $
+* $Id: PermissionAttributes.java,v 1.16 2005/10/13 11:05:47 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/13 10:44:55 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/13 11:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -47,19 +47,19 @@ public class PermissionAttributes extends StorableObject {
 	// TODO generate serialVersionUID when all enum will be made 
 
 	public static enum Module {
-		ADMINISTRATION,
-		SCHEME,
-		SCHEME_EDITOR,
-		MAPVIEW,
-		OPTIMIZATION,
-		MODELING,
-		SCHEDULER,
-		ANALYSIS,
-		RESEARCH,
-		EVALUATION,
-		SURVEY,
-		PREDICTION,
-		REPORT;
+		ADMINISTRATION(true),
+		SCHEME(true),
+		SCHEME_EDITOR(true),
+		MAPVIEW(true),
+		OPTIMIZATION(true),
+		MODELING(true),
+		SCHEDULER(true),
+		ANALYSIS(true),
+		RESEARCH(true),
+		EVALUATION(true),
+		SURVEY(true),
+		PREDICTION(false),
+		REPORT(true);
 		
 		private static final String KEY_ROOT = "Module.Description.";
 		
@@ -67,9 +67,11 @@ public class PermissionAttributes extends StorableObject {
 		private static List<Module> valueList = 
 			Collections.unmodifiableList(Arrays.asList(values));
 		
+		private final boolean enable;
 		private final String codename;
 		
-		private Module(){
+		private Module(final boolean enable){
+			this.enable = enable;
 			this.codename = getJavaNamingStyleName(this.name());
 		}
 		
@@ -99,6 +101,10 @@ public class PermissionAttributes extends StorableObject {
 		
 		public final String getDescription() {
 			return LangModelAdministation.getString(KEY_ROOT + this.codename);
+		}
+		
+		public final boolean isEnable() {
+			return this.enable;
 		}
 	}
 	
@@ -577,8 +583,8 @@ public class PermissionAttributes extends StorableObject {
 		SURVEY_ALARM_MANAGE(Survey.ALARM_MANAGE),
 		
 		// Prediction
-//		PREDICTION_ENTER(Prediction.ENTER),
-//		PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM(Prediction.SAVE_PREDICTION_REFLECTOGRAM),
+		PREDICTION_ENTER(Prediction.ENTER),
+		PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM(Prediction.SAVE_PREDICTION_REFLECTOGRAM),
 		
 		// Report
 		REPORT_ENTER(Report.ENTER),
@@ -615,7 +621,7 @@ public class PermissionAttributes extends StorableObject {
 		}
 		
 		public boolean isEnable() {
-			return ((SwitchableGroupNumber)this.e).isEnable();
+			return this.getModule().isEnable() && ((SwitchableGroupNumber)this.e).isEnable();
 		}
 	}
 	
