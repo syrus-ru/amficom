@@ -1,5 +1,5 @@
 /*
- * $Id: ObserveReportModel.java,v 1.4 2005/09/25 16:23:18 krupenn Exp $
+ * $Id: ObserveReportModel.java,v 1.5 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.report.DataStorableElement;
@@ -71,18 +71,14 @@ public class ObserveReportModel extends ReportModel {
 
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
 		String langReportName = null;
 		if (	reportName.equals(MARKER_INFO)
 			||	reportName.equals(ALARMS_LIST))
-			langReportName = LangModelReport.getString("report.Modules.Observation." + reportName);
+			langReportName = I18N.getString("report.Modules.Observation." + reportName);
 		else if (reportName.equals(SchemeReportModel.ON_SCREEN_SCHEME))
-			langReportName = LangModelReport.getString("report.Modules.SchemeEditor." + reportName);
+			langReportName = I18N.getString("report.Modules.SchemeEditor." + reportName);
 		else if (reportName.equals(MapReportModel.TOPOLOGY_IMAGE))
-			langReportName = LangModelReport.getString("report.Modules.Map." + reportName);
-		
+			langReportName = I18N.getString("report.Modules.Map." + reportName);
 		
 		return langReportName;
 	}

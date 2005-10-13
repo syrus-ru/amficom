@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.5 2005/09/22 14:46:43 peskovsky Exp $
+ * $Id: SchemeReportModel.java,v 1.6 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.util.Collection;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCableLinkPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCablePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
@@ -182,14 +182,11 @@ public class SchemeReportModel extends ReportModel
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
 		String langReportName = null;
 		if (	reportName.equals(ON_SCREEN_SCHEME)
 			||	reportName.equals(SELECTED_OBJECT_UGO)
 			||	reportName.equals(SELECTED_OBJECT_CHARS))
-			langReportName = LangModelReport.getString("report.Modules.SchemeEditor." + reportName);
+			langReportName = I18N.getString("report.Modules.SchemeEditor." + reportName);
 		
 		return langReportName;
 	}

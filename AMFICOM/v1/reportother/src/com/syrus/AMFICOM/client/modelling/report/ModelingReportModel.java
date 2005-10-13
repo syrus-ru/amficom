@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingReportModel.java,v 1.1 2005/09/12 11:36:24 peskovsky Exp $
+ * $Id: ModelingReportModel.java,v 1.2 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.Collection;
 
 import com.syrus.AMFICOM.client.analysis.report.AESMPReportModel;
 import com.syrus.AMFICOM.client.analysis.report.AnalysisReportModel;
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
@@ -54,13 +54,10 @@ public class ModelingReportModel extends AnalysisReportModel {
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
 		String langReportName = super.getReportElementName(reportName);
 		if (langReportName == null){
 			if (reportName.equals(MODELLING_PARAMETERS))
-				langReportName = LangModelReport.getString("report.Modules.Modeling." + reportName);
+				langReportName = I18N.getString("report.Modules.Modeling." + reportName);
 		}
 		return langReportName;
 	}

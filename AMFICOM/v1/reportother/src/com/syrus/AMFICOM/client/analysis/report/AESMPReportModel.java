@@ -18,10 +18,10 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceEventsPanel;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.TableModelVerticalDivider;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -176,13 +176,10 @@ public abstract class AESMPReportModel extends ReportModel
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
 		if (	reportName.equals(COMMON_INFO)
 			||	reportName.equals(GENERAL_CHARACTERISTICS)
 			||	reportName.equals(REFLECTOGRAMM))
-			return LangModelReport.getString("report.Modules.AESMPCommon." + reportName);
+			return I18N.getString("report.Modules.AESMPCommon." + reportName);
 		return null;
 	}
 }

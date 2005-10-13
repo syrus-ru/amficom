@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePathReport.java,v 1.4 2005/09/23 12:10:04 peskovsky Exp $
+ * $Id: SchemePathReport.java,v 1.5 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.SortedSet;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
@@ -68,6 +68,10 @@ public class SchemePathReport {
 }
 
 class SchemePathTableModel extends AbstractTableModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4737863562876675985L;
 	private static final String PARAMETER_NAME = "report.UI.propertyName";
 	private static final String PARAMETER_VALUE = "report.UI.propertyValue";
 	
@@ -93,16 +97,16 @@ class SchemePathTableModel extends AbstractTableModel {
 			int vertDivisionsCount) throws ApplicationException {
 		this.vertDivisionsCount = vertDivisionsCount;
 		
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+		this.propertyNamesColumn.add(I18N.getString(NAME));
 		this.propertyValuesColumn.add(schemePath.getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
+		this.propertyNamesColumn.add(I18N.getString(TYPE));
 		this.propertyValuesColumn.add(LangModelScheme.getString(SchemeResourceKeys.SCHEME_PATH));
-		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
+		this.propertyNamesColumn.add(I18N.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(schemePath.getDescription());
 
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(OBJECT_CHARS));
+		this.propertyNamesColumn.add(I18N.getString(OBJECT_CHARS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 5;
 
@@ -121,7 +125,7 @@ class SchemePathTableModel extends AbstractTableModel {
 		this.propertyValuesColumn.add(schemePath.getEndSchemeElement().getName());
 		this.originalRowCount += 2;
 		
-		this.propertyNamesColumn.add(LangModelReport.getString(TEMP_PATH_ELEMENTS_LIST));
+		this.propertyNamesColumn.add(I18N.getString(TEMP_PATH_ELEMENTS_LIST));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount++;
 		final SortedSet<PathElement> pathElements = schemePath.getPathMembers();
@@ -150,9 +154,9 @@ class SchemePathTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % SchemePathReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");

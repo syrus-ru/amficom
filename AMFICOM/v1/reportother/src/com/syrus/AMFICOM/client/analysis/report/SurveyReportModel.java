@@ -3,13 +3,13 @@ package com.syrus.AMFICOM.client.analysis.report;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
  * Модель отчётов для модуля "Анализ"
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/09/12 11:36:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/13 06:21:41 $
  * @module reportother
  */
 public class SurveyReportModel extends AnalysisReportModel
@@ -72,15 +72,12 @@ public class SurveyReportModel extends AnalysisReportModel
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
 		String langReportName = super.getReportElementName(reportName);
 		if (langReportName == null){
 			if (	reportName.equals(NOISE_LEVEL)
 				||	reportName.equals(NOISE_AREA_HISTOGRAMM)
 				||	reportName.equals(WORK_AREA_HISTOGRAMM))
-				langReportName = LangModelReport.getString("report.Modules.Survey." + reportName);
+				langReportName = I18N.getString("report.Modules.Survey." + reportName);
 		}
 		return langReportName;
 	}

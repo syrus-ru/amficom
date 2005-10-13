@@ -1,5 +1,5 @@
 /*
- * $Id: PredictionReportModel.java,v 1.1 2005/09/12 11:36:24 peskovsky Exp $
+ * $Id: PredictionReportModel.java,v 1.2 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.syrus.AMFICOM.client.analysis.report.AESMPReportModel;
-import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
@@ -62,14 +62,11 @@ public class PredictionReportModel extends AESMPReportModel
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
 		String langReportName = super.getReportElementName(reportName);
 		if (langReportName == null){
 			if (	reportName.equals(TIME_DISTRIBUTION)
 				||	reportName.equals(STATISTICAL_DATA))
-				langReportName = LangModelReport.getString("report.Modules.Prediction." + reportName);
+				langReportName = I18N.getString("report.Modules.Prediction." + reportName);
 		}
 		return langReportName;
 	}

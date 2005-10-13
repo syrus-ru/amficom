@@ -1,5 +1,5 @@
 /*
- * $Id: SchedulerReportModel.java,v 1.3 2005/09/23 13:20:25 peskovsky Exp $
+ * $Id: SchedulerReportModel.java,v 1.4 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.TableModelVerticalDivider;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -103,14 +103,11 @@ public class SchedulerReportModel extends ReportModel {
 	
 	@Override
 	public String getReportElementName(String reportName) {
-		// TODO Вообще-то, эта информация должна храниться в
-		// других LangModel'ах и, соответственно, методы должны
-		//быть в моделях отчётов - наследницах
 		String langReportName = null;
 		if (	reportName.equals(TESTS_GRAPHIC)
 			||	reportName.equals(TEST_PARAMETERS)
 			||	reportName.equals(TESTS_LIST))
-			langReportName = LangModelReport.getString("report.Modules.Scheduler." + reportName);
+			langReportName = I18N.getString("report.Modules.Scheduler." + reportName);
 			
 		return langReportName;
 	}

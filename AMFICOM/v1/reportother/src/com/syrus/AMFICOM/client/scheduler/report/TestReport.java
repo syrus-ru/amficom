@@ -1,5 +1,5 @@
 /*
- * $Id: TestReport.java,v 1.3 2005/09/23 12:10:04 peskovsky Exp $
+ * $Id: TestReport.java,v 1.4 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,10 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.IntervalToDate;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.MeasurementUnit;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -73,21 +72,24 @@ public class TestReport {
 }
 
 class TestReportTableModel extends AbstractTableModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4445964162600693593L;
 	private static final String PARAMETER_NAME = "report.UI.propertyName";
 	private static final String PARAMETER_VALUE = "report.UI.propertyValue";
 	
 	private static final String NAME = "report.Modules.SchemeEditor.Common.name";
 	
-	private static final String TEMPORAL_PARAMETERS = "Text.TimePanel.Title";
-	private static final String TEMPORAL_TYPE_ONETIME = "Text.Test.TemporalType.Onetime";
-	private static final String TEMPORAL_TYPE_CONTINUAL = "Text.Test.TemporalType.Continual";
-	private static final String TEMPORAL_TYPE_PERIODICAL = "Text.Test.TemporalType.Periodical";
+	private static final String TEMPORAL_PARAMETERS = "Scheduler.Text.TimePanel.Title";
+	private static final String TEMPORAL_TYPE_ONETIME = "Scheduler.Text.Test.TemporalType.Onetime";
+	private static final String TEMPORAL_TYPE_PERIODICAL = "Scheduler.Text.Test.TemporalType.Periodical";
 
-	private static final String START_TIME = "Text.TimePanel.Start";
-	private static final String FINISH_TIME = "Text.TimePanel.Finish";
-	private static final String INTERVAL = "Text.TimePanel.Interval";
+	private static final String START_TIME = "Scheduler.Text.TimePanel.Start";
+	private static final String FINISH_TIME = "Scheduler.Text.TimePanel.Finish";
+	private static final String INTERVAL = "Scheduler.Text.TimePanel.Interval";
 	
-	private static final String MEASUREMENT_PARAMETERS = "Text.MeasurementParameter.Title";	
+	private static final String MEASUREMENT_PARAMETERS = "Scheduler.Text.MeasurementParameter.Title";	
 	
 	private static final String EMPTY_STRING = "";
 	private static final String SEPARATOR = ", ";	
@@ -107,33 +109,30 @@ class TestReportTableModel extends AbstractTableModel {
 
 		TestWrapper wrapper = TestWrapper.getInstance();
 		
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+		this.propertyNamesColumn.add(I18N.getString(NAME));
 		this.propertyValuesColumn.add(test.getName());
 		this.originalRowCount++;		
 		
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelSchedule.getString(TEMPORAL_PARAMETERS));
+		this.propertyNamesColumn.add(I18N.getString(TEMPORAL_PARAMETERS));
 		String temporalTypeString = null;
 		TestTemporalType temporalType = test.getTemporalType();
 		switch (temporalType.value()) {
 		case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-			temporalTypeString = LangModelSchedule.getString(TEMPORAL_TYPE_ONETIME);
+			temporalTypeString = I18N.getString(TEMPORAL_TYPE_ONETIME);
 			break;
 		case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-			temporalTypeString = LangModelSchedule.getString(TEMPORAL_TYPE_PERIODICAL);
-			break;
-		case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-			temporalTypeString = LangModelSchedule.getString(TEMPORAL_TYPE_CONTINUAL);
+			temporalTypeString = I18N.getString(TEMPORAL_TYPE_PERIODICAL);
 			break;
 		}
 		this.propertyValuesColumn.add(temporalTypeString);
 
-		this.propertyNamesColumn.add(LangModelSchedule.getString(START_TIME));
+		this.propertyNamesColumn.add(I18N.getString(START_TIME));
 		Date startTime = (Date)wrapper.getValue(test,TestWrapper.COLUMN_START_TIME);
 		this.propertyValuesColumn.add(startTime.toString());
 
-		this.propertyNamesColumn.add(LangModelSchedule.getString(FINISH_TIME));
+		this.propertyNamesColumn.add(I18N.getString(FINISH_TIME));
 		Date endTime = (Date)wrapper.getValue(test,TestWrapper.COLUMN_END_TIME);
 		this.propertyValuesColumn.add(endTime.toString());
 		
@@ -144,14 +143,14 @@ class TestReportTableModel extends AbstractTableModel {
 			PeriodicalTemporalPattern ptPattern =
 				(PeriodicalTemporalPattern)StorableObjectPool.getStorableObject(test.getTemporalPatternId(),true);
 			long period = ptPattern.getPeriod();
-			this.propertyNamesColumn.add(LangModelSchedule.getString(INTERVAL));
+			this.propertyNamesColumn.add(I18N.getString(INTERVAL));
 			this.propertyValuesColumn.add(IntervalToDate.toDate(period));
 			this.originalRowCount++;
 		}
 
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelSchedule.getString(MEASUREMENT_PARAMETERS));
+		this.propertyNamesColumn.add(I18N.getString(MEASUREMENT_PARAMETERS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		this.originalRowCount += 2;
 		
@@ -191,9 +190,9 @@ class TestReportTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % TestReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");

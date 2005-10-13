@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePortReport.java,v 1.4 2005/09/23 12:10:04 peskovsky Exp $
+ * $Id: SchemePortReport.java,v 1.5 2005/10/13 06:21:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -64,6 +64,10 @@ public class SchemePortReport {
 }
 
 class AbstractPortTableModel extends AbstractTableModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8910382472510534505L;
 	private static final String PARAMETER_NAME = "report.UI.propertyName";
 	private static final String PARAMETER_VALUE = "report.UI.propertyValue";
 	
@@ -89,16 +93,16 @@ class AbstractPortTableModel extends AbstractTableModel {
 		this.vertDivisionsCount = vertDivisionsCount;
 		
 		PortType portType = abstractPort.getPortType();
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+		this.propertyNamesColumn.add(I18N.getString(NAME));
 		this.propertyValuesColumn.add(abstractPort.getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
+		this.propertyNamesColumn.add(I18N.getString(TYPE));
 		this.propertyValuesColumn.add(portType.getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
+		this.propertyNamesColumn.add(I18N.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(abstractPort.getDescription());
 
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(OBJECT_CHARS));
+		this.propertyNamesColumn.add(I18N.getString(OBJECT_CHARS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		
 		this.originalRowCount += 5;
@@ -113,7 +117,7 @@ class AbstractPortTableModel extends AbstractTableModel {
 
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE_CHARS));
+		this.propertyNamesColumn.add(I18N.getString(TYPE_CHARS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		
 		this.originalRowCount += 2;
@@ -145,9 +149,9 @@ class AbstractPortTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % SchemePortReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");
