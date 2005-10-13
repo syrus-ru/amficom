@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.24 2005/10/12 15:33:09 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.25 2005/10/13 12:15:44 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.general;
 
 import java.beans.PropertyChangeListener;
+import java.net.InetAddress;
 
 import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/12 15:33:09 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/13 12:15:44 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -168,7 +169,9 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	private void activateServant() throws CommunicationException {
-		final String servantName = LoginManager.getSessionKey().toString();
+		final String servantName = LoginManager.getSessionKey().toString()
+				+ Identifier.SEPARATOR
+				+ ContextNameFactory.generateContextName();
 		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
 		this.corbaClientImpl = new CORBAClientImpl();
 		corbaServer.activateServant(new CORBAClientPOATie(this.corbaClientImpl, corbaServer.getPoa()), servantName);
