@@ -1,5 +1,5 @@
 /*
- * $Id: ReportDataChecker.java,v 1.4 2005/10/05 09:39:37 peskovsky Exp $
+ * $Id: ReportDataChecker.java,v 1.5 2005/10/13 15:19:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,8 @@ import com.syrus.AMFICOM.client.analysis.report.AESMPReportModel;
 import com.syrus.AMFICOM.client.analysis.report.AnalysisReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
-import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
+
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -50,8 +51,16 @@ public class ReportDataChecker {
 			Object objectToInstall) {
 		Map<String,String> attributes = null;
 		//Для сиюминутных отчётов по схеме		
-		if (	(objectToInstall instanceof Scheme)
-				||	(objectToInstall instanceof SchemeElement)
+		if (objectToInstall instanceof Scheme) {
+			attributes = new HashMap<String,String>();
+			attributes.put(
+					MODEL_CLASS_NAME,
+					SchemeReportModel.class.getName());
+			attributes.put(
+					REPORT_NAME,
+					SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER);
+		}
+		else if (	(objectToInstall instanceof SchemeElement)
 				||	(objectToInstall instanceof AbstractSchemePort)
 				||	(objectToInstall instanceof AbstractSchemeLink)
 				||	(objectToInstall instanceof SchemePath)) {
@@ -63,6 +72,7 @@ public class ReportDataChecker {
 					REPORT_NAME,
 					SchemeReportModel.SELECTED_OBJECT_CHARS);
 		}
+
 		//Для сиюминутных отчётов по карте
 		else if (	(objectToInstall instanceof PhysicalLink)
 				||	(objectToInstall instanceof SiteNode)
