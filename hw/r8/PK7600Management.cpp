@@ -30,11 +30,12 @@ BOOL initPK7600Cards(const OTDRReportListener* otdrReportListener,
 			printf("PK7600OTDRController | Init card %u - success; report: '%s'\n",
 				id,
 				progressMessage);
-			PK7600OTDRController* controller = new PK7600OTDRController(id,
+			PK7600OTDRController* otdrController = new PK7600OTDRController(id,
 				otdrReportListener,
 				timewait,
 				foundOTDRs[id].cardType);
-			otdrContainer->registerOTDRController(controller);
+			otdrController->init();
+			otdrContainer->registerOTDRController(otdrController);
 		} else {
 			printf("PK7600OTDRController | Init OTDR card %u - failure; error code: %d; report: '%s'\n",
 				id,
