@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLinkReport.java,v 1.1 2005/10/12 10:10:50 stas Exp $
+ * $Id: SchemeLinkReport.java,v 1.2 2005/10/13 10:24:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -67,6 +67,10 @@ public class SchemeLinkReport {
 }
 
 class AbstractLinkTableModel extends AbstractTableModel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7403273472909313004L;
 	private static final String PARAMETER_NAME = "report.UI.propertyName";
 	private static final String PARAMETER_VALUE = "report.UI.propertyValue";
 	
@@ -93,16 +97,16 @@ class AbstractLinkTableModel extends AbstractTableModel {
 		this.vertDivisionsCount = vertDivisionsCount;
 		
 		AbstractLinkType linkType = abstractLink.getAbstractLinkType();
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+		this.propertyNamesColumn.add(I18N.getString(NAME));
 		this.propertyValuesColumn.add(abstractLink.getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
+		this.propertyNamesColumn.add(I18N.getString(TYPE));
 		this.propertyValuesColumn.add(linkType.getName());
-		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
+		this.propertyNamesColumn.add(I18N.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(abstractLink.getDescription());
 
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(OBJECT_CHARS));
+		this.propertyNamesColumn.add(I18N.getString(OBJECT_CHARS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		
 		this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
@@ -125,7 +129,7 @@ class AbstractLinkTableModel extends AbstractTableModel {
 
 		this.propertyNamesColumn.add(EMPTY_STRING);
 		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE_CHARS));
+		this.propertyNamesColumn.add(I18N.getString(TYPE_CHARS));
 		this.propertyValuesColumn.add(EMPTY_STRING);
 		
 		this.originalRowCount += 2;
@@ -142,7 +146,7 @@ class AbstractLinkTableModel extends AbstractTableModel {
 		if (link != null) {
 			this.propertyNamesColumn.add(EMPTY_STRING);
 			this.propertyValuesColumn.add(EMPTY_STRING);
-			this.propertyNamesColumn.add(LangModelReport.getString(EQUIPMENT_CHARS));
+			this.propertyNamesColumn.add(I18N.getString(EQUIPMENT_CHARS));
 			this.propertyValuesColumn.add(EMPTY_STRING);
 
 			this.propertyNamesColumn.add(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
@@ -177,9 +181,9 @@ class AbstractLinkTableModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex % SchemeLinkReport.COLUMNS_COUNT) {
 		case 0:
-			return LangModelReport.getString(PARAMETER_NAME);
+			return I18N.getString(PARAMETER_NAME);
 		case 1:
-			return LangModelReport.getString(PARAMETER_VALUE);
+			return I18N.getString(PARAMETER_VALUE);
 			
 		}
 		throw new AssertionError("TestReportTableModel.getColumnName | Unreachable code");

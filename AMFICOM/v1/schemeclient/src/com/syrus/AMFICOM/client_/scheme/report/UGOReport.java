@@ -1,5 +1,5 @@
 /*
- * $Id: UGOReport.java,v 1.1 2005/10/12 10:10:51 stas Exp $
+ * $Id: UGOReport.java,v 1.2 2005/10/13 10:24:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.

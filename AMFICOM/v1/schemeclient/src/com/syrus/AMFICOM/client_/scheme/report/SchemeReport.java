@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReport.java,v 1.1 2005/10/12 10:10:50 stas Exp $
+ * $Id: SchemeReport.java,v 1.2 2005/10/13 10:24:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,13 +24,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.report.StorableElement;
-import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 public class SchemeReport {
 	private static final int SCHEME_FIELD = 10;
 
 	public static ImageRenderingComponent createReport (
-			SchemeCellContainer schemeCellContainer,
+			Scheme scheme,
 			StorableElement element,
 			ApplicationContext aContext) {
 		int elementWidth = element.getWidth();
@@ -45,7 +45,7 @@ public class SchemeReport {
 		SchemeGraph schemeGraph = ugoPanel.getGraph();
 		SchemeActions.openSchemeImageResource(
 				schemeGraph,
-				schemeCellContainer.getSchemeCell(),
+				scheme.getSchemeCell(),
 				false);
 
 		Rectangle schemeCellBounds = schemeGraph.getCellBounds(schemeGraph.getRoots());

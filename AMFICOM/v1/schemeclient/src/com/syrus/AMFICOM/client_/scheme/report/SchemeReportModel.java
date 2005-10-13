@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.1 2005/10/12 10:10:51 stas Exp $
+ * $Id: SchemeReportModel.java,v 1.2 2005/10/13 10:24:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.util.Collection;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCableLinkPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCablePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
@@ -189,7 +189,7 @@ public class SchemeReportModel extends ReportModel
 		if (	reportName.equals(ON_SCREEN_SCHEME_CELL_CONTAINER)
 			||	reportName.equals(SELECTED_OBJECT_UGO)
 			||	reportName.equals(SELECTED_OBJECT_CHARS))
-			langReportName = LangModelReport.getString("report.Modules.SchemeEditor." + reportName);
+			langReportName = I18N.getString("report.Modules.SchemeEditor." + reportName);
 		
 		return langReportName;
 	}
