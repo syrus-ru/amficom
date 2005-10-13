@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.118 2005/10/07 10:04:20 bass Exp $
+ * $Id: StorableObject.java,v 1.119 2005/10/13 10:38:44 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import static java.util.logging.Level.INFO;
 import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.118 $, $Date: 2005/10/07 10:04:20 $
+ * @version $Revision: 1.119 $, $Date: 2005/10/13 10:38:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -54,6 +55,8 @@ public abstract class StorableObject implements Identifiable,
 
 	private boolean changed;
 
+	private boolean deleted;
+
 	private volatile int cachedTimes;
 
 	private Date savedModified;
@@ -65,6 +68,7 @@ public abstract class StorableObject implements Identifiable,
 	 */
 	protected StorableObject(/*IdlStorableObject*/) {
 		this.changed = false;
+		this.deleted = false;
 		this.cachedTimes = 0;
 	}
 
@@ -92,6 +96,7 @@ public abstract class StorableObject implements Identifiable,
 		this.version = version;
 
 		this.changed = false;
+		this.deleted = false;
 		this.cachedTimes = 0;
 
 		this.savedModified = null;
@@ -205,6 +210,10 @@ public abstract class StorableObject implements Identifiable,
 		return this.changed;
 	}
 
+	final boolean isDeleted() {
+		return this.deleted;
+	}
+
 	/**
 	 * @return {@code true} if not only pool holds a reference to this
 	 *         object, but also some external chache, and the object thus
@@ -234,11 +243,14 @@ public abstract class StorableObject implements Identifiable,
 		}
 	}
 
+	final void markAsDeleted() {
+		this.deleted = true;
+	}
+
 	/**
 	 * Is invoked solely by caching facilities.
 	 */
-	@Crutch134(notes = "Narrow visivility from public to default")
-	public final void markAsPersistent() {
+	final void markAsPersistent() {
 		if (!this.isPersistent()) {
 			try {
 				StorableObjectPool.putStorableObject(this);
@@ -252,8 +264,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * Is invoked solely by caching facilities.
 	 */
-	@Crutch134(notes = "Narrow visivility from public to default")
-	public final void cleanupPersistence() {
+	final void cleanupPersistence() {
 		assert this.isPersistent() : PERSISTENCE_COUNTER_NEGATIVE + this
 				+ "; cached " + (this.cachedTimes - 1) + " time(s)";
 		this.cachedTimes--;
@@ -360,6 +371,8 @@ public abstract class StorableObject implements Identifiable,
 
 		clone.changed = false;
 		clone.markAsChanged();
+
+		clone.deleted = false;
 
 		clone.cachedTimes = 0;
 
@@ -640,7 +653,7 @@ public abstract class StorableObject implements Identifiable,
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.118 $, $Date: 2005/10/07 10:04:20 $
+	 * @version $Revision: 1.119 $, $Date: 2005/10/13 10:38:44 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -648,14 +661,11 @@ public abstract class StorableObject implements Identifiable,
 			implements Serializable {
 		private static final long serialVersionUID = -1264974065379428032L;
 
-		@Crutch134(notes = "Narrow visibility from protected to private.")
-		protected boolean cacheBuilt = false;
+		private boolean cacheBuilt = false;
 
-		@Crutch134(notes = "Narrow visibility from protected to private.")
-		protected StorableObjectCondition condition;
+		private StorableObjectCondition condition;
 
-		@Crutch134(notes = "Narrow visibility from protected to private.")
-		protected Set<T> containees;
+		private Set<T> containees;
 
 		/**
 		 * @param wrapper
@@ -673,6 +683,10 @@ public abstract class StorableObject implements Identifiable,
 		@Crutch134(notes = "Remove the final modifier: containing class itself should be final.")
 		public final void addToCache(final T containee, final boolean usePool)
 		throws ApplicationException {
+			if (containee.isDeleted()) {
+				return;
+			}
+
 			if (this.cacheBuilt) {
 				if (!this.containees.contains(containee)) {
 					containee.markAsPersistent();
@@ -719,6 +733,13 @@ public abstract class StorableObject implements Identifiable,
 		public final Set<T> getContainees(final boolean usePool)
 		throws ApplicationException {
 			this.ensureCacheBuilt(usePool);
+			synchronized (this.containees) {
+				for (final Iterator<T> containeeIterator = this.containees.iterator(); containeeIterator.hasNext();) {
+					if (containeeIterator.next().isDeleted()) {
+						containeeIterator.remove();
+					}
+				}
+			}
 			return this.containees;
 		}
 
@@ -726,20 +747,21 @@ public abstract class StorableObject implements Identifiable,
 		 * @param usePool
 		 * @throws ApplicationException
 		 */
-		@Crutch134(notes = "Narrow visibility from protected to private.")
-		protected void ensureCacheBuilt(final boolean usePool)
+		private void ensureCacheBuilt(final boolean usePool)
 		throws ApplicationException {
 			synchronized (this) {
 				if (!this.cacheBuilt || usePool) {
 					if (this.containees == null) {
-						this.containees = new HashSet<T>();
+						this.containees = Collections.synchronizedSet(new HashSet<T>());
 					} else {
-						for (final T containee : this.containees) {
-							containee.cleanupPersistence();
+						synchronized (this.containees) {
+							for (final Iterator<T> containeeIterator = this.containees.iterator(); containeeIterator.hasNext();) {
+								containeeIterator.next().cleanupPersistence();
+								containeeIterator.remove();
+							}
 						}
-						this.containees.clear();
 					}
-					for (final T containee : StorableObjectPool.<T>getStorableObjectsByCondition(this.condition, true)) {
+					for (final T containee : StorableObjectPool.<T>getStorableObjectsByCondition(this.condition, this.useLoader())) {
 						containee.markAsPersistent();
 						this.containees.add(containee);
 					}
@@ -751,12 +773,17 @@ public abstract class StorableObject implements Identifiable,
 		private boolean buildCacheOnModification() {
 			return Boolean.parseBoolean(System.getProperty(KEY, DEFAULT_VALUE));
 		}
+
+		@Crutch134(notes = "Inline")
+		protected boolean useLoader() {
+			return true;
+		}
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.118 $, $Date: 2005/10/07 10:04:20 $
+	 * @version $Revision: 1.119 $, $Date: 2005/10/13 10:38:44 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

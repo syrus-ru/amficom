@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.188 2005/09/27 14:34:42 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.189 2005/10/13 10:38:44 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.188 $, $Date: 2005/09/27 14:34:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.189 $, $Date: 2005/10/13 10:38:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -655,6 +655,11 @@ public final class StorableObjectPool {
 			entityDeletedIds = new HashSet<Identifier>();
 			DELETED_IDS_MAP.put(new Short(entityCode), entityDeletedIds);
 		}
+		try {
+			getStorableObject(id, false).markAsDeleted();
+		} catch (final ApplicationException ae) {
+			assert false;
+		}
 		entityDeletedIds.add(id);
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
@@ -700,6 +705,13 @@ public final class StorableObjectPool {
 			if (entityDeletedIds == null) {
 				entityDeletedIds = new HashSet<Identifier>();
 				DELETED_IDS_MAP.put(entityKey, entityDeletedIds);
+			}
+			for (final Identifiable identifiable : entityDeleteIds) {
+				try {
+					getStorableObject(identifiable.getId(), false).markAsDeleted();
+				} catch (final ApplicationException ae) {
+					assert false;
+				}
 			}
 			entityDeletedIds.addAll(entityDeleteIds);
 

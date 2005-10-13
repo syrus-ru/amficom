@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.134 2005/10/11 09:25:15 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.135 2005/10/13 10:38:44 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.134 $, $Date: 2005/10/11 09:25:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.135 $, $Date: 2005/10/13 10:38:44 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1152,12 +1152,6 @@ public class PhysicalLink extends StorableObject
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()
 	 */
-//	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
-//		if (this.characteristicContainerWrappee == null) {
-//			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
-//		}
-//		return this.characteristicContainerWrappee;
-//	}
 	@Crutch134(notes = "Remove subclassing here.")
 	public final StorableObjectContainerWrappee<Characteristic> getCharacteristicContainerWrappee() {
 		return (this.characteristicContainerWrappee == null)
@@ -1165,25 +1159,8 @@ public class PhysicalLink extends StorableObject
 					private static final long serialVersionUID = -2741783821486426615L;
 
 					@Override
-					protected void ensureCacheBuilt(final boolean usePool)
-					throws ApplicationException {
-						synchronized (this) {
-							if (!this.cacheBuilt || usePool) {
-								if (this.containees == null) {
-									this.containees = new HashSet<Characteristic>();
-								} else {
-									for (final Characteristic containee : this.containees) {
-										containee.cleanupPersistence();
-									}
-									this.containees.clear();
-								}
-								for (final Characteristic containee : StorableObjectPool.<Characteristic>getStorableObjectsByCondition(this.condition, false)) {
-									containee.markAsPersistent();
-									this.containees.add(containee);
-								}
-								this.cacheBuilt = true;
-							}
-						}
+					protected boolean useLoader() {
+						return false;
 					}
 				}
 				: this.characteristicContainerWrappee;
