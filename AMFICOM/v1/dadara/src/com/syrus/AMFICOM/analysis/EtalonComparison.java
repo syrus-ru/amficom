@@ -1,5 +1,5 @@
 /*-
- * $Id: EtalonComparison.java,v 1.2 2005/10/12 12:06:02 saa Exp $
+ * $Id: EtalonComparison.java,v 1.3 2005/10/13 17:09:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,26 +19,26 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
  * Не обеспечивает неизменяемости - это целиком на совести вызывающего.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/10/12 12:06:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/13 17:09:45 $
  * @module dadara
  */
 public interface EtalonComparison {
 	/**
-	 * Возвращает список полученных несоответствий
+	 * Возвращает список полученных несоответствий, not null
 	 * XXX: неплохо бы переделать со списка на на массив несоответствий
-	 * @return список полученных несоответствий
+	 * @return список полученных несоответствий, not null
 	 */
 	List<ReflectogramMismatchImpl> getAlarms();
 	/**
-	 * Возвращает общие параметры качества р/г, полученные по результатам сравнения
+	 * Возвращает общие параметры качества р/г, полученные по результатам сравнения, not null
 	 * в соответствии с контрактом {@link ReflectometryEvaluationOverallResult}
-	 * @return общие параметры качества р/г, полученные по результатам сравнения
+	 * @return общие параметры качества р/г, полученные по результатам сравнения, not null
 	 */
 	ReflectometryEvaluationOverallResult getOverallResult();
 	/**
-	 * Возвращает параметры качества р/г по каждому событию, полученные по результатам сравнения 
+	 * Возвращает параметры качества р/г по каждому событию, полученные по результатам сравнения, not null 
 	 * в соответствии с контрактом {@link EvaluationPerEventResult}
-	 * @return параметры качества р/г по каждому событию, полученные по результатам сравнения
+	 * @return параметры качества р/г по каждому событию, полученные по результатам сравнения, not null
 	 */
 	EvaluationPerEventResult getPerEventResult();
 }
