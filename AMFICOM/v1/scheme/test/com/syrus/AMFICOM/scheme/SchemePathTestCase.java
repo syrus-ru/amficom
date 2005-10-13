@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.28 2005/10/13 11:24:37 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.29 2005/10/13 11:54:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/10/13 11:24:37 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/13 11:54:04 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -741,5 +741,27 @@ public final class SchemePathTestCase extends TestCase {
 		assertFalse(schemePort0prime.equals(schemePort0));
 		assertEquals(schemePort0prime.getName(), schemePort0.getName());
 		assertEquals(schemeDevice0prime, schemePort0prime.getParentSchemeDevice());
+	}
+
+	public void testBug182() throws ApplicationException {
+		final Identifier userId = new Identifier("SystemUser_0");
+		final Identifier domainId = new Identifier("Domain_0");
+
+		final Scheme scheme = Scheme.createInstance(userId, "scheme", IdlKind.BAY, domainId);
+		final SchemeLink schemeLink = SchemeLink.createInstance(userId, "schemeLink", scheme);
+		final SchemeElement schemeElement = SchemeElement.createInstance(userId, "schemeElement", scheme);
+		final SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, "schemeDevice", schemeElement);
+		final SchemePort schemePort = SchemePort.createInstance(userId, "schemePort", IdlDirectionType._IN, schemeDevice);
+
+		schemeLink.setTargetAbstractSchemePort(schemePort);
+
+		SchemePort schemePort2 = schemeLink.getTargetAbstractSchemePort();
+		assertEquals(schemePort, schemePort2);
+		assertSame(schemePort, schemePort2);
+
+		schemeLink.setTargetAbstractSchemePort(null);
+
+		assertNull(schemePort.getAbstractSchemeLink());
+		assertNull(schemeLink.getTargetAbstractSchemePort());
 	}
 }
