@@ -385,10 +385,11 @@ public final class AttachedTextStorableElement extends StorableElement
 //			}
 		}
 		
+		DataStorableElement verticalAttacher = this.getVerticalAttacher();
 		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
 			newY = this.getY();
 		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
-			newY = horizontalAttacher.getY() + this.distanceY;
+			newY = verticalAttacher.getY() + this.distanceY;
 //			//Если выходит за границы шаблона - не двигаемся и возвращаем на
 //			//исходную позицию Attacher
 //			if (newY < templateBounds.y) {
@@ -405,7 +406,7 @@ public final class AttachedTextStorableElement extends StorableElement
 //			}
 		}
 		else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM)) {
-			newY = horizontalAttacher.getY() + horizontalAttacher.getHeight() + this.distanceY;
+			newY = verticalAttacher.getY() + verticalAttacher.getHeight() + this.distanceY;
 //			//Если выходит за границы шаблона - не двигаемся и возвращаем на
 //			//исходную позицию Attacher
 //			if (newY < templateBounds.y) {
