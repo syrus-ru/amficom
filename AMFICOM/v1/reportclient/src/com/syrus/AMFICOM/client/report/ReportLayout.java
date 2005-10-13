@@ -1,5 +1,5 @@
 /*
- * $Id: ReportLayout.java,v 1.6 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: ReportLayout.java,v 1.7 2005/10/13 15:20:39 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.report.TextAttachingType;
  * Класс проводит раскладку визульных компонентов с реализованными
  * элементами отчёта так, чтобы расстояния между компонентами были
  * равны расстоянию между компонентами на схеме шаблона отчёта.
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/10/08 13:30:14 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.7 $, $Date: 2005/10/13 15:20:39 $
  * @module reportclient
  */
 public class ReportLayout {
@@ -56,12 +56,37 @@ public class ReportLayout {
 		while (!this.layoutIsFinished()){
 			//пытаемся "уложить" очередной элемент
 			for (RenderingComponent component : this.componentContainer){
-				try {
-					int newY = this.checkToTopForElements(component,xs,ys);
-					component.setY(newY);
-					this.componentsSetUp.put(component,Boolean.TRUE);
-				} catch (NonImplementedElementFoundException e) {
-				}
+				if (this.componentsSetUp.get(component).equals(Boolean.FALSE))
+					try {
+						int newY = -1;
+						if (component instanceof AttachedTextComponent) {
+							//Привязанные надписи рисуем после того, как отрисовываем
+							//объекты, к которым они привязаны
+							AttachedTextStorableElement element =
+								(AttachedTextStorableElement)component.getElement();
+							TextAttachingType vertAttachingType = element.getVerticalAttachType();
+							
+							if (!vertAttachingType.equals(TextAttachingType.TO_FIELDS_TOP)) {
+								RenderingComponent vertAttacherComponent =
+									this.getComponentForElement(element.getVerticalAttacher());
+								if (this.componentsSetUp.get(vertAttacherComponent).equals(Boolean.FALSE))
+									continue;
+								if (vertAttachingType.equals(TextAttachingType.TO_TOP))
+									newY = vertAttacherComponent.getY() + element.getDistanceY();
+								else
+									newY = vertAttacherComponent.getY()
+										+ vertAttacherComponent.getHeight() + element.getDistanceY();
+							}
+							else
+								newY = this.checkToTopForElements(component,xs,ys);
+						}
+						else
+							newY = this.checkToTopForElements(component,xs,ys);
+						
+						component.setY(newY);
+						this.componentsSetUp.put(component,Boolean.TRUE);
+					} catch (NonImplementedElementFoundException e) {
+					}
 			}
 		}
 	}
@@ -70,8 +95,8 @@ public class ReportLayout {
 	 * Выбрасывается при вычислении Y координаты для элемента отображения, 
 	 * в том случае, когда элементы, находящиеся выше на схеме, ещё не
 	 * реализованы.
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.6 $, $Date: 2005/10/08 13:30:14 $
+	 * @author $Author: peskovsky $
+	 * @version $Revision: 1.7 $, $Date: 2005/10/13 15:20:39 $
 	 * @module reportclient
 	 */
 	private class NonImplementedElementFoundException extends Exception
@@ -139,10 +164,12 @@ public class ReportLayout {
 					continue;
 				
 				//Нашли
-				if (this.componentsSetUp.get(componentFound).equals(Boolean.FALSE))
-					//Если выше данного объекта находится НЕОБРАБОТАННЫЙ
-					//элемент отображения
-					throw new NonImplementedElementFoundException();
+				if (!componentFound.equals(component))
+					//Чтобы компонент не нашёл самого себя по кластеру
+					if (this.componentsSetUp.get(componentFound).equals(Boolean.FALSE))
+						//Если выше данного объекта находится НЕОБРАБОТАННЫЙ
+						//элемент отображения
+						throw new NonImplementedElementFoundException();
 
 				/**
 				 * Координата Y нижнего края найденного компонента
@@ -302,5 +329,13 @@ public class ReportLayout {
 				return false;
 		
 		return true;
+	}
+	
+	private RenderingComponent getComponentForElement(StorableElement element) {
+		for (RenderingComponent component : this.componentContainer) {
+			if (component.getElement().equals(element))
+				return component;
+		}
+		return null;
 	}
 }
