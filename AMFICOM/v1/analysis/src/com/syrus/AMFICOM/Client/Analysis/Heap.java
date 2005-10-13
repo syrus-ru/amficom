@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.113 2005/10/06 15:53:57 saa Exp $
+ * $Id: Heap.java,v 1.114 2005/10/13 15:47:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
-import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
@@ -91,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.113 $, $Date: 2005/10/06 15:53:57 $
+ * @version $Revision: 1.114 $, $Date: 2005/10/13 15:47:52 $
  * @module
  */
 public class Heap
@@ -125,8 +124,6 @@ public class Heap
 	private static CompositeEventList eventList = new CompositeEventList();
 	private static CompositeEventList.Walker currentEvent =
 		eventList.new Walker();
-
-	private static SimpleReflectogramEventComparer rComp = null;
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 
@@ -563,10 +560,6 @@ public class Heap
 		return eventList;
 	}
 
-	public static SimpleReflectogramEventComparer getEventComparer() {
-		return rComp;
-	}
-
 	public static void setMarkerObject(Marker marker) {
 		markerObject = marker;
 	}
@@ -850,12 +843,6 @@ public class Heap
 	}
 
 	private static void fixEventList() {
-		ModelTraceAndEventsImpl pri = getMTAEPrimary();
-		ModelTraceAndEventsImpl et = getMTMEtalon() != null ?
-				getMTMEtalon().getMTAE() : null;
-		rComp = pri != null && et != null
-			? new SimpleReflectogramEventComparer(pri, et)
-			: null;
 		eventList.dataUpdated();
 		currentEvent.fixNEvent();
 	}
