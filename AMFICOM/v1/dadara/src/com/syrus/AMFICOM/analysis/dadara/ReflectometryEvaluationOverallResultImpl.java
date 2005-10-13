@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryEvaluationOverallResultImpl.java,v 1.1 2005/10/11 16:42:01 saa Exp $
+ * $Id: ReflectometryEvaluationOverallResultImpl.java,v 1.2 2005/10/13 17:16:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,14 @@ package com.syrus.AMFICOM.analysis.dadara;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 
 /**
+ * Unmodifiable реализация ReflectometryEvaluationOverallResult
+ * с дополнительным интерфейсом, нужным для dadara.
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/11 16:42:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/13 17:16:06 $
  * @module dadara
  */
-public class ReflectometryEvaluationOverallResultImpl
+public final class ReflectometryEvaluationOverallResultImpl
 implements ReflectometryEvaluationOverallResult {
 	private boolean dqPresent;
 	private double dParam;
