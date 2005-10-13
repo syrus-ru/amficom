@@ -1,5 +1,5 @@
 /*
- * $Id: TextComponentMenu.java,v 1.8 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: TextComponentMenu.java,v 1.9 2005/10/13 06:22:42 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,11 +89,11 @@ public class TextComponentMenu extends JPopupMenu {
 					selectItems.toArray(),
 					I18N.getString(oldValue));
 
-				if (newAttachmentType == null)
+				if (newAttachmentTypeString == null)
 					return;
 
 				// Если мы выбрали привязку по полю
-				if (newAttachmentType.equals(I18N
+				if (newAttachmentTypeString.equals(I18N
 						.getString(TextAttachingType.TO_FIELDS_TOP.stringValue())))
 					newAttachmentType = TextAttachingType.TO_FIELDS_TOP;
 
@@ -149,7 +149,7 @@ public class TextComponentMenu extends JPopupMenu {
 					selectItems.toArray(),
 					I18N.getString(oldValue));
 	
-				if (newAttachmentType == null)
+				if (newAttachmentTypeString == null)
 					return;
 	
 				// Если мы выбрали привязку по полю
