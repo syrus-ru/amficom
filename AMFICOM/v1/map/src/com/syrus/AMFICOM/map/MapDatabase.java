@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.55 2005/09/27 14:23:05 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.56 2005/10/13 09:16:50 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,17 +19,17 @@ import static com.syrus.AMFICOM.map.MapWrapper.LINK_COLUMN_PHYSICAL_LINK_ID;
 import static com.syrus.AMFICOM.map.MapWrapper.LINK_COLUMN_SITE_NODE_ID;
 import static com.syrus.AMFICOM.map.MapWrapper.LINK_COLUMN_TOPOLOGICAL_NODE_ID;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,14 +40,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/09/27 14:23:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/10/13 09:16:50 $
+ * @author $Author: max $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -300,6 +299,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void delete(final Set<? extends Identifiable> ids) {
 
@@ -311,58 +311,27 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			return;
 		}
 
-		final java.util.Map<Map, Set<Identifier>> linkedIds = new HashMap<Map, Set<Identifier>>();
+		Set<Identifier> linkedIds = new HashSet<Identifier>();
 		for (int i = 0; i < LinkedEntities.values().length; i++) {
 			final LinkedEntities linkedEntities = LinkedEntities.values()[i];
 			for (final Map map : dbMaps) {
 				try {
-					linkedIds.put(map, LinkedEntities.getLinkedIds(map, linkedEntities));
+					linkedIds.addAll(LinkedEntities.getLinkedIds(map, linkedEntities));
 				} catch (ApplicationException ae) {
 					Log.errorException(ae);
 				}
 			}
-			this.deleteLinkedObjectIds(linkedIds, linkedEntities);
-			linkedIds.clear();
+			if(!linkedIds.isEmpty()) {
+				StorableObjectDatabase database = DatabaseContext.getDatabase(linkedIds.iterator().next().getMajor());
+				// Nothing to do but suppress a warning
+				database.delete(linkedIds);
+				linkedIds.clear();
+			}
+			
 		}
 
 		super.delete(ids);
 	}	
-
-	private void deleteLinkedObjectIds(final java.util.Map<Map, Set<Identifier>> linkedObjectIds,
-			final LinkedEntities linkedEntities) {
-		String tableName = linkedEntities.getTableName();
-		String columnName = linkedEntities.getLinkColumnName();
-
-		final StringBuffer linkBuffer = new StringBuffer(SQL_DELETE_FROM + tableName + SQL_WHERE);
-		linkBuffer.append(idsEnumerationString(linkedObjectIds.keySet(), columnName, true));
-
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			statement.executeUpdate(linkBuffer.toString());
-			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
 
 	@Override
 	protected Set<Map> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
