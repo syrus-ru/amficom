@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 public class SchematicsApplicationModel extends ApplicationModel
@@ -67,6 +68,7 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add(ApplicationModel.MENU_VIEW_ARRANGE);
 		
 		this.initUIConstats();
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
 	}
 	
 	private void initUIConstats() {
