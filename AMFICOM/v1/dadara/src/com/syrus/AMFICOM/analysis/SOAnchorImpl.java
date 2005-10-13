@@ -1,5 +1,5 @@
 /*-
- * $Id: SOAnchorImpl.java,v 1.2 2005/10/06 16:10:20 saa Exp $
+ * $Id: SOAnchorImpl.java,v 1.3 2005/10/13 17:10:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,10 @@ import com.syrus.io.SignatureMismatchException;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/10/06 16:10:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/13 17:10:45 $
  * @module
  */
-public class SOAnchorImpl implements SOAnchor {
+public final class SOAnchorImpl implements SOAnchor {
 	private static final long voidCode = 0x7FFF000000000000L; // FIXME: 'untied' value for SOAnchor
 	public static final SOAnchorImpl VOID_ANCHOR = new SOAnchorImpl(voidCode);
 	private static final byte SIGNATURE_BYTE_0 = 0; // format version number
