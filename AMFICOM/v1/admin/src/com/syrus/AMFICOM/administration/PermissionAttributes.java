@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.14 2005/10/11 08:50:46 bob Exp $
+* $Id: PermissionAttributes.java,v 1.15 2005/10/13 10:44:55 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/11 08:50:46 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/13 10:44:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -48,7 +48,18 @@ public class PermissionAttributes extends StorableObject {
 
 	public static enum Module {
 		ADMINISTRATION,
-		SCHEME;
+		SCHEME,
+		SCHEME_EDITOR,
+		MAPVIEW,
+		OPTIMIZATION,
+		MODELING,
+		SCHEDULER,
+		ANALYSIS,
+		RESEARCH,
+		EVALUATION,
+		SURVEY,
+		PREDICTION,
+		REPORT;
 		
 		private static final String KEY_ROOT = "Module.Description.";
 		
@@ -103,7 +114,25 @@ public class PermissionAttributes extends StorableObject {
 	 */
 	private enum Adminstration implements SwitchableGroupNumber {
 		ENTER(true),
-		CREATE_DOMAIN(true);
+		
+		CREATE_DOMAIN(true),
+		CREATE_GROUP(false), // Создать группу
+		CREATE_USER(true),
+		CREATE_MEASUREMENT_MODULE(true),
+		CREATE_SERVER(true),
+		CREATE_WORKSTATION(true),
+		
+		CHANGE_DOMAIN(true),
+		CHANGE_GROUP(false), //
+		CHANGE_USER(true),
+		CHANGE_MEASUREMENT_MODULE(true),
+		CHANGE_SERVER(true),
+		CHANGE_WORKSTATION(true),
+		
+		DELETE_DOMAIN(true),
+		DELETE_GROUP(false), //
+		DELETE_USER(true);
+
 		
 		private final boolean	enable;
 
@@ -121,11 +150,37 @@ public class PermissionAttributes extends StorableObject {
 	}
 	
 	/**
+	 * SchemeEditor permission enum
+	 * 
+	 *  <p><b>ОХНУНГ !!! Стасег и иво прадалжатили, Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum SchemeEditor implements SwitchableGroupNumber {		
+		ENTER(true),
+		CREATE_AND_EDIT(true),
+		SAVING(true),
+		CREATE_CHANGE_SAVE_TYPE(true);
+		
+		private final boolean	enable;
+		
+		private SchemeEditor(final boolean enable) {
+			this.enable = enable;			
+		}			
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.SCHEME_EDITOR;
+		}
+	}
+	
+	/**
 	 * Scheme permission enum
 	 * 
 	 *  <p><b>ОХНУНГ !!! Стасег и иво прадалжатили, Never change the order or delete items, only appending to the end of list permitted</b></p>  
 	 */
-	private enum Scheme implements SwitchableGroupNumber {
+	private enum Scheme implements SwitchableGroupNumber {		
 		ENTER(true),
 		CREATE_AND_EDIT(true),
 		SAVING(true);
@@ -145,13 +200,390 @@ public class PermissionAttributes extends StorableObject {
 		}
 	}
 	
-	public static enum PermissionCodename {
-		ADMINSTRATION_ENTER(Adminstration.ENTER),
-		ADMINSTRATION_CREATE_DOMAIN(Adminstration.CREATE_DOMAIN),
+	/**
+	 * MapView permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum MapView implements SwitchableGroupNumber {
+		ENTER(true),
 		
+		EDIT_TOPOLOGICAL_SCHEME(true),
+		SAVE_TOPOLOGICAL_SCHEME(true),
+		SAVE_TOPOLOGICAL_VIEW(true),
+		
+		EDIT_BINDING(true),
+		SAVE_BINDING(true);
+
+		private final boolean	enable;
+
+		private MapView(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.MAPVIEW;
+		}
+	}
+	
+	/**
+	 * Optimization permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Optimization implements SwitchableGroupNumber {
+		ENTER(true),
+
+		OPEN_MAP(true),
+		OPEN_SCHEME(true),
+		SET_OPTIMIZATION_OPTIONS(true),
+		START_OPTIMIZATION(true),
+		ABORT_OPTIMIZATION(true),
+		SAVE_OPTIMIZATION_RESULT(true),
+		SAVE_OPTIMIZATION_OPTIONS(true);
+		
+		private final boolean	enable;
+
+		private Optimization(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.OPTIMIZATION;
+		}
+	}
+	
+	/**
+	 * Modeling permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Modeling implements SwitchableGroupNumber {
+		ENTER(true),
+
+		OPEN_MAP(true),
+		OPEN_SCHEME(true),
+		
+		SET_MODELING_OPTIONS(true),
+		SAVE_REFLECTOGRAM_MODEL(true);
+		
+		private final boolean	enable;
+
+		private Modeling(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.MODELING;
+		}
+	}
+	
+	/**
+	 * Scheduler permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Scheduler implements SwitchableGroupNumber {
+		ENTER(true),
+
+//		Задать тестирование КИСа 
+//		Задать тестирование всех КИСов
+ 
+		CREATE_TEST(true),
+		EDIT_TEST(true),
+		SAVE_TEST(true);
+		
+		private final boolean	enable;
+
+		private Scheduler(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.SCHEDULER;
+		}
+	}
+
+	/**
+	 * Analysis permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Analysis implements SwitchableGroupNumber {
+		ENTER(true),
+		OPEN_REFLECTOGRAM_FILE(true),
+		OPEN_REFLECTOGRAM(true);
+		
+		private final boolean	enable;
+
+		private Analysis(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.ANALYSIS;
+		}
+	}
+
+	/**
+	 * Research permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Research implements SwitchableGroupNumber {
+		ENTER(true),
+		OPEN_REFLECTOGRAM_FILE(true),
+		OPEN_REFLECTOGRAM(true),
+		SAVE_MEASUREMENT_SETUP(true),
+		SAVE_REFLECTOGRAM_FILE(true),
+		SAVE_SCHEME_BONDING(true);
+		
+		private final boolean	enable;
+
+		private Research(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.RESEARCH;
+		}
+	}
+	
+	/**
+	 * Evaluation permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Evaluation implements SwitchableGroupNumber {
+		ENTER(true),
+		OPEN_REFLECTOGRAM_FILE(true),
+		OPEN_ETALON_REFLECTOGRAM(true),
+		SAVE_MEASUREMENT_SETUP(true),
+		SAVE_REFLECTOGRAM_FILE(true),
+		EDIT_MASKS(true);
+		
+		private final boolean	enable;
+
+		private Evaluation(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.EVALUATION;
+		}
+	}
+	
+	/**
+	 * Survey permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Survey implements SwitchableGroupNumber {
+		ENTER(true),
+		OPEN_MAP(true),
+		OPEN_SCHEME(true),
+		OPEN_MEASUREMENT_ARCHIVE(true),
+		QUICK_TASK(true),
+		ALARM_MANAGE(true);
+		
+		private final boolean	enable;
+
+		private Survey(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.SURVEY;
+		}
+	}
+	
+	/**
+	 * Prediction permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Prediction implements SwitchableGroupNumber {
+		ENTER(true),
+		SAVE_PREDICTION_REFLECTOGRAM(true);
+		
+		private final boolean	enable;
+
+		private Prediction(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.PREDICTION;
+		}
+	}
+	
+	/**
+	 * Report permission enum
+	 * 
+	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
+	 */
+	private enum Report implements SwitchableGroupNumber {
+		ENTER(true),
+		CREATE_TEMPLATE(true),
+		SAVE_TEMPLATE(true);
+		
+		private final boolean	enable;
+
+		private Report(final boolean enable) {
+			this.enable = enable;			
+		}	
+		
+		public boolean isEnable() {
+			return this.enable;
+		}
+		
+		public final Module getModule() {
+			return Module.REPORT;
+		}
+	}
+	
+	public static enum PermissionCodename {
+		// Adminstration
+		ADMINISTRATION_ENTER(Adminstration.ENTER),
+		ADMINISTRATION_CREATE_DOMAIN(Adminstration.CREATE_DOMAIN),
+		ADMINISTRATION_CREATE_GROUP(Adminstration.CREATE_GROUP),
+		ADMINISTRATION_CREATE_USER(Adminstration.CREATE_USER),
+		ADMINISTRATION_CREATE_MEASUREMENT_MODULE(Adminstration.CREATE_MEASUREMENT_MODULE),
+		ADMINISTRATION_CREATE_SERVER(Adminstration.CREATE_SERVER),
+		ADMINISTRATION_CREATE_WORKSTATION(Adminstration.CREATE_WORKSTATION),
+		
+		ADMINISTRATION_CHANGE_DOMAIN(Adminstration.CHANGE_DOMAIN),
+		ADMINISTRATION_CHANGE_GROUP(Adminstration.CHANGE_GROUP),
+		ADMINISTRATION_CHANGE_USER(Adminstration.CHANGE_USER),
+		ADMINISTRATION_CHANGE_MEASUREMENT_MODULE(Adminstration.CHANGE_MEASUREMENT_MODULE),
+		ADMINISTRATION_CHANGE_SERVER(Adminstration.CHANGE_SERVER),
+		ADMINISTRATION_CHANGE_WORKSTATION(Adminstration.CHANGE_WORKSTATION),
+		
+		ADMINISTRATION_DELETE_DOMAIN(Adminstration.DELETE_DOMAIN),
+		ADMINISTRATION_DELETE_GROUP(Adminstration.DELETE_GROUP),
+		ADMINISTRATION_DELETE_USER(Adminstration.DELETE_USER),
+		
+		//SchemeEditor		
+		SCHEME_EDITOR_ENTER(SchemeEditor.ENTER),
+		SCHEME_EDITOR_CREATE_AND_EDIT(SchemeEditor.CREATE_AND_EDIT),
+		SCHEME_EDITOR_SAVING(SchemeEditor.SAVING),
+		SCHEME_EDITOR_CREATE_CHANGE_SAVE_TYPE(SchemeEditor.CREATE_CHANGE_SAVE_TYPE),
+		
+		// Scheme
 		SCHEME_ENTER(Scheme.ENTER),
 		SCHEME_CREATE_AND_EDIT(Scheme.CREATE_AND_EDIT),
-		SCHEME_SAVING(Scheme.SAVING);
+		SCHEME_SAVING(Scheme.SAVING),
+		
+		// MapView		
+		MAPVIEW_ENTER(MapView.ENTER),
+		
+		MAPVIEW_EDIT_TOPOLOGICAL_SCHEME(MapView.EDIT_TOPOLOGICAL_SCHEME),
+		MAPVIEW_SAVE_TOPOLOGICAL_SCHEME(MapView.SAVE_TOPOLOGICAL_SCHEME),
+		MAPVIEW_SAVE_TOPOLOGICAL_VIEW(MapView.SAVE_TOPOLOGICAL_VIEW),
+		
+		MAPVIEW_EDIT_BINDING(MapView.EDIT_BINDING),
+		MAPVIEW_SAVE_BINDING(MapView.SAVE_BINDING),
+		
+		// Optimization
+		OPTIMIZATION_ENTER(Optimization.ENTER),
+
+		OPTIMIZATION_OPEN_MAP(Optimization.OPEN_MAP),
+		OPTIMIZATION_OPEN_SCHEME(Optimization.OPEN_SCHEME),
+		OPTIMIZATION_SET_OPTIMIZATION_OPTIONS(Optimization.SET_OPTIMIZATION_OPTIONS),
+		OPTIMIZATION_START_OPTIMIZATION(Optimization.START_OPTIMIZATION),
+		OPTIMIZATION_ABORT_OPTIMIZATION(Optimization.ABORT_OPTIMIZATION),
+		OPTIMIZATION_SAVE_OPTIMIZATION_RESULT(Optimization.SAVE_OPTIMIZATION_RESULT),
+		OPTIMIZATION_SAVE_OPTIMIZATION_OPTIONS(Optimization.SAVE_OPTIMIZATION_OPTIONS),
+		
+		// Modeling
+		MODELING_ENTER(Modeling.ENTER),
+
+		MODELING_OPEN_MAP(Modeling.OPEN_MAP),
+		MODELING_OPEN_SCHEME(Modeling.OPEN_SCHEME),
+		
+		MODELING_SET_MODELING_OPTIONS(Modeling.SET_MODELING_OPTIONS),
+		MODELING_SAVE_REFLECTOGRAM_MODEL(Modeling.SAVE_REFLECTOGRAM_MODEL),
+		
+		// Scheduler		
+		SCHEDULER_ENTER(Scheduler.ENTER),
+ 
+		SCHEDULER_CREATE_TEST(Scheduler.CREATE_TEST),
+		SCHEDULER_EDIT_TEST(Scheduler.EDIT_TEST),
+		SCHEDULER_SAVE_TEST(Scheduler.SAVE_TEST),
+		
+		// Analysis
+		ANALYSIS_ENTER(Analysis.ENTER),
+		ANALYSIS_OPEN_REFLECTOGRAM_FILE(Analysis.OPEN_REFLECTOGRAM_FILE),
+		ANALYSIS_OPEN_REFLECTOGRAM(Analysis.OPEN_REFLECTOGRAM),
+		
+		// Research 
+		RESEARCH_ENTER(Research.ENTER),
+		RESEARCH_OPEN_REFLECTOGRAM_FILE(Research.OPEN_REFLECTOGRAM_FILE),
+		RESEARCH_OPEN_REFLECTOGRAM(Research.OPEN_REFLECTOGRAM),
+		RESEARCH_SAVE_MEASUREMENT_SETUP(Research.SAVE_MEASUREMENT_SETUP),
+		RESEARCH_SAVE_REFLECTOGRAM_FILE(Research.SAVE_REFLECTOGRAM_FILE),
+		RESEARCH_SAVE_SCHEME_BONDING(Research.SAVE_SCHEME_BONDING),
+		
+		// Evaluation 
+		EVALUATION_ENTER(Evaluation.ENTER),
+		EVALUATION_OPEN_REFLECTOGRAM_FILE(Evaluation.OPEN_REFLECTOGRAM_FILE),
+		EVALUATION_OPEN_ETALON_REFLECTOGRAM(Evaluation.OPEN_ETALON_REFLECTOGRAM),
+		EVALUATION_SAVE_MEASUREMENT_SETUP(Evaluation.SAVE_MEASUREMENT_SETUP),
+		EVALUATION_SAVE_REFLECTOGRAM_FILE(Evaluation.SAVE_REFLECTOGRAM_FILE),
+		EVALUATION_EDIT_MASKS(Evaluation.EDIT_MASKS),
+		
+		// Survey
+		SURVEY_ENTER(Survey.ENTER),
+		SURVEY_OPEN_MAP(Survey.OPEN_MAP),
+		SURVEY_OPEN_SCHEME(Survey.OPEN_SCHEME),
+		SURVEY_OPEN_MEASUREMENT_ARCHIVE(Survey.OPEN_MEASUREMENT_ARCHIVE),
+		SURVEY_QUICK_TASK(Survey.QUICK_TASK),
+		SURVEY_ALARM_MANAGE(Survey.ALARM_MANAGE),
+		
+		// Prediction
+//		PREDICTION_ENTER(Prediction.ENTER),
+//		PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM(Prediction.SAVE_PREDICTION_REFLECTOGRAM),
+		
+		// Report
+		REPORT_ENTER(Report.ENTER),
+		REPORT_CREATE_TEMPLATE(Report.CREATE_TEMPLATE),
+		REPORT_SAVE_TEMPLATE(Report.SAVE_TEMPLATE);
 		
 		private final Enum	e;		
 
