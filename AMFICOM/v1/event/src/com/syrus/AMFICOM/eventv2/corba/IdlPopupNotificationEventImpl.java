@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.2 2005/10/13 09:57:25 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.3 2005/10/13 10:47:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.eventv2.corba;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import com.syrus.AMFICOM.eventv2.DefaultPopupNotificationEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
@@ -19,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/13 09:57:25 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/13 10:47:42 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
@@ -31,6 +33,11 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 
 	IdlPopupNotificationEventImpl(final IdlIdentifier targetUserId,
 			final String message) {
+		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
+		this.id = voidId;
+		this.creatorId = voidId;
+		this.modifierId = voidId;
+
 		this.targetUserId = targetUserId;
 		this.message = message;
 	}

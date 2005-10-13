@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.3 2005/10/13 09:57:25 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.4 2005/10/13 10:47:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
 import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
+import static com.syrus.AMFICOM.general.Identifier.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/13 09:57:25 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/13 10:47:42 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -39,6 +40,11 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 			final IdlMismatchData mismatchData,
 			final IdlIdentifier affectedPathElementId,
 			final IdlSpatialData spatialData) {
+		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
+		this.id = voidId;
+		this.creatorId = voidId;
+		this.modifierId = voidId;
+
 		this.alarmType = alarmType;
 		this.severity = severity;
 		this.mismatchData = mismatchData;

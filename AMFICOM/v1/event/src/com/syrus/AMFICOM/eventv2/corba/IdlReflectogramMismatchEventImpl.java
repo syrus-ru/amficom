@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.5 2005/10/13 09:57:25 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.6 2005/10/13 10:47:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.eventv2.corba;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import com.syrus.AMFICOM.eventv2.DefaultReflectogramMismatchEvent;
 import com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/13 09:57:25 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/13 10:47:42 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -51,6 +53,11 @@ final class IdlReflectogramMismatchEventImpl
 			final int endCoord, final IdlAlarmType alarmType,
 			final double deltaX,
 			final IdlIdentifier monitoredElementId) {
+		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
+		this.id = voidId;
+		this.creatorId = voidId;
+		this.modifierId = voidId;
+
 		this.mismatchData = mismatchData;
 		this.severity = severity;
 		this.anchorData = anchorData;
