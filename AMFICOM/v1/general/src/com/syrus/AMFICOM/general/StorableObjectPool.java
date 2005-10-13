@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.189 2005/10/13 10:38:44 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.190 2005/10/13 11:17:45 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.189 $, $Date: 2005/10/13 10:38:44 $
- * @author $Author: bass $
+ * @version $Revision: 1.190 $, $Date: 2005/10/13 11:17:45 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -648,17 +648,28 @@ public final class StorableObjectPool {
 	 * @param id
 	 */
 	public static void delete(final Identifier id) {
+		assert id != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		try {
+			final StorableObject storableObject = getStorableObject(id, false);
+			if (storableObject != null) {
+				storableObject.markAsDeleted();
+			} else {
+				Log.debugMessage("StorableObjectPool.delete | Object '" + id + "' not found in pool, probably already deleted",
+						Log.DEBUGLEVEL08);
+				return;
+			}
+		} catch (final ApplicationException ae) {
+			//-Never
+			assert false;
+		}
+
 		final short entityCode = id.getMajor();
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 		Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 		if (entityDeletedIds == null) {
 			entityDeletedIds = new HashSet<Identifier>();
 			DELETED_IDS_MAP.put(new Short(entityCode), entityDeletedIds);
-		}
-		try {
-			getStorableObject(id, false).markAsDeleted();
-		} catch (final ApplicationException ae) {
-			assert false;
 		}
 		entityDeletedIds.add(id);
 
@@ -678,6 +689,23 @@ public final class StorableObjectPool {
 	 */
 	public static void delete(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		for (final Identifiable identifiable : identifiables) {
+			final Identifier id = identifiable.getId();
+			try {
+				final StorableObject storableObject = getStorableObject(id, false);
+				if (storableObject != null) {
+					storableObject.markAsDeleted();
+				} else {
+					Log.debugMessage("StorableObjectPool.delete | Object '" + id + "' not found in pool, probably already deleted",
+							Log.DEBUGLEVEL08);
+					continue;
+				}
+			} catch (final ApplicationException ae) {
+				//-Never
+				assert false;
+			}
+		}
 
 		/*
 		 * Map<Short entityCode, Set<Identifiable> identifiables>
@@ -705,13 +733,6 @@ public final class StorableObjectPool {
 			if (entityDeletedIds == null) {
 				entityDeletedIds = new HashSet<Identifier>();
 				DELETED_IDS_MAP.put(entityKey, entityDeletedIds);
-			}
-			for (final Identifiable identifiable : entityDeleteIds) {
-				try {
-					getStorableObject(identifiable.getId(), false).markAsDeleted();
-				} catch (final ApplicationException ae) {
-					assert false;
-				}
 			}
 			entityDeletedIds.addAll(entityDeleteIds);
 

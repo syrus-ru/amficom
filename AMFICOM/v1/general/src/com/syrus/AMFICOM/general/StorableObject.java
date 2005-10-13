@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.119 2005/10/13 10:38:44 bass Exp $
+ * $Id: StorableObject.java,v 1.120 2005/10/13 11:17:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/10/13 10:38:44 $
- * @author $Author: bass $
+ * @version $Revision: 1.120 $, $Date: 2005/10/13 11:17:45 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -115,11 +115,15 @@ public abstract class StorableObject implements Identifiable,
 	 * @throws IdentifierGenerationException
 	 */
 	protected StorableObject(final XmlIdentifier id,
-			final String importType, final short entityCode,
-			final Date created, final Identifier creatorId)
-	throws IdentifierGenerationException {
+			final String importType,
+			final short entityCode,
+			final Date created,
+			final Identifier creatorId) throws IdentifierGenerationException {
 		this(Identifier.fromXmlTransferable(id, importType, entityCode),
-				created, created, creatorId, creatorId,
+				created,
+				created,
+				creatorId,
+				creatorId,
 				StorableObjectVersion.createInitial());
 	}
 
@@ -652,8 +656,8 @@ public abstract class StorableObject implements Identifiable,
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.119 $, $Date: 2005/10/13 10:38:44 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.120 $, $Date: 2005/10/13 11:17:45 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -782,8 +786,8 @@ public abstract class StorableObject implements Identifiable,
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.119 $, $Date: 2005/10/13 10:38:44 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.120 $, $Date: 2005/10/13 11:17:45 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
