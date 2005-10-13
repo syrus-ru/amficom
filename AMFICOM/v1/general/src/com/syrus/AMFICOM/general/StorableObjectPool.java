@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.190 2005/10/13 11:17:45 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.191 2005/10/13 11:40:14 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.190 $, $Date: 2005/10/13 11:17:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.191 $, $Date: 2005/10/13 11:40:14 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -643,6 +643,33 @@ public final class StorableObjectPool {
 
 	/*	Delete */
 
+	private static void markAsDeleted(final Set<? extends Identifiable> identifiables) {
+		try {
+			for (final Identifiable identifiable : identifiables) {
+				final StorableObject storableObject;
+				if (identifiable instanceof StorableObject) {
+					storableObject = (StorableObject) identifiable;
+					storableObject.markAsDeleted();
+				} else {
+					final Identifier id = identifiable.getId();
+					storableObject = getStorableObject(id, false);
+					if (storableObject != null) {
+						storableObject.markAsDeleted();
+					} else {
+						Log.debugMessage("StorableObjectPool.markAsDeleted() | Object '" + id
+								+ "' not found in pool, probably already deleted",
+								Log.DEBUGLEVEL08);
+					}
+				}
+			}
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
+	}
+
 	/**
 	 * Mark object with given id as deleted
 	 * @param id
@@ -650,19 +677,7 @@ public final class StorableObjectPool {
 	public static void delete(final Identifier id) {
 		assert id != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		try {
-			final StorableObject storableObject = getStorableObject(id, false);
-			if (storableObject != null) {
-				storableObject.markAsDeleted();
-			} else {
-				Log.debugMessage("StorableObjectPool.delete | Object '" + id + "' not found in pool, probably already deleted",
-						Log.DEBUGLEVEL08);
-				return;
-			}
-		} catch (final ApplicationException ae) {
-			//-Never
-			assert false;
-		}
+		markAsDeleted(Collections.<Identifiable>singleton(id));
 
 		final short entityCode = id.getMajor();
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
@@ -690,22 +705,7 @@ public final class StorableObjectPool {
 	public static void delete(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		for (final Identifiable identifiable : identifiables) {
-			final Identifier id = identifiable.getId();
-			try {
-				final StorableObject storableObject = getStorableObject(id, false);
-				if (storableObject != null) {
-					storableObject.markAsDeleted();
-				} else {
-					Log.debugMessage("StorableObjectPool.delete | Object '" + id + "' not found in pool, probably already deleted",
-							Log.DEBUGLEVEL08);
-					continue;
-				}
-			} catch (final ApplicationException ae) {
-				//-Never
-				assert false;
-			}
-		}
+		markAsDeleted(identifiables);
 
 		/*
 		 * Map<Short entityCode, Set<Identifiable> identifiables>
