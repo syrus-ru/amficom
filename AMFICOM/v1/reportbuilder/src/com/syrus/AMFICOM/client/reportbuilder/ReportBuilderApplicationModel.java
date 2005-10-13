@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.8 2005/09/16 13:26:30 peskovsky Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.9 2005/10/13 06:23:07 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 public class ReportBuilderApplicationModel extends ApplicationModel
 {
@@ -135,5 +136,11 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		UIManager.put(
 				ReportBuilderResourceKeys.GRAPH_TEMPLATE_ELEMENT,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/graph_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		
+		//TODO Для комбинированных отчётов из редактора шаблонов (Ветвь
+		//"Данные для отчётов")по мере необходимости здесь добавлять бандлы
+		I18N.addResourceBundle("com.syrus.AMFICOM.Client.General.Lang.schematics");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
+		I18N.addResourceBundle("com.syrus.AMFICOM.Client.General.lang.scheduler");
 	}
 }
