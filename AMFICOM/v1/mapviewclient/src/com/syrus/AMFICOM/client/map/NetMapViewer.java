@@ -1,5 +1,5 @@
 /*-
- * $$Id: NetMapViewer.java,v 1.61 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: NetMapViewer.java,v 1.62 2005/10/13 14:14:14 peskovsky Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,8 +84,8 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * 
- * @version $Revision: 1.61 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.62 $, $Date: 2005/10/13 14:14:14 $
+ * @author $Author: peskovsky $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -107,7 +107,6 @@ public abstract class NetMapViewer {
 	protected MouseMotionListener mml;
 	protected MapKeyAdapter mka;
 
-	private static final int DEFAULT_NODE_SCALE = 500;
 	/**
 	 * Timer который отвечает за изменение реЖима отображения графических 
 	 * элементов в состоянии alarmed с периодом DEFAULT_TIME_INTERVAL.
@@ -896,20 +895,5 @@ public abstract class NetMapViewer {
 
 		this.logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
-	}
-
-	public void centerAndScale(MapElement mapElement, Dimension dimension) throws MapConnectionException, MapDataException {
-		double scale = DEFAULT_NODE_SCALE;
-		if (!(mapElement instanceof AbstractNode)) {
-			scale = this.getMapContext().getScale();
-			Rectangle2D rectangle = this.logicalNetLayer.getMapViewController().getController(mapElement).getBoundingRectangle(mapElement);
-	
-			double difx = rectangle.getWidth() / dimension.getWidth();
-			double dify = rectangle.getHeight() / dimension.getHeight();
-			
-			scale *= Math.max(difx, dify);
-		}
-		this.setScale(scale);
-		this.setCenter(mapElement.getLocation());
 	}
 }

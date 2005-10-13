@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMapReportCommand.java,v 1.13 2005/10/10 15:25:48 peskovsky Exp $$
+ * $$Id: CreateMapReportCommand.java,v 1.14 2005/10/13 14:14:14 peskovsky Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Set;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/10 15:25:48 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/13 14:14:14 $
  * @author $Author: peskovsky $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -73,7 +74,20 @@ public class CreateMapReportCommand extends AbstractCommand {
 		}
 		Map<Object,Object> topologyImageReportData = new HashMap<Object,Object>();
 		topologyImageReportData.put(MapReportModel.MAPVIEW_OBJECT,mapView);
-		topologyImageReportData.put(MapReportModel.SELECTED_MAP_OBJECT,mapElement);
+		try {
+			topologyImageReportData.put(
+					MapReportModel.CENTER,
+					mapElement.getLocation());			
+			topologyImageReportData.put(
+					MapReportModel.SCALE,
+					new Double(netMapViewer.getMapContext().getScale()));
+			topologyImageReportData.put(
+					MapReportModel.MAPFRAME_SIZE,
+					mapFrame.getSize());
+		} catch (MapException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		reportData.put(MapReportModel.TOPOLOGY_IMAGE, topologyImageReportData);
 		reportData.put(MapReportModel.SELECTED_OBJECT_CHARS, mapElement.getId());
@@ -88,6 +102,3 @@ public class CreateMapReportCommand extends AbstractCommand {
 		}
 	}
 }
-
-
-

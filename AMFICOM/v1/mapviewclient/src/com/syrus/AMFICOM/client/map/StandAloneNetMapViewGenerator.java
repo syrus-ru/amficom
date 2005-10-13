@@ -1,5 +1,5 @@
 /*-
- * $$Id: StandAloneNetMapViewGenerator.java,v 1.4 2005/10/10 15:25:48 peskovsky Exp $$
+ * $$Id: StandAloneNetMapViewGenerator.java,v 1.5 2005/10/13 14:14:14 peskovsky Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,10 @@ import com.syrus.AMFICOM.client.model.MapReportApplicationModelFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/10 15:25:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/13 14:14:14 $
  * @author $Author: peskovsky $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -33,14 +34,21 @@ public class StandAloneNetMapViewGenerator {
 	private static NetMapViewer netMapViewer;
 	private static MapConnection mapConnection;
 
-	public static BufferedImage getMapShot(MapView mapView, MapElement mapElement, Dimension dimension) throws MapConnectionException, MapDataException, ApplicationException {
+	public static BufferedImage getMapShot(
+			MapView mapView,
+			DoublePoint center,
+			double scale,
+			Dimension dimension) throws MapConnectionException, MapDataException, ApplicationException {
 		if(StandAloneNetMapViewGenerator.netMapViewer == null) {
 			initialize();
 		}
 
 		StandAloneNetMapViewGenerator.netMapViewer.getLogicalNetLayer().setMapView(mapView);
 		StandAloneNetMapViewGenerator.netMapViewer.getVisualComponent().setSize(dimension);
-		StandAloneNetMapViewGenerator.netMapViewer.centerAndScale(mapElement, dimension);
+		MapContext mapContext = StandAloneNetMapViewGenerator.netMapViewer.getMapContext();
+		mapContext.setScale(scale);
+		mapContext.setCenter(center);
+
 		StandAloneNetMapViewGenerator.netMapViewer.repaint(true);
 		return StandAloneNetMapViewGenerator.netMapViewer.getMapShot();
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkController.java,v 1.34 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: PhysicalLinkController.java,v 1.35 2005/10/13 14:14:14 peskovsky Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.34 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/10/13 14:14:14 $
+ * @author $Author: peskovsky $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -359,10 +359,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 
 	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
 		final PhysicalLink physicalLink = (PhysicalLink) mapElement;
-		Rectangle2D rectangle = new Rectangle();
+		Rectangle2D rectangle = null;
 		for(NodeLink nodeLink : physicalLink.getNodeLinks()) {
 			NodeLinkController controller = (NodeLinkController) this.logicalNetLayer.getMapViewController().getController(nodeLink);
-			rectangle = rectangle.createUnion(controller.getBoundingRectangle(nodeLink));
+			Rectangle2D nodeLinkRectangle = controller.getBoundingRectangle(nodeLink);
+			if (rectangle == null)
+				rectangle = nodeLinkRectangle;
+			else
+				rectangle = rectangle.createUnion(nodeLinkRectangle);
 		}
 		return rectangle;
 	}
