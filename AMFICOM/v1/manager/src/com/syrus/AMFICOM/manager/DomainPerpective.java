@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.6 2005/10/11 15:34:53 bob Exp $
+* $Id: DomainPerpective.java,v 1.7 2005/10/13 15:25:47 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,8 +7,6 @@
 */
 
 package com.syrus.AMFICOM.manager;
-
-import java.math.BigInteger;
 
 import javax.swing.JToolBar;
 
@@ -32,7 +30,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/13 15:25:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -53,7 +51,7 @@ public class DomainPerpective implements Perspective {
 	
 	public void addEntities(final JToolBar entityToolBar) {
 		this.graphText.createAction(UserBeanFactory.getInstance(this.graphText));
-		this.graphText.createAction(ARMBeanFactory.getInstance(this.graphText));
+		this.graphText.createAction(WorkstationBeanFactory.getInstance(this.graphText));
 		entityToolBar.addSeparator();
 		this.graphText.createAction(RTUBeanFactory.getInstance(this.graphText));
 		this.graphText.createAction(ServerBeanFactory.getInstance(this.graphText));
@@ -112,6 +110,9 @@ public class DomainPerpective implements Perspective {
 					Identifier userId = systemUser.getId();
 					
 					for(final Module module : Module.getValueList()) {
+						if (!module.isEnable()) {
+							continue;
+						}
 						PermissionAttributes permissionAttributes = 
 							this.domainBean.domain.getPermissionAttributes(systemUser.getId(), module);
 						
@@ -120,9 +121,7 @@ public class DomainPerpective implements Perspective {
 								LoginManager.getUserId(),
 								this.getDomainId(),
 								userId,
-								module,
-								BigInteger.ZERO,
-								BigInteger.ZERO);
+								module);
 						}
 					}
 				}
@@ -139,7 +138,7 @@ public class DomainPerpective implements Perspective {
 		
 		this.graphText.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
 				ObjectEntities.SYSTEMUSER, 
-				ARMBeanFactory.ARM_CODENAME, 
+				WorkstationBeanFactory.WORKSTATION_CODENAME, 
 				ObjectEntities.KIS, 
 				ObjectEntities.SERVER, 
 				ObjectEntities.MCM});

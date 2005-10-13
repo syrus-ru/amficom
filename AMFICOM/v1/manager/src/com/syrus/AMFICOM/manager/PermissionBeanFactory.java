@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionBeanFactory.java,v 1.1 2005/10/11 15:31:59 bob Exp $
+* $Id: PermissionBeanFactory.java,v 1.2 2005/10/13 15:25:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,11 +8,14 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
@@ -37,7 +43,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/11 15:31:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/13 15:25:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -99,9 +105,7 @@ public class PermissionBeanFactory extends AbstractBeanFactory {
 			PermissionAttributes.createInstance(LoginManager.getUserId(),
 				userPerpective.getDomainId(),
 				userPerpective.getUserId(),
-				this.module,
-				BigInteger.ZERO,
-				BigInteger.ZERO);
+				this.module);
 		
 		return this.createBean(permissionAttributes.getId());
 
@@ -155,8 +159,31 @@ public class PermissionBeanFactory extends AbstractBeanFactory {
  		if (this.table == null) {
  			final PermissionTableModel model = new PermissionTableModel(bean);
  			
+ 			
+ 			final String[] columnToolTips = new String[] {
+ 					I18N.getString("Manager.Entity.PermissionAttibute.ActionTooltip"),
+ 					I18N.getString("Manager.Entity.PermissionAttibute.DenyTooltip"),
+ 					I18N.getString("Manager.Entity.PermissionAttibute.PermitTooltip"),
+ 					I18N.getString("Manager.Entity.PermissionAttibute.RoleTooltip")	
+ 			};
+
+ 			
  			this.table = 
- 				new JTable(model);
+ 				new JTable(model) {
+ 				@Override
+ 				protected JTableHeader createDefaultTableHeader() {
+ 					return new JTableHeader(this.columnModel) {
+ 			            @Override
+						public String getToolTipText(MouseEvent e) {
+ 			                Point p = e.getPoint();
+ 			                int index = this.columnModel.getColumnIndexAtX(p.x);
+ 			                int realIndex = 
+ 			                        this.columnModel.getColumn(index).getModelIndex();
+ 			                return columnToolTips[realIndex];
+ 			            }
+ 			        };
+ 				}
+ 			};
  	
  			this.listener = new PropertyChangeListener() {
  				public void propertyChange(PropertyChangeEvent evt) {
@@ -164,7 +191,31 @@ public class PermissionBeanFactory extends AbstractBeanFactory {
 // 					model.fireTableRowsUpdated(rowIndex, rowIndex);
  				}
  			};
- 			
+ 			 
+ 			final int[] columnsWidth = new int[model.getColumnCount()];
+ 			final JTableHeader tableHeader = this.table.getTableHeader();
+ 			{ 				
+ 				final TableCellRenderer headerRenderer = tableHeader.getDefaultRenderer();
+ 				final TableColumnModel columnModel = tableHeader.getColumnModel();
+ 				for (int i = 1; i < columnModel.getColumnCount(); i++) {
+ 					final Component component = headerRenderer.getTableCellRendererComponent(null, columnModel.getColumn(i)
+ 							.getHeaderValue(), false, false, 0, 0);
+ 					columnsWidth[i] = component.getPreferredSize().width;
+ 				}
+ 			}
+ 			for (int i = 0; i < model.getRowCount(); i++) {
+ 				for (int j = 1; j < columnsWidth.length; j++) {
+ 					final Rectangle cellRect = this.table.getCellRect(i, j, true);
+ 					int width = cellRect.width - cellRect.x;
+ 					if (width > columnsWidth[j])
+ 						columnsWidth[j] = width;
+ 				}
+ 			}
+
+ 			for (int j = 1; j < columnsWidth.length; j++) {
+ 				this.table.getColumnModel().getColumn(j).setMaxWidth(columnsWidth[j]);
+ 				this.table.getColumnModel().getColumn(j).setPreferredWidth(columnsWidth[j]);
+ 			}
  			
  			this.panel = new JPanel(new GridBagLayout());
  			GridBagConstraints gbc = new GridBagConstraints();
@@ -172,7 +223,7 @@ public class PermissionBeanFactory extends AbstractBeanFactory {
  			gbc.gridwidth = GridBagConstraints.REMAINDER;
  			gbc.weightx = 1.0;
  			gbc.weighty = 1.0;
- 			this.panel.add(this.table.getTableHeader(), gbc);		
+ 			this.panel.add(tableHeader, gbc);		
  			this.panel.add(new JScrollPane(this.table), gbc);
  		}
  		
