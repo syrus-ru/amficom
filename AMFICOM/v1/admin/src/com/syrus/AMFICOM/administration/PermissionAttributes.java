@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.16 2005/10/13 11:05:47 bob Exp $
+* $Id: PermissionAttributes.java,v 1.17 2005/10/13 12:08:03 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/13 11:05:47 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/13 12:08:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -362,7 +362,7 @@ public class PermissionAttributes extends StorableObject {
 		OPEN_REFLECTOGRAM(true),
 		SAVE_MEASUREMENT_SETUP(true),
 		SAVE_REFLECTOGRAM_FILE(true),
-		SAVE_SCHEME_BONDING(true);
+		SAVE_SCHEME_BINDING(true);
 		
 		private final boolean	enable;
 
@@ -564,7 +564,7 @@ public class PermissionAttributes extends StorableObject {
 		RESEARCH_OPEN_REFLECTOGRAM(Research.OPEN_REFLECTOGRAM),
 		RESEARCH_SAVE_MEASUREMENT_SETUP(Research.SAVE_MEASUREMENT_SETUP),
 		RESEARCH_SAVE_REFLECTOGRAM_FILE(Research.SAVE_REFLECTOGRAM_FILE),
-		RESEARCH_SAVE_SCHEME_BONDING(Research.SAVE_SCHEME_BONDING),
+		RESEARCH_SAVE_SCHEME_BINDING(Research.SAVE_SCHEME_BINDING),
 		
 		// Evaluation 
 		EVALUATION_ENTER(Evaluation.ENTER),
@@ -608,7 +608,7 @@ public class PermissionAttributes extends StorableObject {
 			return LangModelAdministation.getString(KEY_ROOT + this.codename);
 		}
 		
-		final String getCodename() {
+		public final String getCodename() {
 			return this.codename;
 		}
 		
