@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.2 2005/10/13 10:24:35 stas Exp $
+ * $Id: SchemeReportModel.java,v 1.3 2005/10/13 11:06:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemePathPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -73,13 +74,13 @@ public class SchemeReportModel extends ReportModel
 		String reportName = element.getReportName();
 		String modelClassName = element.getModelClassName();
 		
-		if (!(data instanceof Identifier))
+		if (!(data instanceof Identifiable))
 			throw new CreateReportException(
 					reportName,
 					modelClassName,
 					CreateReportException.WRONG_DATA_TO_INSTALL);
 		
-		Identifier objectId = (Identifier)data;
+		Identifier objectId = ((Identifiable)data).getId();
 		
 		try {
 			if (reportName.equals(ON_SCREEN_SCHEME_CELL_CONTAINER)) {
