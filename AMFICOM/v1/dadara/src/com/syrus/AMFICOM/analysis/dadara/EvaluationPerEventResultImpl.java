@@ -1,5 +1,5 @@
 /*-
- * $Id: EvaluationPerEventResultImpl.java,v 1.1 2005/10/11 16:42:01 saa Exp $
+ * $Id: EvaluationPerEventResultImpl.java,v 1.2 2005/10/13 11:23:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,96 +16,97 @@ import com.syrus.io.SignatureMismatchException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/11 16:42:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/13 11:23:32 $
  * @module
  */
 public class EvaluationPerEventResultImpl
 implements EvaluationPerEventResult, DataStreamable {
-	private static DataStreamable.Reader reader = null;
+	private static final long SIGNATURE = 72314905101200L;
+	private static DataStreamable.Reader dsReader = null;
 
-	private boolean[] qkPresent;
-	private double[] qi;
-	private double[] ki;
-	private static final long VERSION = 250669505101000L;
+	private boolean[] qk;
+	private double[] q;
+	private double[] k;
 
 	/**
 	 * @see EvaluationPerEventResult#getNEvents()
 	 */
 	public int getNEvents() {
-		return this.qkPresent.length;
+		return this.qk.length;
 	}
 
 	/**
 	 * @see EvaluationPerEventResult#hasQK(int)
 	 */
 	public boolean hasQK(int i) {
-		return this.qkPresent[i];
+		return this.qk[i];
 	}
+
 	/**
 	 * @see EvaluationPerEventResult#getQ(int)
 	 */
 	public double getQ(int i) {
-		if (this.qkPresent[i])
-			return this.qi[i];
+		if (hasQK(i)) {
+			return this.q[i];
+		}
 		throw new IllegalStateException();
 	}
+
 	/**
 	 * @see EvaluationPerEventResult#getK(int)
 	 */
 	public double getK(int i) {
-		if (this.qkPresent[i])
-			return this.ki[i];
+		if (hasQK(i)) {
+			return this.k[i];
+		}
 		throw new IllegalStateException();
 	}
 
-	/**
-	 * Package-visible.
-	 * @param qi массив Qi; the caller will never change this array 
-	 * @param ki массив Ki; the caller will never change this array
-	 * @param presence массив флагов присутствия qi/ki;
-	 *   the caller will never change this array
-	 */
-	EvaluationPerEventResultImpl(boolean[] presence, double[] qi, double[] ki) {
-		this.qkPresent = presence;
-		this.qi = qi;
-		this.ki = ki;
+	public EvaluationPerEventResultImpl(EvaluationPerEventResult that) {
+		int size = that.getNEvents();
+		this.qk = new boolean[size];
+		this.q = new double[size];
+		this.k = new double[size];
+		for (int i = 0; i < size; i++) {
+			this.qk[i] = that.hasQK(i);
+			if (this.qk[i]) {
+				this.k[i] = that.getK(i);
+				this.q[i] = that.getQ(i);
+			} else {
+				this.k[i] = 0.0; // will not be used
+				this.q[i] = 0.0; // will not be used
+			}
+		}
 	}
 
-	/**
-	 * @param dos
-	 * @throws IOException
-	 * @see com.syrus.AMFICOM.analysis.dadara.DataStreamable#writeToDOS(java.io.DataOutputStream)
-	 */
-	public void writeToDOS(DataOutputStream dos)
-			throws IOException {
-		dos.writeLong(VERSION);
-		int n = this.qkPresent.length;
-		dos.writeInt(n);
-		for (int i = 0; i < n; i++) {
-			dos.writeBoolean(this.qkPresent[i]);
-		}
-		for (int i = 0; i < n; i++) {
-			dos.writeDouble(this.qi[i]);
-		}
-		for (int i = 0; i < n; i++) {
-			dos.writeDouble(this.ki[i]);
+	public void writeToDOS(DataOutputStream dos) throws IOException {
+		// XXX: тратится довольно много места. разработать более компактный формат
+		dos.writeLong(SIGNATURE);
+		dos.writeInt(this.qk.length);
+		for (int i = 0; i < this.qk.length; i++) {
+			dos.writeBoolean(this.qk[i]);
+			if (this.qk[i]) {
+				dos.writeDouble(this.q[i]);
+				dos.writeDouble(this.k[i]);
+			}
 		}
 	}
 
 	protected EvaluationPerEventResultImpl(DataInputStream dis)
-	throws IOException, SignatureMismatchException {
-		long version = dis.readLong();
-		if (version != VERSION) {
+	throws SignatureMismatchException, IOException {
+		if (dis.readLong() != SIGNATURE) {
 			throw new SignatureMismatchException();
 		}
-		int n = dis.readInt();
-		this.qi = new double[n];
-		this.ki = new double[n];
-		for (int i = 0; i < n; i++) {
-			this.qi[i] = dis.readDouble();
-		}
-		for (int i = 0; i < n; i++) {
-			this.ki[i] = dis.readDouble();
+		final int size = dis.readInt();
+		this.qk = new boolean[size];
+		this.q = new double[size];
+		this.k = new double[size];
+		for (int i = 0; i < size; i++) {
+			this.qk[i] = dis.readBoolean();
+			if (this.qk[i]) {
+				this.q[i] = dis.readDouble();
+				this.k[i] = dis.readDouble();
+			}
 		}
 	}
 
@@ -113,14 +114,14 @@ implements EvaluationPerEventResult, DataStreamable {
 	 * @see DataStreamable
 	 */
 	public static DataStreamable.Reader getDSReader() {
-		if (reader == null) {
-			reader = new DataStreamable.Reader() {
+		if (dsReader == null) {
+			dsReader = new DataStreamable.Reader() {
 				public DataStreamable readFromDIS(DataInputStream dis)
 						throws IOException, SignatureMismatchException {
 					return new EvaluationPerEventResultImpl(dis);
 				}
 			};
 		}
-		return reader;
+		return dsReader;
 	}
 }
