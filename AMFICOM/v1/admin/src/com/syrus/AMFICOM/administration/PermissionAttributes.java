@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.17 2005/10/13 12:08:03 bob Exp $
+* $Id: PermissionAttributes.java,v 1.18 2005/10/13 15:16:00 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/13 12:08:03 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/13 15:16:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -723,8 +723,9 @@ public class PermissionAttributes extends StorableObject {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.domainId != null && !this.domainId.isVoid()
-				&& this.parentId != null && !this.parentId.isVoid() 
+				&& this.parentId != null && !this.parentId.isVoid()
+				&& this.domainId != null && 
+					(this.parentId.getMajor() == ObjectEntities.ROLE_CODE || !this.domainId.isVoid())
 				&& this.permissions != null;
 	}
 
@@ -733,17 +734,13 @@ public class PermissionAttributes extends StorableObject {
 	 * @param creatorId
 	 * @param domainId
 	 * @param userId
-	 * @param permissions
-	 * @param denyMask
 	 * @return new instance for client
 	 * @throws CreateObjectException
 	 */
 	public static PermissionAttributes createInstance(final Identifier creatorId,
 	                                                  final Identifier domainId,
 	                                                  final Identifier userId,
-	                                                  final Module module,
-	                                                  final BigInteger permissions,
-	                                                  final BigInteger denyMask) 
+	                                                  final Module module) 
 	throws CreateObjectException {
 		try {
 			final PermissionAttributes permissionAttributes = 
@@ -754,8 +751,8 @@ public class PermissionAttributes extends StorableObject {
 					domainId,
 					userId,
 					module,
-					permissions,
-		            denyMask);
+					BigInteger.ZERO,
+					BigInteger.ZERO);
 
 			assert permissionAttributes.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
