@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.23 2005/09/28 10:22:12 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.24 2005/10/13 15:15:43 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Shitlet;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/28 10:22:12 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/13 15:15:43 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -156,6 +156,10 @@ final class TypicalConditionImpl extends TypicalCondition {
 			final PermissionAttributes permissionAttributes = (PermissionAttributes) storableObject;
 			final Wrapper<PermissionAttributes> wrapper = PermissionAttributesWrapper.getInstance();
 			return super.parseCondition(wrapper.getValue(permissionAttributes, this.key));
+		} else if (storableObject instanceof Role) {
+			final Role role = (Role) storableObject;
+			final Wrapper<Role> wrapper = RoleWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(role, this.key));
 		} else {
 			throw new IllegalObjectEntityException(ERROR_ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
