@@ -20,7 +20,7 @@ import com.syrus.io.SignatureMismatchException;
  * @see ReflectogramMismatch
  * 
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/10/11 11:07:08 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/13 17:22:49 $
  * @module dadara
  */
 public class ReflectogramMismatchImpl implements ReflectogramMismatch {
@@ -145,7 +145,7 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 	{ // all initialization is already done
 	}
 
-	protected static ReflectogramMismatch createFromDIS(DataInputStream dis)
+	protected static ReflectogramMismatchImpl createFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException {
 		if (dis.readLong() != SIGNATURE) {
 			throw new SignatureMismatchException();
@@ -249,8 +249,7 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 		return baos.toByteArray();
 	}
 
-	// seem to be unused
-	public static ReflectogramMismatch[] alarmsFromByteArray(byte[] bar)
+	public static ReflectogramMismatchImpl[] alarmsFromByteArray(byte[] bar)
 	throws DataFormatException
 	{
 		ByteArrayInputStream bais = new ByteArrayInputStream(bar);
@@ -258,7 +257,7 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 		try
 		{
 			int count = dis.readInt();
-			ReflectogramMismatch[] ret = new ReflectogramMismatch[count]; // exception possible when input data is malformed
+			ReflectogramMismatchImpl[] ret = new ReflectogramMismatchImpl[count]; // exception possible when input data is malformed
 			for (int i = 0; i < count; i++)
 				ret[i] = createFromDIS(dis);
 			dis.close();
