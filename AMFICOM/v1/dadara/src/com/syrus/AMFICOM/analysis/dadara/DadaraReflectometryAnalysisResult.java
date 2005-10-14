@@ -1,5 +1,5 @@
 /*-
- * $Id: DadaraReflectometryAnalysisResult.java,v 1.1 2005/10/14 11:16:15 saa Exp $
+ * $Id: DadaraReflectometryAnalysisResult.java,v 1.2 2005/10/14 16:53:48 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,16 +19,29 @@ import com.syrus.io.DataFormatException;
 /**
  * Предоставляет проеобразование результатов анализа и сравнения
  * между ReflectometryAnalysisResult и объектным представлением dadara.
- * Обеспечивает полную защиту данных - и на входе, и на выходе.
+ * <p>Обеспечивает полную защиту данных - и на входе, и на выходе.
+ * <p>Поддерживает два способа создания:
+ * на основе {@link ReflectometryAnalysisResult}
+ * и
+ * на основе пары {@link AnalysisResult} и {@link EtalonComparison}.
+ * <p>При создании на основе {@link ReflectometryAnalysisResult}
+ * возможны нулевые значения любых свойств, поскольку это допускается
+ * интерфейсом входных данных {@link ReflectometryAnalysisResult}.
+ * <p>При создании
+ * на основе пары {@link AnalysisResult} и {@link EtalonComparison}
+ * также допустимы null-значения, однако, если входные ar и ec будут not null,
+ * то гарантировано, что и все свойства созданного объекта будут not null.
+ * <p>XXX: допустимость null-значений свойств зависит от способа создания.
+ * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/10/14 11:16:15 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/14 16:53:48 $
  * @module dadara
  */
 public class DadaraReflectometryAnalysisResult implements
 		ReflectometryAnalysisResult {
 
-	private AnalysisResult ar; // not null
+	private AnalysisResult ar; // may be null
 	private ReflectogramMismatchImpl[] rma; // may be null
 	private EvaluationPerEventResultImpl epe; // may be null
 	private ReflectometryEvaluationOverallResultImpl eOverall; // may be null
@@ -36,11 +49,21 @@ public class DadaraReflectometryAnalysisResult implements
 	/**
 	 * Создается на основе результатов анализа и сравнения dadara
 	 * Создает копии входных данных.
-	 * Входные параметры не должны быть null.
+	 * Если ar != null, то гарантировано, что выходные свойства также будут
+	 * not null. Если ar == null, то гарантировано, что
+	 * все выходные свойства будут null ;-)
+	 * @param ar may be null.
+	 * @param ec not null unless ar == null.
 	 */
 	public DadaraReflectometryAnalysisResult(AnalysisResult ar,
 			EtalonComparison ec) {
-		assert ar != null;
+		if (ar == null) {
+			this.ar = null;
+			this.rma = null;
+			this.epe = null;
+			this.eOverall = null;
+			return;
+		}
 		this.ar = new AnalysisResult(ar);
 
 		final List<ReflectogramMismatchImpl> alarms = ec.getAlarms();
@@ -66,35 +89,47 @@ public class DadaraReflectometryAnalysisResult implements
 	public DadaraReflectometryAnalysisResult(ReflectometryAnalysisResult that)
 	throws DataFormatException {
 		// распаковываем AR
-		this.ar = (AnalysisResult)
-				DataStreamableUtil.readDataStreamableFromBA(
-						that.getDadaraAnalysisResultBytes(),
-						AnalysisResult.getDSReader());
+		final byte[] arBytes = that.getDadaraAnalysisResultBytes();
+		this.ar = arBytes == null ? null
+				: (AnalysisResult)DataStreamableUtil.readDataStreamableFromBA(
+					arBytes,
+					AnalysisResult.getDSReader());
 		// распаковываем RM
-		this.rma = ReflectogramMismatchImpl.alarmsFromByteArray(
-			that.getDadaraReflectogramMismatchBytes());
+		final byte[] rmBytes = that.getDadaraReflectogramMismatchBytes();
+		this.rma = rmBytes == null ? null
+				: ReflectogramMismatchImpl.alarmsFromByteArray( rmBytes);
 		// распаковываем PE
-		this.epe = (EvaluationPerEventResultImpl)
-				DataStreamableUtil.readDataStreamableFromBA(
-						that.getDadaraEvaluationPerEventResultBytes(),
+		final byte[] epeBytes = that.getDadaraEvaluationPerEventResultBytes();
+		this.epe = epeBytes == null ? null
+				: (EvaluationPerEventResultImpl)
+					DataStreamableUtil.readDataStreamableFromBA(
+						epeBytes,
 						EvaluationPerEventResultImpl.getDSReader());
 		// делаем копию Overall
-		this.eOverall = new ReflectometryEvaluationOverallResultImpl(
-			that.getReflectometryEvaluationOverallResult());
+		final ReflectometryEvaluationOverallResult eoResult =
+			that.getReflectometryEvaluationOverallResult();
+		this.eOverall = eoResult == null ? null
+				: new ReflectometryEvaluationOverallResultImpl(eoResult);
 	}
 
 	/**
-	 * Возвращает копию своего AnalysisResult
-	 * @return копию своего AnalysisResult
+	 * Возвращает копию своего AnalysisResult, may be null
+	 * @return копию своего AnalysisResult, may be null
 	 */
 	public AnalysisResult getDadaraAnalysisResult() {
-		return new AnalysisResult(this.ar); // делаем копию
+		return this.ar == null ? null
+				: new AnalysisResult(this.ar); // делаем копию
 	}
 
 	/**
-	 * Возвращает копию своего EtalonComparison
+	 * Возвращает представление в виде {@link EtalonComparison}, may be null.
+	 * Если не определено хотя бы одно свойство, необходимое для
+	 * {@link EtalonComparison}, также возвращает null.
 	 */
 	public EtalonComparison getDadaraEtalonComparison() {
+		if (this.rma == null || this.epe == null || this.eOverall == null) {
+			return null;
+		}
 		// копируем элементы массива rma в список, клонируя их при этом
 		final ArrayList<ReflectogramMismatchImpl> rmArray =
 			new ArrayList<ReflectogramMismatchImpl>(this.rma.length);
@@ -122,21 +157,24 @@ public class DadaraReflectometryAnalysisResult implements
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraAnalysisResultBytes()
 	 */
 	public byte[] getDadaraAnalysisResultBytes() {
-		return this.ar.toByteArray();
+		return this.ar == null ? null
+				: this.ar.toByteArray();
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraReflectogramMismatchBytes()
 	 */
 	public byte[] getDadaraReflectogramMismatchBytes() {
-		return ReflectogramMismatchImpl.alarmsToByteArray(this.rma);
+		return this.rma == null ? null
+				: ReflectogramMismatchImpl.alarmsToByteArray(this.rma);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraEvaluationPerEventResultBytes()
 	 */
 	public byte[] getDadaraEvaluationPerEventResultBytes() {
-		return DataStreamableUtil.writeDataStreamableToBA(this.epe);
+		return this.epe == null ? null
+				: DataStreamableUtil.writeDataStreamableToBA(this.epe);
 	}
 
 	/**
@@ -144,6 +182,6 @@ public class DadaraReflectometryAnalysisResult implements
 	 */
 	public ReflectometryEvaluationOverallResult
 	getReflectometryEvaluationOverallResult() {
-		return this.eOverall; // это unmodifiable-реализация
+		return this.eOverall; // это unmodifiable-реализация либо null
 	}
 }
