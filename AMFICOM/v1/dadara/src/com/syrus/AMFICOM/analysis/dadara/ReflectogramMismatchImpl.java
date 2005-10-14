@@ -20,10 +20,11 @@ import com.syrus.io.SignatureMismatchException;
  * @see ReflectogramMismatch
  * 
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/10/13 17:22:49 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/14 07:59:13 $
  * @module dadara
  */
-public class ReflectogramMismatchImpl implements ReflectogramMismatch {
+public class ReflectogramMismatchImpl
+implements ReflectogramMismatch, Cloneable {
 	private static final long SIGNATURE = 5490879050929171200L;
 
 	private Severity severity = SEVERITY_NONE;
@@ -46,6 +47,23 @@ public class ReflectogramMismatchImpl implements ReflectogramMismatch {
 	// начальное состояние - "не определено"
 	private double minMismatch = 1.0; // оценка снизу (состояние не определено)
 	private double maxMismatch = 0.0; // оценка сверху (состояние не определено)
+
+	@Override
+	protected ReflectogramMismatchImpl clone() {
+		try {
+			return (ReflectogramMismatchImpl) super.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError();
+		}
+	}
+
+	/**
+	 * Makes a copy
+	 * @return a copy of this
+	 */
+	public ReflectogramMismatchImpl copy() {
+		return this.clone();
+	}
 
 	/**
 	 * Устанавливает степень превышения предупр. порога в состояние
