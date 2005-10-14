@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.123 2005/10/14 13:26:54 bob Exp $
+ * $Id: SchedulerModel.java,v 1.124 2005/10/14 14:47:56 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.123 $, $Date: 2005/10/14 13:26:54 $
+ * @version $Revision: 1.124 $, $Date: 2005/10/14 14:47:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1066,26 +1066,17 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					continue;
 				}			
 				
-				{
+				{		
 					final MonitoredElement monitoredElement = 
 						StorableObjectPool.getStorableObject(monitoredElementId, true);
-					
-					final MonitoredElement testMonitoredElement = 
-						StorableObjectPool.getStorableObject(test.getMonitoredElementId(), true);
 					
 					final MeasurementPort measurementPort = 
 						StorableObjectPool.getStorableObject(monitoredElement.getMeasurementPortId(), true);
 					
-					final MeasurementPort testMeasurementPort = 
-						StorableObjectPool.getStorableObject(testMonitoredElement.getMeasurementPortId(), true);
-				
-					if (!testMeasurementPort.getKISId().equals(measurementPort.getKISId())) {
+					if (!test.getKISId().equals(measurementPort.getKISId())) {
 						continue;
 					}
 				}
-				
-				
-
 				
 				for(final Date stDate : times) {
 					Date enDate = localStartEndTimeMap.get(stDate);
