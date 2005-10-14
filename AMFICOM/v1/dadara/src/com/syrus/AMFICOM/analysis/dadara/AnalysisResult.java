@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResult.java,v 1.6 2005/10/13 17:19:52 saa Exp $
+ * $Id: AnalysisResult.java,v 1.7 2005/10/14 14:53:35 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.io.SignatureMismatchException;
 
 /**
- * Аггрегатор результатов анализа и сравнения:
+ * Агрегатор результатов анализа и данных о привязке
  * <ul>
  * <li> результаты анализа:
  *   <ul>
@@ -25,17 +25,17 @@ import com.syrus.io.SignatureMismatchException;
  *   <li> MTAE - ModelTraceAndEventsImpl - а/к, события, deltaX
  *     (следовательно, здесь же и дистанция начала события конца волокна).
  *   </ul>
- * <li> результатов сравнения:
+ * <li> привязка (в результате сравнения):
  *   <ul>
  *   <li> anchorer (может быть null) - {@link EventAnchorer}.
  *   </ul>
- *   Другие результаты сравнения пока не реализованы.
+ *   Другие результаты сравнения здесь не используются.
  * </ul>
- * Поля результатов анализа (пока) немодицифируемы,
- * поля результатов сравнения модифицируемы и изначально null.
+ * <p>Поля результатов анализа немодицифируемы, not null;
+ * поле привязки модифицируемо и может быть null.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.6 $, $Date: 2005/10/13 17:19:52 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/14 14:53:35 $
  * @module dadara
  */
 public class AnalysisResult implements DataStreamable {
@@ -46,7 +46,7 @@ public class AnalysisResult implements DataStreamable {
 	private int traceLength; // длина рабочей области р/г (до ухода в ноль)
 	private ModelTraceAndEventsImpl mtae; // а/к, события и deltaX
 
-	// результаты сравнения (все поля могут быть null)
+	// результаты сравнения (может быть null)
 	private EventAnchorer anchorer = null;
 
 	private static final long SIGNATURE = 7990616050929170500L;
@@ -66,7 +66,7 @@ public class AnalysisResult implements DataStreamable {
 		this.dataLength = that.dataLength;
 		this.traceLength = that.traceLength;
 		this.mtae = new ModelTraceAndEventsImpl(that.mtae);
-		this.anchorer = new EventAnchorer(that.anchorer);
+		this.anchorer = that.anchorer == null ? null : new EventAnchorer(that.anchorer);
 	}
 
 	public int getDataLength() {
