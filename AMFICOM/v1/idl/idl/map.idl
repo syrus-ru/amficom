@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.40 2005/10/14 12:01:13 max Exp $
+ * $Id: map.idl,v 1.41 2005/10/14 13:12:34 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -248,8 +248,6 @@ module map {
 			public boolean topToBottom;
 			public boolean horizontalVertical;
 
-			public general::corba::IdlIdentifier physicalLinkId;
-
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
@@ -261,8 +259,7 @@ module map {
 					in long dimensionY,
 					in boolean leftToRight,
 					in boolean topToBottom,
-					in boolean horizontalVertical,
-					in general::corba::IdlIdentifier physicalLinkId);
+					in boolean horizontalVertical);
 		};
 
 /////////////////////// PhysicalLink ////////////////////////
@@ -285,6 +282,7 @@ module map {
 			public wstring building;
 
 			public general::corba::IdlIdentifierSeq nodeLinkIds;
+			public general::corba::IdlIdentifierSeq pipeBlockIds;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -300,7 +298,8 @@ module map {
 					in wstring city,
 					in wstring street,
 					in wstring building,
-					in general::corba::IdlIdentifierSeq nodeLinkIds);
+					in general::corba::IdlIdentifierSeq nodeLinkIds,
+					in general::corba::IdlIdentifierSeq pipeBlockIds);
 		};
 
 
