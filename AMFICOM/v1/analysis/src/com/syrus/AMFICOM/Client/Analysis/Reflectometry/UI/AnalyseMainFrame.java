@@ -140,6 +140,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
 				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
+					@Override
 					public String getReportTitle() {
 						return PRIMARY_PARAMETERS_FRAME;
 					}
@@ -155,6 +156,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
 				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrame.this.dispatcher) {
+					@Override
 					public String getReportTitle() {
 						return STATS_FRAME;
 					}
@@ -280,7 +282,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
-				EventsFrame eventsFrame = new EventsFrame(aContext);
+				EventsFrame eventsFrame = new EventsFrame(aContext) {
+					public String getReportTitle() {
+						return EVENTS_FRAME;
+					}
+				};
 				AnalyseMainFrame.this.desktopPane.add(eventsFrame);
 				AnalyseMainFrame.this.tables.add(eventsFrame);
 				return eventsFrame;
@@ -301,7 +307,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
-				PathElementsFrame analysisFrame = new PathElementsFrame(aContext, AnalyseMainFrame.this.dispatcher);
+				PathElementsFrame analysisFrame = new PathElementsFrame(aContext, AnalyseMainFrame.this.dispatcher)  {
+					public String getReportTitle() {
+						return ANALYSIS_FRAME;
+					}
+				};
 				desktopPane.add(analysisFrame);
 				AnalyseMainFrame.this.graphs.add(analysisFrame);
 				return analysisFrame;
@@ -312,7 +322,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
-				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrame.this.dispatcher);
+				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrame.this.dispatcher) ;
 				desktopPane.add(mInfoFrame);
 				return mInfoFrame;
 			}
@@ -322,7 +332,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
-				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext);
+				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext) {
+					public String getReportTitle() {
+						return ANALYSIS_SELECTION_FRAME;
+					}
+				};
 				AnalyseMainFrame.this.desktopPane.add(analysisSelectionFrame);
 				AnalyseMainFrame.this.tables.add(analysisSelectionFrame);
 				return analysisSelectionFrame;
@@ -333,7 +347,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Level.FINEST);
-				HistogrammFrame histogrammFrame = new HistogrammFrame(AnalyseMainFrame.this.dispatcher);
+				HistogrammFrame histogrammFrame = new HistogrammFrame(AnalyseMainFrame.this.dispatcher) {
+					public String getReportTitle() {
+						return HISTOGRAMM_FRAME;
+					}
+				};
 				AnalyseMainFrame.this.desktopPane.add(histogrammFrame);
 				AnalyseMainFrame.this.graphs.add(histogrammFrame);
 				return histogrammFrame;

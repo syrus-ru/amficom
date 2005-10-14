@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-final class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListener, CurrentEventChangeListener,
+public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListener, CurrentEventChangeListener,
 		PrimaryRefAnalysisListener {
 	private static final long serialVersionUID = 2729642346362069321L;
 

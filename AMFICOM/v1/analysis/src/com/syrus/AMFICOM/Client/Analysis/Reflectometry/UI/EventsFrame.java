@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-final class EventsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
+public class EventsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		CurrentEventChangeListener, PropertyChangeListener, RefMismatchListener {
 	private static final long serialVersionUID = 6768761574582221386L;
 

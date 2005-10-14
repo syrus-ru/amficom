@@ -13,6 +13,7 @@ import javax.swing.table.AbstractTableModel;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ResizableLayeredPanel;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceEventsPanel;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
@@ -79,8 +80,8 @@ public abstract class AESMPReportModel extends ReportModel
 					(AbstractTableModel)data,
 					(TableDataStorableElement)element);
 		}
-		else if (data instanceof SimpleGraphPanel) {
-			SimpleGraphPanel sgPanel = (SimpleGraphPanel)data;
+		else if (data instanceof ScaledGraphPanel) {
+			ScaledGraphPanel sgPanel = (ScaledGraphPanel)data;
 			Dimension oldSize = sgPanel.getSize();			
 			Dimension sizeForRendering = new Dimension(
 					element.getWidth() - RenderingComponent.EDGE_SIZE,
