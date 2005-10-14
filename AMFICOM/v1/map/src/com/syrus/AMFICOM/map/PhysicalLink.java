@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.135 2005/10/13 10:38:44 bass Exp $
+ * $Id: PhysicalLink.java,v 1.136 2005/10/14 06:18:16 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.135 $, $Date: 2005/10/13 10:38:44 $
+ * @version $Revision: 1.136 $, $Date: 2005/10/14 06:18:16 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -1147,7 +1147,7 @@ public class PhysicalLink extends StorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

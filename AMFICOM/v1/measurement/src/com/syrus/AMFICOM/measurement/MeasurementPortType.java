@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.12 2005/10/07 10:04:20 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.13 2005/10/14 06:18:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/07 10:04:20 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/14 06:18:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -188,7 +188,7 @@ public final class MeasurementPortType extends StorableObjectType
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.142 2005/10/13 11:23:17 bass Exp $
+ * $Id: SchemeElement.java,v 1.143 2005/10/14 06:18:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.142 $, $Date: 2005/10/13 11:23:17 $
+ * @version $Revision: 1.143 $, $Date: 2005/10/14 06:18:19 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1643,7 +1643,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: scheme devices                              *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeDevice> schemeDeviceContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeDevice> getSchemeDeviceContainerWrappee() {
 		return (this.schemeDeviceContainerWrappee == null)
@@ -1727,7 +1727,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: scheme links, lynx and w3m                  *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
 		return (this.schemeLinkContainerWrappee == null)
@@ -1811,7 +1811,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: scheme elements                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
 		return (this.schemeElementContainerWrappee == null)
@@ -1904,7 +1904,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Children manipulation: schemes                                     *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Scheme> schemeContainerWrappee;
+	private transient StorableObjectContainerWrappee<Scheme> schemeContainerWrappee;
 
 	StorableObjectContainerWrappee<Scheme> getSchemeContainerWrappee() {
 		return (this.schemeContainerWrappee == null)

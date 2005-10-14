@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.74 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.75 2005/10/14 06:18:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.75 $, $Date: 2005/10/14 06:18:19 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -692,7 +692,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * Children manipulation: scheme optimizeInfo switches                *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitchContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitchContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitchContainerWrappee() {
 		return (this.schemeOptimizeInfoSwitchContainerWrappee == null)
@@ -777,7 +777,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * Children manipulation: scheme optimizeInfo RTUs                    *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtuContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtuContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtuContainerWrappee() {
 		return (this.schemeOptimizeInfoRtuContainerWrappee == null)
@@ -862,7 +862,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * Children manipulation: scheme monitoringSolutions                  *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeMonitoringSolution> getSchemeMonitoringSolutionContainerWrappee() {
 		return (this.schemeMonitoringSolutionContainerWrappee == null)

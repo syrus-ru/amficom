@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.103 2005/10/07 10:04:24 bass Exp $
+ * $Id: PortType.java,v 1.104 2005/10/14 06:18:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/10/07 10:04:24 $
+ * @version $Revision: 1.104 $, $Date: 2005/10/14 06:18:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -384,7 +384,7 @@ public final class PortType extends StorableObjectType
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.83 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.84 2005/10/14 06:18:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.84 $, $Date: 2005/10/14 06:18:19 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -609,7 +609,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 * Children manipulation: scheme protoelements                        *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeProtoElement> schemeProtoElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeProtoElement> getSchemeProtoElementContainerWrappee() {
 		return (this.schemeProtoElementContainerWrappee == null)
@@ -713,7 +713,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 * Children manipulation: scheme protogroups                          *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeProtoGroup> schemeProtoGroupContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeProtoGroup> schemeProtoGroupContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeProtoGroup> getSchemeProtoGroupContainerWrappee() {
 		return (this.schemeProtoGroupContainerWrappee == null)

@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.99 2005/10/07 10:04:24 bass Exp $
+ * $Id: Port.java,v 1.100 2005/10/14 06:18:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/10/07 10:04:24 $
+ * @version $Revision: 1.100 $, $Date: 2005/10/14 06:18:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -236,7 +236,7 @@ public final class Port extends StorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

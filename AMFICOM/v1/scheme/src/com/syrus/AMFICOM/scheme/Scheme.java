@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.115 2005/10/13 11:23:17 bass Exp $
+ * $Id: Scheme.java,v 1.116 2005/10/14 06:18:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.115 $, $Date: 2005/10/13 11:23:17 $
+ * @version $Revision: 1.116 $, $Date: 2005/10/14 06:18:19 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1236,7 +1236,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * Children manipulation: scheme elements                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
 		return (this.schemeElementContainerWrappee == null)
@@ -1319,7 +1319,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * Children manipulation: scheme links                                *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeLink> schemeLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeLink> getSchemeLinkContainerWrappee() {
 		return (this.schemeLinkContainerWrappee == null)
@@ -1402,7 +1402,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * Children manipulation: scheme cable links                          *
 	 **********************************************************************/
 
-	StorableObjectContainerWrappee<SchemeCableLink> schemeCableLinkContainerWrappee;
+	transient StorableObjectContainerWrappee<SchemeCableLink> schemeCableLinkContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeCableLink> getSchemeCableLinkContainerWrappee() {
 		return (this.schemeCableLinkContainerWrappee == null)
@@ -1486,7 +1486,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * Children manipulation: scheme optimizeInfos                        *
 	 **********************************************************************/
 
-	StorableObjectContainerWrappee<SchemeOptimizeInfo> schemeOptimizeInfoContainerWrappee;
+	transient StorableObjectContainerWrappee<SchemeOptimizeInfo> schemeOptimizeInfoContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeOptimizeInfo> getSchemeOptimizeInfoContainerWrappee() {
 		return (this.schemeOptimizeInfoContainerWrappee == null)
@@ -1574,7 +1574,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * Children manipulation: scheme monitoringSolutions                  *
 	 **********************************************************************/
 
-	StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
+	transient StorableObjectContainerWrappee<SchemeMonitoringSolution> schemeMonitoringSolutionContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeMonitoringSolution> getSchemeMonitoringSolutionContainerWrappee() {
 		return (this.schemeMonitoringSolutionContainerWrappee == null)

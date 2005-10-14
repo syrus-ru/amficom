@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.98 2005/10/07 10:04:24 bass Exp $
+ * $Id: TransmissionPath.java,v 1.99 2005/10/14 06:18:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.98 $, $Date: 2005/10/07 10:04:24 $
+ * @version $Revision: 1.99 $, $Date: 2005/10/14 06:18:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -256,7 +256,7 @@ public final class TransmissionPath extends DomainMember
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.104 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemePath.java,v 1.105 2005/10/14 06:18:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.104 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.105 $, $Date: 2005/10/14 06:18:19 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -568,7 +568,7 @@ public final class SchemePath extends StorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

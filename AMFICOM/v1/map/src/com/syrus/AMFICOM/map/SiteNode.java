@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.110 2005/10/11 09:25:15 krupenn Exp $
+ * $Id: SiteNode.java,v 1.111 2005/10/14 06:18:17 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.110 $, $Date: 2005/10/11 09:25:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.111 $, $Date: 2005/10/14 06:18:17 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -547,7 +547,7 @@ public class SiteNode extends AbstractNode
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

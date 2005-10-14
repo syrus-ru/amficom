@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.80 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.81 2005/10/14 06:18:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/14 06:18:19 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -732,7 +732,7 @@ public final class SchemeMonitoringSolution
 	 * Children manipulation: scheme paths                                *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemePath> schemePathContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemePath> schemePathContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemePath> getSchemePathContainerWrappee() {
 		return (this.schemePathContainerWrappee == null)

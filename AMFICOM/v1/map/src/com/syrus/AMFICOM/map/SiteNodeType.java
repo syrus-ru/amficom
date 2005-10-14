@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.104 2005/10/07 10:04:19 bass Exp $
+ * $Id: SiteNodeType.java,v 1.105 2005/10/14 06:18:17 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.104 $, $Date: 2005/10/07 10:04:19 $
+ * @version $Revision: 1.105 $, $Date: 2005/10/14 06:18:17 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -600,7 +600,7 @@ public final class SiteNodeType extends StorableObjectType
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

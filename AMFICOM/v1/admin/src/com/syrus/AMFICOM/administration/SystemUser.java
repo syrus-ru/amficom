@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.31 2005/10/11 11:40:33 bob Exp $
+* $Id: SystemUser.java,v 1.32 2005/10/14 06:18:17 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/11 11:40:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2005/10/14 06:18:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -298,7 +298,7 @@ public final class SystemUser extends StorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.106 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemeDevice.java,v 1.107 2005/10/14 06:18:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.107 $, $Date: 2005/10/14 06:18:19 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -853,7 +853,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @see Characterizable#getCharacteristicContainerWrappee()
@@ -941,7 +941,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * Children manipulation: scheme ports                                *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemePort> schemePortContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemePort> schemePortContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemePort> getSchemePortContainerWrappee() {
 		return (this.schemePortContainerWrappee == null)
@@ -1025,7 +1025,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * Children manipulation: scheme cable ports                          *
 	 **********************************************************************/
 
-	private StorableObjectContainerWrappee<SchemeCablePort> schemeCablePortContainerWrappee;
+	private transient StorableObjectContainerWrappee<SchemeCablePort> schemeCablePortContainerWrappee;
 
 	StorableObjectContainerWrappee<SchemeCablePort> getSchemeCablePortContainerWrappee() {
 		return (this.schemeCablePortContainerWrappee == null)

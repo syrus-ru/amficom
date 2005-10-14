@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.120 2005/10/13 11:17:45 arseniy Exp $
+ * $Id: StorableObject.java,v 1.121 2005/10/14 06:18:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 import static java.util.logging.Level.INFO;
 
-import java.io.Serializable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Collections;
@@ -37,8 +36,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.120 $, $Date: 2005/10/13 11:17:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.121 $, $Date: 2005/10/14 06:18:18 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -57,7 +56,7 @@ public abstract class StorableObject implements Identifiable,
 
 	private boolean deleted;
 
-	private volatile int cachedTimes;
+	private transient volatile int cachedTimes;
 
 	private Date savedModified;
 	private Identifier savedModifierId;
@@ -656,13 +655,12 @@ public abstract class StorableObject implements Identifiable,
 	 * at com.sun.tools.javac.Main.main(Main.java:52)</pre>
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.120 $, $Date: 2005/10/13 11:17:45 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.121 $, $Date: 2005/10/14 06:18:18 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
-	protected static class StorableObjectContainerWrappee<T extends StorableObject>
-			implements Serializable {
+	protected static class StorableObjectContainerWrappee<T extends StorableObject> {
 		private static final long serialVersionUID = -1264974065379428032L;
 
 		private boolean cacheBuilt = false;
@@ -786,8 +784,8 @@ public abstract class StorableObject implements Identifiable,
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.120 $, $Date: 2005/10/13 11:17:45 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.121 $, $Date: 2005/10/14 06:18:18 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
