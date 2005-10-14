@@ -8,11 +8,19 @@ EXTLIB=../../extlib
 EXTCLASSPATH=$EXTLIB/kunststoff.jar:\
 $EXTLIB/trove.jar:\
 $EXTLIB/jgraphpad.jar:\
-$EXTLIB/xbean.jar
+$EXTLIB/dom4j-1.6.jar:\
+$EXTLIB/jaxen-1.1-beta-6.jar
 
 MAPINFODIR=$EXTLIB/mapinfo
 COMMONMAPINFODIR=$MAPINFODIR/common
 CLIENTMAPINFODIR=$MAPINFODIR/client
+
+ORACLECLASSPATH=\
+$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
+$ORACLE_HOME/jdbc/lib/orai18n.jar:\
+$ORACLE_HOME/jdbc/lib/classes12.jar:\
+$ORACLE_HOME/jdbc/lib/nls_charset12.jar
+
 
 MAPINFOCLASSPATH=$COMMONMAPINFODIR/jdom.jar:\
 $COMMONMAPINFODIR/commons-logging.jar:\
@@ -39,6 +47,7 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
+$LIB/event.jar:\
 $LIB/resource.jar:\
 $LIB/map.jar:\
 $LIB/scheme.jar:\
@@ -47,12 +56,14 @@ $LIB/filter.jar:\
 $LIB/csbridge.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
+$LIB/reportclient.jar:\
 $LIB/mapclient.jar:\
 $LIB/mapinfo.jar:\
 $LIB/spatialfx.jar:\
 $LIB/schemeclient.jar:\
 $LIB/leserver_interface.jar:\
+$LIB/mscharserver_interface.jar:\
 $LIB/util.jar
 
-$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$XMLCLASSPATH:$EXTCLASSPATH:$MAPINFOCLASSPATH:$SPATIALFXCLASSPATH com.syrus.AMFICOM.client.map.editor.MapEditor
+$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$XMLCLASSPATH:$EXTCLASSPATH:$ORACLECLASSPATH:$MAPINFOCLASSPATH:$SPATIALFXCLASSPATH com.syrus.AMFICOM.client.map.editor.MapEditor
 

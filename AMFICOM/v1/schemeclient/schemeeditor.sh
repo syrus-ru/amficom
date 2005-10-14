@@ -23,6 +23,7 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
+$LIB/event.jar:\
 $LIB/resource.jar:\
 $LIB/map.jar:\
 $LIB/scheme.jar:\
@@ -30,6 +31,7 @@ $LIB/filter.jar:\
 $LIB/csbridge.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
+$LIB/reportclient.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/util.jar
 
