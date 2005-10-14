@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.33 2005/10/11 14:17:30 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.34 2005/10/14 12:15:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/11 14:17:30 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/14 12:15:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -153,6 +153,8 @@ public class IdentifierPool {
 				FIFOSaver.save(fifo, entityName);
 			}
 		}
+
+		FIFOSaver.touchFlagFile();
 	}
 
 	protected static void deserialize() {
