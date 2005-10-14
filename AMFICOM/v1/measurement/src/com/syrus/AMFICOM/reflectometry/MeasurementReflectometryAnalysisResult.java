@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementReflectometryAnalysisResult.java,v 1.3 2005/10/14 13:39:29 saa Exp $
+ * $Id: MeasurementReflectometryAnalysisResult.java,v 1.4 2005/10/14 13:45:08 bob Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -32,12 +33,12 @@ import com.syrus.util.ByteArray;
  * <li>DataFormatException - при ошибке восстановления double из byte[]
  * </ul>
  * 
- * @author $Author: saa $
+ * @author $Author: bob $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/10/14 13:39:29 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/14 13:45:08 $
  * @module measurement
  */
-public class MeasurementReflectometryAnalysisResult
+public final class MeasurementReflectometryAnalysisResult
 implements ReflectometryAnalysisResult {
 	private byte[] analysisResultBytes = null;
 	private byte[] reflectogramMismatchBytes = null;
@@ -50,33 +51,34 @@ implements ReflectometryAnalysisResult {
 	 * Если не находит, возвращает null.
 	 * XXX: вероятно, аналогичный метод есть и в других классах, скажем, AnalysisUtil в analysis
 	 * XXX: вообще говоря, из специфики reflectometry здесь лишь предположение о том, что analysis для measurement'а не более чем один
-	 * @param m Measurement
+	 * @param measurement Measurement
 	 * @return Analysis or null
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 */
-	public static Analysis getAnalysisForMeasurement(final Measurement m)
+	public static Analysis getAnalysisForMeasurement(final Measurement measurement)
 	throws ApplicationException {
-		assert m != null : "Not null expected";
-		LinkedIdsCondition condition1 =
-			new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_CODE);
-		Set<Analysis> analyse =
-			StorableObjectPool.getStorableObjectsByCondition(condition1, true); // XXX: performance: the most slow part of loading trace that has no analysis
+		assert measurement != null : ErrorMessages.NON_NULL_EXPECTED;
+		final Set<Analysis> analyse =
+			StorableObjectPool.getStorableObjectsByCondition(
+				new LinkedIdsCondition(measurement.getId(), ObjectEntities.ANALYSIS_CODE), true); // XXX: performance: the most slow part of loading trace that has no analysis
 		return analyse.isEmpty() ? null : analyse.iterator().next();
 	}
 
+	
+	
 	/**
 	 * Создается по данному измерению.
 	 * Если анализа не было, то получаемое значение
 	 * будет иметь все свойства в значении null, что, согласно
 	 * контракту {@link ReflectometryAnalysisResult}, соответствует
 	 * тому, что ни анализ, ни сравнение не было проведено.
-	 * @param m измерение
+	 * @param measurement измерение
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
 	 */
-	public MeasurementReflectometryAnalysisResult(final Measurement m)
+	public MeasurementReflectometryAnalysisResult(final Measurement measurement)
 	throws ApplicationException, DataFormatException {
-		this(getAnalysisForMeasurement(m), true);
+		this(getAnalysisForMeasurement(measurement), true);
 	}
 
 	/**
@@ -104,7 +106,7 @@ implements ReflectometryAnalysisResult {
 			final boolean allowNull)
 	throws ApplicationException, DataFormatException {
 		if (!allowNull) {
-			assert analysis != null : "not null expected";
+			assert analysis != null : ErrorMessages.NON_NULL_EXPECTED;
 		} else {
 			if (analysis == null) {
 				return; // leave null fields
