@@ -1,5 +1,5 @@
 /*
- * $Id: OpenTemplateCommand.java,v 1.5 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: OpenTemplateCommand.java,v 1.6 2005/10/14 07:31:44 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
@@ -70,6 +71,13 @@ public class OpenTemplateCommand extends AbstractCommand {
 			this.result = RESULT_NO;			
 			return;
 		}
+
+		ApplicationModel aModel = this.aContext.getApplicationModel(); 
+		aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME).execute();
+		aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TREE).execute();
+		
+		aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
+		
 		this.aContext.getDispatcher().firePropertyChange(new UseTemplateEvent(this,templateToOpen));
 		this.result = RESULT_OK;
 	}
