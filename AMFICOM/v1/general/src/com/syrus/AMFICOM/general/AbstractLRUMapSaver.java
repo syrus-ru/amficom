@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractLRUMapSaver.java,v 1.4 2005/09/28 13:54:12 arseniy Exp $
+* $Id: AbstractLRUMapSaver.java,v 1.5 2005/10/14 12:04:27 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/28 13:54:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/14 12:04:27 $
  * @author $Author: arseniy $
  * @author Maxim Selivanov
  * @author Vladimir Dolzhenko
@@ -119,4 +119,5 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 	}
 
 	protected abstract Set<StorableObject> loading(final ObjectInputStream in) throws IOException, ClassNotFoundException;
+
 }
