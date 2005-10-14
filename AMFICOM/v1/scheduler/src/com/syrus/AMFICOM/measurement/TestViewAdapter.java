@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.1 2005/10/14 13:26:54 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.2 2005/10/14 13:53:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/14 13:26:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/14 13:53:10 $
  * @author $Author: bob $
  * @module module
  */
@@ -41,7 +41,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 	public static final String KEY_MEASUREMENT_TYPE = "MeasurementType";
 	public static final String KEY_START_TIME = "TestStartTime";
 	public static final String KEY_STATUS = "Status";
-	public static final String KEY_Q = "q";
+	public static final String KEY_Q = "Q";
 	public static final String KEY_D = "d";
 
 	private List<String> keys;
@@ -116,7 +116,9 @@ public class TestViewAdapter implements Wrapper<TestView> {
 			name = I18N.getString("Scheduler.Text.Test.Field.TimeOfTheFirstMeasurement"); //$NON-NLS-1$
 		} else if (key.equals(KEY_STATUS)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.Status"); //$NON-NLS-1$
-		} else if (key.equals(KEY_D) || key.equals(KEY_Q)) {
+		} else if (key.equals(KEY_D)) {
+			name = key + ", " + I18N.getString("Scheduler.Text.Table.dMeasurementUnit");
+		} else if (key.equals(KEY_Q)) {
 			name = key;
 		}
 

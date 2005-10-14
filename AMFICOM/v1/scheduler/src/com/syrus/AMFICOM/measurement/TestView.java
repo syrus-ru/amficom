@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.1 2005/10/14 13:26:54 bob Exp $
+* $Id: TestView.java,v 1.2 2005/10/14 13:53:10 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/14 13:26:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/14 13:53:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -144,23 +144,20 @@ public final class TestView {
 			final Measurement measurement = set.last();
 			if (measurement.getStatus() == 
 				MeasurementStatus.MEASUREMENT_STATUS_COMPLETED) {
-				final Analysis analysisForMeasurement = 
-					MeasurementReflectometryAnalysisResult.getAnalysisForMeasurement(measurement);
-				assert Log.debugMessage("TestView.createQuality | " + analysisForMeasurement,
-					Log.DEBUGLEVEL09);
 				try {
 					final MeasurementReflectometryAnalysisResult result =
-						new MeasurementReflectometryAnalysisResult(analysisForMeasurement);
+						new MeasurementReflectometryAnalysisResult(measurement);
 					final ReflectometryEvaluationOverallResult reflectometryEvaluationOverallResult = 
 						result.getReflectometryEvaluationOverallResult();
 					if (reflectometryEvaluationOverallResult != null && 
 							reflectometryEvaluationOverallResult.hasDQ()) {
 						final NumberFormat numberFormat = NumberFormat.getInstance();
-						numberFormat.setMaximumFractionDigits(2);
+						numberFormat.setMaximumFractionDigits(3);
 						final double d = reflectometryEvaluationOverallResult.getD();
 						assert Log.debugMessage("TestView.createQuality | d:" + d,
 							Log.DEBUGLEVEL10);
 						this.testD = numberFormat.format(d);
+						numberFormat.setMaximumFractionDigits(2);
 						final double q = reflectometryEvaluationOverallResult.getQ();
 						assert Log.debugMessage("TestView.createQuality | q:" + q,
 							Log.DEBUGLEVEL10);
