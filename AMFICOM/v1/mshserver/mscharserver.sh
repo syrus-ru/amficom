@@ -52,6 +52,6 @@ $LIB/mapview.jar
 
 
 JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=n"
-$JAVA -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH:$MAPINFOCLASSPATH com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer &
+$JAVA -Xms128m -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH:$MAPINFOCLASSPATH com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer &
 # Expands to the process ID of the most recently executed background (asynchronous) command.
 echo $! > `dirname $0`/mscharserver.pid

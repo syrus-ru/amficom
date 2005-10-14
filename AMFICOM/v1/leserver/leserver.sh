@@ -21,7 +21,8 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/event.jar:\
 $LIB/csbridge.jar:\
+$LIB/reflectometry.jar:\
 $LIB/util.jar
 
-$JAVA -server -ea -classpath $APPCLASSPATH:$XMLCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH com.syrus.AMFICOM.leserver.LoginEventServer &
+$JAVA -Xms128m -Xmx256m -server -ea -classpath $APPCLASSPATH:$XMLCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH com.syrus.AMFICOM.leserver.LoginEventServer &
 echo $! > `dirname $0`/leserver.pid
