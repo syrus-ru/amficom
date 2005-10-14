@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementReflectometryAnalysisResult.java,v 1.2 2005/10/14 13:37:08 saa Exp $
+ * $Id: MeasurementReflectometryAnalysisResult.java,v 1.3 2005/10/14 13:39:29 saa Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.ByteArray;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/10/14 13:37:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/14 13:39:29 $
  * @module measurement
  */
 public class MeasurementReflectometryAnalysisResult
@@ -54,7 +54,7 @@ implements ReflectometryAnalysisResult {
 	 * @return Analysis or null
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 */
-	public static Analysis getAnalysisForMeasurement(Measurement m)
+	public static Analysis getAnalysisForMeasurement(final Measurement m)
 	throws ApplicationException {
 		assert m != null : "Not null expected";
 		LinkedIdsCondition condition1 =
@@ -74,7 +74,7 @@ implements ReflectometryAnalysisResult {
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
 	 */
-	public MeasurementReflectometryAnalysisResult(Measurement m)
+	public MeasurementReflectometryAnalysisResult(final Measurement m)
 	throws ApplicationException, DataFormatException {
 		this(getAnalysisForMeasurement(m), true);
 	}
@@ -86,7 +86,7 @@ implements ReflectometryAnalysisResult {
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
 	 */
-	public MeasurementReflectometryAnalysisResult(Analysis analysis)
+	public MeasurementReflectometryAnalysisResult(final Analysis analysis)
 	throws ApplicationException, DataFormatException {
 		this(analysis, false);
 	}
@@ -100,8 +100,8 @@ implements ReflectometryAnalysisResult {
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
 	 */
-	private MeasurementReflectometryAnalysisResult(Analysis analysis,
-			boolean allowNull)
+	private MeasurementReflectometryAnalysisResult(final Analysis analysis,
+			final boolean allowNull)
 	throws ApplicationException, DataFormatException {
 		if (!allowNull) {
 			assert analysis != null : "not null expected";
@@ -110,15 +110,15 @@ implements ReflectometryAnalysisResult {
 				return; // leave null fields
 			}
 		}
-		LinkedIdsCondition condition = new LinkedIdsCondition(
+		final LinkedIdsCondition condition = new LinkedIdsCondition(
 				analysis.getId(), ObjectEntities.RESULT_CODE);
-		Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(
-				condition, true);
+		final Set<Result> results =
+			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		boolean qualityHasQd = false;
 		double qualityQ = 0.0;
 		double qualityD = 0.0;
-		for (Result result1 : results) {
-			for (Parameter parameter : result1.getParameters()) {
+		for (final Result result1 : results) {
+			for (final Parameter parameter : result1.getParameters()) {
 				if (parameter.getType().equals(ParameterType.DADARA_ANALYSIS_RESULT)) {
 					this.analysisResultBytes = parameter.getValue().clone();
 				}
