@@ -1,1 +1,0 @@
-@@report/object/DROP;

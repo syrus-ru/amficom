@@ -1,1 +1,0 @@
-nmake /f makesurveyresource %1
