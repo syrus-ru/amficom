@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.11 2005/10/14 14:04:25 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.12 2005/10/14 16:22:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.general;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static java.util.logging.Level.INFO;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -25,7 +26,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/10/14 14:04:25 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/14 16:22:17 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -57,7 +58,7 @@ public final class XmlComplementorRegistry {
 		assert complementor != null : NON_NULL_EXPECTED;
 		List<XmlComplementor> complementors = REGISTRY.get(entityCode);
 		if (complementors == null) {
-			complementors = new LinkedList<XmlComplementor>();
+			complementors = Collections.synchronizedList(new LinkedList<XmlComplementor>());
 			REGISTRY.put(entityCode, complementors);
 		}
 		if (!complementors.contains(complementor)) {
@@ -91,8 +92,10 @@ public final class XmlComplementorRegistry {
 			}
 			return;
 		}
-		for (final XmlComplementor complementor : complementors) {
-			complementor.complementStorableObject(storableObject, importType, mode);
+		synchronized (complementors) {
+			for (final XmlComplementor complementor : complementors) {
+				complementor.complementStorableObject(storableObject, importType, mode);
+			}
 		}
 	}
 }
