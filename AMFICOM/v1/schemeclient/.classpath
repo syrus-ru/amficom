@@ -20,5 +20,7 @@
 	<classpathentry kind="var" path="EXTLIB/jgraphpad.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/jsr173_api.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reportclient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/report"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
