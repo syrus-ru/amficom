@@ -1,5 +1,5 @@
 /*-
- * $Id: MapEditorResourceKeys.java,v 1.5 2005/10/07 14:12:44 krupenn Exp $
+ * $Id: MapEditorResourceKeys.java,v 1.6 2005/10/14 11:58:39 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/07 14:12:44 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/14 11:58:39 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapclient
@@ -244,5 +244,7 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String VALUE_NO_DESCRIPTION = "Value.NoDescription"; //$NON-NLS-1$
 	String VALUE_NEW = "Value.New"; //$NON-NLS-1$
 	String VALUE_UPDATING = "Value.Updating"; //$NON-NLS-1$
+
+	String LABEL_PIPEBLOCK = "Label.PipeBlock"; //$NON-NLS-1$
 
 }

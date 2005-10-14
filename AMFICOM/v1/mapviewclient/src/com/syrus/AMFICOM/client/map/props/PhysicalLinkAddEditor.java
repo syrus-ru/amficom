@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.33 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.34 2005/10/14 11:58:10 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -35,6 +36,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
@@ -44,8 +46,12 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
+import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.resource.IntDimension;
@@ -53,7 +59,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/12 13:07:08 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/14 11:58:10 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -65,11 +71,17 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	WrapperedList cableList = null;
 	JScrollPane cablesScrollPane = new JScrollPane();
 
+	private JLabel pipeBlockLabel = new JLabel();
+	private JPanel pipeBlockPanel = new JPanel();
+	WrapperedComboBox pipeBlockComboBox = null;
+	JButton addBlockButton = new JButton();
+	JButton removeBlockButton = new JButton();
+
 	private JLabel dimensionLabel = new JLabel();
 	private JPanel dimensionPanel = new JPanel();
 	private JLabel xLabel = new JLabel();
-	private JTextField mTextField = new JTextField();
-	private JTextField nTextField = new JTextField();
+	JTextField mTextField = new JTextField();
+	JTextField nTextField = new JTextField();
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
 	TunnelLayout tunnelLayout = null;
@@ -90,6 +102,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	private List unboundElements = new LinkedList();
 
 	PhysicalLink physicalLink;
+	PipeBlock pipeBlock;
 	
 	boolean processSelection = true;
 
@@ -133,7 +146,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.getInstance();
 
 		this.cableList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
-
+		this.pipeBlockComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.LABEL_CABLES_BINDING));
@@ -194,9 +207,70 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
+		final ActionListener dimensionActionListener = new ActionListener() {
+		
+			public void actionPerformed(ActionEvent e) {
+				int m = Integer.parseInt(PhysicalLinkAddEditor.this.mTextField.getText());
+				int n = Integer.parseInt(PhysicalLinkAddEditor.this.nTextField.getText());
+				if(!PhysicalLinkAddEditor.this.pipeBlock.getDimension().equals(new IntDimension(m, n))) {
+					PhysicalLinkAddEditor.this.pipeBlock.setDimension(new IntDimension(m, n));
+					PhysicalLinkAddEditor.this.tunnelLayout.setDimension(m, n);
+					PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
+				}
+			}
+		
+		};
+		this.mTextField.addActionListener(dimensionActionListener);
+		this.nTextField.addActionListener(dimensionActionListener);
+		
 		this.dimensionLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DIMENSION));
+		this.pipeBlockLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_PIPEBLOCK));
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
+
+		this.pipeBlockPanel.setLayout(new FlowLayout());
+		this.pipeBlockPanel.add(this.pipeBlockComboBox);
+		this.pipeBlockPanel.add(this.addBlockButton);
+		this.pipeBlockPanel.add(this.removeBlockButton);
+		
+		this.pipeBlockComboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Object or = PhysicalLinkAddEditor.this.pipeBlockComboBox
+					.getSelectedItem();
+				selectBlock(or);
+			}
+		});
+		
+		this.addBlockButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/add.gif"))); //$NON-NLS-1$
+		this.addBlockButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_ADD));
+		this.addBlockButton.setPreferredSize(buttonSize);
+		this.addBlockButton.setMaximumSize(buttonSize);
+		this.addBlockButton.setMinimumSize(buttonSize);
+		this.addBlockButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PipeBlock newPipeBlock;
+				try {
+					newPipeBlock = PipeBlock.createInstance(LoginManager.getUserId(), 1, 1, true, true, true);
+					PhysicalLinkAddEditor.this.physicalLink.getBinding().addPipeBlock(newPipeBlock);
+					PhysicalLinkAddEditor.this.pipeBlockComboBox.addItem(newPipeBlock);
+					PhysicalLinkAddEditor.this.pipeBlockComboBox.setSelectedItem(newPipeBlock);
+				} catch(CreateObjectException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+
+		this.removeBlockButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/remove.gif"))); //$NON-NLS-1$
+		this.removeBlockButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_REMOVE));
+		this.removeBlockButton.setPreferredSize(buttonSize);
+		this.removeBlockButton.setMaximumSize(buttonSize);
+		this.removeBlockButton.setMinimumSize(buttonSize);
+		this.removeBlockButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PhysicalLinkAddEditor.this.physicalLink.getBinding().removePipeBlock(PhysicalLinkAddEditor.this.pipeBlock);
+				PhysicalLinkAddEditor.this.pipeBlockComboBox.removeItem(PhysicalLinkAddEditor.this.pipeBlock);
+			}
+		});
 
 		this.directionPanel.setLayout(new FlowLayout());
 		this.directionPanel.add(this.topDownLabel);
@@ -206,10 +280,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.horvertLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				PhysicalLinkAddEditor.this.physicalLink.getBinding()
+				PhysicalLinkAddEditor.this.pipeBlock
 						.flipHorizontalVertical();
 				PhysicalLinkAddEditor.this.horvertLabel.setIcon(
-						PhysicalLinkAddEditor.this.physicalLink.getBinding().isHorizontalVertical() 
+						PhysicalLinkAddEditor.this.pipeBlock.isHorizontalVertical() 
 							? horverticon : verthoricon);
 				PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
 			}
@@ -218,10 +292,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.topDownLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				PhysicalLinkAddEditor.this.physicalLink.getBinding()
+				PhysicalLinkAddEditor.this.pipeBlock
 						.flipTopToBottom();
 				PhysicalLinkAddEditor.this.topDownLabel.setIcon(
-						PhysicalLinkAddEditor.this.physicalLink.getBinding().isTopToBottom() 
+						PhysicalLinkAddEditor.this.pipeBlock.isTopToBottom() 
 							? topdownicon : downtopicon);
 				PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
 			}
@@ -230,10 +304,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.leftRightLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				PhysicalLinkAddEditor.this.physicalLink.getBinding()
+				PhysicalLinkAddEditor.this.pipeBlock
 						.flipLeftToRight();
 				PhysicalLinkAddEditor.this.leftRightLabel.setIcon(
-						PhysicalLinkAddEditor.this.physicalLink.getBinding().isLeftToRight() 
+						PhysicalLinkAddEditor.this.pipeBlock.isLeftToRight() 
 							? leftrighticon : rightlefticon);
 				PhysicalLinkAddEditor.this.tunnelLayout.updateElements();
 			}
@@ -449,9 +523,26 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.bindButton.setEnabled(false);
 		this.unbindButton.setEnabled(false);
 		this.selectButton.setEnabled(false);
+	}
 
-		super.addToUndoableListener(this.mTextField);
-		super.addToUndoableListener(this.nTextField);
+	protected void selectBlock(Object or) {
+		this.pipeBlock = (PipeBlock)or;
+		this.mTextField.setText(String.valueOf(this.pipeBlock.getDimension().getWidth()));
+		this.nTextField.setText(String.valueOf(this.pipeBlock.getDimension().getHeight()));
+
+		this.horvertLabel.setIcon(
+				this.pipeBlock.isHorizontalVertical() 
+					? horverticon : verthoricon);
+
+		this.leftRightLabel.setIcon(
+				this.pipeBlock.isLeftToRight() 
+					? leftrighticon : rightlefticon);
+
+		this.topDownLabel.setIcon(
+				this.pipeBlock.isTopToBottom() 
+					? topdownicon : downtopicon);
+
+		this.tunnelLayout.setPipeBlock(this.pipeBlock);
 	}
 
 	public Object getObject() {
@@ -463,7 +554,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.physicalLink = (PhysicalLink )object;
 		if(this.physicalLink == null) {
 			this.cableList.setEnabled(false);
-			this.tunnelLayout.setBinding(null);
+			this.tunnelLayout.setPipeBlock(null);
 
 			this.mTextField.setText(""); //$NON-NLS-1$
 			this.nTextField.setText(""); //$NON-NLS-1$
@@ -471,23 +562,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		else {
 			this.cableList.setEnabled(true);
 			PhysicalLinkBinding binding = this.physicalLink.getBinding();
-
-			this.mTextField.setText(String.valueOf(this.physicalLink.getBinding().getDimension().getWidth()));
-			this.nTextField.setText(String.valueOf(this.physicalLink.getBinding().getDimension().getHeight()));
-
-			this.horvertLabel.setIcon(
-					this.physicalLink.getBinding().isHorizontalVertical() 
-						? horverticon : verthoricon);
-
-			this.leftRightLabel.setIcon(
-					this.physicalLink.getBinding().isLeftToRight() 
-						? leftrighticon : rightlefticon);
-
-			this.topDownLabel.setIcon(
-					this.physicalLink.getBinding().isTopToBottom() 
-						? topdownicon : downtopicon);
-
-			this.tunnelLayout.setBinding(binding);
+			final Set<PipeBlock> pipeBlocks = binding.getPipeBlocks();
+			if(pipeBlocks != null) {
+				this.pipeBlockComboBox.addElements(pipeBlocks);
+			}
 
 			List list = binding.getBindObjects();
 			if(list != null) {
@@ -511,19 +589,33 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				setBindMode(false);
 			}
 			else {
-				PhysicalLinkBinding binding = this.physicalLink.getBinding();
-				List list = binding.getBindObjects();
-				if(list != null) {
-					this.cableList.getSelectionModel().clearSelection();
-					for(Iterator it = list.iterator(); it.hasNext();) {
-						CablePath cablePath = (CablePath )it.next();
-						CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.physicalLink);
-						int x = cableChannelingItem.getRowX();
-						int y = cableChannelingItem.getPlaceY();
-						if(x == col && y == row) {
-							this.cableList.setSelectedValue(cablePath, true);
+				try {
+					PhysicalLinkBinding binding = this.physicalLink
+							.getBinding();
+					List list = binding.getBindObjects();
+					if(list != null) {
+						this.cableList.getSelectionModel().clearSelection();
+						for(Iterator it = list.iterator(); it.hasNext();) {
+							CablePath cablePath = (CablePath) it.next();
+							CableChannelingItem cableChannelingItem = cablePath
+									.getFirstCCI(this.physicalLink);
+							PipeBlock block = null;
+							block = StorableObjectPool.getStorableObject(
+									cableChannelingItem.getBlockId(),
+									false);
+							if(block.equals(this.pipeBlock)) {
+								int x = cableChannelingItem.getRowX();
+								int y = cableChannelingItem.getPlaceY();
+								if(x == col && y == row) {
+									this.cableList.setSelectedValue(
+											cablePath,
+											true);
+								}
+							}
 						}
 					}
+				} catch(Exception e) {
+					e.printStackTrace();
 				}
 			}
 			this.processSelection = true;
@@ -540,14 +632,14 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	public void bind(Object or) {
-		PhysicalLinkBinding binding = this.physicalLink.getBinding();
 		IntPoint pt = this.tunnelLayout.getActiveCoordinates();
 		if(pt != null) {
-			binding.bind(or, pt.x, pt.y);
+			this.pipeBlock.bind(or, pt.x, pt.y);
 			CablePath cablePath = (CablePath )or;
 			CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
 			cci.setRowX(pt.x);
 			cci.setPlaceY(pt.y);
+			cci.setBlockId(this.pipeBlock.getId());
 			this.tunnelLayout.updateElements();
 		}
 	}
@@ -612,13 +704,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 	@Override
 	public void commitChanges() {
-		int m = Integer.parseInt(this.mTextField.getText());
-		int n = Integer.parseInt(this.nTextField.getText());
-		if(!this.physicalLink.getBinding().getDimension().equals(new IntDimension(m, n))) {
-			this.physicalLink.getBinding().setDimension(new IntDimension(m, n));
-			this.tunnelLayout.setDimension(m, n);
-			this.tunnelLayout.updateElements();
-		}
 		super.commitChanges();
 	}
 }

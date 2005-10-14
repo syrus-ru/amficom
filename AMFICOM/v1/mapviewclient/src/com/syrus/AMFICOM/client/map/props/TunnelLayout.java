@@ -1,5 +1,5 @@
 /*-
- * $$Id: TunnelLayout.java,v 1.26 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: TunnelLayout.java,v 1.27 2005/10/14 11:58:10 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,11 +23,11 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.map.PhysicalLinkBinding;
+import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/14 11:58:10 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -39,7 +39,7 @@ public class TunnelLayout implements PropertyChangeListener {
 	private static final int SPACE = 2;
 	private int m, n;
 	
-	PhysicalLinkBinding binding;
+	PipeBlock pipeBlock;
 	
 	EllipseCell[][] cells;
 
@@ -114,12 +114,12 @@ public class TunnelLayout implements PropertyChangeListener {
 		}
 	}
 
-	public void setBinding(PhysicalLinkBinding binding) {
-		this.binding = binding;
-		if(binding == null)
+	public void setPipeBlock(PipeBlock pipeBlock) {
+		this.pipeBlock = pipeBlock;
+		if(pipeBlock == null)
 			setDimension(0, 0);
 		else
-			setDimension(binding.getDimension().getWidth(), binding
+			setDimension(pipeBlock.getDimension().getWidth(), pipeBlock
 					.getDimension().getHeight());
 		updateElements();
 	}
@@ -145,7 +145,7 @@ public class TunnelLayout implements PropertyChangeListener {
 
 	public void setActiveElement(Object or) {
 		removeSelection();
-		this.activeCoordinates = this.binding.getBinding(or);
+		this.activeCoordinates = this.pipeBlock.getBinding(or);
 
 		if(this.activeCoordinates != null) {
 			EllipseCell cell = this.cells[this.activeCoordinates.x][this.activeCoordinates.y];
@@ -171,14 +171,14 @@ public class TunnelLayout implements PropertyChangeListener {
 		int counter = 1;
 		int limit = this.n * this.m;
 
-		int istart = this.binding.isLeftToRight() ? 0 : this.m - 1;
-		int jstart = this.binding.isTopToBottom() ? 0 : this.n - 1;
+		int istart = this.pipeBlock.isLeftToRight() ? 0 : this.m - 1;
+		int jstart = this.pipeBlock.isTopToBottom() ? 0 : this.n - 1;
 
 		int iend = this.m - 1 - istart;
 		int jend = this.n - 1 - jstart;
 
-		int iincrement = this.binding.isLeftToRight() ? 1 : -1;
-		int jincrement = this.binding.isTopToBottom() ? 1 : -1;
+		int iincrement = this.pipeBlock.isLeftToRight() ? 1 : -1;
+		int jincrement = this.pipeBlock.isTopToBottom() ? 1 : -1;
 
 		int i = istart;
 		int j = jstart;
@@ -187,7 +187,7 @@ public class TunnelLayout implements PropertyChangeListener {
 			GraphActions.setText(this.ugoTabbedPane.getGraph(),this.cells[i][j], String.valueOf(counter++));
 			if(counter > limit)
 				break;
-			if(this.binding.isHorizontalVertical()) {
+			if(this.pipeBlock.isHorizontalVertical()) {
 				if(i == iend) {
 					i = istart;
 					j += jincrement;

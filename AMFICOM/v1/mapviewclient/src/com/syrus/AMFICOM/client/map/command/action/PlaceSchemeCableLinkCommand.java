@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.50 2005/10/11 08:50:22 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.51 2005/10/14 11:58:10 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,11 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -30,7 +32,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.50 $, $Date: 2005/10/11 08:50:22 $
+ * @version $Revision: 1.51 $, $Date: 2005/10/14 11:58:10 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -173,18 +175,22 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 						link.getBinding().add(this.cablePath);
 						if(cci.getRowX() != -1
 								&& cci.getPlaceY() != -1) {
+							PipeBlock block = null;
 							try {
-								link.getBinding().bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
+								block = StorableObjectPool.getStorableObject(cci.getBlockId(), false);
+								block.bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
 							} catch(ArrayIndexOutOfBoundsException e) {
 								XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
 								link.getId().getXmlTransferable(xmlId, "ucm");
 								String linkUn = xmlId.getStringValue();
 								cci.getId().getXmlTransferable(xmlId, "ucm");
 								String cciUn = xmlId.getStringValue();
-								final IntDimension dimension = link.getBinding().getDimension();
-								System.out.println("link '" + link.getName() 
+								final IntDimension dimension = block.getDimension();
+								System.out.println(
+										"link '" + link.getName() 
 										+ "' (un " + linkUn 
-										+ ") has dimensions (" + dimension.getWidth()
+										+ ") block '" + block.getNumber() 
+										+ "' has dimensions (" + dimension.getWidth()
 										+ ", " + dimension.getHeight()
 										+ "), which is inconsistent with cci (un " + cciUn
 										+ ") with position (" + cci.getRowX()
