@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.39 2005/10/11 07:45:33 max Exp $
+ * $Id: map.idl,v 1.40 2005/10/14 12:01:13 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -163,7 +163,7 @@ module map {
 					in long long version,
 					in wstring name,
 					in wstring description,
-					in double  longitude,
+					in double longitude,
 					in double latitude,
 					in boolean active);
 		};
@@ -231,6 +231,40 @@ module map {
 		};
 
 
+/////////////////////// PipeBlock ////////////////////////
+
+		/**
+		 * Line item.
+		 */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		valuetype IdlPipeBlock : general::corba::IdlStorableObject {
+
+			public long number;
+
+			public long dimensionX;
+			public long dimensionY;
+
+			public boolean leftToRight;
+			public boolean topToBottom;
+			public boolean horizontalVertical;
+
+			public general::corba::IdlIdentifier physicalLinkId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in long number,
+					in long dimensionX,
+					in long dimensionY,
+					in boolean leftToRight,
+					in boolean topToBottom,
+					in boolean horizontalVertical,
+					in general::corba::IdlIdentifier physicalLinkId);
+		};
+
 /////////////////////// PhysicalLink ////////////////////////
 
 		/**
@@ -250,12 +284,6 @@ module map {
 			public wstring street;
 			public wstring building;
 
-			public long dimensionX;
-			public long dimensionY;
-
-			public boolean leftToRight;
-			public boolean topToBottom;
-
 			public general::corba::IdlIdentifierSeq nodeLinkIds;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -272,10 +300,6 @@ module map {
 					in wstring city,
 					in wstring street,
 					in wstring building,
-					in long dimensionX,
-					in long dimensionY,
-					in boolean leftToRight,
-					in boolean topToBottom,
 					in general::corba::IdlIdentifierSeq nodeLinkIds);
 		};
 
