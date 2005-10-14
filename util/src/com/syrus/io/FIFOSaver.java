@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.11 2005/07/15 11:31:13 max Exp $
+ * $Id: FIFOSaver.java,v 1.12 2005/10/14 11:35:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/15 11:31:13 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/10/14 11:35:25 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class FIFOSaver {
@@ -48,7 +48,7 @@ public final class FIFOSaver {
 		File tempFile = null;
 		try {
 			init();
-			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
+			final File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
 			tempFile = new File(saveFile.getPath() + ".swp");
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 			Log.debugMessage("FifoSaver.save | Trying to save Fifo with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
