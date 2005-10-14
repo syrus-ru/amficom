@@ -28,10 +28,10 @@ public class CreateAnalysisReportCommand extends AbstractCommand {
 
 	@Override
 	public void setParameter(String key, Object value) {
-		if (key.equals(TABLE) && value instanceof ReportTable) {
-			this.tableFrames.add((ReportTable)value);
-		} else if (key.equals(PANEL) && value instanceof SimpleResizableFrame) {
-			this.panels.add((SimpleResizableFrame)value);
+		if (key.equals(TABLE)) {
+			this.tableFrames = (List<ReportTable>)value;
+		} else if (key.equals(PANEL)) {
+			this.panels = (List<SimpleResizableFrame>)value;
 		}
 	}
 
