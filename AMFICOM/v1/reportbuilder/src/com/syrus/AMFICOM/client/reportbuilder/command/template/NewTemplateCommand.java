@@ -1,5 +1,5 @@
 /*
- * $Id: NewTemplateCommand.java,v 1.5 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: NewTemplateCommand.java,v 1.6 2005/10/14 12:44:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,18 +41,36 @@ public class NewTemplateCommand extends AbstractCommand {
 	public void execute() {
 		try {
 			ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
-			if (	currentTemplate != null
-				&&	currentTemplate.isChanged()) {
-				int saveChanges = JOptionPane.showConfirmDialog(
-						Environment.getActiveWindow(),
-						I18N.getString("report.Command.SaveTemplate.saveConfirmText"),
-						I18N.getString("report.File.confirm"),
-						JOptionPane.YES_NO_CANCEL_OPTION,
-						JOptionPane.WARNING_MESSAGE);
-				if (saveChanges == JOptionPane.YES_OPTION)
-					this.aContext.getApplicationModel().getCommand(
-							ReportBuilderApplicationModel.MENU_SAVE_REPORT).execute();
-				else if (saveChanges == JOptionPane.NO_OPTION) {
+			if (currentTemplate != null) {
+				if (currentTemplate.isChanged()) {
+					int saveChanges = JOptionPane.showConfirmDialog(
+							Environment.getActiveWindow(),
+							I18N.getString("report.Command.SaveTemplate.saveConfirmText"),
+							I18N.getString("report.File.confirm"),
+							JOptionPane.YES_NO_CANCEL_OPTION,
+							JOptionPane.WARNING_MESSAGE);
+					if (saveChanges == JOptionPane.YES_OPTION)
+						this.aContext.getApplicationModel().getCommand(
+								ReportBuilderApplicationModel.MENU_SAVE_REPORT).execute();
+					else if (saveChanges == JOptionPane.NO_OPTION) {
+						if (currentTemplate.isNew()) {
+							StorableObjectPool.delete(currentTemplate.getId());
+							try {
+								StorableObjectPool.flush(
+										currentTemplate.getId(),
+										LoginManager.getUserId(),
+										true);
+							} catch (ApplicationException e) {
+								Log.errorException(e);
+							}
+						}					
+					}
+					else if (saveChanges == JOptionPane.CANCEL_OPTION) {
+						this.result = RESULT_CANCEL;
+						return;					
+					}
+				}
+				else {
 					if (currentTemplate.isNew()) {
 						StorableObjectPool.delete(currentTemplate.getId());
 						try {
@@ -64,10 +82,6 @@ public class NewTemplateCommand extends AbstractCommand {
 							Log.errorException(e);
 						}
 					}					
-				}
-				else if (saveChanges == JOptionPane.CANCEL_OPTION) {
-					this.result = RESULT_CANCEL;
-					return;					
 				}
 			}
 			

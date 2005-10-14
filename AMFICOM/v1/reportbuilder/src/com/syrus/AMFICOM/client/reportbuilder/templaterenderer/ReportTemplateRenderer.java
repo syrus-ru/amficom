@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.17 2005/10/13 08:50:49 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.18 2005/10/14 12:44:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
@@ -139,7 +138,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			else if (eventType.equals(ReportFlagEvent.DELETE_OBJECT)) {
 				try {
 					ReportTemplateRenderer.this.removeRenderingComponent(
-							this.selectedComponent);
+							this.selectedComponent,
+							true);
 					this.selectedComponent = null;				
 					ReportTemplateRenderer.this.repaint();
 				} catch (ApplicationException e) {
@@ -163,17 +163,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				return;
 		}
 		else if (evt instanceof UseTemplateEvent){
-			try {
-				this.removeAllComponents();
-			} catch (ApplicationException e1) {
-				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
-				Log.errorException(e1);			
-				JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
-						I18N.getString("report.Exception.deleteObjectError"),
-						I18N.getString("report.Exception.error"),
-						JOptionPane.ERROR_MESSAGE);
-			}
+			this.removeAllComponents();
 			
 			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
 			DRIComponentMouseListener.createInstance(this.applicationContext);			
@@ -211,17 +201,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			if (command.getResult() == Command.RESULT_CANCEL)
 				return;
 			
-			try {
-				this.removeAllComponents();
-			} catch (ApplicationException e1) {
-				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e1.getMessage());
-				Log.errorException(e1);			
-				JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
-						I18N.getString("report.Exception.deleteObjectError"),
-						I18N.getString("report.Exception.error"),
-						JOptionPane.ERROR_MESSAGE);
-			}
+			this.removeAllComponents();
 			
 			try {
 				this.createDataComponentWithText(
@@ -276,19 +256,18 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.intersectingElements = null;
 	}
 
-	private void removeAllComponents() throws ApplicationException {
-//		int componentCount = this.getComponentCount();
-//		for (int i = 0; i < componentCount; i++) {
-//			this.removeRenderingComponent(
-//					(RenderingComponent)this.getComponent(i));
-//		}
+	private void removeAllComponents() {
 		while (this.getComponentCount() > 0) {
-			this.removeRenderingComponent(
-					(RenderingComponent)this.getComponent(0));
+			try {
+				this.removeRenderingComponent(
+						(RenderingComponent)this.getComponent(0),false);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
 		}
 	}
 	
-	private void removeRenderingComponent(RenderingComponent component) throws ApplicationException {
+	private void removeRenderingComponent(RenderingComponent component,boolean deleteElement) throws ApplicationException {
 		if (component instanceof DataRenderingComponent) {
 			DataRenderingComponent drComponent =
 				(DataRenderingComponent) component;
@@ -309,7 +288,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					
 					if (	drElement.equals(storableElement.getHorizontalAttacher())
 						||	drElement.equals(storableElement.getVerticalAttacher()))
-						this.removeRenderingComponent(textComponent);
+						this.removeRenderingComponent(textComponent,deleteElement);
 				}
 			}
 		}
@@ -325,13 +304,11 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					atComponent.getATPropertyChangeListener());
 		}
 		this.remove((JComponent)component);
-		StorableElement element = component.getElement();
-		this.template.removeElement(element);
-		StorableObjectPool.delete(element.getId());
-		StorableObjectPool.flush(
-				element.getId(),
-				LoginManager.getUserId(),
-				true);
+		
+		if (deleteElement) {
+			StorableElement element = component.getElement();
+			this.template.removeElement(element);
+		}
 	}
 	
 	public ReportTemplate getTemplate() {

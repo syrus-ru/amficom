@@ -323,7 +323,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 				if (replace == JOptionPane.NO_OPTION)
 					return;
 
-				Set<Identifiable> dependencies = selectedTemplate.getReverseDependencies(true);
+				Set<Identifiable> dependencies = selectedTemplate.getReverseDependencies(false);
 				StorableObjectPool.delete(selectedTemplate.getId());
 				StorableObjectPool.delete(dependencies);
 				StorableObjectPool.flush(selectedTemplate,LoginManager.getUserId(),true);
@@ -336,7 +336,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 
 			StorableObjectPool.flush(this.templateProcessed,LoginManager.getUserId(),true);
 			StorableObjectPool.flush(
-					this.templateProcessed.getReverseDependencies(true),
+					this.templateProcessed.getReverseDependencies(false),
 					LoginManager.getUserId(),
 					true);			
 			this.templateProcessed.setNew(false);

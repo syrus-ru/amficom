@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.9 2005/10/08 13:16:31 arseniy Exp $
+ * $Id: StorableElement.java,v 1.10 2005/10/14 12:44:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/10/08 13:16:31 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.10 $, $Date: 2005/10/14 12:44:35 $
  * @module report
  */
 public abstract class StorableElement extends StorableObject {
@@ -38,19 +38,18 @@ public abstract class StorableElement extends StorableObject {
 		return this.location;
 	}
 
-	public void setLocation(IntPoint newLocation)
-	{
+	public void setLocation(IntPoint newLocation) {
 		this.location = newLocation;
+		super.markAsChanged();
 	}
 
-	public IntDimension getSize()
-	{
+	public IntDimension getSize() {
 		return this.size;
 	}
 
-	public void setSize(IntDimension newSize)
-	{
+	public void setSize(IntDimension newSize) {
 		this.size = newSize;
+		super.markAsChanged();
 	}
 	
 	public int getX(){
@@ -156,5 +155,6 @@ public abstract class StorableElement extends StorableObject {
 
 	void setReportTemplateId(Identifier reportTemplateId) {
 		this.reportTemplateId = reportTemplateId;
+		super.markAsChanged();
 	}
 }

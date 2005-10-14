@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.18 2005/10/12 13:28:13 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.19 2005/10/14 12:44:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.18 $, $Date: 2005/10/12 13:28:13 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/14 12:44:35 $
  * @module report
  */
 public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer {
@@ -93,6 +93,8 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	 * Принадлежность шаблона к модулю
 	 */
 	private String destinationModule;
+	
+	private Set<StorableElement> storableElementsToRemove;
 	
 	private boolean isNew = false;
 
@@ -348,6 +350,10 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	}
 
 	public Set<DataStorableElement> getDataStorableElements() throws ApplicationException {
+		return this.getDataStorableElements(true);
+	}
+	
+	public Set<DataStorableElement> getDataStorableElements(boolean usePool) throws ApplicationException {
 		if(this.dataCondition == null) {
 			this.dataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
 		}
@@ -355,23 +361,31 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 			this.tableDataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTTABLEDATA_CODE);
 		}
 		Set<DataStorableElement> dataSet = new HashSet<DataStorableElement>();
-		dataSet.addAll(StorableObjectPool.<DataStorableElement>getStorableObjectsByCondition(this.dataCondition, true));
-		dataSet.addAll(StorableObjectPool.<TableDataStorableElement>getStorableObjectsByCondition(this.tableDataCondition, true));
+		dataSet.addAll(StorableObjectPool.<DataStorableElement>getStorableObjectsByCondition(this.dataCondition, usePool));
+		dataSet.addAll(StorableObjectPool.<TableDataStorableElement>getStorableObjectsByCondition(this.tableDataCondition, usePool));
 		return dataSet;
 	}
 
 	public Set<ImageStorableElement> getImageStorableElements() throws ApplicationException {
+		return this.getImageStorableElements(true);
+	}
+	
+	public Set<ImageStorableElement> getImageStorableElements(boolean usePool) throws ApplicationException {
 		if(this.imageCondition == null) {
 			this.imageCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTIMAGE_CODE);
 		}
-		return StorableObjectPool.getStorableObjectsByCondition(this.imageCondition, true);
+		return StorableObjectPool.getStorableObjectsByCondition(this.imageCondition, usePool);
 	}
 
 	public Set<AttachedTextStorableElement> getAttachedTextStorableElements() throws ApplicationException {
+		return this.getAttachedTextStorableElements(true);
+	}
+	
+	public Set<AttachedTextStorableElement> getAttachedTextStorableElements(boolean usePool) throws ApplicationException {
 		if(this.attTextCondition == null) {
 			this.attTextCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
 		}
-		return StorableObjectPool.getStorableObjectsByCondition(this.attTextCondition, true);
+		return StorableObjectPool.getStorableObjectsByCondition(this.attTextCondition, usePool);
 	}
 
 	public String getName() {
@@ -429,6 +443,11 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 	}
 
 	public void removeElement(StorableElement element) {
+		if (this.storableElementsToRemove == null) {
+			this.storableElementsToRemove = new HashSet<StorableElement>();
+		}
+		this.storableElementsToRemove.add(element);	
+		element.setReportTemplateId(Identifier.VOID_IDENTIFIER);
 		super.markAsChanged();
 	}
 
@@ -438,9 +457,12 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 
 	public Set<Identifiable> getReverseDependencies(boolean usePool) throws ApplicationException {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.addAll(getAttachedTextStorableElements());
-		dependencies.addAll(getDataStorableElements());
-		dependencies.addAll(getImageStorableElements());
+		dependencies.addAll(getAttachedTextStorableElements(usePool));
+		dependencies.addAll(getDataStorableElements(usePool));
+		dependencies.addAll(getImageStorableElements(usePool));
+		if (this.storableElementsToRemove != null) {
+			dependencies.addAll(this.storableElementsToRemove);
+		}
 		dependencies.remove(null);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);
 		return dependencies;

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.12 2005/10/13 15:18:11 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.13 2005/10/14 12:44:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,14 @@ import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
+import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
+import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.Client.Analysis.UI.ResultChildrenFactory;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
-import com.syrus.AMFICOM.client.analysis.report.AnalysisReportModel;
-import com.syrus.AMFICOM.client.analysis.report.EvaluationReportModel;
-import com.syrus.AMFICOM.client.analysis.report.SurveyReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.map.ui.MapTreeModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
