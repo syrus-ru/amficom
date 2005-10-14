@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryAnalysisResultImpl.java,v 1.2 2005/10/14 08:07:52 saa Exp $
+ * $Id: DadaraReflectometryAnalysisResult.java,v 1.1 2005/10/14 11:16:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,10 @@ import com.syrus.io.DataFormatException;
  * ќбеспечивает полную защиту данных - и на входе, и на выходе.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/10/14 08:07:52 $
+ * @version $Revision: 1.1 $, $Date: 2005/10/14 11:16:15 $
  * @module dadara
  */
-public class ReflectometryAnalysisResultImpl implements
+public class DadaraReflectometryAnalysisResult implements
 		ReflectometryAnalysisResult {
 
 	private AnalysisResult ar; // not null
@@ -38,7 +38,7 @@ public class ReflectometryAnalysisResultImpl implements
 	 * —оздает копии входных данных.
 	 * ¬ходные параметры не должны быть null.
 	 */
-	public ReflectometryAnalysisResultImpl(AnalysisResult ar,
+	public DadaraReflectometryAnalysisResult(AnalysisResult ar,
 			EtalonComparison ec) {
 		assert ar != null;
 		this.ar = new AnalysisResult(ar);
@@ -63,7 +63,7 @@ public class ReflectometryAnalysisResultImpl implements
 	 * @param that копируемый {@link ReflectometryAnalysisResult}
 	 * @throws DataFormatException 
 	 */
-	public ReflectometryAnalysisResultImpl(ReflectometryAnalysisResult that)
+	public DadaraReflectometryAnalysisResult(ReflectometryAnalysisResult that)
 	throws DataFormatException {
 		// распаковываем AR
 		this.ar = (AnalysisResult)
