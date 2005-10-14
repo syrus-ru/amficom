@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingReportModel.java,v 1.2 2005/10/13 06:21:41 peskovsky Exp $
+ * $Id: ModelingReportModel.java,v 1.3 2005/10/14 12:43:33 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.client.modelling.report;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.syrus.AMFICOM.client.analysis.report.AESMPReportModel;
-import com.syrus.AMFICOM.client.analysis.report.AnalysisReportModel;
+import com.syrus.AMFICOM.Client.Analysis.Report.AESMPReportModel;
+import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.report.DestinationModules;
 

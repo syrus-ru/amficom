@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.client.observe.report;
 
-import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /*
 import javax.swing.table.TableColumn;
