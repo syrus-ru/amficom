@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.6 2005/09/26 06:29:26 bob Exp $
+* $Id: ProcessingDialog.java,v 1.7 2005/10/14 11:55:36 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/09/26 06:29:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/10/14 11:55:36 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -117,17 +117,25 @@ public final class ProcessingDialog {
 				new Thread() {
 					@Override
 					public void run() {
-						
+
 						final String threadName = currentThread().getName();
-						
-						while(!runnableTasks.isEmpty()) {
+
+						boolean empty;
+
+						synchronized (LOCK) {
+							assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
+							empty = runnableTasks.isEmpty();								
+						}
+
+						while(!empty) {
 							final Runnable runnable;
 							final String title;							
 							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
 							synchronized (LOCK) {
 								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-								runnable = runnableTasks.get(0);
-								title = runnableTaskNames.get(runnable);
+								runnable = runnableTasks.remove(0);
+								title = runnableTaskNames.remove(runnable);
+								empty = runnableTasks.isEmpty();
 							}
 							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 							modalDialog.setTitle(title);
@@ -137,11 +145,6 @@ public final class ProcessingDialog {
 							} catch(final Throwable throwable) {
 								// too unlikely
 								new Launcher.DefaultThrowableHandler().handle(throwable);
-							}
-							synchronized (LOCK) {
-								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-								runnableTasks.remove(0);
-								runnableTaskNames.remove(runnable);
 							}
 						}
 						SwingUtilities.invokeLater(new Runnable() {
