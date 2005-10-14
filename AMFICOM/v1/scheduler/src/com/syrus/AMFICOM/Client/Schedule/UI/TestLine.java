@@ -37,14 +37,13 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestController;
+import com.syrus.AMFICOM.measurement.TestView;
+import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
@@ -56,7 +55,6 @@ final class TestLine extends TimeLine {
 
 	private class TestTimeLine implements Comparable<TestTimeLine> {
 		protected long duration;
-//		protected boolean haveMeasurement;
 		
 		Color color;
 		Color selectedColor;
@@ -518,18 +516,12 @@ final class TestLine extends TimeLine {
 				
 				this.testIds.add(testId);
 				
-				final boolean newerTest = this.schedulerModel.isTestNewer(test);
-
 				final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
 				this.measurements.put(testId, measurementTestList);
 				
-				final Set<Measurement> testMeasurements;
-				if (newerTest) {
-					testMeasurements = Collections.emptySet();
-				} else {
-					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(testId, ObjectEntities.MEASUREMENT_CODE);	
-					testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
-				}
+				final TestView view = TestView.valueOf(test);
+				
+				final Set<Measurement> testMeasurements = view.getMeasurements();
 				
 				switch (test.getTemporalType().value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
@@ -550,7 +542,6 @@ final class TestLine extends TimeLine {
 										testTimeLine.duration = measurement.getDuration();										
 										this.updateTestTimeLine(testTimeLine, measurement);
 										foundMeasurement = true;
-										testMeasurements.remove(measurement);
 										break;
 									}
 								}								
@@ -600,7 +591,6 @@ final class TestLine extends TimeLine {
 										testTimeLine.duration = measurement.getDuration();										
 										this.updateTestTimeLine(testTimeLine, measurement);
 										foundMeasurement = true;
-										testMeasurements.remove(measurement);
 										break;
 									}
 								}
@@ -635,7 +625,6 @@ final class TestLine extends TimeLine {
 								testTimeLine.duration = measurement.getDuration();
 								this.updateTestTimeLine(testTimeLine, measurement);
 								foundMeasurement = true;
-								testMeasurements.remove(measurement);
 								break;
 							}
 						}
@@ -646,9 +635,6 @@ final class TestLine extends TimeLine {
 							testTimeLine.startTime = time;
 							testTimeLine.duration =  test.getEndTime().getTime() - testTimeLine.startTime +
 									measurementSetup.getMeasurementDuration();
-							
-//							assert Log.debugMessage("TestLine.acquireTests | " + testTimeLine.duration,
-//								Log.DEBUGLEVEL09);
 							
 							testTimeLine.color = color;
 							testTimeLine.selectedColor = selectedColor;
@@ -771,23 +757,24 @@ final class TestLine extends TimeLine {
 	private String getTitle(final int x,
 							final Set<TestTimeItem> testTimeItems) {
 		
-		final TestController testController = TestController.getInstance();
+		final TestViewAdapter testController = TestViewAdapter.getInstance();
 		for (final TestTimeItem testTimeItem : testTimeItems) {
 			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 				
 				try {
-					final Test test = (Test) StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
-					return "<html>" + testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString()
-							+ "<br>" + testController.getName(TestController.KEY_START_TIME) 
+					final Test test = StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
+					final TestView view = TestView.valueOf(test);
+					return "<html>" + testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
+							+ "<br>" + testController.getName(TestViewAdapter.KEY_START_TIME) 
 							+ " : " 
-							+ testController.getValue(test, TestController.KEY_START_TIME) 
+							+ testController.getValue(view, TestViewAdapter.KEY_START_TIME) 
 							+ "<br><br>" 
 							+ sdf.format(testTimeItem.testTimeLine.date)
 							+ " : "
 							+ testTimeItem.testTimeLine.title
 							+ "</html>";
-				} catch (ApplicationException e) {
+				} catch (final ApplicationException e) {
 					AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				}
 			}
@@ -795,4 +782,5 @@ final class TestLine extends TimeLine {
 		return null;
 	}
 
+	
 }

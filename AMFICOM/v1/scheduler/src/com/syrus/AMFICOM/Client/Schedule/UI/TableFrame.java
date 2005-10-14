@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.53 2005/10/12 08:17:32 bob Exp $
+ * $Id: TableFrame.java,v 1.54 2005/10/14 13:26:54 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.Icon;
@@ -50,12 +51,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestController;
+import com.syrus.AMFICOM.measurement.TestView;
+import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/10/12 08:17:32 $
+ * @version $Revision: 1.54 $, $Date: 2005/10/14 13:26:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -65,7 +67,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	
 	Dispatcher dispatcher;
 	SchedulerModel schedulerModel;
-	WrapperedTable<Test> listTable;
+	WrapperedTable<TestView> listTable;
 	ApplicationContext aContext;
 	private JPanel panel;
 	
@@ -92,8 +94,13 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		if (selectedTestIds.isEmpty()) {
 			this.listTable.clearSelection();
 		} else {
-			try {
-				this.listTable.setSelectedValues(this.schedulerModel.getSelectedTests());				
+			try { 
+				final Set<Test> selectedTests = this.schedulerModel.getSelectedTests();				
+				final Set<TestView> testViews = new HashSet<TestView>(selectedTests.size());
+				for (final Test test : selectedTests) {
+					testViews.add(TestView.valueOf(test));
+				}
+				this.listTable.setSelectedValues(testViews);				
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				return;
@@ -118,13 +125,13 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 	}
 
 	private void setTests() {
-		final WrapperedTableModel<Test> model = this.listTable.getModel();
+		final WrapperedTableModel<TestView> model = this.listTable.getModel();
 		model.clear();
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
 			assert Log.debugMessage("TableFrame.setTests | " + tests, Log.DEBUGLEVEL09);
 			for (final Test test : tests) {
-				model.addObject(test);
+				model.addObject(TestView.valueOf(test));
 			}
 		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(this, e);
@@ -137,11 +144,16 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		if (this.panel == null) {
 			this.panel = new JPanel(new BorderLayout());
 
-			this.listTable = new WrapperedTable<Test>(TestController.getInstance(), new String[] {
-					TestController.KEY_TEMPORAL_TYPE, TestController.KEY_MONITORED_ELEMENT,
-					TestController.KEY_TEST_OBJECT, TestController.KEY_MEASUREMENT_TYPE, TestController.KEY_START_TIME,
-					TestController.KEY_STATUS});
-			this.listTable.setRenderer(StubLabelCellRenderer.getInstance(), TestController.KEY_STATUS);
+			this.listTable = new WrapperedTable<TestView>(TestViewAdapter.getInstance(), new String[] {
+					TestViewAdapter.KEY_TEMPORAL_TYPE, 
+					TestViewAdapter.KEY_MONITORED_ELEMENT,
+					TestViewAdapter.KEY_TEST_OBJECT, 
+					TestViewAdapter.KEY_MEASUREMENT_TYPE, 
+					TestViewAdapter.KEY_START_TIME,
+					TestViewAdapter.KEY_STATUS,
+					TestViewAdapter.KEY_D,
+					TestViewAdapter.KEY_Q});
+			this.listTable.setRenderer(StubLabelCellRenderer.getInstance(), TestViewAdapter.KEY_STATUS);
 			this.listTable.setAllowAutoResize(true);
 			this.listTable.setAutoscrolls(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
@@ -151,14 +163,15 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 					if (e.getValueIsAdjusting() || TableFrame.this.propertyChangeEvent != null) {
 						return;
 					}
-					final Test selectedValue = TableFrame.this.listTable.getSelectedValue();
+					final TestView selectedValue = TableFrame.this.listTable.getSelectedValue();
 					if (selectedValue != null) {
 						new ProcessingDialog(new Runnable() {
 
 							public void run() {
 								TableFrame.this.schedulerModel.unselectTests(TableFrame.this);
 								try {
-									TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, TableFrame.this.listTable.getSelectedValue());
+									TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, 
+										TableFrame.this.listTable.getSelectedValue().getTest());
 								} catch (final ApplicationException e) {
 									AbstractMainFrame.showErrorMessage(
 										I18N.getString("Scheduler.Error.CannotSelectTest"));

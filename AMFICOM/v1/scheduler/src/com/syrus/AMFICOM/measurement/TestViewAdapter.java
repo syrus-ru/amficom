@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.28 2005/10/06 13:18:02 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.1 2005/10/14 13:26:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,20 +23,15 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.ComparableLabel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/06 13:18:02 $
+ * @version $Revision: 1.1 $, $Date: 2005/10/14 13:26:54 $
  * @author $Author: bob $
  * @module module
  */
-public class TestController implements Wrapper<Test> {
+public class TestViewAdapter implements Wrapper<TestView> {
 
 	public static final String KEY_TEMPORAL_TYPE = "TemporalType";
 	public static final String KEY_TEMPORAL_TYPE_NAME = "TemporalTypeName";
@@ -46,26 +41,25 @@ public class TestController implements Wrapper<Test> {
 	public static final String KEY_MEASUREMENT_TYPE = "MeasurementType";
 	public static final String KEY_START_TIME = "TestStartTime";
 	public static final String KEY_STATUS = "Status";
+	public static final String KEY_Q = "q";
+	public static final String KEY_D = "d";
 
 	private List<String> keys;
 
-	private static boolean initialized = false;
-	private static TestController instance = null;
-	private static Object lock = new Object();
+	private static TestViewAdapter instance = null;
 
 	private Map<Component, TestStatus> statusMap;
 
-	private Map<TestTemporalType, String> temporalTypeMap;
+	private TestViewAdapter() {
 
-	private TestController() {
-
-		//		 empty private constructor
 		final String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, 
 				KEY_MONITORED_ELEMENT, 
 				KEY_TEST_OBJECT,
 				KEY_MEASUREMENT_TYPE, 
 				KEY_START_TIME, 
-				KEY_STATUS};
+				KEY_STATUS,
+				KEY_D,
+				KEY_Q};
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 		this.statusMap = new HashMap<Component, TestStatus>();
@@ -76,18 +70,11 @@ public class TestController implements Wrapper<Test> {
 		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED);
 		this.addStatusItem(TestStatus.TEST_STATUS_STOPPING);
 		this.addStatusItem(TestStatus.TEST_STATUS_STOPPED);
-
-		this.temporalTypeMap = new HashMap<TestTemporalType, String>();
-		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, 
-			I18N.getString("Scheduler.Text.Test.TemporalType.Onetime"));
-		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, 
-			I18N.getString("Scheduler.Text.Test.TemporalType.Periodical"));
-//		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS, 
-//			I18N.getString("Scheduler.Text.Test.TemporalType.Continual"));
 	}
 
 	private Component getStatusComponent(final TestStatus testStatus) {
-		final ComparableLabel label = new ComparableLabel(SchedulerModel.getStatusName(testStatus));
+		final ComparableLabel label = 
+			new ComparableLabel(SchedulerModel.getStatusName(testStatus));
 		label.setOpaque(true);
 		final Color color = SchedulerModel.getColor(testStatus);
 		label.setBackground(color.brighter());
@@ -98,16 +85,9 @@ public class TestController implements Wrapper<Test> {
 		this.statusMap.put(this.getStatusComponent(testStatus), testStatus);
 	}
 
-	public static TestController getInstance() {
-		if (!initialized) {
-			synchronized (lock) {
-				if (!initialized && instance == null) {
-					instance = new TestController();
-				}
-			}
-			synchronized (lock) {
-				initialized = true;
-			}
+	public static synchronized TestViewAdapter getInstance() {
+		if (instance == null) {
+			instance = new TestViewAdapter();
 		}
 		return instance;
 	}
@@ -124,24 +104,20 @@ public class TestController implements Wrapper<Test> {
 		String name = null;
 		if (key.equals(KEY_TEMPORAL_TYPE)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.TemporalType"); //$NON-NLS-1$
-		}
-		else if (key.equals(KEY_KIS)) {
+		} else if (key.equals(KEY_KIS)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.RTU"); //$NON-NLS-1$
-		}
-		else if (key.equals(KEY_MONITORED_ELEMENT)) {
+		} else if (key.equals(KEY_MONITORED_ELEMENT)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.Port"); //$NON-NLS-1$
-		}
-		else if (key.equals(KEY_TEST_OBJECT)) {
+		} else if (key.equals(KEY_TEST_OBJECT)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.TestingObject"); //$NON-NLS-1$
-		}
-		else if (key.equals(KEY_MEASUREMENT_TYPE)) {
+		} else if (key.equals(KEY_MEASUREMENT_TYPE)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.MeasurementType"); //$NON-NLS-1$
-		}
-		else if (key.equals(KEY_START_TIME)) {
+		} else if (key.equals(KEY_START_TIME)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.TimeOfTheFirstMeasurement"); //$NON-NLS-1$
-		}
-		else if (key.equals(KEY_STATUS)) {
+		} else if (key.equals(KEY_STATUS)) {
 			name = I18N.getString("Scheduler.Text.Test.Field.Status"); //$NON-NLS-1$
+		} else if (key.equals(KEY_D) || key.equals(KEY_Q)) {
+			name = key;
 		}
 
 		return name;
@@ -163,76 +139,47 @@ public class TestController implements Wrapper<Test> {
 		return value;
 	}
 
-	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
+	public void setPropertyValue(final String key, 
+	                             final Object objectKey, 
+	                             final Object objectValue) {
 		// TODO Auto-generated method stub
 	}
 
-	public Object getValue(final Test test, final String key) {
-		Object value = null;
-		if (test != null) {
+	public Object getValue(final TestView testView, final String key) {
+		if (testView != null) {
 			if (key.equals(KEY_TEMPORAL_TYPE)) {
-				if (test.getGroupTestId().isVoid()) {
-					value = this.temporalTypeMap.get(test.getTemporalType());
-				} else {
-					value = I18N.getString("Scheduler.Text.Test.TemporalType.Sectional");
-				}
+				return testView.getTemporalType();
 			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
-				if (test.getGroupTestId().isVoid()) {
-					final TestTemporalType temporalType = test.getTemporalType();
-					value = this.temporalTypeMap.get(test.getTemporalType());
-
-					if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
-						final Identifier temporalPatternId = test.getTemporalPatternId();
-						if (!temporalPatternId.isVoid() && temporalPatternId.getMajor() == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
-							try {
-								final PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
-										true);
-								value = value + ", " + I18N.getString("Scheduler.Text.TimePanel.Period") + ": " + periodicalTemporalPattern.getPeriodDescription();
-							} catch (ApplicationException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
-				} else {
-					value = I18N.getString("Scheduler.Text.Test.TemporalType.Sectional");
-				}
+				return testView.getTemporalName();
 			} else if (key.equals(KEY_KIS)) {
-				try {
-					final KIS kis = (KIS) StorableObjectPool.getStorableObject(test.getKISId(), true);
-					value = kis.getName();
-				} catch (ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				return testView.getKISName();
 			} else if (key.equals(KEY_MONITORED_ELEMENT)) {
-				value = test.getMonitoredElement().getName();
+				return testView.getMonitoredElementName();
 			} else if (key.equals(KEY_TEST_OBJECT)) {
-				try {
-					final MeasurementPort mp = (MeasurementPort) StorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(),
-							true);
-					value = mp.getName();
-				} catch (ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				return testView.getPortName();
 			} else if (key.equals(KEY_MEASUREMENT_TYPE)) {
-				value = test.getMeasurementType().getDescription();
+				return testView.getTest().getMeasurementType().getDescription();
 			} else if (key.equals(KEY_START_TIME)) {
 				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				value = sdf.format(test.getStartTime());
+				return sdf.format(testView.getTest().getStartTime());
 			} else if (key.equals(KEY_STATUS)) {
-				return test.getStatus();
+				return testView.getTest().getStatus();
+			} else if (key.equals(KEY_D)) {
+				return testView.getTestD();
+			} else if (key.equals(KEY_Q)) {
+				return testView.getTestQ();
 			}
 		}
-		return value;
+		return null;
 	}
 
 	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setValue(final Test test, final String key, final Object value) {
+	public void setValue(final TestView test, 
+	                     final String key, 
+	                     final Object value) {
 		if (test != null) {
 			//Nothing
 		}

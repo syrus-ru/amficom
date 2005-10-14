@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.122 2005/10/12 13:10:17 bob Exp $
+ * $Id: SchedulerModel.java,v 1.123 2005/10/14 13:26:54 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,8 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestController;
+import com.syrus.AMFICOM.measurement.TestView;
+import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.122 $, $Date: 2005/10/12 13:10:17 $
+ * @version $Revision: 1.123 $, $Date: 2005/10/14 13:26:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -233,7 +234,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		if (propertyName.equals(COMMAND_CLEAN)) {
 			if (this.testIds != null) {
 				this.testIds.clear();
-			}
+			}			
+			TestView.clearCache();
 			this.refreshEditors();
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
 			this.analysisType = (AnalysisType) evt.getNewValue();
@@ -1357,11 +1359,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		final KIS kis = StorableObjectPool.getStorableObject(testMeasurementPort.getKISId(), true); 
 		
-		final TestController testController = TestController.getInstance();
-		return testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString()
-			+ "\n" + testController.getName(TestController.KEY_START_TIME) 
+		final TestViewAdapter testController = TestViewAdapter.getInstance();
+		final TestView view = TestView.valueOf(test);
+		return testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
+			+ "\n" + testController.getName(TestViewAdapter.KEY_START_TIME) 
 			+ " : " 
-			+ testController.getValue(test, TestController.KEY_START_TIME)
+			+ testController.getValue(view, TestViewAdapter.KEY_START_TIME)
 			+ "\n"
 			+ testMonitoredElement.getName() 
 			+ "\n"
