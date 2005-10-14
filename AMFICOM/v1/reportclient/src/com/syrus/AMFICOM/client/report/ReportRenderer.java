@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.13 2005/10/13 08:50:48 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.14 2005/10/14 12:43:59 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.13 $, $Date: 2005/10/13 08:50:48 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/14 12:43:59 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -183,8 +184,10 @@ public class ReportRenderer extends JPanel {
 	 * @throws ElementsIntersectException, если на схеме шаблона есть пересечения элементов.
 	 */
 	private void checkForIntersections() throws ApplicationException, ElementsIntersectException{
-		Set<Identifiable> templateElements = null;
-		templateElements = this.reportTemplate.getReverseDependencies(true);
+		Set<Identifiable> templateElements = new HashSet<Identifiable>();
+		templateElements.addAll(this.reportTemplate.getAttachedTextStorableElements());
+		templateElements.addAll(this.reportTemplate.getDataStorableElements());
+		templateElements.addAll(this.reportTemplate.getImageStorableElements());
 
 		for (Identifiable element1 : templateElements){
 			for (Identifiable element2 : templateElements){
