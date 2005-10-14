@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.6 2005/10/12 10:03:31 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.7 2005/10/14 13:00:25 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -236,7 +236,8 @@ cmserver_interface \
 leserver_interface \
 mcm_interface \
 mscharserver_interface \
-mserver_interface
+mserver_interface \
+commonclient
 
 # Figuring out what command(s) to run for "idl" target.
 ifeq ($(IDL_SOURCES),)
