@@ -1,5 +1,5 @@
 /*
- * $Id: ReportLayout.java,v 1.7 2005/10/13 15:20:39 peskovsky Exp $
+ * $Id: ReportLayout.java,v 1.8 2005/10/14 07:32:16 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.report.TextAttachingType;
  * элементами отчёта так, чтобы расстояния между компонентами были
  * равны расстоянию между компонентами на схеме шаблона отчёта.
  * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/10/13 15:20:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/14 07:32:16 $
  * @module reportclient
  */
 public class ReportLayout {
@@ -96,7 +96,7 @@ public class ReportLayout {
 	 * в том случае, когда элементы, находящиеся выше на схеме, ещё не
 	 * реализованы.
 	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.7 $, $Date: 2005/10/13 15:20:39 $
+	 * @version $Revision: 1.8 $, $Date: 2005/10/14 07:32:16 $
 	 * @module reportclient
 	 */
 	private class NonImplementedElementFoundException extends Exception
@@ -120,9 +120,17 @@ public class ReportLayout {
 			List<Integer> xs,
 			List<Integer> ys) throws NonImplementedElementFoundException, ApplicationException{
 		StorableElement element  = component.getElement();
+		int elemMinX = element.getX();
+		int elemMaxX = element.getX() + element.getWidth();
+		int elementMinY = element.getY();
+		if (element instanceof DataStorableElement) {
+			//Смотрим: принадлежит ли точка кластеру - области, в которую
+			//вписаны элемент отображения данных и прявязанные к нему надписи
+			DataStorableElement dsElement =	(DataStorableElement) element;
+			Rectangle bounds = this.reportTemplate.getElementClasterBounds(dsElement);
+			elementMinY = bounds.y;
+		}
 		
-		//Находим границы диапазона по абциссе на котором мы проверяем наличие
-		//объектов сверху
 		/**
 		 * Значение Y для нижнего края элемента, ближайшего сверху к указанному
 		 */
@@ -140,8 +148,7 @@ public class ReportLayout {
 			 */
 			int cellMiddleX = (xs.get(i).intValue() + xs.get(i + 1).intValue()) / 2;
 
-			if (!	(	(element.getX() <= cellMiddleX)
-					&&	(cellMiddleX <= element.getX() + element.getWidth())))
+			if (!((elemMinX <= cellMiddleX) &&	(cellMiddleX <= elemMaxX)))
 				//Если центр находится не над элементом переходим к следующему
 				//"столбцу" ячеек сетки 				
 				continue;
@@ -152,7 +159,7 @@ public class ReportLayout {
 				 * Значение ординаты центра очередной ячейки
 				 */
 				int cellMiddleY = (ys.get(j).intValue() + ys.get(j + 1).intValue()) / 2;
-				if (cellMiddleY >= element.getY())
+				if (cellMiddleY >= elementMinY)
 					//Если спустились вниз до самого искомого элемента
 					break;
 
@@ -164,12 +171,10 @@ public class ReportLayout {
 					continue;
 				
 				//Нашли
-				if (!componentFound.equals(component))
-					//Чтобы компонент не нашёл самого себя по кластеру
-					if (this.componentsSetUp.get(componentFound).equals(Boolean.FALSE))
-						//Если выше данного объекта находится НЕОБРАБОТАННЫЙ
-						//элемент отображения
-						throw new NonImplementedElementFoundException();
+				if (this.componentsSetUp.get(componentFound).equals(Boolean.FALSE))
+					//Если выше данного объекта находится НЕОБРАБОТАННЫЙ
+					//элемент отображения
+					throw new NonImplementedElementFoundException();
 
 				/**
 				 * Координата Y нижнего края найденного компонента
@@ -195,7 +200,7 @@ public class ReportLayout {
 
 		//Если выше не нашли ни одного объекта
 		if (theLowestEdgeValue == -1)
-			return element.getY();
+			return elementMinY;
 
 		StorableElement lowestElement = theLowestComponent.getElement();
 		int yDistanceAtScheme = component.getElement().getY()
@@ -221,8 +226,7 @@ public class ReportLayout {
 		for (RenderingComponent component : this.componentContainer) {
 			StorableElement element = component.getElement();
 			
-			if (element instanceof AttachedTextStorableElement)
-			{
+			if (element instanceof AttachedTextStorableElement) {
 				//Мы фиксируем координаты только непривязанных к объектам надписей
 				AttachedTextStorableElement atElement =
 					(AttachedTextStorableElement) element;
@@ -237,8 +241,7 @@ public class ReportLayout {
 				xs.add(new Integer(element.getX() + element.getWidth()));
 				ys.add(new Integer(element.getY() + element.getHeight()));
 			}
-			else if (element instanceof DataStorableElement)
-			{
+			else if (element instanceof DataStorableElement) {
 				Rectangle borders = this.reportTemplate.getElementClasterBounds(
 						(DataStorableElement)element);
 				
@@ -248,8 +251,7 @@ public class ReportLayout {
 				xs.add(new Integer(borders.x + borders.width));
 				ys.add(new Integer(borders.y + borders.height));
 			}
-			else if (element instanceof ImageStorableElement)
-			{
+			else if (element instanceof ImageStorableElement) {
 				xs.add(new Integer(element.getX()));
 				ys.add(new Integer(element.getY()));
 
@@ -273,8 +275,7 @@ public class ReportLayout {
 	private RenderingComponent getComponentAtPoint(int x,int y) throws ApplicationException {
 		for (RenderingComponent component : this.componentContainer) {
 			StorableElement element = component.getElement();
-			if (element instanceof AttachedTextStorableElement)
-			{
+			if (element instanceof AttachedTextStorableElement)	{
 				//Привязанные надписи не считаются
 				AttachedTextStorableElement atElement =
 					(AttachedTextStorableElement) element;
@@ -286,16 +287,14 @@ public class ReportLayout {
 				if (element.hasPoint(x,y))
 					return component;
 			}
-			else if (element instanceof DataStorableElement)
-			{
+			else if (element instanceof DataStorableElement) {
 				//Смотрим: принадлежит ли точка кластеру - области, в которую
 				//вписаны элемент отображения данных и прявязанные к нему надписи
 				DataStorableElement dsElement =	(DataStorableElement) element;
 				if (this.reportTemplate.clasterContainsPoint(dsElement,x,y))
 					return component;
 			}
-			else if (element instanceof ImageStorableElement)
-			{
+			else if (element instanceof ImageStorableElement) {
 				if (element.hasPoint(x,y))
 					return component;
 			}
