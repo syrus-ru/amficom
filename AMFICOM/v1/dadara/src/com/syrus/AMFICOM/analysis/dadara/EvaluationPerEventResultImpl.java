@@ -1,5 +1,5 @@
 /*-
- * $Id: EvaluationPerEventResultImpl.java,v 1.2 2005/10/13 11:23:32 saa Exp $
+ * $Id: EvaluationPerEventResultImpl.java,v 1.3 2005/10/14 07:58:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,12 @@ import java.io.IOException;
 import com.syrus.io.SignatureMismatchException;
 
 /**
+ * immutable реализация {@link EvaluationPerEventResult}
+ * с поддержкой {@link DataStreamable}
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/10/13 11:23:32 $
- * @module
+ * @author saa
+ * @version $Revision: 1.3 $, $Date: 2005/10/14 07:58:32 $
+ * @module dadara
  */
 public class EvaluationPerEventResultImpl
 implements EvaluationPerEventResult, DataStreamable {
@@ -62,6 +65,9 @@ implements EvaluationPerEventResult, DataStreamable {
 		throw new IllegalStateException();
 	}
 
+	/**
+	 * copy-constructor
+	 */
 	public EvaluationPerEventResultImpl(EvaluationPerEventResult that) {
 		int size = that.getNEvents();
 		this.qk = new boolean[size];
@@ -79,6 +85,9 @@ implements EvaluationPerEventResult, DataStreamable {
 		}
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.analysis.dadara.DataStreamable#writeToDOS(java.io.DataOutputStream)
+	 */
 	public void writeToDOS(DataOutputStream dos) throws IOException {
 		// XXX: тратится довольно много места. разработать более компактный формат
 		dos.writeLong(SIGNATURE);
@@ -92,6 +101,9 @@ implements EvaluationPerEventResult, DataStreamable {
 		}
 	}
 
+	/**
+	 * Для DSReader'а
+	 */
 	protected EvaluationPerEventResultImpl(DataInputStream dis)
 	throws SignatureMismatchException, IOException {
 		if (dis.readLong() != SIGNATURE) {
