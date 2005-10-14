@@ -139,7 +139,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
-				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame();
+				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
+					public String getReportTitle() {
+						return PRIMARY_PARAMETERS_FRAME;
+					}
+				};
 				desktopPane.add(paramFrame);
 				AnalyseMainFrame.this.tables.add(paramFrame);
 				return paramFrame;
@@ -150,7 +154,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
-				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrame.this.dispatcher);
+				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrame.this.dispatcher) {
+					public String getReportTitle() {
+						return STATS_FRAME;
+					}
+				};
 				desktopPane.add(statsFrame);
 				AnalyseMainFrame.this.tables.add(statsFrame);
 				return statsFrame;
@@ -161,7 +169,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | NOISE_FRAME", Level.FINEST);
-				ScalableFrame noiseFrame = new ScalableFrame(new ScalableLayeredPanel());
+				ScalableFrame noiseFrame = new ScalableFrame(new ScalableLayeredPanel()) {
+					public String getReportTitle() {
+						return NOISE_FRAME;
+					}
+				};
 				noiseFrame.setTitle(LangModelAnalyse.getString("Noise level"));
 				desktopPane.add(noiseFrame);
 				AnalyseMainFrame.this.graphs.add(noiseFrame);
@@ -189,7 +201,11 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 				ScalableLayeredPanel layeredPanel = new ScalableLayeredPanel();
 				noiseHistogrammPanel = new NoiseHistogrammPanel(layeredPanel);
 				layeredPanel.setGraphPanel(noiseHistogrammPanel);
-				ScalableFrame noiseHistoFrame = new ScalableFrame(layeredPanel);
+				ScalableFrame noiseHistoFrame = new ScalableFrame(layeredPanel) {
+					public String getReportTitle() {
+						return NOISE_HISTOGRAMM_FRAME;
+					}
+				};
 				noiseHistoFrame.setTitle(LangModelAnalyse.getString("noiseHistoTitle"));
 				desktopPane.add(noiseHistoFrame);
 				AnalyseMainFrame.this.graphs.add(noiseHistoFrame);
