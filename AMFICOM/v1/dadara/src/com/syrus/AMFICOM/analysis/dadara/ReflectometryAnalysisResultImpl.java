@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryAnalysisResultImpl.java,v 1.1 2005/10/13 11:20:39 saa Exp $
+ * $Id: ReflectometryAnalysisResultImpl.java,v 1.2 2005/10/14 08:07:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,73 +8,142 @@
 
 package com.syrus.AMFICOM.analysis.dadara;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
+import com.syrus.io.DataFormatException;
 
 /**
- * Предоставляет доступ к результатам анализа в виде
- * ReflectometryAnalysisResult.
- * Внимание: Не обеспечивает защиты объектов от изменения, не делает копий.
+ * Предоставляет проеобразование результатов анализа и сравнения
+ * между ReflectometryAnalysisResult и объектным представлением dadara.
+ * Обеспечивает полную защиту данных - и на входе, и на выходе.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/10/13 11:20:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/14 08:07:52 $
  * @module dadara
  */
 public class ReflectometryAnalysisResultImpl implements
 		ReflectometryAnalysisResult {
-	private byte[] dadaraARBytes;
-	private byte[] dadaraRMBytes;
-	private byte[] evalPEBytes;
-	private ReflectometryEvaluationOverallResult evalOverall;
+
+	private AnalysisResult ar; // not null
+	private ReflectogramMismatchImpl[] rma; // may be null
+	private EvaluationPerEventResultImpl epe; // may be null
+	private ReflectometryEvaluationOverallResultImpl eOverall; // may be null
 
 	/**
-	 * 
-	 * NB: предполагает, что входной EtalonComparison и его объекты
-	 * не будут изменяться извне.
+	 * Создается на основе результатов анализа и сравнения dadara
+	 * Создает копии входных данных.
+	 * Входные параметры не должны быть null.
 	 */
 	public ReflectometryAnalysisResultImpl(AnalysisResult ar,
 			EtalonComparison ec) {
-		this.dadaraARBytes = ar.toByteArray();
+		assert ar != null;
+		this.ar = new AnalysisResult(ar);
 
 		final List<ReflectogramMismatchImpl> alarms = ec.getAlarms();
-		this.dadaraRMBytes = ReflectogramMismatchImpl.alarmsToByteArray(
-			alarms.toArray(new ReflectogramMismatchImpl[alarms.size()]));
+		this.rma = alarms.toArray(new ReflectogramMismatchImpl[alarms.size()]);
+		// надо склонировать алармы, т.к. они modifiable
+		for (int i = 0; i < this.rma.length; i++) {
+			this.rma[i] = this.rma[i].copy();
+		}
 
-		EvaluationPerEventResultImpl eper = new EvaluationPerEventResultImpl(
-				ec.getPerEventResult());
-		this.evalPEBytes = DataStreamableUtil.writeDataStreamableToBA(eper);
+		this.epe = new EvaluationPerEventResultImpl(ec.getPerEventResult());
 
-		this.evalOverall = ec.getOverallResult();
+		this.eOverall = new ReflectometryEvaluationOverallResultImpl(
+				ec.getOverallResult());
+	}
+
+	/**
+	 * Считывает(импортирует) данные другого
+	 * {@link ReflectometryAnalysisResult}
+	 * (copy-конструктор)
+	 * @param that копируемый {@link ReflectometryAnalysisResult}
+	 * @throws DataFormatException 
+	 */
+	public ReflectometryAnalysisResultImpl(ReflectometryAnalysisResult that)
+	throws DataFormatException {
+		// распаковываем AR
+		this.ar = (AnalysisResult)
+				DataStreamableUtil.readDataStreamableFromBA(
+						that.getDadaraAnalysisResultBytes(),
+						AnalysisResult.getDSReader());
+		// распаковываем RM
+		this.rma = ReflectogramMismatchImpl.alarmsFromByteArray(
+			that.getDadaraReflectogramMismatchBytes());
+		// распаковываем PE
+		this.epe = (EvaluationPerEventResultImpl)
+				DataStreamableUtil.readDataStreamableFromBA(
+						that.getDadaraEvaluationPerEventResultBytes(),
+						EvaluationPerEventResultImpl.getDSReader());
+		// делаем копию Overall
+		this.eOverall = new ReflectometryEvaluationOverallResultImpl(
+			that.getReflectometryEvaluationOverallResult());
+	}
+
+	/**
+	 * Возвращает копию своего AnalysisResult
+	 * @return копию своего AnalysisResult
+	 */
+	public AnalysisResult getDadaraAnalysisResult() {
+		return new AnalysisResult(this.ar); // делаем копию
+	}
+
+	/**
+	 * Возвращает копию своего EtalonComparison
+	 */
+	public EtalonComparison getDadaraEtalonComparison() {
+		// копируем элементы массива rma в список, клонируя их при этом
+		final ArrayList<ReflectogramMismatchImpl> rmArray =
+			new ArrayList<ReflectogramMismatchImpl>(this.rma.length);
+		for (int i = 0; i < this.rma.length; i++) {
+			rmArray.add(this.rma[i].copy());
+		}
+		// остальные поля - immutable
+		final ReflectometryEvaluationOverallResult overall = this.eOverall;
+		final EvaluationPerEventResultImpl perEvent = this.epe;
+		// создаем EvalonComparison
+		return new EtalonComparison() {
+			public List<ReflectogramMismatchImpl> getAlarms() {
+				return rmArray;
+			}
+			public ReflectometryEvaluationOverallResult getOverallResult() {
+				return overall;
+			}
+			public EvaluationPerEventResult getPerEventResult() {
+				return perEvent;
+			}
+		};
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraAnalysisResultBytes()
 	 */
 	public byte[] getDadaraAnalysisResultBytes() {
-		return this.dadaraARBytes;
+		return this.ar.toByteArray();
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraReflectogramMismatchBytes()
 	 */
 	public byte[] getDadaraReflectogramMismatchBytes() {
-		return this.dadaraRMBytes;
+		return ReflectogramMismatchImpl.alarmsToByteArray(this.rma);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraEvaluationPerEventResultBytes()
 	 */
 	public byte[] getDadaraEvaluationPerEventResultBytes() {
-		return this.evalPEBytes;
+		return DataStreamableUtil.writeDataStreamableToBA(this.epe);
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getReflectometryEvaluationOverallResult()
 	 */
-	public ReflectometryEvaluationOverallResult getReflectometryEvaluationOverallResult() {
-		return this.evalOverall;
+	public ReflectometryEvaluationOverallResult
+	getReflectometryEvaluationOverallResult() {
+		return this.eOverall; // это unmodifiable-реализация
 	}
 }
