@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.12 2005/10/14 11:35:25 arseniy Exp $
+ * $Id: FIFOSaver.java,v 1.13 2005/10/14 12:14:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,20 +25,21 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/14 11:35:25 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/14 12:14:35 $
  * @author $Author: arseniy $
  * @module util
  */
 public final class FIFOSaver {
-	
+
 	private static final String KEY_CACHE_PATH = "CachePath";
 
 	private static final String DEFAULT_HOME = System.getProperty("user.dir");
 	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + File.separator
 			+ "cache" + File.separator + Application.getApplicationName();
 	public static final String EXTENSION = "Fifo.serialized";
-	
-	
+
+	private static final String FLAG_FILE_NAME = "serialized";
+
 	private static String pathNameOfSaveDir;
 	private static File saveDir;
 
@@ -50,7 +53,7 @@ public final class FIFOSaver {
 			init();
 			final File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
 			tempFile = new File(saveFile.getPath() + ".swp");
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
+			final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 			Log.debugMessage("FifoSaver.save | Trying to save Fifo with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
 			out.writeObject(objectEntityName);
 			out.writeObject(fifo.getObjects());
@@ -63,11 +66,12 @@ public final class FIFOSaver {
 		} catch (IOException ioe) {
 			Log.errorMessage("FifoSaver.save | Error: " + ioe.getMessage());
 		} finally {
-			if(tempFile != null)
+			if(tempFile != null) {
 				tempFile.delete();
+			}
 		}
 	}
-	
+
 	/**
 	 * @param objectEntityName
 	 * @todo Consider returning an empty list instead of null. Check all
@@ -76,16 +80,16 @@ public final class FIFOSaver {
 	private static Fifo load(final String objectEntityName) {
 		try {
 			Log.debugMessage("FifoSaver.load | Trying to load Fifo with " + objectEntityName , Log.DEBUGLEVEL10);
-			File savedFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(savedFile));
-			String keyObjectEntityName = (String) in.readObject();
+			final File savedFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
+			final ObjectInputStream in = new ObjectInputStream(new FileInputStream(savedFile));
+			final String keyObjectEntityName = (String) in.readObject();
 			if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
 				Log.errorMessage("FifoSaver.load | Wrong input file "+ savedFile.getAbsolutePath() + ". Loading failed");
 				return null;
 			}
-			Object[] objects = (Object[]) in.readObject();
-			Integer number = (Integer)in.readObject();
-			Fifo fifo = new Fifo(objects.length);
+			final Object[] objects = (Object[]) in.readObject();
+			final Integer number = (Integer)in.readObject();
+			final Fifo fifo = new Fifo(objects.length);
 			fifo.setObjects(objects);
 			fifo.setNumber(number.intValue());
 			return fifo;
@@ -100,13 +104,19 @@ public final class FIFOSaver {
 			return null;
 		}
 	}
-	
+
 	public static Map<String, Fifo> load() {
 		init();
+
+		if (!FIFOSaver.ensureFlagFile()) {
+			return Collections.emptyMap();
+		}
+
 		final Map<String, Fifo> codeNameFifo = new HashMap<String, Fifo>();
 		final File[] fifoFiles = saveDir.listFiles(new FifoFileFilter());
-		if(fifoFiles == null)
+		if(fifoFiles == null) {
 			return codeNameFifo;
+		}
 		for (int i = 0; i < fifoFiles.length; i++) {
 			final File file = fifoFiles[i];
 			final String fileName = file.getName();
@@ -130,5 +140,21 @@ public final class FIFOSaver {
 			saveDir = new File(pathNameOfSaveDir);
 			saveDir.mkdirs();
 		}		
+	}
+
+	private static boolean ensureFlagFile() {
+		final File flagFile = new File(saveDir.getPath() + File.separator + FLAG_FILE_NAME);
+		return flagFile.exists();
+	}
+
+	public static void touchFlagFile() {
+		try {
+			final OutputStream os = new FileOutputStream(saveDir.getPath() + File.separator + FLAG_FILE_NAME);
+			os.write(1);
+			os.flush();
+			os.close();
+		} catch (IOException ioe) {
+			Log.errorException(ioe);
+		}
 	}
 }
