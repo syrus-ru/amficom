@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.70 2005/10/13 12:03:34 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.71 2005/10/14 11:17:04 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/10/13 12:03:34 $
+ * @version $Revision: 1.71 $, $Date: 2005/10/14 11:17:04 $
  * @author $Author: saa $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ReflectometryAnalysisResultImpl;
+import com.syrus.AMFICOM.analysis.dadara.DadaraReflectometryAnalysisResult;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.Analysis;
@@ -170,8 +170,8 @@ final class DadaraAnalysisManager implements AnalysisManager {
 			// сравниваем
 			EtalonComparison ec =
 				CoreAnalysisManager.compareToEtalon(ar, etalon);
-			final ReflectometryAnalysisResultImpl rar =
-				new ReflectometryAnalysisResultImpl(ar, ec);
+			final DadaraReflectometryAnalysisResult rar =
+				new DadaraReflectometryAnalysisResult(ar, ec);
 
 			// сохраняем результаты сравнения
 			outParameters.put(ParameterType.DADARA_ALARMS,
