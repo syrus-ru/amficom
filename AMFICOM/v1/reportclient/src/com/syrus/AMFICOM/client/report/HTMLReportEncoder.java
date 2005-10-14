@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.8 2005/10/12 13:27:04 peskovsky Exp $
+ * $Id: HTMLReportEncoder.java,v 1.9 2005/10/14 14:07:41 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -273,7 +273,7 @@ public class HTMLReportEncoder {
 			for (int j = 0; j < table.getColumnCount(); j++) {
 				float startTableWidth = table.getColumnModel()
 						.getTotalColumnWidth();
-				float currTableWidth = table.getWidth();
+				float currTableWidth = component.getWidth();
 				int columnWidth = (int) (table.getColumnModel().getColumn(j)
 						.getWidth()
 						* currTableWidth / startTableWidth);
