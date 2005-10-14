@@ -71,15 +71,7 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_MAPXML): 
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/Map.xsd \
-		$(XMLDIR)/Collector.xsd \
-		$(XMLDIR)/NodeLink.xsd \
-		$(XMLDIR)/PhysicalLink.xsd \
-		$(XMLDIR)/PhysicalLinkType.xsd \
-		$(XMLDIR)/SiteNode.xsd \
-		$(XMLDIR)/SiteNodeType.xsd \
-		$(XMLDIR)/TopologicalNode.xsd \
-		$(XMLDIR)/MapLibrary.xsd \
+		$(XMLDIR)/*.xsd \
 		$(XMLDIR)/map.xsdconfig
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
