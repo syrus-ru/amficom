@@ -11,6 +11,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 
 public class AnalyseApplicationModel extends ApplicationModel {
 
@@ -86,6 +87,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add("commandCheckMismatch");
 		add("menuMakeCurrentTracePrimary");
 		this.initUIConstats();
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
 	}
 
 	private void initUIConstats() {

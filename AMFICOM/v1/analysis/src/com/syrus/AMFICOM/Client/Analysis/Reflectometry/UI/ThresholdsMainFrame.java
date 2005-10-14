@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.UIDefaults;
+
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CheckMismatchCommand;
@@ -45,6 +47,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.report.DestinationModules;
 
 public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChangeListener, EtalonMTMListener,
 		CurrentTraceChangeListener {
@@ -63,8 +66,8 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 	AnalysisSelectionFrame		anaSelectFrame;
 	AnalysisFrame				analysisFrame;
 
-	List					tables;
-	List					graphs;
+	List<ReportTable>					tables;
+	List<SimpleResizableFrame>					graphs;
 
 	public ThresholdsMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("ThresholdsTitle"), new AnalyseMainMenuBar(aContext
@@ -142,6 +145,16 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 			}
 		});
 
+		
+		// XXX: debug code
+		if (System.getProperty("amficom.debug.partialHeight", "false").equals("true"))
+			this.setSize(getSize().width, getSize().height * 3 / 4);
+	}
+
+	protected void initFrames() {
+		this.tables = new LinkedList<ReportTable>();
+		this.graphs = new LinkedList<SimpleResizableFrame>();
+		
 		this.selectFrame = new TraceSelectorFrame(this.dispatcher);
 		this.desktopPane.add(this.selectFrame);
 
@@ -181,26 +194,16 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		this.analysisFrame = new AnalysisFrame(this.dispatcher);
 		this.desktopPane.add(this.analysisFrame);
 		this.graphs.add(this.analysisFrame);
-		
-		ApplicationModel aModel = this.aContext.getApplicationModel();
-		CreateAnalysisReportCommand rc = (CreateAnalysisReportCommand) aModel.getCommand("menuReportCreate");
-		for (Iterator it = this.tables.iterator(); it.hasNext();) {
-			rc.setParameter(CreateAnalysisReportCommand.TABLE, it.next());
-		}
-		for (Iterator it = this.graphs.iterator(); it.hasNext();) {
-			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
-		}
-		// XXX: debug code
-		if (System.getProperty("amficom.debug.partialHeight", "false").equals("true"))
-			this.setSize(getSize().width, getSize().height * 3 / 4);
 	}
-
+	
 	public ThresholdsMainFrame() {
 		this(new ApplicationContext());
 	}
 
+	@Override
 	protected void initModule() {
 		super.initModule();
+		initFrames();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		Heap.addBsHashListener(this);
@@ -237,9 +240,14 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
-		// rc.setParameter(CreateAnalysisReportCommand.TYPE,
-		// ReportTemplate.rtt_Evaluation);
-		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext);
+		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
+				DestinationModules.EVALUATION);
+		for (ReportTable rt : this.tables) {
+			rc.setParameter(CreateAnalysisReportCommand.TABLE, rt);
+		}
+		for (SimpleResizableFrame rf : this.graphs) {
+			rc.setParameter(CreateAnalysisReportCommand.PANEL, rf);
+		}
 		aModel.setCommand("menuReportCreate", rc);
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(super.windowArranger));

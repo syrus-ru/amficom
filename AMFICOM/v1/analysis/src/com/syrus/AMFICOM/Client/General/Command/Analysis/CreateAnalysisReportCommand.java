@@ -1,79 +1,61 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.JDialog;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.report.CreateReportDialog;
 
-public class CreateAnalysisReportCommand extends AbstractCommand
-{
+public class CreateAnalysisReportCommand extends AbstractCommand {
 	public static final String TABLE = "table";
 	public static final String PANEL = "panel";
-	public static final String TYPE = "type";
 
 	private ApplicationContext aContext;
-	private ArrayList tableFrames = new ArrayList();
-	private ArrayList panels = new ArrayList();
-	private String type = "";
+	private List<ReportTable> tableFrames = new LinkedList<ReportTable>();
+	private List<SimpleResizableFrame> panels = new LinkedList<SimpleResizableFrame>();
+	private String destinationModule;
 
-	public CreateAnalysisReportCommand(ApplicationContext aContext)
-	{
+	public CreateAnalysisReportCommand(ApplicationContext aContext, String moduleName) {
 		this.aContext = aContext;
+		this.destinationModule = moduleName;
 	}
 
-	public Object clone()
-	{
-		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(aContext);
-		for (Iterator it = tableFrames.iterator(); it.hasNext();)
-		{
-			ReportTable tf = (ReportTable)it.next();
-			rc.setParameter(TABLE, tf);
-		}
-		for (Iterator it = panels.iterator(); it.hasNext();)
-		{
-			SimpleResizableFrame rf = (SimpleResizableFrame)it.next();
-			rc.setParameter(PANEL, rf);
-		}
-
-		rc.type = this.type;
-
-		return rc;
-	}
-
-	public void setParameter(String key, Object value)
-	{
-		if (key.equals(TABLE) && value instanceof ReportTable)
-		{
-			tableFrames.add(value);
-		} else if (key.equals(PANEL) && value instanceof SimpleResizableFrame)
-		{
-			panels.add(value);
-		} else if (key.equals(TYPE))
-		{
-			type = (String)value;
+	@Override
+	public void setParameter(String key, Object value) {
+		if (key.equals(TABLE) && value instanceof ReportTable) {
+			this.tableFrames.add((ReportTable)value);
+		} else if (key.equals(PANEL) && value instanceof SimpleResizableFrame) {
+			this.panels.add((SimpleResizableFrame)value);
 		}
 	}
 
-	public void execute()
-	{
-		/*AMTReport report = new AMTReport();
-		for (Iterator it = tableFrames.iterator(); it.hasNext();)
-		{
-			ATableFrame tf = (ATableFrame)it.next();
-			report.addRecord(tf.getReportTitle(),	tf.getTableModel());
+	@Override
+	public void execute() {
+		java.util.Map<Object,Object> reportData = new HashMap<Object,Object>();
+		
+		for (ReportTable tf : this.tableFrames) {
+			reportData.put(tf.getReportTitle(),	tf.getTableModel());
 		}
 
-		for (Iterator it = panels.iterator(); it.hasNext();)
-		{
-			SimpleResizableFrame rf = (SimpleResizableFrame)it.next();
-			report.addRecord(rf.getReportTitle(), rf.getTopGraphPanel());
+		for (SimpleResizableFrame rf : this.panels) {
+			reportData.put(rf.getReportTitle(), rf.getTopGraphPanel());
 		}
 
-		new OpenTypedTemplateCommand(aContext, type,
-																 report).execute();*/
+		try {
+			JDialog dialog = new CreateReportDialog(
+					this.aContext,
+					this.destinationModule,
+					reportData);
+			dialog.setVisible(true);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
 

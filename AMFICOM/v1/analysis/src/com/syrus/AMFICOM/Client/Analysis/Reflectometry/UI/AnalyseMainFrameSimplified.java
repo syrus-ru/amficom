@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.report.DestinationModules;
 
 public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsHashChangeListener, EtalonMTMListener,
 		CurrentTraceChangeListener {
@@ -56,8 +57,8 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	MarkersInfoFrame			mInfoFrame;
 	AnalysisSelectionFrame		anaSelectFrame;
 
-	List						tables;
-	List						graphs;
+	List<ReportTable>					tables;
+	List<SimpleResizableFrame>					graphs;
 
 	public AnalyseMainFrameSimplified(ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("AnalyseTitle"), new AnalyseMainMenuBar(aContext
@@ -120,47 +121,48 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 			}
 		});
+	}
 
-		if (this.tables == null) {
-			this.tables = new LinkedList();
-		}
-		if (this.graphs == null) {
-			this.graphs = new LinkedList();
-		}
-
+	protected void initFrames() {
+		this.tables = new LinkedList<ReportTable>();
+		this.graphs = new LinkedList<SimpleResizableFrame>();
+		
 		this.selectFrame = new TraceSelectorFrame(super.dispatcher);
 		this.desktopPane.add(this.selectFrame);
-
+		
 		this.paramFrame = new PrimaryParametersFrame();
 		this.desktopPane.add(this.paramFrame);
 		this.tables.add(this.paramFrame);
-
+		
 		this.statsFrame = new OverallStatsFrame(super.dispatcher);
 		this.desktopPane.add(this.statsFrame);
 		this.tables.add(this.statsFrame);
-
+		
 		this.eventsFrame = new EventsFrame(aContext);
 		this.desktopPane.add(this.eventsFrame);
 		this.tables.add(this.eventsFrame);
-
+		
 		this.analysisFrame = new AnalysisFrame(super.dispatcher);
 		this.desktopPane.add(this.analysisFrame);
 		this.graphs.add(this.analysisFrame);
-
+		
 		this.mInfoFrame = new MarkersInfoFrame(super.dispatcher);
 		this.desktopPane.add(this.mInfoFrame);
-
+		
 		this.anaSelectFrame = new AnalysisSelectionFrame(aContext);
 		this.desktopPane.add(this.anaSelectFrame);
 		this.tables.add(this.anaSelectFrame);
 	}
-
+	
 	public AnalyseMainFrameSimplified() {
 		this(new ApplicationContext());
 	}
 
+	@Override
 	public void initModule() {
 		super.initModule();
+		initFrames();
+		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		Heap.addBsHashListener(this);
@@ -189,22 +191,14 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
-		if (this.tables == null) {
-			this.tables = new LinkedList();
+		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
+				DestinationModules.ANALYSIS);
+		for (ReportTable rt : this.tables) {
+			rc.setParameter(CreateAnalysisReportCommand.TABLE, rt);
 		}
-		if (this.graphs == null) {
-			this.graphs = new LinkedList();
+		for (SimpleResizableFrame rf : this.graphs) {
+			rc.setParameter(CreateAnalysisReportCommand.PANEL, rf);
 		}
-
-		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext);
-		for (Iterator it = this.tables.iterator(); it.hasNext();) {
-			rc.setParameter(CreateAnalysisReportCommand.TABLE, it.next());
-		}
-		for (Iterator it = this.graphs.iterator(); it.hasNext();) {
-			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
-		}
-		// rc.setParameter(CreateAnalysisReportCommand.TYPE,
-		// ReportTemplate.rtt_Analysis);
 		aModel.setCommand("menuReportCreate", rc);
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
