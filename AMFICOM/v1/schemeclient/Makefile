@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.16 2005/10/12 10:03:33 bass Exp $
+# $Id: Makefile,v 1.17 2005/10/14 10:40:59 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -20,12 +20,14 @@ administration \
 configuration \
 measurement \
 resource \
+report \
 map \
 scheme \
 filter \
 csbridge \
 commonclient \
-filterclient
+filterclient \
+reportclient
 
 XMLCLASSPATH := $(LIBDIR)/configurationxml.jar:$(LIBDIR)/schemexml.jar
 EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
