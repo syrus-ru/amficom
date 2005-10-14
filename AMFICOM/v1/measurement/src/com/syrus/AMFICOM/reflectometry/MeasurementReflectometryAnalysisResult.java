@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementReflectometryAnalysisResult.java,v 1.1 2005/10/14 11:19:45 saa Exp $
+ * $Id: MeasurementReflectometryAnalysisResult.java,v 1.2 2005/10/14 13:37:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,17 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 
 /**
+ * Представление результатов анализа, доступных из модуля measurement
+ * (как объектов Pool), в виде ReflectometryAnalysisResult.
+ * <p>
+ * Методы могут бросать исключения:<ul>
+ * <li>ApplicationException - thrown by getStorableObjectsByCondition
+ * <li>DataFormatException - при ошибке восстановления double из byte[]
+ * </ul>
+ * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/10/14 11:19:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/14 13:37:08 $
  * @module measurement
  */
 public class MeasurementReflectometryAnalysisResult
@@ -44,11 +52,11 @@ implements ReflectometryAnalysisResult {
 	 * XXX: вообще говоря, из специфики reflectometry здесь лишь предположение о том, что analysis для measurement'а не более чем один
 	 * @param m Measurement
 	 * @return Analysis or null
-	 * @throws ApplicationException thrown by getStorableObjectsByCondition
+	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 */
 	public static Analysis getAnalysisForMeasurement(Measurement m)
 	throws ApplicationException {
-		assert m != null;
+		assert m != null : "Not null expected";
 		LinkedIdsCondition condition1 =
 			new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_CODE);
 		Set<Analysis> analyse =
@@ -57,17 +65,50 @@ implements ReflectometryAnalysisResult {
 	}
 
 	/**
+	 * Создается по данному измерению.
+	 * Если анализа не было, то получаемое значение
+	 * будет иметь все свойства в значении null, что, согласно
+	 * контракту {@link ReflectometryAnalysisResult}, соответствует
+	 * тому, что ни анализ, ни сравнение не было проведено.
+	 * @param m измерение
+	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
+	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
+	 */
+	public MeasurementReflectometryAnalysisResult(Measurement m)
+	throws ApplicationException, DataFormatException {
+		this(getAnalysisForMeasurement(m), true);
+	}
+
+	/**
 	 * Создается по результатам данного analysis.
-	 * @param analysis объект Analysis, по параметрам которого создаемся.
-	 *   Может быть null, в таком случае все свойства тоже будут null
-	 *   (состояние "анализ не проводился")
-	 * @throws ApplicationException thrown by getStorableObjectsByCondition
-	 * @throws DataFormatException при ошибке восстановления double из byte[]
+	 * @param analysis объект Analysis, по параметрам которого создаемся,
+	 *   not null
+	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
+	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
 	 */
 	public MeasurementReflectometryAnalysisResult(Analysis analysis)
 	throws ApplicationException, DataFormatException {
-		if (analysis == null) {
-			return; // leave null fields
+		this(analysis, false);
+	}
+
+	/**
+	 * Создается по результатам данного analysis, с поддержкой null.
+	 * @param analysis объект Analysis, по параметрам которого создаемся.
+	 * @param allowNull разрешить на входе null в качестве значения analysis,
+	 *   в таком случае все свойства тоже будут null
+	 *   (состояние "анализ не проводился")
+	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
+	 * @throws DataFormatException @see MeasurementReflectometryAnalysisResult
+	 */
+	private MeasurementReflectometryAnalysisResult(Analysis analysis,
+			boolean allowNull)
+	throws ApplicationException, DataFormatException {
+		if (!allowNull) {
+			assert analysis != null : "not null expected";
+		} else {
+			if (analysis == null) {
+				return; // leave null fields
+			}
 		}
 		LinkedIdsCondition condition = new LinkedIdsCondition(
 				analysis.getId(), ObjectEntities.RESULT_CODE);
