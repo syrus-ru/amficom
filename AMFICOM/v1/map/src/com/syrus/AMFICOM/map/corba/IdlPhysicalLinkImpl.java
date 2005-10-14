@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPhysicalLinkImpl.java,v 1.4 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: IdlPhysicalLinkImpl.java,v 1.5 2005/10/14 11:57:19 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/10/14 11:57:19 $
  * @module map
  */
 final class IdlPhysicalLinkImpl extends IdlPhysicalLink {
@@ -43,11 +43,8 @@ final class IdlPhysicalLinkImpl extends IdlPhysicalLink {
 			final String city,
 			final String street,
 			final String building,
-			final int dimensionX,
-			final int dimensionY,
-			final boolean leftToRight,
-			final boolean topToBottom,
-			final IdlIdentifier nodeLinkIds[]) {
+			final IdlIdentifier nodeLinkIds[],
+			final IdlIdentifier pipeBlockIds[]) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -62,11 +59,8 @@ final class IdlPhysicalLinkImpl extends IdlPhysicalLink {
 		this.city = city;
 		this.street = street;
 		this.building = building;
-		this.dimensionX = dimensionX;
-		this.dimensionY = dimensionY;
-		this.leftToRight = leftToRight;
-		this.topToBottom = topToBottom;
 		this.nodeLinkIds = nodeLinkIds;
+		this.pipeBlockIds = pipeBlockIds;
 	}
 
 	/**

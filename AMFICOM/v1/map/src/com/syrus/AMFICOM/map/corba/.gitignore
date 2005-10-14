@@ -9,6 +9,7 @@ IdlMap.java
 IdlMapFeature.java
 IdlMark.java
 IdlNodeLink.java
+IdlPipeBlock.java
 IdlPhysicalLink.java
 IdlPhysicalLinkType.java
 IdlRenderedImage.java

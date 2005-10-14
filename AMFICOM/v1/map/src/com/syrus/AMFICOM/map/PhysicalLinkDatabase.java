@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.38 2005/10/03 16:16:58 krupenn Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.39 2005/10/14 11:57:19 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/10/03 16:16:58 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/14 11:57:19 $
  * @author $Author: krupenn $
  * @module map
  */
@@ -51,9 +51,6 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				+ PhysicalLinkWrapper.COLUMN_CITY + COMMA
 				+ PhysicalLinkWrapper.COLUMN_STREET + COMMA
 				+ PhysicalLinkWrapper.COLUMN_BUILDING + COMMA
-				+ PhysicalLinkWrapper.COLUMN_DIMENSION_X + COMMA
-				+ PhysicalLinkWrapper.COLUMN_DIMENSION_Y + COMMA
-				+ PhysicalLinkWrapper.COLUMN_TOPLEFT + COMMA
 				+ PhysicalLinkWrapper.COLUMN_START_NODE_ID + COMMA
 				+ PhysicalLinkWrapper.COLUMN_END_NODE_ID;
 		}
@@ -64,9 +61,6 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -89,9 +83,6 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, storableObject.getDimensionX());
-		preparedStatement.setInt(++startParameterNumber, storableObject.getDimensionY());			
-		preparedStatement.setInt(++startParameterNumber, (storableObject.isTopToBottom() ? TOP_BOTTOM : 0) | (storableObject.isLeftToRight() ? LEFT_RIGHT : 0) );
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartNodeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndNodeId());
 		return startParameterNumber;
@@ -105,9 +96,6 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 			+ DatabaseString.toQuerySubString(storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
 			+ DatabaseString.toQuerySubString(storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
 			+ DatabaseString.toQuerySubString(storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN) + COMMA
-			+ storableObject.getDimensionX() + COMMA
-			+ storableObject.getDimensionY() + COMMA
-			+ ((storableObject.isTopToBottom() ? TOP_BOTTOM : 0) | (storableObject.isLeftToRight() ? LEFT_RIGHT : 0)) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getStartNodeId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getEndNodeId());
 		return values;
@@ -129,12 +117,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				null,
 				null,
 				null,
-				null,
-				0,
-				0,
-				false,
-				false,
-				false) : storableObject;
+				null) : storableObject;
 
 		PhysicalLinkType type;
 		try {
@@ -159,10 +142,6 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_CITY)),
 				DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_STREET)),
 				DatabaseString.fromQuerySubString(resultSet.getString(PhysicalLinkWrapper.COLUMN_BUILDING)),
-				resultSet.getInt(PhysicalLinkWrapper.COLUMN_DIMENSION_X),
-				resultSet.getInt(PhysicalLinkWrapper.COLUMN_DIMENSION_Y),
-				(topLeft & LEFT_RIGHT) == 1,
-				(topLeft & TOP_BOTTOM) == 1,
 				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_START_NODE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_END_NODE_ID));
 		return physicalLink;
