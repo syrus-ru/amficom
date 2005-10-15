@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.18 2005/09/21 15:14:28 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.19 2005/10/15 16:44:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/21 15:14:28 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/15 16:44:15 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -151,6 +152,7 @@ final class MapSchemeAdministrationResourceServer {
 			final MscharServerSessionEnvironment sessionEnvironment = MscharServerSessionEnvironment.getInstance();
 			try {
 				sessionEnvironment.login(login, PASSWORD);
+				LoginManager.selectDomain(server.getDomainId());
 			} catch (final LoginException le) {
 				Log.errorException(le);
 			}

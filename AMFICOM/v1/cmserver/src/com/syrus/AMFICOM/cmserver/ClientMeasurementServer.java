@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.64 2005/10/11 14:33:36 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.65 2005/10/15 16:44:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -28,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/10/11 14:33:36 $
+ * @version $Revision: 1.65 $, $Date: 2005/10/15 16:44:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -127,6 +128,7 @@ final class ClientMeasurementServer {
 			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
 			try {
 				sessionEnvironment.login(login, PASSWORD);
+				LoginManager.selectDomain(server.getDomainId());
 			} catch (final LoginException le) {
 				Log.errorException(le);
 			}
