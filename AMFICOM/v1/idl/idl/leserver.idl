@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.6 2005/10/12 12:25:12 bass Exp $
+ * $Id: leserver.idl,v 1.7 2005/10/15 16:47:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ module corba {
 
 		security::corba::IdlSessionKey login(in general::corba::WString32 login,
 			in general::corba::WString32 password,
+			in general::corba::WString64 userHostName,
 			out general::corba::IdlIdentifier userId)
 			raises (general::corba::AMFICOMRemoteException);
 
