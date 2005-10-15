@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseString.java,v 1.11 2005/06/07 09:14:47 max Exp $
+ * $Id: DatabaseString.java,v 1.12 2005/10/15 14:39:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/07 09:14:47 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/10/15 14:39:17 $
+ * @author $Author: arseniy $
  * @module util
  */
 public class DatabaseString {
@@ -92,7 +92,7 @@ public class DatabaseString {
 	 * @return sql query without escape chars
  	 * @since j2sdk 1.4
 	 */
-	public static String fromQuerySubString(final String string){
+	public static String fromQuerySubString(final String string) {
 		// we mustn't unescape from substring because of this work done in sql driver
 /*/
 		return (string != null) ? string.replaceAll("(')\\1", "$1") : null;
