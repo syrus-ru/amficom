@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.15 2005/10/12 11:44:57 arseniy Exp $
+# $Id: Makefile,v 1.16 2005/10/15 14:16:52 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -20,12 +20,15 @@ general \
 administration \
 configuration \
 measurement \
+resource \
+report \
 filter \
 reflectometry \
 scheme \
 csbridge \
 commonclient \
-filterclient
+filterclient \
+reportclient
 
 SOURCES := $(shell find $(SRCDIR) -name *.java)
 
