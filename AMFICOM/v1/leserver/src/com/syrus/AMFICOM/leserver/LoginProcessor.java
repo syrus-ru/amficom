@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.17 2005/10/15 16:48:45 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.18 2005/10/15 17:52:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/15 16:48:45 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/15 17:52:30 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -123,7 +123,7 @@ final class LoginProcessor extends SleepButWorkThread {
 						+ Identifier.SEPARATOR
 						+ ContextNameFactory.generateContextName(userLogin.getUserHostName());
 				final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
-				corbaServer.deactivateServant(servantName);
+				corbaServer.deactivateServant(servantName, false);
 			}
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);
