@@ -1,5 +1,5 @@
 /**
- * $Id: Link.java,v 1.7 2005/10/06 09:59:23 krupenn Exp $
+ * $Id: Link.java,v 1.8 2005/10/15 13:41:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,10 +9,15 @@ package com.syrus.impexp.unicablemap.map;
 
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLink;
+import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
+import com.syrus.AMFICOM.map.xml.XmlPipeBlockSeq;
 import com.syrus.impexp.unicablemap.UniCableMapDatabase;
 import com.syrus.impexp.unicablemap.UniCableMapLink;
 import com.syrus.impexp.unicablemap.UniCableMapLinkType;
@@ -32,12 +37,9 @@ public class Link {
 	private String endNodeId;
 	private String startNodeId;
 	private double length = 0.0D;
-	private int dimensionX = -1;
-	private int dimensionY = -1;
 	private Collection<NodeLink> nodeLinks = new LinkedList<NodeLink>();
-	private boolean fromRight = false;
-	private boolean fromTop = false;
-	private boolean horVert = true;
+
+	private Map<String, Block> bindingBlocks = new HashMap<String, Block>();
 	
 	public void setStreet(String street) {
 		this.street = street;
@@ -142,14 +144,17 @@ public class Link {
 		xmlPhysicalLink.setCity(this.city);
 		xmlPhysicalLink.setStreet(this.street);
 		xmlPhysicalLink.setBuilding(this.building);
-		if(this.dimensionX != -1 && this.dimensionY != -1) {
-			xmlPhysicalLink.setDimensionX(this.dimensionX);
-			xmlPhysicalLink.setDimensionY(this.dimensionY);
-		}
-		xmlPhysicalLink.setLeftToRight(!this.fromRight);
-		xmlPhysicalLink.setTopToBottom(this.fromTop);
-		xmlPhysicalLink.setHorVert(this.horVert);
 
+		if(this.bindingBlocks.size() > 0) {
+			final XmlPipeBlockSeq xmlPipeBlocks = xmlPhysicalLink.addNewPipeBlocks();
+			XmlPipeBlock[] pipeBlockArray = new XmlPipeBlock[this.bindingBlocks.size()];
+			int i = 0;
+			for(Block block : this.bindingBlocks.values()) {
+				pipeBlockArray[i++] = block.getXmlPipeBlock();
+			}
+			xmlPipeBlocks.setPipeBlockArray(pipeBlockArray);
+		}
+		
 		if(this.name == null || this.name.length() == 0 || this.startNodeId == null || this.startNodeId.length() == 0 || this.endNodeId == null || this.endNodeId.length() == 0) {
 			System.out.println("link " + this.uid + " has no name!");
 			this.name = this.uid;
@@ -161,6 +166,10 @@ public class Link {
 			xmlPhysicalLink.setDescription(this.description);
 		}
 
+		if(this.bindingBlocks.size()> 0) {
+			// add blocks
+		}
+		
 		return xmlPhysicalLink;
 	}
 
@@ -170,6 +179,7 @@ public class Link {
 		String street = "";
 		String city = "";
 		String building = "";
+		String description = "";
 //		if(ucmObject.un == 597402L) {
 //			// link with 2 blocks
 //			int a = 0;
@@ -204,28 +214,17 @@ public class Link {
 				for(UniCableMapLink ucmLink2 : ucmDatabase.getChildren(ucmLink.child)) {
 					if(ucmLink2.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)
 							&& ucmLink2.child.typ.text.equals(UniCableMapType.UCM_BLOCK)) {
-						blocksscanned++;
-						for(UniCableMapParameter param : ucmLink2.child.buf.params) {
-							if(param.realParameter.text.equals(UniCableMapParameter.UCM_X)) {
-								link.setDimensionX(Integer.parseInt(param.value));
-							}
-							if(param.realParameter.text.equals(UniCableMapParameter.UCM_Y)) {
-								link.setDimensionY(Integer.parseInt(param.value));
-							}
-							if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_TOP)) {
-								link.setFromTop(Boolean.getBoolean(param.value));
-							}
-							if(param.realParameter.text.equals(UniCableMapParameter.UCM_FROM_RIGHT)) {
-								link.setFromRight(Boolean.getBoolean(param.value));
-							}
-						}
+						Block block = Block.parseBlock(ucmDatabase, ucmLink2.child, blocksscanned++);
+						link.bindingBlocks.put(block.getId(), block);
+						description += block.getComment() + "\n";
 					}
 				}
 			}
 		}
 
 		if(blocksscanned > 1) {
-			System.out.println("Внимание! Тоннель '" + ucmObject.text + "' содержит блоков труб: "
+			System.out.println("Внимание! Тоннель '" + ucmObject.text + "' ("
+					+ ucmObject.un + ") содержит блоков труб: "
 					+ blocksscanned + ".");
 		}
 		
@@ -240,7 +239,7 @@ public class Link {
 		}
 
 		link.setId(String.valueOf(ucmObject.un));
-		link.setDescription("");
+		link.setDescription(description);
 		link.setPhysicalLinkTypeCodename(proto);
 
 		link.setCity(city);
@@ -250,28 +249,9 @@ public class Link {
 		return link;
 	}
 
-	public void setFromRight(boolean fromRight) {
-		this.fromRight = fromRight;
+	public Map<String, Block> getBindingBlocks() {
+		return Collections.unmodifiableMap(this.bindingBlocks);
 	}
 
-	public void setFromTop(boolean fromTop) {
-		this.fromTop = fromTop;
-	}
-
-	public int getDimensionY() {
-		return this.dimensionY;
-	}
-
-	public void setDimensionY(int dimensionY) {
-		this.dimensionY = dimensionY;
-	}
-
-	public int getDimensionX() {
-		return this.dimensionX;
-	}
-
-	public void setDimensionX(int dimensionX) {
-		this.dimensionX = dimensionX;
-	}
 
 }

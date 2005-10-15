@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.16 2005/10/09 12:51:31 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.17 2005/10/15 13:41:52 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeElementSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort.DirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme.Kind;
+import com.syrus.impexp.unicablemap.map.Block;
 import com.syrus.impexp.unicablemap.map.Link;
 import com.syrus.impexp.unicablemap.map.Site;
 import com.syrus.impexp.unicablemap.objects.Cable;
@@ -54,8 +55,8 @@ import com.syrus.impexp.unicablemap.objects.Port;
 import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/10/09 12:51:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/10/15 13:41:52 $
  * @module importUCM
  */
 
@@ -133,8 +134,9 @@ public class UCMSchemeExportCommand {
 			Cable cable = new Cable(Integer.toString(ucmObject.un));
 			this.cables.put(Integer.valueOf(ucmObject.un), cable);
 			
-			if(ucmObject.un == 538058L) {
-				int a = 0;
+			if(ucmObject.un == 636029L) {
+				int a;
+				a = 0;
 			}
 			
 			cable.setName(ucmObject.text);
@@ -407,12 +409,12 @@ public class UCMSchemeExportCommand {
 				UniCableMapObject truba = ucmLink.parent;
 				for(UniCableMapLink ucmLink1 : this.ucmDatabase.getParents(truba)) {
 					if(ucmLink1.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
-						UniCableMapObject block = ucmLink1.parent;
+						UniCableMapObject ucmBlock = ucmLink1.parent;
 						int pox = 0;
 						int poy = 0;
 						boolean leftToRight = true;
 						boolean topToBottom = false;
-						for(UniCableMapParameter param : block.buf.params) {
+						for(UniCableMapParameter param : ucmBlock.buf.params) {
 							if (param.realParameter.text.equals(UniCableMapParameter.UCM_X)) {
 								pox = Integer.parseInt(param.value);
 							} else if (param.realParameter.text.equals(UniCableMapParameter.UCM_Y)) {
@@ -423,41 +425,8 @@ public class UCMSchemeExportCommand {
 								leftToRight = ! Boolean.getBoolean(param.value);
 							}
 						}
-//						if(ucmObject.un == 604919L) {
-//							// in a link which nas 2 blocks
-//							int a = 0;
-//						}
-						int seq = truba.un - block.un;
-						if(seq > pox * poy) {
-							System.out.println("seq " + seq
-									+ " is greater than " + pox
-									+ " * " + poy
-									+ " for truba " + truba.un
-									+ " (" + truba.text + ") "
-									+ " in block " + block.un
-									+ " (" + block.text + ") ");
-						}
-						int rowX = (pox == 0) ? 0
-								: (leftToRight) ? ((seq % pox) - 1) 
-										: (pox - (seq % pox));
-						if(rowX < 0) {
-							rowX += pox;
-						}
-						int placeY = (pox == 0) ? 0
-								: (topToBottom) ? ((seq - 1) / pox) 
-										: (poy - ((seq - 1) / pox) - 1);
-						item.setRowX(rowX);
-						item.setPlaceY(placeY);
-						if(rowX == -1 || placeY == -1) {
-							System.out.println("row " + rowX
-									+ ", place " + placeY
-									+ " for seq " + seq
-									+ " at tunnel dimensions (" + pox
-									+ ", " + poy + ")");
-						}
-//						item.setRowX(seq / poy == 0 ? 1 : poy);
-//						item.setPlaceY(seq % pox == 0 ? seq : pox);
-						for(UniCableMapLink ucmLink2 : this.ucmDatabase.getParents(block)) {
+
+						for(UniCableMapLink ucmLink2 : this.ucmDatabase.getParents(ucmBlock)) {
 							if(ucmLink2.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
 								UniCableMapObject razrez = ucmLink2.parent;
 								for(UniCableMapLink ucmLink3 : this.ucmDatabase.getParents(razrez)) {
@@ -484,6 +453,48 @@ public class UCMSchemeExportCommand {
 								}
 								break;
 							}
+						}
+
+//						if(ucmObject.un == 604919L) {
+//							// in a link which has 2 blocks
+//							int a = 0;
+//						}
+						Link link = this.links.get(Integer.parseInt(item.getTunnelId()));
+						if(link != null) {
+							Block block = link.getBindingBlocks().get(String.valueOf(ucmBlock.un));
+							int seq = block.getPipeNumbers().get(String.valueOf(truba.un));
+							if(seq > pox * poy) {
+								System.out.println("seq " + seq
+										+ " is greater than " + pox
+										+ " * " + poy
+										+ " for truba " + truba.un
+										+ " (" + truba.text + ") "
+										+ " in block " + ucmBlock.un
+										+ " (" + ucmBlock.text + ") ");
+							}
+							int rowX = (pox == 0) ? 0
+									: (leftToRight) ? ((seq % pox) - 1) 
+											: (pox - (seq % pox));
+							if(rowX < 0) {
+								rowX += pox;
+							}
+							int placeY = (pox == 0) ? 0
+									: (topToBottom) ? ((seq - 1) / pox) 
+											: (poy - ((seq - 1) / pox) - 1);
+							item.setRowX(rowX);
+							item.setPlaceY(placeY);
+							item.setBlockId(block.getId());
+							if(rowX == -1 || placeY == -1) {
+								System.out.println("row " + rowX
+										+ ", place " + placeY
+										+ " for seq " + seq
+										+ " at tunnel dimensions (" + pox
+										+ ", " + poy + ")");
+							}
+						}
+						else {
+							item.setRowX(-1);
+							item.setPlaceY(-1);
 						}
 						break;
 					}

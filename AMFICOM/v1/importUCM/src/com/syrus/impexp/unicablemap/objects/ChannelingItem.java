@@ -1,5 +1,5 @@
 /*-
- * $Id: ChannelingItem.java,v 1.6 2005/10/06 10:00:23 krupenn Exp $
+ * $Id: ChannelingItem.java,v 1.7 2005/10/15 13:41:52 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ public class ChannelingItem {
 	private int rowX;
 	private int placeY;
 	private String parentId;
+	private String blockId;
 	
 	private transient double length = 0;
 	
@@ -79,6 +80,12 @@ public class ChannelingItem {
 			System.err.println("tunnelId is null for " + this);
 		} else {
 			pluid.setStringValue(this.tunnelId);
+			XmlIdentifier bluid = xmlCCI.addNewBlockId();
+			if (this.blockId == null) {
+//				System.err.println("blockId is null for " + this.id + " ( tunnel " + this.tunnelId + ")");
+			} else {
+				bluid.setStringValue(this.blockId);
+			}
 		}
 		
 		XmlIdentifier ssuid = xmlCCI.addNewStartSiteNodeId();
@@ -116,5 +123,13 @@ public class ChannelingItem {
 
 	public String getId() {
 		return this.id;
+	}
+
+	public String getBlockId() {
+		return this.blockId;
+	}
+
+	public void setBlockId(String blockId) {
+		this.blockId = blockId;
 	}
 }
