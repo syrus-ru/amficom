@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientCORBAActionProcessor.java,v 1.2 2005/10/12 06:21:11 arseniy Exp $
+ * $Id: ClientCORBAActionProcessor.java,v 1.3 2005/10/15 17:47:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/12 06:21:11 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/15 17:47:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -72,4 +72,18 @@ public class ClientCORBAActionProcessor extends DefaultCORBAActionProcessor {
 		}
 	}
 
+	@Override
+	boolean restoreLogin() throws LoginException, CommunicationException {
+		if (!super.restoreLogin()) {
+			return false;
+		}
+
+		try {
+			ClientSessionEnvironment.getInstance().activateServant();
+			return true;
+		} catch (CommunicationException ce) {
+			Log.errorException(ce);
+			return false;
+		}
+	}
 }
