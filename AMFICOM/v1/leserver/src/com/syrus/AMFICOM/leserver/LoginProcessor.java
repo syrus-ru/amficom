@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.16 2005/09/21 14:09:16 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.17 2005/10/15 16:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,16 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.ContextNameFactory;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.AMFICOM.security.UserLoginDatabase;
@@ -27,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/21 14:09:16 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/15 16:48:45 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -40,9 +45,10 @@ final class LoginProcessor extends SleepButWorkThread {
 	public static final int LOGIN_PROCESSOR_TICK_TIME = 5;	//sec
 	public static final int MAX_USER_UNACTIVITY_PERIOD = 1;	//minutes
 
+	private static final UserLoginDatabase userLoginDatabase = new UserLoginDatabase();
+
 	private static Map<SessionKey, UserLogin> loginMap;
 	private long maxUserUnactivityPeriod;
-	private UserLoginDatabase userLoginDatabase;
 	private boolean running;
 
 	public LoginProcessor() {
@@ -54,7 +60,6 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 
 		this.maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 1000;
-		this.userLoginDatabase = new UserLoginDatabase();
 		this.running = true;
 
 		this.restoreState();
@@ -70,7 +75,7 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	private void restoreState() {
 		try {
-			final Set<UserLogin> userLogins = this.userLoginDatabase.retrieveAll();
+			final Set<UserLogin> userLogins = userLoginDatabase.retrieveAll();
 			for (final UserLogin userLogin : userLogins) {
 				loginMap.put(userLogin.getSessionKey(), userLogin);
 			}
@@ -92,8 +97,10 @@ final class LoginProcessor extends SleepButWorkThread {
 					if (System.currentTimeMillis() - lastActivityDate.getTime() >= this.maxUserUnactivityPeriod) {
 						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than "
 								+ (this.maxUserUnactivityPeriod / (60 * 1000)) + " minutes. Deleting login", Log.DEBUGLEVEL06);
-						this.userLoginDatabase.delete(userLogin);
+						userLoginDatabase.delete(userLogin);
 						it.remove();
+
+						deactivateUserServant(userLogin);
 					}
 				}
 			}
@@ -107,6 +114,22 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 	}
 
+	private void deactivateUserServant(final UserLogin userLogin) {
+		try {
+			final SystemUser user = StorableObjectPool.getStorableObject(userLogin.getUserId(), true);
+			final int userSort = user.getSort().value();
+			if (userSort == SystemUserSort._USER_SORT_REGULAR || userSort == SystemUserSort._USER_SORT_SYSADMIN) {
+				final String servantName = userLogin.getSessionKey().toString()
+						+ Identifier.SEPARATOR
+						+ ContextNameFactory.generateContextName(userLogin.getUserHostName());
+				final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
+				corbaServer.deactivateServant(servantName);
+			}
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
+
 	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
@@ -117,24 +140,61 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 	}
 
-	protected static void addUserLogin(final UserLogin userLogin) {
-		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userLogin.getUserId() + "'", Log.DEBUGLEVEL08);
+	static SessionKey addUserLogin(final Identifier userId, final String userHostName) {
+		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userId + "'", Log.DEBUGLEVEL08);
+		final UserLogin userLogin = UserLogin.createInstance(userId, userHostName);
 		loginMap.put(userLogin.getSessionKey(), userLogin);
+		try {
+			userLoginDatabase.insert(userLogin);
+		} catch (CreateObjectException coe) {
+			Log.errorException(coe);
+		}
 		printUserLogins();
+		return userLogin.getSessionKey();
 	}
 
-	protected static UserLogin getUserLogin(final SessionKey sessionKey) {
-		Log.debugMessage("LoginProcessor.getUserLogin | Getting login for session key '" + sessionKey
-				+ "'; found: " + loginMap.containsKey(sessionKey), Log.DEBUGLEVEL08);
-		printUserLogins();
-		return loginMap.get(sessionKey);
-	}
-
-	protected static UserLogin removeUserLogin(final SessionKey sessionKey) {
+	static boolean removeUserLogin(final SessionKey sessionKey) {
 		Log.debugMessage("LoginProcessor.getUserLogin | Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = loginMap.remove(sessionKey);
+		if (userLogin == null) {
+			return false;
+		}
+
+		userLoginDatabase.delete(userLogin);
 		printUserLogins();
-		return userLogin;
+		return true;
+	}
+
+	static boolean isUserLoginPresent(final SessionKey sessionKey) {
+		return loginMap.containsKey(sessionKey);
+	}
+
+	static void setUserLoginDomain(final SessionKey sessionKey, final Identifier domainId) {
+		final UserLogin userLogin = loginMap.get(sessionKey);
+		userLogin.setDomainId(domainId);
+		try {
+			userLoginDatabase.update(userLogin);
+		} catch (UpdateObjectException uoe) {
+			Log.errorException(uoe);
+		}
+		printUserLogins();
+	}
+
+	static void updateUserLoginLastActivityDate(final SessionKey sessionKey) {
+		final UserLogin userLogin = loginMap.get(sessionKey);
+		userLogin.updateLastActivityDate();
+		try {
+			userLoginDatabase.update(userLogin);
+		} catch (final UpdateObjectException uoe) {
+			Log.errorException(uoe);
+		}
+		printUserLogins();
+	}
+
+	static UserLogin getUserLogin(final SessionKey sessionKey) {
+		Log.debugMessage("LoginProcessor.getUserLogin | Getting login for session key '" + sessionKey
+				+ "'; found: " + loginMap.containsKey(sessionKey), Log.DEBUGLEVEL08);
+		return loginMap.get(sessionKey);
 	}
 
 	private static void printUserLogins() {
@@ -165,6 +225,9 @@ final class LoginProcessor extends SleepButWorkThread {
 				stringBuffer.append("'\n");
 				stringBuffer.append("\t Domain id: '");
 				stringBuffer.append(userLogin.getDomainId());
+				stringBuffer.append("'\n");
+				stringBuffer.append("\t From host: '");
+				stringBuffer.append(userLogin.getUserHostName());
 				stringBuffer.append("'\n");
 				stringBuffer.append("\t From date: ");
 				stringBuffer.append(userLogin.getLoginDate());
