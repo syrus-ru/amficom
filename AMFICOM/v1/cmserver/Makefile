@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.39 2005/10/12 10:03:30 bass Exp $
+# $Id: Makefile,v 1.40 2005/10/15 14:29:59 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,15 +19,15 @@ include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
 
 DEPENDENCIES = \
-$(LIBDIR)/general \
-$(LIBDIR)/administration \
-$(LIBDIR)/configuration \
-$(LIBDIR)/measurement \
-$(LIBDIR)/report \
-$(LIBDIR)/csbridge \
-$(LIBDIR)/leserver_interface \
-$(LIBDIR)/mserver_interface \
-$(LIBDIR)/util
+general \
+administration \
+configuration \
+measurement \
+report \
+csbridge \
+leserver_interface \
+mserver_interface \
+util
 
 EXTCLASSPATH := $(TROVE4JCLASSPATH)
 
