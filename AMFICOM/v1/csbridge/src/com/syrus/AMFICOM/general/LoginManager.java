@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.23 2005/10/11 14:29:26 arseniy Exp $
+ * $Id: LoginManager.java,v 1.24 2005/10/15 16:49:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 package com.syrus.AMFICOM.general;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +25,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/11 14:29:26 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/15 16:49:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -55,8 +57,9 @@ public final class LoginManager {
 	public static void login(final String login, final String password) throws CommunicationException, LoginException {
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
+			final String localHostName = InetAddress.getLocalHost().getHostName();
 			IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
-			sessionKeyT = loginServer.login(login, password, userIdHolder);
+			sessionKeyT = loginServer.login(login, password, localHostName, userIdHolder);
 			sessionKey = new SessionKey(sessionKeyT);
 			userId = new Identifier(userIdHolder.value);
 		} catch (final AMFICOMRemoteException are) {
@@ -72,6 +75,8 @@ public final class LoginManager {
 			}
 		} catch (final SystemException se) {
 			throw new LoginException(I18N.getString("Error.CannotLogin") + " -- " + se.getMessage());
+		} catch (UnknownHostException uhe) {
+			throw new LoginException(I18N.getString("Error.CannotLogin") + " -- " + uhe.getMessage());
 		}
 	}
 
@@ -124,7 +129,7 @@ public final class LoginManager {
 	/*
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
-	public static void selectDomain(Identifier domainId1) throws CommunicationException {
+	public static void selectDomain(final Identifier domainId1) throws CommunicationException {
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			loginServer.selectDomain(sessionKey.getTransferable(), domainId1.getTransferable());
@@ -146,7 +151,7 @@ public final class LoginManager {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public static void setUserId(Identifier userId1) {
+	public static void setUserId(final Identifier userId1) {
 		userId = userId1;
 	}
 	
