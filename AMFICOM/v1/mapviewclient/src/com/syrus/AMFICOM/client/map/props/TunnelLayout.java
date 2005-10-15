@@ -1,5 +1,5 @@
 /*-
- * $$Id: TunnelLayout.java,v 1.27 2005/10/14 11:58:10 krupenn Exp $$
+ * $$Id: TunnelLayout.java,v 1.28 2005/10/15 13:39:28 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/14 11:58:10 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/15 13:39:28 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -168,6 +168,9 @@ public class TunnelLayout implements PropertyChangeListener {
 	}
 
 	public void updateElements() {
+		if(this.pipeBlock == null) {
+			return;
+		}
 		int counter = 1;
 		int limit = this.n * this.m;
 
