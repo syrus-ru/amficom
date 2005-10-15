@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisResult.java,v 1.2 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: TestAnalysisResult.java,v 1.3 2005/10/15 17:57:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Set;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
@@ -22,19 +23,24 @@ import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/15 17:57:06 $
  * @author $Author: arseniy $
  * @module test
  */
-public final class TestAnalysisResult extends DatabaseCommonTest {
+public final class TestAnalysisResult extends TestCase {
 
 	public TestAnalysisResult(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		addTestSuite(TestAnalysisResult.class);
-		return createTestSetup();
+		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
+		commonTest.addTestSuite(TestAnalysisResult.class);
+		return commonTest.createTestSetup();
+	}
+
+	public void testLoadAnalysisResult() {
+		final Identifier
 	}
 
 	public void testLoadResult() throws ApplicationException, DataFormatException {
