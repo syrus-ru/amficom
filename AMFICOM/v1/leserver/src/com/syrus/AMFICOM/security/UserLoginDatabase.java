@@ -1,11 +1,25 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.11 2005/09/21 14:07:00 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.12 2005/10/15 16:50:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.security;
+
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.EQUALS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_DELETE_FROM;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_UPDATE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,7 +32,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -26,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/21 14:07:00 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/15 16:50:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -36,28 +49,29 @@ public final class UserLoginDatabase {
 	private static final String COLUMN_SESSION_KEY = "session_key";
 	private static final String COLUMN_USER_ID = "user_id";
 	private static final String COLUMN_DOMAIN_ID = "domain_id";
+	private static final String COLUMN_USER_HOST_NAME = "user_host_name";
 	private static final String COLUMN_LOGIN_DATE = "login_date";
 	private static final String COLUMN_LAST_ACTIVITY_DATE = "last_activity_date";
 	private static final int SIZE_COLUMN_SESSION_KEY = 128;
+	private static final int SIZE_COLUMN_USER_HOST_NAME = 64;
 
 	private StringBuffer singleWhereClause(final SessionKey sessionKey) {
-		return new StringBuffer(COLUMN_SESSION_KEY + StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTROPHE
-				+ DatabaseString.toQuerySubString(sessionKey.toString(), SIZE_COLUMN_SESSION_KEY)
-				+ StorableObjectDatabase.APOSTROPHE);
+		return new StringBuffer(COLUMN_SESSION_KEY + EQUALS
+				+ APOSTROPHE + DatabaseString.toQuerySubString(sessionKey.toString(), SIZE_COLUMN_SESSION_KEY) + APOSTROPHE);
 	}
 
 	private StringBuffer retrieveQuery(final StringBuffer condition) {
-		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
-				+ COLUMN_SESSION_KEY + StorableObjectDatabase.COMMA
-				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
-				+ COLUMN_DOMAIN_ID + StorableObjectDatabase.COMMA
-				+ DatabaseDate.toQuerySubString(COLUMN_LOGIN_DATE) + StorableObjectDatabase.COMMA
+		final StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ COLUMN_SESSION_KEY + COMMA
+				+ COLUMN_USER_ID + COMMA
+				+ COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_USER_HOST_NAME + COMMA
+				+ DatabaseDate.toQuerySubString(COLUMN_LOGIN_DATE) + COMMA
 				+ DatabaseDate.toQuerySubString(COLUMN_LAST_ACTIVITY_DATE)
-				+ StorableObjectDatabase.SQL_FROM + TABLE_NAME_USER_LOGIN);
+				+ SQL_FROM + TABLE_NAME_USER_LOGIN);
 
 		if (condition != null && condition.length() != 0) {
-			sql.append(StorableObjectDatabase.SQL_WHERE);
+			sql.append(SQL_WHERE);
 			sql.append(condition);
 		}
 
@@ -93,6 +107,7 @@ public final class UserLoginDatabase {
 				final UserLogin userLogin = new UserLogin(new SessionKey(DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SESSION_KEY))),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
+						DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_USER_HOST_NAME)),
 						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LOGIN_DATE),
 						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LAST_ACTIVITY_DATE));
 				objects.add(userLogin);
@@ -129,20 +144,22 @@ public final class UserLoginDatabase {
 	}
 
 	public void insert(final UserLogin userLogin) throws CreateObjectException {
-		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_INSERT_INTO + TABLE_NAME_USER_LOGIN
-				+ StorableObjectDatabase.OPEN_BRACKET
-				+ COLUMN_SESSION_KEY + StorableObjectDatabase.COMMA
-				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
-				+ COLUMN_DOMAIN_ID + StorableObjectDatabase.COMMA
-				+ COLUMN_LOGIN_DATE + StorableObjectDatabase.COMMA
+		final StringBuffer sql = new StringBuffer(SQL_INSERT_INTO + TABLE_NAME_USER_LOGIN
+				+ OPEN_BRACKET
+				+ COLUMN_SESSION_KEY + COMMA
+				+ COLUMN_USER_ID + COMMA
+				+ COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_USER_HOST_NAME + COMMA
+				+ COLUMN_LOGIN_DATE + COMMA
 				+ COLUMN_LAST_ACTIVITY_DATE
-				+ StorableObjectDatabase.CLOSE_BRACKET + StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
-				+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getSessionKey().toString(), SIZE_COLUMN_SESSION_KEY) + StorableObjectDatabase.APOSTROPHE + StorableObjectDatabase.COMMA
-				+ DatabaseIdentifier.toSQLString(userLogin.getUserId()) + StorableObjectDatabase.COMMA
-				+ DatabaseIdentifier.toSQLString(userLogin.getDomainId()) + StorableObjectDatabase.COMMA
-				+ DatabaseDate.toUpdateSubString(userLogin.getLoginDate()) + StorableObjectDatabase.COMMA
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getSessionKey().toString(), SIZE_COLUMN_SESSION_KEY) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(userLogin.getUserId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(userLogin.getDomainId()) + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getUserHostName(), SIZE_COLUMN_USER_HOST_NAME) + APOSTROPHE + COMMA
+				+ DatabaseDate.toUpdateSubString(userLogin.getLoginDate()) + COMMA
 				+ DatabaseDate.toUpdateSubString(userLogin.getLastActivityDate())
-				+ StorableObjectDatabase.CLOSE_BRACKET);
+				+ CLOSE_BRACKET);
 
 		Statement statement = null;
 		Connection connection = null;
@@ -175,15 +192,13 @@ public final class UserLoginDatabase {
 	}
 
 	public void update(final UserLogin userLogin) throws UpdateObjectException {
-		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_UPDATE + TABLE_NAME_USER_LOGIN + StorableObjectDatabase.SQL_SET
-				+ COLUMN_USER_ID + StorableObjectDatabase.EQUALS + DatabaseIdentifier.toSQLString(userLogin.getUserId())
-				+ StorableObjectDatabase.COMMA
-				+ COLUMN_DOMAIN_ID + StorableObjectDatabase.EQUALS + DatabaseIdentifier.toSQLString(userLogin.getDomainId())
-				+ StorableObjectDatabase.COMMA
-				+ COLUMN_LOGIN_DATE + StorableObjectDatabase.EQUALS + DatabaseDate.toUpdateSubString(userLogin.getLoginDate())
-				+ StorableObjectDatabase.COMMA
-				+ COLUMN_LAST_ACTIVITY_DATE + StorableObjectDatabase.EQUALS + DatabaseDate.toUpdateSubString(userLogin.getLastActivityDate())
-				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
+		final StringBuffer sql = new StringBuffer(SQL_UPDATE + TABLE_NAME_USER_LOGIN + SQL_SET
+				+ COLUMN_USER_ID + EQUALS + DatabaseIdentifier.toSQLString(userLogin.getUserId()) + COMMA
+				+ COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(userLogin.getDomainId()) + COMMA
+				+ COLUMN_USER_HOST_NAME + EQUALS + APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getUserHostName(), SIZE_COLUMN_USER_HOST_NAME) + APOSTROPHE + COMMA
+				+ COLUMN_LOGIN_DATE + EQUALS + DatabaseDate.toUpdateSubString(userLogin.getLoginDate()) + COMMA
+				+ COLUMN_LAST_ACTIVITY_DATE + EQUALS + DatabaseDate.toUpdateSubString(userLogin.getLastActivityDate())
+				+ SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
 		Connection connection = null;
@@ -216,8 +231,8 @@ public final class UserLoginDatabase {
 	}
 
 	public void delete(final UserLogin userLogin) {
-		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_DELETE_FROM + TABLE_NAME_USER_LOGIN
-				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + TABLE_NAME_USER_LOGIN
+				+ SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
 		Connection connection = null;
