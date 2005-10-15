@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.1 2005/10/14 11:57:19 krupenn Exp $
+ * $Id: PipeBlock.java,v 1.2 2005/10/15 13:37:56 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,12 +49,13 @@ import com.syrus.util.Log;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/10/14 11:57:19 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/15 13:37:56 $
  * @module map
  */
 public final class PipeBlock 
 		extends StorableObject 
-		implements XmlBeansTransferable<XmlPipeBlock> {
+		implements XmlBeansTransferable<XmlPipeBlock>,
+		Comparable<PipeBlock> {
 	private static final long serialVersionUID = -6089210980096232608L;
 
 	private int number;
@@ -128,7 +129,7 @@ public final class PipeBlock
 		
 		try {
 			final PipeBlock pipeBlock = new PipeBlock(
-					// TODO use PHYSICALLINKBINDING_CODE
+					// TODO use PIPEBLOCK_CODE
 					IdentifierPool.getGeneratedIdentifier(PHYSICALLINK_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
@@ -152,6 +153,7 @@ public final class PipeBlock
 		final IdlPipeBlock pltb = (IdlPipeBlock) transferable;
 		super.fromTransferable(pltb);
 
+		this.number = pltb.number;
 		this.dimension = new IntDimension(pltb.dimensionX, pltb.dimensionY);
 		this.leftToRight = pltb.leftToRight;
 		this.topToBottom = pltb.topToBottom;
@@ -188,6 +190,7 @@ public final class PipeBlock
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final int number,
 			final int dimensionX,
 			final int dimensionY,
 			final boolean leftToRight,
@@ -199,6 +202,7 @@ public final class PipeBlock
 				modifierId,
 				version);
 		
+		this.number = number;
 		this.setDimension(new IntDimension(dimensionX, dimensionY));
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
@@ -474,6 +478,7 @@ public final class PipeBlock
 			String importType, 
 			boolean usePool) throws ApplicationException {
 		this.id.getXmlTransferable(xmlPipeBlock.addNewId(), importType);
+		xmlPipeBlock.setNumber(this.number);
 		xmlPipeBlock.setDimensionX(this.dimension.getWidth());
 		xmlPipeBlock.setDimensionY(this.dimension.getHeight());
 		xmlPipeBlock.setHorVert(this.horizontalVertical);
@@ -495,6 +500,9 @@ public final class PipeBlock
 			XmlPipeBlock xmlPipeBlock, 
 			String importType) throws ApplicationException {
 
+		this.number = xmlPipeBlock.isSetNumber() ?
+				xmlPipeBlock.getNumber()
+				: 0;
 		this.leftToRight = xmlPipeBlock.isSetLeftToRight() ?
 			xmlPipeBlock.getLeftToRight()
 			: true;
@@ -560,5 +568,9 @@ public final class PipeBlock
 
 	public void setNumber(int number) {
 		this.number = number;
+	}
+
+	public int compareTo(PipeBlock o) {
+		return this.number - o.getNumber();
 	}
 }

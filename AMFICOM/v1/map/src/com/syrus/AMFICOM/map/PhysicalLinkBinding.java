@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkBinding.java,v 1.17 2005/10/14 11:57:19 krupenn Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.18 2005/10/15 13:37:56 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,12 @@ package com.syrus.AMFICOM.map;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Объект привязки кабелей к тоннелю. Принадлежит определенному тоннелю.
@@ -22,13 +24,13 @@ import java.util.Set;
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/10/14 11:57:19 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/15 13:37:56 $
  * @module map
  */
 public final class PhysicalLinkBinding implements Serializable {
 	private static final long serialVersionUID = -6384653393124814845L;
 
-	private Set<PipeBlock> pipeBlocks;
+	private SortedSet<PipeBlock> pipeBlocks;
 
 	/** список кабелей, проложенных по данному тоннелю */
 	private transient ArrayList<Object> bindObjects = new ArrayList<Object>();
@@ -44,7 +46,10 @@ public final class PhysicalLinkBinding implements Serializable {
 	 */
 	public PhysicalLinkBinding(
 			Collection<PipeBlock> pipeBlocks) {
-		this.pipeBlocks = new HashSet(pipeBlocks);
+		this.pipeBlocks = new TreeSet();
+		if(pipeBlocks != null) {
+			this.pipeBlocks.addAll(pipeBlocks);
+		}
 	}
 
 	/**
@@ -133,18 +138,31 @@ public final class PhysicalLinkBinding implements Serializable {
 	}
 
 	public void addPipeBlock(PipeBlock pipeBlock) {
+		pipeBlock.setNumber(this.pipeBlocks.size() + 1);
 		this.pipeBlocks.add(pipeBlock);
 	}
 
-	public Set<PipeBlock> getPipeBlocks() {
-		return this.pipeBlocks;
+	public SortedSet<PipeBlock> getPipeBlocks() {
+		return Collections.unmodifiableSortedSet(this.pipeBlocks);
 	}
 
 	public void setPipeBlocks(Set<PipeBlock> pipeBlocks) {
-		this.pipeBlocks = pipeBlocks;
+		this.pipeBlocks.clear();
+		if(pipeBlocks != null) {
+			this.pipeBlocks.addAll(pipeBlocks);
+		}
 	}
 
 	public void removePipeBlock(PipeBlock block) {
+		final int removedNumber = block.getNumber();
+		final SortedSet<PipeBlock> blocksToShift = this.pipeBlocks.tailSet(block);
+		block.setNumber(-1);
 		this.pipeBlocks.remove(block);
+		for(PipeBlock pipeBlock : blocksToShift) {
+			final int number = pipeBlock.getNumber();
+			if(number > removedNumber) {
+				pipeBlock.setNumber(number - 1);
+			}
+		}
 	}
 }
