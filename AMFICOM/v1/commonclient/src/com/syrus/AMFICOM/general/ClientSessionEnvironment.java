@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.26 2005/10/14 11:55:08 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.27 2005/10/15 17:49:34 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/10/14 11:55:08 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/15 17:49:34 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -163,11 +163,15 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	@Override
 	public void logout() throws CommunicationException, LoginException {
-		this.deactivateServant();
+		try {
+			this.deactivateServant();
+		} catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
 		super.logout();
 	}
 
-	private void activateServant() throws CommunicationException {
+	void activateServant() throws CommunicationException {
 		final String servantName = LoginManager.getSessionKey().toString()
 				+ Identifier.SEPARATOR
 				+ ContextNameFactory.generateContextName();
@@ -182,7 +186,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		+ Identifier.SEPARATOR
 		+ ContextNameFactory.generateContextName();
 		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
-		corbaServer.deactivateServant(servantName);
+		corbaServer.deactivateServant(servantName, true);
 	}
 
 	public void addPopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
