@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.21 2005/10/12 15:54:39 arseniy Exp $
+* $Id: CORBAServer.java,v 1.22 2005/10/15 17:46:06 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/12 15:54:39 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/15 17:46:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -217,7 +217,13 @@ public class CORBAServer {
 		}
 	}
 
-	public void deactivateServant(final String name) throws CommunicationException {
+	/**
+	 * 
+	 * @param name - name of servant to deactivate
+	 * @param isOwner -- if caller is owner of this servant, i. e. can deactivate it from it's POA.
+	 * @throws CommunicationException
+	 */
+	public void deactivateServant(final String name, final boolean isOwner) throws CommunicationException {
 		if (this.running) {
 			try {
 				final NameComponent[] nameComponents = this.namingContext.to_name(name);
@@ -226,8 +232,10 @@ public class CORBAServer {
 				this.namingContext.unbind(nameComponents);
 				this.servantNames.remove(name);
 
-				final byte[] id = this.poa.reference_to_id(reference);
-				this.poa.deactivate_object(id);
+				if (isOwner) {
+					final byte[] id = this.poa.reference_to_id(reference);
+					this.poa.deactivate_object(id);
+				}
 
 				Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
 			} catch (UserException ue) {
