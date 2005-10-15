@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.34 2005/10/14 11:58:10 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.35 2005/10/15 13:40:22 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,12 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,9 +61,11 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.util.PropertyChangeException;
+import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/10/14 11:58:10 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/15 13:40:22 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -146,7 +152,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.getInstance();
 
 		this.cableList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
-		this.pipeBlockComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		PipeBlockWrapper pipeBlockWrapper = PipeBlockWrapper.getInstance();
+
+		this.pipeBlockComboBox = new WrapperedComboBox(pipeBlockWrapper, PipeBlockWrapper.KEY_NUMBER, PipeBlockWrapper.KEY_NUMBER);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.LABEL_CABLES_BINDING));
@@ -227,21 +235,22 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.pipeBlockLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_PIPEBLOCK));
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
-
-		this.pipeBlockPanel.setLayout(new FlowLayout());
-		this.pipeBlockPanel.add(this.pipeBlockComboBox);
-		this.pipeBlockPanel.add(this.addBlockButton);
-		this.pipeBlockPanel.add(this.removeBlockButton);
+		this.pipeBlockPanel.setLayout(new GridBagLayout());
 		
-		this.pipeBlockComboBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Object or = PhysicalLinkAddEditor.this.pipeBlockComboBox
-					.getSelectedItem();
-				selectBlock(or);
+		this.pipeBlockComboBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					Object or = PhysicalLinkAddEditor.this.pipeBlockComboBox
+						.getSelectedItem();
+					selectBlock(or);
+				}
+				else {
+					selectBlock(null);
+				}
 			}
 		});
-		
-		this.addBlockButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/add.gif"))); //$NON-NLS-1$
+
+		this.addBlockButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/newprop.gif"))); //$NON-NLS-1$
 		this.addBlockButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_ADD));
 		this.addBlockButton.setPreferredSize(buttonSize);
 		this.addBlockButton.setMaximumSize(buttonSize);
@@ -250,7 +259,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			public void actionPerformed(ActionEvent e) {
 				PipeBlock newPipeBlock;
 				try {
-					newPipeBlock = PipeBlock.createInstance(LoginManager.getUserId(), 1, 1, true, true, true);
+					newPipeBlock = PipeBlock.createInstance(LoginManager.getUserId(), 0, 0, true, true, true);
 					PhysicalLinkAddEditor.this.physicalLink.getBinding().addPipeBlock(newPipeBlock);
 					PhysicalLinkAddEditor.this.pipeBlockComboBox.addItem(newPipeBlock);
 					PhysicalLinkAddEditor.this.pipeBlockComboBox.setSelectedItem(newPipeBlock);
@@ -260,7 +269,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.removeBlockButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/remove.gif"))); //$NON-NLS-1$
+		this.removeBlockButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
 		this.removeBlockButton.setToolTipText(I18N.getString(MapEditorResourceKeys.BUTTON_REMOVE));
 		this.removeBlockButton.setPreferredSize(buttonSize);
 		this.removeBlockButton.setMaximumSize(buttonSize);
@@ -337,6 +346,45 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		});
 
 		GridBagConstraints constraints = new GridBagConstraints();
+
+		constraints.gridx =  0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.pipeBlockPanel.add(this.pipeBlockComboBox, constraints);
+
+		constraints.gridx =  1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.pipeBlockPanel.add(this.addBlockButton, constraints);
+
+		constraints.gridx =  2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.pipeBlockPanel.add(this.removeBlockButton, constraints);
 
 		constraints.gridx =  0;
 		constraints.gridy = 0;
@@ -466,7 +514,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.dimensionLabel, constraints);
+		this.jPanel.add(this.pipeBlockLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 1;
@@ -479,10 +527,36 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.dimensionPanel, constraints);
+		this.jPanel.add(this.pipeBlockPanel, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.dimensionLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 2;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.dimensionPanel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
 		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
@@ -495,7 +569,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.tunnelsScrollPane, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 3;
+		constraints.gridy = 4;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -507,25 +581,17 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.directionPanel, constraints);
 
-//		constraints.gridx = 0;
-//		constraints.gridy = 2;
-//		constraints.gridwidth = 2;
-//		constraints.gridheight = 1;
-//		constraints.weightx = 1.0;
-//		constraints.weighty = 0.0;
-//		constraints.anchor = GridBagConstraints.WEST;
-//		constraints.fill = GridBagConstraints.HORIZONTAL;
-//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-//		constraints.ipadx = 0;
-//		constraints.ipady = 0;
-//		this.jPanel.add(Box.createVerticalStrut(3), constraints);
-
 		this.bindButton.setEnabled(false);
 		this.unbindButton.setEnabled(false);
 		this.selectButton.setEnabled(false);
 	}
 
 	protected void selectBlock(Object or) {
+		if(!(or instanceof PipeBlock)) {
+			this.pipeBlock = null;
+			this.tunnelLayout.setPipeBlock(null);
+			return;
+		}
 		this.pipeBlock = (PipeBlock)or;
 		this.mTextField.setText(String.valueOf(this.pipeBlock.getDimension().getWidth()));
 		this.nTextField.setText(String.valueOf(this.pipeBlock.getDimension().getHeight()));
@@ -551,9 +617,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 	public void setObject(Object object) {
 		this.cableList.removeAll();
+		this.pipeBlockComboBox.removeAllItems();
 		this.physicalLink = (PhysicalLink )object;
 		if(this.physicalLink == null) {
 			this.cableList.setEnabled(false);
+			this.pipeBlockComboBox.setEnabled(false);
 			this.tunnelLayout.setPipeBlock(null);
 
 			this.mTextField.setText(""); //$NON-NLS-1$
@@ -561,10 +629,14 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		}
 		else {
 			this.cableList.setEnabled(true);
+			this.pipeBlockComboBox.setEnabled(true);
 			PhysicalLinkBinding binding = this.physicalLink.getBinding();
 			final Set<PipeBlock> pipeBlocks = binding.getPipeBlocks();
 			if(pipeBlocks != null) {
 				this.pipeBlockComboBox.addElements(pipeBlocks);
+				if(pipeBlocks.size() > 0) {
+					this.pipeBlockComboBox.setSelectedItem(pipeBlocks.iterator().next());
+				}
 			}
 
 			List list = binding.getBindObjects();
@@ -706,4 +778,66 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	public void commitChanges() {
 		super.commitChanges();
 	}
+}
+
+class PipeBlockWrapper implements Wrapper {
+	public static final String KEY_NUMBER = MapEditorResourceKeys.LABEL_NUMBER;
+	private List keys = Collections.unmodifiableList(Arrays
+			.asList(new String[] { KEY_NUMBER }));
+
+	static PipeBlockWrapper instance;
+	
+	private PipeBlockWrapper() {
+		// nothing
+	}
+	
+	public void setValue(Object object, String key, Object value)
+			throws PropertyChangeException {
+		//nothing
+	}
+
+	public static PipeBlockWrapper getInstance() {
+		if(instance == null) {
+			instance = new PipeBlockWrapper();
+		}
+		return instance;
+	}
+
+	public boolean isEditable(String key) {
+		return false;
+	}
+
+	public Object getValue(Object object, String key) {
+		if(! (object instanceof PipeBlock)) {
+			return " "; //$NON-NLS-1$
+		}
+		PipeBlock pipeBlock = (PipeBlock) object;
+		return String.valueOf(pipeBlock.getNumber());
+	}
+
+	public void setPropertyValue(
+			String key,
+			Object objectKey,
+			Object objectValue) {
+		// nothing
+	}
+
+	public Object getPropertyValue(String key) {
+		// nothing
+		return null;
+	}
+
+	public Class getPropertyClass(String key) {
+		// nothing
+		return null;
+	}
+
+	public String getName(String key) {
+		return "Номер";
+	}
+
+	public List getKeys() {
+		return this.keys;
+	}
+
 }
