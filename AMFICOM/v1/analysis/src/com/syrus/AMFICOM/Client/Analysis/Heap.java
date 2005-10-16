@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.115 2005/10/16 16:16:29 saa Exp $
+ * $Id: Heap.java,v 1.116 2005/10/16 16:21:44 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -93,7 +93,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.115 $, $Date: 2005/10/16 16:16:29 $
+ * @version $Revision: 1.116 $, $Date: 2005/10/16 16:21:44 $
  * @module
  */
 public class Heap
@@ -1093,7 +1093,9 @@ public class Heap
 	}
 
 	public static void setEtalonComparison(EtalonComparison ec) {
-		System.err.println("setEtalonComparison(): " + ec);
+		Log.debugMessage("Heap.setEtalonComparison | "
+				+ (ec == null ? null : "not null"),
+				Level.FINEST);
 		Heap.etalonComparison = ec;
 		if (getRefMismatch() == null)
 			notifyRefMismatchRemoved();
