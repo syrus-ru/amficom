@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.5 2005/10/16 17:21:52 max Exp $
+ * $Id: PipeBlock.java,v 1.6 2005/10/16 17:22:57 max Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/10/16 17:21:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/16 17:22:57 $
  * @module map
  */
 public final class PipeBlock 
