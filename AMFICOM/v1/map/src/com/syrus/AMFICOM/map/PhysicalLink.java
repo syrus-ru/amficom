@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.139 2005/10/16 14:24:39 max Exp $
+ * $Id: PhysicalLink.java,v 1.140 2005/10/16 16:44:30 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -71,8 +72,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: max $
- * @version $Revision: 1.139 $, $Date: 2005/10/16 14:24:39 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.140 $, $Date: 2005/10/16 16:44:30 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -452,7 +453,7 @@ public class PhysicalLink extends StorableObject
 	public List<NodeLink> getNodeLinks() {
 		this.initialize();
 		if(this.nodeLinks.isEmpty()) {
-			System.out.println("no nodelinks for link " + this.id + " between \'" + this.getStartNode().getName() + "\' and " + this.getEndNode().getName() + "\'");
+			Log.debugMessage("no nodelinks for link '" + this.getName() + "' id " + this.id + " between \'" + this.getStartNode().getName() + "\' and " + this.getEndNode().getName() + "\'", Level.FINE);
 		}
 		return Collections.unmodifiableList(this.nodeLinks);
 	}
