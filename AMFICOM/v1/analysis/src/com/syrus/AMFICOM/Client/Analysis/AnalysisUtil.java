@@ -5,10 +5,12 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
+import com.syrus.AMFICOM.analysis.dadara.DadaraReflectometryAnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
@@ -28,6 +30,7 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.reflectometry.MeasurementReflectometryAnalysisResult;
 import com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisCriteria;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEtalon;
 import com.syrus.AMFICOM.reflectometry.ReflectometryMeasurementSetup;
@@ -130,13 +133,38 @@ public class AnalysisUtil
 		return null;
 	}
 
-	public static AnalysisResult getAnalysisForMeasurement(Measurement m)
-	throws DataFormatException, ApplicationException {
-		AnalysisResult ar = getAnalysisForMeasurementIfPresent(m);
-		if (ar == null) {
-			throw new ApplicationException("No AnalysisResult found for Measurement " + m.getName());
+	/**
+	 * @param m
+	 * @throws DataFormatException 
+	 * @throws ApplicationException 
+	 */
+	public static void loadEtalonComparison(Measurement m)
+	throws ApplicationException, DataFormatException {
+		final EtalonComparison etalonComparison = getEtalonComparison(m);
+		System.out.println("AnalysisUtil.loadEtalonComparison(): setting eComp = " + etalonComparison);
+		Heap.setEtalonComparison(etalonComparison);
+	}
+
+	/**
+	 * @param m
+	 * @return may be null
+	 * @throws ApplicationException 
+	 * @throws DataFormatException 
+	 */
+	public static EtalonComparison getEtalonComparison(Measurement m)
+	throws ApplicationException, DataFormatException {
+		// получаем анализ для измерения (может быть null)
+		Analysis analysis =
+			MeasurementReflectometryAnalysisResult.getAnalysisForMeasurement(m);
+		if (analysis == null) {
+			return null; // нет анализа
 		}
-		return ar;
+		// оформляем анализ в виде DRAR
+		final DadaraReflectometryAnalysisResult drar =
+			new DadaraReflectometryAnalysisResult(
+					new MeasurementReflectometryAnalysisResult(analysis));
+
+		return drar.getDadaraEtalonComparison(); // may be null
 	}
 
 	/**
