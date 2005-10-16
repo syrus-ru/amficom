@@ -47,7 +47,8 @@ import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class EventsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
+public class EventsFrame extends JInternalFrame
+implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		CurrentEventChangeListener, PropertyChangeListener, RefMismatchListener {
 	private static final long serialVersionUID = 6768761574582221386L;
 
@@ -203,14 +204,18 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		this.table = 
-			new WrapperedTable<DetailedEventResource>(new WrapperedTableModel<DetailedEventResource>(
-				DetailedEventWrapper.getInstance(),
-				new String[] { DetailedEventWrapper.KEY_N, DetailedEventWrapper.KEY_IMAGE,
-						DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_DISTANCE,
+		this.table = new WrapperedTable<DetailedEventResource>(
+				new WrapperedTableModel<DetailedEventResource>(
+					DetailedEventWrapper.getInstance(),
+					new String[] {
+						DetailedEventWrapper.KEY_N,
+						DetailedEventWrapper.KEY_IMAGE,
+						DetailedEventWrapper.KEY_TYPE,
+						DetailedEventWrapper.KEY_DISTANCE,
 						DetailedEventWrapper.KEY_LENGTH,
 						DetailedEventWrapper.KEY_REFLECTANCE,
-						DetailedEventWrapper.KEY_LOSS, DetailedEventWrapper.KEY_ATTENUATION }));
+						DetailedEventWrapper.KEY_LOSS,
+						DetailedEventWrapper.KEY_ATTENUATION }));
 		this.table.setAllowSorting(false);
 		this.table.setAllowAutoResize(true);
 
@@ -393,7 +398,8 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 			return; // XXX
 		}
 		final DetailedEvent[] pevents = Heap.getMTAEPrimary().getDetailedEvents();
-		final DetailedEvent[] eevents = Heap.getMTMEtalon() != null ? Heap.getMTMEtalon().getMTAE().getDetailedEvents() : null;
+		final DetailedEvent[] eevents = Heap.getMTMEtalon() != null
+				? Heap.getMTMEtalon().getMTAE().getDetailedEvents() : null;
 		final PFTrace pf = Heap.getPFTracePrimary();
 		final double resMt = pf.getResolution();
 		final double resKm = resMt / 1000.0;
@@ -404,7 +410,8 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 		final CompositeEventList eList = Heap.getEventList();
 		final CompositeEventList.Walker w = eList.new Walker();
 
-		final WrapperedTableModel<DetailedEventResource> model = this.table.getModel();
+		final WrapperedTableModel<DetailedEventResource> model =
+				this.table.getModel();
 		model.clear();
 
 		for (int row = 0; row < nRows; row++, this.view.toNextRow(w)) {
@@ -423,7 +430,8 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 		this.table.getModel().fireTableDataChanged();
 	}
 
-	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {
+	private class EventTableRenderer
+	extends ADefaultTableCellRenderer.ObjectRenderer {
 		@Override
 		public Component getTableCellRendererComponent(final JTable table1,
 				final Object value,
@@ -431,7 +439,8 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 				final boolean hasFocus,
 				final int row,
 				final int column) {
-			final Component c = super.getTableCellRendererComponent(table1, value, isSelected1, hasFocus, row, column);
+			final Component c = super.getTableCellRendererComponent(table1,
+					value, isSelected1, hasFocus, row, column);
 
 			final int nPrimary = EventsFrame.this.view.nPri1(Heap.getEventList(), row);
 			final int nEtalon = EventsFrame.this.view.nEt1(Heap.getEventList(), row);
