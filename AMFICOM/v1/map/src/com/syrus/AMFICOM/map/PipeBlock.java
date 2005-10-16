@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.2 2005/10/15 13:37:56 krupenn Exp $
+ * $Id: PipeBlock.java,v 1.3 2005/10/16 09:53:13 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/10/15 13:37:56 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/10/16 09:53:13 $
  * @module map
  */
 public final class PipeBlock 
@@ -101,6 +101,7 @@ public final class PipeBlock
 			final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final int number,
 			final IntDimension bindingDimension,
 			final boolean leftToRight,
 			final boolean topToBottom,
@@ -111,6 +112,7 @@ public final class PipeBlock
 				creatorId,
 				creatorId,
 				version);
+		this.number = number;
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
 		this.horizontalVertical = horizontalVertical;
@@ -119,6 +121,7 @@ public final class PipeBlock
 
 	public static PipeBlock createInstance(
 			final Identifier creatorId,
+			final int number,
 			final int dimensionX,
 			final int dimensionY,
 			final boolean leftToRight,
@@ -133,6 +136,7 @@ public final class PipeBlock
 					IdentifierPool.getGeneratedIdentifier(PHYSICALLINK_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
+					number,
 					new IntDimension(dimensionX, dimensionY),
 					leftToRight,
 					topToBottom,
