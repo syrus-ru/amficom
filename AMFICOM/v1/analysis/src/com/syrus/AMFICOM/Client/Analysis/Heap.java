@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.114 2005/10/13 15:47:52 saa Exp $
+ * $Id: Heap.java,v 1.115 2005/10/16 16:16:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -29,6 +30,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
@@ -75,7 +77,8 @@ import com.syrus.util.Log;
  * etalonMTM (но не его свойства);
  * currentTrace;
  * currentEvent, currentEtalonEvent;
- * refMismatch.
+ * etalonComparison - с той оговоркой, что предполагается, что клиент не будет явно изменять эти объекты;
+ * refMismatch (read only) - часть etalonComparison 
  *
  * Кроме того, есть свойство primaryMTAE, которое изменяется вместе и только
  * вместе с refAnalysisPrimary; по его изменению тоже рассылаются уведомления.
@@ -90,7 +93,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.114 $, $Date: 2005/10/13 15:47:52 $
+ * @version $Revision: 1.115 $, $Date: 2005/10/16 16:16:29 $
  * @module
  */
 public class Heap
@@ -129,7 +132,8 @@ public class Heap
 
 	private static Marker markerObject = null;
 
-	private static ReflectogramMismatchImpl refMismatch = null; // это еще не аларм, это - "несоответствие".
+	// результаты сравнения с эталоном - загруженные либо вычисленные
+	private static EtalonComparison etalonComparison = null;
 
 	// listeners
 
@@ -1072,13 +1076,26 @@ public class Heap
 	}
 
 
+	/**
+	 * XXX: Возвращаемое значение null может означать как соответствие эталону,
+	 * так и то, что сравнение не проводилось. Надо переделать.
+	 */
+	@Deprecated
 	public static ReflectogramMismatchImpl getRefMismatch() {
-		return refMismatch;
+		if (etalonComparison != null) {
+			List<ReflectogramMismatchImpl> alarms =
+				etalonComparison.getAlarms();
+			if (alarms.size() > 0) {
+				return alarms.iterator().next();
+			}
+		}
+		return null; // либо сравнения не было, либо алармов нет
 	}
 
-	public static void setRefMismatch(ReflectogramMismatchImpl refMismatch) {
-		Heap.refMismatch = refMismatch;
-		if (refMismatch == null)
+	public static void setEtalonComparison(EtalonComparison ec) {
+		System.err.println("setEtalonComparison(): " + ec);
+		Heap.etalonComparison = ec;
+		if (getRefMismatch() == null)
 			notifyRefMismatchRemoved();
 		else
 			notifyRefMismatchCUpdated();
