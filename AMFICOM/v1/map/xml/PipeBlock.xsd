@@ -8,13 +8,17 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: PipeBlock.xsd,v 1.1 2005/10/14 11:57:19 krupenn Exp $
+			$Id: PipeBlock.xsd,v 1.2 2005/10/16 18:18:49 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
 			Project: AMFICOM.
 		</xsd:documentation>
 	</xsd:annotation>
+
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObject.xsd"/>
 
 	<xsd:element name = "pipeBlocks" type = "map:XmlPipeBlockSeq">
 		<xsd:key name = "pipeBlockId">
