@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.137 2005/10/14 11:57:19 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.138 2005/10/16 10:52:13 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.137 $, $Date: 2005/10/14 11:57:19 $
+ * @author $Author: max $
+ * @version $Revision: 1.138 $, $Date: 2005/10/16 10:52:13 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -234,6 +234,7 @@ public class PhysicalLink extends StorableObject
 			
 			PipeBlock pipeBlock = PipeBlock.createInstance(
 					creatorId,
+					-1,
 					physicalLinkType.getBindingDimension().getWidth(),
 					physicalLinkType.getBindingDimension().getHeight(),
 					true,
