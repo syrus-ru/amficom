@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkWrapper.java,v 1.12 2005/08/12 10:05:08 arseniy Exp $
+ * $Id: PhysicalLinkWrapper.java,v 1.13 2005/10/16 14:29:29 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/12 10:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/10/16 14:29:29 $
+ * @author $Author: max $
  * @module map
  */
 public class PhysicalLinkWrapper extends StorableObjectWrapper<PhysicalLink> {
@@ -31,12 +31,6 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper<PhysicalLink> {
 	public static final String COLUMN_STREET = "street";
 	// building VARCHAR2(128),
 	public static final String COLUMN_BUILDING = "building";
-	// dimension_x NUMBER(12),
-	public static final String COLUMN_DIMENSION_X = "dimension_x";
-	// dimension_y NUMBER(12),
-	public static final String COLUMN_DIMENSION_Y = "dimension_y";
-	// topLeft NUMBER(1),
-	public static final String COLUMN_TOPLEFT = "topLeft";
 	// start_node_id VARCHAR2(32),
 	public static final String COLUMN_START_NODE_ID = "start_node_id";
 	// end_node_id VARCHAR2(32),
@@ -54,9 +48,6 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper<PhysicalLink> {
 				COLUMN_CITY,
 				COLUMN_STREET,
 				COLUMN_BUILDING,
-				COLUMN_DIMENSION_X,
-				COLUMN_DIMENSION_Y,
-				COLUMN_TOPLEFT,
 				COLUMN_START_NODE_ID,
 				COLUMN_END_NODE_ID };
 
