@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementReflectometryAnalysisResult.java,v 1.4 2005/10/14 13:45:08 bob Exp $
+ * $Id: MeasurementReflectometryAnalysisResult.java,v 1.5 2005/10/16 16:03:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,9 +33,9 @@ import com.syrus.util.ByteArray;
  * <li>DataFormatException - при ошибке восстановления double из byte[]
  * </ul>
  * 
- * @author $Author: bob $
+ * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/10/14 13:45:08 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/16 16:03:15 $
  * @module measurement
  */
 public final class MeasurementReflectometryAnalysisResult
@@ -55,7 +55,8 @@ implements ReflectometryAnalysisResult {
 	 * @return Analysis or null
 	 * @throws ApplicationException @see MeasurementReflectometryAnalysisResult
 	 */
-	public static Analysis getAnalysisForMeasurement(final Measurement measurement)
+	public static Analysis getAnalysisForMeasurement(
+			final Measurement measurement)
 	throws ApplicationException {
 		assert measurement != null : ErrorMessages.NON_NULL_EXPECTED;
 		final Set<Analysis> analyse =
@@ -187,27 +188,34 @@ implements ReflectometryAnalysisResult {
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraAnalysisResultBytes()
 	 */
 	public byte[] getDadaraAnalysisResultBytes() {
-		return this.analysisResultBytes.clone();
+		return this.analysisResultBytes == null
+				? null
+				: this.analysisResultBytes.clone();
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraReflectogramMismatchBytes()
 	 */
 	public byte[] getDadaraReflectogramMismatchBytes() {
-		return this.reflectogramMismatchBytes.clone();
+		return this.reflectogramMismatchBytes == null
+				? null
+				: this.reflectogramMismatchBytes.clone();
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getDadaraEvaluationPerEventResultBytes()
 	 */
 	public byte[] getDadaraEvaluationPerEventResultBytes() {
-		return this.evaluationPerEventResultBytes.clone();
+		return this.evaluationPerEventResultBytes == null
+				? null
+				: this.evaluationPerEventResultBytes.clone();
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisResult#getReflectometryEvaluationOverallResult()
 	 */
-	public ReflectometryEvaluationOverallResult getReflectometryEvaluationOverallResult() {
+	public ReflectometryEvaluationOverallResult
+	getReflectometryEvaluationOverallResult() {
 		return this.evaluationOverall; // need not clone, it is immutable
 	}
 }
