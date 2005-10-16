@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.56 2005/10/13 09:16:50 max Exp $
+ * $Id: MapDatabase.java,v 1.57 2005/10/16 15:50:23 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/10/13 09:16:50 $
+ * @version $Revision: 1.57 $, $Date: 2005/10/16 15:50:23 $
  * @author $Author: max $
  * @module map
  */
@@ -315,6 +315,11 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		for (int i = 0; i < LinkedEntities.values().length; i++) {
 			final LinkedEntities linkedEntities = LinkedEntities.values()[i];
 			for (final Map map : dbMaps) {
+				if (linkedEntities == LinkedEntities.MAP_MAPS 
+						|| linkedEntities == LinkedEntities.MAP_EXTERNAL_NODES
+						|| linkedEntities == LinkedEntities.MAP_MAP_LIBRARYS) {
+					continue;
+				}
 				try {
 					linkedIds.addAll(LinkedEntities.getLinkedIds(map, linkedEntities));
 				} catch (ApplicationException ae) {
