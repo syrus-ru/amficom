@@ -40,7 +40,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 	private static final long serialVersionUID = -2281313783873630551L;
 
 	Dispatcher dispatcher;
-	protected static List<String> traces = new LinkedList<String>();
+	protected List<String> traces = new LinkedList<String>();
 	private WrapperedTable jTable;
 	private WrapperedTableModel<TraceResource> tModel;
 
@@ -140,7 +140,6 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 		if (traces.contains(id)) {
 			return;
 		}
-
 		Log.debugMessage("TraceSelectorFrame.traceAdded | id is '" + id + '\'', Level.FINEST);
 
 		final TraceResource tr = new TraceResource(id);
