@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.26 2005/10/13 17:19:00 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.27 2005/10/16 16:53:21 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.26 $, $Date: 2005/10/13 17:19:00 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/16 16:53:21 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -226,18 +226,22 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		return (this.mt.getY(begin) - this.mt.getY(end)) / (end - begin);
 	}
 
+	private boolean isEventLinear(int i) {
+		return this.rse[i].getEventType() == SimpleReflectogramEvent.LINEAR;
+	}
+
 	private double getAddToMLoss(int i, boolean useLeft, boolean useRight) {
 		// берем средний (из одного или двух) наклон смежных линейных
 		// событий, которые по длине больше текущего события
 		int linCount = 0;
 		double linAtt = 0;
-		if (useLeft && i > 0
+		if (useLeft && i > 0 && isEventLinear(i - 1)
 				&& eventLength(i - 1) > eventLength(i))
 		{
 			linCount++;
 			linAtt += linearTangent(i - 1);
 		}
-		if (useRight && i < this.rse.length - 1
+		if (useRight && i < this.rse.length - 1 && isEventLinear(i)
 				&& eventLength(i + 1) > eventLength(i))
 		{
 			linCount++;
@@ -277,8 +281,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		// то альтернативным y0 будет экстраполированное значение по точке
 		// непосредственно слева началом события;
 		// иначе альтернативное y0 совпадает с y0
-		double y0alt = i > 0 && this.rse[i - 1].getEventType() ==
-					SimpleReflectogramEvent.LINEAR
+		double y0alt = i > 0 && isEventLinear(i - 1)
 					&& this.rse[i - 1].getEnd() - this.rse[i - 1].getBegin() > 5
 				? this.mt.getY(ev.getBegin() - 1) - linearTangent(i - 1) * 1.0
 				: y0;
