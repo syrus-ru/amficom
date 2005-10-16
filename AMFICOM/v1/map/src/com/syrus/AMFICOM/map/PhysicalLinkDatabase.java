@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.39 2005/10/14 11:57:19 krupenn Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.40 2005/10/16 14:30:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,16 +25,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/10/14 11:57:19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.40 $, $Date: 2005/10/16 14:30:09 $
+ * @author $Author: max $
  * @module map
  */
 public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalLink> {
-	private static final int LEFT_RIGHT = 0x01;
-    private static final int TOP_BOTTOM = 0x02;
-
 	private static String columns;
-	
 	private static String updateMultipleSQLValues;
 	
 	@Override
@@ -130,7 +126,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
-		final int topLeft = resultSet.getInt(PhysicalLinkWrapper.COLUMN_TOPLEFT);
+		
 		physicalLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -146,5 +142,4 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_END_NODE_ID));
 		return physicalLink;
 	}
-
 }
