@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.35 2005/10/15 13:40:22 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.36 2005/10/16 14:50:57 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/10/15 13:40:22 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/16 14:50:57 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -259,7 +259,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			public void actionPerformed(ActionEvent e) {
 				PipeBlock newPipeBlock;
 				try {
-					newPipeBlock = PipeBlock.createInstance(LoginManager.getUserId(), 0, 0, true, true, true);
+					newPipeBlock = PipeBlock.createInstance(LoginManager.getUserId(), -1, 0, 0, true, true, true);
 					PhysicalLinkAddEditor.this.physicalLink.getBinding().addPipeBlock(newPipeBlock);
 					PhysicalLinkAddEditor.this.pipeBlockComboBox.addItem(newPipeBlock);
 					PhysicalLinkAddEditor.this.pipeBlockComboBox.setSelectedItem(newPipeBlock);
