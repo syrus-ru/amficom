@@ -440,6 +440,7 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 			String colorCode = null;
 
 			chooseColor: {
+				// XXX: performance: все эти вычисления производятся для каждой отрисовки каждой ячейки таблицы
 				if (Heap.getMTMEtalon() == null) {
 					break chooseColor; // no etalon - use default colors
 				}
@@ -448,20 +449,22 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 					break chooseColor; // etalon-only event
 				}
 				// nPrimary >= 0
-				if (Heap.getRefMismatch() != null) {
-					final SimpleReflectogramEvent ev = Heap.getMTAEPrimary().getSimpleEvent(nPrimary);
-					final int dist = Heap.getRefMismatch().getCoord();
-					if (ev.getBegin() <= dist && ev.getEnd() > dist) {
-						colorCode = isSelected1 ? AnalysisResourceKeys.COLOR_EVENTS_ALARM_SELECTED : AnalysisResourceKeys.COLOR_EVENTS_ALARM;
-						break chooseColor; // mismatched event
-					}
-				}
 				if (nEtalon < 0) {
 					colorCode = isSelected1 ? AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED : AnalysisResourceKeys.COLOR_EVENTS_NEW;
 					break chooseColor; // probe-only event
 				}
 				final DetailedEvent pri = Heap.getMTAEPrimary().getDetailedEvent(nPrimary);
 				final DetailedEvent et = Heap.getMTMEtalon().getMTAE().getDetailedEvent(nEtalon);
+				if (Heap.getRefMismatch() != null) {
+					final int dist = Heap.getRefMismatch().getCoord();
+					// Дистация аларма привязана к событиям эталона,
+					// поэтому подсветку аларма делаем согласно событиями эталона,
+					// даже если это немного за пределами текущего события
+					if (et.getBegin() <= dist && et.getEnd() > dist) {
+						colorCode = isSelected1 ? AnalysisResourceKeys.COLOR_EVENTS_ALARM_SELECTED : AnalysisResourceKeys.COLOR_EVENTS_ALARM;
+						break chooseColor; // mismatched event
+					}
+				}
 				if (SimpleReflectogramEventComparer.eventsAreDifferent(pri, et, SimpleReflectogramEventComparer.CHANGETYPE_LOSS, 0.5)) {
 					colorCode = isSelected1
 							? AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED
