@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.138 2005/10/16 10:52:13 max Exp $
+ * $Id: PhysicalLink.java,v 1.139 2005/10/16 14:24:39 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: max $
- * @version $Revision: 1.138 $, $Date: 2005/10/16 10:52:13 $
+ * @version $Revision: 1.139 $, $Date: 2005/10/16 14:24:39 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -288,14 +288,15 @@ public class PhysicalLink extends StorableObject
 		assert !this.endNodeId.isVoid() : NON_VOID_EXPECTED;
 		
 		this.selected = false;
-
-		this.binding = new PhysicalLinkBinding(null);
-//				new IntDimension(plt.dimensionX, plt.dimensionY),
-//				plt.leftToRight,
-//				plt.topToBottom,
-//				// todo make horizontalVertical persistent
-////				plt.horizontalVertical);
-//				true);
+		
+		Set<PipeBlock> pipeBlocks = null;
+		Set<Identifier> pipeBlockIds = Identifier.fromTransferables(plt.pipeBlockIds);
+		try {
+			pipeBlocks = StorableObjectPool.getStorableObjects(pipeBlockIds, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}		
+		this.binding = new PhysicalLinkBinding(pipeBlocks);
 
 		this.transientFieldsInitialized = false;
 	}
@@ -307,6 +308,7 @@ public class PhysicalLink extends StorableObject
 		dependencies.add(this.physicalLinkType);
 		dependencies.add(this.startNodeId);
 		dependencies.add(this.endNodeId);
+		dependencies.addAll(this.binding.getPipeBlocks());
 		
 		return dependencies;
 	}
@@ -317,10 +319,7 @@ public class PhysicalLink extends StorableObject
 	 */
 	@Override
 	public IdlPhysicalLink getTransferable(final ORB orb) {
-		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
-		
 		final IdlIdentifier[] pipeBlockIds = Identifier.createTransferables(this.binding.getPipeBlocks());
-
 		return IdlPhysicalLinkHelper.init(
 				orb,
 				this.id.getTransferable(),
@@ -337,7 +336,6 @@ public class PhysicalLink extends StorableObject
 				this.city,
 				this.street,
 				this.building,
-				nodeLinkIds,
 				pipeBlockIds);
 	}
 
