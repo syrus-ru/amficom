@@ -240,14 +240,13 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
+		// XXX temporary not allowed, uncomment after create frames like AnalyseMainFrame 
+		aModel.setVisible("menuReport", false);
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
 				DestinationModules.EVALUATION);
-		for (ReportTable rt : this.tables) {
-			rc.setParameter(CreateAnalysisReportCommand.TABLE, rt);
-		}
-		for (SimpleResizableFrame rf : this.graphs) {
-			rc.setParameter(CreateAnalysisReportCommand.PANEL, rf);
-		}
+		rc.setParameter(CreateAnalysisReportCommand.TABLE, this.tables);
+		rc.setParameter(CreateAnalysisReportCommand.PANEL, this.graphs);
+
 		aModel.setCommand("menuReportCreate", rc);
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(super.windowArranger));
