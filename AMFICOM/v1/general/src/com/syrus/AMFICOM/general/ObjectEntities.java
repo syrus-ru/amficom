@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.90 2005/10/10 15:39:37 bob Exp $
+ * $Id: ObjectEntities.java,v 1.91 2005/10/16 11:05:47 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/10/10 15:39:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.91 $, $Date: 2005/10/16 11:05:47 $
+ * @author $Author: max $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -141,6 +141,7 @@ public final class ObjectEntities {
 	public static final String COLLECTOR = "Collector";
 	public static final String MAP = "Map";
 	public static final String MAPLIBRARY = "MapLibrary";
+	public static final String PIPEBLOCK = "PipeBlock";
 
 
 	/*	##################################### Resource ##################################### */
@@ -313,6 +314,7 @@ public final class ObjectEntities {
 	public static final short COLLECTOR_CODE = 0x0306;
 	public static final short MAP_CODE = 0x0307;
 	public static final short MAPLIBRARY_CODE = 0x0308;
+	public static final short PIPEBLOCK_CODE = 0x0309;
 
 	public static final short SITENODE_TYPE_CODE = 0x0341;
 	public static final short PHYSICALLINK_TYPE_CODE = 0x0342;
@@ -454,6 +456,7 @@ public final class ObjectEntities {
 		registerEntity(COLLECTOR_CODE, COLLECTOR);
 		registerEntity(MAP_CODE, MAP);
 		registerEntity(MAPLIBRARY_CODE, MAPLIBRARY);
+		registerEntity(PIPEBLOCK_CODE, PIPEBLOCK);
 
 		registerEntity(IMAGERESOURCE_CODE, IMAGERESOURCE);
 		registerEntity(LAYOUT_ITEM_CODE, LAYOUT_ITEM);
