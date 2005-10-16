@@ -1,4 +1,4 @@
--- $Id: physicallink.sql,v 1.7 2005/06/15 17:03:09 bass Exp $
+-- $Id: physicallink.sql,v 1.8 2005/10/16 15:56:30 max Exp $
 
 CREATE TABLE PhysicalLink (
  id NUMBER(19),
@@ -13,10 +13,6 @@ CREATE TABLE PhysicalLink (
  physical_link_type_id NOT NULL,
  city VARCHAR2(128 CHAR),
  street VARCHAR2(128 CHAR),
- building VARCHAR2(128 CHAR),
- dimension_x NUMBER(12),
- dimension_y NUMBER(12),
- topLeft NUMBER(1),
  start_node_id NUMBER(19),
  end_node_id NUMBER(19),
 --
@@ -29,6 +25,6 @@ CREATE TABLE PhysicalLink (
   REFERENCES PhysicalLinkType (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE PhysicalLink IS '$Id: physicallink.sql,v 1.7 2005/06/15 17:03:09 bass Exp $';
+COMMENT ON TABLE PhysicalLink IS '$Id: physicallink.sql,v 1.8 2005/10/16 15:56:30 max Exp $';
 
 CREATE SEQUENCE PhysicalLink_Seq ORDER;
