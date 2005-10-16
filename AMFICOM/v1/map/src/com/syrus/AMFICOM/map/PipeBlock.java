@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.4 2005/10/16 15:52:13 krupenn Exp $
+ * $Id: PipeBlock.java,v 1.5 2005/10/16 17:21:52 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/10/16 15:52:13 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/10/16 17:21:52 $
  * @module map
  */
 public final class PipeBlock 
@@ -117,7 +117,9 @@ public final class PipeBlock
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
 		this.horizontalVertical = horizontalVertical;
-		setDimension(bindingDimension);
+		this.dimension = (bindingDimension == null)
+				? new IntDimension(0, 0)
+						: bindingDimension;
 	}
 
 	public static PipeBlock createInstance(
