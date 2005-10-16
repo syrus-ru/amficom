@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.3 2005/10/16 09:53:13 max Exp $
+ * $Id: PipeBlock.java,v 1.4 2005/10/16 15:52:13 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
-import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -48,8 +49,8 @@ import com.syrus.util.Log;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/10/16 09:53:13 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/10/16 15:52:13 $
  * @module map
  */
 public final class PipeBlock 
@@ -132,8 +133,7 @@ public final class PipeBlock
 		
 		try {
 			final PipeBlock pipeBlock = new PipeBlock(
-					// TODO use PIPEBLOCK_CODE
-					IdentifierPool.getGeneratedIdentifier(PHYSICALLINK_CODE),
+					IdentifierPool.getGeneratedIdentifier(PIPEBLOCK_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					number,
@@ -496,8 +496,7 @@ public final class PipeBlock
 			final Date created,
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
-		// TODO use PHYSICALLINKBINDING_CODE
-		super(id, importType, PHYSICALLINK_CODE, created, creatorId);
+		super(id, importType, PIPEBLOCK_CODE, created, creatorId);
 	}
 
 	public void fromXmlTransferable(
