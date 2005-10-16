@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.40 2005/10/16 14:30:09 max Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.41 2005/10/16 15:51:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,20 +12,31 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/10/16 14:30:09 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/16 15:51:22 $
  * @author $Author: max $
  * @module map
  */
@@ -141,5 +152,79 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_START_NODE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_END_NODE_ID));
 		return physicalLink;
+	}
+	
+	@Override
+	protected void update(Set<PhysicalLink> storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
+		this.updateLinkedEntities(storableObjects);	
+	}
+	
+	private void updateLinkedEntities(Set<PhysicalLink> physicalLinks) throws UpdateObjectException {
+		Map<Identifier, Set<Identifier>> map = new HashMap<Identifier, Set<Identifier>>();
+		
+		for (PhysicalLink link : physicalLinks) {
+			map.put(link.getId(), Identifier.createIdentifiers(link.getBinding().getPipeBlocks()));
+		}
+		super.updateLinkedEntityIds(map, 
+				PhysicalLinkWrapper.PIPE_BLOCK_TABLE, 
+				PhysicalLinkWrapper.LINK_COLUMN_PHYSICALLINK_ID, 
+				PhysicalLinkWrapper.LINK_COLUMN_PIPEBLOCK_ID);
+	}
+	
+	@Override
+	protected void insert(Set<PhysicalLink> storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insert(storableObjects);
+		try {
+			this.update(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
+	}
+	
+	@Override
+	protected Set<PhysicalLink> retrieveByCondition(String conditionQuery) 
+	throws RetrieveObjectException, IllegalDataException {
+		
+		Set<PhysicalLink> physicalLinks = super.retrieveByCondition(conditionQuery);
+		
+		final Map<Identifier, PhysicalLink> physicalLinkIds = new HashMap<Identifier, PhysicalLink>();
+		for (final PhysicalLink physicalLink : physicalLinks) {
+			physicalLinkIds.put(physicalLink.getId(), physicalLink);
+		}
+		
+		Map<Identifier, Set<Identifier>> map = super.retrieveLinkedEntityIds(physicalLinks, 
+				PhysicalLinkWrapper.PIPE_BLOCK_TABLE, 
+				PhysicalLinkWrapper.LINK_COLUMN_PHYSICALLINK_ID, 
+				PhysicalLinkWrapper.LINK_COLUMN_PIPEBLOCK_ID);
+		
+		for (Identifier physicalLinkId : map.keySet()) {
+			PhysicalLink physicalLink = physicalLinkIds.get(physicalLinkId);
+			StorableObjectDatabase<PipeBlock> database = DatabaseContext.getDatabase(ObjectEntities.PIPEBLOCK_CODE);
+			Set<PipeBlock> pipeBlocks = database.retrieveByIdsByCondition(map.get(physicalLinkId), null);
+			physicalLink.getBinding().setPipeBlocks(pipeBlocks);
+		}
+		return physicalLinks;
+	}
+	
+	@Override
+	public void delete(Set<? extends Identifiable> identifiables) {
+		super.delete(identifiables);
+		
+		Set<PhysicalLink> dbPhysicalLinks = null;
+		try {
+			dbPhysicalLinks = this.retrieveByCondition(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true).toString());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return;
+		}
+		
+		Set<PipeBlock> pipeBlocks = new HashSet<PipeBlock>();
+		for (PhysicalLink link : dbPhysicalLinks) {
+			pipeBlocks.addAll(link.getBinding().getPipeBlocks());
+		}
+		
+		StorableObjectDatabase<PipeBlock> database = DatabaseContext.getDatabase(ObjectEntities.PIPEBLOCK_CODE);
+		database.delete(pipeBlocks);	
 	}
 }
