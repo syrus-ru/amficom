@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlockWrapper.java,v 1.1 2005/10/16 10:52:13 max Exp $
+ * $Id: PipeBlockWrapper.java,v 1.2 2005/10/16 16:40:03 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.PropertyChangeException;
 /**
  * @author max
  * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/10/16 10:52:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/16 16:40:03 $
  * @module map
  */
 
@@ -24,7 +24,7 @@ public class PipeBlockWrapper extends StorableObjectWrapper {
 	
 	public static final String COLUMN_NUMBER = "pipe_number";
 	public static final String COLUMN_DIMENSION_X = "dimension_x";
-	public static final String COLUMN_DIMENSION_Y = "dimension_x";
+	public static final String COLUMN_DIMENSION_Y = "dimension_y";
 	public static final String COLUMN_LEFT_TO_RIGHT = "left_to_right";
 	public static final String COLUMN_TOP_TO_BOTTOM = "top_to_bottom";
 	public static final String COLUMN_HORIZONTAL_VERTICAL = "horizontal_vertical";
