@@ -1,7 +1,8 @@
--- $Id: CREATE.sql,v 1.6 2005/08/04 15:22:26 max Exp $
+-- $Id: CREATE.sql,v 1.7 2005/10/16 11:11:12 max Exp $
 
 @@sitenode;
 @@topologicalnode;
+@@pipeblock;
 @@physicallink;
 @@nodelink;
 @@mark;
