@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.76 2005/10/07 10:04:23 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.77 2005/10/16 18:18:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
@@ -52,6 +53,7 @@ import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PipeBlock;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItemHelper;
@@ -62,7 +64,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.77 $, $Date: 2005/10/16 18:18:24 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -85,6 +87,8 @@ public final class CableChannelingItem
 
 	private Identifier physicalLinkId;
 
+	private Identifier pipeBlockId;
+
 	private Identifier startSiteNodeId;
 
 	private Identifier endSiteNodeId;
@@ -104,6 +108,7 @@ public final class CableChannelingItem
 	 * @param placeY
 	 * @param sequentialNumber
 	 * @param physicalLink
+	 * @param pipeBlock
 	 * @param startSiteNode
 	 * @param endSiteNode
 	 * @param parentSchemeCableLink
@@ -120,6 +125,7 @@ public final class CableChannelingItem
 			final int placeY,
 			final int sequentialNumber,
 			final PhysicalLink physicalLink,
+			final PipeBlock pipeBlock,
 			final SiteNode startSiteNode,
 			final SiteNode endSiteNode,
 			final SchemeCableLink parentSchemeCableLink) {
@@ -131,6 +137,7 @@ public final class CableChannelingItem
 		this.placeY = placeY;
 		this.sequentialNumber = sequentialNumber;
 		this.physicalLinkId = Identifier.possiblyVoid(physicalLink);
+		this.pipeBlockId = Identifier.possiblyVoid(pipeBlock);
 		this.startSiteNodeId = Identifier.possiblyVoid(startSiteNode);
 		this.endSiteNodeId = Identifier.possiblyVoid(endSiteNode);
 		this.parentSchemeCableLinkId = Identifier.possiblyVoid(parentSchemeCableLink);
@@ -162,7 +169,7 @@ public final class CableChannelingItem
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, double, double, int, int, PhysicalLink, SiteNode, SiteNode, SchemeCableLink)}.
+	 * {@link #createInstance(Identifier, double, double, int, int, PhysicalLink, PipeBlock, SiteNode, SiteNode, SchemeCableLink)}.
 	 *
 	 * @param creatorId
 	 * @param startSiteNode
@@ -174,7 +181,7 @@ public final class CableChannelingItem
 			final SiteNode startSiteNode,
 			final SiteNode endSiteNode,
 			final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
-		return createInstance(creatorId, 0, 0, 0, 0, null, startSiteNode, endSiteNode, parentSchemeCableLink);
+		return createInstance(creatorId, 0, 0, 0, 0, null, null, startSiteNode, endSiteNode, parentSchemeCableLink);
 	}
 
 	/**
@@ -184,6 +191,7 @@ public final class CableChannelingItem
 	 * @param rowX
 	 * @param placeY
 	 * @param physicalLink
+	 * @param pipeBlock
 	 * @param startSiteNode
 	 * @param endSiteNode
 	 * @param parentSchemeCableLink
@@ -195,6 +203,7 @@ public final class CableChannelingItem
 			final int rowX,
 			final int placeY,
 			final PhysicalLink physicalLink,
+			final PipeBlock pipeBlock,
 			final SiteNode startSiteNode,
 			final SiteNode endSiteNode,
 			final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
@@ -222,6 +231,7 @@ public final class CableChannelingItem
 					placeY,
 					sequentialNumber,
 					physicalLink,
+					pipeBlock,
 					startSiteNode,
 					endSiteNode,
 					parentSchemeCableLink);
@@ -284,11 +294,13 @@ public final class CableChannelingItem
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.physicalLinkId != null
+				&& this.pipeBlockId != null
 				&& this.startSiteNodeId != null
 				&& this.endSiteNodeId != null
 				&& this.parentSchemeCableLinkId != null : OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.physicalLinkId);
+		dependencies.add(this.pipeBlockId);
 		dependencies.add(this.startSiteNodeId);
 		dependencies.add(this.endSiteNodeId);
 		dependencies.add(this.parentSchemeCableLinkId);
@@ -369,6 +381,21 @@ public final class CableChannelingItem
 		}
 	}
 
+	Identifier getPipeBlockId() {
+		assert this.pipeBlockId != null : OBJECT_NOT_INITIALIZED;
+		assert this.pipeBlockId.isVoid() || this.pipeBlockId.getMajor() == PIPEBLOCK_CODE;
+		return this.pipeBlockId;
+	}
+
+	/**
+	 * A wrapper around {@link #getPipeBlockId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	public PipeBlock getPipeBlock() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getPipeBlockId(), true);
+	}
+
 	public int getPlaceY() {
 		return this.placeY;
 	}
@@ -443,6 +470,7 @@ public final class CableChannelingItem
 				this.placeY,
 				this.sequentialNumber,
 				this.physicalLinkId.getTransferable(),
+				this.pipeBlockId.getTransferable(),
 				this.startSiteNodeId.getTransferable(),
 				this.endSiteNodeId.getTransferable(),
 				this.parentSchemeCableLinkId.getTransferable());
@@ -472,6 +500,12 @@ public final class CableChannelingItem
 		if (!this.physicalLinkId.isVoid()) {
 			this.physicalLinkId.getXmlTransferable(cableChannelingItem.addNewPhysicalLinkId(), importType);
 		}
+		if (cableChannelingItem.isSetPipeBlockId()) {
+			cableChannelingItem.unsetPipeBlockId();
+		}
+		if (!this.pipeBlockId.isVoid()) {
+			this.pipeBlockId.getXmlTransferable(cableChannelingItem.addNewPipeBlockId(), importType);
+		}
 		this.startSiteNodeId.getXmlTransferable(cableChannelingItem.addNewStartSiteNodeId(), importType);
 		this.endSiteNodeId.getXmlTransferable(cableChannelingItem.addNewEndSiteNodeId(), importType);
 		this.parentSchemeCableLinkId.getXmlTransferable(cableChannelingItem.addNewParentSchemeCableLinkId(), importType);
@@ -490,6 +524,7 @@ public final class CableChannelingItem
 	 * @param placeY
 	 * @param sequentialNumber
 	 * @param physicalLinkId
+	 * @param pipeBlockId
 	 * @param startSiteNodeId
 	 * @param endSiteNodeId
 	 * @param parentSchemeCableLinkId
@@ -505,12 +540,14 @@ public final class CableChannelingItem
 			final int placeY,
 			final int sequentialNumber,
 			final Identifier physicalLinkId,
+			final Identifier pipeBlockId,
 			final Identifier startSiteNodeId,
 			final Identifier endSiteNodeId,
 			final Identifier parentSchemeCableLinkId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
 		assert physicalLinkId != null: NON_NULL_EXPECTED;
+		assert pipeBlockId != null : NON_NULL_EXPECTED;
 		assert startSiteNodeId != null && !startSiteNodeId.isVoid(): NON_VOID_EXPECTED;
 		assert endSiteNodeId != null && !endSiteNodeId.isVoid(): NON_VOID_EXPECTED;
 		assert parentSchemeCableLinkId != null && !parentSchemeCableLinkId.isVoid(): NON_VOID_EXPECTED;
@@ -521,6 +558,7 @@ public final class CableChannelingItem
 		this.placeY = placeY;
 		this.sequentialNumber = sequentialNumber;
 		this.physicalLinkId = physicalLinkId;
+		this.pipeBlockId = pipeBlockId;
 		this.startSiteNodeId = startSiteNodeId;
 		this.endSiteNodeId = endSiteNodeId;
 		this.parentSchemeCableLinkId = parentSchemeCableLinkId;
@@ -681,6 +719,29 @@ public final class CableChannelingItem
 		this.setPhysicalLinkId(Identifier.possiblyVoid(physicalLink));
 	}
 
+	/**
+	 * @param pipeBlockId
+	 */
+	void setPipeBlockId(final Identifier pipeBlockId) {
+		assert pipeBlockId != null : NON_NULL_EXPECTED;
+		assert pipeBlockId.isVoid() || pipeBlockId.getMajor() == PIPEBLOCK_CODE;
+
+		if (this.pipeBlockId.equals(pipeBlockId)) {
+			return;
+		}
+		this.pipeBlockId = pipeBlockId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setPipeBlockId(Identifier)}.
+	 *
+	 * @param pipeBlock
+	 */
+	public void setPipeBlock(final PipeBlock pipeBlock) {
+		this.setPipeBlockId(Identifier.possiblyVoid(pipeBlock));
+	}
+
 	public void setPlaceY(final int placeY) {
 		if (this.placeY == placeY)
 			return;
@@ -754,6 +815,7 @@ public final class CableChannelingItem
 			this.placeY = cableChannelingItem.placeY;
 			this.sequentialNumber = cableChannelingItem.sequentialNumber;
 			this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
+			this.pipeBlockId = Identifier.valueOf(cableChannelingItem.pipeBlockId);
 			this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
 			this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
 			this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
@@ -779,6 +841,9 @@ public final class CableChannelingItem
 		this.sequentialNumber = cableChannelingItem.getSequentialNumber();
 		this.physicalLinkId = cableChannelingItem.isSetPhysicalLinkId()
 				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType, MODE_THROW_IF_ABSENT)
+				: VOID_IDENTIFIER;
+		this.pipeBlockId = cableChannelingItem.isSetPipeBlockId()
+				? Identifier.fromXmlTransferable(cableChannelingItem.getPipeBlockId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
 		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType, MODE_THROW_IF_ABSENT);

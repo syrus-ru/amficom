@@ -1,4 +1,4 @@
--- $Id: cablechannelingitem.sql,v 1.6 2005/09/25 17:52:41 bass Exp $
+-- $Id: cablechannelingitem.sql,v 1.7 2005/10/16 18:18:23 bass Exp $
 
 CREATE TABLE CableChannelingItem (
 	id NUMBER(19) NOT NULL,
@@ -15,6 +15,7 @@ CREATE TABLE CableChannelingItem (
 	place_y NUMBER(10) NOT NULL,
 	sequential_number NUMBER(10) NOT NULL,
 	physical_link_id,
+	pipe_block_id,
 	start_site_node_id NOT NULL,
 	end_site_node_id NOT NULL,
 	parent_scheme_cable_link_id NOT NULL,
@@ -28,6 +29,8 @@ CREATE TABLE CableChannelingItem (
 --
 	CONSTRAINT cblchnnlngtm_physical_link_fk FOREIGN KEY(physical_link_id)
 		REFERENCES PhysicalLink(id) ON DELETE SET NULL,
+	CONSTRAINT cblchnnlngtm_pipe_block_fk FOREIGN KEY(pipe_block_id)
+		REFERENCES PipeBlock(id) ON DELETE SET NULL,
 	CONSTRAINT cblchnnlngtm_strt_site_node_fk FOREIGN KEY(start_site_node_id)
 		REFERENCES SiteNode(id) ON DELETE CASCADE,
 	CONSTRAINT cblchnnlngtm_end_site_node_fk FOREIGN KEY(end_site_node_id)
@@ -36,6 +39,6 @@ CREATE TABLE CableChannelingItem (
 		REFERENCES SchemeCableLink(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE CableChannelingItem IS '$Id: cablechannelingitem.sql,v 1.6 2005/09/25 17:52:41 bass Exp $';
+COMMENT ON TABLE CableChannelingItem IS '$Id: cablechannelingitem.sql,v 1.7 2005/10/16 18:18:23 bass Exp $';
 
 CREATE SEQUENCE CableChannelingItem_Seq ORDER;

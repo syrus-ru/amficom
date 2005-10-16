@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.13 2005/09/08 16:34:40 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.14 2005/10/16 18:18:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/16 18:18:24 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -27,6 +27,7 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 	public static final String COLUMN_PLACE_Y = "place_y";
 	public static final String COLUMN_SEQUENTIAL_NUMBER = "sequential_number";
 	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
+	public static final String COLUMN_PIPE_BLOCK_ID = "pipe_block_id";
 	public static final String COLUMN_START_SITE_NODE_ID = "start_site_node_id";
 	public static final String COLUMN_END_SITE_NODE_ID = "end_site_node_id";
 	public static final String COLUMN_PARENT_SCHEME_CABLE_LINK_ID = "parent_scheme_cable_link_id";
@@ -43,6 +44,7 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 				COLUMN_PLACE_Y,
 				COLUMN_SEQUENTIAL_NUMBER,
 				COLUMN_PHYSICAL_LINK_ID,
+				COLUMN_PIPE_BLOCK_ID,
 				COLUMN_START_SITE_NODE_ID,
 				COLUMN_END_SITE_NODE_ID,
 				COLUMN_PARENT_SCHEME_CABLE_LINK_ID}));
@@ -70,6 +72,7 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 				|| key.equals(COLUMN_SEQUENTIAL_NUMBER)) {
 			return Integer.class;
 		} else if (key.equals(COLUMN_PHYSICAL_LINK_ID) 
+				|| key.equals(COLUMN_PIPE_BLOCK_ID)
 				|| key.equals(COLUMN_START_SITE_NODE_ID)
 				|| key.equals(COLUMN_END_SITE_NODE_ID)
 				|| key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
@@ -104,6 +107,8 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 				return Integer.valueOf(cableChannelingItem.getPlaceY());
 			} else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				return cableChannelingItem.getPhysicalLinkId();
+			} else if (key.equals(COLUMN_PIPE_BLOCK_ID)) {
+				return cableChannelingItem.getPipeBlockId();
 			} else if (key.equals(COLUMN_START_SITE_NODE_ID)) {
 				return cableChannelingItem.getStartSiteNodeId();
 			} else if (key.equals(COLUMN_END_SITE_NODE_ID)) {
@@ -132,6 +137,8 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 				cableChannelingItem.setPlaceY(((Integer) value).intValue());
 			} else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				cableChannelingItem.setPhysicalLinkId((Identifier) value);
+			} else if (key.equals(COLUMN_PIPE_BLOCK_ID)) {
+				cableChannelingItem.setPipeBlockId((Identifier) value);
 			} else if (key.equals(COLUMN_START_SITE_NODE_ID)) {
 				cableChannelingItem.setStartSiteNodeId((Identifier) value);
 			} else if (key.equals(COLUMN_END_SITE_NODE_ID)) {

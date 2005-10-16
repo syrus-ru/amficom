@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.39 2005/09/29 12:50:55 bass Exp $
+ * $Id: scheme.idl,v 1.40 2005/10/16 18:18:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -483,6 +483,7 @@ module scheme {
 			public long sequentialNumber;
 
 			public general::corba::IdlIdentifier physicalLinkId;
+			public general::corba::IdlIdentifier pipeBlockId;
 			public general::corba::IdlIdentifier startSiteNodeId;
 			public general::corba::IdlIdentifier endSiteNodeId;
 			public general::corba::IdlIdentifier parentSchemeCableLinkId;
@@ -499,6 +500,7 @@ module scheme {
 					in long placeY,
 					in long sequentialNumber,
 					in general::corba::IdlIdentifier physicalLinkId,
+					in general::corba::IdlIdentifier pipeBlockId,
 					in general::corba::IdlIdentifier startSiteNodeId,
 					in general::corba::IdlIdentifier endSiteNodeId,
 					in general::corba::IdlIdentifier parentSchemeCableLinkId);

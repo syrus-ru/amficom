@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.19 2005/07/28 17:42:35 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.20 2005/10/16 18:18:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_END_SIT
 import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_END_SPARE;
 import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
 import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_PIPE_BLOCK_ID;
 import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_PLACE_Y;
 import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_ROW_X;
 import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/16 18:18:24 $
  * @module scheme
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase<CableChannelingItem> {
@@ -57,6 +58,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 					+ COLUMN_PLACE_Y + COMMA
 					+ COLUMN_SEQUENTIAL_NUMBER + COMMA
 					+ COLUMN_PHYSICAL_LINK_ID + COMMA
+					+ COLUMN_PIPE_BLOCK_ID + COMMA
 					+ COLUMN_START_SITE_NODE_ID + COMMA
 					+ COLUMN_END_SITE_NODE_ID + COMMA
 					+ COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
@@ -73,6 +75,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -97,6 +100,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 				+ storableObject.getPlaceY() + COMMA
 				+ storableObject.getSequentialNumber() + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getPhysicalLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getPipeBlockId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getStartSiteNodeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getEndSiteNodeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeCableLinkId());
@@ -122,6 +126,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 		preparedStatement.setInt(++startParameterNumber1, storableObject.getPlaceY());
 		preparedStatement.setInt(++startParameterNumber1, storableObject.getSequentialNumber());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getPhysicalLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getPipeBlockId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getStartSiteNodeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getEndSiteNodeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber1, storableObject.getParentSchemeCableLinkId());
@@ -155,6 +160,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 						null,
 						null,
 						null,
+						null,
 						null)
 				: storableObject;
 		cableChannelingItem.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -168,6 +174,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 				resultSet.getInt(COLUMN_PLACE_Y),
 				resultSet.getInt(COLUMN_SEQUENTIAL_NUMBER),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PHYSICAL_LINK_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PIPE_BLOCK_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_SITE_NODE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_END_SITE_NODE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_CABLE_LINK_ID));

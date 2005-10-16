@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCableChannelingItemImpl.java,v 1.2 2005/07/24 17:08:16 bass Exp $
+ * $Id: IdlCableChannelingItemImpl.java,v 1.3 2005/10/16 18:18:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/24 17:08:16 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/16 18:18:24 $
  * @module scheme
  */
 final class IdlCableChannelingItemImpl extends IdlCableChannelingItem {
@@ -36,6 +36,7 @@ final class IdlCableChannelingItemImpl extends IdlCableChannelingItem {
 			final int placeY,
 			final int sequentialNumber,
 			final IdlIdentifier physicalLinkId,
+			final IdlIdentifier pipeBlockId,
 			final IdlIdentifier startSiteNodeId,
 			final IdlIdentifier endSiteNodeId,
 			final IdlIdentifier parentSchemeCableLinkId) {
@@ -51,6 +52,7 @@ final class IdlCableChannelingItemImpl extends IdlCableChannelingItem {
 		this.placeY = placeY;
 		this.sequentialNumber = sequentialNumber;
 		this.physicalLinkId = physicalLinkId;
+		this.pipeBlockId = pipeBlockId;
 		this.startSiteNodeId = startSiteNodeId;
 		this.endSiteNodeId = endSiteNodeId;
 		this.parentSchemeCableLinkId = parentSchemeCableLinkId;
