@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.125 2005/10/12 13:24:31 bass Exp $
+ * $Id: CoreAnalysisManager.java,v 1.126 2005/10/17 13:51:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.125 $, $Date: 2005/10/12 13:24:31 $
+ * @author $Author: saa $
+ * @version $Revision: 1.126 $, $Date: 2005/10/17 13:51:01 $
  * @module
  */
 
@@ -347,9 +347,12 @@ public class CoreAnalysisManager
 		// определяем reflSize и nReflSize
 		// FIXME: привести reflSize и nReflSize в порядок
 
-		//int reflSize = ReflectogramMath.getReflectiveEventSize(tpa.y, 0.5);
+//		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
+//				tpa.y,
+//				tpa.pulseWidth,
+//				tpa.ior,
+//				tpa.deltaX);
 		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
-				tpa.y,
 				tpa.pulseWidth,
 				tpa.ior,
 				tpa.deltaX);

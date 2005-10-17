@@ -132,35 +132,12 @@ public class ReflectogramMath
 		return eventSize;
 	}
 
-	public static int getNonReflectiveEventSize(double[] data, double pulsewidth, double refraction, double resolution)
+	public static int getNonReflectiveEventSize(
+//			double[] data,
+			double pulsewidth,
+			double refraction,
+			double resolution)
 	{
-		/*
-		double firstLevel = 0.25;
-		double secondLevel = 1.75;
-		int firstPoint = 0;
-		int secondPoint = 1;
-		int maxIndex = 4;
-
-		for (int i = 0; i < Math.min(300, data.length); i++)
-			if(data[i] > data[maxIndex])
-				maxIndex = i;
-
-		for(int i = maxIndex + 1; i < data.length; i++)
-			if(data[i] < data[maxIndex] - firstLevel)
-			{
-				firstPoint = i - 1;
-				break;
-			}
-
-		for(int i = firstPoint + 1; i < data.length; i++)
-			if(data[i] < data[maxIndex] - secondLevel)
-			{
-				secondPoint = i;
-				break;
-			}
-		double[] d = ReflectogramMath.linearize2point(data, firstPoint, secondPoint);
-		double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
-		*/
 		if (pulsewidth <= 0)
 			return 50; // XXX: default wavelet width when pulsewidth is unknown
 		double eventSize = 150d / refraction * pulsewidth / 1000d / resolution;
@@ -170,6 +147,31 @@ public class ReflectogramMath
 		if(eventSize < 15)
 			eventSize = 15;
 		return (int)eventSize;
+//		double firstLevel = 0.25;
+//		double secondLevel = 1.75;
+//		int firstPoint = 0;
+//		int secondPoint = 1;
+//		int maxIndex = 4;
+//
+//		for (int i = 0; i < Math.min(300, data.length); i++)
+//			if(data[i] > data[maxIndex])
+//				maxIndex = i;
+//
+//		for(int i = maxIndex + 1; i < data.length; i++)
+//			if(data[i] < data[maxIndex] - firstLevel)
+//			{
+//				firstPoint = i - 1;
+//				break;
+//			}
+//
+//		for(int i = firstPoint + 1; i < data.length; i++)
+//			if(data[i] < data[maxIndex] - secondLevel)
+//			{
+//				secondPoint = i;
+//				break;
+//			}
+//		double[] d = ReflectogramMath.linearize2point(data, firstPoint, secondPoint);
+//		double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
 	}
 
 	public static double[] getDerivative(double[] y, int freq, int wLet)
