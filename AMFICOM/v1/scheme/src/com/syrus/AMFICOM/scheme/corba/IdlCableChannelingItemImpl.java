@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCableChannelingItemImpl.java,v 1.3 2005/10/16 18:18:24 bass Exp $
+ * $Id: IdlCableChannelingItemImpl.java,v 1.4 2005/10/17 07:54:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,18 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import static java.util.logging.Level.SEVERE;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/16 18:18:24 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/17 07:54:07 $
  * @module scheme
  */
 final class IdlCableChannelingItemImpl extends IdlCableChannelingItem {
@@ -59,10 +64,16 @@ final class IdlCableChannelingItemImpl extends IdlCableChannelingItem {
 	}
 
 	/**
+	 * @throws IdlCreateObjectException
 	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
 	 */
 	@Override
-	public CableChannelingItem getNative() {
-		return new CableChannelingItem(this);
+	public CableChannelingItem getNative() throws IdlCreateObjectException {
+		try {
+			return new CableChannelingItem(this);
+		} catch (final CreateObjectException coe) {
+			Log.debugException(coe, SEVERE);
+			throw new IdlCreateObjectException(coe.getMessage());
+		}
 	}
 }

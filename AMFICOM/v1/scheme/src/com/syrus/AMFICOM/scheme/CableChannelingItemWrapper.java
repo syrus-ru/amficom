@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.14 2005/10/16 18:18:24 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.15 2005/10/17 07:54:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/16 18:18:24 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/17 07:54:07 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -125,27 +127,33 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 	}
 
 	@Override
-	public void setValue(final CableChannelingItem cableChannelingItem, final String key, final Object value) {
-		if (cableChannelingItem != null) {
-			if (key.equals(COLUMN_START_SPARE)) {
-				cableChannelingItem.setStartSpare(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_END_SPARE)) {
-				cableChannelingItem.setEndSpare(((Double) value).doubleValue());
-			} else if (key.equals(COLUMN_ROW_X)) {
-				cableChannelingItem.setRowX(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_PLACE_Y)) {
-				cableChannelingItem.setPlaceY(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
-				cableChannelingItem.setPhysicalLinkId((Identifier) value);
-			} else if (key.equals(COLUMN_PIPE_BLOCK_ID)) {
-				cableChannelingItem.setPipeBlockId((Identifier) value);
-			} else if (key.equals(COLUMN_START_SITE_NODE_ID)) {
-				cableChannelingItem.setStartSiteNodeId((Identifier) value);
-			} else if (key.equals(COLUMN_END_SITE_NODE_ID)) {
-				cableChannelingItem.setEndSiteNodeId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
-				cableChannelingItem.setParentSchemeCableLinkId((Identifier) value);
+	public void setValue(final CableChannelingItem cableChannelingItem,
+			final String key, final Object value)
+	throws PropertyChangeException {
+		try {
+			if (cableChannelingItem != null) {
+				if (key.equals(COLUMN_START_SPARE)) {
+					cableChannelingItem.setStartSpare(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_END_SPARE)) {
+					cableChannelingItem.setEndSpare(((Double) value).doubleValue());
+				} else if (key.equals(COLUMN_ROW_X)) {
+					cableChannelingItem.setRowX(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_PLACE_Y)) {
+					cableChannelingItem.setPlaceY(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
+					cableChannelingItem.setPhysicalLinkId((Identifier) value);
+				} else if (key.equals(COLUMN_PIPE_BLOCK_ID)) {
+					cableChannelingItem.setPipeBlockId((Identifier) value);
+				} else if (key.equals(COLUMN_START_SITE_NODE_ID)) {
+					cableChannelingItem.setStartSiteNodeId((Identifier) value);
+				} else if (key.equals(COLUMN_END_SITE_NODE_ID)) {
+					cableChannelingItem.setEndSiteNodeId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
+					cableChannelingItem.setParentSchemeCableLinkId((Identifier) value);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

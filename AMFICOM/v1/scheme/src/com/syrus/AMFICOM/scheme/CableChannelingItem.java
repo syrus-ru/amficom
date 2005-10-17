@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.77 2005/10/16 18:18:24 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.78 2005/10/17 07:54:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/10/16 18:18:24 $
+ * @version $Revision: 1.78 $, $Date: 2005/10/17 07:54:07 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -86,8 +86,6 @@ public final class CableChannelingItem
 	int sequentialNumber;
 
 	private Identifier physicalLinkId;
-
-	private Identifier pipeBlockId;
 
 	private Identifier startSiteNodeId;
 
@@ -137,7 +135,9 @@ public final class CableChannelingItem
 		this.placeY = placeY;
 		this.sequentialNumber = sequentialNumber;
 		this.physicalLinkId = Identifier.possiblyVoid(physicalLink);
-		this.pipeBlockId = Identifier.possiblyVoid(pipeBlock);
+
+		this.pipeBlockId = Identifier.possiblyVoid(this.pipeBlock = pipeBlock);
+
 		this.startSiteNodeId = Identifier.possiblyVoid(startSiteNode);
 		this.endSiteNodeId = Identifier.possiblyVoid(endSiteNode);
 		this.parentSchemeCableLinkId = Identifier.possiblyVoid(parentSchemeCableLink);
@@ -158,13 +158,25 @@ public final class CableChannelingItem
 			final Identifier creatorId)
 	throws IdentifierGenerationException {
 		super(id, importType, CABLECHANNELINGITEM_CODE, created, creatorId);
+
+		this.pipeBlockId = VOID_IDENTIFIER;
 	}
 
 	/**
 	 * @param transferable
+	 * @throws CreateObjectException
 	 */
-	public CableChannelingItem(final IdlCableChannelingItem transferable) {
-		fromTransferable(transferable);
+	public CableChannelingItem(final IdlCableChannelingItem transferable)
+	throws CreateObjectException {
+		this.pipeBlockId = VOID_IDENTIFIER;
+
+		try {
+			this.fromTransferable(transferable);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
@@ -379,21 +391,6 @@ public final class CableChannelingItem
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
-	}
-
-	Identifier getPipeBlockId() {
-		assert this.pipeBlockId != null : OBJECT_NOT_INITIALIZED;
-		assert this.pipeBlockId.isVoid() || this.pipeBlockId.getMajor() == PIPEBLOCK_CODE;
-		return this.pipeBlockId;
-	}
-
-	/**
-	 * A wrapper around {@link #getPipeBlockId()}.
-	 *
-	 * @throws ApplicationException
-	 */
-	public PipeBlock getPipeBlock() throws ApplicationException {
-		return StorableObjectPool.getStorableObject(this.getPipeBlockId(), true);
 	}
 
 	public int getPlaceY() {
@@ -719,29 +716,6 @@ public final class CableChannelingItem
 		this.setPhysicalLinkId(Identifier.possiblyVoid(physicalLink));
 	}
 
-	/**
-	 * @param pipeBlockId
-	 */
-	void setPipeBlockId(final Identifier pipeBlockId) {
-		assert pipeBlockId != null : NON_NULL_EXPECTED;
-		assert pipeBlockId.isVoid() || pipeBlockId.getMajor() == PIPEBLOCK_CODE;
-
-		if (this.pipeBlockId.equals(pipeBlockId)) {
-			return;
-		}
-		this.pipeBlockId = pipeBlockId;
-		super.markAsChanged();
-	}
-
-	/**
-	 * A wrapper around {@link #setPipeBlockId(Identifier)}.
-	 *
-	 * @param pipeBlock
-	 */
-	public void setPipeBlock(final PipeBlock pipeBlock) {
-		this.setPipeBlockId(Identifier.possiblyVoid(pipeBlock));
-	}
-
 	public void setPlaceY(final int placeY) {
 		if (this.placeY == placeY)
 			return;
@@ -795,10 +769,11 @@ public final class CableChannelingItem
 
 	/**
 	 * @param transferable
+	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		synchronized (this) {
 			final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
 			try {
@@ -815,7 +790,7 @@ public final class CableChannelingItem
 			this.placeY = cableChannelingItem.placeY;
 			this.sequentialNumber = cableChannelingItem.sequentialNumber;
 			this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
-			this.pipeBlockId = Identifier.valueOf(cableChannelingItem.pipeBlockId);
+			this.setPipeBlockId0(Identifier.valueOf(cableChannelingItem.pipeBlockId));
 			this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
 			this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
 			this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
@@ -842,9 +817,9 @@ public final class CableChannelingItem
 		this.physicalLinkId = cableChannelingItem.isSetPhysicalLinkId()
 				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
-		this.pipeBlockId = cableChannelingItem.isSetPipeBlockId()
+		this.setPipeBlockId0(cableChannelingItem.isSetPipeBlockId()
 				? Identifier.fromXmlTransferable(cableChannelingItem.getPipeBlockId(), importType, MODE_THROW_IF_ABSENT)
-				: VOID_IDENTIFIER;
+				: VOID_IDENTIFIER);
 		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
 		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
 		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType, MODE_THROW_IF_ABSENT);
@@ -944,5 +919,87 @@ public final class CableChannelingItem
 			this.sequentialNumber = thatSequentialNumber;
 		}
 		super.markAsChanged();
+	}
+
+	/*-********************************************************************
+	 * pipeBlock                                                          *
+	 **********************************************************************/
+
+	private Identifier pipeBlockId;
+
+	private transient PipeBlock pipeBlock;
+
+	Identifier getPipeBlockId() {
+		assert this.pipeBlockId != null : OBJECT_NOT_INITIALIZED;
+		assert this.pipeBlockId.isVoid() || this.pipeBlockId.getMajor() == PIPEBLOCK_CODE;
+		return this.pipeBlockId;
+	}
+
+	/**
+	 * A wrapper around {@link #getPipeBlockId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	public PipeBlock getPipeBlock() throws ApplicationException {
+		final Identifier thisPipeBlockId = this.getPipeBlockId();
+		return thisPipeBlockId.equals(Identifier.possiblyVoid(this.pipeBlock))
+				? this.pipeBlock
+				: (this.pipeBlock = StorableObjectPool.getStorableObject(thisPipeBlockId, true));
+	}
+
+	/**
+	 * A wrapper around {@link #setPipeBlockId0(Identifier)}.
+	 *
+	 * @param pipeBlockId
+	 * @throws ApplicationException
+	 */
+	void setPipeBlockId(final Identifier pipeBlockId)
+	throws ApplicationException {
+		this.setPipeBlockId0(pipeBlockId);
+		this.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setPipeBlock0(PipeBlock)}.
+	 *
+	 * @param pipeBlockId
+	 * @throws ApplicationException
+	 */
+	private void setPipeBlockId0(final Identifier pipeBlockId)
+	throws ApplicationException {
+		assert pipeBlockId != null : NON_NULL_EXPECTED;
+		assert pipeBlockId.isVoid() || pipeBlockId.getMajor() == PIPEBLOCK_CODE;
+
+		if (this.pipeBlockId.equals(pipeBlockId)) {
+			return;
+		}
+
+		if (buildCacheOnModification()) {
+			this.setPipeBlock0(StorableObjectPool.<PipeBlock>getStorableObject(pipeBlockId, true));
+		} else {
+			this.pipeBlockId = pipeBlockId;
+			this.pipeBlock = null;
+		}
+	}
+
+	/**
+	 * A wrapper around {@link #setPipeBlock0(PipeBlock)}.
+	 *
+	 * @param pipeBlock
+	 */
+	public void setPipeBlock(final PipeBlock pipeBlock) {
+		this.setPipeBlock0(pipeBlock);
+		this.markAsChanged();
+	}
+
+	private void setPipeBlock0(final PipeBlock pipeBlock) {
+		final Identifier newPipeBlockId = Identifier.possiblyVoid(pipeBlock);
+
+		if (this.pipeBlockId.equals(newPipeBlockId)) {
+			return;
+		}
+
+		this.pipeBlockId = newPipeBlockId;
+		this.pipeBlock = pipeBlock;
 	}
 }

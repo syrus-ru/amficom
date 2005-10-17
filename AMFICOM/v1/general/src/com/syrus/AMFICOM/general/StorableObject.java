@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.121 2005/10/14 06:18:18 bass Exp $
+ * $Id: StorableObject.java,v 1.122 2005/10/17 07:54:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/10/14 06:18:18 $
+ * @version $Revision: 1.122 $, $Date: 2005/10/17 07:54:06 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -624,6 +624,10 @@ public abstract class StorableObject implements Identifiable,
 		Log.debugMessage(KEY + '=' + System.getProperty(KEY, DEFAULT_VALUE), INFO);
 	}
 
+	protected static boolean buildCacheOnModification() {
+		return Boolean.parseBoolean(System.getProperty(KEY, DEFAULT_VALUE));
+	}
+
 	/**
 	 * This class shouldn&apos;t have been declared static since it&apos;s
 	 * not referenced within a static context anywhere, unless an ugly
@@ -656,7 +660,7 @@ public abstract class StorableObject implements Identifiable,
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.121 $, $Date: 2005/10/14 06:18:18 $
+	 * @version $Revision: 1.122 $, $Date: 2005/10/17 07:54:06 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -694,7 +698,7 @@ public abstract class StorableObject implements Identifiable,
 					containee.markAsPersistent();
 					this.containees.add(containee);
 				}
-			} else if (this.buildCacheOnModification()) {
+			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
 				if (!this.containees.contains(containee)) {
@@ -717,7 +721,7 @@ public abstract class StorableObject implements Identifiable,
 					containee.cleanupPersistence();
 					this.containees.remove(containee);
 				}
-			} else if (this.buildCacheOnModification()) {
+			} else if (buildCacheOnModification()) {
 				this.ensureCacheBuilt(usePool);
 
 				if (this.containees.contains(containee)) {
@@ -772,10 +776,6 @@ public abstract class StorableObject implements Identifiable,
 			}
 		}
 
-		private boolean buildCacheOnModification() {
-			return Boolean.parseBoolean(System.getProperty(KEY, DEFAULT_VALUE));
-		}
-
 		@Crutch134(notes = "Inline")
 		protected boolean useLoader() {
 			return true;
@@ -785,7 +785,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.121 $, $Date: 2005/10/14 06:18:18 $
+	 * @version $Revision: 1.122 $, $Date: 2005/10/17 07:54:06 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
