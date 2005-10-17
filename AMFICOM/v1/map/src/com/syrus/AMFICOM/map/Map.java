@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.114 2005/10/14 11:56:49 krupenn Exp $
+ * $Id: Map.java,v 1.115 2005/10/17 15:25:51 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.114 $, $Date: 2005/10/14 11:56:49 $
+ * @author $Author: max $
+ * @version $Revision: 1.115 $, $Date: 2005/10/17 15:25:51 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1316,39 +1316,39 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		}
 	}
 
-	public Set<Identifier> getCollectorIds() {
+	Set<Identifier> getCollectorIds() {
 		return this.collectorIds;
 	}
 
-	public Set<Identifier> getExternalNodeIds() {
+	Set<Identifier> getExternalNodeIds() {
 		return this.externalNodeIds;
 	}
 
-	public Set<Identifier> getMapIds() {
+	Set<Identifier> getMapIds() {
 		return this.mapIds;
 	}
 
-	public Set<Identifier> getMapLibraryIds() {
+	Set<Identifier> getMapLibraryIds() {
 		return this.mapLibraryIds;
 	}
 
-	public Set<Identifier> getMarkIds() {
+	Set<Identifier> getMarkIds() {
 		return this.markIds;
 	}
 
-	public Set<Identifier> getNodeLinkIds() {
+	Set<Identifier> getNodeLinkIds() {
 		return this.nodeLinkIds;
 	}
 
-	public Set<Identifier> getPhysicalLinkIds() {
+	Set<Identifier> getPhysicalLinkIds() {
 		return this.physicalLinkIds;
 	}
 
-	public Set<Identifier> getSiteNodeIds() {
+	Set<Identifier> getSiteNodeIds() {
 		return this.siteNodeIds;
 	}
 
-	public Set<Identifier> getTopologicalNodeIds() {
+	Set<Identifier> getTopologicalNodeIds() {
 		return this.topologicalNodeIds;
 	}
 }

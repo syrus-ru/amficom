@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.57 2005/10/16 15:50:23 max Exp $
+ * $Id: MapDatabase.java,v 1.58 2005/10/17 15:25:51 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,21 +45,22 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/10/16 15:50:23 $
+ * @version $Revision: 1.58 $, $Date: 2005/10/17 15:25:51 $
  * @author $Author: max $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
 	 // linked tables ::
-    private static final String MAP_COLLECTOR 			= "MapCollector";
-    private static final String MAP_MARK 				= "MapMark";
-	private static final String MAP_NODE_LINK 			= "MapNodeLink";
-	private static final String MAP_PHYSICAL_LINK 		= "MapPhysicalLink";
-	private static final String MAP_SITE_NODE 			= "MapSiteNode";
-	private static final String MAP_TOPOLOGICAL_NODE 	= "MapTopologicalNode";
-	private static final String MAP_MAP 				= "MapMapLink";
-	private static final String MAP_EXTERNAL_NODE 		= "MapExtNodeLink";
-	private static final String MAP_MAP_LIBRARY 		= "MapMapLibraryLink";
+    //TODO: move to mapWrapper
+	static final String MAP_COLLECTOR 			= "MapCollector";
+    static final String MAP_MARK 				= "MapMark";
+	static final String MAP_NODE_LINK 			= "MapNodeLink";
+	static final String MAP_PHYSICAL_LINK 		= "MapPhysicalLink";
+	static final String MAP_SITE_NODE 			= "MapSiteNode";
+	static final String MAP_TOPOLOGICAL_NODE 	= "MapTopologicalNode";
+	static final String MAP_MAP 				= "MapMapLink";
+	static final String MAP_EXTERNAL_NODE 		= "MapExtNodeLink";
+	static final String MAP_MAP_LIBRARY 		= "MapMapLibraryLink";
 	
 //    private static final int _MAP_COLLECTOR 			= 0;
 //    private static final int _MAP_MARK 					= 1;
