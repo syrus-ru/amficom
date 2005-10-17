@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLibraryCommand.java,v 1.10 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorNewLibraryCommand.java,v 1.11 2005/10/17 14:06:47 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,22 +10,26 @@ package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.props.MapLibraryEditor;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/17 14:06:47 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -62,15 +66,28 @@ public class MapEditorNewLibraryCommand extends AbstractCommand {
 					MapEditorResourceKeys.EMPTY_STRING,
 					null);
 			
-			Map map = mapFrame.getMapView().getMap();
-			map.addMapLibrary(mapLibrary);
-			this.aContext.getDispatcher().firePropertyChange(
-					new MapEvent(
-						this, 
-						MapEvent.LIBRARY_SET_CHANGED,
-						map.getMapLibraries()));
-			setResult(Command.RESULT_OK);
+			MapLibraryEditor mapLibraryEditor = new MapLibraryEditor();
+			if(EditorDialog.showEditorDialog(
+					I18N.getString(MapEditorResourceKeys.ENTITY_SITE_NODE_TYPE),
+					mapLibrary,
+					mapLibraryEditor) ) {
+				StorableObjectPool.flush(mapLibrary, LoginManager.getUserId(), true);
+				Map map = mapFrame.getMapView().getMap();
+				map.addMapLibrary(mapLibrary);
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(
+							this, 
+							MapEvent.LIBRARY_SET_CHANGED,
+							map.getMapLibraries()));
+				setResult(Command.RESULT_OK);
+			} else {
+				StorableObjectPool.delete(mapLibrary.getId());
+				setResult(Command.RESULT_CANCEL);
+			}
 		} catch(CreateObjectException e) {
+			e.printStackTrace();
+			setResult(Command.RESULT_NO);
+		} catch(ApplicationException e) {
 			e.printStackTrace();
 			setResult(Command.RESULT_NO);
 		}
