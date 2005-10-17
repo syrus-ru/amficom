@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.3 2005/09/14 11:17:00 krupenn Exp $
+ * $Id: ResultFrame.java,v 1.4 2005/10/17 10:43:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,10 +33,11 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ThresholdsPanel;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -58,14 +59,15 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/09/14 11:17:00 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/10/17 10:43:00 $
  * @module surveyclient_v1
  */
 
@@ -138,10 +140,10 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 //		this.traceMap = new HashMap<String, JComponent>();
 		Heap.addBsHashListener(new BsHashChangeListener() {
 			public void bsHashAdded(String key) {
-				BellcoreStructure bs = Heap.getAnyBSTraceByKey(key);
+				PFTrace bs = Heap.getAnyPFTraceByKey(key);
 				if (bs == null)
 					return;
-				initReflectogramTab(key, bs);
+				initReflectogramTab(key, bs.getBS());
 			}
 
 			public void bsHashRemoved(String key) {
@@ -226,11 +228,14 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			for (Parameter parameter : parameters) {
 				if (parameter.getType().equals(ParameterType.DADARA_ALARMS)) {
 					try {
-						ReflectogramMismatch[] alarms = ReflectogramMismatch.alarmsFromByteArray(parameter.getValue());
+						ReflectogramMismatch[] alarms = ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue());
+						
+						
+						
 						// XXX assume the only alarm
-						if (alarms.length == 1) {
-							Heap.setRefMismatch(alarms[0]);
-						}
+//						if (alarms.length == 1) {
+//							Heap.setRefMismatch(alarms[0]);
+//						}
 					} catch (DataFormatException e) {
 						Log.errorException(e);
 					}
