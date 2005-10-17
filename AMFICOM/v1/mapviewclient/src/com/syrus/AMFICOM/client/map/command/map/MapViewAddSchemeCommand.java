@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewAddSchemeCommand.java,v 1.27 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapViewAddSchemeCommand.java,v 1.28 2005/10/17 14:08:46 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * добавить в вид схему из списка
  * 
- * @version $Revision: 1.27 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/17 14:08:46 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -105,6 +105,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 				schemes,
 				schemeTableController,
 				schemeTableController.getKeysArray(),
+				null,
 				false);
 
 		if(this.scheme == null) {

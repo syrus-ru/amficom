@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapOpenCommand.java,v 1.34 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapOpenCommand.java,v 1.35 2005/10/17 14:08:46 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapRemoveWrapper;
 import com.syrus.AMFICOM.client.map.ui.MapTableController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * открыть карту. карта открывается в новом виде
  * 
- * @version $Revision: 1.34 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/17 14:08:46 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -96,6 +97,7 @@ public class MapOpenCommand extends AbstractCommand {
 				maps,
 				mapTableController,
 				mapTableController.getKeysArray(),
+				MapRemoveWrapper.getInstance(),
 				true);
 
 		if(this.map == null) {

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapAddExternalNodeCommand.java,v 1.20 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapAddExternalNodeCommand.java,v 1.21 2005/10/17 14:08:46 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * 
- * @version $Revision: 1.20 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/17 14:08:46 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -103,7 +103,8 @@ public class MapAddExternalNodeCommand extends AbstractCommand {
 				I18N.getString(MapEditorResourceKeys.TITLE_MAP),
 				availableMaps,
 				mapTableController,
-				mapTableController.getKeysArray());
+				mapTableController.getKeysArray(),
+				null);
 
 		if(this.map == null) {
 			this.aContext.getDispatcher().firePropertyChange(

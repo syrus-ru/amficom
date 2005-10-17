@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewOpenCommand.java,v 1.35 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: MapViewOpenCommand.java,v 1.36 2005/10/17 14:08:46 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.Set;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.UI.dialogs.DefaultStorableObjectRemoveWrapper;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.ui.MapViewTableController;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * открыть вид
  *  
- * @version $Revision: 1.35 $, $Date: 2005/10/12 13:07:08 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/17 14:08:46 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -103,6 +104,7 @@ public class MapViewOpenCommand extends AbstractCommand {
 				mapViews,
 				mapViewTableController,
 				mapViewTableController.getKeysArray(),
+				DefaultStorableObjectRemoveWrapper.getInstance(),
 				true);
 
 		if(this.mapView == null) {
