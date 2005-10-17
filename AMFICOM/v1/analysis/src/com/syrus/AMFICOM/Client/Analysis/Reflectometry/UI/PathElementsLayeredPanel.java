@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.11 2005/08/31 11:26:22 stas Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.12 2005/10/17 15:05:05 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/31 11:26:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/10/17 15:05:05 $
+ * @author $Author: saa $
  * @module analysis
  */
 
@@ -38,43 +38,46 @@ public class PathElementsLayeredPanel extends AnalysisLayeredPanel
 		super(dispatcher);
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new PathElementsToolBar(this);
 	}
 
+	@Override
 	public void updPaintingMode()
 	{
 		super.updPaintingMode();
-		for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
+		for(int i = 0; i < this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if(panel instanceof PathElementsPanel)
 			{
-				((PathElementsPanel)panel).paint_path_elements = ((PathElementsToolBar)toolbar).pathElementsTButton.isSelected();
+				((PathElementsPanel)panel).paint_path_elements = ((PathElementsToolBar)this.toolbar).pathElementsTButton.isSelected();
 			}
 		}
 	}
 
 	public void showPathElements(boolean b)
 	{
-		for (int i = 0; i < jLayeredPane.getComponentCount(); i++)
+		for (int i = 0; i < this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if(panel instanceof PathElementsPanel)
 			{
 				((PathElementsPanel)panel).paint_path_elements = b;
-				jLayeredPane.repaint();
+				this.jLayeredPane.repaint();
 				return;
 			}
 		}
 	}
 	
+	@Override
 	public void setAnalysisType (long type)
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				((AnalysisPanel)panel).show_markers = ((type & NO_MARKERS) == 0);
@@ -106,6 +109,7 @@ class PathElementsToolBar extends AnalysisToolBar
 		return buttons;
 	}
 
+	@Override
 	protected Map<String, AbstractButton> createGraphButtons()
 	{
 		Map<String, AbstractButton> buttons2 = super.createGraphButtons();
@@ -113,7 +117,7 @@ class PathElementsToolBar extends AnalysisToolBar
 		buttons2.put(
 				pe,
 				createToolButton(
-				pathElementsTButton,
+				this.pathElementsTButton,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,

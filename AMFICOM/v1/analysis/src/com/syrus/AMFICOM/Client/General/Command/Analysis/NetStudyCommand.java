@@ -5,11 +5,13 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 
 public class NetStudyCommand extends AbstractCommand
 {
+	@Override
 	public Object clone()
 	{
 		return new NetStudyCommand();
 	}
 
+	@Override
 	public void execute()
 	{
 		WeightsDialog dialog = new WeightsDialog();

@@ -100,6 +100,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 		}
 	}
 	
+	@Override
 	protected void this_mousePressed(MouseEvent mev)
 	{
 		ModelTraceManager etalon = Heap.getMTMEtalon();
@@ -169,6 +170,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 		super.this_mousePressed(mev);
 	}
 
+	@Override
 	protected void this_mouseDragged(MouseEvent e)
 	{
 		if (!edit_thresholds || Heap.getMTMEtalon() == null)
@@ -192,6 +194,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 			super.this_mouseDragged(e);
 	}
 
+	@Override
 	protected void this_mouseReleased(MouseEvent e)
 	{
 		if (!edit_thresholds || Heap.getMTMEtalon() == null || c_TH == null)
@@ -211,6 +214,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 		}
 	}
 
+	@Override
 	protected void this_mouseClicked(MouseEvent e)
 	{
 		// для окна порогов переходим к другому событию,
@@ -230,6 +234,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 		}
 	}
 
+	@Override
 	public void paint (Graphics g)
 	{
 		paint_scales(g);

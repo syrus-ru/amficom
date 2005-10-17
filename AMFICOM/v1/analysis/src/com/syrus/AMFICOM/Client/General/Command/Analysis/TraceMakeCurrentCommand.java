@@ -14,18 +14,20 @@ public class TraceMakeCurrentCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new TraceMakeCurrentCommand(aContext);
+		return new TraceMakeCurrentCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 
 		// FIXME: ерунда?
 		Trace tr = Heap.getReferenceTrace();
-		new FileRemoveCommand(Heap.REFERENCE_TRACE_KEY, aContext).execute();
-		new FileRemoveCommand(Heap.PRIMARY_TRACE_KEY, aContext).execute();
+		new FileRemoveCommand(Heap.REFERENCE_TRACE_KEY, this.aContext).execute();
+		new FileRemoveCommand(Heap.PRIMARY_TRACE_KEY, this.aContext).execute();
 		Heap.setPrimaryTrace(tr);
 		Heap.makePrimaryAnalysis();
 	}

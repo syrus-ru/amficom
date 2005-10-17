@@ -15,11 +15,13 @@ public class LoadEtalonCommand extends AbstractCommand
 	{ // empty
 	}
 
+	@Override
 	public Object clone()
 	{
 		return new LoadEtalonCommand();
 	}
 
+	@Override
 	public void execute()
 	{
 		BellcoreStructure bs = Heap.getPFTracePrimary().getBS();

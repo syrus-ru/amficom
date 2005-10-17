@@ -59,11 +59,13 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	{
 		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter()
 		{
+			@Override
 			public void mouseDragged(MouseEvent e)
 			{
 				this_mouseDragged(e);
 			}
 
+			@Override
 			public void mouseMoved(MouseEvent e)
 			{
 				this_mouseMoved(e);
@@ -71,14 +73,17 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		});
 		this.addMouseListener(new java.awt.event.MouseAdapter()
 		{
+			@Override
 			public void mousePressed(MouseEvent e)
 			{
 				this_mousePressed(e);
 			}
+			@Override
 			public void mouseReleased(MouseEvent e)
 			{
 				this_mouseReleased(e);
 			}
+			@Override
 			public void mouseClicked(MouseEvent e)
 			{
 				this_mouseClicked(e);
@@ -157,6 +162,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		limit_currpos();
 	}
 
+	@Override
 	public void paint(Graphics g)
 	{
 		paint_scales(g);

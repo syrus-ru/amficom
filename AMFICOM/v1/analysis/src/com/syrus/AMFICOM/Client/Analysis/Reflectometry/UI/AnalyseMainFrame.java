@@ -207,6 +207,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 				noiseHistogrammPanel = new NoiseHistogrammPanel(layeredPanel);
 				layeredPanel.setGraphPanel(noiseHistogrammPanel);
 				ScalableFrame noiseHistoFrame = new ScalableFrame(layeredPanel) {
+					@Override
 					public String getReportTitle() {
 						return NOISE_HISTOGRAMM_FRAME;
 					}
@@ -287,6 +288,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
 				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
+					@Override
 					public String getReportTitle() {
 						return EVENTS_FRAME;
 					}
@@ -312,6 +314,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
 				PathElementsFrame analysisFrame = new PathElementsFrame(aContext, AnalyseMainFrame.this.dispatcher)  {
+					@Override
 					public String getReportTitle() {
 						return ANALYSIS_FRAME;
 					}
@@ -337,6 +340,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
 				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext) {
+					@Override
 					public String getReportTitle() {
 						return ANALYSIS_SELECTION_FRAME;
 					}
@@ -352,6 +356,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Level.FINEST);
 				HistogrammFrame histogrammFrame = new HistogrammFrame(AnalyseMainFrame.this.dispatcher) {
+					@Override
 					public String getReportTitle() {
 						return HISTOGRAMM_FRAME;
 					}
@@ -455,12 +460,14 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 				return this.command;
 			}
 
+			@Override
 			public void execute() {
 				this.getLazyCommand().execute();
 			}
 		};
 	}
 
+	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 		aModel.setEnabled("menuFile", true);
@@ -481,6 +488,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setVisible("menuTraceSavePES", true);
 	}
 
+	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
 
@@ -497,6 +505,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 	}
 
+	@Override
 	public void setSessionClosed() {
 		super.setSessionClosed();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -540,7 +549,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			noiseFrame.updScales();
 			noiseFrame.setVisible(true);
 			
-			noiseHistogrammPanel.updateHistogrammData();
+			this.noiseHistogrammPanel.updateHistogrammData();
 			noiseHistoFrame.updScales();
 			noiseHistoFrame.setVisible(true);
 		}
@@ -552,6 +561,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId", id);
 	}
 
+	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this.aManager.saveIni();

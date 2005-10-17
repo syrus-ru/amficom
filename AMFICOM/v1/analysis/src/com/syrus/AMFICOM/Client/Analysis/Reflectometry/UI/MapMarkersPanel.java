@@ -57,6 +57,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 		this.scheme_path_id = scheme_path_id;
 	}
 
+	@Override
 	protected void this_mousePressed(MouseEvent e)
 	{
 		startpos = e.getPoint();
@@ -116,6 +117,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 		super.this_mousePressed(e);
 	}
 
+	@Override
 	protected void this_mouseDragged(MouseEvent e)
 	{
 		if (creating_marker)
@@ -151,6 +153,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 			monitored_element_id));
 	}
 
+	@Override
 	protected void this_mouseReleased(MouseEvent e)
 	{
 		// если создавали маркеры - ничего не делаем
@@ -174,6 +177,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 		super.this_mouseReleased(e);
 	}
 
+	@Override
 	protected void updColorModel()
 	{
 		super.updColorModel();
@@ -226,6 +230,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 		return null;
 	}
 
+	@Override
 	public void paint (Graphics g)
 	{
 		super.paint(g);

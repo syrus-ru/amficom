@@ -31,12 +31,13 @@ implements PropertyChangeListener,
 	{ // empty
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new ThresholdsToolBar(this);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	@Override void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
 		// на RefUpdateEvent подписывается суперкласс - нам подписываться не надо
@@ -44,6 +45,7 @@ implements PropertyChangeListener,
 		Heap.addEtalonMTMListener(this);
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent ae)
 	{
 		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
@@ -85,6 +87,7 @@ implements PropertyChangeListener,
 		}
 	}
 	
+	@Override
 	protected void updScale2fit(int start, int end, double indent_x, double iy)
 	{
 		SimpleGraphPanel activePanel = (SimpleGraphPanel)jLayeredPane.getComponent(0);

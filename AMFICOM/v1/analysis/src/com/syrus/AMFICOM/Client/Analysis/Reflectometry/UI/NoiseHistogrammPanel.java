@@ -24,23 +24,25 @@ public class NoiseHistogrammPanel extends ScaledGraphPanel {
 
 	public NoiseHistogrammPanel(ResizableLayeredPanel panel) {
 		super(panel, new double[] {}, 0.0); // XXX
-		inversed_y = false;
-		grid_shift_x = downLimit;
-		select_by_mouse = true;
+		this.inversed_y = false;
+		this.grid_shift_x = this.downLimit;
+		this.select_by_mouse = true;
 
 		updateHistogrammData();
 		setDefaultScales();
 	}
 
+	@Override
 	protected void updColorModel() {
 		super.updColorModel();
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		paint_scales(g);
-		if (showAll) {
+		if (this.showAll) {
 			((Graphics2D) g).setStroke((Stroke)UIManager.get(AnalysisResourceKeys.STROKE_NOISE_HISTOGRAMM));
-			color = UIManager.getColor(AnalysisResourceKeys.COLOR_PRIMARY_TRACE);
+			this.color = UIManager.getColor(AnalysisResourceKeys.COLOR_PRIMARY_TRACE);
 			paint_trace(g);
 			((Graphics2D) g).setStroke((Stroke)UIManager.get(AnalysisResourceKeys.STROKE_DEFAULT));
 		}
@@ -67,31 +69,33 @@ public class NoiseHistogrammPanel extends ScaledGraphPanel {
 		// --- we will process y[noiseStart] .. y[y.length-1] ---
 
 		// find scales
-		downLimit = y1[ReflectogramMath.getArrayMinIndex(y1, noiseStart, y1.length - 1)];
-		upLimit = y1[ReflectogramMath.getArrayMaxIndex(y1, noiseStart, y1.length - 1)];
+		this.downLimit = y1[ReflectogramMath.getArrayMinIndex(y1, noiseStart, y1.length - 1)];
+		this.upLimit = y1[ReflectogramMath.getArrayMaxIndex(y1, noiseStart, y1.length - 1)];
 		double yTop = y1[ReflectogramMath.getArrayMaxIndex(y1, 0, y1.length - 1)];
 		double delta = yTop - Math.floor(yTop + 0.999);
 		yTop -= delta;
-		downLimit += delta;
+		this.downLimit += delta;
 
-		grid_shift_x = -yTop; // we treat abs max of trace data as 0.0 dB 
-		Kx = (upLimit - downLimit) / nBins;
-		Ky = 1;
+		this.grid_shift_x = -yTop; // we treat abs max of trace data as 0.0 dB 
+		this.Kx = (this.upLimit - this.downLimit) / this.nBins;
+		this.Ky = 1;
 
 		// calc histogram
-		Histogramm histo = new Histogramm(downLimit, upLimit, nBins);
-		histData = histo.init(y1, noiseStart, y1.length - 1);
+		Histogramm histo = new Histogramm(this.downLimit, this.upLimit, this.nBins);
+		this.histData = histo.init(y1, noiseStart, y1.length - 1);
 
 		// convert histogram to cumulative
-		for (int i = 1; i < histData.length; i++)
-			histData[i] += histData[i - 1];
+		for (int i = 1; i < this.histData.length; i++) {
+			this.histData[i] += this.histData[i - 1];
+		}
 
 		// normalize
-		double vMax = histData[histData.length - 1];
-		for (int i = 0; i < histData.length; i++)
-			histData[i] /= vMax;
+		double vMax = this.histData[this.histData.length - 1];
+		for (int i = 0; i < this.histData.length; i++) {
+			this.histData[i] /= vMax;
+		}
 
-		super.init(histData, 1.0); // XXX: 1.0 -- ?
-		minY = 0;
+		super.init(this.histData, 1.0); // XXX: 1.0 -- ?
+		this.minY = 0;
 	}
 }

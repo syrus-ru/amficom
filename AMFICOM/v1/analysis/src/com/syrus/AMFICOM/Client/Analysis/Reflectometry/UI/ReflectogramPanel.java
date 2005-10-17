@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramPanel.java,v 1.7 2005/07/22 06:56:49 saa Exp $
+ * $Id: ReflectogramPanel.java,v 1.8 2005/10/17 15:05:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceRange;
 /**
  * Отрисовывает рефлектограмму (исходную и модельную, с учетом расцветки)
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/07/22 06:56:49 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/17 15:05:05 $
  * @module
  */
 public class ReflectogramPanel extends TraceEventsPanel {
@@ -46,20 +46,22 @@ public class ReflectogramPanel extends TraceEventsPanel {
 				Heap.getAnyTraceByKey(id).getDeltaX());
 		if (arg == false)
 			throw new UnsupportedOperationException();
-		draw_scales = false;
+		this.draw_scales = false;
 		// draw_events = false; -- use this to see proginal trace color
 		updEvents(id);
 	}
 
+	@Override
 	protected void paint_specific(Graphics g) {
 		super.paint_specific(g);
-		if (showAll) {
+		if (this.showAll) {
 			if (isDraw_modeled()) {
 				paint_modeled_trace(g);
 			}
 		}
 	}
 
+	@Override
 	public void updEvents(String id) {
 		super.updEvents(id);
 		ModelTraceAndEvents mtae = Heap.getAnyMTAE(id);
@@ -78,10 +80,10 @@ public class ReflectogramPanel extends TraceEventsPanel {
 	{
 		int n1 = mtr.getBegin();
 		int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
-		if ((n1 <= end) && (n2 >= start))
+		if ((n1 <= this.end) && (n2 >= this.start))
 		{
-			int iFrom = Math.max(start, n1);
-			int iTo = Math.min(end, n2);
+			int iFrom = Math.max(this.start, n1);
+			int iTo = Math.min(this.end, n2);
 			if (iTo - iFrom >= 0)
 			{
 				double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
@@ -118,13 +120,13 @@ public class ReflectogramPanel extends TraceEventsPanel {
 
 	protected void paint_modeled_trace(Graphics g)
 	{
-		if (mt == null)
+		if (this.mt == null)
 			return;
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
 		if (isDraw_events()) {
-			draw_eventized_curve(g, mt.getYArray(), false);
+			draw_eventized_curve(g, this.mt.getYArray(), false);
 		} else {
-			drawModelCurve(g, mt, false);
+			drawModelCurve(g, this.mt, false);
 		}
 	}
 
@@ -135,13 +137,15 @@ public class ReflectogramPanel extends TraceEventsPanel {
 		return isDraw_modeled();
 	}
 
+	@Override
 	protected boolean isShowGraph() {
-		return ((TraceEventsLayeredPanel)parent).graphsShowDesired();
+		return ((TraceEventsLayeredPanel)this.parent).graphsShowDesired();
 	}
+	@Override
 	protected boolean isDraw_events() {
-		return ((TraceEventsLayeredPanel)parent).eventsShowDesired();
+		return ((TraceEventsLayeredPanel)this.parent).eventsShowDesired();
 	}
 	protected boolean isDraw_modeled() {
-		return ((TraceEventsLayeredPanel)parent).modelShowDesired();
+		return ((TraceEventsLayeredPanel)this.parent).modelShowDesired();
 	}
 }

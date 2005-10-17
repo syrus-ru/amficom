@@ -24,18 +24,20 @@ public class FileSaveCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new FileSaveCommand(aContext);
+		return new FileSaveCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 		Properties properties = new Properties();
 		String lastDir = "";
 		try
 		{
-			properties.load(new FileInputStream(propertiesFileName));
+			properties.load(new FileInputStream(this.propertiesFileName));
 			lastDir = properties.getProperty("lastdir");
 		} catch (IOException ex)
 		{
@@ -62,7 +64,7 @@ public class FileSaveCommand extends AbstractCommand
 				try
 				{
 					properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
-					properties.store(new FileOutputStream(propertiesFileName), null);
+					properties.store(new FileOutputStream(this.propertiesFileName), null);
 				} catch (IOException ex)
 				{
 				}

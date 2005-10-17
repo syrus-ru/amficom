@@ -45,6 +45,7 @@ public class SimpleResizableFrame extends JInternalFrame {
 		});
 		this.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				panel.resize();
 			}
@@ -87,6 +88,7 @@ public class SimpleResizableFrame extends JInternalFrame {
 		panel.updScale2fit();
 	}
 
+	@Override
 	public void doDefaultCloseAction() {
 		if (isMaximum())
 			try {

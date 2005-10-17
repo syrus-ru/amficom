@@ -13,11 +13,13 @@ public class OptionsSetColorsCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new OptionsSetColorsCommand(aContext);
+		return new OptionsSetColorsCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 

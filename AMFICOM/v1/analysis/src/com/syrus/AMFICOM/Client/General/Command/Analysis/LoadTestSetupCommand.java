@@ -12,11 +12,13 @@ public class LoadTestSetupCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new LoadTestSetupCommand(aContext);
+		return new LoadTestSetupCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 	/*	BellcoreStructure bs = Heap.getBSPrimaryTrace();

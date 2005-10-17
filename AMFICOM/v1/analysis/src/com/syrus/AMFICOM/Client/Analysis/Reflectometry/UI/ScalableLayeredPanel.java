@@ -74,6 +74,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		toolbar.setVisible(true);
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new ScalableToolBar(this);
@@ -118,6 +119,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 			((ScaledGraphPanel)panel).select_by_mouse = true;
 	}
 
+	@Override
 	public void removeGraphPanel (SimpleGraphPanel panel)
 	{
 		jLayeredPane.remove(panel);
@@ -128,6 +130,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		jLayeredPane.removeAll();
 	}
 
+	@Override
 	public void updScale2fit()
 	{
 		horizontalBar.setMaximum(hwidth);
@@ -184,6 +187,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		updScale2fit(start, end, 0, 0);
 	}
 
+	@Override
 	protected void updScale2fit(int start, int end, double indent_x, double iy)
 	{
 		SimpleGraphPanel activePanel = (SimpleGraphPanel)jLayeredPane.getComponent(0);
@@ -232,6 +236,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		panel.setSize(jLayeredPane.getSize());
 	}
 
+	@Override
 	public void updScale (double kx, // коэфиициент ресайза по иксу
 			double ky, // по игреку
 			double rx, // положение точки вокруг которой делается ресайз относительно

@@ -1,5 +1,5 @@
 /*-
-* $Id: ScalableToolBar.java,v 1.7 2005/08/31 11:26:22 stas Exp $
+* $Id: ScalableToolBar.java,v 1.8 2005/10/17 15:05:05 saa Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/31 11:26:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/10/17 15:05:05 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -51,11 +51,13 @@ public class ScalableToolBar extends ToolBarPanel
 		super(panel);
 	}
 
+	@Override
 	protected String[] getButtons()
 	{
 		return buttons;
 	}
 
+	@Override
 	protected Map<String, AbstractButton> createGraphButtons()
 	{
 		Map<String, AbstractButton> buttons1 = super.createGraphButtons();
@@ -63,7 +65,7 @@ public class ScalableToolBar extends ToolBarPanel
 		buttons1.put(
 				EX,
 				createToolButton(
-				exButton,
+				this.exButton,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
@@ -80,7 +82,7 @@ public class ScalableToolBar extends ToolBarPanel
 		buttons1.put(
 				EY,
 				createToolButton(
-				eyButton,
+				this.eyButton,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
@@ -97,7 +99,7 @@ public class ScalableToolBar extends ToolBarPanel
 		buttons1.put(
 				DX,
 				createToolButton(
-				dxButton,
+				this.dxButton,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
@@ -114,7 +116,7 @@ public class ScalableToolBar extends ToolBarPanel
 		buttons1.put(
 				DY,
 				createToolButton(
-				dyButton,
+				this.dyButton,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
@@ -131,7 +133,7 @@ public class ScalableToolBar extends ToolBarPanel
 		buttons1.put(
 				FIX,
 				createToolButton(
-				fitButton,
+				this.fitButton,
 				null,
 				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
 				null,
@@ -151,43 +153,43 @@ public class ScalableToolBar extends ToolBarPanel
 
 	void dxButton_actionPerformed(ActionEvent e)
 	{
-		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
+		ScalableLayeredPanel panel1 = (ScalableLayeredPanel)super.panel;
 		double k = .8;
-		if (panel.horizontalMax * k < ScalableLayeredPanel.hwidth)
-			k = ScalableLayeredPanel.hwidth / panel.horizontalMax;
-		if (panel.horizontalBar.getMaximum() > ScalableLayeredPanel.hwidth)
-			panel.updScale(k, 1, .5, .5);
+		if (panel1.horizontalMax * k < ScalableLayeredPanel.hwidth)
+			k = ScalableLayeredPanel.hwidth / panel1.horizontalMax;
+		if (panel1.horizontalBar.getMaximum() > ScalableLayeredPanel.hwidth)
+			panel1.updScale(k, 1, .5, .5);
 	}
 
 	void exButton_actionPerformed(ActionEvent e)
 	{
-		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
+		ScalableLayeredPanel panel1 = (ScalableLayeredPanel)super.panel;
 		double k = 1.25;
-		if (panel.horizontalBar.getMaximum() < ScalableLayeredPanel.hwidth * 1000)
-			panel.updScale(k, 1, .5, .5);
+		if (panel1.horizontalBar.getMaximum() < ScalableLayeredPanel.hwidth * 1000)
+			panel1.updScale(k, 1, .5, .5);
 	}
 
 	void dyButton_actionPerformed(ActionEvent e)
 	{
-		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
+		ScalableLayeredPanel panel1 = (ScalableLayeredPanel)super.panel;
 		double k = .8;
-		if (panel.verticalMax * k < ScalableLayeredPanel.vheight)
-			k = ScalableLayeredPanel.vheight / panel.verticalMax;
-		if (panel.verticalBar.getMaximum() > ScalableLayeredPanel.vheight)
-			panel.updScale(1, k, .5, .5);
+		if (panel1.verticalMax * k < ScalableLayeredPanel.vheight)
+			k = ScalableLayeredPanel.vheight / panel1.verticalMax;
+		if (panel1.verticalBar.getMaximum() > ScalableLayeredPanel.vheight)
+			panel1.updScale(1, k, .5, .5);
 	}
 
 	void eyButton_actionPerformed(ActionEvent e)
 	{
-		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
+		ScalableLayeredPanel panel1 = (ScalableLayeredPanel)super.panel;
 		double k = 1.25;
-		if (panel.verticalBar.getMaximum() < ScalableLayeredPanel.vheight * 150)
-			panel.updScale(1, k, .5, .5);
+		if (panel1.verticalBar.getMaximum() < ScalableLayeredPanel.vheight * 150)
+			panel1.updScale(1, k, .5, .5);
 	}
 
 	void fitButton_actionPerformed(ActionEvent e)
 	{
-		panel.updScale2fit();
+		this.panel.updScale2fit();
 	}
 }
 

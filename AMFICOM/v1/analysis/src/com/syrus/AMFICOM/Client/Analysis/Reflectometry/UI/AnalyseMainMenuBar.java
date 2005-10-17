@@ -40,6 +40,7 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		super(aModel);
 	}
 
+	@Override
 	protected void addMenuItems() {
 		// AnalyseMainMenuBar_this_actionAdapter actionAdapter =
 		// new AnalyseMainMenuBar_this_actionAdapter(this);

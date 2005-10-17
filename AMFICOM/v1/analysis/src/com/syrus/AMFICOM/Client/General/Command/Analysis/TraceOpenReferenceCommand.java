@@ -24,18 +24,20 @@ public class TraceOpenReferenceCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new TraceOpenReferenceCommand(aContext);
+		return new TraceOpenReferenceCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 		Properties properties = new Properties();
 		String lastDir = "";
 		try
 		{
-			properties.load(new FileInputStream(propertiesFileName));
+			properties.load(new FileInputStream(this.propertiesFileName));
 			lastDir = properties.getProperty("lastdir");
 		} catch (IOException ex)
 		{
@@ -58,7 +60,7 @@ public class TraceOpenReferenceCommand extends AbstractCommand
 			if (!Heap.hasEmptyAllBSMap())
 			{
 				if (Heap.getReferenceTrace() != null)
-					 new FileRemoveCommand (Heap.REFERENCE_TRACE_KEY, aContext).execute();
+					 new FileRemoveCommand (Heap.REFERENCE_TRACE_KEY, this.aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
@@ -68,7 +70,7 @@ public class TraceOpenReferenceCommand extends AbstractCommand
 			try
 			{
 				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
-				properties.store(new FileOutputStream(propertiesFileName), null);
+				properties.store(new FileOutputStream(this.propertiesFileName), null);
 			} catch (IOException ex)
 			{
 			}

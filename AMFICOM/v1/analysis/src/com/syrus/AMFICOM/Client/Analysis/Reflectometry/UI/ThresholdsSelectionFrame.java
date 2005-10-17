@@ -341,6 +341,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			super(new JTextField());
 		}
 
+		@Override
 		public Component getTableCellEditorComponent(JTable table, Object value,
 				boolean isSelected, int row, int column) {
 			JTextField tf = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
@@ -370,10 +371,11 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		public void updateData(Object[][] pData)
 		{
-			values = pData;
+			this.values = pData;
 			super.fireTableDataChanged();
 		}
 
+		@Override
 		public void setValueAt(Object value, int row, int col) {
 			// XXX: create extra objects... it's better to save teds when it is selected and just take them now
 			ModelTraceManager.ThreshEditor[] te = getTeds();
@@ -394,27 +396,29 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		public int getColumnCount()
 		{
-			return columns.length;
+			return this.columns.length;
 		}
 
 		public int getRowCount()
 		{
-			return values.length;
+			return this.values.length;
 		}
 
 		public Object getValueAt(int rowIndex, int columnIndex)
 		{
-			return values[rowIndex][columnIndex];
+			return this.values[rowIndex][columnIndex];
 		}
 
+		@Override
 		public boolean isCellEditable(int row, int column)
 		{
 			return column > 0;
 		}
 
+		@Override
 		public String getColumnName(int column)
 		{
-			return columns[column];
+			return this.columns[column];
 		}
 	}
 

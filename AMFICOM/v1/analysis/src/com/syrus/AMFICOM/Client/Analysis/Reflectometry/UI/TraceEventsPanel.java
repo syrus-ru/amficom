@@ -36,6 +36,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 			: null; // XXX: наверное, лучше инкапсулировать sevents, и обращаться к Heap каждый раз, а не отслеживать изменения
 	}
 
+	@Override
 	protected void updColorModel()
 	{
 		super.updColorModel();
@@ -49,6 +50,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 		noiseColor = UIManager.getColor(AnalysisResourceKeys.COLOR_NOISE);
 	}
 
+	@Override
 	public void paint(Graphics g)
 	{
 		paint_scales(g);

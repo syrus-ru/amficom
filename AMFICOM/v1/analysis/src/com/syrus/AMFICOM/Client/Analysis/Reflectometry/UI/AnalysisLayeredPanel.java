@@ -41,6 +41,7 @@ implements CurrentEventChangeListener,
 		Heap.addAnalysisParametersListener(this);
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new AnalysisToolBar(this);
@@ -48,9 +49,9 @@ implements CurrentEventChangeListener,
 
 	public void updMarkers()
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				((AnalysisPanel)panel).updMarkers();
@@ -61,9 +62,9 @@ implements CurrentEventChangeListener,
 
 	void centerMarkerA()
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				AnalysisPanel p = (AnalysisPanel)panel;
@@ -74,9 +75,9 @@ implements CurrentEventChangeListener,
 
 	void centerMarkerB()
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				AnalysisPanel p = (AnalysisPanel)panel;
@@ -85,32 +86,33 @@ implements CurrentEventChangeListener,
 		}
 	}
 
+	@Override
 	public void updPaintingMode()
 	{
 		super.updPaintingMode();
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
-				((AnalysisPanel)panel).loss_analysis = ((AnalysisToolBar)toolbar).lossTButton.isSelected();
-				((AnalysisPanel)panel).reflection_analysis = ((AnalysisToolBar)toolbar).reflectionTButton.isSelected();
+				((AnalysisPanel)panel).loss_analysis = ((AnalysisToolBar)this.toolbar).lossTButton.isSelected();
+				((AnalysisPanel)panel).reflection_analysis = ((AnalysisToolBar)this.toolbar).reflectionTButton.isSelected();
 			}
 		}
 	}
 
 	public void setAnalysisType (long type)
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				((AnalysisPanel)panel).loss_analysis = ((type & LOSS_ANALYSIS) != 0);
 				((AnalysisPanel)panel).reflection_analysis = ((type & REFLECTION_ANALYSIS) != 0);
 				((AnalysisPanel)panel).updMarkers();
 				((AnalysisPanel)panel).updAnalysisMarkerInfo();
-				jLayeredPane.repaint();
+				this.jLayeredPane.repaint();
 				return;
 			}
 		}
@@ -119,9 +121,9 @@ implements CurrentEventChangeListener,
 	public void currentEventChanged()
 	{
 		int num = Heap.getCurrentEvent2();
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				((AnalysisPanel)panel).move_marker_to_ev(num);
@@ -131,15 +133,15 @@ implements CurrentEventChangeListener,
 	}
 
 	public void primaryRefAnalysisCUpdated() {
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof AnalysisPanel)
 			{
 				{
 					((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
 					((AnalysisPanel)panel).updMarkers();
-					jLayeredPane.repaint();
+					this.jLayeredPane.repaint();
 				}
 			}
 		}
@@ -151,9 +153,9 @@ implements CurrentEventChangeListener,
 
 	private void updRefMismatch() {
 		ReflectogramMismatchImpl alarm = Heap.getRefMismatch();
-		for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
+		for(int i = 0; i < this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof MapMarkersPanel)
 			{
 				// удаляем маркер (если он есть) и запоминаем, был ли он удален
@@ -169,7 +171,7 @@ implements CurrentEventChangeListener,
 							refMismatchMarkerId, dist);
 				}
 				if (updated)
-					jLayeredPane.repaint();
+					this.jLayeredPane.repaint();
 			}
 		}
 	}
@@ -183,15 +185,15 @@ implements CurrentEventChangeListener,
 
 	public void analysisParametersUpdated() {
 		boolean updated = false;
-		for(int i = 0; i < jLayeredPane.getComponentCount(); i++) {
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+		for(int i = 0; i < this.jLayeredPane.getComponentCount(); i++) {
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof EnhancedReflectogramPanel) {
 				EnhancedReflectogramPanel p2 = (EnhancedReflectogramPanel)panel;
 				updated = p2.eotDetectionLevel.isDrawed();
 			}
 		}
 		if (updated) {
-			jLayeredPane.repaint();
+			this.jLayeredPane.repaint();
 		}
 	}
 }

@@ -102,6 +102,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 		this.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentShown(ComponentEvent e) {
 				// init_module();
 				desktopPane.setPreferredSize(desktopPane.getSize());
@@ -112,6 +113,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		});
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 
+			@Override
 			public void windowClosing(WindowEvent e) {
 				AnalyseMainFrameSimplified.this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE,
 					AnalyseMainFrameSimplified.this);
@@ -138,7 +140,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		this.desktopPane.add(this.statsFrame);
 		this.tables.add(this.statsFrame);
 		
-		this.eventsFrame = new EventsFrame(aContext, false);
+		this.eventsFrame = new EventsFrame(this.aContext, false);
 		this.desktopPane.add(this.eventsFrame);
 		this.tables.add(this.eventsFrame);
 		
@@ -149,7 +151,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		this.mInfoFrame = new MarkersInfoFrame(super.dispatcher);
 		this.desktopPane.add(this.mInfoFrame);
 		
-		this.anaSelectFrame = new AnalysisSelectionFrame(aContext);
+		this.anaSelectFrame = new AnalysisSelectionFrame(this.aContext);
 		this.desktopPane.add(this.anaSelectFrame);
 		this.tables.add(this.anaSelectFrame);
 	}
@@ -213,6 +215,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 		aModel.setEnabled("menuFile", true);
@@ -233,6 +236,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setVisible("menuWindowDerivHistoFrame", false);
 	}
 
+	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -247,6 +251,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	}
 
+	@Override
 	public void setSessionClosed() {
 		super.setSessionClosed();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -276,6 +281,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId", id);
 	}
 
+	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this.aManager.saveIni();

@@ -78,6 +78,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		Heap.setMarkerObject(markerA);
 	}
 
+	@Override
 	public void updEvents(String id)
 	{
 		super.updEvents(id);
@@ -94,6 +95,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		}
 	}
 
+	@Override
 	protected void this_mousePressed(MouseEvent e)
 	{
 		startpos = e.getPoint();
@@ -173,6 +175,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		super.this_mousePressed(e);
 	}
 
+	@Override
 	protected void this_mouseDragged(MouseEvent e)
 	{
 		// если двигаем курсор

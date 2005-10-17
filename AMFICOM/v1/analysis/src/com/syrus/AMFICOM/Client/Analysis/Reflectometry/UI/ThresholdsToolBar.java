@@ -1,5 +1,5 @@
 /*-
- * $Id: ThresholdsToolBar.java,v 1.2 2005/07/08 11:58:08 saa Exp $
+ * $Id: ThresholdsToolBar.java,v 1.3 2005/10/17 15:05:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,11 +39,13 @@ class ThresholdsToolBar extends TraceEventsToolBar
 		super(panel);
 	}
 
+	@Override
 	protected String[] getButtons()
 	{
 		return buttons;
 	}
 
+	@Override
 	protected Map createGraphButtons()
 	{
 		Map buttons1 = super.createGraphButtons();

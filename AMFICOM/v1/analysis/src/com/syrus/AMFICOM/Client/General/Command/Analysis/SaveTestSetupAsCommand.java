@@ -15,11 +15,13 @@ public class SaveTestSetupAsCommand extends AbstractCommand
 		this.type = type;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new SaveTestSetupAsCommand(aContext, type);
+		return new SaveTestSetupAsCommand(this.aContext, this.type);
 	}
 
+	@Override
 	public void execute()
 	{
 		if (SaveTestSetupCommand.checkStrangeConditions() == false)
@@ -29,7 +31,7 @@ public class SaveTestSetupAsCommand extends AbstractCommand
 		if (newName == null)
 			return;
 
-		if (SaveTestSetupCommand.createNewMSAndSave(newName, aContext, type))
+		if (SaveTestSetupCommand.createNewMSAndSave(newName, this.aContext, this.type))
 			Heap.setNewMSName(null); // success
 	}
 }

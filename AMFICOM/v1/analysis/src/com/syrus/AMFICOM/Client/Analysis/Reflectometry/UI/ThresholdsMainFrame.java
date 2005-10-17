@@ -263,6 +263,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 
@@ -288,6 +289,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setVisible("commandCheckMismatch", true);
 	}
 
+	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -301,6 +303,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	public void setSessionClosed() {
 		super.setSessionClosed();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -332,6 +335,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 	}
 
 
+	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this.aManager.saveIni();

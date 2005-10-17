@@ -37,17 +37,19 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 	{ // empty
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new MapMarkersToolBar(this);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	@Override void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
 		dispatcher.addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent ae)
 	{
 		if(ae.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
@@ -116,6 +118,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 		super.propertyChange(ae);
 	}
 
+	@Override
 	public void removeAllGraphPanels()
 	{
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
@@ -189,11 +192,13 @@ class MapMarkersToolBar extends TraceEventsToolBar
 		super(panel);
 	}
 
+	@Override
 	protected String[] getButtons()
 	{
 		return buttons1;
 	}
 
+	@Override
 	protected Map createGraphButtons()
 	{
 		Map buttons2 = new HashMap();

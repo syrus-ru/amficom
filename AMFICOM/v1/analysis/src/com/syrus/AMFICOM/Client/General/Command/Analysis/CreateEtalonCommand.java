@@ -31,6 +31,7 @@ public class CreateEtalonCommand extends AbstractCommand
 		// empty
 	}
 
+	@Override
 	public void execute()
 	{
 		Collection<PFTrace> trColl = Heap.getPFTraceCollection();

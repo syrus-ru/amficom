@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisToolBar.java,v 1.5 2005/08/31 11:26:22 stas Exp $
+ * $Id: AnalysisToolBar.java,v 1.6 2005/10/17 15:05:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,11 +47,13 @@ class AnalysisToolBar extends TraceEventsToolBar
 		super(panel);
 	}
 
+	@Override
 	protected String[] getButtons()
 	{
 		return buttons;
 	}
 
+	@Override
 	protected Map<String, AbstractButton> createGraphButtons()
 	{
 		Map<String, AbstractButton> buttons2 = super.createGraphButtons();

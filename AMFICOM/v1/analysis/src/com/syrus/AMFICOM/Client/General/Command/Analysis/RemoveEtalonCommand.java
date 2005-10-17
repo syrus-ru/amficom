@@ -9,6 +9,7 @@ public class RemoveEtalonCommand extends AbstractCommand
 	{ // yes, it's really empty
 	}
 
+	@Override
 	public void execute()
 	{
 		Heap.closeTrace(Heap.ETALON_TRACE_KEY);

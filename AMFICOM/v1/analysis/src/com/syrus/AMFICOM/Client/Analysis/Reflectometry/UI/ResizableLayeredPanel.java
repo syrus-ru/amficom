@@ -42,6 +42,7 @@ public class ResizableLayeredPanel extends JPanel
 	{
 		this.addComponentListener(new ComponentAdapter()
 		{
+			@Override
 			public void componentShown(ComponentEvent e)
 			{
 				this_componentShown(e);

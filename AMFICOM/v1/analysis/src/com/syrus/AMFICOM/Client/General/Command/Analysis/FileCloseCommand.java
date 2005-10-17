@@ -9,11 +9,13 @@ public class FileCloseCommand extends AbstractCommand
 	{ // empty
 	}
 
+	@Override
 	public Object clone()
 	{
 		return new FileCloseCommand();
 	}
 
+	@Override
 	public void execute()
 	{
 		Heap.closeAll();

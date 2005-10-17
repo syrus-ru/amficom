@@ -229,6 +229,7 @@ public class SimpleGraphPanel extends JPanel
 		drawYCurve(g, y, iFromP, iFromP, iToP - iFromP);
 	}
 
+	@Override
 	public void paint(Graphics g)
 	{
 		if (showAll)

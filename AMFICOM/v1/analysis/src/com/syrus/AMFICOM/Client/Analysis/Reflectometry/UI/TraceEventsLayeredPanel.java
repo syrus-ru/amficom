@@ -32,6 +32,7 @@ implements PropertyChangeListener
 	{ // empty
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new TraceEventsToolBar(this);
