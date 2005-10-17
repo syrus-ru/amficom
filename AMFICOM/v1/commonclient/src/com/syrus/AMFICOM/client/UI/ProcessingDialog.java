@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.7 2005/10/14 11:55:36 arseniy Exp $
+* $Id: ProcessingDialog.java,v 1.8 2005/10/17 07:46:40 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/10/14 11:55:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/10/17 07:46:40 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -122,10 +122,12 @@ public final class ProcessingDialog {
 
 						boolean empty;
 
+						assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
 						synchronized (LOCK) {
 							assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 							empty = runnableTasks.isEmpty();								
 						}
+						assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 
 						while(!empty) {
 							final Runnable runnable;
@@ -135,7 +137,6 @@ public final class ProcessingDialog {
 								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 								runnable = runnableTasks.remove(0);
 								title = runnableTaskNames.remove(runnable);
-								empty = runnableTasks.isEmpty();
 							}
 							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 							modalDialog.setTitle(title);
@@ -146,6 +147,13 @@ public final class ProcessingDialog {
 								// too unlikely
 								new Launcher.DefaultThrowableHandler().handle(throwable);
 							}
+							
+							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
+							synchronized (LOCK) {
+								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
+								empty = runnableTasks.isEmpty();								
+							}
+							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 						}
 						SwingUtilities.invokeLater(new Runnable() {
 							
