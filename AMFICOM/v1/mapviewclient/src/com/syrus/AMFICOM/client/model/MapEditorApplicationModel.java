@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorApplicationModel.java,v 1.18 2005/10/07 14:29:22 krupenn Exp $$
+ * $$Id: MapEditorApplicationModel.java,v 1.19 2005/10/17 14:12:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * @version $Revision: 1.18 $, $Date: 2005/10/07 14:29:22 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/17 14:12:31 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -55,6 +56,7 @@ public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_MAP_LIBRARY_SAVE = "Menu.MapLibrary.Save"; //$NON-NLS-1$
 	public static final String ITEM_MAP_LIBRARY_SAVE_AS = "Menu.MapLibrary.SaveAs"; //$NON-NLS-1$
 	public static final String ITEM_MAP_LIBRARY_CLOSE = "Menu.MapLibrary.Close"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_REMOVE = "Menu.MapLibrary.Remove"; //$NON-NLS-1$
 	public static final String ITEM_MAP_LIBRARY_IMPORT = "Menu.MapLibrary.Import"; //$NON-NLS-1$
 	public static final String ITEM_MAP_LIBRARY_EXPORT = "Menu.MapLibrary.Export"; //$NON-NLS-1$
 	public static final String ITEM_MAP_LIBRARY_NEW_SITE_TYPE = "Menu.MapLibrary.NewSiteType"; //$NON-NLS-1$
@@ -119,6 +121,7 @@ public class MapEditorApplicationModel extends ApplicationModel {
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE);
@@ -141,5 +144,8 @@ public class MapEditorApplicationModel extends ApplicationModel {
 
 		add(ApplicationModel.MENU_HELP);
 		add(ApplicationModel.MENU_HELP_ABOUT);
+
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
 	}
 }
