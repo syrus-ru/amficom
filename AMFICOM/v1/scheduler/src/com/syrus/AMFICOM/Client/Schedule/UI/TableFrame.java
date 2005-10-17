@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.54 2005/10/14 13:26:54 bob Exp $
+ * $Id: TableFrame.java,v 1.55 2005/10/17 07:48:07 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
@@ -49,7 +48,6 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
@@ -57,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/10/14 13:26:54 $
+ * @version $Revision: 1.55 $, $Date: 2005/10/17 07:48:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -172,7 +170,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 								try {
 									TableFrame.this.schedulerModel.addSelectedTest(TableFrame.this, 
 										TableFrame.this.listTable.getSelectedValue().getTest());
-								} catch (final ApplicationException e) {
+								} catch (final ApplicationException ae) {
 									AbstractMainFrame.showErrorMessage(
 										I18N.getString("Scheduler.Error.CannotSelectTest"));
 								}
@@ -189,7 +187,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 				@Override
 				public void mousePressed(MouseEvent evt) {
-					final JTable table = ((JTable) evt.getSource());
+					final  WrapperedTable<TestView> table = (WrapperedTable<TestView>) evt.getSource();
 					if (SwingUtilities.isRightMouseButton(evt)) {
 						
 						final int[] rowIndices = table.getSelectedRows();
@@ -197,12 +195,12 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 							return;
 						}
 
-						final WrapperedTableModel<Test> model = (WrapperedTableModel<Test>) table.getModel();
+						final WrapperedTableModel<TestView> model = table.getModel();
 
 						for (final int index : rowIndices) {
-							final Test test = model.getObject(index);
-							final int status = test.getStatus().value();
-							if ((!test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) || 
+							final TestView testView = model.getObject(index);
+							final int status = testView.getTest().getStatus().value();
+							if ((!testView.isTestNewer() || 
 									status != TestStatus._TEST_STATUS_NEW) &&
 								status != TestStatus._TEST_STATUS_PROCESSING &&
 								status != TestStatus._TEST_STATUS_SCHEDULED &&
@@ -218,9 +216,9 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 						boolean enableResuming = true;
 
 						for (int i = 0; i < rowIndices.length; i++) {
-							final Test test = model.getObject(rowIndices[i]);
-							final int status = test.getStatus().value();
-							if (!test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) || status != TestStatus._TEST_STATUS_NEW) {
+							final TestView testView = model.getObject(rowIndices[i]);
+							final int status = testView.getTest().getStatus().value();
+							if (!testView.isTestNewer() || status != TestStatus._TEST_STATUS_NEW) {
 								enableDeleting = false;
 							}
 							
@@ -258,16 +256,16 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 											JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {										
 										for (int i = 0; i < rowIndices.length; i++) {
-											final Test test = model.getObject(rowIndices[i]);
+											final TestView testView = model.getObject(rowIndices[i]);
 											try {
-												TableFrame.this.schedulerModel.removeTest(test);
+												TableFrame.this.schedulerModel.removeTest(testView.getTest());
 											} catch (final ApplicationException e1) {
 												AbstractMainFrame.showErrorMessage(I18N.getString("Scheduler.Error.CannotRemoveTest") 
 													+ " " 
-													+ test.getDescription());
+													+ testView.getTest().getDescription());
 												return;
 											}
-											model.removeObject(test);
+											model.removeObject(testView);
 										}
 										table.revalidate();
 										table.repaint();
@@ -289,8 +287,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 								public void actionPerformed(final ActionEvent e) {
 									for (int i = 0; i < rowIndices.length; i++) {
-										final Test test = model.getObject(rowIndices[i]);
-										test.setStatus(TestStatus.TEST_STATUS_NEW);
+										final TestView testView = model.getObject(rowIndices[i]);
+										testView.getTest().setStatus(TestStatus.TEST_STATUS_NEW);
 									}
 									TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this,
 										SchedulerModel.COMMAND_REFRESH_TESTS,
@@ -320,7 +318,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 											null);
 									if (reason != null) {
 										for (int i = 0; i < rowIndices.length; i++) {
-											final Test test = model.getObject(rowIndices[i]);
+											final Test test = model.getObject(rowIndices[i]).getTest();
 											test.setStatus(TestStatus.TEST_STATUS_STOPPING);
 											test.addStopping(reason.toString());
 										}
