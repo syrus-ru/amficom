@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.2 2005/10/14 13:53:10 bob Exp $
+* $Id: TestView.java,v 1.3 2005/10/17 09:24:16 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/14 13:53:10 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/17 09:24:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -181,7 +181,7 @@ public final class TestView {
 	}
 
 	
-	private boolean isTestNewer() {
+	public boolean isTestNewer() {
 		return this.test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION);
 	}	
 	
