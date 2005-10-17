@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphTransferHandler.java,v 1.2 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeGraphTransferHandler.java,v 1.3 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,13 +59,17 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 				GraphActions.removeCells(graph, DefaultGraphModel.getDescendants(graph.getModel(), cells).toArray());
 				
 				final SchemeMarqueeHandler marquee = (SchemeMarqueeHandler)graph.getMarqueeHandler();
-				if (marquee.pane instanceof SchemeTabbedPane) {
-					SchemeResource res = ((SchemeTabbedPane)marquee.pane).getCurrentPanel().getSchemeResource();
-					if (res.getCellContainerType() == SchemeResource.SCHEME) {
-						graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getScheme().getId(), SchemeEvent.UPDATE_OBJECT));
-					} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-						graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getSchemeElement().getId(), SchemeEvent.UPDATE_OBJECT));
+				try {
+					if (marquee.pane instanceof SchemeTabbedPane) {
+						SchemeResource res = ((SchemeTabbedPane)marquee.pane).getCurrentPanel().getSchemeResource();
+						if (res.getCellContainerType() == SchemeResource.SCHEME) {
+							graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getScheme().getId(), SchemeEvent.UPDATE_OBJECT));
+						} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+							graph.aContext.getDispatcher().firePropertyChange(new SchemeEvent(graph, res.getSchemeElement().getId(), SchemeEvent.UPDATE_OBJECT));
+						}
 					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 			}
 			clipboard.setContents(new GraphCellTransferable(alist), null);
@@ -99,17 +103,21 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 			if (marquee.pane instanceof SchemeTabbedPane) {
 				SchemeResource res = ((SchemeTabbedPane)marquee.pane).getCurrentPanel().getSchemeResource();
 				if (res.getCellContainerType() == SchemeResource.SCHEME) {
-					Scheme newParent = res.getScheme(); 
-					// just set new parent
-					if (action == MOVE) {
-						graph.setFromArchivedState(data);
-						assingToNewScheme(cells, newParent);
-						this.insertedCells = cells;
-						action = 0;
-						return true;
-					} else if (action == COPY) {
-						Map<DefaultGraphCell, DefaultGraphCell> clones = graph.copyFromArchivedState(data, null, false);
-						this.insertedCells = clones.values().toArray();
+					try {
+						Scheme newParent = res.getScheme(); 
+						// just set new parent
+						if (action == MOVE) {
+							graph.setFromArchivedState(data);
+							assingToNewScheme(cells, newParent);
+							this.insertedCells = cells;
+							action = 0;
+							return true;
+						} else if (action == COPY) {
+							Map<DefaultGraphCell, DefaultGraphCell> clones = graph.copyFromArchivedState(data, null, false);
+							this.insertedCells = clones.values().toArray();
+						}
+					} catch (ApplicationException e) {
+						Log.errorException(e);
 					}
 				}
 			}

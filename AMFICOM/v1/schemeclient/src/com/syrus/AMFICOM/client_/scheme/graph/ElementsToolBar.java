@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsToolBar.java,v 1.12 2005/10/12 10:08:40 stas Exp $
+ * $Id: ElementsToolBar.java,v 1.13 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,14 +23,11 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.PortToolAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.RedoAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.UndoAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.UngroupAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomActualAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 

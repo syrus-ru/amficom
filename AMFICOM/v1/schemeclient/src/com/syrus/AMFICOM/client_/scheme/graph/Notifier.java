@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.18 2005/10/12 10:05:38 stas Exp $
+ * $Id: Notifier.java,v 1.19 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.ALL_DESELECTED;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.MULTIPLE;
+import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.OTHER_OBJECT;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_CABLELINK;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_CABLEPORT;
@@ -19,7 +20,6 @@ import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PATH;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PORT;
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PROTOELEMENT;
-import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.OTHER_OBJECT;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/10/12 10:05:38 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -86,39 +86,39 @@ public class Notifier {
 		}
 
 		if (object instanceof SchemeElement) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeElement)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeElementPropertiesManager.getInstance(aContext),
 					SCHEME_ELEMENT));
 		} else if (object instanceof SchemeDevice) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeDevice)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeDevicePropertiesManager.getInstance(aContext),
 					SCHEME_DEVICE));
 		} else if (object instanceof SchemeLink) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeLink)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeLinkPropertiesManager.getInstance(aContext),
 					SCHEME_LINK));
 		} else if (object instanceof SchemeCableLink) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeCableLink)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeCableLinkPropertiesManager.getInstance(aContext),
 					SCHEME_CABLELINK));
 		} else if (object instanceof SchemePort) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemePort)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemePortPropertiesManager.getInstance(aContext),
 					SCHEME_PORT));
 		} else if (object instanceof SchemeCablePort) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeCablePort)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeCablePortPropertiesManager.getInstance(aContext),
 					SCHEME_CABLEPORT));
 		} else if (object instanceof SchemeProtoElement) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemeProtoElement)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeProtoElementPropertiesManager.getInstance(aContext),
 					SCHEME_PROTOELEMENT));
 		} else if (object instanceof SchemePath) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (SchemePath)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemePathPropertiesManager.getInstance(aContext),
 					SCHEME_PATH));
 		} else if (object instanceof Scheme) {
-			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, (Scheme)object,
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemePropertiesManager.getInstance(aContext), SCHEME));
 		}
 //		TODO write visual managers
@@ -163,6 +163,7 @@ public class Notifier {
 						manager = SchemeElementPropertiesManager.getInstance(aContext);
 					}
 				} 
+				// check use of this case
 //				else if (dev.getType() == DeviceGroup.SCHEME) {
 //					selectedObject = dev.getScheme();
 //					selectedType = SCHEME;

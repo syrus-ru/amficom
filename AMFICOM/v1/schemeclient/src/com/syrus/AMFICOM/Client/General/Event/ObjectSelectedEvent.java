@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.10 2005/10/12 10:08:40 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.11 2005/10/17 14:59:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/17 14:59:14 $
  * @module schemeclient
  */
 
@@ -42,14 +42,15 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	public static final long SCHEME_CABLELINK =			0x00010000;
 	public static final long SCHEME_PATH =					0x00020000;
 	
-	public static final long RESULT =								0x00040000;
+	public static final long MEASUREMENT =					0x00040000;
 
 	public static final long OTHER_OBJECT =					0x00100000;
+	public static final long ALL_DESELECTED =				0x00200000;
 	
-	public static final long MULTIPLE =							0x00200000;
-	public static final long INRACK =								0x00400000;
+	public static final long MULTIPLE =							0x10000000;
+	public static final long INRACK =								0x20000000;
+	public static final long INSURE_VISIBLE =				0x40000000;
 	
-	public static final long ALL_DESELECTED =				0x10000000;
 	
 	public static final String TYPE = ObjectSelectedEvent.class.getName();
 	private long type;

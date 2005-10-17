@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.14 2005/10/12 10:08:41 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.15 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateRack;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SetLinkModeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SetPathModeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SetRackModeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SetTopLevelModeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -44,7 +45,7 @@ public class SchemeToolBar extends ElementsToolBar {
 			// Constants.redoKey,
 			Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
 			Constants.ZOOM_BOX, Constants.ZOOM_ACTUAL, Constants.SEPARATOR, 
-			Constants.SEPARATOR, Constants.LINK_MODE, Constants.PATH_MODE,
+			Constants.LINK_MODE, Constants.PATH_MODE, Constants.RACK_MODE,
 			Constants.SEPARATOR, Constants.TOP_LEVEL_MODE, Constants.HORIZONTAL_GLUE 
 	};
 	
@@ -80,6 +81,10 @@ public class SchemeToolBar extends ElementsToolBar {
 		bttns.put(Constants.PATH_MODE, createToolButton(mh.pathButt, this.btn_size,
 				null, LangModelGraph.getString(Constants.PATH_MODE), Constants.ICON_PATH_MODE, new SetPathModeAction(pane1),
 				true));
+		bttns.put(Constants.RACK_MODE, createToolButton(mh.rackButt, this.btn_size,
+				null, LangModelGraph.getString(Constants.RACK_MODE), Constants.ICON_RACK_MODE, new SetRackModeAction(pane1),
+				true));
+		
 
 		bttns.put(Constants.TOP_LEVEL_MODE, createToolButton(mh.topModeButt,
 				this.btn_size, null, LangModelGraph.getString(Constants.TOP_LEVEL_MODE), Constants.ICON_TOP_LEVEL_MODE,
@@ -88,6 +93,7 @@ public class SchemeToolBar extends ElementsToolBar {
 		ButtonGroup group = new ButtonGroup();
 		group.add(mh.linkButt);
 		group.add(mh.pathButt);
+		group.add(mh.rackButt);
 		mh.linkButt.doClick();
 		mh.s.doClick();
 

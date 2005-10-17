@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.42 2005/10/12 10:08:41 stas Exp $
+ * $Id: SchemeActions.java,v 1.43 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.42 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -108,6 +108,7 @@ public class SchemeActions {
 	}
 	
 	public static void fixImages(SchemeGraph graph) {
+		try {
 		DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
 		for (int i = 0; i < groups.length; i++) {
 			switch (groups[i].getType()) {
@@ -145,6 +146,9 @@ public class SchemeActions {
 				}
 				break;
 			}
+		}
+		}catch (Exception e) {
+			Log.errorException(e);
 		}
 	}
 	
@@ -336,8 +340,8 @@ public class SchemeActions {
 			Point middle2 = graph.snap(new Point (x + 3 * grid, y));
 			
 			DeleteAction.delete(graph, cell);
-			DefaultCableLink cell1 = createCableLink(graph, source, null, left, middle1, cl1.getId());
-			DefaultCableLink cell2 = createCableLink(graph, null, target, middle2, right, cl2.getId());
+			DefaultCableLink cell1 = createCableLink(graph, source, null, left, middle1, cl1.getId(), true);
+			DefaultCableLink cell2 = createCableLink(graph, null, target, middle2, right, cl2.getId(), true);
 //			if (source != null && source.getParent() instanceof CablePortCell) {
 //				CablePortCell port = (CablePortCell)source.getParent();
 //				connectSchemeCableLink(graph, cell1, port, true);
@@ -556,7 +560,7 @@ public class SchemeActions {
 //		GraphActions.clearGraph(graph);
 		if (schemeImageResource != null) {
 			clones = GraphActions.insertCell(graph, schemeImageResource.getData(), doClone, p, isCenterCell);
-//			fixImages(graph);
+			fixImages(graph);
 		}
 		graph.setGraphChanged(false);
 		graph.setMakeNotifications(tmp);
@@ -564,11 +568,11 @@ public class SchemeActions {
 	}
 	
 	public static DefaultCableLink createCableLink(SchemeGraph graph, PortView firstPort,
-			PortView port, Point p, Point p2, Identifier linkId) throws CreateObjectException {
+			PortView port, Point p, Point p2, Identifier linkId, boolean allowUnconnected) throws CreateObjectException {
 		ConnectionSet cs = new ConnectionSet();
 		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 
-		DefaultCableLink cell = DefaultCableLink.createInstance(EMPTY, firstPort, port, p, p2, viewMap, cs, linkId);
+		DefaultCableLink cell = DefaultCableLink.createInstance(EMPTY, firstPort, port, p, p2, viewMap, cs, linkId, allowUnconnected);
 		
 		Object[] cells = graph.getAll();
 		int counter = 0;
@@ -594,7 +598,7 @@ public class SchemeActions {
 	}
 	
 	public static DefaultLink createLink(SchemeGraph graph, PortView firstPort, 
-			PortView port, Point p, Point p2, Identifier linkId) throws CreateObjectException {
+			PortView port, Point p, Point p2, Identifier linkId, boolean allowUnconnected) throws CreateObjectException {
 		ConnectionSet cs = new ConnectionSet();
 		Map viewMap = new HashMap();
 		
@@ -605,7 +609,7 @@ public class SchemeActions {
 				counter++;
 		String name = LangModelScheme.getString("Title.link") + String.valueOf(counter+1); //$NON-NLS-1$
 		
-		DefaultLink cell = DefaultLink.createInstance(name, firstPort, port, p, p2, viewMap, cs, linkId);
+		DefaultLink cell = DefaultLink.createInstance(name, firstPort, port, p, p2, viewMap, cs, linkId, allowUnconnected);
 
 		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
 		graph.setSelectionCell(cell);
@@ -962,9 +966,9 @@ public class SchemeActions {
 
 			// switching between ports in optical switch is not lead to path change
 			SchemePath path = pe.getParentPathOwner();
-			PathElement lastPE = path.getPreviousPathElement(pe);
-			SchemeElement lastSE = lastPE.getSchemeElement();
 			try {
+				PathElement lastPE = path.getPreviousPathElement(pe);
+				SchemeElement lastSE = lastPE.getSchemeElement();
 				if (!lastSE.getProtoEquipment().getType().equals(EquipmentType.OPTICAL_SWITCH)) {
 					if (is_source) {
 						pe.setParentPathOwner(null, true);
@@ -987,7 +991,12 @@ public class SchemeActions {
 		} 
 		else {
 			sp = sl.getTargetAbstractSchemePort();
+			Log.debugMessage("Link " + sl + " connected to port " + sp + "; disconnecting...", Level.FINER);
 			sl.setTargetAbstractSchemePort(null);
+			if (sp != null) {
+				SchemeLink sl2 = sp.getAbstractSchemeLink();
+				Log.debugMessage("Now port " + sp + " has connected link " + sl2, Level.FINER);
+			}
 		}
 		if (sp != null) {
 			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, null));
@@ -1015,24 +1024,9 @@ public class SchemeActions {
 		} else {
 			sl.setTargetAbstractSchemePort(sp);
 		}
-		
-		IdlDirectionType direction = sp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
 
 		try {
-			List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
-			Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
-
-			List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads(false));	
-			Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
-			for (Iterator it1 = ports.iterator(), it2 = threads.iterator(); it1.hasNext() && it2.hasNext();) {
-				SchemePort sport = (SchemePort)it1.next();
-				SchemeCableThread thread = (SchemeCableThread)it2.next();
-				if (is_source) {
-					thread.setSourceSchemePort(sport);
-				} else {
-					thread.setTargetSchemePort(sport);
-				}
-			}
+			performAutoCommutation(sp, sl, is_source);
 			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
 		} catch (ApplicationException e) {
 			Log.errorException(e);
@@ -1041,10 +1035,31 @@ public class SchemeActions {
 		return true;
 	}
 	
+	public static void performAutoCommutation(SchemeCablePort scp, SchemeCableLink scl, boolean is_source) throws ApplicationException {
+		Log.debugMessage("create autocommutation", Level.FINER);
+		IdlDirectionType direction = scp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
+		
+		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(scp.getParentSchemeDevice(), direction));
+		Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+
+		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(scl.getSchemeCableThreads(false));	
+		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+		for (Iterator it1 = ports.iterator(), it2 = threads.iterator(); it1.hasNext() && it2.hasNext();) {
+			SchemePort sport = (SchemePort)it1.next();
+			SchemeCableThread thread = (SchemeCableThread)it2.next();
+			if (is_source) {
+				thread.setSourceSchemePort(sport);
+			} else {
+				thread.setTargetSchemePort(sport);
+			}
+		}
+	}
+	
 	public static void disconnectSchemeCableLink(SchemeGraph graph,
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
 		SchemeCableLink sl = link.getSchemeCableLink();
-		
+
+		try {
 		PathElement pe = SchemeActions.getSelectedPathElement(link);
 		if (pe != null) {
 //			int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), "Это изменит путь!", "Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -1063,12 +1078,31 @@ public class SchemeActions {
 		}
 		
 		SchemeCablePort sp;
+		assert sl == StorableObjectPool.getStorableObject(sl.getId(), true) : sl;
 		if (is_source) {
 			sp = sl.getSourceAbstractSchemePort();
 			sl.setSourceAbstractSchemePort(null);
+			assert sl.getSourceAbstractSchemePort() == null;
+			if (sp != null) {
+				assert sp == StorableObjectPool.getStorableObject(sp.getId(), true) : sp;
+				final SchemeCableLink sl3 = sp.getAbstractSchemeLink();
+				if (sl.equals(sl3)) {
+					System.err.println(sl + ": " + (sl == StorableObjectPool.getStorableObject(sl.getId(), true)));
+					System.err.println(sl3 + ": " + (sl3 == StorableObjectPool.getStorableObject(sl3.getId(), true)));
+					System.err.println(sl3.getSourceAbstractSchemePort());
+				}
+			}
 		} else {
 			sp = sl.getTargetAbstractSchemePort();
+			Log.debugMessage("Cable " + sl + " connected to port " + sp + "; disconnecting...", Level.FINER);
 			sl.setTargetAbstractSchemePort(null);
+			assert sl.getTargetAbstractSchemePort() == null;
+			if (sp != null) {
+				assert sp == StorableObjectPool.getStorableObject(sp.getId(), true) : sp;
+				assert sp.getAbstractSchemeLink() == null;
+				SchemeCableLink sl2 = sp.getAbstractSchemeLink();
+				Log.debugMessage("Now port " + sp + " has connected link " + sl2, Level.FINER);
+			}
 		}
 
 		if (sp != null) {
@@ -1085,6 +1119,9 @@ public class SchemeActions {
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
+		}
+		} catch (final ApplicationException ae) {
+			ae.printStackTrace();
 		}
 	}
 	

@@ -7,8 +7,10 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePathPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,12 +27,18 @@ public class PathNewCommand extends AbstractCommand {
 		this.pane = pane;
 	}
 
+	@Override
 	public void execute() {
 		ElementsPanel panel = this.pane.getCurrentPanel();
 		if (panel == null) {
 			return;
 		}
-		Scheme scheme = panel.getSchemeResource().getScheme();
+		Scheme scheme = null;
+		try {
+			scheme = panel.getSchemeResource().getScheme();
+		} catch (ApplicationException e1) {
+			Log.errorException(e1);
+		}
 		
 		if (scheme == null) {
 			JOptionPane.showMessageDialog(this.pane, 
@@ -46,9 +54,12 @@ public class PathNewCommand extends AbstractCommand {
 			if(solutions.isEmpty()) {
 				solution = SchemeObjectsFactory.createSchemeMonitoringSolution(scheme);
 			} else {
-				solution = scheme.getCurrentSchemeMonitoringSolution(false);
+				solution = solutions.iterator().next();
+				// TODO remove comment. Now causes error at Scheme:500
+				//solution = scheme.getCurrentSchemeMonitoringSolution(false);
 			}
 			SchemePath path = SchemeObjectsFactory.createSchemePath(solution);
+						
 //		CharacteristicType type = MiscUtil.getCharacteristicType(
 //				user_id, "alarmed", CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 //				DataType.DATA_TYPE_STRING);
@@ -61,6 +72,13 @@ public class PathNewCommand extends AbstractCommand {
 			aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, path,
 					SchemePathPropertiesManager.getInstance(aContext),
 					ObjectSelectedEvent.SCHEME_PATH));
+			SchemeResource.setSchemePath(path, true);
+			
+			ApplicationModel aModel = aContext.getApplicationModel();
+			aModel.setEnabled("menuPathNew", false);
+			aModel.setEnabled("menuPathSave", true);
+			aModel.setEnabled("menuPathCancel", true);
+			aModel.fireModelChanged();			
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}

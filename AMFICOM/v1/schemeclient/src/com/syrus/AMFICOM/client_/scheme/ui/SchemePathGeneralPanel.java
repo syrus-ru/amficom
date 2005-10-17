@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.7 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.8 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -72,7 +74,6 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	JList lsPesList = new JList();
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2, 10);
-	private transient int cashedSize = 0;
 
 	protected SchemePathGeneralPanel() {
 		super();
@@ -296,9 +297,14 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfNameText.setText(this.schemePath.getName());
 			this.taDescriptionArea.setText(this.schemePath.getDescription());
 
-			if (!updateOnly || this.lsPesList.getModel().getSize() != this.cashedSize) {
-				final SortedSet<PathElement> pathElements = this.schemePath.getPathMembers();
-				this.cashedSize = pathElements.size();
+			SortedSet<PathElement> pathElements;
+			try {
+				pathElements = this.schemePath.getPathMembers();
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+				pathElements = new TreeSet<PathElement>();
+			}
+			if (!updateOnly || this.lsPesList.getModel().getSize() != pathElements.size()) {
 				if (!pathElements.isEmpty()) {
 					final PathElement startElement = pathElements.first();
 					this.tfStartText.setText(startElement.getName());
@@ -349,7 +355,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 						if (!measurementPortId.isVoid()) {
 							LinkedIdsCondition condition = new LinkedIdsCondition(measurementPortId, ObjectEntities.MONITOREDELEMENT_CODE);
 							Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-							if (mes.isEmpty()) {
+							if (!mes.isEmpty()) {
 								MonitoredElement me = mes.iterator().next();
 								me.setName(this.tfNameText.getText());
 							}

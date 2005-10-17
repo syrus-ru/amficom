@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.8 2005/10/10 11:07:38 stas Exp $
+ * $Id: SchemeExportCommand.java,v 1.9 2005/10/17 14:59:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,12 @@ public class SchemeExportCommand extends ImportExportCommand {
 	public void execute() {
 		super.execute();
 		
-		Scheme scheme = this.pane.getCurrentPanel().getSchemeResource().getScheme();
+		Scheme scheme = null;
+		try {
+			scheme = this.pane.getCurrentPanel().getSchemeResource().getScheme();
+		} catch (ApplicationException e1) {
+			Log.errorException(e1);
+		}
 		if (scheme != null) {
 
 			final String fileName = openFileForWriting(

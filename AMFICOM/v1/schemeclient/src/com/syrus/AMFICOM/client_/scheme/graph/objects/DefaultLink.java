@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.16 2005/10/10 11:07:38 stas Exp $
+ * $Id: DefaultLink.java,v 1.17 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,13 +26,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -51,7 +50,7 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 
 	public static DefaultLink createInstance(Object userObject,
 			PortView firstPort, PortView port, Point p, Point p2, Map viewMap,
-			ConnectionSet cs, Identifier linkId) throws CreateObjectException {
+			ConnectionSet cs, Identifier linkId, boolean allowUnconnected) throws CreateObjectException {
 
 		// we can connect link to PortCell or not connect at all
 		PortCell sourcePortCell = null;
@@ -68,14 +67,20 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 				targetPortCell = (PortCell) o;
 		}
 		
-		if (sourcePortCell == null || targetPortCell == null) {
-			throw new CreateObjectException("Cable must be connected to cable ports");
+		if (!allowUnconnected && (sourcePortCell == null || targetPortCell == null)) {
+			throw new CreateObjectException("Link must be connected to ports : " + linkId.getIdentifierString());
 		}
-		SchemeLink cl1 = sourcePortCell.getSchemePort().getAbstractSchemeLink();
-		SchemeLink cl2 = targetPortCell.getSchemePort().getAbstractSchemeLink();
-		if ((cl1 != null && !cl1.getId().equals(linkId)) ||
-				(cl2 != null && !cl2.getId().equals(linkId))) {
-			throw new CreateObjectException("Other cable already connected to port");
+		if (sourcePortCell != null) {
+			SchemeLink cl1 = sourcePortCell.getSchemePort().getAbstractSchemeLink();
+			if (cl1 != null && !cl1.getId().equals(linkId)) {
+				throw new CreateObjectException("Other link (" + cl1.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
+			}
+		}
+		if (targetPortCell != null) {
+			SchemeLink cl2 = targetPortCell.getSchemePort().getAbstractSchemeLink();
+			if (cl2 != null && !cl2.getId().equals(linkId)) {
+				throw new CreateObjectException("Other link (" + cl2.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
+			}
 		}
 		
 		DefaultLink cell = new DefaultLink(userObject);

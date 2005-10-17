@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateRack.java,v 1.3 2005/10/12 10:08:41 stas Exp $
+ * $Id: CreateRack.java,v 1.4 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -136,7 +135,7 @@ public class CreateRack extends AbstractAction {
 					element.setUgoCell(imres);
 				}
 				imres.setData((List)invisibleGraph.getArchiveableState());
-			} catch (CreateObjectException e1) {
+			} catch (ApplicationException e1) {
 				Log.errorException(e1);
 				return;
 			}

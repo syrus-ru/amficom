@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.14 2005/10/12 10:08:40 stas Exp $
+ * $Id: ElementsPanel.java,v 1.15 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -23,10 +25,11 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -91,7 +94,11 @@ public class ElementsPanel extends UgoPanel {
 		} else {
 			if (this.schemeResource.getCellContainerType() == SchemeResource.SCHEME) {
 				GraphActions.clearGraph(this.graph);
-				SchemeActions.openSchemeImageResource(this.graph, this.schemeResource.getScheme().getSchemeCell(), false);
+				try {
+					SchemeActions.openSchemeImageResource(this.graph, this.schemeResource.getScheme().getSchemeCell(), false);
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
 			}
 		}
 	}
@@ -103,7 +110,10 @@ public class ElementsPanel extends UgoPanel {
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				SchemePath path = (SchemePath)ev.getSelectedObject();
 				this.graph.setSelectionCells(this.schemeResource.getPathElements(path));
-				this.schemeResource.setSchemePath(path);
+//				SchemeResource.setSchemePath(path, false);
+				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) {
+					this.graph.insureSelectionVisible();
+				}
 			}
 			// TODO разобраться с созданием пути 
 //			else {
@@ -114,13 +124,32 @@ public class ElementsPanel extends UgoPanel {
 //			if (ev.SCHEME_ALL_DESELECTED) {
 //				getGraph().removeSelectionCells();
 //			} 
-			if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
+			else if (ev.isSelected(ObjectSelectedEvent.SCHEME)) {
+				Scheme scheme = (Scheme)ev.getSelectedObject();
+				try {
+					SchemeElement schemeElement = scheme.getParentSchemeElement();
+					if (schemeElement != null) {
+						this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, schemeElement.getId()));
+						if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+							this.graph.insureSelectionVisible();
+						}
+					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
+			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
 				SchemeElement element = (SchemeElement)ev.getSelectedObject();
 				this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, element.getId()));
+				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+					this.graph.insureSelectionVisible();
+				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement)ev.getSelectedObject();
 				this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, proto.getId()));
+				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+					this.graph.insureSelectionVisible();
+				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PORT)) {
 				// TODO multiple selection
@@ -131,17 +160,29 @@ public class ElementsPanel extends UgoPanel {
 					port = (SchemePort)ev.getSelectedObject();
 				}
 				this.graph.setSelectionCell(SchemeActions.findPortCellById(this.graph, port.getId()));
+				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+					this.graph.insureSelectionVisible();
+				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)) {
 				SchemeCablePort port = (SchemeCablePort)ev.getSelectedObject();
 				this.graph.setSelectionCell(SchemeActions.findCablePortCellById(this.graph, port.getId()));
+				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+					this.graph.insureSelectionVisible();
+				}
 			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)) {
 				SchemeLink link = (SchemeLink)ev.getSelectedObject();
 				this.graph.setSelectionCell(SchemeActions.findSchemeLinkById(this.graph, link.getId()));
+				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+					this.graph.insureSelectionVisible();
+				}
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
 				SchemeCableLink link = (SchemeCableLink)ev.getSelectedObject();
 				this.graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(this.graph, link.getId()));
+				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
+					this.graph.insureSelectionVisible();
+				}
 			}
 		}
 		// TODO разобраться с созданием пути 

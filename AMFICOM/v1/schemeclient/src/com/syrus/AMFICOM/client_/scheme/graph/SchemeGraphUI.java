@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.24 2005/10/12 10:08:41 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.25 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -117,23 +117,26 @@ public class SchemeGraphUI extends GPGraphUI {
 					if (transferableObjects.size() > 0) {
 						final Object transferableObject = transferableObjects.iterator().next();
 						if (transferableObject instanceof Identifiable) {
-							Identifier transferable = ((Identifiable)transferableObject).getId(); 
+							Identifier transferable = ((Identifiable)transferableObject).getId();
+							boolean editable = SchemeGraphUI.this.graph.isEditable();
 							if (transferable.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 								ApplicationContext aContext = ((SchemeGraph)SchemeGraphUI.this.graph).aContext; 
 								aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, p, SchemeEvent.INSERT_SCHEME_CABLELINK));
 							} else if (transferable.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
 								SchemeGraph sgraph = (SchemeGraph)SchemeGraphUI.this.graph;
-								JPopupMenu pop = PopupFactory.createProtoOpenPopup(sgraph.aContext, sgraph, transferable, p);
+								JPopupMenu pop = PopupFactory.createProtoOpenPopup(sgraph.aContext, transferable, p);
 								if (pop.getSubElements().length != 0) {
 									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
 							} else if (transferable.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
-								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext, transferable, p, SchemeEvent.INSERT_SCHEMEELEMENT);
+								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext,
+										transferable, p, SchemeEvent.INSERT_SCHEMEELEMENT, editable);
 								if (pop.getSubElements().length != 0) {
 									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
 							} else if (transferable.getMajor() == ObjectEntities.SCHEME_CODE) {
-								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext, transferable, p, SchemeEvent.INSERT_SCHEME);
+								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext,
+										transferable, p, SchemeEvent.INSERT_SCHEME, editable);
 								if (pop.getSubElements().length != 0) {
 									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
@@ -317,6 +320,15 @@ public class SchemeGraphUI extends GPGraphUI {
 			super(ctx);
 		}
 
+		@Override
+		public void mousePressed(MouseEvent e) {
+			super.mousePressed(e);
+			if (SchemeGraph.getMode().equals(Constants.PATH_MODE)) {
+				Object cell = graph.getSelectionCell();
+				graph.getMarqueeHandler().mousePressed(e);
+			}
+		}
+		
 		@Override // fixes bug when move cell in scale differ from 1
 		public void mouseDragged(MouseEvent event) {
 			boolean constrained = isConstrainedMoveEvent(event);

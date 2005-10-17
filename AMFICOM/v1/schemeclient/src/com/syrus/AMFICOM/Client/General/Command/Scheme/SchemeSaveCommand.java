@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.awt.HeadlessException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -86,63 +87,63 @@ public class SchemeSaveCommand extends AbstractCommand {
 
 		if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) // сохраняем компонент
 		{
-			SchemeElement se = res.getSchemeElement();
-
-			// add internal objects - SL, SE
-			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
-			Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
-			Object[] objects = graph.getRoots();
-			for (Object object : objects) {
-				if (object instanceof DefaultLink)
-					schemeLinks.add(((DefaultLink)object).getSchemeLink());
-				else if (object instanceof DeviceGroup) {
-					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
-					assert schemeElement != null;
-					if (!schemeElement.equals(se))
-						schemeElements.add(schemeElement);
-				}
-			}
 			try {
-				se.setSchemeLinks(schemeLinks, false);
-				se.setSchemeElements(schemeElements, false);
-			} catch (ApplicationException e1) {
-				Log.errorException(e1);
-			}
-			
-			//	create SchemeImageResource
-			if (se.getSchemeCell() == null) {
-				try {
-					se.setSchemeCell(SchemeObjectsFactory.createSchemeImageResource());
-				} catch (CreateObjectException e) {
-					Log.errorException(e);
-					return;
-				}
-			}
-			se.getSchemeCell().setData((List) graph.getArchiveableState());
-
-			for (Iterator it = this.schemeTab.getAllPanels().iterator(); it.hasNext();) {
-				ElementsPanel p = (ElementsPanel) it.next();
-				SchemeResource res1 = p.getSchemeResource();
-				if (res1.getCellContainerType() == SchemeResource.SCHEME) {
-					Scheme s = res1.getScheme();
-					if (s.equals(se.getParentScheme())) {
-						// TODO refreshing view (ugo)
-						
-						this.schemeTab.setGraphChanged(true);
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-								se.getName() + LangModelScheme.getString("Message.information.element_saved_in_scheme") + s.getName(),  //$NON-NLS-1$
-								LangModelScheme.getString("Message.information"), //$NON-NLS-1$
-								JOptionPane.INFORMATION_MESSAGE);
-						break;
+				SchemeElement se = res.getSchemeElement();
+				
+				// add internal objects - SL, SE
+				Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+				Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+				Object[] objects = graph.getRoots();
+				for (Object object : objects) {
+					if (object instanceof DefaultLink)
+						schemeLinks.add(((DefaultLink)object).getSchemeLink());
+					else if (object instanceof DeviceGroup) {
+						SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
+						assert schemeElement != null;
+						if (!schemeElement.equals(se))
+							schemeElements.add(schemeElement);
 					}
 				}
+				se.setSchemeLinks(schemeLinks, false);
+				se.setSchemeElements(schemeElements, false);
+				
+				//	create SchemeImageResource
+				if (se.getSchemeCell() == null) {
+					try {
+						se.setSchemeCell(SchemeObjectsFactory.createSchemeImageResource());
+					} catch (CreateObjectException e) {
+						Log.errorException(e);
+						return;
+					}
+				}
+				se.getSchemeCell().setData((List) graph.getArchiveableState());
+				
+				for (Iterator it = this.schemeTab.getAllPanels().iterator(); it.hasNext();) {
+					ElementsPanel p = (ElementsPanel) it.next();
+					SchemeResource res1 = p.getSchemeResource();
+					if (res1.getCellContainerType() == SchemeResource.SCHEME) {
+						Scheme s = res1.getScheme();
+						if (s.equals(se.getParentScheme())) {
+							// TODO refreshing view (ugo)
+							
+							this.schemeTab.setGraphChanged(true);
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									se.getName() + LangModelScheme.getString("Message.information.element_saved_in_scheme") + s.getName(),  //$NON-NLS-1$
+									LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+									JOptionPane.INFORMATION_MESSAGE);
+							break;
+						}
+					}
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 			this.schemeTab.setGraphChanged(false);
 			return;
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) { // сохраняем схему
 
-			Scheme scheme = res.getScheme();
 			try {
+				Scheme scheme = res.getScheme();
 //				scheme.setSchemeLinks(schemeLinks);
 //				scheme.setSchemeCableLinks(schemeCableLinks);
 //				scheme.setSchemeElements(schemeElements);

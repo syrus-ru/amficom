@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.29 2005/10/12 10:08:41 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.30 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,6 +57,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -68,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -116,7 +117,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						private static final long serialVersionUID = 3655699666572424829L;
 
 						public void actionPerformed(ActionEvent ae) {
-							removePanel(getCurrentPanel());
+							removePanel(getCurrentPanel(), true);
 						}
 					});
 					close.setText(LangModelScheme.getString("Button.close") + " '" + SchemeTabbedPane.this.tabs.getTitleAt(SchemeTabbedPane.this.tabs.getSelectedIndex()) + "'");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
@@ -172,8 +173,6 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		this.tabs.setSelectedComponent(graphView);
 		setGraphChanged(false);
 		graph.setEditable(this.editable);
-		
-		graph.setMode(this.toolBar.commands.get(Constants.PATH_MODE).isSelected() ? Constants.PATH_MODE : Constants.LINK_MODE);
 	}
 	
 	public void selectPanel(ElementsPanel p) {
@@ -191,20 +190,35 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		this.tabs.setTitleAt(this.tabs.getSelectedIndex(), title);
 	}
 
-	public boolean removePanel(UgoPanel p) {
+	public boolean removePanel(UgoPanel p, boolean undo) {
 		if (!confirmUnsavedChanges(p)) {
 			return false;
 		}
-
+		
 		// undo changes
-		if (p instanceof ElementsPanel) {
-			SchemeResource res = ((ElementsPanel)p).getSchemeResource();
-			if (res.getCellContainerType() == SchemeResource.SCHEME) {
-				StorableObjectPool.cleanChangedStorableObjects(Collections.singleton(res.getScheme()));
-			} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-				StorableObjectPool.cleanChangedStorableObjects(Collections.singleton(res.getSchemeElement()));
-			} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
-				StorableObjectPool.cleanChangedStorableObjects(Collections.singleton(res.getSchemeProtoElement()));
+		if (undo && hasUnsavedChanges(p)) {
+			try {
+				if (p instanceof ElementsPanel) {
+					SchemeResource res = ((ElementsPanel)p).getSchemeResource();
+					if (res.getCellContainerType() == SchemeResource.SCHEME) {
+						Scheme scheme = res.getScheme();
+						if (!scheme.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+							StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies(false));
+						}
+					} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+						SchemeElement schemeElement = res.getSchemeElement();
+						if (!schemeElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+							StorableObjectPool.cleanChangedStorableObjects(schemeElement.getReverseDependencies(false));
+						}
+					} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
+						SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
+						if (!schemeProtoElement.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+							StorableObjectPool.cleanChangedStorableObjects(schemeProtoElement.getReverseDependencies(false));
+						}
+					}
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 		
@@ -241,11 +255,9 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 				if (see.isType(SchemeEvent.OPEN_SCHEME)) {
 					Scheme scheme = (Scheme)see.getStorableObject();
 					openScheme(scheme);
-					setLinkMode();
 				} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
 					SchemeElement schemeElement = (SchemeElement)see.getStorableObject();
 					openSchemeElement(schemeElement);
-					setLinkMode();
 				} else if (see.isType(SchemeEvent.INSERT_SCHEME)) {
 					Scheme scheme = (Scheme)see.getStorableObject();
 					
@@ -382,6 +394,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						PortView sourceView = null;
 						PortView targetView = null;
 						if (sourcePort != null) {
+							SchemeActions.performAutoCommutation(sourcePort, schemeCableLink, true);
+							
 							sourcePortCell = SchemeActions.findCablePortCellById(graph, sourcePort.getId());
 							try {
 								DefaultPort source = SchemeActions.getSuitablePort(sourcePortCell, schemeCableLink.getId());
@@ -392,6 +406,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							}
 						}
 						if (targetPort != null) {
+							SchemeActions.performAutoCommutation(sourcePort, schemeCableLink, true);
+							
 							targetPortCell = SchemeActions.findCablePortCellById(graph, targetPort.getId());
 							try {
 								DefaultPort target = SchemeActions.getSuitablePort(targetPortCell, schemeCableLink.getId());
@@ -409,7 +425,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						try {
 							DefaultCableLink cell = SchemeActions.createCableLink(graph,
 									sourceView, targetView, graph.snap(graph.fromScreen(p1)), 
-									graph.snap(graph.fromScreen(p2)), schemeCableLink.getId());
+									graph.snap(graph.fromScreen(p2)), schemeCableLink.getId(), true);
 							cell.setUserObject(schemeCableLink.getName());
 							if (sourcePortCell != null) {
 								GraphActions.setObjectBackColor(graph, sourcePortCell, SchemeActions.determinePortColor(sourcePort, schemeCableLink));
@@ -491,7 +507,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	}
 
 	static int counter = 0;
-	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch) {
+	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch) throws ApplicationException {
 
 //		if (counter == 0 && sch.getName().startsWith("UCM")) {
 //			try {
@@ -511,17 +527,17 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 				SchemePanel panel1 = (SchemePanel)p;
 				if (sch.equals(panel1.getSchemeResource().getScheme())) {
 					selectPanel(panel1);
-					if (p.getGraph().isGraphChanged()) {
-						int ret = JOptionPane.showConfirmDialog(
-								Environment.getActiveWindow(), "Схема " + sch.getName()
-									+ " уже открыта. Открыть сохраненную ранее версию?",
-									"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
-						if (ret == JOptionPane.YES_OPTION) {
-							panel1.getSchemeResource().setScheme(sch);
-							SchemeGraph graph = panel1.getGraph();
-							clones = SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);
-						}		
-					}
+//					if (p.getGraph().isGraphChanged()) {
+//						int ret = JOptionPane.showConfirmDialog(
+//								Environment.getActiveWindow(), "Схема " + sch.getName()
+//									+ " уже открыта. Открыть сохраненную ранее версию?",
+//									"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
+//						if (ret == JOptionPane.YES_OPTION) {
+//							panel1.getSchemeResource().setScheme(sch);
+//							SchemeGraph graph = panel1.getGraph();
+//							clones = SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);
+//						}		
+//					}
 					return clones;
 				}
 			}				
@@ -537,7 +553,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return clones;
 	}
 	
-	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeElement(SchemeElement se) {
+	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeElement(SchemeElement se) throws ApplicationException {
 		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
@@ -608,7 +624,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	@Override
 	public void setGraphChanged(boolean b) {
-		if (b && getGraph().isGraphChanged())
+		SchemeGraph graph = getGraph();
+		if (!graph.isEditable() || (b && graph.isGraphChanged()))
 			return;
 
 		super.setGraphChanged(b);

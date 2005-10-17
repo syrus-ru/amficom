@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.17 2005/10/10 11:07:38 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.18 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/10/10 11:07:38 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -51,7 +51,7 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 
 	public static DefaultCableLink createInstance(Object userObject,
 			PortView firstPort, PortView port, Point p, Point p2, Map<Object, Map> viewMap,
-			ConnectionSet cs, Identifier linkId) throws CreateObjectException {
+			ConnectionSet cs, Identifier linkId, boolean allowUnconnected) throws CreateObjectException {
 
 		// we must connect cable to free CablePortCells
 		CablePortCell sourceCablePortCell = null;
@@ -68,16 +68,20 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 				targetCablePortCell = (CablePortCell) o;
 		}
 		
-		if (sourceCablePortCell == null || targetCablePortCell == null) {
+		if (!allowUnconnected && (sourceCablePortCell == null || targetCablePortCell == null)) {
 			throw new CreateObjectException("Cable must be connected to cable ports : " + linkId.getIdentifierString());
 		}
-		SchemeCableLink cl1 = sourceCablePortCell.getSchemeCablePort().getAbstractSchemeLink();
-		SchemeCableLink cl2 = targetCablePortCell.getSchemeCablePort().getAbstractSchemeLink();
-		if (cl1 != null && !cl1.getId().equals(linkId)) {
-			throw new CreateObjectException("Other cable (" + cl1.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
+		if (sourceCablePortCell != null) {
+			SchemeCableLink cl1 = sourceCablePortCell.getSchemeCablePort().getAbstractSchemeLink();
+			if (cl1 != null && !cl1.getId().equals(linkId)) {
+				throw new CreateObjectException("Other cable (" + cl1.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
+			}
 		}
-		if (cl2 != null && !cl2.getId().equals(linkId)) {
-			throw new CreateObjectException("Other cable (" + cl2.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
+		if (targetCablePortCell != null) {
+			SchemeCableLink cl2 = targetCablePortCell.getSchemeCablePort().getAbstractSchemeLink();
+			if (cl2 != null && !cl2.getId().equals(linkId)) {
+				throw new CreateObjectException("Other cable (" + cl2.getId() + ") already connected to port; instead of " + linkId.getIdentifierString());
+			}
 		}
 		DefaultCableLink cell = new DefaultCableLink(userObject);
 		cell.setSchemeCableLinkId(linkId);

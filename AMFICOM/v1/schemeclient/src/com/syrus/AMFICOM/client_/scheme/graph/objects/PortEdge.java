@@ -1,5 +1,5 @@
 /*
- * $Id: PortEdge.java,v 1.8 2005/10/03 07:44:39 stas Exp $
+ * $Id: PortEdge.java,v 1.9 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-
 import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultEdge;
 import com.jgraph.graph.GraphConstants;
@@ -26,7 +23,7 @@ import com.jgraph.graph.Port;
 /**
  * used just for identification of link between PortCell and DeviceCell
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 

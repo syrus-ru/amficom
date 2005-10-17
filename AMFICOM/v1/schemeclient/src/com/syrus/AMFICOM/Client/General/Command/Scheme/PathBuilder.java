@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
@@ -12,9 +13,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -43,11 +43,13 @@ public class PathBuilder {
 	
 	private static boolean exploreSchemeElement(SchemePath path, SchemeElement scheme_element) throws ApplicationException {
 		if (path.getPathMembers().isEmpty()) {
+			Log.debugMessage("Can not explore path with no starting element", Level.FINER);
 			return false;
 		}
 		
 		while(true) {
 			if (!exploreNext(path)) {
+				Log.debugMessage("Can not explore next element", Level.FINER);
 				return false;
 			}
 			
@@ -64,9 +66,11 @@ public class PathBuilder {
 				if (lastPE.getEndAbstractSchemePort() == null) {
 					if (state == PathBuilder.MULTIPLE_PORTS)
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-								"Через элемент " + lastPE.getName() +
-								" невозможно однозначно провести путь.\nПожалуйста, введите следующий элемент пути вручную.",
-								"Ошибка", JOptionPane.OK_OPTION);
+								LangModelScheme.getString("Message.error.path.unambigous")  //$NON-NLS-1$
+								+ "\n'" + lastPE.getName() + "'\n" +  //$NON-NLS-1$//$NON-NLS-2$
+								LangModelScheme.getString("Message.error.path.next_manually"), //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+								JOptionPane.OK_OPTION);
 					state = OK;
 					return false;
 				}
@@ -76,11 +80,13 @@ public class PathBuilder {
 
 	private static boolean exploreScheme(SchemePath path, Scheme scheme) throws ApplicationException {
 		if (path.getPathMembers().isEmpty()) {
+			Log.debugMessage("Can not explore path with no starting element", Level.FINER);
 			return false;
 		}
 		
 		while(true) {
 			if (!exploreNext(path)) {
+				Log.debugMessage("Can not explore next element", Level.FINER);
 				return false;
 			}
 			
@@ -97,9 +103,11 @@ public class PathBuilder {
 				if (lastPE.getEndAbstractSchemePort() == null) {
 					if (state == PathBuilder.MULTIPLE_PORTS)
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-								"Через элемент " + lastPE.getName() +
-								" невозможно однозначно провести путь.\nПожалуйста, введите следующий элемент пути вручную.",
-								"Ошибка", JOptionPane.OK_OPTION);
+								LangModelScheme.getString("Message.error.path.unambigous")  //$NON-NLS-1$
+								+ "\n'" + lastPE.getName() + "'\n" +  //$NON-NLS-1$//$NON-NLS-2$
+								LangModelScheme.getString("Message.error.path.next_manually"), //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+								JOptionPane.OK_OPTION);
 					state = OK;
 					return false;
 				}
@@ -107,44 +115,50 @@ public class PathBuilder {
 		}
 	}
 
-	public static boolean explore(SchemePath path, Identifier startId, Identifier endId) throws ApplicationException {
-		if (path.getPathMembers().isEmpty()) {
-			if (startId.getMajor() != ObjectEntities.SCHEMEELEMENT_CODE) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						"Путь должен начинаться с компонента", "Ошибка", JOptionPane.OK_OPTION);
-				return false;
-			}
-			try {
-				SchemeElement se = StorableObjectPool.getStorableObject(startId, true);
-				PathElement pe = createPEbySE(path, se);
-				if (pe == null)
-					return false;
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-				return false;
-			}
-		}
+	public static boolean explore(SchemePath path, Identifier endId) throws ApplicationException {
+//		if (path.getPathMembers().isEmpty()) {
+//			if (startId.getMajor() != ObjectEntities.SCHEMEELEMENT_CODE) {
+//				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+//						"Путь должен начинаться с компонента", "Ошибка", JOptionPane.OK_OPTION);
+//				return false;
+//			}
+//			try {
+//				SchemeElement se = StorableObjectPool.getStorableObject(startId, true);
+//				PathElement pe = createPEbySE(path, se);
+//				if (pe == null)
+//					return false;
+//			} catch (ApplicationException e) {
+//				Log.errorException(e);
+//				return false;
+//			}
+//		}
 
 		while(true) {
 			PathElement lastPE = path.getPathMembers().last();
 			if (lastPE.getAbstractSchemeElement().equals(endId)) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						"Построение пути успешно завершено", "Сообшение", JOptionPane.INFORMATION_MESSAGE);
+						LangModelScheme.getString("Message.information.path_created"),  //$NON-NLS-1$
+						LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+						JOptionPane.INFORMATION_MESSAGE);
 				return true;
 			}
 
 			if (lastPE.getKind() == IdlKind.SCHEME_ELEMENT && lastPE.getEndAbstractSchemePort() == null) {
 				if (state == PathBuilder.MULTIPLE_PORTS)
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-							"Через элемент " + lastPE.getName() +
-							" невозможно однозначно провести путь.\nПожалуйста, введите следующий элемент пути вручную.",
-							"Ошибка", JOptionPane.OK_OPTION);
+							LangModelScheme.getString("Message.error.path.unambigous")  //$NON-NLS-1$
+							+ "\n'" + lastPE.getName() + "'\n" +  //$NON-NLS-1$//$NON-NLS-2$
+							LangModelScheme.getString("Message.error.path.next_manually"), //$NON-NLS-1$
+							LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+							JOptionPane.OK_OPTION);
 				state = OK;
 				return false;
 			}
 
-			if (!exploreNext(path))
+			if (!exploreNext(path)) {
+				Log.debugMessage("Can not explore next element", Level.FINER);
 				return false;
+			}
 		}
 	}
 	
@@ -157,14 +171,43 @@ public class PathBuilder {
 			AbstractSchemePort port = lastPE.getEndAbstractSchemePort();
 			if (port instanceof SchemePort) {
 				SchemeLink link = ((SchemePort)port).getAbstractSchemeLink();
-				if (link == null)
+				if (link == null) {
+					SchemeElement se = port.getParentSchemeDevice().getParentSchemeElement();
+					SchemeElement parentSchemeElement = se;
+					Scheme parentScheme = null;
+					while (parentScheme == null) {
+						parentScheme = se.getParentScheme();
+						if (parentScheme == null) {
+							se = se.getParentSchemeElement();
+						}
+					}
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelScheme.getString("Message.error.path.next_element_1")  //$NON-NLS-1$
+							+ " '" + port.getName() + "' "  //$NON-NLS-1$//$NON-NLS-2$
+							+ LangModelScheme.getString("Message.error.path.next_element_2") //$NON-NLS-1$
+							+ " '" + parentSchemeElement.getName() + "' "  //$NON-NLS-1$ //$NON-NLS-2$
+							+ LangModelScheme.getString("Message.error.path.next_element_3") //$NON-NLS-1$
+							+ " '" + parentScheme.getName() + "'\n"  //$NON-NLS-1$ //$NON-NLS-2$
+							+ LangModelScheme.getString("Message.error.path.unable_continue"), //$NON-NLS-1$
+							LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+							JOptionPane.OK_OPTION);
 					return false;
+				}
 				newPE = createPEbySL(path, link);
 			} else if (port instanceof SchemeCablePort) {
 				SchemeCablePort cport = (SchemeCablePort)port;
 				SchemeCableLink clink = cport.getAbstractSchemeLink();
-				if (clink == null)
+				if (clink == null) {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelScheme.getString("Message.error.path.next_element_1")  //$NON-NLS-1$
+							+ " '" + port.getName() + "' "  //$NON-NLS-1$//$NON-NLS-2$
+							+ LangModelScheme.getString("Message.error.path.next_element_2") //$NON-NLS-1$
+							+ " '" + port.getParentSchemeDevice().getParentSchemeElement().getName() + "'\n"  //$NON-NLS-1$ //$NON-NLS-2$
+							+ LangModelScheme.getString("Message.error.path.unable_continue"), //$NON-NLS-1$
+							LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+							JOptionPane.OK_OPTION);
 					return false;
+				}
 				newPE = createPEbySCL(path, clink);
 			}
 			if (newPE == null)
@@ -201,6 +244,7 @@ public class PathBuilder {
 					}
 				}
 				if (seToAdd == null) {
+					Log.debugMessage("Can not find SE to add", Level.FINER);
 					return false;
 				}
 				PathElement newPE = createPEbySE(path, seToAdd);
@@ -256,6 +300,7 @@ public class PathBuilder {
 			
 			//		нет общих портов
 			if (newStartPort == null) {
+				Log.debugMessage("No mutual ports found", Level.FINER);
 				return null;
 			}
 
@@ -296,7 +341,7 @@ public class PathBuilder {
 			// для предыдущего кабельного линка подходят варианты (для противоположный портов):
 			//	1. 0 портов, 1 кабельный порт
 			//	2. n портов
-			else if (lastPE.getKind() == IdlKind.SCHEME_LINK) {
+			else if (lastPE.getKind() == IdlKind.SCHEME_CABLE_LINK) {
 				if (ports.size() == 0 && cports.size() == 1) { // 1st variant
 					newEndPort = cports.iterator().next();
 				} else if (ports.size() > 0 && cports.size() == 0) { // 2nd variant
@@ -317,7 +362,10 @@ public class PathBuilder {
 		} else {//first element
 			// must be non scheme element
 			if (se.getScheme(false) != null) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Начальным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				LangModelScheme.getString("Message.error.path.starting_scheme"), 
+				LangModelScheme.getString("Message.error"), 
+				JOptionPane.OK_OPTION);
 				return null;
 			}
 
@@ -419,12 +467,14 @@ public class PathBuilder {
 						SchemeCableThread thread = ((SchemePort)lastStartPort).getSchemeCableThread();
 						if (thread == null) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-									"Проверьте коммутацию в элементе " + se.getName(), "Ошибка", JOptionPane.OK_OPTION);
+									LangModelScheme.getString("Message.error.path.commutation") //$NON-NLS-1$
+									+ "\n'" + se.getName() + "'",   //$NON-NLS-1$//$NON-NLS-2$
+									LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+									JOptionPane.OK_OPTION);
 							return null;
 						}
 						if (!thread.getParentSchemeCableLink().equals(link)) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-									"Коммутация в элементе " + se.getName() + "соответствует подключению кабеля " + thread.getParentSchemeCableLink().getName(), "Ошибка", JOptionPane.OK_OPTION);
+							Log.debugMessage("Incorrect commutation at " + se.getName() + " - corresponds cable " + thread.getParentSchemeCableLink().getName(), Level.FINER);
 							return null;
 						}
 						return addCableLink(path, thread);
@@ -437,10 +487,17 @@ public class PathBuilder {
 
 	private static PathElement addCableLink(SchemePath path, SchemeCableThread thread) {
 		if (thread == null) {
-			PathElement pe = path.getPathMembers().last();
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-							"Пожалуйста, проверьте коммутацию в элементе " + pe.getName(),
-							"Ошибка", JOptionPane.OK_OPTION);
+			PathElement pe;
+			try {
+				pe = path.getPathMembers().last();
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+				LangModelScheme.getString("Message.error.path.commutation") //$NON-NLS-1$
+							+ "\n'" + pe.getName() + "'",   //$NON-NLS-1$//$NON-NLS-2$
+							LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+							JOptionPane.OK_OPTION);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
 			return null;
 		}
 

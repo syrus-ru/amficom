@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.13 2005/09/19 13:10:28 stas Exp $
+ * $Id: SchemeResource.java,v 1.14 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -32,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -43,56 +45,71 @@ public class SchemeResource {
 	public static final int SCHEME_PROTO_ELEMENT = 3;
 	
 	private SchemeGraph graph;
-	private SchemeCellContainer object;
+//	private SchemeCellContainer object;
+	private Identifier objectId;
 	private int objectType;
-	private SchemePath schemePath;
+	
+	private static SchemePath schemePath;
+	private static boolean isEditing = false;
 	/**
 	 * Set of AbstractSchemeElements Identifiers
 	 */
-	private SortedSet<Identifier> pmIds;
-	private Identifier pmStartId;
-	private Identifier pmEndId;
+//	private static SortedSet<Identifier> pmIds;
+//	private static Identifier pmStartId;
+	private static Identifier pmEndId;
 
 	public SchemeResource(SchemeGraph graph) {
 		this.graph = graph;
 	}
 
-	public void setSchemePath(SchemePath path) {
-		this.schemePath = path;
+	public static void setSchemePath(SchemePath path, boolean forEdit) {
+		schemePath = path;
+		isEditing = forEdit;
 	}
 	
-	public void setCashedPathStart(Identifier pathMemberId) {
-		this.pmStartId = pathMemberId;
-	}
+//	public static void setCashedPathStart(Identifier pathMemberId) {
+//		pmStartId = pathMemberId;
+//	}
 	
-	public void setCashedPathEnd(Identifier pathMemberId) {
-		this.pmEndId = pathMemberId;
+	public static void setCashedPathEnd(Identifier pathMemberId) {
+		pmEndId = pathMemberId;
 	}
+//	
+//	public static Identifier getCashedPathStart() {
+//		return pmStartId;
+//	}
 	
-	public Identifier getCashedPathStart() {
-		return this.pmStartId;
-	}
-	
-	public Identifier getCashedPathEnd() {
-		return this.pmEndId;
+	public static Identifier getCashedPathEnd() {
+		return pmEndId;
 	}
 	
 	/**
 	 * @param pathMemberIds Set of AbstractSchemeElements Identifiers
 	 */
-	public void setCashedPathMemberIds(SortedSet<Identifier> pathMemberIds) {
-		this.pmIds = pathMemberIds;
-	}
+//	public static void setCashedPathMemberIds(SortedSet<Identifier> pathMemberIds) {
+//		pmIds = pathMemberIds;
+//	}
 	
 	/**
 	 * @return Set of AbstractSchemeElements Identifiers
+	 * @throws ApplicationException 
 	 */
-	public SortedSet<Identifier> getCashedPathElementIds() {
-		return this.pmIds;
-	}
+//	public static SortedSet<Identifier> getCashedPathElementIds() {
+//		return pmIds;
+//	}
 	
-	public SchemeCellContainer getCellContainer() {
-		return this.object;
+	public SchemeCellContainer getCellContainer() throws ApplicationException {
+		if (this.objectType == SCHEME) {
+			return getScheme();
+		}
+		if (this.objectType == SCHEME_ELEMENT) {
+			return getSchemeElement();
+		}
+		if (this.objectType == SCHEME_PROTO_ELEMENT) {
+			return getSchemeProtoElement();
+		}
+		Log.debugMessage("SchemeResource not initialyzed yet", Level.FINEST);
+		return null;
 	}
 	
 	public int getCellContainerType() {
@@ -103,49 +120,57 @@ public class SchemeResource {
 		this.objectType = cellContainerType;
 	}
 
-	public Scheme getScheme() {
-		if (this.objectType == SCHEME)
-			return (Scheme)this.object;
+	public Scheme getScheme() throws ApplicationException {
+		if (this.objectType == SCHEME) {
+			return StorableObjectPool.getStorableObject(objectId, false);
+		}
 		return null;
 	}
 	
 	public void setScheme(Scheme scheme) {
-		this.object = scheme;
+		this.objectId = scheme.getId();
 		this.objectType = SCHEME;
 	}
 	
-	public SchemeElement getSchemeElement() {
-		if (this.objectType == SCHEME_ELEMENT)
-			return (SchemeElement)this.object;
+	public SchemeElement getSchemeElement() throws ApplicationException {
+		if (this.objectType == SCHEME_ELEMENT) {
+			return StorableObjectPool.getStorableObject(objectId, false);
+		}
 		return null;
 	}
 	
-	public SchemeProtoElement getSchemeProtoElement() {
-		if (this.objectType == SCHEME_PROTO_ELEMENT)
-			return (SchemeProtoElement)this.object;
+	public SchemeProtoElement getSchemeProtoElement() throws ApplicationException {
+		if (this.objectType == SCHEME_PROTO_ELEMENT) {
+			return StorableObjectPool.getStorableObject(objectId, false);
+		}
 		return null;
 	}
 	
 	public void setSchemeElement(SchemeElement schemeElement) {
-		this.object = schemeElement;
+		this.objectId = schemeElement.getId();
 		this.objectType = SCHEME_ELEMENT;
 	}
 	
 	public void setSchemeProtoElement(SchemeProtoElement schemeProtoElement) {
-		this.object = schemeProtoElement;
+		this.objectId = Identifier.possiblyVoid(schemeProtoElement);
 		this.objectType = SCHEME_PROTO_ELEMENT;
 	}
 	
-	public SchemePath getSchemePath() {
-		return this.schemePath;
+	public static SchemePath getSchemePath() {
+		return schemePath;
 	}
 	
-	private void updateObject() {
-		SchemeImageResource ir = this.object.getUgoCell();
+	public static boolean isPathEditing() {
+		return isEditing;
+	}
+	
+	private void updateObject() throws ApplicationException {
+		SchemeCellContainer cellContainer = this.getCellContainer();
+		SchemeImageResource ir = cellContainer.getUgoCell();
 		if (ir == null) {
 			try {
 				ir = SchemeObjectsFactory.createSchemeImageResource();
-				this.object.setUgoCell(ir);
+				cellContainer.setUgoCell(ir);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 				return;
@@ -154,19 +179,19 @@ public class SchemeResource {
 		ir.setData((List)this.graph.getArchiveableState(this.graph.getRoots()));
 	}
 	
-	public void updateScheme() {
+	public void updateScheme() throws ApplicationException {
 		if (this.objectType == SCHEME) {
 			updateObject();
 		}
 	}
 	
-	public void updateSchemeElement() {
+	public void updateSchemeElement() throws ApplicationException {
 		if (this.objectType == SCHEME_ELEMENT) {
 			updateObject();
 		}
 	}
 	
-	public void updateSchemeProtoElement() {
+	public void updateSchemeProtoElement() throws ApplicationException {
 		if (this.objectType == SCHEME_PROTO_ELEMENT) {
 			updateObject();
 		}
@@ -175,27 +200,34 @@ public class SchemeResource {
 	public Object[] getPathElements(SchemePath path) {
 		Object[] cells = this.graph.getRoots();
 		List<Object> new_cells = new ArrayList<Object>();
+		SortedSet<Identifier> pmIds = null;
 		
-		if (this.pmIds == null) {
-			Set<PathElement> pes = path.getPathMembers();	
-			this.pmIds = new TreeSet<Identifier>();
+		if (pmIds == null) {
+			Set<PathElement> pes;
+			try {
+				pes = path.getPathMembers();
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+				return new Object[0];
+			}	
+			pmIds = new TreeSet<Identifier>();
 			for(PathElement pe : pes) {
-				this.pmIds.add(pe.getAbstractSchemeElement().getId());
+				pmIds.add(pe.getAbstractSchemeElement().getId());
 			}
 		}
 
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] instanceof DefaultCableLink) {
 				DefaultCableLink cable = (DefaultCableLink) cells[i];
-				if (this.pmIds.contains(cable.getSchemeCableLinkId()))
+				if (pmIds.contains(cable.getSchemeCableLinkId()))
 					new_cells.add(cable);
 			} else if (cells[i] instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink) cells[i];
-				if (this.pmIds.contains(link.getSchemeLinkId()))
+				if (pmIds.contains(link.getSchemeLinkId()))
 					new_cells.add(link);
 			} else if (cells[i] instanceof DeviceGroup) {
 				DeviceGroup group = (DeviceGroup) cells[i];
-				if (this.pmIds.contains(group.getElementId()))
+				if (pmIds.contains(group.getElementId()))
 					new_cells.add(group);
 			}
 		}

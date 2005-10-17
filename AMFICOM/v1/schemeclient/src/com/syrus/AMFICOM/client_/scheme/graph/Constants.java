@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.11 2005/10/12 10:07:27 stas Exp $
+ * $Id: Constants.java,v 1.12 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/10/12 10:07:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -73,6 +73,7 @@ public interface Constants {
 	public static final Icon ICON_SCHEME_SIZE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/sheme_size.gif")); //$NON-NLS-1$
 	public static final Icon ICON_LINK_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/linkmode.gif")); //$NON-NLS-1$
 	public static final Icon ICON_PATH_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/pathmode.gif")); //$NON-NLS-1$
+	public static final Icon ICON_RACK_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rack.gif")); //$NON-NLS-1$
 	public static final Icon ICON_TOP_LEVEL_MODE = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")); //$NON-NLS-1$
 	
 	public static final String RECTANGLE = "rectangle"; //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateSchemeReportCommand.java,v 1.8 2005/10/12 10:10:50 stas Exp $
+ * $Id: CreateSchemeReportCommand.java,v 1.9 2005/10/17 14:59:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,12 +27,14 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
+import com.syrus.util.Log;
 
 public class CreateSchemeReportCommand extends AbstractCommand {
 	private final ApplicationContext aContext;
@@ -48,16 +50,20 @@ public class CreateSchemeReportCommand extends AbstractCommand {
 	
 		java.util.Map<Object,Object> reportData = new HashMap<Object,Object>();
 	
-		SchemeResource res = this.pane.getCurrentPanel().getSchemeResource();
-		if (res.getCellContainerType() == SchemeResource.SCHEME) {
-			Scheme scheme = res.getScheme();
-			reportData.put(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER, scheme);	
-		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-			SchemeElement schemeElement = res.getSchemeElement();
-			reportData.put(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER, schemeElement);
-		} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
-			SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
-			reportData.put(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER, schemeProtoElement);
+		try {
+			SchemeResource res = this.pane.getCurrentPanel().getSchemeResource();
+			if (res.getCellContainerType() == SchemeResource.SCHEME) {
+				Scheme scheme = res.getScheme();
+				reportData.put(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER, scheme);	
+			} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+				SchemeElement schemeElement = res.getSchemeElement();
+				reportData.put(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER, schemeElement);
+			} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
+				SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
+				reportData.put(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER, schemeProtoElement);
+			}
+		} catch (ApplicationException e1) {
+			Log.errorException(e1);
 		}
 		
 		SchemeGraph graph = this.pane.getGraph();

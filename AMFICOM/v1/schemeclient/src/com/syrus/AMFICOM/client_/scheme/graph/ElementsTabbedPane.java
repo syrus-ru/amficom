@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.17 2005/10/12 10:08:40 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.18 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -85,7 +85,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	protected JComponent createPanel() {
 		this.panel = new ElementsPanel(this.aContext);
 		SchemeGraph graph = this.panel.getGraph();
-		graph.setMode(Constants.PROTO_MODE);
+		SchemeGraph.setMode(Constants.PROTO_MODE);
 		graph.setMarqueeHandler(this.marqueeHandler);
 		graph.addKeyListener(this.keyListener);
 		JScrollPane graphView = new JScrollPane(graph);
@@ -152,15 +152,19 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	
 	@Override
 	public boolean hasUnsavedChanges(UgoPanel p) {
-		if (p instanceof ElementsPanel) {
-			SchemeResource res = ((ElementsPanel)p).getSchemeResource();
-			boolean b = false;
-			if (res.getCellContainerType() == SchemeResource.SCHEME && res.getScheme().isChanged()) {
-				b = true;
-			} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT && res.getSchemeElement().isChanged()) {
-				b = true;
+		try {
+			if (p instanceof ElementsPanel) {
+				SchemeResource res = ((ElementsPanel)p).getSchemeResource();
+				boolean b = false;
+				if (res.getCellContainerType() == SchemeResource.SCHEME && res.getScheme().isChanged()) {
+					b = true;
+				} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT && res.getSchemeElement().isChanged()) {
+					b = true;
+				}
+				return b || p.getGraph().isGraphChanged();
 			}
-			return b || p.getGraph().isGraphChanged();
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 		return super.hasUnsavedChanges(p);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CablePortCell.java,v 1.14 2005/10/12 10:08:41 stas Exp $
+ * $Id: CablePortCell.java,v 1.15 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -28,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 

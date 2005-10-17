@@ -68,27 +68,32 @@ public class ComponentSaveCommand extends AbstractCommand {
 		}
 
 		SchemeProtoElement proto = null;
-		if (this.cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement() != null) {
-			proto = this.cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
-		} else {
-			// check if the olny DeviceGroup exists
-			DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
-			if (groups.length > 1) {
-				JOptionPane.showMessageDialog(
-						Environment.getActiveWindow(),
-						LangModelScheme.getString("Message.error.compound_component"), //$NON-NLS-1$
-						LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
-						JOptionPane.OK_OPTION);
-				return;
+		try {
+			if (this.cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement() != null) {
+				proto = this.cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
+			} else {
+				// check if the olny DeviceGroup exists
+				DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
+				if (groups.length > 1) {
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							LangModelScheme.getString("Message.error.compound_component"), //$NON-NLS-1$
+							LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
+							JOptionPane.OK_OPTION);
+					return;
+				}
+				if ((status & SchemeActions.SCHEME_HAS_LINK) != 0) {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelScheme.getString("Message.error.simple_component_link"),  //$NON-NLS-1$
+							LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+							JOptionPane.OK_OPTION);
+					return;
+				}
+				proto = groups[0].getProtoElement();
 			}
-			if ((status & SchemeActions.SCHEME_HAS_LINK) != 0) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						LangModelScheme.getString("Message.error.simple_component_link"),  //$NON-NLS-1$
-						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
-						JOptionPane.OK_OPTION);
-				return;
-			}
-			proto = groups[0].getProtoElement();
+		} catch (ApplicationException e1) {
+			Log.errorException(e1);
+			return;
 		}
 
 //		if (proto.getProtoEquipment() == null) {

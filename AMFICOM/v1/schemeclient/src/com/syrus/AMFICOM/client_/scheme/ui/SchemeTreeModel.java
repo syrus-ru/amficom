@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.45 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.46 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,13 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.45 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.46 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -26,6 +27,8 @@ import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
+import com.syrus.AMFICOM.filterclient.SchemeConditionWrapper;
+import com.syrus.AMFICOM.filterclient.SchemeElementConditionWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
@@ -37,6 +40,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -231,21 +235,31 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						if (!contents.contains(SchemeResourceKeys.SCHEME) && has_schemes) {
 							LinkedIdsCondition condition1 = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
 							// FIXME add TypicalCondition
+//							TypicalCondition condition2 = new TypicalCondition(IdlSchemeElementKind._SCHEME_CONTAINER, 
+//									OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEMEELEMENT_CODE, SchemeElementWrapper.COLUMN_KIND);
+//							CompoundCondition condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
+							
 							FiltrableIconedNode child = new FiltrableIconedNode();
 							child.setChildrenFactory(this);
 							child.setObject(SchemeResourceKeys.SCHEME);
 							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME));
 							child.setDefaultCondition(condition1);
+							child.setFilter(new Filter(new SchemeElementConditionWrapper()));
 							node.addChild(child);
 						}
 						if (!contents.contains(SchemeResourceKeys.SCHEME_ELEMENT) && has_elements) {
 							LinkedIdsCondition condition1 = new LinkedIdsCondition(s.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
 							// FIXME add TypicalCondition
+//							TypicalCondition condition2 = new TypicalCondition(IdlSchemeElementKind._SCHEME_ELEMENT_CONTAINER, 
+//									OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEMEELEMENT_CODE, SchemeElementWrapper.COLUMN_KIND);
+//							CompoundCondition condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
+
 							FiltrableIconedNode child = new FiltrableIconedNode();
 							child.setChildrenFactory(this);
 							child.setObject(SchemeResourceKeys.SCHEME_ELEMENT);
 							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_ELEMENT));
 							child.setDefaultCondition(condition1);
+							child.setFilter(new Filter(new SchemeElementConditionWrapper()));
 							node.addChild(child);
 						}
 						if (!contents.contains(SchemeResourceKeys.SCHEME_LINK) && !s.getSchemeLinks(false).isEmpty()) {
@@ -264,6 +278,8 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 							child.setObject(SchemeResourceKeys.SCHEME_CABLELINK);
 							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK));
 							child.setDefaultCondition(condition);
+							//XXX
+//							child.setFilter(new Filter(new SchemeCableLinkConditionWrapper()));
 							node.addChild(child);
 						}
 						if (!contents.contains(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION) && !s.getSchemeMonitoringSolutions(false).isEmpty()) {
@@ -372,19 +388,34 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 	
 	private void createSchemeKinds(Item node, Collection contents) {
 		for (int i = 0; i < schemeTypes.length; i++) {
-			if (!contents.contains(schemeTypes[i]))
-				node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+			if (!contents.contains(schemeTypes[i])) {
+				TypicalCondition condition1 = new TypicalCondition(String.valueOf(schemeTypes[i].value()), 
+						OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
+						SchemeWrapper.COLUMN_KIND);
+
+				FiltrableIconedNode child = new FiltrableIconedNode();
+				child.setChildrenFactory(this);
+				child.setObject(schemeTypes[i]);
+				child.setName(schemeTypeNames[i]);
+				child.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
+				child.setDefaultCondition(condition1);
+				child.setFilter(new Filter(new SchemeConditionWrapper()));
+				node.addChild(child);
+			}
 		}
 	}
 	
 	private void createSchemes(Item node, Collection<Object> contents) {
-		IdlKind type = (IdlKind) node.getObject();
-		
 		try {
-			TypicalCondition condition = new TypicalCondition(String.valueOf(type.value()), 
-					OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
-					SchemeWrapper.COLUMN_KIND);
-			Set<StorableObject> schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition(); 
+			Set<StorableObject> schemes = new HashSet<StorableObject>(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+
+			for (Iterator it = schemes.iterator(); it.hasNext();) {
+				Scheme sc = (Scheme) it.next();
+				if (sc.getParentSchemeElement() != null) {
+					it.remove();
+				}
+			}
 			
 			Collection toAdd = super.getObjectsToAdd(schemes, contents);
 			Collection<Item> toRemove = super.getItemsToRemove(schemes, node.getChildren());
@@ -394,9 +425,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
 				Scheme sc = (Scheme) it.next();
-				if (sc.getParentSchemeElement() == null) {
-					node.addChild(new PopulatableIconedNode(this, sc, UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME)));
-				}
+				node.addChild(new PopulatableIconedNode(this, sc, UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME)));
 			}
 		} 
 		catch (ApplicationException ex1) {

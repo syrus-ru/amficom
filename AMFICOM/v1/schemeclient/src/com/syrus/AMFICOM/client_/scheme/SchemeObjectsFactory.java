@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.46 2005/10/12 10:08:40 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.47 2005/10/17 14:59:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.46 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.47 $, $Date: 2005/10/17 14:59:14 $
  * @module schemeclient
  */
 
@@ -511,7 +511,12 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static TransmissionPath createTransmissionPath(SchemePath path, TransmissionPathType type) throws CreateObjectException {
-		SortedSet<PathElement> pathMembers = path.getPathMembers();
+		SortedSet<PathElement> pathMembers;
+		try {
+			pathMembers = path.getPathMembers();
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e);
+		}
 		AbstractSchemePort startPort = pathMembers.first().getEndAbstractSchemePort();
 		assert startPort != null;
 		AbstractSchemePort endPort = pathMembers.last().getStartAbstractSchemePort();

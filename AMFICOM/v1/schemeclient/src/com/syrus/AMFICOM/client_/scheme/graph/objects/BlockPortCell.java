@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.10 2005/10/03 07:44:39 stas Exp $
+ * $Id: BlockPortCell.java,v 1.11 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,10 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.Map;
 
-import javax.swing.UIDefaults;
-import javax.swing.UIManager;
-
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
@@ -29,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 

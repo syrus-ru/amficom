@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.24 2005/10/08 13:49:04 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.25 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,13 +44,14 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/10/08 13:49:04 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -121,8 +122,20 @@ public class SchemeTreeUI extends IconedTreeUI {
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}
-						}
-						else if (object instanceof SchemeProtoElement) {
+						} else if (object instanceof SchemePath) {
+							try {
+								SchemePath path = (SchemePath)object;
+								Set<Identifiable> ids = path.getReverseDependencies(false);
+								
+								SchemeTreeUI.this.aContext.getDispatcher().firePropertyChange(
+										new SchemeEvent(this, path.getId(), SchemeEvent.DELETE_OBJECT));
+								
+								StorableObjectPool.delete(ids);
+								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
+							}
+						} else if (object instanceof SchemeProtoElement) {
 							try {
 								SchemeProtoElement proto = (SchemeProtoElement)object;
 								Set<Identifiable> ids = proto.getReverseDependencies(false);

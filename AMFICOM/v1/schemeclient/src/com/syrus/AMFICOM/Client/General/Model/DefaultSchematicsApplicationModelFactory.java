@@ -19,7 +19,7 @@ public class DefaultSchematicsApplicationModelFactory
 		aModel.setVisible("menuSessionUndo", false);
 		aModel.setVisible("menuSessionOptions", false);
 		
-		aModel.setVisible("menuPathSave", false);
+//		aModel.setVisible("menuPathSave", false);
 		aModel.setVisible("menuPathEdit", false);
 		aModel.setVisible("menuPathAddStart", false);
 		aModel.setVisible("menuPathAddEnd", false);
@@ -27,7 +27,7 @@ public class DefaultSchematicsApplicationModelFactory
 		aModel.setVisible("menuPathRemoveLink", false);
 		aModel.setVisible("menuPathAutoCreate", false);
 		aModel.setVisible("menuPathDelete", false);
-		aModel.setVisible("menuPathCancel", false);
+//		aModel.setVisible("menuPathCancel", false);
 		
 		aModel.setVisible("menuSchemeLoad", false);
 //		aModel.setVisible("menuSchemeSaveAs", false);

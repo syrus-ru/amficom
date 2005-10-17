@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.11 2005/09/29 05:59:38 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.12 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/29 05:59:38 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -121,8 +121,8 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			type = ObjectSelectedEvent.SCHEME_PORT;
 		else if (object instanceof SchemeCablePort)
 			type = ObjectSelectedEvent.SCHEME_CABLEPORT;
-		else if (object instanceof Result)
-			type = ObjectSelectedEvent.RESULT;
+		else if (object instanceof Measurement)
+			type = ObjectSelectedEvent.MEASUREMENT;
 		else if (object instanceof String || object instanceof IdlKind) {
 			type = ObjectSelectedEvent.OTHER_OBJECT;
 			if (manager != null)
@@ -130,6 +130,9 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 		} else {
 			Log.debugMessage(this.getClass().getName() + " | Unsupported tree object type " + object, Level.FINER); //$NON-NLS-1$
 			return;
+		}
+		if (this.treeUI.isLinkObjects()) {
+			type += ObjectSelectedEvent.INSURE_VISIBLE;
 		}
 		ObjectSelectedEvent ev = new ObjectSelectedEvent(this, object, manager, type);
 		this.aContext.getDispatcher().firePropertyChange(ev, false);

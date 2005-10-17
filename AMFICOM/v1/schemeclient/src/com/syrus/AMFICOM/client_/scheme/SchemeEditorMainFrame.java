@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.28 2005/10/12 10:08:40 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.29 2005/10/17 14:59:14 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.28 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/17 14:59:14 $
  * @module schemeclient
  */
 
@@ -32,7 +32,9 @@ import javax.swing.WindowConstants;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ConfigImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.CreateSchemeReportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.PathCancelCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.PathSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ProtoElementsExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ProtoElementsImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeExportCommand;
@@ -239,6 +241,9 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		// TODO разобраться с созданием пути
 		
 		aModel.setCommand("menuPathNew", new PathNewCommand(this.schemeTab));
+		aModel.setCommand("menuPathSave", new PathSaveCommand(this.schemeTab));
+		aModel.setCommand("menuPathCancel", new PathCancelCommand(this.schemeTab));
+		
 		/*aModel.setCommand("menuPathEdit", new PathEditCommand(aContext, schemeTab));
 		aModel.setCommand("menuPathAddStart", new PathSetStartCommand(aContext,
 				schemeTab));
@@ -252,9 +257,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setCommand("menuPathAutoCreate", new PathAutoCreateCommand(aContext,
 				schemeTab.getPanel()));
 
-		aModel.setCommand("menuPathSave", new PathSaveCommand(aContext, schemeTab));
-		aModel.setCommand("menuPathCancel", new PathCancelCommand(aContext,
-				schemeTab));
+		
 		aModel.setCommand("menuPathDelete", new PathDeleteCommand(aContext,
 				schemeTab));*/
 

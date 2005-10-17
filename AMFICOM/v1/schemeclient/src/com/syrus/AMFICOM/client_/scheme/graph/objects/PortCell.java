@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.13 2005/10/12 10:08:41 stas Exp $
+ * $Id: PortCell.java,v 1.14 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.jgraph.graph.DefaultPort;
@@ -30,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 

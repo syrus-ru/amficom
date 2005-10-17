@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -33,6 +35,7 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 	
 	ApplicationContext aContext;
 	SchemeTabbedPane schemeTab;
+	private Set<Scheme> childSchemes = new HashSet<Scheme>();
 
 	public SchemeSaveAsCommand(ApplicationContext aContext,
 			SchemeTabbedPane schemeTab) {
@@ -92,14 +95,14 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 			if (name == null) {
 				return;
 			}
-			Scheme scheme = res.getScheme();
-			
+						
 			try {
-				Scheme clone = scheme.clone();
-				clone.setName(name);
-				Map<Identifier, Identifier> clonedIds = clone.getClonedIdMap();
+				Scheme scheme1 = res.getScheme();
+				Scheme scheme = scheme1.clone();
+				scheme.setName(name);
+				Map<Identifier, Identifier> clonedIds = scheme.getClonedIdMap();
 				
-				SchemeImageResource schemeIr = clone.getSchemeCell();
+				SchemeImageResource schemeIr = scheme.getSchemeCell();
 				if (schemeIr == null) {
 					schemeIr = SchemeObjectsFactory.createSchemeImageResource();
 				}
@@ -112,37 +115,34 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 				
 				SchemeActions.writeClonedIds(invisibleGraph, schemeIr, clonedIds);
 				
-				SchemeImageResource ugoIr = clone.getUgoCell();
+				SchemeImageResource ugoIr = scheme.getUgoCell();
 				if (ugoIr != null) {
 					SchemeActions.writeClonedIds(invisibleGraph, ugoIr, clonedIds);
 				}
 				
 				// write clonedIds to all schemeImages
-				// TODO getSchemeElementsRecursievely
-				for (SchemeElement schemeElement : clone.getSchemeElements(false)) {
-					SchemeImageResource seSchemeCell = schemeElement.getSchemeCell();
-					if (seSchemeCell != null) {
-						SchemeActions.writeClonedIds(invisibleGraph, seSchemeCell, clonedIds);
-					}
-					SchemeImageResource seUgoCell = schemeElement.getSchemeCell();
-					if (seUgoCell != null) {
-						SchemeActions.writeClonedIds(invisibleGraph, seUgoCell, clonedIds);
-					}
+				this.childSchemes.clear();
+				for (SchemeElement schemeElement : scheme.getSchemeElements(false)) {
+					writeIdsToCloneAndChildren(schemeElement, invisibleGraph, clonedIds);
 				}
 
 				Identifier userId = LoginManager.getUserId();
+				scheme.setParentSchemeElement(null, false);
 				StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
+				for (Scheme child : this.childSchemes) {
+					StorableObjectPool.flush(child.getReverseDependencies(false), userId, false);
+				}
 				
-				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, clone.getId(), SchemeEvent.CREATE_OBJECT));
+				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.CREATE_OBJECT));
 				
-				if (clone.getUgoCell() == null) {
+				if (scheme.getUgoCell() == null) {
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-							clone.getName() + " " + LangModelScheme.getString("Message.information.no_ugo"),  //$NON-NLS-1$ //$NON-NLS-2$
+							scheme.getName() + " " + LangModelScheme.getString("Message.information.no_ugo"),  //$NON-NLS-1$ //$NON-NLS-2$
 							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 							JOptionPane.INFORMATION_MESSAGE);					
 				} else {
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-							clone.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
+							scheme.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
 							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 							JOptionPane.INFORMATION_MESSAGE);
 				}
@@ -168,5 +168,41 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 		}
 	}
 	
+	/*void writeIdsToCloneAndChildren(Scheme scheme, SchemeGraph graph, Map<Identifier, Identifier> clonedIds) throws ApplicationException {
+		SchemeImageResource seSchemeCell = scheme.getSchemeCell();
+		if (seSchemeCell != null) {
+			SchemeActions.writeClonedIds(graph, seSchemeCell, clonedIds);
+		}
+		SchemeImageResource seUgoCell = scheme.getSchemeCell();
+		if (seUgoCell != null) {
+			SchemeActions.writeClonedIds(graph, seUgoCell, clonedIds);
+		}
+		for (SchemeElement child : scheme.getSchemeElements(false)) {
+			writeIdsToCloneAndChildren(child, graph, clonedIds);
+		}
+	}*/
+	
+	void writeIdsToCloneAndChildren(SchemeElement schemeElement, SchemeGraph graph, Map<Identifier, Identifier> clonedIds) throws ApplicationException {
+		SchemeImageResource seSchemeCell = schemeElement.getSchemeCell();
+		if (seSchemeCell != null) {
+			SchemeActions.writeClonedIds(graph, seSchemeCell, clonedIds);
+		}
+		SchemeImageResource seUgoCell = schemeElement.getSchemeCell();
+		if (seUgoCell != null) {
+			SchemeActions.writeClonedIds(graph, seUgoCell, clonedIds);
+		}
+		
+		/*
+		Scheme scheme = schemeElement.getScheme(false);
+		if (scheme != null) {
+			this.childSchemes.add(scheme);
+			writeIdsToCloneAndChildren(scheme, graph, clonedIds);
+		}
+		*/
+		
+		for (SchemeElement child : schemeElement.getSchemeElements(false)) {
+			writeIdsToCloneAndChildren(child, graph, clonedIds);
+		}
+	}
 	
 }

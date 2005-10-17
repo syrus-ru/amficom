@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.18 2005/10/12 10:08:40 stas Exp $
+ * $Id: SchemeGraph.java,v 1.19 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.logging.Level;
 
 import javax.swing.tree.TreeNode;
@@ -27,7 +26,6 @@ import javax.swing.tree.TreeNode;
 import com.jgraph.graph.CellMapper;
 import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultGraphCell;
-import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.Edge;
 import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.GraphConstants;
@@ -41,19 +39,20 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.LinkView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.Rack;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.RackView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeEllipseView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.util.Log;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/10/12 10:08:40 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -72,7 +71,7 @@ public class SchemeGraph extends GPGraph {
 	/**
 	 * trigger between path selection modes
 	 */
-	private String mode = Constants.LINK_MODE;
+	private static String mode = Constants.LINK_MODE;
 
 	public SchemeGraph(ApplicationContext aContext) {
 		this(null, aContext);
@@ -232,14 +231,19 @@ public class SchemeGraph extends GPGraph {
 			UgoPanel panel = marqee.pane.getCurrentPanel();
 			if (panel instanceof ElementsPanel) {
 				SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
-				if (res.getSchemePath() != null) {
+				if (SchemeResource.getSchemePath() != null) {
 					this.notifying = false;
 					return;
 				}
-				else if (res.getCellContainer() != null) {
-					Notifier.notify(this, this.aContext, res.getCellContainer());
-					this.notifying = false;
-					return;
+				try {
+					SchemeCellContainer cellContainer = res.getCellContainer(); 
+					if (cellContainer != null) {
+						Notifier.notify(this, this.aContext, cellContainer);
+						this.notifying = false;
+						return;
+					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 			}
 		}
@@ -263,6 +267,13 @@ public class SchemeGraph extends GPGraph {
 	public void setSelectionCell(Object cell) {
 		if (!this.notifying)
 			super.setSelectionCell(cell);
+	}
+	
+	public void insureSelectionVisible() {
+		Object cell = getSelectionCell();
+		if (cell != null) {
+			scrollCellToVisible(cell);
+		}
 	}
 	
 	@Override
@@ -426,9 +437,8 @@ public class SchemeGraph extends GPGraph {
 					GraphActions.move(this, cloned_cells, p, isCenterPoint);
 				}
 				return clones;
-			} else {
-				Log.debugMessage("Try open empty cell", Level.FINER);
 			}
+			Log.debugMessage("Try open empty cell", Level.FINER);
 		}
 		return null;
 	}
@@ -467,11 +477,11 @@ public class SchemeGraph extends GPGraph {
 	public boolean isGraphChanged() {
 		return this.graphChanged;
 	}
-	public void setMode(String mode) {
-		this.mode = mode;
+	public static void setMode(String mode1) {
+		mode = mode1;
 	}
-	public String getMode() {
-		return this.mode;
+	public static String getMode() {
+		return mode;
 	}
 	public void setMakeNotifications(boolean make_notifications) {
 		this.make_notifications = make_notifications;

@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.27 2005/10/08 13:49:03 stas Exp $
+ * $Id: DeleteAction.java,v 1.28 2005/10/17 14:59:15 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2005/10/08 13:49:03 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/17 14:59:15 $
  * @module schemeclient
  */
 
@@ -136,6 +136,7 @@ public class DeleteAction extends AbstractAction {
 		
 		cells = DefaultGraphModel.getDescendants(graph.getModel(), cellsToDelete.toArray()).toArray();
 		cellsToDelete.clear();
+		graph.clearSelection();
 		graph.getModel().remove(cells);
 	}
 	
@@ -219,6 +220,7 @@ public class DeleteAction extends AbstractAction {
 	static void deleteScheme(Scheme scheme) {
 		try {
 			SchemeElement se = scheme.getParentSchemeElement();
+			scheme.setParentSchemeElement(null, false);
 			if (se != null) {
 				objectsToDelete.add(se.getId());
 			}
@@ -309,8 +311,8 @@ public class DeleteAction extends AbstractAction {
 				Scheme scheme = group.getScheme();
 				deleteScheme(scheme);
 			}
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+		} catch (final Exception ae) {
+			Log.errorException(ae);
 		}
 	}
 	
