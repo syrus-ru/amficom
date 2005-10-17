@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.43 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeActions.java,v 1.44 2005/10/17 15:10:13 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.43 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/17 15:10:13 $
  * @module schemeclient
  */
 
@@ -1078,31 +1078,12 @@ public class SchemeActions {
 		}
 		
 		SchemeCablePort sp;
-		assert sl == StorableObjectPool.getStorableObject(sl.getId(), true) : sl;
 		if (is_source) {
 			sp = sl.getSourceAbstractSchemePort();
 			sl.setSourceAbstractSchemePort(null);
-			assert sl.getSourceAbstractSchemePort() == null;
-			if (sp != null) {
-				assert sp == StorableObjectPool.getStorableObject(sp.getId(), true) : sp;
-				final SchemeCableLink sl3 = sp.getAbstractSchemeLink();
-				if (sl.equals(sl3)) {
-					System.err.println(sl + ": " + (sl == StorableObjectPool.getStorableObject(sl.getId(), true)));
-					System.err.println(sl3 + ": " + (sl3 == StorableObjectPool.getStorableObject(sl3.getId(), true)));
-					System.err.println(sl3.getSourceAbstractSchemePort());
-				}
-			}
 		} else {
 			sp = sl.getTargetAbstractSchemePort();
-			Log.debugMessage("Cable " + sl + " connected to port " + sp + "; disconnecting...", Level.FINER);
 			sl.setTargetAbstractSchemePort(null);
-			assert sl.getTargetAbstractSchemePort() == null;
-			if (sp != null) {
-				assert sp == StorableObjectPool.getStorableObject(sp.getId(), true) : sp;
-				assert sp.getAbstractSchemeLink() == null;
-				SchemeCableLink sl2 = sp.getAbstractSchemeLink();
-				Log.debugMessage("Now port " + sp + " has connected link " + sl2, Level.FINER);
-			}
 		}
 
 		if (sp != null) {
