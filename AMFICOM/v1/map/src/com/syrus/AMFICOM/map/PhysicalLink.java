@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.140 2005/10/16 16:44:30 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.141 2005/10/17 06:59:33 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
@@ -61,6 +63,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLink;
+import com.syrus.AMFICOM.map.xml.XmlPipeBlock;
+import com.syrus.AMFICOM.map.xml.XmlPipeBlockSeq;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
@@ -73,7 +77,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.140 $, $Date: 2005/10/16 16:44:30 $
+ * @version $Revision: 1.141 $, $Date: 2005/10/17 06:59:33 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -887,6 +891,16 @@ public class PhysicalLink extends StorableObject
 		if(this.building != null && this.building.length() != 0) {
 			physicalLink.setBuilding(this.building);
 		}
+		if (physicalLink.isSetPipeBlocks()) {
+			physicalLink.unsetPipeBlocks();
+		}
+		final SortedSet<PipeBlock> pipeBlocks = this.binding.getPipeBlocks();
+		if (!pipeBlocks.isEmpty()) {
+			final XmlPipeBlockSeq pipeBlockSeq = physicalLink.addNewPipeBlocks();
+			for (final PipeBlock pipeBlock : pipeBlocks) {
+				pipeBlock.getXmlTransferable(pipeBlockSeq.addNewPipeBlock(), importType, usePool);
+			}
+		}
 	}
 
 	/**
@@ -963,7 +977,13 @@ public class PhysicalLink extends StorableObject
 		
 		this.physicalLinkType = physicalLinkTypes.iterator().next();
 
-		this.binding = new PhysicalLinkBinding(null);
+		SortedSet<PipeBlock> pipeBlocks = new TreeSet<PipeBlock>();
+		if(xmlPhysicalLink.isSetPipeBlocks()) {
+			for (final XmlPipeBlock xmlPipeBlock : xmlPhysicalLink.getPipeBlocks().getPipeBlockArray()) {
+				pipeBlocks.add(PipeBlock.createInstance(this.creatorId, importType, xmlPipeBlock));
+			}
+		}
+		this.binding = new PhysicalLinkBinding(pipeBlocks);
 	}
 
 	/**
