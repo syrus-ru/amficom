@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.53 2005/09/29 11:34:11 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.54 2005/10/17 14:43:20 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,9 +37,9 @@ import com.syrus.util.Log;
 /**
  * Элемент пути.
  *
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.53 $, $Date: 2005/09/29 11:34:11 $
+ * @version $Revision: 1.54 $, $Date: 2005/10/17 14:43:20 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -302,8 +302,9 @@ public final class MeasurementPath implements MapElement {
 	 * Возвращает топологическую длинну в метрах
 	 * 
 	 * @return топологическая длина
+	 * @throws ApplicationException
 	 */
-	public double getLengthLt() {
+	public double getLengthLt() throws ApplicationException {
 		double length = 0;
 		for (final CablePath cablePath : this.getSortedCablePaths()) {
 			length = length + cablePath.getLengthLt();
@@ -315,8 +316,9 @@ public final class MeasurementPath implements MapElement {
 	 * Возвращает физическую длину в метрах.
 	 * 
 	 * @return физическая длина
+	 * @throws ApplicationException	
 	 */
-	public double getLengthLf() {
+	public double getLengthLf() throws ApplicationException {
 		return SchemeUtils.getPhysicalLength(this.schemePath);
 	}
 
@@ -324,8 +326,9 @@ public final class MeasurementPath implements MapElement {
 	 * Возвращает оптическую длину в метрах.
 	 * 
 	 * @return оптическая длина
+	 * @throws ApplicationException
 	 */
-	public double getLengthLo() {
+	public double getLengthLo() throws ApplicationException {
 		return SchemeUtils.getOpticalLength(this.schemePath);
 	}
 

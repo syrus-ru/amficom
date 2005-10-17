@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.71 2005/10/12 13:05:01 krupenn Exp $
+* $Id: MapView.java,v 1.72 2005/10/17 14:43:20 bass Exp $
 *
 * Copyright њ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -59,9 +59,9 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.71 $, $Date: 2005/10/12 13:05:01 $
+ * @version $Revision: 1.72 $, $Date: 2005/10/17 14:43:20 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -786,8 +786,9 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param abstractNode
 	 *        узел
 	 * @return список топологических путей
+	 * @throws ApplicationException
 	 */
-	public List<MeasurementPath> getMeasurementPaths(final AbstractNode abstractNode) {
+	public List<MeasurementPath> getMeasurementPaths(final AbstractNode abstractNode) throws ApplicationException {
 		final LinkedList<MeasurementPath> returnVector = new LinkedList<MeasurementPath>();
 		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
 			for (final CablePath cablePath : measurementPath.getSortedCablePaths()) {
