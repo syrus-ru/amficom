@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.14 2005/09/22 15:17:35 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.15 2005/10/17 07:42:15 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/09/22 15:17:35 $
+ * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2005/10/17 07:42:15 $
  * @module scheme
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -132,6 +132,10 @@ final class TypicalConditionImpl extends TypicalCondition {
 			wrapper = SchemeMonitoringSolutionWrapper.getInstance();
 		} else if (storableObject instanceof Scheme) {
 			wrapper = SchemeWrapper.getInstance();
+		} else if (storableObject instanceof SchemeElement) {
+			wrapper = SchemeElementWrapper.getInstance();
+		} else if (storableObject instanceof SchemeCableLink) {
+			wrapper = SchemeCableLinkWrapper.getInstance();
 		} else {
 			throw new IllegalObjectEntityException(ERROR_ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
