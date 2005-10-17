@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.46 2005/10/12 10:03:32 bass Exp $
+# $Id: Makefile,v 1.47 2005/10/17 07:45:33 max Exp $
 #
 # vim:set ft=make:
 #
@@ -85,23 +85,7 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_SCHEMEXML): 
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/CableChannelingItem.xsd \
-		$(XMLDIR)/PathElement.xsd \
-		$(XMLDIR)/Scheme.xsd \
-		$(XMLDIR)/SchemeCableLink.xsd \
-		$(XMLDIR)/SchemeCablePort.xsd \
-		$(XMLDIR)/SchemeCableThread.xsd \
-		$(XMLDIR)/SchemeDevice.xsd \
-		$(XMLDIR)/SchemeElement.xsd \
-		$(XMLDIR)/SchemeLink.xsd \
-		$(XMLDIR)/SchemeMonitoringSolution.xsd \
-		$(XMLDIR)/SchemeOptimizeInfo.xsd \
-		$(XMLDIR)/SchemeOptimizeInfoRtu.xsd \
-		$(XMLDIR)/SchemeOptimizeInfoSwitch.xsd \
-		$(XMLDIR)/SchemePath.xsd \
-		$(XMLDIR)/SchemePort.xsd \
-		$(XMLDIR)/SchemeProtoElement.xsd \
-		$(XMLDIR)/SchemeProtoGroup.xsd \
+		$(XMLDIR)/*.xsd \
 		$(XMLDIR)/scheme.xsdconfig
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
