@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.51 2005/10/14 11:58:10 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.52 2005/10/17 07:00:21 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -32,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.51 $, $Date: 2005/10/14 11:58:10 $
+ * @version $Revision: 1.52 $, $Date: 2005/10/17 07:00:21 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -177,7 +176,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 								&& cci.getPlaceY() != -1) {
 							PipeBlock block = null;
 							try {
-								block = StorableObjectPool.getStorableObject(cci.getBlockId(), false);
+								block = cci.getPipeBlock();
 								block.bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
 							} catch(ArrayIndexOutOfBoundsException e) {
 								XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.37 2005/10/16 16:45:51 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.38 2005/10/17 07:00:21 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,6 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.map.PipeBlock;
@@ -65,7 +64,7 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/10/16 16:45:51 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/17 07:00:21 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -673,10 +672,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 							CablePath cablePath = (CablePath) it.next();
 							CableChannelingItem cableChannelingItem = cablePath
 									.getFirstCCI(this.physicalLink);
-							PipeBlock block = null;
-							block = StorableObjectPool.getStorableObject(
-									cableChannelingItem.getBlockId(),
-									false);
+							PipeBlock block = cableChannelingItem.getPipeBlock();
 							if(block.equals(this.pipeBlock)) {
 								int x = cableChannelingItem.getRowX();
 								int y = cableChannelingItem.getPlaceY();
@@ -713,7 +709,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
 			cci.setRowX(pt.x);
 			cci.setPlaceY(pt.y);
-			cci.setBlockId(this.pipeBlock.getId());
+			cci.setPipeBlock(this.pipeBlock);
 			this.tunnelLayout.updateElements();
 		}
 	}

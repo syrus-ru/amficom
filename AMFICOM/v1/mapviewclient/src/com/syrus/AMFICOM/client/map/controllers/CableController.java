@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableController.java,v 1.39 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: CableController.java,v 1.40 2005/10/17 07:00:21 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Контроллер кабеля.
  * 
- * @version $Revision: 1.39 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.40 $, $Date: 2005/10/17 07:00:21 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -249,6 +249,7 @@ public final class CableController extends AbstractLinkController {
 						0,//default
 						0,//default
 						link,
+						null,
 						(SiteNode)startNode,
 						(SiteNode)endNode,
 						schemeCableLink);
