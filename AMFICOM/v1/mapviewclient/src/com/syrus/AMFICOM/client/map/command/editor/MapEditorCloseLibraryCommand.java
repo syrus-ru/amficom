@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveLibraryCommand.java,v 1.11 2005/10/17 14:04:05 krupenn Exp $$
+ * $$Id: MapEditorCloseLibraryCommand.java,v 1.1 2005/10/17 14:04:05 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Set;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -22,28 +23,25 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/17 14:04:05 $
+ * @version $Revision: 1.1 $, $Date: 2005/10/17 14:04:05 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
-public class MapEditorRemoveLibraryCommand extends AbstractCommand {
+public class MapEditorCloseLibraryCommand extends AbstractCommand {
 
 	private final JDesktopPane desktop;
 	private final ApplicationContext aContext;
 
-	public MapEditorRemoveLibraryCommand(JDesktopPane desktop, ApplicationContext aContext) {
+	public MapEditorCloseLibraryCommand(JDesktopPane desktop, ApplicationContext aContext) {
 		this.desktop = desktop;
 		this.aContext = aContext;
 	}
@@ -62,18 +60,11 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 		}
 		MapLibraryTableController mapLibraryTableController = MapLibraryTableController.getInstance();
 
-		StorableObjectCondition libcondition = new EquivalentCondition(ObjectEntities.MAPLIBRARY_CODE);
-		final Set<StorableObject> libraries;
-		try {
-			libraries = StorableObjectPool.getStorableObjectsByCondition(libcondition, true);
-		} catch(ApplicationException e1) {
-			e1.printStackTrace();
-			return;
-		}
+		Map map = mapFrame.getMapView().getMap();
 
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
 				I18N.getString(MapEditorResourceKeys.TITLE_MAP_LIBRARY),
-				libraries,
+				map.getMapLibraries(),
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
 				null,
@@ -89,24 +80,39 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 			return;
 		}
 
-		try {
-			LinkedIdsCondition condition = new LinkedIdsCondition(mapLibrary.getId(), ObjectEntities.MAP_CODE);
-			final Set<StorableObject> maps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			if(maps.isEmpty()) {
-				StorableObjectPool.delete(mapLibrary.getId());
-				StorableObjectPool.flush(mapLibrary, LoginManager.getUserId(), true);
-				setResult(Command.RESULT_OK);
+		final Set<SiteNodeType> siteNodeTypes = mapLibrary.getSiteNodeTypes();
+		boolean contains = false;
+		for(SiteNode siteNode : map.getAllSiteNodes()) {
+			if(siteNodeTypes.contains(siteNode.getType())) {
+				contains = true;
+				break;
 			}
-			else {
-				this.aContext.getDispatcher().firePropertyChange(
-						new StatusMessageEvent(
-								this,
-								StatusMessageEvent.STATUS_MESSAGE,
-								I18N.getString(MapEditorResourceKeys.ERROR_LINKED_OBJECTS_EXIST_CANNOT_REMOVE)));
-				setResult(Command.RESULT_NO);
+		}
+		if(!contains) {
+			final Set<PhysicalLinkType> physicalLinkTypes = mapLibrary.getPhysicalLinkTypes();
+			for(PhysicalLink physicalLink : map.getAllPhysicalLinks()) {
+				if(physicalLinkTypes.contains(physicalLink.getType())) {
+					contains = true;
+					break;
+				}
 			}
-		} catch(ApplicationException e) {
-			e.printStackTrace();
+		}
+		if(!contains) {
+			map.removeMapLibrary(mapLibrary);
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(
+						this, 
+						MapEvent.LIBRARY_SET_CHANGED,
+						map.getMapLibraries()));
+			setResult(Command.RESULT_OK);
+		}
+		else {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_LINKED_OBJECTS_EXIST_CANNOT_CLOSE)));
+			setResult(Command.RESULT_NO);
 		}
 	}
 }
