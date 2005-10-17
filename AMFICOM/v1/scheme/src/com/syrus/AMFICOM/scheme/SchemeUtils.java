@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.42 2005/10/02 18:58:43 bass Exp $
+ * $Id: SchemeUtils.java,v 1.43 2005/10/17 12:09:36 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Shitlet;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/10/02 18:58:43 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/17 12:09:36 $
  * @module scheme
  * @deprecated
  */
@@ -39,8 +39,11 @@ public class SchemeUtils {
 	 * @todo Search occurences and change arg2 type to PathElement.
 	 * @param schemePath
 	 * @param pathElementId
+	 * @throws ApplicationException
 	 */
-	public static PathElement getPathElement(final SchemePath schemePath, final Identifier pathElementId) {
+	public static PathElement getPathElement(final SchemePath schemePath,
+			final Identifier pathElementId)
+	throws ApplicationException {
 		final Set<PathElement> pathElements = schemePath.getPathMembers();
 		for (final PathElement pathElement : pathElements) {
 			if (pathElement.equals(pathElementId)) {
@@ -100,7 +103,9 @@ public class SchemeUtils {
 		return top;
 	}
 
-	public static boolean isElementInPath(final SchemePath schemePath, final Identifier abstractSchemeElementId) {
+	public static boolean isElementInPath(final SchemePath schemePath,
+			final Identifier abstractSchemeElementId)
+	throws ApplicationException {
 		for (final PathElement pathElement : schemePath.getPathMembers()) {
 			if (pathElement.getAbstractSchemeElement().equals(abstractSchemeElementId)) {
 				return true;
@@ -114,7 +119,8 @@ public class SchemeUtils {
 		return pos == name.length() || pos == -1 ? name : name.substring(pos + 1);
 	}
 
-	public static double getOpticalLength(final SchemePath schemePath) {
+	public static double getOpticalLength(final SchemePath schemePath)
+	throws ApplicationException {
 		double length = 0;
 		for (final PathElement pathElement : schemePath.getPathMembers()) {
 			length += getOpticalLength(pathElement);
@@ -146,7 +152,8 @@ public class SchemeUtils {
 		}
 	}
 
-	public static double getPhysicalLength(final SchemePath schemePath) {
+	public static double getPhysicalLength(final SchemePath schemePath)
+	throws ApplicationException {
 		double length = 0;
 		for (final PathElement pathElement : schemePath.getPathMembers()) {
 			length += getPhysicalLength(pathElement);

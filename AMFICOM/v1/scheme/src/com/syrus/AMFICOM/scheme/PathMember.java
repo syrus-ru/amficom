@@ -1,5 +1,5 @@
 /*-
- * $Id: PathMember.java,v 1.5 2005/08/04 18:55:05 bass Exp $
+ * $Id: PathMember.java,v 1.6 2005/10/17 12:09:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/08/04 18:55:05 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/17 12:09:36 $
  * @module scheme
  */
 public interface PathMember<T, U extends PathMember<T, U>> {
@@ -25,5 +25,7 @@ public interface PathMember<T, U extends PathMember<T, U>> {
 
 	T getParentPathOwner();
 
-	void setParentPathOwner(final T parentPathOwner, final boolean processSubsequentSiblings);
+	void setParentPathOwner(final T parentPathOwner,
+			final boolean processSubsequentSiblings)
+	throws ApplicationException;
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.12 2005/09/08 16:34:40 bass Exp $
+ * $Id: PathElementWrapper.java,v 1.13 2005/10/17 12:09:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/08 16:34:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/17 12:09:36 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -127,19 +129,25 @@ public final class PathElementWrapper extends StorableObjectWrapper<PathElement>
 	}
 
 	@Override
-	public void setValue(final PathElement pathElement, final String key, final Object value) {
-		if (pathElement != null) {
-			if (key.equals(COLUMN_START_ABSTRACT_SCHEME_PORT_ID)) {
-				pathElement.setStartAbstractSchemePortId((Identifier) value);
-			} else if (key.equals(COLUMN_END_ABSTRACT_SCHEME_PORT_ID)) {
-				pathElement.setEndAbstractSchemePortId((Identifier) value);
-			} else if (key.equals(COLUMN_SCHEME_CABLE_THREAD_ID)) {
-				pathElement.setSchemeCableThreadId((Identifier) value);
-			} else if (key.equals(COLUMN_SCHEME_LINK_ID)) {
-				pathElement.setSchemeLinkId((Identifier) value);
-			} else if (key.equals(COLUMN_PARENT_SCHEME_PATH_ID)) {
-				pathElement.setParentSchemePathId((Identifier) value);
+	public void setValue(final PathElement pathElement, final String key,
+			final Object value)
+	throws PropertyChangeException {
+		try {
+			if (pathElement != null) {
+				if (key.equals(COLUMN_START_ABSTRACT_SCHEME_PORT_ID)) {
+					pathElement.setStartAbstractSchemePortId((Identifier) value);
+				} else if (key.equals(COLUMN_END_ABSTRACT_SCHEME_PORT_ID)) {
+					pathElement.setEndAbstractSchemePortId((Identifier) value);
+				} else if (key.equals(COLUMN_SCHEME_CABLE_THREAD_ID)) {
+					pathElement.setSchemeCableThreadId((Identifier) value);
+				} else if (key.equals(COLUMN_SCHEME_LINK_ID)) {
+					pathElement.setSchemeLinkId((Identifier) value);
+				} else if (key.equals(COLUMN_PARENT_SCHEME_PATH_ID)) {
+					pathElement.setParentSchemePathId((Identifier) value);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

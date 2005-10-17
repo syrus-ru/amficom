@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.78 2005/10/17 07:54:07 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.79 2005/10/17 12:09:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NO_COMMON_PARENT;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
@@ -27,6 +28,7 @@ import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPO
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -64,7 +66,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/10/17 07:54:07 $
+ * @version $Revision: 1.79 $, $Date: 2005/10/17 12:09:36 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -209,6 +211,7 @@ public final class CableChannelingItem
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static CableChannelingItem createInstance(final Identifier creatorId,
 			final double startSpare,
 			final double endSpare,
@@ -218,7 +221,10 @@ public final class CableChannelingItem
 			final PipeBlock pipeBlock,
 			final SiteNode startSiteNode,
 			final SiteNode endSiteNode,
-			final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
+			final SchemeCableLink parentSchemeCableLink)
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert startSiteNode != null : NON_NULL_EXPECTED;
 		assert endSiteNode != null : NON_NULL_EXPECTED;
@@ -247,11 +253,16 @@ public final class CableChannelingItem
 					startSiteNode,
 					endSiteNode,
 					parentSchemeCableLink);
+			parentSchemeCableLink.getCableChannelingItemContainerWrappee().addToCache(cableChannelingItem, usePool);
+
 			cableChannelingItem.markAsChanged();
 			return cableChannelingItem;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"CableChanelingItem.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("CableChannelingItem.createInstance() | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -600,16 +611,31 @@ public final class CableChannelingItem
 
 	/**
 	 * @param parentSchemeCableLinkId
+	 * @throws ApplicationException
 	 */
-	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId) {
+	@ParameterizationPending(value = {"final boolean usePool"})
+	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId)
+	throws ApplicationException {
+		final boolean usePool = false;
+
 		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
 		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
 
 		if (this.parentSchemeCableLinkId.equals(parentSchemeCableLinkId)) {
 			return;
 		}
+
+		this.getParentPathOwner().getCableChannelingItemContainerWrappee().removeFromCache(this, usePool);
+
+		if (parentSchemeCableLinkId.isVoid()) {
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+		} else {
+			StorableObjectPool.<SchemeCableLink>getStorableObject(parentSchemeCableLinkId, true).getCableChannelingItemContainerWrappee().addToCache(this, usePool);
+		}
+
 		this.parentSchemeCableLinkId = parentSchemeCableLinkId;
-		super.markAsChanged();
+		this.markAsChanged();
 	}
 
 	/**
@@ -628,9 +654,11 @@ public final class CableChannelingItem
 	 *
 	 * @param parentSchemeCableLink
 	 * @param processSubsequentSiblings
+	 * @throws ApplicationException
 	 */
 	public void setParentPathOwner(final SchemeCableLink parentSchemeCableLink,
-			final boolean processSubsequentSiblings) {
+			final boolean processSubsequentSiblings)
+	throws ApplicationException {
 		assert this.parentSchemeCableLinkId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Identifier newParentSchemeCableLinkId = Identifier.possiblyVoid(parentSchemeCableLink);
@@ -668,19 +696,15 @@ public final class CableChannelingItem
 	 *
 	 * @param newParentSchemeCableLinkId
 	 * @param newSequentialNumber
+	 * @throws ApplicationException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	private void setParentPathOwner(final Identifier newParentSchemeCableLinkId,
-			final int newSequentialNumber) {
-		final boolean usePool = false;
-
+			final int newSequentialNumber)
+	throws ApplicationException {
+		this.setSequentialNumber(newParentSchemeCableLinkId.isVoid()
+				? -1
+				: newSequentialNumber);
 		this.setParentSchemeCableLinkId(newParentSchemeCableLinkId);
-		if (newParentSchemeCableLinkId.isVoid()) {
-			this.setSequentialNumber(-1);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
-		} else {
-			this.setSequentialNumber(newSequentialNumber);
-		}
 	}
 
 	private void shiftLeft() {

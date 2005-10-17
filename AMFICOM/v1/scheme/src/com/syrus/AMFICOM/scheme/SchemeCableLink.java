@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.109 2005/10/14 06:18:19 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.110 2005/10/17 12:09:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.109 $, $Date: 2005/10/14 06:18:19 $
+ * @version $Revision: 1.110 $, $Date: 2005/10/17 12:09:36 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -289,19 +289,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * Adds <code>CableChannelingItem</code> to the end of this
-	 * <code>SchemeCableLink</code>, adjusting its
-	 * <code>sequentialNumber</code> accordingly.
-	 *
-	 * @param cableChannelingItem
-	 * @param processSubsequentSiblings
-	 */
-	public void addPathMember(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
-		assert cableChannelingItem != null: NON_NULL_EXPECTED;
-		cableChannelingItem.setParentPathOwner(this, processSubsequentSiblings);
-	}
-
-	/**
 	 * @throws CloneNotSupportedException
 	 * @see Object#clone()
 	 */
@@ -351,31 +338,18 @@ public final class SchemeCableLink extends AbstractSchemeLink
 				clone.clonedIdMap.putAll(schemeCableThreadClone.getClonedIdMap());
 				clone.addSchemeCableThread(schemeCableThreadClone, usePool);
 			}
+			/*
+			 * Though CableChannelingItems themselves aren't being
+			 * cloned, we still must prevent clone from sharing its
+			 * cache with the original.
+			 */
+			clone.cableChannelingItemContainerWrappee = null;
 			return clone;
 		} catch (final ApplicationException ae) {
 			final CloneNotSupportedException cnse = new CloneNotSupportedException();
 			cnse.initCause(ae);
 			throw cnse;
 		}
-	}
-
-	public SortedSet<CableChannelingItem> getPathMembers() {
-		try {
-			return Collections.unmodifiableSortedSet(this.getPathMembers0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(Collections.<CableChannelingItem>emptySet()));
-		}
-	}
-
-	/**
-	 * @return child <code>CableChannelingItem</code>s in an unsorted manner.
-	 */
-	SortedSet<CableChannelingItem> getPathMembers0() throws ApplicationException {
-		return new TreeSet<CableChannelingItem>(
-				StorableObjectPool.<CableChannelingItem>getStorableObjectsByCondition(
-						new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE),
-						true));
 	}
 
 	/**
@@ -551,22 +525,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			}
 		}
 		XmlComplementorRegistry.complementStorableObject(schemeCableLink, SCHEMECABLELINK_CODE, importType, EXPORT);
-	}
-
-	/**
-	 * Removes the <code>CableChannelingItem</code> from this
-	 * <code>SchemeCableLink</code>, changing its
-	 * <code>sequentialNumber</code> to <code>-1</code> and removing all
-	 * its subsequent <code>CableChannelingItem</code>s.
-	 *
-	 * @param cableChannelingItem
-	 * @param processSubsequentSiblings
-	 * @see SchemePath#removePathMember(PathElement, boolean)
-	 */
-	public void removePathMember(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
-		assert cableChannelingItem != null: NON_NULL_EXPECTED;
-		assert cableChannelingItem.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		cableChannelingItem.setParentPathOwner(null, processSubsequentSiblings);
 	}
 
 	/**
@@ -844,14 +802,20 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		 * Making a path member depend on its precursor (if any) may be
 		 * a solution, but it'll complicate the code too much.
 		 */
-		return cableChannelingItem.getParentSchemeCableLinkId().equals(this)
-				&& (true || this.getPathMembers().headSet(cableChannelingItem).size() == cableChannelingItem.sequentialNumber);
+		try {
+			return cableChannelingItem.getParentSchemeCableLinkId().equals(this)
+					&& (true || this.getPathMembers().headSet(cableChannelingItem).size() == cableChannelingItem.sequentialNumber);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return true;
+		}
 	}
 
 	/**
 	 * @param sequentialNumber
 	 * @throws ApplicationException
 	 * @see PathOwner#getPathMember(int)
+	 * @bug this call doesn't utilize the local cache
 	 */
 	public CableChannelingItem getPathMember(final int sequentialNumber) throws ApplicationException {
 		if (sequentialNumber < 0) {
@@ -883,6 +847,68 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		}
 		assert pathMembers.size() == 1;
 		return pathMembers.iterator().next();
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: cableChannelingItems                        *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<CableChannelingItem> cableChannelingItemContainerWrappee;
+
+	StorableObjectContainerWrappee<CableChannelingItem> getCableChannelingItemContainerWrappee() {
+		return (this.cableChannelingItemContainerWrappee == null)
+				? this.cableChannelingItemContainerWrappee = new StorableObjectContainerWrappee<CableChannelingItem>(this, CABLECHANNELINGITEM_CODE)
+				: this.cableChannelingItemContainerWrappee;
+	}
+
+	/**
+	 * Adds <code>CableChannelingItem</code> to the end of this
+	 * <code>SchemeCableLink</code>, adjusting its
+	 * <code>sequentialNumber</code> accordingly.
+	 *
+	 * @param cableChannelingItem
+	 * @param processSubsequentSiblings
+	 * @throws ApplicationException
+	 */
+	public void addPathMember(final CableChannelingItem cableChannelingItem,
+			final boolean processSubsequentSiblings)
+	throws ApplicationException {
+		assert cableChannelingItem != null: NON_NULL_EXPECTED;
+		cableChannelingItem.setParentPathOwner(this, processSubsequentSiblings);
+	}
+
+	/**
+	 * Removes the <code>CableChannelingItem</code> from this
+	 * <code>SchemeCableLink</code>, changing its
+	 * <code>sequentialNumber</code> to <code>-1</code> and removing all
+	 * its subsequent <code>CableChannelingItem</code>s.
+	 *
+	 * @param cableChannelingItem
+	 * @param processSubsequentSiblings
+	 * @throws ApplicationException
+	 * @see SchemePath#removePathMember(PathElement, boolean)
+	 */
+	public void removePathMember(final CableChannelingItem cableChannelingItem,
+			final boolean processSubsequentSiblings)
+	throws ApplicationException {
+		assert cableChannelingItem != null: NON_NULL_EXPECTED;
+		assert cableChannelingItem.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		cableChannelingItem.setParentPathOwner(null, processSubsequentSiblings);
+	}
+
+	public SortedSet<CableChannelingItem> getPathMembers()
+	throws ApplicationException {
+		return Collections.unmodifiableSortedSet(this.getPathMembers0());
+	}
+
+	/**
+	 * @return child <code>CableChannelingItem</code>s in an unsorted manner.
+	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
+	SortedSet<CableChannelingItem> getPathMembers0() throws ApplicationException {
+		final boolean usePool = false;
+		return new TreeSet<CableChannelingItem>(
+				this.getCableChannelingItemContainerWrappee().getContainees(usePool));
 	}
 
 	/*-********************************************************************

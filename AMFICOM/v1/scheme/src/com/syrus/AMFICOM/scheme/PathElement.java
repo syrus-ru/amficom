@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.83 2005/10/07 10:04:23 bass Exp $
+ * $Id: PathElement.java,v 1.84 2005/10/17 12:09:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NO_COMMON_PARENT;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OPERATION_IS_OPTIONAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
@@ -31,6 +32,7 @@ import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackag
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_ELEMENT;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_LINK;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -70,7 +72,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.84 $, $Date: 2005/10/17 12:09:36 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -150,6 +152,7 @@ public final class PathElement extends StorableObject
 	 * @param parentSchemePath
 	 * @param startAbstractSchemePort
 	 * @param endSbstractSchemePort
+	 * @throws ApplicationException
 	 * @todo Narrow visibility to private and remove
 	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.Identifiable)}
 	 *       invocations (in favor of direct checks) unless this constructor
@@ -163,7 +166,8 @@ public final class PathElement extends StorableObject
 			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
 			final AbstractSchemePort startAbstractSchemePort,
-			final AbstractSchemePort endSbstractSchemePort) {
+			final AbstractSchemePort endSbstractSchemePort)
+	throws ApplicationException {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		/*
 		 * Here and below: this will work since current object is not
@@ -191,6 +195,7 @@ public final class PathElement extends StorableObject
 	 * @param version
 	 * @param parentSchemePath
 	 * @param schemeCableThread
+	 * @throws ApplicationException
 	 * @todo Narrow visibility to private and remove
 	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.Identifiable)}
 	 *       invocations (in favor of direct checks) unless this constructor
@@ -203,7 +208,8 @@ public final class PathElement extends StorableObject
 			final Identifier modifierId,
 			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
-			final SchemeCableThread schemeCableThread) {
+			final SchemeCableThread schemeCableThread)
+	throws ApplicationException {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		this.sequentialNumber = (parentSchemePath == null)
 				? -1
@@ -227,6 +233,7 @@ public final class PathElement extends StorableObject
 	 * @param version
 	 * @param parentSchemePath
 	 * @param schemeLink
+	 * @throws ApplicationException
 	 * @todo Narrow visibility to private and remove
 	 *       {@link Identifier#possiblyVoid(com.syrus.AMFICOM.general.Identifiable)}
 	 *       invocations (in favor of direct checks) unless this constructor
@@ -239,7 +246,8 @@ public final class PathElement extends StorableObject
 			final Identifier modifierId,
 			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
-			final SchemeLink schemeLink) {
+			final SchemeLink schemeLink)
+	throws ApplicationException {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		this.sequentialNumber = (parentSchemePath == null)
 				? -1
@@ -306,11 +314,14 @@ public final class PathElement extends StorableObject
 	 *         {@link IdlKind#SCHEME_ELEMENT}.
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
 			final AbstractSchemePort startAbstractSchemePort,
 			final AbstractSchemePort endAbstractSchemePort)
-			throws CreateObjectException {
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		
 		/*
@@ -320,9 +331,14 @@ public final class PathElement extends StorableObject
 		 *
 		 * Ending AbstractSchemePort may be null, as noone cares.
 		 */
-		assert parentSchemePath != null
-				&& (parentSchemePath.getPathMembers().isEmpty()
-						== (startAbstractSchemePort == null)): NON_NULL_EXPECTED;
+		try {
+			assert parentSchemePath != null
+					&& (parentSchemePath.getPathMembers().isEmpty()
+							== (startAbstractSchemePort == null)): NON_NULL_EXPECTED;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+		}
+
 		try {
 			final Date created = new Date();
 			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(PATHELEMENT_CODE),
@@ -334,11 +350,16 @@ public final class PathElement extends StorableObject
 					parentSchemePath,
 					startAbstractSchemePort,
 					endAbstractSchemePort);
+			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
+
 			pathElement.markAsChanged();
 			return pathElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ige);
+			throw new CreateObjectException("PathElement.createInstance() | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -350,10 +371,13 @@ public final class PathElement extends StorableObject
 	 *         {@link IdlKind#SCHEME_CABLE_LINK}.
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
 			final SchemeCableThread schemeCableThread)
-			throws CreateObjectException {
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert parentSchemePath != null && schemeCableThread != null: NON_NULL_EXPECTED;
 		try {
@@ -366,11 +390,16 @@ public final class PathElement extends StorableObject
 					StorableObjectVersion.createInitial(),
 					parentSchemePath,
 					schemeCableThread);
+			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
+
 			pathElement.markAsChanged();
 			return pathElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ige);
+			throw new CreateObjectException("PathElement.createInstance() | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -382,10 +411,13 @@ public final class PathElement extends StorableObject
 	 *         {@link IdlKind#SCHEME_LINK}.
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static PathElement createInstance(final Identifier creatorId,
 			final SchemePath parentSchemePath,
 			final SchemeLink schemeLink)
-			throws CreateObjectException {
+	throws CreateObjectException {
+		final boolean usePool = false;
+
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert parentSchemePath != null && schemeLink != null: NON_NULL_EXPECTED;
 		try {
@@ -398,11 +430,16 @@ public final class PathElement extends StorableObject
 					StorableObjectVersion.createInitial(),
 					parentSchemePath,
 					schemeLink);
+			parentSchemePath.getPathElementContainerWrappee().addToCache(pathElement, usePool);
+
 			pathElement.markAsChanged();
 			return pathElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"PathElement.createInstance() | cannot generate identifier ", ige);
+			throw new CreateObjectException("PathElement.createInstance() | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -892,16 +929,31 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * @param parentSchemePathId
+	 * @throws ApplicationException
 	 */
-	void setParentSchemePathId(final Identifier parentSchemePathId) {
+	@ParameterizationPending(value = {"final boolean usePool"})
+	void setParentSchemePathId(final Identifier parentSchemePathId)
+	throws ApplicationException {
+		final boolean usePool = false;
+
 		assert parentSchemePathId != null : NON_NULL_EXPECTED;
 		assert parentSchemePathId.isVoid() || parentSchemePathId.getMajor() == SCHEMEPATH_CODE;
 
 		if (this.parentSchemePathId.equals(parentSchemePathId)) {
 			return;
 		}
+
+		this.getParentPathOwner().getPathElementContainerWrappee().removeFromCache(this, usePool);
+
+		if (parentSchemePathId.isVoid()) {
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			StorableObjectPool.delete(this.getReverseDependencies(usePool));
+		} else {
+			StorableObjectPool.<SchemePath>getStorableObject(parentSchemePathId, true).getPathElementContainerWrappee().addToCache(this, usePool);
+		}
+
 		this.parentSchemePathId = parentSchemePathId;
-		super.markAsChanged();
+		this.markAsChanged();
 	}
 
 	/**
@@ -919,9 +971,11 @@ public final class PathElement extends StorableObject
 	 *
 	 * @param parentSchemePath
 	 * @param processSubsequentSiblings
+	 * @throws ApplicationException
 	 */
 	public void setParentPathOwner(final SchemePath parentSchemePath,
-			final boolean processSubsequentSiblings) {
+			final boolean processSubsequentSiblings)
+	throws ApplicationException {
 		assert this.parentSchemePathId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemePathId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Identifier newParentSchemePathId = Identifier.possiblyVoid(parentSchemePath);
@@ -959,19 +1013,15 @@ public final class PathElement extends StorableObject
 	 *
 	 * @param newParentSchemePathId
 	 * @param newSequentialNumber
+	 * @throws ApplicationException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
 	private void setParentPathOwner(final Identifier newParentSchemePathId,
-			final int newSequentialNumber) {
-		final boolean usePool = false;
-
+			final int newSequentialNumber)
+	throws ApplicationException {
+		this.setSequentialNumber(newParentSchemePathId.isVoid()
+				? -1
+				: newSequentialNumber);
 		this.setParentSchemePathId(newParentSchemePathId);
-		if (newParentSchemePathId.isVoid()) {
-			this.setSequentialNumber(-1);
-			StorableObjectPool.delete(this.getReverseDependencies(usePool));
-		} else {
-			this.setSequentialNumber(newSequentialNumber);
-		}
 	}
 
 	private void shiftLeft() {
@@ -1239,7 +1289,12 @@ public final class PathElement extends StorableObject
 	}
 
 	private boolean isLast() {
-		return this.sequentialNumber + 1 == this.getParentPathOwner().getPathMembers().size();
+		try {
+			return this.sequentialNumber + 1 == this.getParentPathOwner().getPathMembers().size();
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return true;
+		}
 	}
 
 	boolean hasOpticalPort() {
