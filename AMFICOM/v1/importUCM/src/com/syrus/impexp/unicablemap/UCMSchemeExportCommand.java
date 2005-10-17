@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.17 2005/10/15 13:41:52 krupenn Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.18 2005/10/17 07:58:12 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.impexp.unicablemap.objects.Port;
 import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/10/15 13:41:52 $
+ * @author $Author: stas $
+ * @version $Revision: 1.18 $, $Date: 2005/10/17 07:58:12 $
  * @module importUCM
  */
 
@@ -73,8 +73,8 @@ public class UCMSchemeExportCommand {
 	HashMap<Integer, Element> muffs = new HashMap<Integer, Element>();
 	HashMap<Integer, Element> buildings = new HashMap<Integer, Element>();
 	HashMap<Integer, Cable> cables = new HashMap<Integer, Cable>();
-	HashMap<Integer, Link> links = new HashMap<Integer, Link>();
-	HashMap<Integer, Site> sites = new HashMap<Integer, Site>();
+	HashMap<String, Link> links = new HashMap<String, Link>();
+	HashMap<String, Site> sites = new HashMap<String, Site>();
 	
 	Map<Cable, List<Site>> cableInlets = new HashMap<Cable, List<Site>>();
 	
@@ -459,10 +459,10 @@ public class UCMSchemeExportCommand {
 //							// in a link which has 2 blocks
 //							int a = 0;
 //						}
-						Link link = this.links.get(Integer.parseInt(item.getTunnelId()));
+						Link link = this.links.get(item.getTunnelId());
 						if(link != null) {
 							Block block = link.getBindingBlocks().get(String.valueOf(ucmBlock.un));
-							int seq = block.getPipeNumbers().get(String.valueOf(truba.un));
+							int seq = block.getPipeNumbers().get(String.valueOf(truba.un)).intValue();
 							if(seq > pox * poy) {
 								System.out.println("seq " + seq
 										+ " is greater than " + pox
@@ -517,14 +517,14 @@ public class UCMSchemeExportCommand {
 	void createLinks(Collection<UniCableMapObject> objects) throws SQLException {
 		for (UniCableMapObject ucmObject : objects) {
 			Link link = Link.parseLink(this.ucmDatabase, ucmObject, "dummy");
-			this.links.put(Integer.valueOf(ucmObject.un), link);
+			this.links.put(Integer.toString(ucmObject.un), link);
 		}
 	}
 	
 	void createCableInlets(Collection<UniCableMapObject> objects) throws SQLException {
 		for (UniCableMapObject ucmObject : objects) {
 			Site cableInlet = Site.parseSite(this.ucmDatabase, ucmObject, "dummy");
-			this.sites.put(Integer.valueOf(ucmObject.un), cableInlet);
+			this.sites.put(Integer.toString(ucmObject.un), cableInlet);
 		}
 	}
 	
