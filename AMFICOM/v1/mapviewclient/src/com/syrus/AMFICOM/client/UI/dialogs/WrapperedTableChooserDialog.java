@@ -1,5 +1,5 @@
 /*-
- * $$Id: WrapperedTableChooserDialog.java,v 1.13 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: WrapperedTableChooserDialog.java,v 1.14 2005/10/17 13:57:36 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Wrapper;
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для того, чтобы включить эту возможность, используется параметр canDelete
  *
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -52,8 +52,9 @@ public class WrapperedTableChooserDialog extends JDialog {
 			String title,
 			Collection contents,
 			Wrapper wrapper,
-			String[] keys) {
-		return showChooserDialog(title, contents, wrapper, keys, false);
+			String[] keys,
+			RemoveWrapper remover) {
+		return showChooserDialog(title, contents, wrapper, keys, remover, false);
 	}
 
 	public static Object showChooserDialog(
@@ -61,6 +62,7 @@ public class WrapperedTableChooserDialog extends JDialog {
 			Collection contents,
 			Wrapper wrapper,
 			String[] keys,
+			final RemoveWrapper remover, 
 			boolean canDelete) {
 
 		Object returnObject = null;
@@ -147,16 +149,13 @@ public class WrapperedTableChooserDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				int row = table.getSelectedRow();
 				Object obj = model.getObject(row);
-				Identifier id = ((StorableObject )obj).getId();
-				StorableObjectPool.delete(id);
-				try {
-					StorableObjectPool.flush(id, LoginManager.getUserId(), true);
-					model.removeObject(obj);
-					model.fireTableDataChanged();
-					buttonOpen.setEnabled(false);
-					buttonDelete.setEnabled(false);
-				} catch(ApplicationException e1) {
-					e1.printStackTrace();
+				if(remover != null) {
+					if(remover.remove(obj)) {
+						model.removeObject(obj);
+						model.fireTableDataChanged();
+						buttonOpen.setEnabled(false);
+						buttonDelete.setEnabled(false);
+					}
 				}
 			}
 		});
