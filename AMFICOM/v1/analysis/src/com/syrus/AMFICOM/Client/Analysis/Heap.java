@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.117 2005/10/17 13:11:25 saa Exp $
+ * $Id: Heap.java,v 1.118 2005/10/17 13:46:47 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,12 +90,14 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * Замечания:
- * 1. перед установкой эталона (setEtalon, setMTMEtalon)
+ * 1. перед установкой эталона (setEtalonPair(?), setMTMEtalon)
  * должен устанавливаться setBSEtalonTrace
  * 
+ * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
+ * 
  * @author $Author: saa $
- * @version $Revision: 1.117 $, $Date: 2005/10/17 13:11:25 $
- * @module
+ * @version $Revision: 1.118 $, $Date: 2005/10/17 13:46:47 $
+ * @module analysis
  */
 public class Heap
 {
@@ -674,12 +676,14 @@ public class Heap
 
 	private static void notifyEtalonMTMCUpdated() {
 		Log.debugMessage("Heap.notifyEtalonMTMCUpdated | ", Level.FINEST);
+		removeEtalonComparison();
 		for (EtalonMTMListener listener: etalonMTMListeners)
 			listener.etalonMTMCUpdated();
 	}
 
 	private static void notifyEtalonMTMRemoved() {
 		Log.debugMessage("Heap.notifyEtalonMTMRemoved | ", Level.FINEST);
+		removeEtalonComparison();
 		for (EtalonMTMListener listener: etalonMTMListeners)
 			listener.etalonMTMRemoved();
 	}
@@ -1212,5 +1216,13 @@ public class Heap
 
 	public static String getEtalonName() {
 		return etalonName;
+	}
+
+	// сбрасывает результат сравнения - вызывается при каждом
+	// измерении эталона
+	private static void removeEtalonComparison() {
+		if (getEtalonComparison() != null) {
+			setEtalonComparison(null);
+		}
 	}
 }
