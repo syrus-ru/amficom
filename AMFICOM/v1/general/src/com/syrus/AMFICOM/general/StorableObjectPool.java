@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.192 2005/10/13 11:44:42 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.193 2005/10/17 05:43:07 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.192 $, $Date: 2005/10/13 11:44:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.193 $, $Date: 2005/10/17 05:43:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -487,7 +487,7 @@ public final class StorableObjectPool {
 						storableObjects.add(storableObject);
 						objectPool.put(id, storableObject);
 					} else {
-						if (!storableObject.isChanged()) {
+						if (!objectPool.get(id).isChanged()) {
 							refresh(Collections.singleton(storableObject.getId()));
 							storableObjects.add(storableObject);
 						} else {
