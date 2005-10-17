@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.193 2005/10/17 05:43:07 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.194 2005/10/17 06:09:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.193 $, $Date: 2005/10/17 05:43:07 $
+ * @version $Revision: 1.194 $, $Date: 2005/10/17 06:09:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -466,37 +466,48 @@ public final class StorableObjectPool {
 
 		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
 			Identifier.addToIdentifiers(loadButIds, storableObjects);
-			Set<T> loadedObjects = null;
+			Set<T> loadedObjects;
 			try {
 				loadedObjects = objectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
-			}
-			catch (ApplicationException ae) {
+			} catch (final ApplicationException ae) {
 				if (breakOnLoadError) {
 					throw ae;
 				}
 				Log.errorException(ae);
 				loadedObjects = Collections.emptySet();
 			}
-			if (loadedObjects != null) {
-				Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Loaded " + loadedObjects.size()
-						+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL08);
+			assert loadedObjects != null : ErrorMessages.NON_NULL_EXPECTED; 
+			Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Loaded " + loadedObjects.size()
+					+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL08);
 
-				for (final T storableObject : loadedObjects) {
-					final Identifier id = storableObject.getId();
-					if (!objectPool.containsKey(id)) {
-						storableObjects.add(storableObject);
-						objectPool.put(id, storableObject);
+			for (final T storableObject : loadedObjects) {
+				final Identifier id = storableObject.getId();
+				if (objectPool.containsKey(id)) {
+					if (objectPool.get(id).isChanged()) {
+						Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Local version of object '" + id
+								+ "' do not match condition, but remote version matches condition; it is changed -- not returning it");
 					} else {
-						if (!objectPool.get(id).isChanged()) {
-							refresh(Collections.singleton(storableObject.getId()));
-							storableObjects.add(storableObject);
-						} else {
-							Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Local version of object '" + id
-									+ "' do not match condition, but remote version matches condition; it is changed -- not returning it");
-						}
+						/**
+						 * @bug objects returned will contain
+						 *      the newly-loaded instance
+						 *      rather than the refreshed one
+						 *      from the pool.
+						 */
+						/**
+						 * @bug objects are loaded twice here:
+						 *      1. loadStorableObjectsButIdsByCondition(...)
+						 *      2. refresh(...)
+						 *      
+						 *      Moreover, the second operation
+						 *      loads one object at a time.
+						 */
+						refresh(Collections.singleton(id));
+						storableObjects.add(storableObject);
 					}
+				} else {
+					objectPool.put(id, storableObject);
+					storableObjects.add(storableObject);
 				}
-
 			}
 		}
 
