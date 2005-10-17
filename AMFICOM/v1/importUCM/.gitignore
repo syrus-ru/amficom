@@ -10,3 +10,5 @@ lib
 *.swp
 .classpath
 .project
+*.txt
+impexp.properties
