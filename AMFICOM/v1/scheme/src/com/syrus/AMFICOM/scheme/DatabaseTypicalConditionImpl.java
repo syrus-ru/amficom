@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.11 2005/08/28 16:42:19 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.12 2005/10/17 09:45:32 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,23 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+
+
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/28 16:42:19 $
+ * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/10/17 09:45:32 $
  * @module scheme
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -32,14 +40,27 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 	protected String getColumnName() throws IllegalObjectEntityException {
 		/* check key support */
 		switch(super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE:
+			case SCHEMEMONITORINGSOLUTION_CODE:
 				if (this.condition.getKey().equals(SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE)) {
 					return SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE;
 				}
 				break;
-			case ObjectEntities.SCHEME_CODE:
+			case SCHEME_CODE:
 				if (this.condition.getKey().equals(SchemeWrapper.COLUMN_KIND)) {
 					return SchemeWrapper.COLUMN_KIND;
+				}
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME)) {
+					return StorableObjectWrapper.COLUMN_NAME;
+				}
+				break;
+			case SCHEMEELEMENT_CODE:
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME)) {
+					return StorableObjectWrapper.COLUMN_NAME;
+				}
+				break;
+			case SCHEMECABLELINK_CODE:
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME)) {
+					return StorableObjectWrapper.COLUMN_NAME;
 				}
 				break;
 			default:
