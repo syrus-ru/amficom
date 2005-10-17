@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.194 2005/10/17 06:09:25 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.195 2005/10/17 09:45:31 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.194 $, $Date: 2005/10/17 06:09:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.195 $, $Date: 2005/10/17 09:45:31 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -480,35 +480,27 @@ public final class StorableObjectPool {
 			Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Loaded " + loadedObjects.size()
 					+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL08);
 
-			for (final T storableObject : loadedObjects) {
-				final Identifier id = storableObject.getId();
-				if (objectPool.containsKey(id)) {
-					if (objectPool.get(id).isChanged()) {
-						Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Local version of object '" + id
-								+ "' do not match condition, but remote version matches condition; it is changed -- not returning it");
-					} else {
-						/**
-						 * @bug objects returned will contain
-						 *      the newly-loaded instance
-						 *      rather than the refreshed one
-						 *      from the pool.
-						 */
-						/**
-						 * @bug objects are loaded twice here:
-						 *      1. loadStorableObjectsButIdsByCondition(...)
-						 *      2. refresh(...)
-						 *      
-						 *      Moreover, the second operation
-						 *      loads one object at a time.
-						 */
-						refresh(Collections.singleton(id));
-						storableObjects.add(storableObject);
-					}
+			final Set<T> poolObjectsToRefresh = new HashSet<T>();
+			for (final T loadedStorableObject : loadedObjects) {
+				final Identifier id = loadedStorableObject.getId();
+				if (!objectPool.containsKey(id)) {
+					objectPool.put(id, loadedStorableObject);
+					storableObjects.add(loadedStorableObject);
 				} else {
-					objectPool.put(id, storableObject);
-					storableObjects.add(storableObject);
+					final T poolStorableObject = objectPool.get(id);
+					if (!poolStorableObject.isChanged()) {
+						poolObjectsToRefresh.add(poolStorableObject);
+					} else {
+						Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Local version of object '" + id
+								+ "' do not match condition, but remote version matches condition; it is changed locally -- not returning it");
+					}
 				}
 			}
+			if (!poolObjectsToRefresh.isEmpty()) {
+				refresh(Identifier.createIdentifiers(poolObjectsToRefresh));
+				storableObjects.addAll(poolObjectsToRefresh);
+			}
+
 		}
 
 		/*
