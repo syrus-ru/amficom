@@ -101,6 +101,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			/* (non-Javadoc)
 			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
 			 */
+			@Override
 			public void componentShown(ComponentEvent e) {
 				AnalyseMainFrame.this.desktopPane.setPreferredSize(AnalyseMainFrame.this.desktopPane.getSize());
 				AnalyseMainFrame.this.windowArranger.arrange();
@@ -110,6 +111,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		
 		this.addWindowListener(new WindowAdapter() {
 
+			@Override
 			public void windowClosing(WindowEvent e) {
 				AnalyseMainFrame.this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE,
 					AnalyseMainFrame.this);
@@ -172,6 +174,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | NOISE_FRAME", Level.FINEST);
 				ScalableFrame noiseFrame = new ScalableFrame(new ScalableLayeredPanel()) {
+					@Override
 					public String getReportTitle() {
 						return NOISE_FRAME;
 					}
@@ -217,6 +220,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 		super.setWindowArranger(new WindowArranger(AnalyseMainFrame.this) {
 
+					@Override
 					public void arrange() {
 						AnalyseMainFrame f = (AnalyseMainFrame) this.mainframe;
 

@@ -18,9 +18,10 @@ public class CreateTestSetupCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new CreateTestSetupCommand(aContext);
+		return new CreateTestSetupCommand(this.aContext);
 	}
 
 	public static String getNewMSNameFromDialog()
@@ -62,6 +63,7 @@ public class CreateTestSetupCommand extends AbstractCommand
 
 	}
 
+	@Override
 	public void execute()
 	{
 		String name = getNewMSNameFromDialog();

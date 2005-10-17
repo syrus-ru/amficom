@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.15 2005/10/17 13:47:54 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.16 2005/10/17 14:20:09 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/10/17 13:47:54 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/17 14:20:09 $
  * @module analysis
  */
 
@@ -40,15 +40,15 @@ public class DetailedEventResource {
 	private static final String DASH = LangModelAnalyse.getString("dash");
 	private static final String DEFAULT_TYPE = DASH;
 	
-	private static final Icon ICON_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_GAIN);
+//	private static final Icon ICON_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_GAIN);
 	private static final Icon ICON_SPLICE_GAIN = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_GAIN);
 	private static final Icon ICON_SPLICE_LOSS = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_LOSS);
-	private static final Icon ICON_BEND_LOSS = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BEND_LOSS);
+//	private static final Icon ICON_BEND_LOSS = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BEND_LOSS);
 	private static final Icon ICON_REFLECTION = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_REFLECTION);
 	private static final Icon ICON_SINGULARITY = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_SINGULARITY);
 	private static final Icon ICON_DEADZONE = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_DEADZONE);
 	private static final Icon ICON_END = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_END);
-	private static final Icon ICON_BREAK = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BREAK);
+//	private static final Icon ICON_BREAK = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BREAK);
 	
 	// Basic details
 	private String number = DASH;

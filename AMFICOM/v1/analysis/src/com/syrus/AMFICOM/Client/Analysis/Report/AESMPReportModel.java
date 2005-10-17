@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalysisPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ResizableLayeredPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.TraceEventsPanel;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.client.model.ApplicationContext;

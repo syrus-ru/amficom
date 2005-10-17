@@ -30,11 +30,11 @@ public class ScalableFrame extends SimpleResizableFrame
 
 	public void addGraph (SimpleGraphPanel p, String id)
 	{
-		if (panel instanceof ScalableLayeredPanel)
+		if (this.panel instanceof ScalableLayeredPanel)
 		{
 			p.setColorModel (id);
-			((ScalableLayeredPanel)panel).addGraphPanel(p);
-			panels.put(id, p);
+			((ScalableLayeredPanel)this.panel).addGraphPanel(p);
+			this.panels.put(id, p);
 		}
 	}
 
@@ -42,30 +42,31 @@ public class ScalableFrame extends SimpleResizableFrame
 	{
 		if (id.equals("all"))
 		{
-			((ScalableLayeredPanel)panel).removeAllGraphPanels();
-			panels = new HashMap();
+			((ScalableLayeredPanel)this.panel).removeAllGraphPanels();
+			this.panels = new HashMap();
 		} else
 		{
-			SimpleGraphPanel p = (SimpleGraphPanel)panels.get(id);
+			SimpleGraphPanel p = (SimpleGraphPanel)this.panels.get(id);
 			if (p != null)
 			{
-				((ScalableLayeredPanel)panel).removeGraphPanel(p);
-				((ScalableLayeredPanel)panel).updScale2fit();
-				panels.remove(id);
+				((ScalableLayeredPanel)this.panel).removeGraphPanel(p);
+				((ScalableLayeredPanel)this.panel).updScale2fit();
+				this.panels.remove(id);
 			}
 		}
 	}
 
+	@Override
 	public void setGraph (double[] y, double deltaX, boolean isReversedY, String id)
 	{
-		TraceEventsPanel p = new TraceEventsPanel(panel, y, deltaX);
+		TraceEventsPanel p = new TraceEventsPanel(this.panel, y, deltaX);
 		setGraph (p, isReversedY, id);
 	}
 
 	public void setGraph (ScaledGraphPanel p, boolean isReversedY, String id)
 	{
-		panels = new HashMap();
-		panels.put(id, p);
+		this.panels = new HashMap();
+		this.panels.put(id, p);
 		super.setGraph(p, isReversedY, id);
 		p.select_by_mouse = true;
 	}

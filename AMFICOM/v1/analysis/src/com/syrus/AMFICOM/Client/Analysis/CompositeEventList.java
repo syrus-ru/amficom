@@ -1,5 +1,5 @@
 /*-
- * $Id: CompositeEventList.java,v 1.6 2005/10/11 14:42:00 saa Exp $
+ * $Id: CompositeEventList.java,v 1.7 2005/10/17 14:20:09 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.6 $, $Date: 2005/10/11 14:42:00 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/17 14:20:09 $
  * @module
  */
 public class CompositeEventList {
@@ -36,51 +36,51 @@ public class CompositeEventList {
 	}
 	private void updateRComp() {
 		SimpleReflectogramEventComparer comp = null;
-		pNum = getPMTAE() != null ? getPMTAE().getNEvents() : 0;
-		eNum = getEMTAE() != null ? getEMTAE().getNEvents() : 0; 
+		this.pNum = getPMTAE() != null ? getPMTAE().getNEvents() : 0;
+		this.eNum = getEMTAE() != null ? getEMTAE().getNEvents() : 0; 
 		if (getPMTAE() != null && getEMTAE() != null)
 			comp = new SimpleReflectogramEventComparer(
 					getPMTAE().getSimpleEvents(),
 					getEMTAE().getSimpleEvents());
-		p2c = new int[pNum];
-		e2c = new int[eNum];
-		c2p = new int[pNum + eNum]; // заведомо достаточная длина
-		c2e = new int[pNum + eNum];
-		c2pEx = new int[pNum + eNum];
-		c2eEx = new int[pNum + eNum];
+		this.p2c = new int[this.pNum];
+		this.e2c = new int[this.eNum];
+		this.c2p = new int[this.pNum + this.eNum]; // заведомо достаточная длина
+		this.c2e = new int[this.pNum + this.eNum];
+		this.c2pEx = new int[this.pNum + this.eNum];
+		this.c2eEx = new int[this.pNum + this.eNum];
 		int pi, ei, ci;
-		for (pi = 0, ei = 0, ci = 0; pi < pNum || ei < eNum; ci++) {
-			int e2p = comp != null && ei < eNum ?
+		for (pi = 0, ei = 0, ci = 0; pi < this.pNum || ei < this.eNum; ci++) {
+			int e2p = comp != null && ei < this.eNum ?
 					comp.getProbeIdByEtalonIdNonStrict(ei) : -1;
-			int p2e = comp != null && pi < pNum ?
+			int p2e = comp != null && pi < this.pNum ?
 					comp.getEtalonIdByProbeIdNonStrict(pi) : -1;
-			if (e2p > pi || ei == eNum) {
-				p2c[pi] = ci;
-				c2pEx[ci] = pi;
-				c2eEx[ci] = p2e;
-				c2p[ci] = pi;
-				c2e[ci] = -1;
+			if (e2p > pi || ei == this.eNum) {
+				this.p2c[pi] = ci;
+				this.c2pEx[ci] = pi;
+				this.c2eEx[ci] = p2e;
+				this.c2p[ci] = pi;
+				this.c2e[ci] = -1;
 				pi++;
 			} else if (e2p == pi && p2e == ei) {
-				p2c[pi] = ci;
-				e2c[ei] = ci;
-				c2pEx[ci] = pi;
-				c2eEx[ci] = ei;
-				c2p[ci] = pi;
-				c2e[ci] = ei;
+				this.p2c[pi] = ci;
+				this.e2c[ei] = ci;
+				this.c2pEx[ci] = pi;
+				this.c2eEx[ci] = ei;
+				this.c2p[ci] = pi;
+				this.c2e[ci] = ei;
 				pi++;
 				ei++;
 			} else {
-				e2c[ei] = ci;
-				c2pEx[ci] = e2p;
-				c2eEx[ci] = ei;
-				c2p[ci] = -1;
-				c2e[ci] = ei;
+				this.e2c[ei] = ci;
+				this.c2pEx[ci] = e2p;
+				this.c2eEx[ci] = ei;
+				this.c2p[ci] = -1;
+				this.c2e[ci] = ei;
 				ei++;
 			}
 			//System.out.println("c:p:e " + ci +":"+ pna[ci] +":"+ ena[ci]);
 		}
-		cNum = ci;
+		this.cNum = ci;
 		//System.out.println("pl " + pl + " el " + el + " len " + len);
 	}
 	private ModelTraceAndEvents getPMTAE() {
@@ -93,79 +93,79 @@ public class CompositeEventList {
 	}
 
 	public int getNEvents() {
-		return pNum;
+		return this.pNum;
 	}
 
 	public int getNEtalonEvents() {
-		return eNum;
+		return this.eNum;
 	}
 
 	public int getNCompositeEvents() {
-		return cNum;
+		return this.cNum;
 	}
 
 	public int getC2P(int c) {
-		return c >= 0 ? c2p[c] : -1;
+		return c >= 0 ? this.c2p[c] : -1;
 	}
 	public int getC2E(int c) {
-		return c >= 0 ? c2e[c] : -1;
+		return c >= 0 ? this.c2e[c] : -1;
 	}
 	public int getP2C(int p) {
-		return p >= 0 ? p2c[p] : -1;
+		return p >= 0 ? this.p2c[p] : -1;
 	}
 	public int getE2C(int e) {
-		return e >= 0 ? e2c[e] : -1;
+		return e >= 0 ? this.e2c[e] : -1;
 	}
 
 	public class Walker {
 		private int n; // current composite number of event 
 
 		public int getCompositeEvent() {
-			return n;
+			return this.n;
 		}
 		public int getEvent1() {
-			return n >= 0 ? c2p[n] : -1;
+			return this.n >= 0 ? CompositeEventList.this.c2p[this.n] : -1;
 		}
 		public int getEtalonEvent1() {
-			return n >= 0 ? c2e[n] : -1;
+			return this.n >= 0 ? CompositeEventList.this.c2e[this.n] : -1;
 		}
 		public int getEvent2() {
-			return n >= 0 ? c2pEx[n] : -1;
+			return this.n >= 0 ? CompositeEventList.this.c2pEx[this.n] : -1;
 		}
 		public int getEtalonEvent2() {
-			return n >= 0 ? c2eEx[n] : -1;
+			return this.n >= 0 ? CompositeEventList.this.c2eEx[this.n] : -1;
 		}
 
 		public void toNextCompositeEvent() {
-			n = inc(n, cNum);
+			this.n = inc(this.n, CompositeEventList.this.cNum);
 		}
 		public void toPrevCompositeEvent() {
-			n = dec(n, cNum);
+			this.n = dec(this.n, CompositeEventList.this.cNum);
 		}
 		public void toNextEvent() {
-			toEvent(inc(getEvent2(), pNum));
+			toEvent(inc(getEvent2(), CompositeEventList.this.pNum));
 		}
 		public void toPrevEvent() {
-			toEvent(dec(getEvent2(), pNum));
+			toEvent(dec(getEvent2(), CompositeEventList.this.pNum));
 		}
 		public void toNextEtalonEvent() {
-			toEtalonEvent(inc(getEtalonEvent2(), eNum));
+			toEtalonEvent(inc(getEtalonEvent2(), CompositeEventList.this.eNum));
 		}
 		public void toPrevEtalonEvent() {
-			toEtalonEvent(dec(getEtalonEvent2(), eNum));
+			toEtalonEvent(dec(getEtalonEvent2(), CompositeEventList.this.eNum));
 		}
 		public void toEvent(int num) {
-			n = num >= 0 ? p2c[num] : -1;
+			this.n = num >= 0 ? CompositeEventList.this.p2c[num] : -1;
 		}
 		public void toEtalonEvent(int num) {
-			n = num >= 0 ? e2c[num] : -1;
+			this.n = num >= 0 ? CompositeEventList.this.e2c[num] : -1;
 		}
 		public void toCompositeEvent(int num) {
-			n = num >= 0 ? num : -1;
+			this.n = num >= 0 ? num : -1;
 		}
 		public void fixNEvent() {
-			if (n >= cNum)
-				n = -1;
+			if (this.n >= CompositeEventList.this.cNum)
+				this.n = -1;
 		}
 	}
 	protected static int inc(int i, int len) {

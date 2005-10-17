@@ -14,9 +14,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.io.TraceReader;
 
 public class FileAddCommand extends AbstractCommand
 {
@@ -28,18 +26,20 @@ public class FileAddCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new FileAddCommand(aContext);
+		return new FileAddCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 		Properties properties = new Properties();
 		String lastDir = "";
 		try
 		{
-			properties.load(new FileInputStream(propertiesFileName));
+			properties.load(new FileInputStream(this.propertiesFileName));
 			lastDir = properties.getProperty("lastdir");
 		} catch (IOException ex)
 		{
@@ -64,7 +64,7 @@ public class FileAddCommand extends AbstractCommand
 				if (ret == JOptionPane.NO_OPTION)
 					 return;
 				if (ret == JOptionPane.YES_OPTION)
-					 new FileRemoveCommand(id, aContext).execute();
+					 new FileRemoveCommand(id, this.aContext).execute();
 			}
 			/*
 			TraceReader tr = new TraceReader();
@@ -90,7 +90,7 @@ public class FileAddCommand extends AbstractCommand
 			try
 			{
 				properties.setProperty("lastdir", selectedFile.getParent().toLowerCase());
-				properties.store(new FileOutputStream(propertiesFileName), null);
+				properties.store(new FileOutputStream(this.propertiesFileName), null);
 			} catch (IOException ex)
 			{
 			}

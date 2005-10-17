@@ -15,23 +15,26 @@ public class FileRemoveCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("activeRefId"))
 		{
-			activeRefId = (String)value;
+			this.activeRefId = (String)value;
 		}
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new FileRemoveCommand(activeRefId, aContext);
+		return new FileRemoveCommand(this.activeRefId, this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 		// FIXME: activerefId can be null?
 
-		Heap.closeTrace(activeRefId);
+		Heap.closeTrace(this.activeRefId);
 	}
 }

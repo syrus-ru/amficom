@@ -1,14 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.List;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import javax.swing.JDialog;
 
 public class TestSetupLoadDialog extends JDialog 
 //implements OperationListener

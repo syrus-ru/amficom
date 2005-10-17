@@ -4,7 +4,6 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -66,6 +65,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 		this.setWindowArranger(new WindowArranger(this) {
 
+			@Override
 			public void arrange() {
 				AnalyseMainFrameSimplified f = (AnalyseMainFrameSimplified) this.mainframe;
 

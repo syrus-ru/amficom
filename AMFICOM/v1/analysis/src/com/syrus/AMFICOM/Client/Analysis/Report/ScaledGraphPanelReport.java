@@ -1,5 +1,5 @@
 /*
- * $Id: ScaledGraphPanelReport.java,v 1.2 2005/10/14 13:55:13 stas Exp $
+ * $Id: ScaledGraphPanelReport.java,v 1.3 2005/10/17 14:20:09 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.report.DataStorableElement;
 

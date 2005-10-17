@@ -1,18 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import javax.swing.JOptionPane;
-
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
-import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
-//import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.DataFormatException;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 public class LoadTestSetupCommand extends AbstractCommand
 {

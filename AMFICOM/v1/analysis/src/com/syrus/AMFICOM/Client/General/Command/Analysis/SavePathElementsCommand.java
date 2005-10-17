@@ -1,5 +1,5 @@
 /*-
- * $Id: SavePathElementsCommand.java,v 1.1 2005/08/31 12:49:32 stas Exp $
+ * $Id: SavePathElementsCommand.java,v 1.2 2005/10/17 14:20:09 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,11 @@ import com.syrus.util.Log;
 
 public class SavePathElementsCommand  extends AbstractCommand {
 
-	private ApplicationContext aContext;
-	
-	public SavePathElementsCommand(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
+	public SavePathElementsCommand(ApplicationContext aContext) {
+		// empty
 	}
 	
+	@Override
 	public void execute()
 	{
 		try {

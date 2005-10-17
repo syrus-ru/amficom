@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.10 2005/10/11 14:42:00 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.11 2005/10/17 14:20:09 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -34,7 +34,7 @@ import com.syrus.util.HashCodeGenerator;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/10/11 14:42:00 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/17 14:20:09 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -492,9 +492,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 		}
 		double dxkm = trace.getResolution() / 1000;
 		long t0 = System.currentTimeMillis();
-		ReliabilitySimpleReflectogramEvent re[] =
-				(ReliabilitySimpleReflectogramEvent[])CoreAnalysisManager.
-						performAnalysis(trace, ap).getMTAE().getSimpleEvents();
+		ReliabilitySimpleReflectogramEvent re[] = CoreAnalysisManager.
+				performAnalysis(trace, ap).getMTAE().getSimpleEvents();
 		long t1 = System.currentTimeMillis();
 		fails.addTimeAcc(t1 - t0);
 

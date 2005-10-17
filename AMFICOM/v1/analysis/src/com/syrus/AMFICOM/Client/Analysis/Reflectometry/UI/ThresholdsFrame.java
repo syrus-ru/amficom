@@ -48,7 +48,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 
 	public void addEtalon()
 	{
-		if (traces.get(Heap.ETALON_TRACE_KEY) != null)
+		if (this.traces.get(Heap.ETALON_TRACE_KEY) != null)
 			return;
 
 		PFTrace pf = Heap.getPFTraceEtalon();
@@ -58,14 +58,14 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 
 	void removeEtalon()
 	{
-		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(Heap.ETALON_TRACE_KEY);
+		SimpleGraphPanel epPanel = (SimpleGraphPanel)this.traces.get(Heap.ETALON_TRACE_KEY);
 		if (epPanel != null)
-			panel.removeGraphPanel(epPanel);
+			this.panel.removeGraphPanel(epPanel);
 	}
 
 	void addTrace (String id)
 	{
-		if (traces.get(id) != null)
+		if (this.traces.get(id) != null)
 			return;
 		SimpleGraphPanel p;
 		PFTrace pf = Heap.getAnyPFTraceByKey(id);
@@ -73,11 +73,11 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 		double deltaX = pf.getResolution();
 		double[] y = pf.getFilteredTraceClone();
 
-		ThresholdsLayeredPanel ppp = (ThresholdsLayeredPanel)panel;
+		ThresholdsLayeredPanel ppp = (ThresholdsLayeredPanel)this.panel;
 		// XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
-			p = new ThresholdsPanel(ppp, dispatcher, y, deltaX);
+			p = new ThresholdsPanel(ppp, this.dispatcher, y, deltaX);
 			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
 			((ThresholdsPanel)p).minTraceLevel.setDrawed(true);
@@ -91,7 +91,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 		ppp.updScale2fit();
 		ppp.updScale2fitCurrentEv(.2, 1.);
 		p.setColorModel(id);
-		traces.put(id, p);
+		this.traces.put(id, p);
 
 		setVisible(true);
 	}
@@ -100,16 +100,16 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 	{
 		if (id.equals("all"))
 		{
-			((ThresholdsLayeredPanel)panel).removeAllGraphPanels();
-			traces = new HashMap();
+			((ThresholdsLayeredPanel)this.panel).removeAllGraphPanels();
+			this.traces = new HashMap();
 		} else
 		{
-			SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
+			SimpleGraphPanel p = (SimpleGraphPanel)this.traces.get(id);
 			if (p != null)
 			{
-				panel.removeGraphPanel(p);
-				traces.remove(id);
-				((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
+				this.panel.removeGraphPanel(p);
+				this.traces.remove(id);
+				((ThresholdsLayeredPanel)this.panel).updScale2fitCurrentEv(.2, 1.);
 			}
 		}
 	}
@@ -146,10 +146,10 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 			RefUpdateEvent ev = (RefUpdateEvent)evt;
 			if (ev.traceChanged()) {
 				TraceResource tr = (TraceResource)evt.getNewValue();
-				SimpleGraphPanel p = (SimpleGraphPanel)traces.get(tr.getId());
+				SimpleGraphPanel p = (SimpleGraphPanel)this.traces.get(tr.getId());
 				if (p != null) {
 					p.setShowAll(tr.isShown());
-					panel.repaint();
+					this.panel.repaint();
 				}
 			}
 		}

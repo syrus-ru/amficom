@@ -23,24 +23,26 @@ public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 		super(dispatcher);
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new MapThresholdsToolBar(this);
 	}
 
+	@Override
 	public void addGraphPanel(SimpleGraphPanel panel)
 	{
 		super.addGraphPanel(panel);
 		if (panel instanceof ThresholdsPanel)
 			((ThresholdsPanel)panel).paint_thresholds =
-			((MapThresholdsToolBar)toolbar).showThresholdsButton.isSelected();
+			((MapThresholdsToolBar)this.toolbar).showThresholdsButton.isSelected();
 	}
 
 	public void setThresholdsPainted(boolean b)
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++)
 		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
 			{
 				((ThresholdsPanel)panel).paint_thresholds = b;
@@ -74,16 +76,18 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 		super(panel);
 	}
 
+	@Override
 	protected String[] getButtons()
 	{
 		return buttons;
 	}
 
+	@Override
 	protected Map createGraphButtons()
 	{
-		Map buttons = new HashMap();
+		Map buttons2 = new HashMap();
 
-		buttons.put(
+		buttons2.put(
 				thresholds,
 				createToolButton(
 				showThresholdsButton,
@@ -101,14 +105,14 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 				},
 				true));
 
-		showThresholdsButton.setSelected(true);
-		buttons.putAll(super.createGraphButtons());
-		return buttons;
+		this.showThresholdsButton.setSelected(true);
+		buttons2.putAll(super.createGraphButtons());
+		return buttons2;
 	}
 
 	void showThresholdsButton_actionPerformed(ActionEvent e)
 	{
-		MapThresholdsLayeredPanel panel = (MapThresholdsLayeredPanel)super.panel;
-		panel.setThresholdsPainted(showThresholdsButton.isSelected());
+		MapThresholdsLayeredPanel panel1 = (MapThresholdsLayeredPanel)super.panel;
+		panel1.setThresholdsPainted(this.showThresholdsButton.isSelected());
 	}
 }

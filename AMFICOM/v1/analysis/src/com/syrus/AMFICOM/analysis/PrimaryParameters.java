@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryParameters.java,v 1.4 2005/09/07 02:56:49 arseniy Exp $
+ * $Id: PrimaryParameters.java,v 1.5 2005/10/17 14:20:09 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/09/07 02:56:49 $
+ * @author $Author: saa $
+ * @version $Revision: 1.5 $, $Date: 2005/10/17 14:20:09 $
  * @module analysis
  */
 
@@ -177,8 +177,8 @@ public class PrimaryParameters {
 	
 	private void firePropertyChangeEvent(PropertyChangeEvent event) {
 		if (this.propertyChangeListeners != null && !this.propertyChangeListeners.isEmpty()) {
-			for (Iterator iterator = this.propertyChangeListeners.iterator(); iterator.hasNext();) {
-				PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+			for (Iterator<PropertyChangeListener> iterator = this.propertyChangeListeners.iterator(); iterator.hasNext();) {
+				PropertyChangeListener listener = iterator.next();
 				listener.propertyChange(event);
 			}
 		}

@@ -97,7 +97,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		{
 			try
 			{
-				MonitoredElement me = (MonitoredElement)StorableObjectPool.getStorableObject(
+				MonitoredElement me = StorableObjectPool.getStorableObject(
 								new Identifier(pf.getBS().monitoredElementId), true);
 				setTitle(me.getName());
 			} catch(Exception ex)

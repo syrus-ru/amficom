@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.11 2005/10/06 15:53:58 saa Exp $
+ * $Id: OverallStats.java,v 1.12 2005/10/17 14:20:09 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/10/06 15:53:58 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/17 14:20:09 $
  * @module analysis
  */
 
@@ -240,8 +240,8 @@ public class OverallStats {
 
 	private void firePropertyChangeEvent(PropertyChangeEvent event) {
 		if (this.propertyChangeListeners != null && !this.propertyChangeListeners.isEmpty()) {
-			for (Iterator iterator = this.propertyChangeListeners.iterator(); iterator.hasNext();) {
-				PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
+			for (Iterator<PropertyChangeListener> iterator = this.propertyChangeListeners.iterator(); iterator.hasNext();) {
+				PropertyChangeListener listener = iterator.next();
 				listener.propertyChange(event);
 			}
 		}

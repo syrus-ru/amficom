@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.118 2005/10/17 13:46:47 saa Exp $
+ * $Id: Heap.java,v 1.119 2005/10/17 14:20:09 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Log;
  * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
  * 
  * @author $Author: saa $
- * @version $Revision: 1.118 $, $Date: 2005/10/17 13:46:47 $
+ * @version $Revision: 1.119 $, $Date: 2005/10/17 14:20:09 $
  * @module analysis
  */
 public class Heap
@@ -445,14 +445,6 @@ public class Heap
 				return key;
 		}
 		return null;
-	}
-
-	private static void updateCurrentTraceWhenBSRemoved() {
-		if (!traces.containsKey(currentTrace))
-			currentTrace = getFirstSecondaryBSKey();
-		if (currentTrace == null)
-			currentTrace = PRIMARY_TRACE_KEY;
-		notifyCurrentTraceChanged();
 	}
 
 	public static boolean hasSecondaryBS() {

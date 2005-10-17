@@ -37,16 +37,17 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 		init_module(dispatcher);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	void init_module(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
+		this.dispatcher = dispatcher1;
+		dispatcher1.addPropertyChangeListener(RefUpdateEvent.typ, this);
 	}
 
 	private void jbInit() throws Exception
 	{ // empty
 	}
 
+	@Override
 	protected ToolBarPanel createToolBar()
 	{
 		return new HistogrammToolBar(this);
@@ -59,12 +60,12 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
 			if(rue.markerMoved()) {
-				mInfo = (MarkersInfo)rue.getNewValue();
+				this.mInfo = (MarkersInfo)rue.getNewValue();
 			}
 
 			if(rue.markerLocated())
 			{
-				if (useMarkers)
+				if (this.useMarkers)
 				{
 					updateHistogrammData();
 				}
@@ -73,13 +74,13 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 	}
 	
 	protected void updateHistogrammData() {
-		if (mInfo != null) {
-			for (int i = 0; i < jLayeredPane.getComponentCount(); i++) {
-				SimpleGraphPanel panel = (SimpleGraphPanel) jLayeredPane.getComponent(i);
+		if (this.mInfo != null) {
+			for (int i = 0; i < this.jLayeredPane.getComponentCount(); i++) {
+				SimpleGraphPanel panel = (SimpleGraphPanel) this.jLayeredPane.getComponent(i);
 				if (panel instanceof HistogrammPanel) {
-					((HistogrammPanel) panel).updateHistogrammData(Math.min(mInfo.a_pos,
-							mInfo.b_pos), Math.max(mInfo.a_pos, mInfo.b_pos));
-					jLayeredPane.repaint();
+					((HistogrammPanel) panel).updateHistogrammData(Math.min(this.mInfo.a_pos,
+							this.mInfo.b_pos), Math.max(this.mInfo.a_pos, this.mInfo.b_pos));
+					this.jLayeredPane.repaint();
 				}
 			}
 		}
@@ -87,7 +88,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Prop
 
 	public void useMarkers(boolean b)
 	{
-		useMarkers = b;
+		this.useMarkers = b;
 	}
 }
 
@@ -107,16 +108,18 @@ class HistogrammToolBar extends ScalableToolBar
 		super(panel);
 	}
 
+	@Override
 	protected String[] getButtons()
 	{
 		return buttons;
 	}
 
+	@Override
 	protected Map createGraphButtons()
 	{
-		Map buttons = new HashMap();
+		Map buttons1 = new HashMap();
 
-		buttons.put(
+		buttons1.put(
 				BIND_MARK,
 				createToolButton(
 				markersTButton,
@@ -134,16 +137,16 @@ class HistogrammToolBar extends ScalableToolBar
 				},
 				true));
 
-		buttons.putAll(super.createGraphButtons());
-		return buttons;
+		buttons1.putAll(super.createGraphButtons());
+		return buttons1;
 	}
 
 	void markersTButton_actionPerformed(ActionEvent e)
 	{
-		HistogrammLayeredPanel panel = (HistogrammLayeredPanel)super.panel;
-		boolean b = markersTButton.isSelected();
-		panel.useMarkers(b);
+		HistogrammLayeredPanel panel1 = (HistogrammLayeredPanel)super.panel;
+		boolean b = this.markersTButton.isSelected();
+		panel1.useMarkers(b);
 		if (b)
-			panel.updateHistogrammData();
+			panel1.updateHistogrammData();
 	}
 }

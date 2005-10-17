@@ -4,7 +4,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 /**
  * —ейчас используетс€ только дл€ хранени€ overallStats
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/07/22 06:56:50 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/17 14:20:09 $
  * @module
  */
 public class TraceEvent
@@ -93,28 +93,28 @@ public class TraceEvent
 
 	// overallStats methods
 	public double overallStatsNoiseLevel98Pct() { // yMax - yNoise
-		return data[3];
+		return this.data[3];
 	}
 	public double overallStatsNoiseLevelRMS() { // yMax - yNoise
-		return data[4];
+		return this.data[4];
 	}
 	public double overallStatsLoss() {
-		return Math.abs(data[0] -  data[1]);
+		return Math.abs(this.data[0] -  this.data[1]);
 	}
 	public double overallStatsY0() {
-		return data[0];
+		return this.data[0];
 	}
 	public double overallStatsY1() {
-		return data[1];
+		return this.data[1];
 	}
 	public int overallStatsEvNum() {
-		return (int) data[2];
+		return (int) this.data[2];
 	}
 	public double overallStatsDD98pct() {
-		return data[3] - data[0];
+		return this.data[3] - this.data[0];
 	}
 	public double overallStatsDDRMS() {
-		return data[4] - data[0];
+		return this.data[4] - this.data[0];
 	}
 
 //	// linear methods
@@ -196,6 +196,6 @@ public class TraceEvent
 	 */
 	public void setData(double[] data2)
 	{
-		data = data2.clone();
+		this.data = data2.clone();
 	}
 }

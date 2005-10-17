@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.12 2005/09/27 15:05:31 saa Exp $
+ * $Id: Trace.java,v 1.13 2005/10/17 14:20:09 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.io.DataFormatException;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/09/27 15:05:31 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/17 14:20:09 $
  * @module
  */
 public class Trace {
@@ -136,10 +136,10 @@ public class Trace {
 	}
 
 	public AnalysisResult getAR() {
-		if (ar == null) {
-			ar = CoreAnalysisManager.performAnalysis(pfTrace, ap);
+		if (this.ar == null) {
+			this.ar = CoreAnalysisManager.performAnalysis(this.pfTrace, this.ap);
 		}
-		return ar;
+		return this.ar;
 	}
 
 	public ModelTraceAndEventsImpl getMTAE() {
@@ -152,22 +152,22 @@ public class Trace {
 	 * @return объект PFTrace, один и тот же при повторных вызовах
 	 */
 	public PFTrace getPFTrace() {
-		return pfTrace;
+		return this.pfTrace;
 	}
 	public double[] getTraceData() {
-		if (traceData == null) {
-			traceData = pfTrace.getFilteredTraceClone();
+		if (this.traceData == null) {
+			this.traceData = this.pfTrace.getFilteredTraceClone();
 		}
-		return traceData;
+		return this.traceData;
 	}
 	public String getKey() {
-		return key;
+		return this.key;
 	}
 	public double getDeltaX() {
 		return this.pfTrace.getResolution();
 	}
 	public Result getResult() {
-		return result;
+		return this.result;
 	}
 	/**
 	 * @return true, если результаты анализа были заданы в момент создания

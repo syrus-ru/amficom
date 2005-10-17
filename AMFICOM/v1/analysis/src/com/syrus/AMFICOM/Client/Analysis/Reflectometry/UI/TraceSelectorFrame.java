@@ -172,7 +172,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 	private void traceRemoved(final String key) {
 		int index = traces.indexOf(key);
 		if (index != -1) {
-			final TraceResource tr = (TraceResource) this.tModel.getObject(index);
+			final TraceResource tr = this.tModel.getObject(index);
 			tr.removePropertyChangeListener(this);
 			this.tModel.removeObject(tr);
 			traces.remove(key);
@@ -228,7 +228,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 	private void updMismatchmark() {
 		int index = traces.indexOf(Heap.PRIMARY_TRACE_KEY);
 		if (index >= 0) {
-			((TraceResource) this.tModel.getObject(index)).setAlarm(Heap.getRefMismatch() != null);
+			this.tModel.getObject(index).setAlarm(Heap.getRefMismatch() != null);
 		}
 		this.jTable.repaint(); // XXX: is this correct way of refreshing?
 	}

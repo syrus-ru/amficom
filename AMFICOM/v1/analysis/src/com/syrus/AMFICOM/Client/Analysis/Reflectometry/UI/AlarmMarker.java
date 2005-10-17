@@ -14,11 +14,13 @@ class AlarmMarker extends Marker
 		super(name, initial_position);
 	}
 
+	@Override
 	public boolean canMove()
 	{
 		return false;
 	}
 
+	@Override
 	public Color getColor()
 	{
 		return Color.pink;
