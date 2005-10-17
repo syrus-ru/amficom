@@ -1,5 +1,5 @@
 /*-
- * $Id: EvaluationPerEventResultImpl.java,v 1.4 2005/10/17 13:45:11 saa Exp $
+ * $Id: EvaluationPerEventResultImpl.java,v 1.5 2005/10/17 14:41:24 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.io.SignatureMismatchException;
  * с поддержкой {@link DataStreamable}
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/10/17 13:45:11 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/17 14:41:24 $
  * @module dadara
  */
 public class EvaluationPerEventResultImpl
@@ -109,7 +109,7 @@ implements EvaluationPerEventResult, DataStreamable {
 //			dos.writeBoolean(this.hasQk[i]);
 			dos.writeByte(
 					(this.hasQk[i] ? 1 : 0)
-					| (this.hasQk[i] ? 2 : 0));
+					| (this.isModified[i] ? 2 : 0));
 			if (this.hasQk[i]) {
 				dos.writeDouble(this.q[i]);
 				dos.writeDouble(this.k[i]);
