@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapRemoveMapCommand.java,v 1.15 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapRemoveMapCommand.java,v 1.16 2005/10/17 14:10:55 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import javax.swing.JDesktopPane;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapRemoveWrapper;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapTableController;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * убрать из вида выбранную схему
  *  
- * @version $Revision: 1.15 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/17 14:10:55 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -69,6 +70,7 @@ public class MapRemoveMapCommand extends AbstractCommand {
 				mapView.getMap().getMaps(),
 				mapTableController,
 				mapTableController.getKeysArray(),
+				MapRemoveWrapper.getInstance(),
 				true);
 
 		if(map == null) {

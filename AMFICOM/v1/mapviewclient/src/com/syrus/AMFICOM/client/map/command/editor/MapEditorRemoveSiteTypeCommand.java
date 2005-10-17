@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.12 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.13 2005/10/17 14:10:55 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,10 @@
 package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -24,12 +26,15 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/17 14:10:55 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -70,13 +75,24 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 			return;
 		}
 
-//		siteNodeType.getMapLibrary().removeChild(siteNodeType);
-		StorableObjectPool.delete(siteNodeType.getId());
 		try {
-			StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);
+			LinkedIdsCondition condition = new LinkedIdsCondition(siteNodeType.getId(), ObjectEntities.SITENODE_CODE);
+			final Set<StorableObject> siteNodes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if(siteNodes.isEmpty()) {
+				StorableObjectPool.delete(siteNodeType.getId());
+				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);
+				setResult(Command.RESULT_OK);
+			}
+			else {
+				this.aContext.getDispatcher().firePropertyChange(
+						new StatusMessageEvent(
+								this,
+								StatusMessageEvent.STATUS_MESSAGE,
+								I18N.getString(MapEditorResourceKeys.ERROR_LINKED_OBJECTS_EXIST_CANNOT_REMOVE)));
+				setResult(Command.RESULT_NO);
+			}
 		} catch(ApplicationException e) {
 			e.printStackTrace();
 		}
-		setResult(Command.RESULT_OK);
 	}
 }
