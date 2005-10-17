@@ -1,5 +1,5 @@
 /*-
- * $Id: EvaluationPerEventResult.java,v 1.1 2005/10/11 16:42:01 saa Exp $
+ * $Id: EvaluationPerEventResult.java,v 1.2 2005/10/17 13:45:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <p>
  * FIXME: возможно, нумерациу событий по р/г надо переделать на нумерацию по эталону
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/11 16:42:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/17 13:45:11 $
  * @module
  */
 public interface EvaluationPerEventResult {
@@ -33,22 +33,40 @@ public interface EvaluationPerEventResult {
 	 *   <tt> i &lt; 0 || i &gt;= {@link #getNEvents()} </tt>  
 	 */
 	boolean hasQK(int i);
+
+	/**
+	 * Объясняет причину, по которой Q- и K-параметры для данного
+	 * события недоступны.
+	 * Возвращает true, если причиной является изменение на рефлектограмме,
+	 * false, если к данному событию Q и K не определены по другой причине
+	 * (например, Q и K для этих событий не определимо).
+	 * @param i номер данного события
+	 * @throws IllegalStateException, если Q и K для данного события
+	 * доступны, т.е.
+	 * <tt>{@link #hasQK}(i) != false</tt>
+	 * @return true, если причиной является изменение на рефлектограмме,
+	 * false, если к данному событию Q и K не определены по другой причине
+	 * (например, Q и K для этих событий не определимо).
+	 */
+	boolean isModified(int i);
+
 	/**
 	 * Возвращает Q-параметр для данного события.
 	 * @param i номер данного события
 	 * @return Q-параметр для данного события.
 	 * @throws IndexOutOfBoundsException, если
 	 *   <tt> i &lt; 0 || i &gt;= {@link #getNEvents()} </tt>  
-	 * @throws IllegalStateException, если {@link #hasQK}(i) == false
+	 * @throws IllegalStateException, если <tt>{@link #hasQK}(i) == false</tt>
 	 */
 	double getQ(int i);
+
 	/**
 	 * Возвращает K-параметр для данного события.
 	 * @param i номер данного события
 	 * @return K-параметр для данного события.
 	 * @throws IndexOutOfBoundsException, если
 	 *   <tt> i &lt; 0 || i &gt;= {@link #getNEvents()} </tt>  
-	 * @throws IllegalStateException, если {@link #hasQK}(i) == false
+	 * @throws IllegalStateException, если <tt>{@link #hasQK}(i) == false</tt>
 	 */
 	double getK(int i);
 }

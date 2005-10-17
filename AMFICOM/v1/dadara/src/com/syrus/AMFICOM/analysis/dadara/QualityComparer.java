@@ -1,5 +1,5 @@
 /*-
- * $Id: QualityComparer.java,v 1.2 2005/10/12 08:06:12 saa Exp $
+ * $Id: QualityComparer.java,v 1.3 2005/10/17 13:45:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
  * Определяет параметры качества линии.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/10/12 08:06:12 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/17 13:45:11 $
  * @module dadara
  */
 public class QualityComparer
@@ -26,6 +26,7 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 	private double dParam;
 	private double qParam;
 	private boolean[] qkDefined;
+	private boolean[] qkModified;
 	private double[] qiValues;
 	private double[] kiValues;
 	/**
@@ -49,10 +50,12 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 		this.qParam = 0.0; // won't be used
 
 		this.qkDefined = new boolean[mtae.getNEvents()];
+		this.qkModified = new boolean[mtae.getNEvents()];
 		this.qiValues = new double[mtae.getNEvents()];
 		this.kiValues = new double[mtae.getNEvents()];
 		for (int i = 0; i < this.qkDefined.length; i++) {
 			this.qkDefined[i] = false;
+			this.qkModified[i] = false;
 			this.qiValues[i] = 0.0; // won'k be used
 			this.kiValues[i] = 0.0; // won'k be used
 		}
@@ -78,14 +81,16 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 			}
 
 			// вычисляем Ki, Qi
-			for (int i = 0; i < curEot; i++) {
+			for (int i = 0; i <= curEot; i++) {
 				int j = rcomp.getEtalonIdByProbeIdMostStrict(i);
 				if (j < 0) {
+					this.qkModified[i] = true;
 					continue;
 				}
 				DetailedEvent ce = mtae.getDetailedEvent(i);
 				DetailedEvent ee = mtm.getMTAE().getDetailedEvent(j);
 				if (!(ce instanceof HavingLoss && ee instanceof HavingLoss)) {
+					this.qkModified[i] = false;
 					continue;
 				}
 				double dyc = ((HavingLoss)ce).getLoss();
@@ -96,6 +101,7 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 				double qi = delta / t;
 				double ki = delta / Math.max(Math.abs(dyc), Math.abs(dye)); // FIXME: implement another formulae for ki
 				//double ki = delta / (Math.abs(dye) + noise);
+				this.qkDefined[i] = true;
 				this.qiValues[i] = qi;
 				this.kiValues[i] = ki;
 //				System.out.printf("[%d(%d):%d(%d)]: %g  %g\n",
@@ -121,17 +127,33 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 	}
 
 	/**
+	 * @see com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult#isModified(int)
+	 */
+	public boolean isModified(int i) {
+		if (!this.qkDefined[i]) {
+			return this.qkModified[i];
+		}
+		throw new IllegalStateException();
+	}
+
+	/**
 	 * @see com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult#getQ(int)
 	 */
 	public double getQ(int i) {
-		return this.qiValues[i];
+		if (this.qkDefined[i]) {
+			return this.qiValues[i];
+		}
+		throw new IllegalStateException();
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult#getK(int)
 	 */
 	public double getK(int i) {
-		return this.kiValues[i];
+		if (this.qkDefined[i]) {
+			return this.kiValues[i];
+		}
+		throw new IllegalStateException();
 	}
 
 	/**
