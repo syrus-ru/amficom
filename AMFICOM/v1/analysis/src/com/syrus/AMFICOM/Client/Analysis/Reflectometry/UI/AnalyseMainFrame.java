@@ -282,7 +282,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
-				EventsFrame eventsFrame = new EventsFrame(aContext) {
+				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
 					public String getReportTitle() {
 						return EVENTS_FRAME;
 					}

@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventWrapper.java,v 1.5 2005/09/14 05:24:03 bob Exp $
+ * $Id: DetailedEventWrapper.java,v 1.6 2005/10/17 13:11:25 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/09/14 05:24:03 $
+ * @author $Author: saa $
+ * @version $Revision: 1.6 $, $Date: 2005/10/17 13:11:25 $
  * @module analysis
  */
 
@@ -52,6 +52,9 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 	public static final String KEY_LOCATION_DIFFERENCE = "dLocation";
 	public static final String KEY_LENGTH_DIFFERENCE = "dWidth";
 
+	public static final String KEY_QUALITY_QI = "qi";
+	public static final String KEY_QUALITY_KI = "ki";
+
 	private static DetailedEventWrapper instance;
 
 	private List<String> keys;
@@ -68,7 +71,9 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 				KEY_REFLECTION_LEVEL, KEY_ADZ, KEY_EDZ, KEY_MAX_LEVEL, KEY_MIN_LEVEL,
 				KEY_EXTENSION, KEY_ETALON_TYPE, KEY_ETALON_MAX_DEVIATION,
 				KEY_ETALON_MEAN_DEVIATION, KEY_LOSS_DIFFERENCE,
-				KEY_LOCATION_DIFFERENCE, KEY_LENGTH_DIFFERENCE, KEY_IMAGE };
+				KEY_LOCATION_DIFFERENCE, KEY_LENGTH_DIFFERENCE, KEY_IMAGE,
+				KEY_QUALITY_QI, KEY_QUALITY_KI
+		};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -155,6 +160,10 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 			return ev.getLocationDifference();
 		} else if (key.equals(KEY_LENGTH_DIFFERENCE)) {
 			return ev.getLengthDifference();
+		} else if (key.equals(KEY_QUALITY_QI)) {
+			return ev.getQi();
+		} else if (key.equals(KEY_QUALITY_KI)) {
+			return ev.getKi();
 		}
 		return null;
 	}
@@ -215,6 +224,10 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 			ev.setLocationDifference((String) value);
 		} else if (key.equals(KEY_LENGTH_DIFFERENCE)) {
 			ev.setLengthDifference((String) value);
+		} else if (key.equals(KEY_QUALITY_QI)) {
+			ev.setQi((String) value);
+		} else if (key.equals(KEY_QUALITY_KI)) {
+			ev.setKi((String) value);
 		}
 	}
 }

@@ -15,11 +15,14 @@ import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonComparisonListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.DetailedEventResource;
 import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
+import com.syrus.AMFICOM.analysis.EtalonComparison;
+import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -29,8 +32,9 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListener, CurrentEventChangeListener,
-		PrimaryRefAnalysisListener {
+public class DetailedEventsFrame extends JInternalFrame
+implements EtalonMTMListener, CurrentEventChangeListener,
+		PrimaryRefAnalysisListener, EtalonComparisonListener {
 	private static final long serialVersionUID = 2729642346362069321L;
 
 	private ModelTrace alignedDataMT;
@@ -91,6 +95,7 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
 		Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addEtalonComparisonListener(this);
 	}
 
 	private void makeAlignedDataMT() {
@@ -176,9 +181,13 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 		((CompareTableRenderer) this.comparativeTable.getDefaultRenderer(Object.class)).setSameType(dataType == etalonType
 				&& dataType != SimpleReflectogramEvent.RESERVED);
 
+		final EtalonComparison eComp = Heap.getEtalonComparison();
+		final EvaluationPerEventResult perEvent = eComp != null
+				? eComp.getPerEventResult() : null;
+
 		// сравнение по модельной кривой
 		final ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
-		this.res.initComparative(dataEvent, etalonEvent, etalonMT, deltaX);
+		this.res.initComparative(dataEvent, etalonEvent, etalonMT, deltaX, perEvent, nEvent);
 		this.comparativeTable.getModel().fireTableDataChanged();
 	}
 
@@ -218,6 +227,15 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 		}
 		model.fireTableDataChanged();
 		this.setData();
+	}
+
+	public void etalonComparisonCUpdated() {
+		this.updateTableModel();
+	}
+
+	public void etalonComparisonRemoved() {
+		// XXX: is this a suitable behaviour?
+		this.updateTableModel();
 	}
 
 	public void etalonMTMCUpdated() {
@@ -289,4 +307,5 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 			return component;
 		}
 	}
+
 }

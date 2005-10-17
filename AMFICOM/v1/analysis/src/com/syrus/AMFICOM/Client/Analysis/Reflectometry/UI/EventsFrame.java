@@ -35,8 +35,10 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.DetailedEventResource;
 import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
+import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
+import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
@@ -59,6 +61,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	private boolean etalonShown = false;
 	private boolean primaryOpened = false;
 	private boolean etalonOpened = false;
+
+	private final boolean showComparison;
 
 	protected static class TableView {
 		public static final int COMP = 10;
@@ -174,7 +178,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 	protected TableView view; // State
 
-	public EventsFrame(final ApplicationContext aContext) {
+	public EventsFrame(final ApplicationContext aContext, final boolean showComparison) {
+		this.showComparison = showComparison;
 		this.init();
 		this.initModule(aContext);
 	}
@@ -204,18 +209,33 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
+		final String[] keys = this.showComparison
+			? new String[] {
+					DetailedEventWrapper.KEY_N,
+					DetailedEventWrapper.KEY_IMAGE,
+					DetailedEventWrapper.KEY_TYPE,
+					DetailedEventWrapper.KEY_DISTANCE,
+					DetailedEventWrapper.KEY_LENGTH,
+					DetailedEventWrapper.KEY_REFLECTANCE,
+					DetailedEventWrapper.KEY_LOSS,
+					DetailedEventWrapper.KEY_ATTENUATION,
+					DetailedEventWrapper.KEY_QUALITY_QI,
+					DetailedEventWrapper.KEY_QUALITY_KI
+					}
+			: new String[] {
+					DetailedEventWrapper.KEY_N,
+					DetailedEventWrapper.KEY_IMAGE,
+					DetailedEventWrapper.KEY_TYPE,
+					DetailedEventWrapper.KEY_DISTANCE,
+					DetailedEventWrapper.KEY_LENGTH,
+					DetailedEventWrapper.KEY_REFLECTANCE,
+					DetailedEventWrapper.KEY_LOSS,
+					DetailedEventWrapper.KEY_ATTENUATION
+					};
 		this.table = new WrapperedTable<DetailedEventResource>(
 				new WrapperedTableModel<DetailedEventResource>(
 					DetailedEventWrapper.getInstance(),
-					new String[] {
-						DetailedEventWrapper.KEY_N,
-						DetailedEventWrapper.KEY_IMAGE,
-						DetailedEventWrapper.KEY_TYPE,
-						DetailedEventWrapper.KEY_DISTANCE,
-						DetailedEventWrapper.KEY_LENGTH,
-						DetailedEventWrapper.KEY_REFLECTANCE,
-						DetailedEventWrapper.KEY_LOSS,
-						DetailedEventWrapper.KEY_ATTENUATION }));
+					keys));
 		this.table.setAllowSorting(false);
 		this.table.setAllowAutoResize(true);
 
@@ -424,6 +444,19 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 			final DetailedEvent ev = nPri >= 0 ? pevents[nPri] : eevents[nEt];
 			final DetailedEventResource res = new DetailedEventResource();
 			res.initGeneral(ev, nPri + 1, resKm, sigma);
+			if (this.showComparison) {
+				final EtalonComparison eComp = Heap.getEtalonComparison();
+				final EvaluationPerEventResult perEvent = eComp == null
+						? null : eComp.getPerEventResult();
+				if (nPri >= 0 && nEt >= 0 && Heap.getMTMEtalon() != null) {
+					res.initComparative(pevents[nPri],
+							eevents[nEt],
+							Heap.getMTMEtalon().getMTAE().getModelTrace(),
+							resMt,
+							perEvent,
+							nPri);
+				}
+			}
 			model.addObject(res);
 		}
 		this.updateTableModel();

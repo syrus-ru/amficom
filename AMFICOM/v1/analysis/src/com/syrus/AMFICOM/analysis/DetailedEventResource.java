@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.13 2005/10/12 08:16:33 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.14 2005/10/17 13:11:25 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
@@ -24,13 +25,14 @@ import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEventUtil;
 import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.HavingLoss;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/10/12 08:16:33 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/17 13:11:25 $
  * @module analysis
  */
 
@@ -76,7 +78,11 @@ public class DetailedEventResource {
 	private String lossDifference = DASH;
 	private String locationDifference = DASH;
 	private String lengthDifference = DASH;
-	
+
+	// extended comparison results
+	private String qi = DASH;
+	private String ki = DASH;
+
 	private DetailedEvent event;
 	
 	public void initGeneral(DetailedEvent ev, int num, double res, double sigma) {
@@ -166,7 +172,12 @@ public class DetailedEventResource {
 		}			
 	}
 	
-	public void initComparative(DetailedEvent dataEvent, DetailedEvent etalonEvent, ModelTrace etalonMT, double deltaX) {
+	public void initComparative(DetailedEvent dataEvent,
+			DetailedEvent etalonEvent,
+			ModelTrace etalonMT,
+			double deltaX,
+			EvaluationPerEventResult perEvent,
+			int perEventId) {
 		this.event = dataEvent;
 		setType(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
 		setEtalonType(etalonEvent != null ? AnalysisUtil.getSimpleEventNameByType(etalonEvent.getEventType()) : DEFAULT_TYPE);
@@ -211,6 +222,27 @@ public class DetailedEventResource {
 			setLossDifference(DASH);
 			setLengthDifference(DASH);
 			setLocationDifference(DASH);
+		}
+
+//		Log.debugMessage("DetailedEventResource.initComparative | "
+//				+ "perEventId=" + perEventId
+//				+ " of nEvents=" + (perEvent != null ? "" + perEvent.getNEvents() : "<null>"),
+//				Level.FINEST);
+		if (dataEvent != null && perEvent != null
+				&& dataEvent != null && dataEvent instanceof HavingLoss) {
+//			Log.debugMessage("DetailedEventResource.initComparative | "
+//					+ "hasQK=" + perEvent.hasQK(perEventId),
+//					Level.FINEST);
+			if (perEvent.hasQK(perEventId)) {
+				setQi(String.valueOf(MathRef.round_2(perEvent.getQ(perEventId))));
+				setKi(String.valueOf(MathRef.round_2(perEvent.getK(perEventId))));
+			} else {
+				setQi(LangModelAnalyse.getString("QKmodified"));
+				setKi(LangModelAnalyse.getString("QKmodified"));
+			}
+		} else {
+			setQi(DASH);
+			setKi(DASH);
 		}
 	}
 	
@@ -421,5 +453,21 @@ public class DetailedEventResource {
 	
 	public void setExtension(String extension) {
 		this.extension = extension;
+	}
+
+	public String getKi() {
+		return this.ki;
+	}
+
+	public void setKi(String ki) {
+		this.ki = ki;
+	}
+
+	public String getQi() {
+		return this.qi;
+	}
+
+	public void setQi(String qi) {
+		this.qi = qi;
 	}
 }

@@ -138,7 +138,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		this.desktopPane.add(this.statsFrame);
 		this.tables.add(this.statsFrame);
 		
-		this.eventsFrame = new EventsFrame(aContext);
+		this.eventsFrame = new EventsFrame(aContext, false);
 		this.desktopPane.add(this.eventsFrame);
 		this.tables.add(this.eventsFrame);
 		

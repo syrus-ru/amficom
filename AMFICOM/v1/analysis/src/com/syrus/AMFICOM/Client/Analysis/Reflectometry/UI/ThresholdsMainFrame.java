@@ -4,11 +4,8 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.UIDefaults;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
@@ -169,7 +166,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		this.desktopPane.add(this.statsFrame);
 		this.tables.add(this.statsFrame);
 
-		this.eventsFrame = new EventsFrame(aContext);
+		this.eventsFrame = new EventsFrame(aContext, false);
 		this.desktopPane.add(this.eventsFrame);
 		this.tables.add(this.eventsFrame);
 

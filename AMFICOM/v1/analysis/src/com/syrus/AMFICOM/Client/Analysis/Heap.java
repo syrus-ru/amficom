@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.116 2005/10/16 16:21:44 saa Exp $
+ * $Id: Heap.java,v 1.117 2005/10/17 13:11:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonComparisonListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
@@ -93,7 +94,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.116 $, $Date: 2005/10/16 16:21:44 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/17 13:11:25 $
  * @module
  */
 public class Heap
@@ -130,12 +131,12 @@ public class Heap
 
 	private static String newMSName = null; // the name for newly created (unsaved) MeasurementSetup; null if no new MS
 
+	private static String etalonName;
+
 	private static Marker markerObject = null;
 
 	// результаты сравнения с эталоном - загруженные либо вычисленные
 	private static EtalonComparison etalonComparison = null;
-
-	// listeners
 
 	private static LinkedList<BsHashChangeListener> bsHashChangedListeners = new LinkedList<BsHashChangeListener>();
 	private static LinkedList<PrimaryTraceListener> primaryTraceListeners = new LinkedList<PrimaryTraceListener>();
@@ -146,7 +147,7 @@ public class Heap
 	private static LinkedList<CurrentEventChangeListener> currentEventChangeListeners = new LinkedList<CurrentEventChangeListener>();
 	private static LinkedList<AnalysisParametersListener> analysisParametersListeners = new LinkedList<AnalysisParametersListener>();
 	private static LinkedList<RefMismatchListener> refMismatchListeners = new LinkedList<RefMismatchListener>();
-	private static String etalonName;
+	private static LinkedList<EtalonComparisonListener> etalonComparisonListeners = new LinkedList<EtalonComparisonListener>();
 
 	// constructor is not available
 	private Heap() {
@@ -628,6 +629,18 @@ public class Heap
 			listener.refMismatchCUpdated();
 	}
 
+	private static void notifyEtalonComparisonRemoved() {
+		Log.debugMessage("Heap.notifyEtalonComparisonRemoved | ", Level.FINEST);
+		for (EtalonComparisonListener listener: etalonComparisonListeners)
+			listener.etalonComparisonRemoved();
+	}
+
+	private static void notifyEtalonComparisonCUpdated() {
+		Log.debugMessage("Heap.notifyRefMismatchCUpdated | ", Level.FINEST);
+		for (EtalonComparisonListener listener: etalonComparisonListeners)
+			listener.etalonComparisonCUpdated();
+	}
+
 	private static void notifyRefMismatchRemoved() {
 		Log.debugMessage("Heap.notifyRefMismatchRemoved | ", Level.FINEST);
 		for (RefMismatchListener listener: refMismatchListeners)
@@ -771,6 +784,16 @@ public class Heap
 	public static void removeRefMismatchListener(
 			RefMismatchListener listener) {
 		removeListener(refMismatchListeners, listener);
+	}
+
+	public static void removeEtalonComparisonListener(
+			EtalonComparisonListener listener) {
+		removeListener(etalonComparisonListeners, listener);
+	}
+
+	public static void addEtalonComparisonListener(
+			EtalonComparisonListener listener) {
+		addListener(etalonComparisonListeners, listener);
 	}
 
 	/**
@@ -1097,10 +1120,18 @@ public class Heap
 				+ (ec == null ? null : "not null"),
 				Level.FINEST);
 		Heap.etalonComparison = ec;
+		if (ec == null)
+			notifyEtalonComparisonRemoved();
+		else
+			notifyEtalonComparisonCUpdated();
 		if (getRefMismatch() == null)
 			notifyRefMismatchRemoved();
 		else
 			notifyRefMismatchCUpdated();
+	}
+
+	public static EtalonComparison getEtalonComparison() {
+		return Heap.etalonComparison;
 	}
 
 	/*
