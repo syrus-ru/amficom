@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.11 2005/10/14 06:18:20 bass Exp $
+* $Id: LayoutItem.java,v 1.12 2005/10/17 13:49:38 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $
+ * @author $Author: bob $
  * @module resource
  */
 
@@ -217,8 +217,10 @@ public final class LayoutItem extends StorableObject
 	 * @param name The name to set.
 	 */
 	public void setName(final String name) {
-		this.setName0(name);
-		super.markAsChanged();
+		if (this.name.intern() != name.intern()) {
+			this.setName0(name);
+			super.markAsChanged();
+		}
 	}
 	
 	public final String getLayoutName() {
@@ -233,8 +235,10 @@ public final class LayoutItem extends StorableObject
 	}
 	
 	public final void setLayoutName(final String layoutName) {
-		this.setLayoutName0(layoutName);
-		super.markAsChanged();
+		if (this.layoutName.intern() != layoutName.intern()) {
+			this.setLayoutName0(layoutName);
+			super.markAsChanged();
+		}
 	}
 
 	
@@ -247,8 +251,10 @@ public final class LayoutItem extends StorableObject
 	}
 	
 	public final void setParentId(final Identifier parentId) {
-		this.setParentId0(parentId);
-		super.markAsChanged();
+		if(!this.parentId.equals(parentId)) {
+			this.setParentId0(parentId);
+			super.markAsChanged();
+		}
 	}
 
 	/*-********************************************************************
