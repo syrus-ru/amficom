@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/09/22 15:17:15 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/10/17 15:25:35 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $
+ * @author $Author: max $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -64,6 +64,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					boolean condition1 = super.conditionTest(physicalLink.getStartNodeId());
 					boolean condition2 = super.conditionTest(physicalLink.getEndNodeId());
 					return condition1 | condition2;
+				case PHYSICALLINK_TYPE_CODE:
+					return super.conditionTest(physicalLink.getType().getId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
@@ -88,6 +90,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 				case DOMAIN_CODE:
 					return super.conditionTest(map.getDomainId());
+				case MAPLIBRARY_CODE:
+					return super.conditionTest(map.getMapLibraryIds());
+				case MAP_CODE:
+					return super.conditionTest(map.getMapIds());
+				case SITENODE_CODE:
+					return super.conditionTest(map.getExternalNodeIds());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
@@ -112,6 +120,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (this.linkedEntityCode) {
 				case SITENODE_CODE:
 					return super.conditionTest(siteNode.getAttachmentSiteNodeId());
+				case SITENODE_TYPE_CODE:
+					return super.conditionTest(siteNode.getType().getId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}

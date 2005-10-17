@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.13 2005/09/22 15:17:15 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.14 2005/10/17 15:25:35 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,11 +24,12 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/09/22 15:17:15 $
+ * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2005/10/17 15:25:35 $
  * @module map
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -59,6 +60,8 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 								+ SQL_OR
 								+ super.getQuery(PhysicalLinkWrapper.COLUMN_END_NODE_ID)
 								+ CLOSE_BRACKET;
+					case PHYSICALLINK_TYPE_CODE:
+						return super.getQuery(StorableObjectWrapper.COLUMN_TYPE_ID);
 					default:
 						throw newExceptionLinkedEntityIllegal();
 				}
@@ -80,6 +83,12 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				switch (super.condition.getLinkedEntityCode()) {
 					case DOMAIN_CODE:
 						return super.getQuery(MapWrapper.COLUMN_DOMAIN_ID);
+					case MAPLIBRARY_CODE:
+						return super.getLinkedQuery(MapWrapper.LINK_COLUMN_MAP_ID, MapWrapper.LINK_COLUMN_MAP_LIBRARY_ID, MapDatabase.MAP_MAP_LIBRARY);
+					case MAP_CODE:
+						return super.getLinkedQuery(MapWrapper.LINK_COLUMN_MAP_ID, MapWrapper.LINK_COLUMN_CHILD_MAP_ID, MapDatabase.MAP_MAP);
+					case SITENODE_CODE:
+						return super.getLinkedQuery(MapWrapper.LINK_COLUMN_MAP_ID, MapWrapper.LINK_COLUMN_EXTERNAL_NODE_ID, MapDatabase.MAP_EXTERNAL_NODE);
 					default:
 						throw newExceptionLinkedEntityIllegal();
 				}
@@ -101,6 +110,8 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				switch (super.condition.getLinkedEntityCode()) {
 					case SITENODE_CODE:
 						return super.getQuery(SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID);
+					case SITENODE_TYPE_CODE:
+						return super.getQuery(StorableObjectWrapper.COLUMN_TYPE_ID);
 					default:
 						throw newExceptionLinkedEntityIllegal();
 				}
