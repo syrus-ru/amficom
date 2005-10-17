@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.14 2005/10/17 13:11:25 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.15 2005/10/17 13:47:54 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/10/17 13:11:25 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/17 13:47:54 $
  * @module analysis
  */
 
@@ -237,8 +237,11 @@ public class DetailedEventResource {
 				setQi(String.valueOf(MathRef.round_2(perEvent.getQ(perEventId))));
 				setKi(String.valueOf(MathRef.round_2(perEvent.getK(perEventId))));
 			} else {
-				setQi(LangModelAnalyse.getString("QKmodified"));
-				setKi(LangModelAnalyse.getString("QKmodified"));
+				String text = perEvent.isModified(perEventId)
+						? LangModelAnalyse.getString("QKmodified")
+						: DASH;
+				setQi(text);
+				setKi(text);
 			}
 		} else {
 			setQi(DASH);
