@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.18 2005/10/13 15:16:00 bob Exp $
+* $Id: PermissionAttributes.java,v 1.19 2005/10/17 09:58:40 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/13 15:16:00 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/17 09:58:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -390,7 +390,7 @@ public class PermissionAttributes extends StorableObject {
 		OPEN_ETALON_REFLECTOGRAM(true),
 		SAVE_MEASUREMENT_SETUP(true),
 		SAVE_REFLECTOGRAM_FILE(true),
-		EDIT_MASKS(true);
+		EDIT_ETALON(true);
 		
 		private final boolean	enable;
 
@@ -572,7 +572,7 @@ public class PermissionAttributes extends StorableObject {
 		EVALUATION_OPEN_ETALON_REFLECTOGRAM(Evaluation.OPEN_ETALON_REFLECTOGRAM),
 		EVALUATION_SAVE_MEASUREMENT_SETUP(Evaluation.SAVE_MEASUREMENT_SETUP),
 		EVALUATION_SAVE_REFLECTOGRAM_FILE(Evaluation.SAVE_REFLECTOGRAM_FILE),
-		EVALUATION_EDIT_MASKS(Evaluation.EDIT_MASKS),
+		EVALUATION_EDIT_ETALON(Evaluation.EDIT_ETALON),
 		
 		// Survey
 		SURVEY_ENTER(Survey.ENTER),
