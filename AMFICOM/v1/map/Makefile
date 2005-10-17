@@ -71,8 +71,8 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_MAPXML): 
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/*.xsd \
-		$(XMLDIR)/map.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration
@@ -114,9 +114,10 @@ install: xmlinstall $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/map.idl \
+		$(IDL_SOURCES) \
 		$(SOURCES) \
-		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
 .PHONY: pmd
 pmd:

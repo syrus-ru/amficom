@@ -72,14 +72,8 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_CONFIGURATIONXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/CableLinkType.xsd \
-		$(XMLDIR)/CableThreadType.xsd \
-		$(XMLDIR)/ConfigurationLibrary.xsd \
-		$(XMLDIR)/ProtoEquipment.xsd \
-		$(XMLDIR)/Equipment.xsd \
-		$(XMLDIR)/LinkType.xsd \
-		$(XMLDIR)/PortType.xsd \
-		$(XMLDIR)/configuration.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
 
@@ -119,6 +113,7 @@ install: xmlinstall $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/configuration.idl \
+		$(IDL_SOURCES) \
 		$(SOURCES) \
-		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig

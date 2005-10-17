@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.78 2005/10/12 10:52:28 arseniy Exp $
+# $Id: Makefile,v 1.79 2005/10/17 08:07:02 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -79,13 +79,8 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_GENERALXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/general.xsd \
-		$(XMLDIR)/Identifier.xsd \
-		$(XMLDIR)/StorableObject.xsd \
-		$(XMLDIR)/StorableObjectType.xsd \
-		$(XMLDIR)/Characteristic.xsd \
-		$(XMLDIR)/CharacteristicType.xsd \
-		$(XMLDIR)/general.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
 .PHONY: clean
 clean: cleanmach cleancorba cleanxml
@@ -137,7 +132,8 @@ arch:
 		$(SOURCES) \
 		$(SRCDIR)/com/syrus/AMFICOM/general/general.properties \
 		$(SRCDIR)/com/syrus/AMFICOM/general/general_ru.properties \
-		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
 .javadocs: .idl .xml $(JAVADOCDIR)
 	$(JAVADOC) \

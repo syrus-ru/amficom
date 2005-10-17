@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.47 2005/10/17 07:45:33 max Exp $
+# $Id: Makefile,v 1.48 2005/10/17 08:07:02 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -85,8 +85,8 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_SCHEMEXML): 
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/*.xsd \
-		$(XMLDIR)/scheme.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration
@@ -135,9 +135,10 @@ uninstall: $(LIBDIR)/$(LIBNAME)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/scheme.idl \
+		$(IDL_SOURCES) \
 		$(SOURCES) \
-		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig
+		$(wildcard $(XMLDIR)/*.xsd) \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
 #### Distribution ####
 .PHONY: dist
