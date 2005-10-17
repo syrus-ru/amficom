@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMenuBar.java,v 1.31 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorMenuBar.java,v 1.32 2005/10/17 14:11:54 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 /**
  * Панель меню модуля "Редактор топологических схем".
  * 
- * @version $Revision: 1.31 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/17 14:11:54 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -62,6 +62,7 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuMapLibraryOpen = new JMenuItem();
 		final JMenuItem menuMapLibrarySave = new JMenuItem();
 		final JMenuItem menuMapLibrarySaveAs = new JMenuItem();
+		final JMenuItem menuMapLibraryClose = new JMenuItem();
 		final JMenuItem menuMapLibraryRemove = new JMenuItem();
 		final JMenuItem menuMapLibraryExport = new JMenuItem();
 		final JMenuItem menuMapLibraryImport = new JMenuItem();
@@ -181,8 +182,11 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuMapLibrarySaveAs.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
 		menuMapLibrarySaveAs.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS);
 		menuMapLibrarySaveAs.addActionListener(super.actionAdapter);
-		menuMapLibraryRemove.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
-		menuMapLibraryRemove.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE);
+		menuMapLibraryClose.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
+		menuMapLibraryClose.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE);
+		menuMapLibraryClose.addActionListener(super.actionAdapter);
+		menuMapLibraryRemove.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
+		menuMapLibraryRemove.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE);
 		menuMapLibraryRemove.addActionListener(super.actionAdapter);
 		menuMapLibraryExport.setText(I18N.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
 		menuMapLibraryExport.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT);
@@ -250,6 +254,7 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuMapLibrary.add(menuMapLibraryOpen);
 		menuMapLibrary.add(menuMapLibrarySave);
 		menuMapLibrary.add(menuMapLibrarySaveAs);
+		menuMapLibrary.add(menuMapLibraryClose);
 		menuMapLibrary.addSeparator();
 		menuMapLibrary.add(menuMapLibraryRemove);
 		menuMapLibrary.addSeparator();
@@ -378,8 +383,11 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 				menuMapLibrarySaveAs.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
 				menuMapLibrarySaveAs.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
 				
-				menuMapLibraryRemove.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
-				menuMapLibraryRemove.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
+				menuMapLibraryClose.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
+				menuMapLibraryClose.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_CLOSE));
+				
+				menuMapLibraryRemove.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
+				menuMapLibraryRemove.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
 				
 				menuMapLibraryExport.setVisible(MapEditorMenuBar.this.getApplicationModel().isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
 				menuMapLibraryExport.setEnabled(MapEditorMenuBar.this.getApplicationModel().isEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
