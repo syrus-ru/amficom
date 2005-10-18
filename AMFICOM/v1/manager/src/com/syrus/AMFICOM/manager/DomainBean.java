@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.14 2005/10/11 15:34:53 bob Exp $
+ * $Id: DomainBean.java,v 1.15 2005/10/18 15:10:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,108 +11,35 @@ package com.syrus.AMFICOM.manager;
 import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_DESCRIPTION;
 import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
 
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
-import java.net.URL;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class DomainBean extends Bean {
 	
+	private static final String UI_CLASS_ID = "DomainBeanUI";
+	
 	Domain domain;
 	
 	@Override
-	public JPopupMenu getMenu(final Object cell) {
-
-		if (cell != null) {
-			final JPopupMenu popupMenu = new JPopupMenu();
-			
-			
-			
-			final AbstractAction action = new AbstractAction(I18N.getString("Manager.Dialog.EnterIntoDomain")) {
-
-				public void actionPerformed(ActionEvent e) {
-					
-					MPort port = (MPort) ((DefaultGraphCell) cell).getChildAt(0);
-					
-					List<Port> ports = port.getSources();
-					
-					if (ports.isEmpty()) {
-						JOptionPane.showMessageDialog(popupMenu, 
-							I18N.getString("Manager.Error.DomainDoesnotContainNetwork"), 
-							I18N.getString("Manager.Error"),
-							JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-					
-					for(Port port2 : ports) {
-						MPort port3 = (MPort) port2;
-						Log.debugMessage("DomainBean.getMenu | " + port3, Log.DEBUGLEVEL10);
-						AbstractBean bean2 = port3.getBean();
-						
-						if (bean2 == null || 
-								!bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
-							JOptionPane.showMessageDialog(popupMenu, 
-								I18N.getString("Manager.Error.DomainContainsNotOnlyNetwork"), 
-								I18N.getString("Manager.Error"),
-								JOptionPane.ERROR_MESSAGE);
-							return;
-						}
-					}
-					
-					DomainBean.this.graphText.setPerspective(new DomainPerpective(DomainBean.this.graphText, DomainBean.this, cell));				
-					
-					
-					
-				}
-			};
-			
-			Icon icon;
-			URL resource = DomainBean.class.getClassLoader().getResource("com/syrus/AMFICOM/manager/resources/icons/enter.gif");
-			if (resource != null) {
-				icon = new ImageIcon(resource);
-			}
-			
-			// TODO
-			
-			
-			popupMenu.add(action);
-			return popupMenu;
-		}
-
-		return null;
-	}
+	public String getUIClassID() {
+		return UI_CLASS_ID;
+	}	
 	
 	@Override
-	protected void setId(Identifier storableObject) {
+	protected void setId(Identifier storableObject) throws ApplicationException {
 		super.setId(storableObject);
-		try {
-			this.domain = StorableObjectPool.getStorableObject(this.id, true);
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.domain = StorableObjectPool.getStorableObject(this.id, true);
 	}
 	
 	public final String getDescription() {
@@ -135,11 +62,10 @@ public class DomainBean extends Bean {
 	}
 	
 	@Override
-	public final void setName(String name) {
-		String name2 = this.domain.getName();
-		if (name2 != name &&
-				(name2 != null && !name2.equals(name) ||
-				!name.equals(name2))) {
+	public final void setName(final String name) {
+		String name2 = this.domain.getName().intern();
+		if (name2 != name.intern() ) {
+			assert Log.debugMessage("DomainBean.setName | was:" + name2 + ", now:" + name, Log.DEBUGLEVEL09);
 			this.domain.setName(name);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
 		}

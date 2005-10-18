@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionBean.java,v 1.1 2005/10/11 15:31:59 bob Exp $
+ * $Id: PermissionBean.java,v 1.2 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,25 +33,27 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/11 15:31:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class PermissionBean extends Bean implements UserItem {
 
+	private static final String UI_CLASS_ID = "PermissionAttributesBeanUI";
+	
 	private PermissionAttributes permissionAttributes;
-	private HashMap<PermissionCodename, Boolean>	rolePermissionMap;
+	private HashMap<PermissionCodename, Boolean>	rolePermissionMap;	
 	
 	@Override
-	protected void setId(Identifier id) {
+	public String getUIClassID() {
+		return UI_CLASS_ID;
+	}
+	
+	@Override
+	protected void setId(Identifier id) throws ApplicationException {
 		super.setId(id);
-		try {
-			this.permissionAttributes = StorableObjectPool.getStorableObject(this.id, true);
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.permissionAttributes = StorableObjectPool.getStorableObject(this.id, true);
 	}
 
 	@Override
@@ -61,9 +63,6 @@ public class PermissionBean extends Bean implements UserItem {
 
 	@Override
 	public void setName(String name) {
-//		throw new UnsupportedOperationException(
-//												"PermissionBean.setName() is unsupported");
-		
 	}
 	
 	public final Identifier getUserId() {
@@ -80,9 +79,6 @@ public class PermissionBean extends Bean implements UserItem {
 		}		
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.manager.AbstractBean#applyTargetPort(com.syrus.AMFICOM.manager.MPort)
-	 */
 	@Override
 	public void applyTargetPort(MPort oldPort, MPort newPort) {
 		// TODO Auto-generated method stub

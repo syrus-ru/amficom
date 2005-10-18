@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanWrapper.java,v 1.2 2005/10/11 15:34:53 bob Exp $
+ * $Id: ServerBeanWrapper.java,v 1.3 2005/10/18 15:10:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,12 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ServerBeanWrapper implements Wrapper {
+public class ServerBeanWrapper implements Wrapper<ServerBean> {
 
 	public static final String		KEY_NAME		= "name";
 	public static final String		KEY_DESCRIPTION	= "description";
@@ -33,13 +33,9 @@ public class ServerBeanWrapper implements Wrapper {
 	private List<String>					keys;
 	
 	private ServerBeanWrapper() {
-		// empty private constructor
-		String[] keysArray = new String[] { KEY_NAME, 
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] { KEY_NAME, 
 				KEY_DESCRIPTION, 
-				KEY_HOSTNAME};
-
-		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
-		
+				KEY_HOSTNAME}));		
 	}
 
 	public static ServerBeanWrapper getInstance() {
@@ -83,16 +79,15 @@ public class ServerBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public Object getValue(	Object object,
+	public Object getValue(	ServerBean serverBean,
 							String key) {
-		if (object instanceof ServerBean) {
-			ServerBean bean = (ServerBean) object;
+		if (serverBean != null) {
 			if (key.equals(KEY_NAME)) {
-				return bean.getName();
+				return serverBean.getName();
 			} else if (key.equals(KEY_DESCRIPTION)) {
-				return bean.getDescription();
+				return serverBean.getDescription();
 			} else if (key.equals(KEY_HOSTNAME)) {
-				return bean.getHostname();
+				return serverBean.getHostname();
 			}
 		}
 		return null;
@@ -109,17 +104,16 @@ public class ServerBeanWrapper implements Wrapper {
 
 	}
 
-	public void setValue(	Object object,
+	public void setValue(	ServerBean serverBean,
 							String key,
 							Object value) {
-		if (object instanceof ServerBean) {
-			ServerBean bean = (ServerBean) object;
+		if (serverBean != null) {
 			if (key.equals(KEY_NAME)) {
-				bean.setName((String) value);
+				serverBean.setName((String) value);
 			} else if (key.equals(KEY_DESCRIPTION)) {
-				bean.setDescription((String) value);
+				serverBean.setDescription((String) value);
 			} else if (key.equals(KEY_HOSTNAME)) {
-				bean.setHostname((String) value);
+				serverBean.setHostname((String) value);
 			} 
 		}
 	}

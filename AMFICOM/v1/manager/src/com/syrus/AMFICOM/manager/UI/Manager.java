@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.12 2005/10/13 15:25:19 bob Exp $
+* $Id: Manager.java,v 1.13 2005/10/18 15:10:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/13 15:25:19 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -273,7 +273,7 @@ public class Manager extends AbstractApplication {
 						Module.EVALUATION);
 				
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.EVALUATION_EDIT_MASKS, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_EDIT_ETALON, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
@@ -285,11 +285,11 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.SURVEY);
+						Module.OBSERVE);
 				
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
 			}
 			
 			{
@@ -413,13 +413,13 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						operator.getId(), 
-						Module.SURVEY);
+						Module.OBSERVE);
 				
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_ENTER, true);				
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_ALARM_MANAGE, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);				
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ALARM_MANAGE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
 			}
 			
 			{
@@ -486,11 +486,11 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						subscriber.getId(), 
-						Module.SURVEY);
+						Module.OBSERVE);
 				
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_ENTER, true);				
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);				
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
 			}			
 		}
 		
@@ -680,14 +680,14 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						specialist.getId(), 
-						Module.SURVEY);
+						Module.OBSERVE);
 				
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_ALARM_MANAGE, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.SURVEY_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ALARM_MANAGE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
 			}
 			
 			{

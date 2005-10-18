@@ -1,4 +1,10 @@
-
+/*-
+ * $Id: DomainBeanWrapper.java,v 1.3 2005/10/18 15:10:38 bob Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.manager;
 
 import java.util.Arrays;
@@ -8,21 +14,13 @@ import java.util.List;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
-/*-
- * $Id: DomainBeanWrapper.java,v 1.2 2005/10/11 15:34:53 bob Exp $
- *
- * Copyright ¿ 2005 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
- */
-
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainBeanWrapper implements Wrapper {
+public class DomainBeanWrapper implements Wrapper<DomainBean> {
 
 	public static final String		KEY_NAME		= "name";
 	public static final String		KEY_DESCRIPTION	= "description";
@@ -32,11 +30,9 @@ public class DomainBeanWrapper implements Wrapper {
 	private List<String>					keys;
 	
 	private DomainBeanWrapper() {
-		// empty private constructor
-		String[] keysArray = new String[] { KEY_NAME, 
-				KEY_DESCRIPTION};
-
-		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
+		this.keys = Collections.unmodifiableList(
+			Arrays.asList(new String[] { KEY_NAME, 
+				KEY_DESCRIPTION}));
 
 	}
 
@@ -55,18 +51,20 @@ public class DomainBeanWrapper implements Wrapper {
 		return this.keys;
 	}
 
-	public String getName(final String key) {
-		if (key.equals(KEY_NAME)) {
+	public String getName(String key) {
+		key = key.intern();
+		if (key == KEY_NAME) {
 			return I18N.getString("Manager.Entity.Domain.attributes.Name");
-		} else if (key.equals(KEY_DESCRIPTION)) { 
+		} else if (key == KEY_DESCRIPTION) { 
 			return I18N.getString("Manager.Entity.Domain.attributes.Description"); 
 		}		
 		return null;
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(KEY_NAME) || 
-				key.equals(KEY_DESCRIPTION)) { 
+		key = key.intern();
+		if (key == KEY_NAME || 
+				key == KEY_DESCRIPTION) { 
 			return String.class; 
 		}
 		return null;
@@ -76,14 +74,14 @@ public class DomainBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public Object getValue(	Object object,
+	public Object getValue(	DomainBean domainBean,
 							String key) {
-		if (object instanceof DomainBean) {
-			DomainBean bean = (DomainBean) object;
-			if (key.equals(KEY_NAME)) {
-				return bean.getName();
-			} else if (key.equals(KEY_DESCRIPTION)) {
-				return bean.getDescription();
+		if (domainBean != null) {
+			key = key.intern();
+			if (key == KEY_NAME) {
+				return domainBean.getName();
+			} else if (key == KEY_DESCRIPTION) {				
+				return domainBean.getDescription();
 			} 
 		}
 		return null;
@@ -99,15 +97,15 @@ public class DomainBeanWrapper implements Wrapper {
 		// nothing
 	}
 
-	public void setValue(	Object object,
+	public void setValue(	DomainBean domainBean,
 							String key,
 							Object value) {
-		if (object instanceof DomainBean) {
-			DomainBean bean = (DomainBean) object;
-			if (key.equals(KEY_NAME)) {
-				bean.setName((String) value);
-			} else if (key.equals(KEY_DESCRIPTION)) {
-				bean.setDescription((String) value);
+		if (domainBean != null) {
+			key = key.intern();
+			if (key == KEY_NAME) {
+				domainBean.setName((String) value);
+			} else if (key == KEY_DESCRIPTION) {
+				domainBean.setDescription((String) value);
 			}
 		}
 	}

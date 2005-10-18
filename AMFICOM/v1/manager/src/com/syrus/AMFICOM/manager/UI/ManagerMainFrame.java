@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.13 2005/10/13 15:28:14 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.14 2005/10/18 15:10:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,10 +91,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -103,7 +101,6 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
 import com.syrus.AMFICOM.manager.Bean;
@@ -116,12 +113,14 @@ import com.syrus.AMFICOM.manager.Perspective;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
+import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
+import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/13 15:28:14 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -169,7 +168,9 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	JScrollPane pane;
 	JTabbedPane tabbedPane;
 
-HashMap<JComponent, Perspective>	perspectiveMap;
+	HashMap<JComponent, Perspective>	perspectiveMap;
+
+	private BeanUI	beanUI;
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
 		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
@@ -231,10 +232,7 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 							ApplicationModel.MENU_VIEW_ARRANGE));
 
 					}
-
-				});
-			
-				
+				});				
 			}
 		}, new AbstractMainToolBar() {});
 		
@@ -844,7 +842,7 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 		}
 		
 		
-		String name = item.getName();		
+				
 		DefaultGraphCell itemCell = null;		
 		int x = 0;
 		int y = 0;
@@ -860,66 +858,12 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 			}
 		}
 		
-		for(int i = 0; i<model.getRootCount(); i++) {
-			DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
-			if (!model.isEdge(cell) && !model.isPort(cell)) {				
-				MPort port = (MPort) cell.getChildAt(0);
-				AbstractBean bean = port.getBean();
-				if (name.equals(bean.getCodeName())) {
-					if (!graphLayoutCache.isVisible(cell)) {
-						graphLayoutCache.setVisible(cell, true);
-					}
-					
-					itemCell = cell;
-					
-					AttributeMap attributeMap = new AttributeMap();
-					GraphConstants.setBounds(attributeMap,
-						new Rectangle2D.Double(x, y, 0, 0));
-					if (title != null) {
-						GraphConstants.setValue(attributeMap,
-							title);
-					}
-					Map viewMap = new Hashtable();
-					viewMap.put(itemCell, attributeMap);
-					model.edit(viewMap, null, null, null);
-					
-					
-					if (parentCell != null) {
-						MPort parentPort = (MPort) parentCell.getChildAt(0);
-						Edge connectionEdge = null;
-						for(int j = 0; j<model.getRootCount(); j++) {
-							DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
-							if (model.isEdge(edgeCell)) {
-								Edge edge = (Edge) edgeCell;
-								Object target = edge.getSource();
-								Object source = edge.getTarget();								
-								if (target == port && source == parentPort) {
-									connectionEdge = edge;
-									break;
-								}
-							}
-						}
-						
-						
-						if (connectionEdge != null) {
-							// make edge visible
-							if (!graphLayoutCache.isVisible(connectionEdge)) {
-								graphLayoutCache.setVisible(connectionEdge, true);
-							}
-						} else {
-							// otherwise create edge
-							this.createEdge(cell, parentCell);
-						}
-					}
-					
-				}
-			}
-		}
+		itemCell = this.getDefaultGraphCell(item);
 		
 		if (itemCell == null) {
-			AbstractBeanFactory factory = this.getFactory(name);
-			
 			AbstractBean bean = this.getCell(item);
+			
+			final BeanUI beanUI = BeanUI.BeanUIFactory.getBeanUI(bean.getUIClassID(), this);
 			
 			itemCell = this.createChild(
 				null, 
@@ -929,7 +873,7 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 				y, 
 				0, 
 				0, 
-				factory.getImage());
+				beanUI.getImage(bean));
 			if (!graphLayoutCache.isVisible(itemCell)) {
 				graphLayoutCache.setVisible(itemCell, true);
 			}
@@ -962,19 +906,83 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 					this.createEdge(itemCell, parentCell);
 				}
 			}
+		} else {
+			final AttributeMap attributeMap = new AttributeMap();
+			GraphConstants.setBounds(attributeMap,
+				new Rectangle2D.Double(x, y, 0, 0));
+			if (title != null) {
+				GraphConstants.setValue(attributeMap,
+					title);
+			}
+			Map viewMap = new Hashtable();
+			viewMap.put(itemCell, attributeMap);
+			model.edit(viewMap, null, null, null);
+			
+			
+			if (parentCell != null) {
+				MPort parentPort = (MPort) parentCell.getChildAt(0);
+				Edge connectionEdge = null;
+				for(int j = 0; j<model.getRootCount(); j++) {
+					DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
+					if (model.isEdge(edgeCell)) {
+						Edge edge = (Edge) edgeCell;
+						Object target = edge.getSource();
+						Object source = edge.getTarget();								
+						if (source == parentPort && target == itemCell.getChildAt(0)) {
+							connectionEdge = edge;
+							break;
+						}
+					}
+				}
+				
+				
+				if (connectionEdge != null) {
+					// make edge visible
+					if (!graphLayoutCache.isVisible(connectionEdge)) {
+						graphLayoutCache.setVisible(connectionEdge, true);
+					}
+				} else {
+					// otherwise create edge
+					this.createEdge(itemCell, parentCell);
+				}
+			}
 		}
 		
 		return itemCell;
 	}
 	
+	public DefaultGraphCell getDefaultGraphCell(final LayoutItem item) {
+		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+		final GraphModel model = this.graph.getModel();
+		
+		final String name = item.getName();
+		
+		for(int i = 0; i < model.getRootCount(); i++) {
+			DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
+			if (!model.isEdge(cell) && !model.isPort(cell)) {				
+				MPort port = (MPort) cell.getChildAt(0);
+				AbstractBean bean = port.getBean();
+				if (name.equals(bean.getCodeName())) {
+					if (!graphLayoutCache.isVisible(cell)) {
+						graphLayoutCache.setVisible(cell, true);
+					}
+					
+					return cell;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
 	private AbstractBeanFactory getFactory(final String name) {
-		assert Log.debugMessage("ManagerMainFrame.getFactory | name:" + name, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("ManagerMainFrame.getFactory | name:" + name, Log.DEBUGLEVEL09);
 		for(final String  codename: this.factoryMap.keySet()) {
 			assert Log.debugMessage("ManagerMainFrame.getFactory | " + codename,
-				Log.DEBUGLEVEL10);
+				Log.DEBUGLEVEL09);
 			if (name.startsWith(codename)) {
 				assert Log.debugMessage("ManagerMainFrame.getFactory | found " + codename,
-					Log.DEBUGLEVEL10);
+					Log.DEBUGLEVEL09);
 				return this.factoryMap.get(codename);
 			}
 		}
@@ -989,7 +997,15 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 		
 		if (bean == null) {
 			AbstractBeanFactory factory = this.getFactory(name);
-			bean = factory.createBean(name);
+			try {
+				bean = factory.createBean(name);
+			} catch (final ApplicationException ae) {
+				ae.printStackTrace();
+				JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
+					ae.getMessage(), 
+					I18N.getString("Manager.Error"),
+					JOptionPane.ERROR_MESSAGE);
+			}
 			this.beanMap.put(name, bean);
 		}
 		
@@ -1268,46 +1284,9 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 		return this.entityToolBar;
 	}
 	
-	public final JButton createAction(final AbstractBeanFactory factory) {
-		final String name = factory.getName();
-		Icon icon = factory.getIcon();
-		this.factoryMap.put(factory.getCodename(), factory);
-		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
-			
-			public void actionPerformed(ActionEvent e) {
-				try {
-					AbstractBean bean = factory.createBean(ManagerMainFrame.this.perspective);
-					ManagerMainFrame.this.createChild(null, 
-						factory.getShortName() + "-" + factory.getCount(), 
-						bean, 
-						20, 
-						20, 
-						0, 
-						0, 
-						factory.getImage());
-				} catch (CreateObjectException e1) {
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
-						e1.getMessage(), 
-						I18N.getString("Manager.Error"),
-						JOptionPane.ERROR_MESSAGE);
-				} catch (IllegalObjectEntityException e1) {
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
-						e1.getMessage(), 
-						I18N.getString("Manager.Error"),
-						JOptionPane.ERROR_MESSAGE);
-
-				}
-				
-				
-			}
-		};		
-	
-		action.putValue(Action.SHORT_DESCRIPTION, name);
-		return this.entityToolBar.add(action);
-	}
-	
+	public final JButton addAction(final AbstractAction abstractAction) {
+		return this.entityToolBar.add(abstractAction);
+	}	
 
 	DefaultEdge createEdge(final DefaultGraphCell source, 
 	                       final DefaultGraphCell target) {
@@ -1406,7 +1385,7 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 	}
 
 	
-	DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, Object object, double x,
+	public DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, Object object, double x,
 	         	             			double y, double w, double h, Icon image) {
 		DefaultGraphCell cell = this.createVertex(name, object, x, y, w, h, image);
  		GraphLayoutCache cache = this.graph.getGraphLayoutCache();
@@ -1416,7 +1395,8 @@ HashMap<JComponent, Perspective>	perspectiveMap;
  			DefaultEdge edge = this.createEdge(cell, parentCell);
  			if (object instanceof AbstractBean) {
 				AbstractBean bean = (AbstractBean)object;
-				bean.updateEdgeAttributes(edge, (MPort) parentCell.getChildAt(0));
+				// XXX
+//				bean.updateEdgeAttributes(edge, (MPort) parentCell.getChildAt(0));
 			}
  		}
  		return cell;
@@ -1426,6 +1406,9 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 		final JInternalFrame frame = 
 			(JInternalFrame) this.frames.get(PROPERTIES_FRAME);
 		frame.setTitle(I18N.getString(PROPERTIES_FRAME));
+		if (this.beanUI != null) {
+			this.beanUI.disposePropertyPanel();
+		}
 		this.propertyPanel.removeAll();		
 		if (e == null) {			
 			return;
@@ -1465,15 +1448,16 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 				Object userObject = port.getUserObject();
 				
 				if (userObject instanceof AbstractBean) {
-					JPanel propertyPanel2 = ((AbstractBean)userObject).getPropertyPanel();
+					final AbstractBean abstractBean = (AbstractBean)userObject;
+					this.beanUI = BeanUI.BeanUIFactory.getBeanUI(abstractBean.getUIClassID(), this);
+					JPanel propertyPanel2 = this.beanUI.getPropertyPanel(abstractBean);
 					if (propertyPanel2 != null) {
 						frame.setTitle(I18N.getString(PROPERTIES_FRAME)
 							+ " : "
 							+ ((AbstractBean)userObject).getName());
 						this.propertyPanel.add(propertyPanel2, this.gbc2);
 					}					
-				}
-				
+				}				
 			} else {
 				selectionModel.clearSelection();
 			}
@@ -1486,7 +1470,6 @@ HashMap<JComponent, Perspective>	perspectiveMap;
 		this.remove.setEnabled(enabled);
 	}
 
-	
 	private void createTreeModel() {		
 		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel());
 		this.tree = new JTree(this.treeModel);

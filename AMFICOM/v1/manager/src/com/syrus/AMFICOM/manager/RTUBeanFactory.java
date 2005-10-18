@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.16 2005/10/11 15:34:53 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.17 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,40 +8,26 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_DESCRIPTION;
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_HOSTNAME;
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_MCM_ID;
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_NAME;
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_PORT;
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.PROPERTY_MCMS_REFRESHED;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class RTUBeanFactory extends TabledBeanFactory {
+public class RTUBeanFactory extends IdentifiableBeanFactory<RTUBean> {
 	
 	private static RTUBeanFactory instance;
 	
 	private RTUBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.RemoteTestUnit", 
-			"Manager.Entity.RemoteTestUnit.acronym", 
-			"com/syrus/AMFICOM/manager/resources/icons/rtu.gif", 
-			"com/syrus/AMFICOM/manager/resources/rtu.png");
+			"Manager.Entity.RemoteTestUnit.acronym");
 		super.graphText = graphText;
 	}
 	
@@ -53,8 +39,8 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean(Perspective perspective) 
-	throws CreateObjectException, IllegalObjectEntityException {
+	public RTUBean createBean(Perspective perspective) 
+	throws ApplicationException {
 		
 		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
@@ -70,36 +56,15 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	}
 	
 	@Override
-	public AbstractBean createBean(Identifier identifier) {
+	public RTUBean createBean(Identifier identifier) 
+	throws ApplicationException {
 		final RTUBean bean = new RTUBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
-		bean.setId(identifier);	
-		
+		bean.setId(identifier);		
 
-		
-		bean.table = super.getTable(bean, 
-			RTUBeanWrapper.getInstance(bean.graphText.getDispatcher()),
-			new String[] { KEY_NAME, 
-				KEY_DESCRIPTION, 
-				KEY_MCM_ID,
-				KEY_HOSTNAME,
-				KEY_PORT});
-		
-		bean.graphText.getDispatcher().addPropertyChangeListener(
-			PROPERTY_MCMS_REFRESHED,
-			new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					((WrapperedPropertyTable)bean.table).updateModel();
-				}
-			});
-		
-		bean.addPropertyChangeListener(this.listener);
-		bean.setPropertyPanel(this.panel);
-		
 		return bean;
 	}
 	

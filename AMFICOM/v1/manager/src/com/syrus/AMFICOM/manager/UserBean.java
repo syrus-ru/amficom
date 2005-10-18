@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.22 2005/10/13 15:28:14 bob Exp $
+ * $Id: UserBean.java,v 1.23 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,31 +8,17 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTable;
-
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.GraphConstants;
-
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -52,32 +38,33 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/13 15:28:14 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class UserBean extends Bean implements  WorkstationItem {
+public class UserBean extends Bean implements WorkstationItem {
 
 	final SortedSet<Role>	roles;
 	
 	final Map<String, String> propertyName;
 	
-	final Map<Identifier, JTable> domainPermissionTable;
-	
-	JPanel switchPanel;
-
 	private SystemUser	user;
 
 	private Identifier	domainId;
 	private Map<Module, PermissionAttributes>	permissionAttributesMap;
 
+	private static final String UI_CLASS_ID = "SystemUserBeanUI";
+	
+	@Override
+	public String getUIClassID() {
+		return UI_CLASS_ID;
+	}
 	
 	UserBean(final SortedSet<Role> names) {
 		this.roles = names;
 		
 		this.propertyName = new HashMap<String, String>();
-		this.domainPermissionTable = new HashMap<Identifier, JTable>();	
 		this.permissionAttributesMap = new HashMap<Module, PermissionAttributes>();
 		
 	}
@@ -107,105 +94,22 @@ public class UserBean extends Bean implements  WorkstationItem {
 	}
 	
 	@Override
-	protected void setId(Identifier storableObject) {
+	protected void setId(Identifier storableObject) 
+	throws ApplicationException {
 		super.setId(storableObject);
-		try {
-			this.user = StorableObjectPool.getStorableObject(this.id, true);
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.user = StorableObjectPool.getStorableObject(this.id, true);
 	}
 
-	@Override
-	public void updateEdgeAttributes(	DefaultEdge edge,
-										MPort port) {
-		AttributeMap attributes = edge.getAttributes();
-		GraphConstants.setLineWidth(attributes, 10.0f);
-		GraphConstants.setLineEnd(attributes, GraphConstants.ARROW_TECHNICAL);
-		GraphConstants.setLineColor(attributes, Color.LIGHT_GRAY);
-		GraphConstants.setForeground(attributes, Color.BLACK);
-	}
+//	@Override
+//	public void updateEdgeAttributes(	DefaultEdge edge,
+//										MPort port) {
+//		AttributeMap attributes = edge.getAttributes();
+//		GraphConstants.setLineWidth(attributes, 10.0f);
+//		GraphConstants.setLineEnd(attributes, GraphConstants.ARROW_TECHNICAL);
+//		GraphConstants.setLineColor(attributes, Color.LIGHT_GRAY);
+//		GraphConstants.setForeground(attributes, Color.BLACK);
+//	}
 
-	@Override
-	public JPopupMenu getMenu(final Object cell) {
-
-		if (cell != null) {
-			final JPopupMenu popupMenu = new JPopupMenu();
-			
-			final Set<Identifier> roleIds = this.user.getRoleIds();
-			
-			for(final Role role : this.roles) {
-
-				
-				final Action action = new AbstractAction(role.getDescription()){
-					
-					public void actionPerformed(final ActionEvent e) {
-						final JCheckBoxMenuItem checkBoxMenuItem = 
-							(JCheckBoxMenuItem) e.getSource();
-						
-						if (checkBoxMenuItem.isSelected()) {
-							user.addRole(role);
-						} else {
-							user.removeRole(role);
-						}
-						
-					}
-				};
-				
-				final JCheckBoxMenuItem checkBoxMenuItem =
-					new JCheckBoxMenuItem(action);
-				checkBoxMenuItem.setSelected(roleIds.contains(role));
-				
-				popupMenu.add(checkBoxMenuItem);
-			}
-
-			//			popupMenu.add(new AbstractAction(I18N
-//					.getString("Manager.Entity.User.new")
-//					+ "...") {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					String string = JOptionPane.showInputDialog(null,
-//						I18N.getString("Manager.Dialog.Add.User"),
-//						I18N.getString("Manager.Entity.User.new"),
-//						JOptionPane.OK_CANCEL_OPTION);
-//					if (string == null) { return; }
-//					try {
-//						UserBean.this.roles.add(string);
-//						UserBean.this.setNature(string);
-//						AttributeMap attributeMap = new AttributeMap();
-//						GraphConstants.setValue(attributeMap, string);
-//						Map viewMap = new Hashtable();
-//						viewMap.put(cell, attributeMap);
-//						JGraph graph = UserBean.this.graphText.getGraph();
-//						graph.getModel().edit(viewMap, null, null, null);
-//						graph.getSelectionModel().setSelectionCell(cell);
-//					} catch (ApplicationException e1) {
-//						e1.printStackTrace();
-//						JOptionPane.showMessageDialog(UserBean.this.graphText.getGraph(), 
-//							e1.getMessage(), 
-//							I18N.getString("Manager.Error"),
-//							JOptionPane.ERROR_MESSAGE);
-//					}
-//				}
-//			});
-			
-			popupMenu.addSeparator();
-			
-			popupMenu.add(new AbstractAction(I18N.getString("Manager.Dialog.GotoUserPermissions")) {
-
-				public void actionPerformed(ActionEvent e) {					
-					UserBean.this.graphText.setPerspective(new SystemUserPerpective(UserBean.this.graphText, UserBean.this, cell));
-				}
-			});
-			
-			return popupMenu;
-		}
-
-		return null;
-	}
-
-	
 	private Characteristic findCharacteristic(String codename) throws ApplicationException {
 		TypicalCondition typicalCondition = new TypicalCondition(codename, 
 			OperationSort.OPERATION_EQUALS, 
@@ -303,12 +207,6 @@ public class UserBean extends Bean implements  WorkstationItem {
 	
 	protected final String getNature() throws ApplicationException {
 		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_NATURE);
-	}
-
-	protected final void setNature(final String nature) throws ApplicationException {
-		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_NATURE, 
-			nature,
-			UserBeanWrapper.USER_NATURE);
 	}
 
 	public final String getBuilding() throws ApplicationException {
@@ -510,6 +408,14 @@ public class UserBean extends Bean implements  WorkstationItem {
 			return permissionAttributes;
 		}
 		return null;
+	}
+	
+	public final SystemUser getUser() {
+		return this.user;
+	}
+	
+	public final SortedSet<Role> getRoles() {
+		return this.roles;
 	}
 
 }

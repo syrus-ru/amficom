@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanWrapper.java,v 1.10 2005/10/11 15:34:53 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.11 2005/10/18 15:10:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,12 +29,12 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class RTUBeanWrapper implements Wrapper {
+public class RTUBeanWrapper implements Wrapper<RTUBean> {
 
 	public static final String		KEY_NAME		= "name";
 	public static final String		KEY_DESCRIPTION	= "description";
@@ -149,20 +149,19 @@ public class RTUBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public Object getValue(	Object object,
+	public Object getValue(	RTUBean rtuBean,
 							String key) {
-		if (object instanceof RTUBean) {
-			RTUBean bean = (RTUBean) object;
+		if (rtuBean != null) {
 			if (key.equals(KEY_NAME)) {
-				return bean.getName();
+				return rtuBean.getName();
 			} else if (key.equals(KEY_DESCRIPTION)) {
-				return bean.getDescription();
+				return rtuBean.getDescription();
 			} else if (key.equals(KEY_HOSTNAME)) {
-				return bean.getHostname();
+				return rtuBean.getHostname();
 			} else if (key.equals(KEY_PORT)) { 
-				return Short.valueOf(bean.getPort()); 
+				return Short.valueOf(rtuBean.getPort()); 
 			} else if (key.equals(KEY_MCM_ID)) { 
-				return bean.getMcmId(); 
+				return rtuBean.getMcmId(); 
 			}  
 		}
 		return null;
@@ -180,25 +179,24 @@ public class RTUBeanWrapper implements Wrapper {
 
 	}
 
-	public void setValue(	Object object,
+	public void setValue(	RTUBean rtuBean,
 							String key,
 							Object value) {
-		if (object instanceof RTUBean) {
-			RTUBean bean = (RTUBean) object;
+		if (rtuBean != null) {
 			if (key.equals(KEY_NAME)) {
-				bean.setName((String) value);
+				rtuBean.setName((String) value);
 			} else if (key.equals(KEY_DESCRIPTION)) {
-				bean.setDescription((String) value);
+				rtuBean.setDescription((String) value);
 			} else if (key.equals(KEY_HOSTNAME)) {
-				bean.setHostname((String) value);
+				rtuBean.setHostname((String) value);
 			} else if (key.equals(KEY_PORT)) { 
 				try {
-					bean.setPort(Short.parseShort((String)value));
+					rtuBean.setPort(Short.parseShort((String)value));
 				} catch(NumberFormatException nfe) {
 					// nothing can do 
 				}
 			} else if (key.equals(KEY_MCM_ID)) {
-				bean.setMcmId((Identifier) value);
+				rtuBean.setMcmId((Identifier) value);
 			}
 		}
 	}

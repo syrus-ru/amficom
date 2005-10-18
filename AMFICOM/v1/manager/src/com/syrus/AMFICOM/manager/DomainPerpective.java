@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.7 2005/10/13 15:25:47 bob Exp $
+* $Id: DomainPerpective.java,v 1.8 2005/10/18 15:10:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,32 +30,31 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/13 15:25:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainPerpective implements Perspective {
+public class DomainPerpective extends AbstractPerspective {
 
-	private final ManagerMainFrame graphText;
 	private final DomainBean domainBean;
 	private Object	cell;
 	
 	public DomainPerpective(final ManagerMainFrame graphText,
 	                        final DomainBean domainBean,
 	                        final Object cell) {
-		this.graphText = graphText;
+		super(graphText);
 		this.domainBean = domainBean;
 		this.cell = cell;
-	}
+	}	
 	
 	public void addEntities(final JToolBar entityToolBar) {
-		this.graphText.createAction(UserBeanFactory.getInstance(this.graphText));
-		this.graphText.createAction(WorkstationBeanFactory.getInstance(this.graphText));
+		this.managerMainFrame.addAction(super.createAction(UserBeanFactory.getInstance(this.managerMainFrame)));
+		this.managerMainFrame.addAction(super.createAction(WorkstationBeanFactory.getInstance(this.managerMainFrame)));
 		entityToolBar.addSeparator();
-		this.graphText.createAction(RTUBeanFactory.getInstance(this.graphText));
-		this.graphText.createAction(ServerBeanFactory.getInstance(this.graphText));
-		this.graphText.createAction(MCMBeanFactory.getInstance(this.graphText));
+		this.managerMainFrame.addAction(super.createAction(RTUBeanFactory.getInstance(this.managerMainFrame)));
+		this.managerMainFrame.addAction(super.createAction(ServerBeanFactory.getInstance(this.managerMainFrame)));
+		this.managerMainFrame.addAction(super.createAction(MCMBeanFactory.getInstance(this.managerMainFrame)));
 		entityToolBar.addSeparator();		
 	}
 	
@@ -72,7 +71,7 @@ public class DomainPerpective implements Perspective {
 	}
 	
 	public boolean isValid() {
-		JGraph graph = this.graphText.getGraph();
+		final JGraph graph = this.managerMainFrame.getGraph();
 		final GraphLayoutCache graphLayoutCache = graph.getGraphLayoutCache();
 		final GraphModel model = graph.getModel();
 		for(final Object root : graph.getRoots()) {
@@ -134,9 +133,9 @@ public class DomainPerpective implements Perspective {
 
 	
 	public void perspectiveApplied() {
-		this.graphText.showOnlyDescendants((DefaultGraphCell) this.cell);
+		this.managerMainFrame.showOnlyDescendants((DefaultGraphCell) this.cell);
 		
-		this.graphText.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
+		this.managerMainFrame.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
 				ObjectEntities.SYSTEMUSER, 
 				WorkstationBeanFactory.WORKSTATION_CODENAME, 
 				ObjectEntities.KIS, 

@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanWrapper.java,v 1.7 2005/10/11 15:34:53 bob Exp $
+ * $Id: MCMBeanWrapper.java,v 1.8 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,12 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class MCMBeanWrapper implements Wrapper {
+public class MCMBeanWrapper implements Wrapper<MCMBean> {
 
 	public static final String		KEY_NAME		= "name";
 	public static final String		KEY_DESCRIPTION	= "description";
@@ -55,18 +55,13 @@ public class MCMBeanWrapper implements Wrapper {
 	private Map<String, Identifier> 	userIdMap;
 	
 	private MCMBeanWrapper(final Dispatcher dispatcher) {
-		// empty private constructor
-		String[] keysArray = new String[] { KEY_NAME, 
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] { KEY_NAME, 
 				KEY_DESCRIPTION, 
 				KEY_HOSTNAME,
 				KEY_SERVER_ID,
-				KEY_USER_ID};
-
-		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
+				KEY_USER_ID}));
 		this.serverIdMap  = new HashMap<String, Identifier>();
 		this.userIdMap  = new HashMap<String, Identifier>();		
-
-//		Dispatcher dispatcher = bean.graphText.getDispatcher();
 		
 		dispatcher.addPropertyChangeListener(
 			ObjectEntities.SYSTEMUSER,
@@ -174,20 +169,19 @@ public class MCMBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public Object getValue(	Object object,
+	public Object getValue(	MCMBean mcmBean,
 							String key) {
-		if (object instanceof MCMBean) {
-			MCMBean bean = (MCMBean) object;
+		if (mcmBean != null) {
 			if (key.equals(KEY_NAME)) {
-				return bean.getName();
+				return mcmBean.getName();
 			} else if (key.equals(KEY_DESCRIPTION)) {
-				return bean.getDescription();
+				return mcmBean.getDescription();
 			} else if (key.equals(KEY_HOSTNAME)) {
-				return bean.getHostname();
+				return mcmBean.getHostname();
 			} else if (key.equals(KEY_SERVER_ID)) { 
-				return bean.getServerId(); 
+				return mcmBean.getServerId(); 
 			} else if (key.equals(KEY_USER_ID)) { 
-				return bean.getUserId(); 
+				return mcmBean.getUserId(); 
 			}  
 		}
 		return null;
@@ -203,21 +197,20 @@ public class MCMBeanWrapper implements Wrapper {
 		// TODO Auto-generated method stub
 	}
 
-	public void setValue(	Object object,
+	public void setValue(	MCMBean mcmBean,
 							String key,
 							Object value) {
-		if (object instanceof MCMBean) {
-			MCMBean bean = (MCMBean) object;
+		if (mcmBean != null) {
 			if (key.equals(KEY_NAME)) {
-				bean.setName((String) value);
+				mcmBean.setName((String) value);
 			} else if (key.equals(KEY_DESCRIPTION)) {
-				bean.setDescription((String) value);
+				mcmBean.setDescription((String) value);
 			} else if (key.equals(KEY_HOSTNAME)) {
-				bean.setHostname((String) value);
+				mcmBean.setHostname((String) value);
 			} else if (key.equals(KEY_SERVER_ID)) { 
-				bean.setServerId((Identifier) value);
+				mcmBean.setServerId((Identifier) value);
 			} else if (key.equals(KEY_USER_ID)) {
-				bean.setUserId((Identifier) value);
+				mcmBean.setUserId((Identifier) value);
 			}
 		}
 	}

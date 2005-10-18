@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerMarqueeHandler.java,v 1.4 2005/09/04 11:31:23 bob Exp $
+* $Id: ManagerMarqueeHandler.java,v 1.5 2005/10/18 15:10:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,10 +27,11 @@ import org.jgraph.graph.PortView;
 
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
+import com.syrus.AMFICOM.manager.viewers.BeanUI;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -85,7 +86,8 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 				Object userObject = port1.getUserObject();
 				if (userObject instanceof AbstractBean) {
 					AbstractBean bean = (AbstractBean)userObject;
-					JPopupMenu menu = bean.getMenu(cell);
+					BeanUI beanUI = BeanUI.BeanUIFactory.getBeanUI(bean.getUIClassID(), this.graphText);
+					JPopupMenu menu = beanUI.getPopupMenu(bean, cell);
 					if (menu != null) {
 						menu.show(this.graphText.graph, e.getX(), e.getY());
 					} 
@@ -175,7 +177,8 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 				if (userObject instanceof AbstractBean) {
 //					System.out.println("MyMarqueeHandler.mouseReleased()");
 					AbstractBean bean = (AbstractBean)userObject;
-					bean.updateEdgeAttributes(edge, targetPort);
+					// XXX
+//					bean.updateEdgeAttributes(edge, targetPort);
 				}
 				GraphLayoutCache graphLayoutCache = this.graphText.graph.getGraphLayoutCache();
 				graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.19 2005/10/11 15:34:53 bob Exp $
+ * $Id: AbstractBean.java,v 1.20 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,6 @@
 package com.syrus.AMFICOM.manager;
 
 import java.util.Set;
-
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-
-import org.jgraph.graph.DefaultEdge;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -32,7 +27,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -45,8 +40,6 @@ public abstract class AbstractBean {
 
 	protected String		codeName;
 
-	protected JPanel		propertyPanel;
-
 	protected ManagerMainFrame	graphText;
 	
 	protected AbstractBean() {
@@ -54,11 +47,9 @@ public abstract class AbstractBean {
 	}
 
 	protected AbstractBean(final Identifier id,
-			final Validator validator,
-			final JPanel propertyPanel) {
+			final Validator validator) {
 		this.id = id;
 		this.validator = validator;
-		this.propertyPanel = propertyPanel;
 	}
 
 	public final Identifier getId() {
@@ -70,12 +61,15 @@ public abstract class AbstractBean {
 	}
 	
 	public abstract void applyTargetPort(final MPort oldPort,
-	                                     final MPort newPort) throws ApplicationException; 
+	                                     final MPort newPort) 
+	throws ApplicationException;
+	
+	public abstract String getUIClassID();
 
 	public abstract void dispose() throws ApplicationException;
 	
 	public final void disposeLayoutItem() throws ApplicationException {
-		CompoundCondition compoundCondition = 
+		final CompoundCondition compoundCondition = 
 			new CompoundCondition(new TypicalCondition(
 				this.getCodeName(), 
 				OperationSort.OPERATION_EQUALS,
@@ -91,7 +85,7 @@ public abstract class AbstractBean {
 					}
 				});
 		
-		Set<LayoutItem> layoutItems = 
+		final Set<LayoutItem> layoutItems = 
 			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);	
 		
 //		Log.debugMessage("AbstractBean.disposeLayoutItem | delete: " + layoutItems, Log.DEBUGLEVEL10);
@@ -102,25 +96,10 @@ public abstract class AbstractBean {
 		
 		StorableObjectPool.delete(layoutItems);
 	}
-	
-	public JPanel getPropertyPanel() {
-		return this.propertyPanel;
-	}
 
-	public JPopupMenu getMenu(final Object cell) {
-		return null;
-	}
-
-	public void updateEdgeAttributes(	final DefaultEdge edge,
-	                                 	final MPort port) {
-		// nothing yet
-	}
-
-	protected final void setPropertyPanel(final JPanel propertyPanel) {
-		this.propertyPanel = propertyPanel;
-	}
-
-	protected void setId(Identifier id) {
+	@SuppressWarnings("unused")
+	protected void setId(final Identifier id) 
+	throws ApplicationException {
 		this.id = id;
 	}
 
@@ -151,7 +130,7 @@ public abstract class AbstractBean {
 	
 	protected final LayoutItem getLayoutItem(final String layoutName,
 	                                         final String codename) throws ApplicationException {
-		CompoundCondition compoundCondition = 
+		final CompoundCondition compoundCondition = 
 			new CompoundCondition(new TypicalCondition(
 				layoutName, 
 				OperationSort.OPERATION_EQUALS,
@@ -173,7 +152,7 @@ public abstract class AbstractBean {
 			ObjectEntities.LAYOUT_ITEM_CODE,
 			StorableObjectWrapper.COLUMN_NAME));
 		
-		Set<LayoutItem> layoutItems = 
+		final Set<LayoutItem> layoutItems = 
 			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 		
 		if (layoutItems.isEmpty()) {

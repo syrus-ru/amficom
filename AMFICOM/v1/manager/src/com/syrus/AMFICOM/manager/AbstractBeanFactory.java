@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.11 2005/10/11 15:34:53 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.12 2005/10/18 15:10:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,30 +8,19 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.net.URL;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public abstract class AbstractBeanFactory {
+public abstract class AbstractBeanFactory<T extends AbstractBean> {
 
-	protected Icon icon;
-	
-	protected Icon image;
-	
 	protected String nameKey;
 	
 	protected String shortNameKey;
@@ -40,48 +29,19 @@ public abstract class AbstractBeanFactory {
 	
 	protected ManagerMainFrame graphText;
 	
-	protected  AbstractBeanFactory(final String iconUrl,
-		                              final String imageUrl) {
-		URL resource = AbstractBeanFactory.class.getClassLoader().getResource(iconUrl);
-		if (resource != null) {
-			this.icon = new ImageIcon(resource);
-		} else {
-			assert Log.debugMessage("AbstractBeanFactory.AbstractBeanFactory | " + iconUrl + " not found ",
-				Log.DEBUGLEVEL09);
-		}
-		
-		resource = AbstractBeanFactory.class.getClassLoader().getResource(imageUrl);
-		if (resource != null) {
-			this.image = new ImageIcon(resource);
-		} else {
-			assert Log.debugMessage("AbstractBeanFactory.AbstractBeanFactory | " + imageUrl + " not found ",
-				Log.DEBUGLEVEL09);
-		}
-	}
-	
 	protected AbstractBeanFactory(final String nameKey, 
-	                              final String shortNameKey,
-	                              final String iconUrl,
-	                              final String imageUrl) {
-		this(iconUrl, imageUrl);
+	                              final String shortNameKey) {
 		this.nameKey = nameKey;
 		this.shortNameKey = shortNameKey;
 	}
 	
-	public abstract AbstractBean createBean(Perspective perspective) 
-	throws IllegalObjectEntityException, CreateObjectException;	
+	public abstract T createBean(final Perspective perspective) 
+	throws ApplicationException;	
 
-	public abstract AbstractBean createBean(String codename);	
+	public abstract T createBean(final String codename) 
+	throws ApplicationException;	
 
-	
-	public final Icon getIcon() {
-		return this.icon;
-	}
-	
-	public final Icon getImage() {
-		return this.image;
-	}
-	
+
 	public String getName() {
 		return I18N.getString(this.nameKey);
 	}

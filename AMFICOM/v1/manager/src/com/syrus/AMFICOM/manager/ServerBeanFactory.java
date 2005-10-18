@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.11 2005/10/11 15:34:53 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.12 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,12 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_DESCRIPTION;
-import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_HOSTNAME;
-import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_NAME;
-
 import java.beans.PropertyChangeEvent;
 
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
@@ -26,20 +21,18 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ServerBeanFactory extends TabledBeanFactory {
+public class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean> {
 	
 	private static ServerBeanFactory instance;
 	
 	private ServerBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Server", 
-			"Manager.Entity.Server", 
-			"com/syrus/AMFICOM/manager/resources/icons/server.gif", 
-			"com/syrus/AMFICOM/manager/resources/server.png");
+			"Manager.Entity.Server");
 		super.graphText = graphText;
 	}
 	
@@ -51,8 +44,8 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean(Perspective perspective) 
-	throws IllegalObjectEntityException, CreateObjectException {
+	public ServerBean createBean(Perspective perspective) 
+	throws ApplicationException {
 		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
 		String name = I18N.getString("Manager.Entity.Server") + "-" + (++super.count);
@@ -67,20 +60,21 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	}
 	
 	@Override
-	protected AbstractBean createBean(Identifier identifier) {
+	protected ServerBean createBean(Identifier identifier) 
+	throws ApplicationException {
 		final ServerBean bean = new ServerBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setId(identifier);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
-		bean.table = super.getTable(bean, 
-			ServerBeanWrapper.getInstance(),
-			new String[] { KEY_NAME, 
-				KEY_DESCRIPTION, 
-				KEY_HOSTNAME});
-		bean.addPropertyChangeListener(this.listener);
-		bean.setPropertyPanel(this.panel);
+//		bean.table = super.getTable(bean, 
+//			ServerBeanWrapper.getInstance(),
+//			new String[] { KEY_NAME, 
+//				KEY_DESCRIPTION, 
+//				KEY_HOSTNAME});
+//		bean.addPropertyChangeListener(this.listener);
+//		bean.setPropertyPanel(this.panel);
 		
 		super.graphText.getDispatcher().firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.SERVER, null, bean));

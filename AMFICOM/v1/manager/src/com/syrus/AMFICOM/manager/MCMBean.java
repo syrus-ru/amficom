@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.8 2005/09/06 10:08:55 bob Exp $
+ * $Id: MCMBean.java,v 1.9 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/06 10:08:55 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -33,15 +33,17 @@ public class MCMBean extends Bean implements DomainNetworkItem {
 
 	private MCM mcm;
 	
+	private static final String UI_CLASS_ID = "MCMBeanUI";
+	
 	@Override
-	protected void setId(Identifier id) {
+	public String getUIClassID() {
+		return UI_CLASS_ID;
+	}
+	
+	@Override
+	protected void setId(Identifier id) throws ApplicationException {
 		super.setId(id);
-		try {
-			this.mcm = StorableObjectPool.getStorableObject(this.id, true);
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.mcm = StorableObjectPool.getStorableObject(this.id, true);
 	}
 
 	public final String getDescription() {

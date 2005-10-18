@@ -1,5 +1,5 @@
 /*-
- * $Id: WorkstationBeanFactory.java,v 1.1 2005/10/13 15:28:14 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.2 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,12 +23,12 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/13 15:28:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class WorkstationBeanFactory extends AbstractBeanFactory {
+public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	
 	public static final String WORKSTATION_CODENAME = "Workstation";
 	
@@ -38,9 +38,7 @@ public class WorkstationBeanFactory extends AbstractBeanFactory {
 	
 	private WorkstationBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Workstation", 
-			"Manager.Entity.Workstation.acronym", 
-			"com/syrus/AMFICOM/manager/resources/icons/arm.gif", 
-			"com/syrus/AMFICOM/manager/resources/arm.gif");
+			"Manager.Entity.Workstation.acronym");
 		super.graphText = graphText;
 	}
 	
@@ -52,14 +50,15 @@ public class WorkstationBeanFactory extends AbstractBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean(Perspective perspective) {
+	public NonStorableBean createBean(Perspective perspective) throws ApplicationException {
 		return this.createBean(WORKSTATION_CODENAME + this.count);
 	}
 	
 	@Override
-	public AbstractBean createBean(final String codename) {
+	public NonStorableBean createBean(final String codename) 
+	throws ApplicationException {
 		++super.count;
-		final AbstractBean bean = new WorkstationBean();
+		final WorkstationBean bean = new WorkstationBean();
 		bean.setGraphText(super.graphText);
 		bean.setValidator(this.getValidator());
 		bean.setCodeName(codename);
@@ -89,6 +88,14 @@ public class WorkstationBeanFactory extends AbstractBeanFactory {
 	}	
 	
 	private class WorkstationBean extends NonStorableBean implements DomainNetworkItem {
+		
+		private static final String UI_CLASS_ID = "WorkstationBeanUI";
+		
+		@Override
+		public String getUIClassID() {
+			return UI_CLASS_ID;
+		}
+		
 		private Set<LayoutItem> getBeanChildrenLayoutItems() 
 		throws ApplicationException{
 			final TypicalCondition typicalCondition = 

@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.17 2005/10/11 15:34:53 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.18 2005/10/18 15:10:39 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,8 @@
 package com.syrus.AMFICOM.manager;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
@@ -19,20 +18,18 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainBeanFactory extends TabledBeanFactory {
+public class DomainBeanFactory extends IdentifiableBeanFactory<DomainBean> {
 	
 	private static DomainBeanFactory instance;
 	
 	private DomainBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Domain", 
-			"Manager.Entity.Domain", 
-			"com/syrus/AMFICOM/manager/resources/icons/domain.gif", 
-			"com/syrus/AMFICOM/manager/resources/domain2.png");
+			"Manager.Entity.Domain");
 		super.graphText = graphText;
 	}
 	
@@ -44,32 +41,22 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean(Perspective perspective) throws IllegalObjectEntityException, 
-	CreateObjectException {		
+	public DomainBean createBean(Perspective perspective) 
+	throws ApplicationException {		
 		Domain domain = Domain.createInstance(LoginManager.getUserId(), 
 				Identifier.VOID_IDENTIFIER, "", "");
 		return this.createBean(domain.getId());
 	}
 	
 	@Override
-	protected AbstractBean createBean(final Identifier id) {		
+	protected DomainBean createBean(final Identifier id) 
+	throws ApplicationException {		
 		final DomainBean bean = new DomainBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(id.getIdentifierString());
 		bean.setValidator(this.getValidator());
 		bean.setId(id);		
-		bean.table = super.getTable(bean, 
-			DomainBeanWrapper.getInstance(),
-			new String[] {
-				DomainBeanWrapper.KEY_NAME,
-				DomainBeanWrapper.KEY_DESCRIPTION}
-			);
-		bean.addPropertyChangeListener(this.listener);
-		
-		bean.setPropertyPanel(this.panel);
-		
-		
 		return bean;
 	}
 

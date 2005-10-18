@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBeanWrapper.java,v 1.11 2005/10/11 15:34:53 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.12 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,26 +11,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class UserBeanWrapper implements Wrapper {
+public class UserBeanWrapper implements Wrapper<UserBean> {
 
 	public static final String		NAME				= "name";
 	public static final String		LOGIN				= "login";
 	public static final String		FULL_NAME			= "fullName";
-	public static final String		USER_NATURE			= "nature";
 	public static final String		USER_POSITION		= "position";
 	public static final String		USER_DEPARTEMENT	= "departement";
 	public static final String		USER_COMPANY		= "company";
@@ -54,7 +52,6 @@ public class UserBeanWrapper implements Wrapper {
 		String[] keysArray = new String[] { NAME, 
 				LOGIN,
 				FULL_NAME, 
-				USER_NATURE, 
 				USER_POSITION,
 				USER_DEPARTEMENT,
 				USER_COMPANY,
@@ -80,56 +77,55 @@ public class UserBeanWrapper implements Wrapper {
 		return this.keys;
 	}
 
-	public String getName(final String key) {
-		if (key.equals(NAME)) {
+	public String getName(String key) {
+		key = key.intern();
+		if (key == NAME) {
 			return I18N.getString("Manager.Entity.User.attributes.Name");
 		}
-		if (key.equals(LOGIN)) {
+		if (key == LOGIN) {
 			return I18N.getString("Manager.Entity.User.attributes.Login");
 		}
-		if (key.equals(FULL_NAME)) {
+		if (key == FULL_NAME) {
 			return I18N.getString("Manager.Entity.User.attributes.FullName");
-		} else if (key.equals(USER_NATURE)) { 
-			return I18N.getString("Manager.Entity.User.attributes.Type"); 
-		} else if (key.equals(USER_POSITION)) { 
+		} else if (key == USER_POSITION) { 
 			return I18N.getString("Manager.Entity.User.attributes.Position"); 
-		} else if (key.equals(USER_DEPARTEMENT)) { 
+		} else if (key == USER_DEPARTEMENT) { 
 			return I18N.getString("Manager.Entity.User.attributes.Departement"); 
-		} else if (key.equals(USER_COMPANY)) { 
+		} else if (key == USER_COMPANY) { 
 			return I18N.getString("Manager.Entity.User.attributes.Company"); 
-		} else if (key.equals(USER_ROOM_NO)) { 
+		} else if (key == USER_ROOM_NO) { 
 			return I18N.getString("Manager.Entity.User.attributes.RoomNo"); 
-		} else if (key.equals(USER_CITY)) { 
+		} else if (key == USER_CITY) { 
 			return I18N.getString("Manager.Entity.User.attributes.City"); 
-		} else if (key.equals(USER_STREET)) { 
+		} else if (key == USER_STREET) { 
 			return I18N.getString("Manager.Entity.User.attributes.Street");
-		} else if (key.equals(USER_BUILDING)) { 
+		} else if (key == USER_BUILDING) { 
 			return I18N.getString("Manager.Entity.User.attributes.Building");
-		} else if (key.equals(USER_EMAIL)) { 
+		} else if (key == USER_EMAIL) { 
 			return I18N.getString("Manager.Entity.User.attributes.EMail"); 
-		} else if (key.equals(USER_PHONE)) { 
+		} else if (key == USER_PHONE) { 
 			return I18N.getString("Manager.Entity.User.attributes.Phone"); 
-		} else if (key.equals(USER_CELLULAR)) { 
+		} else if (key == USER_CELLULAR) { 
 			return I18N.getString("Manager.Entity.User.attributes.Cellular"); 
 		}
 		return null;
 	}
 
-	public Class getPropertyClass(final String key) {
-		if (key.equals(NAME) ||
-				key.equals(LOGIN) || 
-				key.equals(FULL_NAME) || 
-				key.equals(USER_NATURE) ||
-				key.equals(USER_POSITION) ||
-				key.equals(USER_DEPARTEMENT) ||
-				key.equals(USER_COMPANY) ||
-				key.equals(USER_ROOM_NO) ||
-				key.equals(USER_CITY) ||
-				key.equals(USER_STREET) ||
-				key.equals(USER_BUILDING) ||
-				key.equals(USER_EMAIL) ||
-				key.equals(USER_PHONE) ||
-				key.equals(USER_CELLULAR)) { 
+	public Class getPropertyClass(String key) {
+		key = key.intern();
+		if (key == NAME ||
+				key == LOGIN || 
+				key == FULL_NAME || 
+				key == USER_POSITION ||
+				key == USER_DEPARTEMENT ||
+				key == USER_COMPANY ||
+				key == USER_ROOM_NO ||
+				key == USER_CITY ||
+				key == USER_STREET ||
+				key == USER_BUILDING ||
+				key == USER_EMAIL ||
+				key == USER_PHONE ||
+				key == USER_CELLULAR) { 
 			return String.class; 
 		}
 		
@@ -141,54 +137,47 @@ public class UserBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public Object getValue(	final Object object,
-	                       	final String key) {
+	public Object getValue(	final UserBean userBean,
+	                       	String key) {
 		try {
-			if (object instanceof UserBean) {
-				UserBean userBean = (UserBean) object;
-				if (key.equals(NAME)) {
+			if (userBean != null) {
+				key = key.intern();
+				if (key == NAME) {
 					return userBean.getName();
-				} else if (key.equals(LOGIN)) {
+				} else if (key == LOGIN) {
 					return userBean.getLogin();
-				} else if (key.equals(FULL_NAME)) {
+				} else if (key == FULL_NAME) {
 					return userBean.getFullName();
-				} else if (key.equals(USER_NATURE)) { 
-					return userBean.getNature(); 
-				} else if (key.equals(USER_POSITION)) { 
+				} else if (key == USER_POSITION) { 
 					return userBean.getPosition(); 
-				} else if (key.equals(USER_DEPARTEMENT)) { 
+				} else if (key == USER_DEPARTEMENT) { 
 					return userBean.getDepartement(); 
-				} else if (key.equals(USER_COMPANY)) { 
+				} else if (key == USER_COMPANY) { 
 					return userBean.getCompany(); 
-				} else if (key.equals(USER_ROOM_NO)) { 
+				} else if (key == USER_ROOM_NO) { 
 					return userBean.getRoomNo(); 
-				} else if (key.equals(USER_CITY)) { 
+				} else if (key == USER_CITY) { 
 					return userBean.getCity(); 
-				} else if (key.equals(USER_STREET)) { 
+				} else if (key == USER_STREET) { 
 					return userBean.getStreet(); 
-				} else if (key.equals(USER_BUILDING)) { 
+				} else if (key == USER_BUILDING) { 
 					return userBean.getBuilding(); 
-				} else if (key.equals(USER_EMAIL)) { 
+				} else if (key == USER_EMAIL) { 
 					return userBean.getEmail(); 
-				} else if (key.equals(USER_PHONE)) { 
+				} else if (key == USER_PHONE) { 
 					return userBean.getPhone(); 
-				} else if (key.equals(USER_CELLULAR)) { 
+				} else if (key == USER_CELLULAR) { 
 					return userBean.getCellular(); 
 				}
-
 			}
-		} catch (ApplicationException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, 
-				e.getMessage(), 
-				I18N.getString("Manager.Error"),
-				JOptionPane.ERROR_MESSAGE);
+		} catch (final ApplicationException e) {
+			throw new PropertyChangeException(e);
 		}
 		return null;
 	}
 
 	public boolean isEditable(final String key) {
-		return !key.equals(USER_NATURE);
+		return true;
 	} 
 
 	public void setPropertyValue(	final String key,
@@ -198,47 +187,41 @@ public class UserBeanWrapper implements Wrapper {
 
 	}
 
-	public void setValue(	final Object object,
-	                     	final String key,
+	public void setValue(	final UserBean userBean,
+	                     	String key,
 	                     	final Object value) {
-		if (object instanceof UserBean) {
+		if (userBean != null) {
 			try {
-				UserBean userBean = (UserBean) object;
-				if (key.equals(NAME)) {
+				key = key.intern();
+				if (key == NAME) {
 					userBean.setName((String) value);
-				} else if (key.equals(LOGIN)) {
+				} else if (key == LOGIN) {
 					userBean.setLogin((String) value);
-				} else if (key.equals(FULL_NAME)) {
+				} else if (key == FULL_NAME) {
 					userBean.setFullName((String) value);
-				} else if (key.equals(USER_NATURE)) {
-					userBean.setNature((String) value);
-				} else if (key.equals(USER_POSITION)) {
+				} else if (key == USER_POSITION) {
 					userBean.setPosition((String) value);
-				} else if (key.equals(USER_DEPARTEMENT)) { 
+				} else if (key == USER_DEPARTEMENT) { 
 					userBean.setDepartement((String) value); 
-				} else if (key.equals(USER_COMPANY)) { 
+				} else if (key == USER_COMPANY) { 
 					userBean.setCompany((String) value); 
-				} else if (key.equals(USER_ROOM_NO)) { 
+				} else if (key == USER_ROOM_NO) { 
 					userBean.setRoomNo((String) value); 
-				} else if (key.equals(USER_CITY)) { 
+				} else if (key == USER_CITY) { 
 					userBean.setCity((String) value); 
-				} else if (key.equals(USER_STREET)) { 
+				} else if (key == USER_STREET) { 
 					userBean.setStreet((String) value); 
-				} else if (key.equals(USER_BUILDING)) { 
+				} else if (key == USER_BUILDING) { 
 					userBean.setBuilding((String) value); 
-				} else if (key.equals(USER_EMAIL)) { 
+				} else if (key == USER_EMAIL) { 
 					userBean.setEmail((String) value); 
-				} else if (key.equals(USER_PHONE)) { 
+				} else if (key == USER_PHONE) { 
 					userBean.setPhone((String) value); 
-				} else if (key.equals(USER_CELLULAR)) { 
+				} else if (key == USER_CELLULAR) { 
 					userBean.setCellular((String) value); 
 				} 
-			} catch (ApplicationException e) {
-				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, 
-					e.getMessage(), 
-					I18N.getString("Manager.Error"),
-					JOptionPane.ERROR_MESSAGE);
+			} catch (final ApplicationException e) {
+				throw new PropertyChangeException(e);
 			}
 		}
 	}

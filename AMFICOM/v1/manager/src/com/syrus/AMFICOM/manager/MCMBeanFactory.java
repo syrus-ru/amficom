@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.13 2005/10/11 15:34:53 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.14 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,44 +8,31 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_DESCRIPTION;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_HOSTNAME;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_NAME;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_SERVER_ID;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_USER_ID;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.PROPERTY_SERVERS_REFRESHED;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.PROPERTY_USERS_REFRESHED;
-
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import com.syrus.AMFICOM.administration.MCM;
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class MCMBeanFactory extends TabledBeanFactory {
+public class MCMBeanFactory extends IdentifiableBeanFactory<MCMBean> {
 	
 	private static MCMBeanFactory instance;
 	
 	private MCMBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.MeasurementContolModule", 
-			"Manager.Entity.MeasurementContolModule.acronym", 
-			"com/syrus/AMFICOM/manager/resources/icons/mcm.gif", 
-			"com/syrus/AMFICOM/manager/resources/mcm.png");
+			"Manager.Entity.MeasurementContolModule.acronym");
 		super.graphText = graphText;
 	}
 	
@@ -57,8 +44,8 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean(Perspective perspective) 
-	throws CreateObjectException, IllegalObjectEntityException {
+	public MCMBean createBean(Perspective perspective) 
+	throws ApplicationException {
 		
 		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
@@ -76,7 +63,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	}	
 
 	@Override
-	public AbstractBean createBean(Identifier identifier) {
+	public MCMBean createBean(final Identifier identifier) throws ApplicationException {
 		final MCMBean bean = new MCMBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
@@ -85,34 +72,33 @@ public class MCMBeanFactory extends TabledBeanFactory {
 		bean.setId(identifier);			
 		
 		Dispatcher dispatcher = super.graphText.getDispatcher();
-		
-		dispatcher.addPropertyChangeListener(
-			PROPERTY_USERS_REFRESHED,
-			new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					((WrapperedPropertyTable)bean.table).updateModel();
-				}
-			});
-		
-		dispatcher.addPropertyChangeListener(
-			PROPERTY_SERVERS_REFRESHED,
-			new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					((WrapperedPropertyTable)bean.table).updateModel();
-				}
-			});
-
-		bean.table = super.getTable(bean, 
-			MCMBeanWrapper.getInstance(dispatcher),
-			new String[] { KEY_NAME, 
-				KEY_DESCRIPTION, 
-				KEY_HOSTNAME,
-				KEY_SERVER_ID,
-				KEY_USER_ID});
-		bean.addPropertyChangeListener(this.listener);
-		bean.setPropertyPanel(this.panel);
+//		dispatcher.addPropertyChangeListener(
+//			PROPERTY_USERS_REFRESHED,
+//			new PropertyChangeListener() {
+//
+//				public void propertyChange(PropertyChangeEvent evt) {
+//					((WrapperedPropertyTable)bean.table).updateModel();
+//				}
+//			});
+//		
+//		dispatcher.addPropertyChangeListener(
+//			PROPERTY_SERVERS_REFRESHED,
+//			new PropertyChangeListener() {
+//
+//				public void propertyChange(PropertyChangeEvent evt) {
+//					((WrapperedPropertyTable)bean.table).updateModel();
+//				}
+//			});
+//
+//		bean.table = super.getTable(bean, 
+//			MCMBeanWrapper.getInstance(dispatcher),
+//			new String[] { KEY_NAME, 
+//				KEY_DESCRIPTION, 
+//				KEY_HOSTNAME,
+//				KEY_SERVER_ID,
+//				KEY_USER_ID});
+//		bean.addPropertyChangeListener(this.listener);
+//		bean.setPropertyPanel(this.panel);
 		
 		dispatcher.firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.MCM, null, bean));

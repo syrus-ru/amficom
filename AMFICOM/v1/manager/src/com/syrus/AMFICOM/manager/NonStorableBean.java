@@ -1,5 +1,5 @@
 /*-
-* $Id: NonStorableBean.java,v 1.4 2005/10/11 15:34:53 bob Exp $
+* $Id: NonStorableBean.java,v 1.5 2005/10/18 15:10:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,15 +12,15 @@ import com.syrus.AMFICOM.general.ApplicationException;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class NonStorableBean extends AbstractBean {
+public abstract class NonStorableBean extends AbstractBean {
 	
-	protected String		name;
-	
+	protected String		name;	
+
 	@Override
 	public final String getName() {
 		return this.name;
@@ -39,8 +39,7 @@ public class NonStorableBean extends AbstractBean {
 	
 	@Override
 	public void dispose() throws ApplicationException {
-		// nothing ?
-		
+		// nothing ?		
 	}
 }
 

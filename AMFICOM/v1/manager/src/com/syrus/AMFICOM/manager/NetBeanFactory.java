@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.23 2005/10/11 15:34:53 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.24 2005/10/18 15:10:38 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/11 15:34:53 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/18 15:10:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class NetBeanFactory extends AbstractBeanFactory {
+public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	
 	public static final String NET_CODENAME = "Net";
 	
@@ -41,9 +41,7 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	
 	private NetBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Net", 
-			"Manager.Entity.Net", 
-			"com/syrus/AMFICOM/manager/resources/icons/cloud.gif", 
-			"com/syrus/AMFICOM/manager/resources/cloud.png");
+			"Manager.Entity.Net");
 		super.graphText = graphText;
 	}
 	
@@ -55,14 +53,22 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean(Perspective perspective) {
+	public NonStorableBean createBean(Perspective perspective) 
+	throws ApplicationException {
 		return this.createBean(NET_CODENAME + super.count);
 	}
 
 	@Override
-	public AbstractBean createBean(final String codename) {
+	public NonStorableBean createBean(final String codename) 
+	throws ApplicationException {
 		++super.count;
-		final AbstractBean bean = new NonStorableBean() {
+		final NonStorableBean bean = new NonStorableBean() {
+			private static final String UI_CLASS_ID = "NetBeanUI";
+			
+			@Override
+			public String getUIClassID() {
+				return UI_CLASS_ID;
+			}
 			
 			private Set<LayoutItem> getBeanChildrenLayoutItems() 
 			throws ApplicationException{

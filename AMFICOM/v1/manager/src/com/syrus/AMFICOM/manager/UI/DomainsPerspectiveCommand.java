@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspectiveCommand.java,v 1.1 2005/10/11 15:36:25 bob Exp $
+* $Id: DomainsPerspectiveCommand.java,v 1.2 2005/10/18 15:10:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import org.jgraph.graph.Port;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.manager.AbstractPerspective;
 import com.syrus.AMFICOM.manager.DomainBeanFactory;
 import com.syrus.AMFICOM.manager.MPort;
 import com.syrus.AMFICOM.manager.NetBeanFactory;
@@ -26,14 +27,19 @@ import com.syrus.AMFICOM.manager.Perspective;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/11 15:36:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/18 15:10:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class DomainsPerspectiveCommand extends AbstractCommand {
 
-	private class DomainsPerspective implements Perspective {
+	private class DomainsPerspective extends AbstractPerspective {
+		
+		
+		public DomainsPerspective() {
+			super(DomainsPerspectiveCommand.this.graphText);
+		}
 		
 		public String getCodename() {
 			return "domains";
@@ -44,9 +50,9 @@ public class DomainsPerspectiveCommand extends AbstractCommand {
 		}
 		
 		public void addEntities(final JToolBar entityToolBar) {
-			DomainsPerspectiveCommand.this.graphText.createAction(NetBeanFactory.getInstance(DomainsPerspectiveCommand.this.graphText));
+			this.managerMainFrame.addAction(super.createAction(NetBeanFactory.getInstance(this.managerMainFrame)));
 			entityToolBar.addSeparator();
-			DomainsPerspectiveCommand.this.graphText.createAction(DomainBeanFactory.getInstance(DomainsPerspectiveCommand.this.graphText));
+			this.managerMainFrame.addAction(super.createAction(DomainBeanFactory.getInstance(this.managerMainFrame)));
 		}
 		
 		public boolean isValid() {
