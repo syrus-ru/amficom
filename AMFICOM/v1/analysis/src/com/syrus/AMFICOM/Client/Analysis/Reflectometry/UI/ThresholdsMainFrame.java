@@ -167,7 +167,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 		this.desktopPane.add(this.statsFrame);
 		this.tables.add(this.statsFrame);
 
-		this.eventsFrame = new EventsFrame(this.aContext, false);
+		this.eventsFrame = new EventsFrame(this.aContext, true);
 		this.desktopPane.add(this.eventsFrame);
 		this.tables.add(this.eventsFrame);
 
