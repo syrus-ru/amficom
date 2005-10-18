@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 
 public class ObserverApplicationModel extends ApplicationModel {
@@ -76,6 +77,10 @@ public class ObserverApplicationModel extends ApplicationModel {
 		add(ApplicationModel.MENU_HELP_ABOUT);
 		
 		this.initUIConstats();
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.resource.map");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client.report.report");
+		I18N.addResourceBundle("com.syrus.AMFICOM.resource.SchemeMessages");
+		I18N.addResourceBundle("com.syrus.AMFICOM.client_.scheme.graph.messages");
 	}
 	
 	public static final int IMG_SIZE = 16;

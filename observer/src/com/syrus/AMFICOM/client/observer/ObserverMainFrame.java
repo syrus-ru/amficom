@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.client.observer.command.start.OpenSchemeEditorCommand;
 import com.syrus.AMFICOM.client.observer.ui.AlarmFrame;
 import com.syrus.AMFICOM.client.observer.ui.ObserverTreeModel;
 import com.syrus.AMFICOM.client.observer.ui.ResultFrame;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeViewerFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
@@ -59,9 +59,8 @@ import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 import com.syrus.util.Log;
 
 public class ObserverMainFrame extends AbstractMainFrame {
+	private static final long serialVersionUID = -4447044860893666923L;
 
-	// sdf = UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-	
 	UIDefaults					frames;
 	
 	public static final String	ALARM_FRAME	= "alarmFrame"; //$NON-NLS-1$
@@ -91,7 +90,6 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		this.schemePane.setToolBarVisible(false);
 		
 		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
-			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | SCHEME_VIEWER_FRAME", Level.FINEST);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(ObserverMainFrame.this.aContext, ObserverMainFrame.this.schemePane);
@@ -102,10 +100,9 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 		
 		this.frames.put(GeneralPropertiesFrame.NAME, new UIDefaults.LazyValue() {
-			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
-				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame(LangModelGeneral.getString("Properties"));
+				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 				ObserverMainFrame.this.desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, ObserverMainFrame.this.aContext);
 				new MapPropertiesEventHandler(generalFrame, ObserverMainFrame.this.aContext);
@@ -114,10 +111,9 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 
 		this.frames.put(AdditionalPropertiesFrame.NAME, new UIDefaults.LazyValue() {
-			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
-				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame(LangModelMap.getString("AdditionalProperties"));
+				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_ADDITIONAL_PROPERTIES));
 				ObserverMainFrame.this.desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, ObserverMainFrame.this.aContext);
 				new MapPropertiesEventHandler(additionalFrame, ObserverMainFrame.this.aContext);
@@ -126,10 +122,9 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 
 		this.frames.put(CharacteristicPropertiesFrame.NAME, new UIDefaults.LazyValue() {
-			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
-				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame(LangModelMap.getString("Characteristics"));
+				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_CHARACTERISTICS));
 				ObserverMainFrame.this.desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, ObserverMainFrame.this.aContext);
 				new MapPropertiesEventHandler(characteristicFrame, ObserverMainFrame.this.aContext);
@@ -138,7 +133,6 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 		
 		this.frames.put(ResultFrame.NAME, new UIDefaults.LazyValue() {
-			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue RESULT_FRAME", Level.FINEST);
 				ResultFrame resultFrame = new ResultFrame(ObserverMainFrame.this.aContext);
@@ -148,7 +142,6 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 		
 		this.frames.put(ALARM_FRAME, new UIDefaults.LazyValue() {
-			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue ALARM_FRAME", Level.FINEST);
 				AlarmFrame alarmFrame = new AlarmFrame(ObserverMainFrame.this.aContext);
@@ -158,8 +151,6 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 		
 		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
-
-			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
 				JInternalFrame treeFrame = new JInternalFrame();
@@ -195,8 +186,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 		
 		super.setWindowArranger(new WindowArranger(ObserverMainFrame.this) {
-
-			@SuppressWarnings("synthetic-access")
+			@Override
 			public void arrange() {
 				int w = ObserverMainFrame.this.desktopPane.getSize().width;
 				int h = ObserverMainFrame.this.desktopPane.getSize().height;
@@ -273,7 +263,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		});
 	}
 
-
+	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 		
@@ -283,6 +273,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ObserverApplicationModel.MENU_REPORT, true);
 	}
 
+	@Override
 	protected void initModule() {
 		super.initModule();
 		
@@ -336,12 +327,14 @@ public class ObserverMainFrame extends AbstractMainFrame {
 				return this.command;
 			}
 
+			@Override
 			public void execute() {
 				this.getLazyCommand().execute();
 			}
 		};
 	}
 	
+	@Override
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
 			this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
@@ -354,6 +347,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		}
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent pce) {
 		if (pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
 			MapEvent mapEvent = (MapEvent) pce;
@@ -374,10 +368,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		super.propertyChange(pce);
 	}
 
-	public void setSessionOpened() {
-		super.setSessionOpened();
-	}
-
+	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
 
@@ -412,6 +403,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 	}
 
+	@Override
 	public void setSessionClosed() {
 		super.setSessionClosed();
 
