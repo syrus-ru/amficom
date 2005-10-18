@@ -1,5 +1,5 @@
 /*-
- * $Id: QualityComparer.java,v 1.5 2005/10/18 13:14:10 saa Exp $
+ * $Id: QualityComparer.java,v 1.6 2005/10/18 13:24:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
  * Определяет параметры качества линии.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.5 $, $Date: 2005/10/18 13:14:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/18 13:24:51 $
  * @module dadara
  */
 public class QualityComparer
@@ -56,8 +56,8 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 		for (int i = 0; i < this.qkDefined.length; i++) {
 			this.qkDefined[i] = false;
 			this.qkModified[i] = false;
-			this.qiValues[i] = 0.0; // won'k be used
-			this.kiValues[i] = 0.0; // won'k be used
+			this.qiValues[i] = 0.0; // won't be used
+			this.kiValues[i] = 0.0; // won't be used
 		}
 
 		if (!hasAlarms) {
@@ -74,7 +74,9 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 						double cY0 = ((HavingY0)ce).getY0();
 						this.dqDefined = true;
 						this.dParam = cY0 - eY0;
-						this.qParam = this.dParam / mtm.getDYScaleForEventBeginning(etalonEot);
+						final double delta = Math.abs(this.dParam);
+						final double wt = mtm.getDYScaleForEventBeginning(etalonEot);
+						this.qParam = delta >= wt ? 0.0 : 1.0 - delta / wt;
 //						System.out.printf("[*]: %g  %g\n", this.dParam, this.qParam);
 					}
 				}
