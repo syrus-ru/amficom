@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.4 2005/10/17 10:43:00 stas Exp $
+ * $Id: ResultFrame.java,v 1.5 2005/10/18 06:53:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -33,10 +34,12 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ThresholdsPanel;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
+import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
@@ -49,6 +52,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.Analysis;
@@ -60,6 +65,7 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
+import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.DataFormatException;
@@ -67,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/10/17 10:43:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/18 06:53:29 $
  * @module surveyclient_v1
  */
 
@@ -78,7 +84,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 	
 	ApplicationContext aContext;
 	
-	JTabbedPane tabs;	
+	JTabbedPane tabs;
 	WrapperedTableModel inParamsTableModel;
 	WrapperedTableModel outParamsTableModel;
 	
@@ -168,8 +174,23 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		if (e.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent)e;
 			Object selected = ev.getSelectedObject();
-			if (ev.isSelected(ObjectSelectedEvent.RESULT)) {
-				showResult((Result)selected);
+			if (ev.isSelected(ObjectSelectedEvent.MEASUREMENT)) {
+				Measurement m = (Measurement)selected;
+				Result r = null;
+				try {
+					StorableObjectCondition condition2 = new LinkedIdsCondition(m.getId(), ObjectEntities.RESULT_CODE);
+					Set<StorableObject> resultSet = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+					for (Iterator<StorableObject> iter = resultSet.iterator(); iter.hasNext();) {
+						Result res = (Result) iter.next();
+						if (res.getSort().value() == ResultSort.RESULT_SORT_MEASUREMENT.value()) {
+							r = res;
+							break;
+						}
+					}
+				} catch (ApplicationException e1) {
+					Log.errorException(e1);
+				}
+				showResult(r);
 			}
 		}
 	}
@@ -228,14 +249,26 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			for (Parameter parameter : parameters) {
 				if (parameter.getType().equals(ParameterType.DADARA_ALARMS)) {
 					try {
-						ReflectogramMismatch[] alarms = ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue());
-						
-						
-						
+						ReflectogramMismatchImpl[] alarms = ReflectogramMismatchImpl.alarmsFromByteArray(parameter.getValue());
 						// XXX assume the only alarm
-//						if (alarms.length == 1) {
-//							Heap.setRefMismatch(alarms[0]);
-//						}
+						if (alarms.length == 1) {
+							//Heap.setRefMismatch(alarms[0]);
+							final List<ReflectogramMismatchImpl> alarmList =
+								new ArrayList<ReflectogramMismatchImpl>();
+							alarmList.add(alarms[0]);
+							Heap.setEtalonComparison(new EtalonComparison(){
+								public List<ReflectogramMismatchImpl> getAlarms() {
+									return alarmList;
+								}
+								public EvaluationPerEventResult getPerEventResult() {
+									throw new UnsupportedOperationException();
+								}
+								public 	ReflectometryEvaluationOverallResult getOverallResult() {
+									throw new UnsupportedOperationException();
+								}
+							});
+						}
+
 					} catch (DataFormatException e) {
 						Log.errorException(e);
 					}
