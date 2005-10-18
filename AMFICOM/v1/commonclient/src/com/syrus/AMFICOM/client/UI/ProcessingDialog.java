@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.10 2005/10/18 07:53:19 bob Exp $
+* $Id: ProcessingDialog.java,v 1.11 2005/10/18 08:05:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,14 +33,14 @@ import com.syrus.util.Log;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/10/18 07:53:19 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/18 08:05:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public final class ProcessingDialog {
 
-	final static Level LOGLEVEL = Log.DEBUGLEVEL09;
+	final static Level LOGLEVEL = Log.DEBUGLEVEL10;
 	
 	final static Object LOCK = new Object(); 
 	
@@ -84,7 +84,10 @@ public final class ProcessingDialog {
 					+ currentThreadName 
 					+ ']' , 
 				LOGLEVEL);
-			if (runnableTasks.size() > 1) {
+			final int size = runnableTasks.size();
+			assert Log.debugMessage("ProcessingDialog.startIfItNeeded | size = " + size,
+				LOGLEVEL);
+			if (size > 1) {
 				assert Log.debugMessage("ProcessingDialog.startIfItNeeded | LOCK -- there is working queue -- return -- " 
 						+ new Date()  
 						+ '[' 
@@ -136,8 +139,8 @@ public final class ProcessingDialog {
 							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
 							synchronized (LOCK) {
 								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-								runnable = runnableTasks.remove(0);
-								title = runnableTaskNames.remove(runnable);
+								runnable = runnableTasks.get(0);
+								title = runnableTaskNames.get(runnable);
 							}
 							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
 							modalDialog.setTitle(title);
@@ -152,6 +155,8 @@ public final class ProcessingDialog {
 							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
 							synchronized (LOCK) {
 								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
+								runnableTasks.remove(0);
+								runnableTaskNames.remove(runnable);
 								empty = runnableTasks.isEmpty();								
 							}
 							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
