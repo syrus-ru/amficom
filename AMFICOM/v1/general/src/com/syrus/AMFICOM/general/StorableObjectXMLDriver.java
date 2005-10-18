@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.32 2005/08/19 14:04:31 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.33 2005/10/18 06:46:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.32 $, $Date: 2005/08/19 14:04:31 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/18 06:46:46 $
  * @author $Author: bob $
  * @module general
  */
@@ -181,9 +181,8 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 		if (object instanceof Collection) {
 			/* TODO replace for java.util.Set*/
 			final Collection<?> collection = (Collection) object;
-			final Set<Object> set = new HashSet<Object>(collection);
-			for (final Iterator it = set.iterator(); it.hasNext();) {
-				this.addObject(element, key + "item", it.next());
+			for (final Object element2 : new HashSet<Object>(collection)) {
+				this.addObject(element, key + "item", element2);
 			}
 		} else if (object instanceof Map) {
 			final Map map = (Map) object;
