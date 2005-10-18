@@ -1,5 +1,5 @@
 /*-
- * $Id: EvaluationPerEventResult.java,v 1.2 2005/10/17 13:45:11 saa Exp $
+ * $Id: EvaluationPerEventResult.java,v 1.3 2005/10/18 13:14:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * <p>
  * FIXME: возможно, нумерациу событий по р/г надо переделать на нумерацию по эталону
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/10/17 13:45:11 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/18 13:14:10 $
  * @module
  */
 public interface EvaluationPerEventResult {
@@ -52,16 +52,29 @@ public interface EvaluationPerEventResult {
 
 	/**
 	 * Возвращает Q-параметр для данного события.
+	 * Значение Q-параметра лежит в диапазоне [0,1].
+	 * <p>
+	 * <ul>
+	 * <li>Q=1 - соответствие 100%, полное соответствие
+	 * <li>Q=0 - соответствие 0%, полное несоответствие,
+	 * отличие равно либо превышает предельное значение
+	 * </ul>
 	 * @param i номер данного события
 	 * @return Q-параметр для данного события.
 	 * @throws IndexOutOfBoundsException, если
-	 *   <tt> i &lt; 0 || i &gt;= {@link #getNEvents()} </tt>  
+	 *   <tt> i &lt; 0 || i &gt;= {@link #getNEvents()} </tt>
 	 * @throws IllegalStateException, если <tt>{@link #hasQK}(i) == false</tt>
 	 */
 	double getQ(int i);
 
 	/**
 	 * Возвращает K-параметр для данного события.
+	 * Значение K-параметра лежит в диапазоне [0,1].
+	 * <p>
+	 * <ul>
+	 * <li>K=0 - изменение 0%,
+	 * <li>K=1 - изменение 100%,
+	 * </ul>
 	 * @param i номер данного события
 	 * @return K-параметр для данного события.
 	 * @throws IndexOutOfBoundsException, если

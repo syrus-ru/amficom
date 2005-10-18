@@ -1,5 +1,5 @@
 /*-
- * $Id: QualityComparer.java,v 1.4 2005/10/18 09:34:37 saa Exp $
+ * $Id: QualityComparer.java,v 1.5 2005/10/18 13:14:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
  * Определяет параметры качества линии.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/10/18 09:34:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/18 13:14:10 $
  * @module dadara
  */
 public class QualityComparer
@@ -96,17 +96,21 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 				double dyc = ((HavingLoss)ce).getLoss();
 				double dye = ((HavingLoss)ee).getLoss();
 				double delta = Math.abs(dyc - dye);
-				double t = Math.max(mtm.getDYScaleForEventBeginning(j),
+				double wt = Math.max(mtm.getDYScaleForEventBeginning(j),
 						mtm.getDYScaleForEventEnd(j));
-				double qi = delta / t;
-				double ki = delta / Math.max(Math.abs(dyc), Math.abs(dye)); // FIXME: implement another formulae for ki
-				//double ki = delta / (Math.abs(dye) + noise);
+				double qi = delta >= wt ? 0.0 : 1.0 - delta / wt;
+				double ki = delta / Math.max(Math.abs(dyc), Math.abs(dye));
+				if (ki > 1) {
+					ki = 1;
+				}
+				// qi is in [0..1]
+				// ki is in [0..1]
 				this.qkDefined[i] = true;
 				this.qiValues[i] = qi;
 				this.kiValues[i] = ki;
-//				System.out.printf("[%d(%d):%d(%d)]: %g  %g\n",
+//				System.out.printf("[%d(%d):%d(%d)]: {%g %g} %g  %g\n",
 //						i, ce.getEventType(),
-//						j, ee.getEventType(), qi, ki);
+//						j, ee.getEventType(), delta, wt, qi, ki);
 			}
 			//выставить Qi, Ki...
 		}
