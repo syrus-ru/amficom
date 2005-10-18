@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathEditor.java,v 1.14 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MeasurementPathEditor.java,v 1.15 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -30,9 +31,10 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -335,10 +337,17 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.measurementPath.getName());
-			this.topologicalLengthTextField.setText(String.valueOf(this.measurementPath.getLengthLt()));
-			this.physicalLengthTextField.setText(String.valueOf(this.measurementPath.getLengthLf()));
-			this.opticalLengthTextField.setText(String.valueOf(this.measurementPath.getLengthLo()));
-			this.descTextArea.setEnabled(true);
+			try {
+				this.topologicalLengthTextField.setText(String
+						.valueOf(this.measurementPath.getLengthLt()));
+				this.physicalLengthTextField.setText(String
+						.valueOf(this.measurementPath.getLengthLf()));
+				this.opticalLengthTextField.setText(String
+						.valueOf(this.measurementPath.getLengthLo()));
+				this.descTextArea.setEnabled(true);
+			} catch(Exception e) {
+				Log.debugException(e, Level.SEVERE);
+			}
 			this.descTextArea.setText(this.measurementPath.getDescription());
 			this.startComboBox.addItem(this.measurementPath.getStartNode());
 			this.startComboBox.setSelectedItem(this.measurementPath.getStartNode());

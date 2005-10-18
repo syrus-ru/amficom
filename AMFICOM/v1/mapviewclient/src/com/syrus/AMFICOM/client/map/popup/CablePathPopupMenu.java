@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathPopupMenu.java,v 1.27 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: CablePathPopupMenu.java,v 1.28 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import javax.swing.JMenuItem;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -53,10 +54,14 @@ public class CablePathPopupMenu extends MapPopupMenu {
 		this.cablePath = (CablePath) object;
 
 		boolean canGenerate = false;
-		for(Iterator it = this.cablePath.getLinks().iterator(); it.hasNext();) {
-			Object link = it.next();
-			if(link instanceof UnboundLink)
-				canGenerate = true;
+		try {
+			for(Iterator it = this.cablePath.getLinks().iterator(); it.hasNext();) {
+				Object link = it.next();
+				if(link instanceof UnboundLink)
+					canGenerate = true;
+			}
+		} catch(ApplicationException e) {
+			e.printStackTrace();
 		}
 		this.generateMenuItem.setVisible(canGenerate);
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveUnboundLinkCommandBundle.java,v 1.18 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: RemoveUnboundLinkCommandBundle.java,v 1.19 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
  * удаление непривязанно линии из карты, включая элементы, из которых она
  * состоит
  * 
- * @version $Revision: 1.18 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -50,7 +50,7 @@ public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 

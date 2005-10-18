@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeAddEditor.java,v 1.35 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: SiteNodeAddEditor.java,v 1.36 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -134,13 +134,18 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			{
 				public void valueChanged(TreeSelectionEvent e)
 				{
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-							SiteNodeAddEditor.this.elementsTree.getLastSelectedPathComponent();
-					if(node == null)
-						showElement(null);
-					else
-						showElement(node.getUserObject());
-					SiteNodeAddEditor.this.selectButton.setEnabled(node != null);
+					try {
+						DefaultMutableTreeNode node = (DefaultMutableTreeNode) SiteNodeAddEditor.this.elementsTree
+								.getLastSelectedPathComponent();
+						if(node == null)
+							showElement(null);
+						else
+							showElement(node.getUserObject());
+						SiteNodeAddEditor.this.selectButton
+								.setEnabled(node != null);
+					} catch(Exception e1) {
+						e1.printStackTrace();
+					}
 				}
 			});
 
@@ -464,7 +469,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			}
 	}
 
-	void showElement(Object element) {
+	void showElement(Object element) throws ApplicationException {
 		boolean sen = false;
 		if(element != null) {
 			if(element instanceof SchemeElement) {
@@ -550,7 +555,11 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		this.crossingPanel.setSite(this.site);
 
 		this.schemePane.getGraph().setVisible(false);
-		this.crossingPanel.setCable(null);
+		try {
+			this.crossingPanel.setCable(null);
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
 		this.crossingScrollPane.setVisible(true);
 
 		this.elementsTree.updateUI();

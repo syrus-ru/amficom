@@ -1,5 +1,5 @@
 /*-
- * $$Id: AlarmMarkerController.java,v 1.21 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: AlarmMarkerController.java,v 1.22 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.I18N;
@@ -26,7 +25,7 @@ import com.syrus.AMFICOM.mapview.AlarmMarker;
 /**
  * Контроллер маркера сигнала тревоги.
  * 
- * @version $Revision: 1.21 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -101,7 +100,7 @@ public final class AlarmMarkerController extends MarkerController {
 					+ I18N.getString(MapEditorResourceKeys.DISTANCE_LOWERCASE) + " - " + distance; //$NON-NLS-1$ //$NON-NLS-2$
 
 			return s1;
-		} catch(MapException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return null;

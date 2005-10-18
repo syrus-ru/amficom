@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveMarkCommand.java,v 1.20 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MoveMarkCommand.java,v 1.21 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.controllers.MarkController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.Mark;
@@ -22,7 +21,7 @@ import com.syrus.util.Log;
  * Команда перемещения метки. вызывает только функцию "обновить состояние
  * местоположения"
  * 
- * @version $Revision: 1.20 $, $Date: 2005/09/30 16:08:37 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -75,7 +74,7 @@ public class MoveMarkCommand extends MapActionCommand {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 
@@ -83,12 +82,9 @@ public class MoveMarkCommand extends MapActionCommand {
 	public void undo() {
 		try {
 			this.markController.moveToFromStartLt(this.mark, this.distance);
-		} catch(MapConnectionException e) {
+		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 
@@ -98,12 +94,9 @@ public class MoveMarkCommand extends MapActionCommand {
 			this.markController.moveToFromStartLt(
 					this.mark,
 					this.initialDistance);
-		} catch(MapConnectionException e) {
+		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 }

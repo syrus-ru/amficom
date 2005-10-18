@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerController.java,v 1.42 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: MarkerController.java,v 1.43 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * 
- * @version $Revision: 1.42 $, $Date: 2005/10/12 13:07:08 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -191,31 +191,35 @@ public class MarkerController extends AbstractNodeController {
 	 * @return расстояние
 	 */
 	public double getPhysicalDistanceFromRight(final Marker marker) throws MapConnectionException, MapDataException {
-		final NodeLink nodeLink = marker.getNodeLink();
-		final CablePath cablePath = marker.getCablePath();
+		try {
+			final NodeLink nodeLink = marker.getNodeLink();
+			final CablePath cablePath = marker.getCablePath();
 
-		final double kd = cablePath.getKd();
-		double dist = endToThis(marker);
+			final double kd = cablePath.getKd();
+			double dist = endToThis(marker);
 
-		final List<NodeLink> pNodeLinks = nodeLink.getPhysicalLink().getNodeLinks();
-		final List<NodeLink> cNodeLinks = cablePath.getSortedNodeLinks();
+			final List<NodeLink> pNodeLinks = nodeLink.getPhysicalLink().getNodeLinks();
+			final List<NodeLink> cNodeLinks = cablePath.getSortedNodeLinks();
 
-		boolean doCount = false;
+			boolean doCount = false;
 
-		for (final ListIterator<NodeLink> liter = cNodeLinks.listIterator(cNodeLinks.size()); liter.hasPrevious();) {
-			final NodeLink curNodeLink = liter.previous();
-			if (pNodeLinks.contains(curNodeLink)) {
-				doCount = true;
-			}
-			if (doCount) {
-				if (curNodeLink.equals(nodeLink)) {
-					break;
+			for (final ListIterator<NodeLink> liter = cNodeLinks.listIterator(cNodeLinks.size()); liter.hasPrevious();) {
+				final NodeLink curNodeLink = liter.previous();
+				if (pNodeLinks.contains(curNodeLink)) {
+					doCount = true;
 				}
-				dist += curNodeLink.getLengthLt();
+				if (doCount) {
+					if (curNodeLink.equals(nodeLink)) {
+						break;
+					}
+					dist += curNodeLink.getLengthLt();
+				}
 			}
-		}
 
-		return dist * kd;
+			return dist * kd;
+		} catch(ApplicationException e) {
+			return 0.0D;
+		}
 	}
 
 	/**
@@ -226,12 +230,16 @@ public class MarkerController extends AbstractNodeController {
 	 * @throws MapConnectionException 
 	 */
 	public double getFromStartLengthLo(final Marker marker) throws MapConnectionException, MapDataException {
-		final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
-		if (schemePath == null) {
-			return this.getFromStartLengthLf(marker);
-		}
+		try {
+			final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
+			if (schemePath == null) {
+				return this.getFromStartLengthLf(marker);
+			}
 
-		return schemePath.getOpticalDistance(this.getFromStartLengthLf(marker));
+			return schemePath.getOpticalDistance(this.getFromStartLengthLf(marker));
+		} catch(ApplicationException e) {
+			return 0.0D;
+		}
 	}
 
 	/**
@@ -343,10 +351,11 @@ public class MarkerController extends AbstractNodeController {
 	 *        маркер
 	 * @param physicalDistance
 	 *        физическое расстояние
+	 * @throws ApplicationException 
 	 */
 	public void setRelativeToCablePath(final Marker marker, final double physicalDistance)
 			throws MapConnectionException,
-				MapDataException {
+				MapDataException, ApplicationException {
 		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		final CablePath cablePath = marker.getCablePath();
@@ -422,8 +431,9 @@ public class MarkerController extends AbstractNodeController {
 	 * @return физическое расстояние
 	 * @throws MapDataException 
 	 * @throws MapConnectionException 
+	 * @throws ApplicationException 
 	 */
-	public double getFromStartLengthLf(final Marker marker) throws MapConnectionException, MapDataException {
+	public double getFromStartLengthLf(final Marker marker) throws MapConnectionException, MapDataException, ApplicationException {
 		final MeasurementPath measurementPath = marker.getMeasurementPath();
 
 		double physicalDistance = 0.0D;
@@ -454,12 +464,20 @@ public class MarkerController extends AbstractNodeController {
 	 * @throws MapConnectionException 
 	 */
 	public void notifyMarkerCreated(final Marker marker) throws MapConnectionException, MapDataException {
-		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
-				MarkerEvent.MARKER_CREATED_EVENT,
-				marker.getId(),
-				getFromStartLengthLf(marker),
-				marker.getMeasurementPath().getSchemePath().getId(),
-				marker.getMonitoringElementId()));
+		try {
+			this.logicalNetLayer.getContext().getDispatcher()
+					.firePropertyChange(
+							new MarkerEvent(
+									this,
+									MarkerEvent.MARKER_CREATED_EVENT,
+									marker.getId(),
+									getFromStartLengthLf(marker),
+									marker.getMeasurementPath().getSchemePath()
+											.getId(),
+									marker.getMonitoringElementId()));
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateCollectorCommandAtomic.java,v 1.19 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: CreateCollectorCommandAtomic.java,v 1.20 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
  * создание коллектора, внесение его в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.19 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -60,7 +60,7 @@ public class CreateCollectorCommandAtomic extends MapActionCommand {
 		} catch(CreateObjectException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 

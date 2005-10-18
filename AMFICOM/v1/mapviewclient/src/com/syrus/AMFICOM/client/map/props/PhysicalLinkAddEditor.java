@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.38 2005/10/17 07:00:21 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.39 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/10/17 07:00:21 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -657,7 +657,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			this.processSelection = false;
 			if(this.bindButton.isSelected()) {
 				Object or = this.cableList.getSelectedValue();
-				bind(or);
+				try {
+					bind(or);
+				} catch(ApplicationException e) {
+					e.printStackTrace();
+				}
 				this.bindButton.setSelected(false);
 				setBindMode(false);
 			}
@@ -701,7 +705,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 
-	public void bind(Object or) {
+	public void bind(Object or) throws ApplicationException {
 		IntPoint pt = this.tunnelLayout.getActiveCoordinates();
 		if(pt != null) {
 			this.pipeBlock.bind(or, pt.x, pt.y);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLibraryCommand.java,v 1.11 2005/10/17 14:06:47 krupenn Exp $$
+ * $$Id: MapEditorNewLibraryCommand.java,v 1.12 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
+
+import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -27,9 +29,10 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/17 14:06:47 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -85,10 +88,10 @@ public class MapEditorNewLibraryCommand extends AbstractCommand {
 				setResult(Command.RESULT_CANCEL);
 			}
 		} catch(CreateObjectException e) {
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 			setResult(Command.RESULT_NO);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 			setResult(Command.RESULT_NO);
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveSelectionCommandBundle.java,v 1.24 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: MoveSelectionCommandBundle.java,v 1.25 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,23 +8,27 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import static com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle.DELTA_X;
+import static com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle.DELTA_Y;
+
 import java.awt.Point;
 import java.util.Iterator;
+import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * 
- * @version $Revision: 1.24 $, $Date: 2005/10/03 10:35:00 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -118,12 +122,9 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle {
 			DoublePoint ep = this.logicalNetLayer.getConverter().convertScreenToMap(this.endPoint);
 			this.deltaX = ep.getX() - sp.getX();
 			this.deltaY = ep.getY() - sp.getY();
-		} catch(MapConnectionException e) {
+		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 	

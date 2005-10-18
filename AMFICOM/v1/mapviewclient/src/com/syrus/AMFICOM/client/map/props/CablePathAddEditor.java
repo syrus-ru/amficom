@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.29 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.30 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,9 +58,10 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/12 13:07:08 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -310,11 +312,13 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.clearBindingButton.setPreferredSize(buttonSize);
 		this.clearBindingButton.setMaximumSize(buttonSize);
 		this.clearBindingButton.setMinimumSize(buttonSize);
-		this.clearBindingButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					clearBinding();
+		this.clearBindingButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					try {
+						clearBinding();
+					} catch(ApplicationException e1) {
+						Log.debugException(e1, Level.SEVERE);
+					}
 				}
 			});
 
@@ -644,16 +648,19 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		{
 			this.controller.setCablePath(this.cablePath);
 
-			this.links.addAll(this.cablePath.getLinks());
-
-			this.model.setValues(this.cablePath.getLinks());
+			try {
+				this.links.addAll(this.cablePath.getLinks());
+				this.model.setValues(this.cablePath.getLinks());
+				setBindingValues();
+			} catch(Exception e) {
+				Log.debugException(e, Level.SEVERE);
+			}
 			
-			setBindingValues();
 			setBindingPanels();
 		}
 	}
 
-	private void setBindingValues() {
+	private void setBindingValues() throws ApplicationException {
 		PhysicalLinkType unboundType;
 		try {
 			unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
@@ -878,7 +885,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 	
-	void clearBinding() {
+	void clearBinding() throws ApplicationException {
 		this.cablePath.clearLinks();
 		final CableChannelingItem firstCCI = this.cablePath.getSchemeCableLink().getPathMembers().iterator().next();
 		firstCCI.setParentPathOwner(null, true);

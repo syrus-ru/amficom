@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteCrossingPanel.java,v 1.20 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: SiteCrossingPanel.java,v 1.21 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -35,7 +36,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -97,7 +98,7 @@ public class SiteCrossingPanel extends JPanel {
 		repaint();
 	}
 
-	public void setCable(CablePath cpath) {
+	public void setCable(CablePath cpath) throws ApplicationException {
 		this.cpath = cpath;
 
 		this.index1 = -1;

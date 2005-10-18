@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeleteNodeLinkCommandBundle.java,v 1.40 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: DeleteNodeLinkCommandBundle.java,v 1.41 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.40 $, $Date: 2005/10/03 10:35:00 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -338,7 +338,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 }

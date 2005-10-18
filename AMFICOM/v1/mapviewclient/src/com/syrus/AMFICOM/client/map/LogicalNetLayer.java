@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.131 2005/10/12 13:07:07 krupenn Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.132 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.131 $, $Date: 2005/10/12 13:07:07 $
+ * @version $Revision: 1.132 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -198,7 +198,12 @@ public final class LogicalNetLayer {
 		}
 		if (MapPropertiesManager.isOptimizeLinks()) {
 			// calculateVisualLinks();
-			calculateVisualElements();
+			try {
+				calculateVisualElements();
+			} catch(ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -405,7 +410,12 @@ public final class LogicalNetLayer {
 		if (MapPropertiesManager.isOptimizeLinks()) {
 			drawVisualElements(p, visibleBounds);
 		} else {
-			drawLines(p, visibleBounds);
+			try {
+				drawLines(p, visibleBounds);
+			} catch(ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			drawNodes(p, visibleBounds);
 		}
 		drawSelection(p, visibleBounds);
@@ -425,8 +435,9 @@ public final class LogicalNetLayer {
 	/**
 	 * Отрисовать линейные объекты.
 	 * @param g графический контекст
+	 * @throws ApplicationException 
 	 */
-	public void drawLines(final Graphics g, final Rectangle2D.Double visibleBounds) throws MapConnectionException, MapDataException {
+	public void drawLines(final Graphics g, final Rectangle2D.Double visibleBounds) throws MapConnectionException, MapDataException, ApplicationException {
 		final long f = System.currentTimeMillis();
 
 		MapViewController.nullTime1();
@@ -971,7 +982,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.131 $, $Date: 2005/10/12 13:07:07 $
+	 * @version $Revision: 1.132 $, $Date: 2005/10/18 07:21:12 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1020,8 +1031,9 @@ public final class LogicalNetLayer {
 	/**
 	 * Обновляет список элементов которые должны отображаться при текущем
 	 * массштабе.
+	 * @throws ApplicationException 
 	 */
-	public void calculateVisualElements() throws MapDataException, MapConnectionException {
+	public void calculateVisualElements() throws MapDataException, MapConnectionException, ApplicationException {
 
 		MapViewController.nullTime1();
 		MapViewController.nullTime2();
@@ -1115,7 +1127,7 @@ public final class LogicalNetLayer {
 			final Set<AbstractNode> allNodes, 
 			final Set<NodeLink> allNodeLinks,
 			final Set<AbstractNode> nodes,
-			final Set<NodeLink> nodeLinks) {
+			final Set<NodeLink> nodeLinks) throws ApplicationException {
 
 		final long t1 = System.currentTimeMillis();
 		for (final PhysicalLink physicalLink : cablePath.getLinks()) {
@@ -1136,7 +1148,7 @@ public final class LogicalNetLayer {
 			final Set<AbstractNode> allNodes, 
 			final Set<NodeLink> allNodeLinks,
 			final Set<AbstractNode> nodes,
-			final Set<NodeLink> nodeLinks) {
+			final Set<NodeLink> nodeLinks) throws ApplicationException {
 
 		final long t1 = System.currentTimeMillis();
 		for (final CablePath cablePath : measurementPath.getSortedCablePaths()) {

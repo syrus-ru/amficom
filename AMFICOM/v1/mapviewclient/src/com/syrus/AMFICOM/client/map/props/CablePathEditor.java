@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathEditor.java,v 1.17 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: CablePathEditor.java,v 1.18 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,10 +29,11 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -336,7 +337,12 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.cablePath.getName());
-			this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLt()));
+			try {
+				this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLt()));
+			} catch(ApplicationException e) {
+				e.printStackTrace();
+				return;
+			}
 			this.physicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLf()));
 			this.opticalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLo()));
 			this.descTextArea.setEnabled(true);

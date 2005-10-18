@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableController.java,v 1.40 2005/10/17 07:00:21 krupenn Exp $$
+ * $$Id: CableController.java,v 1.41 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Контроллер кабеля.
  * 
- * @version $Revision: 1.40 $, $Date: 2005/10/17 07:00:21 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -98,12 +99,16 @@ public final class CableController extends AbstractLinkController {
 		final CablePath cablePath = (CablePath) me;
 
 		boolean visibility = false;
-		for (final PhysicalLink link : cablePath.getLinks()) {
-			final PhysicalLinkController controller = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
-			if (controller.isElementVisible(link, visibleBounds)) {
-				visibility = true;
-				break;
+		try {
+			for (final PhysicalLink link : cablePath.getLinks()) {
+				final PhysicalLinkController controller = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
+				if (controller.isElementVisible(link, visibleBounds)) {
+					visibility = true;
+					break;
+				}
 			}
+		} catch(ApplicationException e) {
+			return false;
 		}
 		return visibility;
 	}
@@ -195,9 +200,14 @@ public final class CableController extends AbstractLinkController {
 			return;
 		}
 
-		for (final PhysicalLink link : cpath.getLinks()) {
-			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
-			plc.paint(link, g, visibleBounds, stroke, color, selectionVisible);
+		try {
+			for (final PhysicalLink link : cpath.getLinks()) {
+				final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
+				plc.paint(link, g, visibleBounds, stroke, color, selectionVisible);
+			}
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -215,11 +225,16 @@ public final class CableController extends AbstractLinkController {
 
 		final CablePath cpath = (CablePath) me;
 
-		for (final PhysicalLink link : cpath.getLinks()) {
-			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
-			if (plc.isMouseOnElement(link, currentMousePoint)) {
-				return true;
+		try {
+			for (final PhysicalLink link : cpath.getLinks()) {
+				final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
+				if (plc.isMouseOnElement(link, currentMousePoint)) {
+					return true;
+				}
 			}
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return false;
 	}
@@ -282,7 +297,11 @@ public final class CableController extends AbstractLinkController {
 		double distance = 0.0;
 
 		AbstractNode node = cpath.getStartNode();
-		cpath.sortNodeLinks();
+		try {
+			cpath.sortNodeLinks();
+		} catch(ApplicationException e) {
+			return 0.0D;
+		}
 		for (final NodeLink mnle : cpath.getSortedNodeLinks()) {
 			final NodeLinkController nlc = (NodeLinkController) this.logicalNetLayer.getMapViewController().getController(mnle);
 			if (nlc.isMouseOnElement(mnle, pt)) {
@@ -311,8 +330,12 @@ public final class CableController extends AbstractLinkController {
 	 * @return дистанция физическая
 	 */
 	public double getDistanceFromStartLf(final CablePath cpath, final Point pt) throws MapConnectionException, MapDataException {
-		final double kd = cpath.getKd();
-		return this.getDistanceFromStartLt(cpath, pt) * kd;
+		try {
+			final double kd = cpath.getKd();
+			return this.getDistanceFromStartLt(cpath, pt) * kd;
+		} catch(ApplicationException e) {
+			return 0.0D;
+		}
 	}
 
 //	/**
@@ -366,9 +389,14 @@ public final class CableController extends AbstractLinkController {
 	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
 		final CablePath cablePath = (CablePath) mapElement;
 		Rectangle2D rectangle = new Rectangle();
-		for(PhysicalLink physicalLink : cablePath.getLinks()) {
-			final PhysicalLinkController controller = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(physicalLink);
-			rectangle = rectangle.createUnion(controller.getBoundingRectangle(physicalLink));
+		try {
+			for(PhysicalLink physicalLink : cablePath.getLinks()) {
+				final PhysicalLinkController controller = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(physicalLink);
+				rectangle = rectangle.createUnion(controller.getBoundingRectangle(physicalLink));
+			}
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return rectangle;
 	}

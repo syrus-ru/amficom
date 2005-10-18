@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableBindingController.java,v 1.28 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: CableBindingController.java,v 1.29 2005/10/18 07:21:13 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
@@ -20,10 +21,11 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/18 07:21:13 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -92,31 +94,23 @@ public final class CableBindingController implements Wrapper {
 		Object result = null;
 		if (object instanceof PhysicalLink) {
 			PhysicalLink link = (PhysicalLink)object;
-			CableChannelingItem cci = this.cablePath.getFirstCCI(link);
-			if (key.equals(KEY_START_NODE)) {
-//				result = link.getStartNode().getName();
-				AbstractNode mne = cci.getStartSiteNode();
-				result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
-			}
-			else
-			if (key.equals(KEY_START_SPARE)) {
-				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare()); //$NON-NLS-1$
-			}
-			else
-			if (key.equals(KEY_LINK)) {
-				result = (link instanceof UnboundLink) ? "" : link.getName(); //$NON-NLS-1$
-//				MapPhysicalLinkElement mle = (MapPhysicalLinkElement )map.getPhysicalLink(cci.physicalLinkId);
-//				result = (mle == null) ? "" : mle.getName();
-			}
-			else
-			if (key.equals(KEY_END_SPARE)) {
-				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare()); //$NON-NLS-1$
-			}
-			else
-			if (key.equals(KEY_END_NODE)) {
-//				result = link.getEndNode().getName();
-				AbstractNode mne = cci.getEndSiteNode();
-				result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
+			try {
+				CableChannelingItem cci = this.cablePath.getFirstCCI(link);
+				if(key.equals(KEY_START_NODE)) {
+					AbstractNode mne = cci.getStartSiteNode();
+					result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
+				} else if(key.equals(KEY_START_SPARE)) {
+					result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare()); //$NON-NLS-1$
+				} else if(key.equals(KEY_LINK)) {
+					result = (link instanceof UnboundLink) ? "" : link.getName(); //$NON-NLS-1$
+				} else if(key.equals(KEY_END_SPARE)) {
+					result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare()); //$NON-NLS-1$
+				} else if(key.equals(KEY_END_NODE)) {
+					AbstractNode mne = cci.getEndSiteNode();
+					result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
+				}
+			} catch(Exception e) {
+				Log.debugException(e, Level.SEVERE);
 			}
 		}
 		return result;
@@ -133,15 +127,17 @@ public final class CableBindingController implements Wrapper {
 	public void setValue(Object object, final String key, final Object value) {
 		if(object instanceof PhysicalLink) {
 			PhysicalLink link = (PhysicalLink)object;
-			CableChannelingItem cci = this.cablePath.getFirstCCI(link);
-			if (key.equals(KEY_START_SPARE)){
-				if(cci.getPhysicalLink() != null)
-					cci.setStartSpare(Double.parseDouble((String )value));
-			}
-			else
-			if (key.equals(KEY_END_SPARE)) {
-				if(cci.getPhysicalLink() != null)
-					cci.setEndSpare(Double.parseDouble((String )value));
+			try {
+				CableChannelingItem cci = this.cablePath.getFirstCCI(link);
+				if(key.equals(KEY_START_SPARE)) {
+					if(cci.getPhysicalLink() != null)
+						cci.setStartSpare(Double.parseDouble((String) value));
+				} else if(key.equals(KEY_END_SPARE)) {
+					if(cci.getPhysicalLink() != null)
+						cci.setEndSpare(Double.parseDouble((String) value));
+				}
+			} catch(Exception e) {
+				Log.debugException(e, Level.SEVERE);
 			}
 		}
 	}

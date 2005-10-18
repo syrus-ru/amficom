@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveFixedDistanceCommand.java,v 1.16 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: MoveFixedDistanceCommand.java,v 1.17 2005/10/18 07:21:12 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,19 +9,20 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.awt.Point;
+import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Команда позволяет перемещать топологический узел вокруг другого
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
  * 
- * @version $Revision: 1.16 $, $Date: 2005/10/03 10:35:00 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/18 07:21:12 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -64,12 +65,9 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle {
 						* (movedScreenPoint.x - this.fixedScreenPoint.x) 
 					+ (movedScreenPoint.y - this.fixedScreenPoint.y) 
 						* (movedScreenPoint.y - this.fixedScreenPoint.y));
-		} catch(MapConnectionException e) {
+		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 
@@ -106,12 +104,9 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle {
 			DoublePoint startMapPoint = this.logicalNetLayer.getConverter().convertScreenToMap(super.startPoint);
 			super.deltaX = targetMapPoint.getX() - startMapPoint.getX();
 			super.deltaY = targetMapPoint.getY() - startMapPoint.getY();
-		} catch(MapConnectionException e) {
+		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.debugException(e, Level.SEVERE);
 		}
 	}
 	
