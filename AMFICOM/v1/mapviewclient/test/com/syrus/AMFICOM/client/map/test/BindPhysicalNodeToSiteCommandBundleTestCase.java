@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.5 2005/08/10 09:27:21 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.6 2005/10/18 07:07:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.client.map.command.action.BindPhysicalNodeToSiteCommand
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 public class BindPhysicalNodeToSiteCommandBundleTestCase extends SchemeBindingTestCase {
 
-	public void testExecute() {
+	public void testExecute() throws ApplicationException {
 		//pre-test tasks
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);

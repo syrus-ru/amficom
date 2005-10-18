@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.7 2005/08/10 09:27:21 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.8 2005/10/18 07:07:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -28,9 +29,10 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 	/**
 	 * building(start) ----- well ----- well ----- well ----- building
+	 * @throws ApplicationException 
 	 *
 	 */
-	public void testSingleNodeAtSite() {
+	public void testSingleNodeAtSite() throws ApplicationException {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -56,9 +58,10 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 	/**
 	 * building ----- well ----- well ----- well ----- building unbound(start)
+	 * @throws ApplicationException 
 	 *
 	 */
-	public void testSingleNodeUnbound() {
+	public void testSingleNodeUnbound() throws ApplicationException {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, new Point(120, 120));
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -84,9 +87,10 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 	/**
 	 * building(start) ----- well ----- well ----- well ----- building(end)
+	 * @throws ApplicationException 
 	 *
 	 */
-	public void testStartAndEndAtSites() {
+	public void testStartAndEndAtSites() throws ApplicationException {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -159,9 +163,10 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 	/**
 	 * building(start) ----- well ----- well ----- well ----- building unbound(end)
+	 * @throws ApplicationException 
 	 *
 	 */
-	public void testStartAtSiteEndUnbound() {
+	public void testStartAtSiteEndUnbound() throws ApplicationException {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -245,9 +250,10 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 	/**
 	 * building ----- well ----- well ----- well ----- building(end) unbound(start)
+	 * @throws ApplicationException 
 	 *
 	 */
-	public void testStartUnboundEndAtSite() {
+	public void testStartUnboundEndAtSite() throws ApplicationException {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, new Point(120, 120));
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();

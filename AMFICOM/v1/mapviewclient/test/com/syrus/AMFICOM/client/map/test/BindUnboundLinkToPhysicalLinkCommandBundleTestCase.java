@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundleTestCase.java,v 1.4 2005/08/10 09:27:21 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundleTestCase.java,v 1.5 2005/10/18 07:07:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandBund
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -35,8 +36,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 	/**
 	 *                  _____ 
 	 * building1(start) ----- well1(end) ----- well2 ----- well3 ----- building2
+	 * @throws ApplicationException 
 	 */
-	public void testSingleUnboundToPhysical() {
+	public void testSingleUnboundToPhysical() throws ApplicationException {
 		//pre-test tasks
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
@@ -98,8 +100,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 	/**
 	 *                  ___ node ___ 
 	 * building1(start) ------------ well1(end) ----- well2 ----- well3 ----- building2
+	 * @throws ApplicationException 
 	 */
-	public void testSingleUnboundWithNodeToPhysical() {
+	public void testSingleUnboundWithNodeToPhysical() throws ApplicationException {
 		//pre-test tasks
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
@@ -173,8 +176,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 	/**
 	 *                  ____________ 
 	 * building1(start) --- node --- well1(end) ----- well2 ----- well3 ----- building2
+	 * @throws ApplicationException 
 	 */
-	public void testSingleUnboundToPhysicalWithNode() {
+	public void testSingleUnboundToPhysicalWithNode() throws ApplicationException {
 		//pre-test tasks
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
@@ -242,8 +246,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 	/**
 	 *                  _____ unbound(end)
 	 * building1(start) ----- well1 ----- well2 ----- well3 ----- building2
+	 * @throws ApplicationException 
 	 */
-	public void testSingleUnboundSite() {
+	public void testSingleUnboundSite() throws ApplicationException {
 		//pre-test tasks
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
@@ -319,8 +324,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 	/**
 	 *                  _____ 
 	 * building1(start) ----- well1(end) ----- well2 ----- well3 ----- building2
+	 * @throws ApplicationException 
 	 */
-	public void testSingleUnboundToInconsequent() {
+	public void testSingleUnboundToInconsequent() throws ApplicationException {
 		//pre-test tasks
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
@@ -384,8 +390,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 	/**
 	 *                  _____                _____________________________ 
 	 * building1(start) ----- well1(interim) ----- well2 ----- well3 ----- building2(end)
+	 * @throws ApplicationException 
 	 */
-	public void testDoubleUnboundToPhysical() {
+	public void testDoubleUnboundToPhysical() throws ApplicationException {
 		//pre-test tasks
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);

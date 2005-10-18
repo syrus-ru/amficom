@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.6 2005/09/16 14:53:38 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.7 2005/10/18 07:07:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.client.map.command.action.GenerateUnboundLinkCablingCom
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -323,7 +324,7 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertSame(cablePath.getEndUnboundNode(), unbound);
 	}
 
-	public void testUnboundBetweenTwoBound() {
+	public void testUnboundBetweenTwoBound() throws ApplicationException {
 		long t1 = System.currentTimeMillis();
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
