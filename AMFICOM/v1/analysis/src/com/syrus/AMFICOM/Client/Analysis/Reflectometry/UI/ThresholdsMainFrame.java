@@ -46,7 +46,8 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.report.DestinationModules;
 
-public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChangeListener, EtalonMTMListener,
+public class ThresholdsMainFrame extends AbstractMainFrame
+implements BsHashChangeListener, EtalonMTMListener,
 		CurrentTraceChangeListener {
 	private static final long serialVersionUID = 2086348259538964334L;
 
@@ -155,8 +156,8 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		this.selectFrame = new TraceSelectorFrame(this.dispatcher);
 		this.desktopPane.add(this.selectFrame);
 
-		this.tables = new LinkedList();
-		this.graphs = new LinkedList();
+		this.tables = new LinkedList<ReportTable>();
+		this.graphs = new LinkedList<SimpleResizableFrame>();
 		
 		this.paramFrame = new PrimaryParametersFrame();
 		this.desktopPane.add(this.paramFrame);
@@ -166,7 +167,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		this.desktopPane.add(this.statsFrame);
 		this.tables.add(this.statsFrame);
 
-		this.eventsFrame = new EventsFrame(aContext, false);
+		this.eventsFrame = new EventsFrame(this.aContext, false);
 		this.desktopPane.add(this.eventsFrame);
 		this.tables.add(this.eventsFrame);
 
@@ -184,7 +185,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		this.mInfoFrame = new MarkersInfoFrame(this.dispatcher);
 		this.desktopPane.add(this.mInfoFrame);
 
-		this.anaSelectFrame = new AnalysisSelectionFrame(aContext);
+		this.anaSelectFrame = new AnalysisSelectionFrame(this.aContext);
 		this.desktopPane.add(this.anaSelectFrame);
 		this.tables.add(this.anaSelectFrame);
 
