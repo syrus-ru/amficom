@@ -178,6 +178,7 @@ final class TestLine extends TimeLine {
 	                   final SortedSet<TestTimeItem> testTimeItems,
 	                   final boolean unselect) {
 		boolean selected = false;
+		synchronized (this) {
 		for (final TestTimeItem testTimeItem : testTimeItems) {
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 				if (this.selectedTestIds == null) {
@@ -245,6 +246,7 @@ final class TestLine extends TimeLine {
 				break;
 			}
 		}
+		}
 		return selected;
 	}
 
@@ -281,14 +283,14 @@ final class TestLine extends TimeLine {
 			this.flash = !this.flash;
 			int y = this.titleHeight / 2 + 4;
 			int h = this.getHeight() - y - 2;
-
+			synchronized (this) {
 			for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
 				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.width, h, this.flash
 						? (((this.selectedTestIds == null) || (!this.selectedTestIds.contains(testTimeItem.testTimeLine.testId)))
 								? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_SCHEDULED_SELECTED)
 						: SchedulerModel.COLOR_UNRECOGNIZED);
 			}
-
+			}
 		}
 	}
 
@@ -310,6 +312,7 @@ final class TestLine extends TimeLine {
 			}
 		}
 
+		synchronized (this) {
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
 				for (final Identifier identifier : this.selectedTestIds) {
@@ -330,6 +333,7 @@ final class TestLine extends TimeLine {
 				}
 
 			}
+		}
 		}
 		super.repaint();
 		super.revalidate();
@@ -705,9 +709,11 @@ final class TestLine extends TimeLine {
 			testTimeItem.x += diff;
 		}
 		
+		synchronized (this) {
 		for(TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
 			testTimeItem.x += diff;
 		}		
+		}
 	}
 	
 	@Override
