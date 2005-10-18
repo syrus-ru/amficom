@@ -13,6 +13,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.UIDefaults;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
@@ -120,7 +121,9 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 				aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 			}
 		});
-	}
+
+		PermissionManager.setReseachTranslation();
+}
 	
 	protected void initFrames() {
 		this.frames = new UIDefaults();

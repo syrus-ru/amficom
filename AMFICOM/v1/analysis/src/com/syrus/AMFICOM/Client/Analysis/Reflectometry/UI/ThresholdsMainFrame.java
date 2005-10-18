@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CheckMismatchCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
@@ -143,6 +144,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 			}
 		});
 
+
+		PermissionManager.setEvaluationTranslation();
 		
 		// XXX: debug code
 		if (System.getProperty("amficom.debug.partialHeight", "false").equals("true"))
