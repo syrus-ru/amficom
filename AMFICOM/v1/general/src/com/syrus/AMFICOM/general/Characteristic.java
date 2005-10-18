@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.73 2005/10/05 13:43:32 bass Exp $
+ * $Id: Characteristic.java,v 1.74 2005/10/18 07:37:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/10/05 13:43:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.74 $, $Date: 2005/10/18 07:37:31 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -378,8 +378,10 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	}
 
 	public void setValue(final String value) {
-		super.markAsChanged();
-		this.value = value;
+		if (this.value.intern() != value.intern()) {
+			super.markAsChanged();
+			this.value = value;
+		}
 	}
 
 	/**
