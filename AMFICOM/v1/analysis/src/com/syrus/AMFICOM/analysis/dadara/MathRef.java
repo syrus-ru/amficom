@@ -155,23 +155,31 @@ public class MathRef
 				+ 1);
 	}
 
-	public static double round_4 (double d)
-	{
+	public static double round_4 (double d) {
+		if (Double.isInfinite(d) || Double.isNaN(d)) {
+			return d;
+		}
 		return Math.round(d * 10000.0) / 10000.0;
 	}
 
-	public static double round_3 (double d)
-	{
+	public static double round_3 (double d) {
+		if (Double.isInfinite(d) || Double.isNaN(d)) {
+			return d;
+		}
 		return Math.round(d * 1000.0) / 1000.0;
 	}
 
-	public static double round_2 (double d)
-	{
+	public static double round_2 (double d) {
+		if (Double.isInfinite(d) || Double.isNaN(d)) {
+			return d;
+		}
 		return Math.round(d * 100.0) / 100.0;
 	}
 
-	public static double round_1 (double d)
-	{
+	public static double round_1 (double d) {
+		if (Double.isInfinite(d) || Double.isNaN(d)) {
+			return d;
+		}
 		return Math.round(d * 10.0) / 10.0;
 	}
 
