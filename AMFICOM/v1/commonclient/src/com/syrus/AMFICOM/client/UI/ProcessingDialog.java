@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.9 2005/10/18 07:45:32 bob Exp $
+* $Id: ProcessingDialog.java,v 1.10 2005/10/18 07:53:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,14 +33,14 @@ import com.syrus.util.Log;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/10/18 07:45:32 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/18 07:53:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public final class ProcessingDialog {
 
-	final static Level LOGLEVEL = Log.DEBUGLEVEL10;
+	final static Level LOGLEVEL = Log.DEBUGLEVEL09;
 	
 	final static Object LOCK = new Object(); 
 	
@@ -84,7 +84,7 @@ public final class ProcessingDialog {
 					+ currentThreadName 
 					+ ']' , 
 				LOGLEVEL);
-			if (!runnableTasks.isEmpty()) {
+			if (runnableTasks.size() > 1) {
 				assert Log.debugMessage("ProcessingDialog.startIfItNeeded | LOCK -- there is working queue -- return -- " 
 						+ new Date()  
 						+ '[' 
@@ -117,6 +117,7 @@ public final class ProcessingDialog {
 				new Thread() {
 					@Override
 					public void run() {
+						assert Log.debugMessage(".run | thread in", LOGLEVEL);
 
 						final String threadName = currentThread().getName();
 
@@ -162,6 +163,8 @@ public final class ProcessingDialog {
 								
 							}
 						});
+						
+						assert Log.debugMessage(".run | thread out", LOGLEVEL);
 					}
 				}.start();								
 			}
