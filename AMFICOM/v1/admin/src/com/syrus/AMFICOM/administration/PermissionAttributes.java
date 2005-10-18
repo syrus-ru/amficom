@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.19 2005/10/17 09:58:40 bob Exp $
+* $Id: PermissionAttributes.java,v 1.20 2005/10/18 13:14:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/17 09:58:40 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/18 13:14:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -51,8 +51,8 @@ public class PermissionAttributes extends StorableObject {
 		SCHEME(true),
 		SCHEME_EDITOR(true),
 		MAPVIEW(true),
-		OPTIMIZATION(true),
-		MODELING(true),
+		OPTIMIZATION(false),
+		MODELING(false),
 		SCHEDULER(true),
 		ANALYSIS(true),
 		RESEARCH(true),
