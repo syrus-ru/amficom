@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.13 2005/09/22 15:27:49 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/10/18 12:52:06 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $
+ * @author $Author: max $
  * @module mapview
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -32,16 +32,21 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 	}
 
 	@Override
-	public boolean isConditionTrue(final StorableObject storableObject) {
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MAPVIEW_CODE:
 				MapView mapView = (MapView) storableObject;
-				super.conditionTest(mapView.getDomainId());
-				break;
+				switch (super.linkedEntityCode) {
+				case ObjectEntities.DOMAIN_CODE:
+					return super.conditionTest(mapView.getDomainId());
+				case ObjectEntities.MAP_CODE:
+					return super.conditionTest(mapView.getMapId());
+				default:
+					throw newExceptionLinkedEntityIllegal();
+				}				
 			default:
-				throw new UnsupportedOperationException("LinkedIdsConditionImpl.isConditionTrue | entityCode "
-						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
+				newExceptionEntityIllegal();
 		}
 		return condition;
 	}
