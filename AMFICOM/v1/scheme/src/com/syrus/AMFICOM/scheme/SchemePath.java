@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.106 2005/10/17 12:09:36 bass Exp $
+ * $Id: SchemePath.java,v 1.107 2005/10/18 16:19:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/10/17 12:09:36 $
+ * @version $Revision: 1.107 $, $Date: 2005/10/18 16:19:42 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -84,7 +84,7 @@ public final class SchemePath extends StorableObject
 
 	private String description;
 
-	private Identifier transmissionPathId;
+	Identifier transmissionPathId;
 
 	Identifier parentSchemeMonitoringSolutionId;
 
@@ -671,10 +671,58 @@ public final class SchemePath extends StorableObject
 	 **********************************************************************/
 
 	/**
+	 * @param pathElement
+	 * @see SchemeCableLink#assertContains(CableChannelingItem)
+	 */
+	boolean assertContains(final PathElement pathElement) {
+		/*
+		 * The second precondition is intentionally turned off since
+		 * getPathMembers() cannot always return the correct number of
+		 * path members when the code is executed server-side (path
+		 * members preceding the one in question may be not saved yet).
+		 *
+		 * Making a path member depend on its precursor (if any) may be
+		 * a solution, but it'll complicate the code too much.
+		 */
+		try {
+			return pathElement.getParentSchemePathId().equals(this)
+					&& (true || this.getPathMembers().headSet(pathElement).size() == pathElement.sequentialNumber);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return true;
+		}
+	}
+
+	public double getOpticalLength()
+	throws ApplicationException {
+		double opticalLength = 0;
+		for (final PathElement pathElement : this.getPathMembers()) {
+			opticalLength += pathElement.getOpticalLength();
+		}
+		return opticalLength;
+	}
+
+	public double getPhysicalLength()
+	throws ApplicationException {
+		double physicalLength = 0;
+		for (final PathElement pathElement : this.getPathMembers()) {
+			physicalLength += pathElement.getPhysicalLength();
+		}
+		return physicalLength;
+	}
+
+	/*-********************************************************************
+	 * Shitlets.                                                          *
+	 **********************************************************************/
+
+	/**
 	 * @return <code>SchemeElement</code> associated with the first
 	 *         <code>PathElement</code> in this <code>SchemePath</code>.
 	 * @throws ApplicationException
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public SchemeElement getStartSchemeElement() throws ApplicationException {
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
@@ -687,7 +735,10 @@ public final class SchemePath extends StorableObject
 	 * @return <code>SchemeElement</code> associated with the last
 	 *         <code>PathElement</code> in this <code>SchemePath</code>.
 	 * @throws ApplicationException
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public SchemeElement getEndSchemeElement() throws ApplicationException {
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
@@ -699,8 +750,10 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param pathElement
 	 * @throws ApplicationException
+	 * @deprecated
 	 */
 	@Shitlet
+	@Deprecated
 	public PathElement getNextNode(final PathElement pathElement) throws ApplicationException {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
@@ -721,12 +774,15 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param pathElement
 	 * @throws ApplicationException
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public PathElement getNextPathElement(final PathElement pathElement)
 	throws ApplicationException {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		final SortedSet<PathElement> pathElements  = getPathMembers().tailSet(pathElement);
+		final SortedSet<PathElement> pathElements = getPathMembers().tailSet(pathElement);
 		if (pathElements.size() == 1) {
 			return null;
 		}
@@ -747,10 +803,10 @@ public final class SchemePath extends StorableObject
 		double opticalDistance = .0;
 		double d = .0;
 		for (final PathElement pathElement : getPathMembers()) {
-			final double physicalLength = SchemeUtils.getPhysicalLength(pathElement);
+			final double physicalLength = pathElement.getPhysicalLength();
 			if (d + physicalLength < physicalDistance) {
 				d += physicalLength;
-				opticalDistance += SchemeUtils.getOpticalLength(pathElement);
+				opticalDistance += pathElement.getOpticalLength();
 			} else {
 				opticalDistance += (physicalDistance - d) * SchemeUtils.getKu(pathElement);
 				break;
@@ -776,9 +832,9 @@ public final class SchemePath extends StorableObject
 		for (final PathElement pathElement1 : pathElements) {
 			if (pathElement1.equals(pathElement)) {
 				assert pathElement1 == pathElement;
-				return new double[]{opticalDistanceFromStart, opticalDistanceFromStart + SchemeUtils.getOpticalLength(pathElement1)};
+				return new double[]{opticalDistanceFromStart, opticalDistanceFromStart + pathElement1.getOpticalLength()};
 			}
-			opticalDistanceFromStart += SchemeUtils.getOpticalLength(pathElement1);
+			opticalDistanceFromStart += pathElement1.getOpticalLength();
 		}
 		/*
 		 * Never.
@@ -802,32 +858,8 @@ public final class SchemePath extends StorableObject
 
 		double opticalLength = 0;
 		for (final PathElement pathElement : pathElements) {
-			opticalLength += SchemeUtils.getOpticalLength(pathElement);
+			opticalLength += pathElement.getOpticalLength();
 			if (opticalLength >= opticalDistance) {
-				return pathElement;
-			}
-		}
-		return pathElements.last();
-	}
-
-	/**
-	 * @param physicalDistance
-	 * @throws ApplicationException
-	 * @deprecated
-	 */
-	@Shitlet
-	@Deprecated
-	public PathElement getPathElementByPhysicalDistance(final double physicalDistance)
-	throws ApplicationException {
-		final SortedSet<PathElement> pathElements = getPathMembers();
-		if (pathElements.isEmpty()) {
-			return null;
-		}
-
-		double physicalLength = 0;
-		for (final PathElement pathElement : pathElements) {
-			physicalLength += SchemeUtils.getPhysicalLength(pathElement);
-			if (physicalLength >= physicalDistance) {
 				return pathElement;
 			}
 		}
@@ -846,10 +878,10 @@ public final class SchemePath extends StorableObject
 		double physicalDistance = .0;
 		double d = .0;
 		for (final PathElement pathElement : getPathMembers()) {
-			final double opticalLength = SchemeUtils.getOpticalLength(pathElement);
+			final double opticalLength = pathElement.getOpticalLength();
 			if (d + opticalLength < opticalDistance) {
 				d += opticalLength;
-				physicalDistance += SchemeUtils.getPhysicalLength(pathElement);
+				physicalDistance += pathElement.getPhysicalLength();
 			} else {
 				physicalDistance += (opticalDistance - d) / SchemeUtils.getKu(pathElement);
 				break;
@@ -865,30 +897,6 @@ public final class SchemePath extends StorableObject
 	 */
 	@Shitlet
 	@Deprecated
-	public double[] getPhysicalDistanceFromStart(final PathElement pathElement)
-	throws ApplicationException {
-		assert assertContains(pathElement): CHILDREN_ALIEN;
-
-		double physicalDistanceFromStart = 0;
-		final SortedSet<PathElement> pathElements = getPathMembers();
-		for (final PathElement pathElement1 : pathElements) {
-			if (pathElement1.equals(pathElement)) {
-				assert pathElement1 == pathElement;
-				return new double[]{physicalDistanceFromStart, physicalDistanceFromStart + SchemeUtils.getPhysicalLength(pathElement1)};
-			}
-			physicalDistanceFromStart += SchemeUtils.getPhysicalLength(pathElement1);
-		}
-		/*
-		 * Never.
-		 */
-		return new double[2];
-	}
-
-	/**
-	 * @param pathElement
-	 * @throws ApplicationException
-	 */
-	@Shitlet
 	public PathElement getPreviousNode(final PathElement pathElement) throws ApplicationException {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
@@ -905,7 +913,10 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param pathElement
 	 * @throws ApplicationException
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public PathElement getPreviousPathElement(final PathElement pathElement)
 	throws ApplicationException {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
@@ -916,7 +927,10 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param pathElement
 	 * @throws ApplicationException
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public boolean hasNextPathElement(final PathElement pathElement)
 	throws ApplicationException {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
@@ -925,118 +939,13 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public boolean hasPreviousPathElement(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 		return pathElement.getSequentialNumber() > 0;
-	}
-
-	/**
-	 * @param totalOpticalength
-	 * @throws ApplicationException
-	 */
-	public void setTotalOpticalLength(final double totalOpticalength)
-	throws ApplicationException {
-		final SortedSet<PathElement> pathElements = getPathMembers();
-		if (pathElements.isEmpty()) {
-			return;
-		}
-		setOpticalLength(pathElements.first(), pathElements.last(), totalOpticalength);
-	}
-
-	/**
-	 * @param pathElement
-	 * @see SchemeCableLink#assertContains(CableChannelingItem)
-	 */
-	boolean assertContains(final PathElement pathElement) {
-		/*
-		 * The second precondition is intentionally turned off since
-		 * getPathMembers() cannot always return the correct number of
-		 * path members when the code is executed server-side (path
-		 * members preceding the one in question may be not saved yet).
-		 *
-		 * Making a path member depend on its precursor (if any) may be
-		 * a solution, but it'll complicate the code too much.
-		 */
-		try {
-			return pathElement.getParentSchemePathId().equals(this)
-					&& (true || this.getPathMembers().headSet(pathElement).size() == pathElement.sequentialNumber);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return true;
-		}
-	}
-
-	/**
-	 * @param pathElements
-	 * @param startPathElement
-	 * @param endPathElement
-	 * @deprecated
-	 */
-	@Shitlet
-	@Deprecated
-	private double getOpticalLength(final SortedSet<PathElement> pathElements, final PathElement startPathElement, final PathElement endPathElement) {
-		double oldOpticalLength = 0;
-		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
-			oldOpticalLength += SchemeUtils.getOpticalLength(pathElement);
-			if (pathElement.equals(endPathElement)) {
-				assert pathElement == endPathElement;
-				break;
-			}
-		}
-		return oldOpticalLength;
-	}
-
-	/**
-	 * @param pathElements
-	 * @param startPathElement
-	 * @param endPathElement
-	 * @param coeff
-	 * @deprecated
-	 */
-	@Shitlet
-	@Deprecated
-	private void changeOpticalLength(final SortedSet<PathElement> pathElements, final PathElement startPathElement, final PathElement endPathElement, double coeff) {
-		if (Math.abs(coeff - 1) < .001) {
-			return;
-		}
-		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
-			SchemeUtils.setOpticalLength(pathElement, SchemeUtils.getOpticalLength(pathElement) * coeff);
-			if (pathElement.equals(endPathElement)) {
-				break;
-			}
-		}
-	}
-
-	/**
-	 * <code>startPathElement</code> and <code>endPathElement</code> may
-	 * be swapped, but must belong to this <code>SchemePath</code>.
-	 *
-	 * @param startPathElement
-	 * @param endPathElement
-	 * @param opticalLength
-	 * @throws ApplicationException
-	 */
-	@Shitlet
-	private void setOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double opticalLength)
-	throws ApplicationException {
-		final int greaterThan = endPathElement.compareTo(startPathElement);
-		assert greaterThan != 0;
-		if (greaterThan < 0) {
-			setOpticalLength(endPathElement, startPathElement, opticalLength);
-			return;
-		}
-		assert assertContains(startPathElement): CHILDREN_ALIEN;
-		assert assertContains(endPathElement): CHILDREN_ALIEN;
-		
-		final SortedSet<PathElement> pathElements = getPathMembers();
-		double oldOpticalLength = getOpticalLength(pathElements, startPathElement, endPathElement);
-		if (oldOpticalLength == 0) {
-			return;
-		}
-		
-		final double k = opticalLength / oldOpticalLength;
-		changeOpticalLength(pathElements, startPathElement, endPathElement, k);
 	}
 
 	/**
@@ -1047,8 +956,10 @@ public final class SchemePath extends StorableObject
 	 * @param endPathElement
 	 * @param increment
 	 * @throws ApplicationException
+	 * @deprecated
 	 */
 	@Shitlet
+	@Deprecated
 	public void changeOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double increment)
 	throws ApplicationException {
 		final int greaterThan = endPathElement.compareTo(startPathElement);
@@ -1061,13 +972,28 @@ public final class SchemePath extends StorableObject
 		assert assertContains(endPathElement): CHILDREN_ALIEN;
 		
 		final SortedSet<PathElement> pathElements = getPathMembers();
+		double oldOpticalLength1 = 0;
+		for (final PathElement pathElement1 : pathElements.tailSet(startPathElement)) {
+			oldOpticalLength1 += pathElement1.getOpticalLength();
+			if (pathElement1.equals(endPathElement)) {
+				assert pathElement1 == endPathElement;
+				break;
+			}
+		}
 
-		double oldOpticalLength = getOpticalLength(pathElements, startPathElement, endPathElement);
+		double oldOpticalLength = oldOpticalLength1;
 		if (oldOpticalLength == 0) {
 			return;
 		}
 
 		final double k = (oldOpticalLength + increment) / oldOpticalLength;
-		changeOpticalLength(pathElements, startPathElement, endPathElement, k);
+		if (Math.abs(k - 1) >= .001) {
+			for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
+				pathElement.setOpticalLength(pathElement.getOpticalLength() * k);
+				if (pathElement.equals(endPathElement)) {
+					break;
+				}
+			}
+		}
 	}
 }

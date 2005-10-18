@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.5 2005/10/11 13:16:34 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.6 2005/10/18 16:19:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,10 @@
 
 package com.syrus.AMFICOM.eventv2;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/11 13:16:34 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/18 16:19:41 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -105,20 +106,20 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @serial include
 	 */
-	private Identifier monitoredElementId;
+	private Identifier resultId;
 
 	private DefaultReflectogramMismatchEvent(
 			final ReflectogramMismatch reflectogramMismatch,
-			final Identifier monitoredElementId) {
-		if (monitoredElementId == null) {
+			final Identifier resultId) {
+		if (resultId == null) {
 			throw new NullPointerException();
 		}
 		/*
 		 * Currently, the second check is unnecessary. But
 		 * implementation may eventually change.
 		 */
-		if (monitoredElementId.getMajor() != MONITOREDELEMENT_CODE
-				|| monitoredElementId.isVoid()) {
+		if (resultId.getMajor() != RESULT_CODE
+				|| resultId.isVoid()) {
 			throw new IllegalArgumentException();
 		}
 
@@ -148,7 +149,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.endCoord = reflectogramMismatch.getEndCoord();
 		this.alarmType = reflectogramMismatch.getAlarmType();
 		this.deltaX = reflectogramMismatch.getDeltaX();
-		this.monitoredElementId = monitoredElementId;
+		this.resultId = resultId;
 	}
 
 	private DefaultReflectogramMismatchEvent(
@@ -175,7 +176,14 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.endCoord = reflectogramMismatchEvent.getEndCoord();
 		this.alarmType = AlarmType.valueOf(reflectogramMismatchEvent.getAlarmType());
 		this.deltaX = reflectogramMismatchEvent.getDeltaX();
-		this.monitoredElementId = Identifier.valueOf(reflectogramMismatchEvent.getMonitoredElementId());
+		this.resultId = Identifier.valueOf(reflectogramMismatchEvent.getResultId());
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent#getCreated()
+	 */
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -209,14 +217,14 @@ public final class DefaultReflectogramMismatchEvent extends
 				this.getEndCoord(),
 				this.getAlarmType().getTransferable(orb),
 				this.getDeltaX(),
-				this.getMonitoredElementId().getTransferable(orb));
+				this.getResultId().getTransferable(orb));
 	}
 
 	public static ReflectogramMismatchEvent valueOf(
 			final ReflectogramMismatch reflectogramMismatch,
-			final Identifier monitoredElementId) {
+			final Identifier resultId) {
 		return new DefaultReflectogramMismatchEvent(reflectogramMismatch,
-				monitoredElementId);
+				resultId);
 	}
 
 	public static ReflectogramMismatchEvent valueOf(
@@ -347,16 +355,16 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
-	 * @see ReflectogramMismatchEvent#getMonitoredElementId()
+	 * @see ReflectogramMismatchEvent#getResultId()
 	 */
-	public Identifier getMonitoredElementId() {
-		return this.monitoredElementId;
+	public Identifier getResultId() {
+		return this.resultId;
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.5 $, $Date: 2005/10/11 13:16:34 $
+	 * @version $Revision: 1.6 $, $Date: 2005/10/18 16:19:41 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {

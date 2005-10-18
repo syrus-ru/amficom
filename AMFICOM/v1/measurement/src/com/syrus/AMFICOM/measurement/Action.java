@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.40 2005/10/11 13:32:48 bass Exp $
+ * $Id: Action.java,v 1.41 2005/10/18 16:19:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,11 +14,12 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/10/11 13:32:48 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/18 16:19:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -95,11 +96,24 @@ public abstract class Action extends StorableObject {
 		return this.type;
 	}
 
-	public Identifier getMonitoredElementId() {
+	public final Identifier getMonitoredElementId() {
 		return this.monitoredElementId;
 	}
-	
-	public void setMonitoredElementId(final Identifier monitoredElementId) {
+
+	/**
+	 * Returns the {@link MonitoredElement} associated with this
+	 * {@link Action}. The {@link MonitoredElement} is guaranteed to exist.
+	 *
+	 * @return the {@link MonitoredElement} associated with this
+	 *         {@link Action}.
+	 * @throws ApplicationException
+	 */
+	public final MonitoredElement getMonitoredElement()
+	throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getMonitoredElementId(), true);
+	}
+
+	public final void setMonitoredElementId(final Identifier monitoredElementId) {
 		this.monitoredElementId = monitoredElementId;
 		super.markAsChanged();
 	}

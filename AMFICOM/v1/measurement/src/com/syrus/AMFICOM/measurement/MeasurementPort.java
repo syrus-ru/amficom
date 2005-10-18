@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.13 2005/10/14 06:18:20 bass Exp $
+ * $Id: MeasurementPort.java,v 1.14 2005/10/18 16:19:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/14 06:18:20 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/18 16:19:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -182,6 +183,17 @@ public final class MeasurementPort extends StorableObject
 
 	public Identifier getPortId() {
 		return this.portId;
+	}
+
+	/**
+	 * Returns the {@link Port} view of this {@link MeasurementPort}. In
+	 * rare cases, this view may be {@code null}.
+	 * 
+	 * @return the {@link Port} view of this {@link MeasurementPort}.
+	 * @throws ApplicationException
+	 */
+	public Port getPort() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getPortId(), true);
 	}
 
 	protected synchronized void setAttributes(final Date created,

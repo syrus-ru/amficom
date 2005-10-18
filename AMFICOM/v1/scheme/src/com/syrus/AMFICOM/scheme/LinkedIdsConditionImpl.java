@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.43 2005/10/18 13:17:12 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.44 2005/10/18 16:19:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
 import java.util.Set;
 
@@ -50,8 +51,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.43 $, $Date: 2005/10/18 13:17:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/10/18 16:19:42 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -253,6 +254,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case SCHEMEPATH_CODE:
 				final SchemePath schemePath = (SchemePath) storableObject;
 				switch (super.linkedEntityCode) {
+				case TRANSMISSIONPATH_CODE:
+					return this.conditionTest(schemePath.transmissionPathId);
 				case SCHEMEMONITORINGSOLUTION_CODE:
 					return super.conditionTest(schemePath.parentSchemeMonitoringSolutionId);
 				default:

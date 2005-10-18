@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.6 2005/10/07 10:04:20 bass Exp $
+ * $Id: MonitoredElement.java,v 1.7 2005/10/18 16:19:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -23,6 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -31,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/07 10:04:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/18 16:19:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -160,6 +162,13 @@ public final class MonitoredElement extends DomainMember {
 
 	public Identifier getMeasurementPortId() {
 		return this.measurementPortId;
+	}
+
+	/**
+	 * @throws ApplicationException
+	 */
+	public MeasurementPort getMeasurementPort() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
 	}
 
 	public MonitoredElementSort getSort() {

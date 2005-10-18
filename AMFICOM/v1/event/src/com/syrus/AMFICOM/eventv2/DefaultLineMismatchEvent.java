@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.2 2005/10/10 16:25:47 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.3 2005/10/18 16:19:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.eventv2;
+
+import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
@@ -25,7 +27,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/10 16:25:47 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/18 16:19:41 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -97,6 +99,39 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		}
 	}
 
+	private DefaultLineMismatchEvent(final AlarmType alarmType,
+			final Severity severity,
+			final boolean mismatch,
+			final double minMismatch,
+			final double maxMismatch,
+			final Identifier affectedPathElementId,
+			final boolean affectedPathElementSpatious,
+			final double physicalDistanceToStart,
+			final double physicalDistanceToEnd,
+			final Identifier resultId,
+			final double eventOpticalDistance,
+			final double eventPhysicalDistance,
+			final Date mismatchCreated) {
+		this.alarmType = alarmType;
+		this.severity = severity;
+
+		if (!!(this.mismatch = mismatch)) {
+			this.minMismatch = minMismatch;
+			this.maxMismatch = maxMismatch;
+
+			if (this.minMismatch > this.maxMismatch) {
+				throw new IllegalArgumentException();
+			}
+		}
+
+		this.affectedPathElementId = affectedPathElementId;
+
+		if (!!(this.affectedPathElementSpatious = affectedPathElementSpatious)) {
+			this.physicalDistanceToStart = physicalDistanceToStart;
+			this.physicalDistanceToEnd = physicalDistanceToEnd;
+		}
+	}
+
 	/**
 	 * @param orb
 	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
@@ -133,6 +168,26 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	public static LineMismatchEvent valueOf(
 			final IdlLineMismatchEvent lineMismatchEvent) {
 		return new DefaultLineMismatchEvent(lineMismatchEvent);
+	}
+
+	public static LineMismatchEvent valueOf(final AlarmType alarmType,
+			final Severity severity,
+			final boolean mismatch,
+			final double minMismatch,
+			final double maxMismatch,
+			final Identifier affectedPathElementId,
+			final boolean affectedPathElementSpatious,
+			final double physicalDistanceToStart,
+			final double physicalDistanceToEnd,
+			final Identifier resultId,
+			final double eventOpticalDistance,
+			final double eventPhysicalDistance,
+			final Date mismatchCreated) {
+		return new DefaultLineMismatchEvent(alarmType, severity, mismatch,
+				minMismatch, maxMismatch, affectedPathElementId,
+				affectedPathElementSpatious, physicalDistanceToStart,
+				physicalDistanceToEnd, resultId, eventOpticalDistance,
+				eventPhysicalDistance, mismatchCreated);
 	}
 
 	public AlarmType getAlarmType() {

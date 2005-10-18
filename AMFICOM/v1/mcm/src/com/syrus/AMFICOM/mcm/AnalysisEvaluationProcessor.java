@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.46 2005/10/12 12:24:50 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.47 2005/10/18 16:19:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/10/12 12:24:50 $
+ * @version $Revision: 1.47 $, $Date: 2005/10/18 16:19:41 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -147,8 +147,6 @@ final class AnalysisEvaluationProcessor {
 					measurementResult, analysis, etalon);
 	
 			final Parameter[] arParameters = analysisManager.analyse();
-			final Identifier monitoredElementId =
-					measurementResult.getAction().getMonitoredElementId();
 
 			int dadaraAlarmsOccurenceCount = 0;
 			for (final Parameter parameter : arParameters) {
@@ -166,7 +164,7 @@ final class AnalysisEvaluationProcessor {
 					MeasurementControlModule.eventQueue.addEvent(
 							DefaultReflectogramMismatchEvent.valueOf(
 									reflectogramMismatch,
-									monitoredElementId));
+									measurementResult.getId()));
 				}
 			}
 

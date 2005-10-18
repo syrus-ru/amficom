@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.84 2005/10/17 12:09:36 bass Exp $
+ * $Id: PathElement.java,v 1.85 2005/10/18 16:19:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import static com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort.PORTTYPESORT_OPTICAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
@@ -72,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/10/17 12:09:36 $
+ * @version $Revision: 1.85 $, $Date: 2005/10/18 16:19:42 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -1297,18 +1296,60 @@ public final class PathElement extends StorableObject
 		}
 	}
 
-	boolean hasOpticalPort() {
-		final AbstractSchemePort startAbstractSchemePort = getStartAbstractSchemePort();
-		if (startAbstractSchemePort instanceof SchemePort
-				&& startAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL) {
+	public boolean isSpacious() {
+		switch (this.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
 			return true;
+		case _SCHEME_ELEMENT:
+		default:
+			return false;
 		}
-		
-		final AbstractSchemePort endAbstractSchemePort = getEndAbstractSchemePort();
-		if (endAbstractSchemePort instanceof SchemePort
-				&& endAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL) {
-			return true;
+	}
+
+	public double getOpticalLength() {
+		switch (this.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
+			return ((AbstractSchemeLink) this.getAbstractSchemeElement()).getOpticalLength();
+		case _SCHEME_ELEMENT:
+		default:
+			return 0;
 		}
-		return false;
+	}
+
+	public void setOpticalLength(final double opticalLength) {
+		switch (this.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
+			((AbstractSchemeLink) this.getAbstractSchemeElement()).setOpticalLength(opticalLength);
+			break;
+		case _SCHEME_ELEMENT:
+		default:
+			break;
+		}
+	}
+
+	public double getPhysicalLength() {
+		switch (this.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
+			return ((AbstractSchemeLink) this.getAbstractSchemeElement()).getPhysicalLength();
+		case _SCHEME_ELEMENT:
+		default:
+			return 0;
+		}
+	}
+
+	public void setPhysicalLength(final double physicalLength) {
+		switch (this.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
+			((AbstractSchemeLink) this.getAbstractSchemeElement()).setPhysicalLength(physicalLength);
+			break;
+		case _SCHEME_ELEMENT:
+		default:
+			break;
+		}
 	}
 }

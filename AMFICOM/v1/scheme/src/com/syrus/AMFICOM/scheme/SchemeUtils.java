@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.43 2005/10/17 12:09:36 bass Exp $
+ * $Id: SchemeUtils.java,v 1.44 2005/10/18 16:19:42 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,7 @@ package com.syrus.AMFICOM.scheme;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_CABLE_LINK;
 import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_LINK;
 
-import java.util.Set;
-
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Shitlet;
 
 /**
@@ -22,77 +19,26 @@ import com.syrus.util.Shitlet;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/10/17 12:09:36 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/18 16:19:42 $
  * @module scheme
  * @deprecated
  */
 @Shitlet
 @Deprecated
 public class SchemeUtils {
-	private static final char SEPARATOR = ':';
-
 	private SchemeUtils() {
 		assert false;
-	}
-
-	/**
-	 * @todo Search occurences and change arg2 type to PathElement.
-	 * @param schemePath
-	 * @param pathElementId
-	 * @throws ApplicationException
-	 */
-	public static PathElement getPathElement(final SchemePath schemePath,
-			final Identifier pathElementId)
-	throws ApplicationException {
-		final Set<PathElement> pathElements = schemePath.getPathMembers();
-		for (final PathElement pathElement : pathElements) {
-			if (pathElement.equals(pathElementId)) {
-				return pathElement;
-			}
-		}
-		return null;
 	}
 
 	static double getKu(final PathElement pathElement) {
 		switch (pathElement.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
-			/*
-			 * Fall through.
-			 */
 		case _SCHEME_LINK:
 			final AbstractSchemeLink link = (AbstractSchemeLink)pathElement.getAbstractSchemeElement();
 			return link.getOpticalLength() / link.getPhysicalLength();
 		default:
 			return 1;
 		}
-	}
-
-	public static SchemeElement getSchemeElementByDevice(final Scheme scheme,
-			final SchemeDevice schemeDevice,
-			final boolean usePool)
-	throws ApplicationException {
-		for (final SchemeElement schemeElement : scheme.getSchemeElements0(usePool)) {
-			if (schemeDevice.getParentSchemeElementId().equals(schemeElement)) {
-				return schemeElement;
-			}
-		}
-		return null;
-	}
-
-	public static SchemeElement getSchemeElementByDevice(
-			final SchemeElement schemeElement,
-			final SchemeDevice schemeDevice,
-			final boolean usePool)
-	throws ApplicationException {
-		if (schemeDevice.getParentSchemeElementId().equals(schemeElement)) {
-			return schemeElement;
-		}
-		for (final SchemeElement schemeElement1 : schemeElement.getSchemeElements0(usePool)) {
-			if (schemeDevice.getParentSchemeElementId().equals(schemeElement1)) {
-				return schemeElement1;
-			}
-		}
-		return null;
 	}
 
 	public static SchemeElement getTopLevelSchemeElement(final SchemeElement schemeElement) {
@@ -103,86 +49,25 @@ public class SchemeUtils {
 		return top;
 	}
 
-	public static boolean isElementInPath(final SchemePath schemePath,
-			final Identifier abstractSchemeElementId)
-	throws ApplicationException {
-		for (final PathElement pathElement : schemePath.getPathMembers()) {
-			if (pathElement.getAbstractSchemeElement().equals(abstractSchemeElementId)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public static String parseThreadName(final String name) {
-		final int pos = name.lastIndexOf(SEPARATOR);
-		return pos == name.length() || pos == -1 ? name : name.substring(pos + 1);
-	}
-
 	public static double getOpticalLength(final SchemePath schemePath)
 	throws ApplicationException {
-		double length = 0;
-		for (final PathElement pathElement : schemePath.getPathMembers()) {
-			length += getOpticalLength(pathElement);
-		}
-		return length;
-	}
-
-	static double getOpticalLength(final PathElement pathElement) {
-		switch (pathElement.getKind().value()) {
-		case _SCHEME_CABLE_LINK:
-			/*
-			 * Fall through.
-			 */
-		case _SCHEME_LINK:
-			return ((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).getOpticalLength();
-		default:
-			return 0;
-		}
+		return schemePath.getOpticalLength();
 	}
 
 	static void setOpticalLength(final PathElement pathElement, final double d) {
-		switch (pathElement.getKind().value()) {
-		case _SCHEME_CABLE_LINK:
-		case _SCHEME_LINK:
-			((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setOpticalLength(d);
-			break;
-		default:
-			break;
-		}
+		pathElement.setOpticalLength(d);
 	}
 
 	public static double getPhysicalLength(final SchemePath schemePath)
 	throws ApplicationException {
-		double length = 0;
-		for (final PathElement pathElement : schemePath.getPathMembers()) {
-			length += getPhysicalLength(pathElement);
-		}
-		return length;
+		return schemePath.getPhysicalLength();
 	}
 
 	public static double getPhysicalLength(final PathElement pathElement) {
-		switch (pathElement.getKind().value()) {
-		case _SCHEME_CABLE_LINK:
-			/*
-			 * Fall through.
-			 */
-		case _SCHEME_LINK:
-			return ((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).
-					getPhysicalLength();
-		default:
-			return 0;
-		}
+		return pathElement.getPhysicalLength();
 	}
 
 	public static void setPhysicalLength(final PathElement pathElement, final double d) {
-		switch (pathElement.getKind().value()) {
-		case _SCHEME_CABLE_LINK:
-		case _SCHEME_LINK:
-			((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setPhysicalLength(d);
-			break;
-		default:
-			break;
-		}
+		pathElement.setPhysicalLength(d);
 	}
 }
