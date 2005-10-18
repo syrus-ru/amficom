@@ -49,13 +49,17 @@ public final class PathElementsPanel extends AnalysisPanel {
 	protected void setGraphBounds(final int start, final int end) {
 		super.setGraphBounds(start, end);
 		if (this.path != null) {
-			this.startPathElement = this.path.getPathElementByOpticalDistance(start * this.deltaX);
-			if (this.path.hasPreviousPathElement(this.startPathElement)) {
-				this.startPathElement = this.path.getPreviousPathElement(this.startPathElement);
-			}
-			this.endPathElement = this.path.getPathElementByOpticalDistance(end * this.deltaX);
-			if (this.path.hasNextPathElement(this.endPathElement)) {
-				this.endPathElement = this.path.getNextPathElement(this.endPathElement);
+			try {
+				this.startPathElement = this.path.getPathElementByOpticalDistance(start * this.deltaX);
+				if (this.path.hasPreviousPathElement(this.startPathElement)) {
+					this.startPathElement = this.path.getPreviousPathElement(this.startPathElement);
+				}
+				this.endPathElement = this.path.getPathElementByOpticalDistance(end * this.deltaX);
+				if (this.path.hasNextPathElement(this.endPathElement)) {
+					this.endPathElement = this.path.getNextPathElement(this.endPathElement);
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 	}
@@ -68,22 +72,26 @@ public final class PathElementsPanel extends AnalysisPanel {
 		if (this.paint_path_elements && this.path != null) {
 			if (this.currpos.y > 4 && this.currpos.y < 14) {
 				this.setting_active_pe = true;
-				double distance = this.deltaX * coord2index(this.currpos.x);
-				this.activePathElement = this.path.getPathElementByOpticalDistance(distance);
-				final double[] d = this.path.getOpticalDistanceFromStart(this.activePathElement);
+				try {
+					double distance = this.deltaX * coord2index(this.currpos.x);
+					this.activePathElement = this.path.getPathElementByOpticalDistance(distance);
+					final double[] d = this.path.getOpticalDistanceFromStart(this.activePathElement);
 
-				if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT
-						&& Math.abs(distance - d[0]) < 3 / this.scaleX * this.deltaX
-						&& this.path.hasPreviousPathElement(this.activePathElement)) {
-					this.activePathElement = this.path.getPreviousPathElement(this.activePathElement);
-					Log.debugMessage("Set previous pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
-							Level.FINER);
-				} else if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT
-						&& Math.abs(distance - d[1]) < 3 / this.scaleX * this.deltaX
-						&& this.path.hasNextPathElement(this.activePathElement)) {
-					this.activePathElement = this.path.getNextPathElement(this.activePathElement);
-					Log.debugMessage("Set next pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
-							Level.FINER);
+					if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT
+							&& Math.abs(distance - d[0]) < 3 / this.scaleX * this.deltaX
+							&& this.path.hasPreviousPathElement(this.activePathElement)) {
+						this.activePathElement = this.path.getPreviousPathElement(this.activePathElement);
+						Log.debugMessage("Set previous pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
+								Level.FINER);
+					} else if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT
+							&& Math.abs(distance - d[1]) < 3 / this.scaleX * this.deltaX
+							&& this.path.hasNextPathElement(this.activePathElement)) {
+						this.activePathElement = this.path.getNextPathElement(this.activePathElement);
+						Log.debugMessage("Set next pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
+								Level.FINER);
+					}
+				} catch (ApplicationException e1) {
+					Log.errorException(e1);
 				}
 				return;
 			}
@@ -148,61 +156,65 @@ public final class PathElementsPanel extends AnalysisPanel {
 			if (this.startPathElement == null || this.endPathElement == null)
 				this.setGraphBounds(this.start, this.end);
 
-			for (final PathElement pathElement : this.path.getPathMembers().tailSet(this.startPathElement)) {
+			try {
+				for (final PathElement pathElement : this.path.getPathMembers().tailSet(this.startPathElement)) {
 
-				if (pathElement == this.activePathElement) {
-					g.setColor(Color.RED);
-				} else if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK) {
-					g.setColor(Color.CYAN);
-				} else if (pathElement.getKind() == IdlKind.SCHEME_LINK) {
-					g.setColor(Color.BLUE);
-				} else {
-					g.setColor(Color.GREEN);
-				}
-
-				final double d[] = this.path.getOpticalDistanceFromStart(pathElement);
-				final int start1 = index2coord((int) Math.round(d[0] / this.deltaX));
-				final int end1 = index2coord((int) Math.round(d[1] / this.deltaX));
-				Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
-				if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
-					final SchemeElement se = pathElement.getSchemeElement();
-					// if muff - paint only small box and dashed line
-
-					EquipmentType type;
-					try {
-						type = se.getProtoEquipment().getType();
-					} catch (ApplicationException e) {
-						Log.errorException(e);
-						type = EquipmentType.OTHER;
+					if (pathElement == this.activePathElement) {
+						g.setColor(Color.RED);
+					} else if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK) {
+						g.setColor(Color.CYAN);
+					} else if (pathElement.getKind() == IdlKind.SCHEME_LINK) {
+						g.setColor(Color.BLUE);
+					} else {
+						g.setColor(Color.GREEN);
 					}
-					if (type.equals(EquipmentType.MUFF)) {
-						g.fill3DRect(start1 - 1, 6, 2, 8, true);
-						((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-						g.drawLine(start1, 6, start1, getHeight());
-						((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-					} else { // paint large box, dashed line and name of SE
-						g.fill3DRect(start1 - 4, 6, 8, 8, true);
-						((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-						g.drawLine(start1, 6, start1, getHeight());
-						((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
 
-						final String text = pathElement.getName();
-						final FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
-						final int height = fm.stringWidth(text);
-						final int width = fm.getHeight();
-						final int y1 = 6;
-						final Graphics2D g2 = (Graphics2D) g;
-						final AffineTransform t = g2.getTransform();
-						g2.translate(0, height + 10);
-						g2.rotate(Math.toRadians(270), start1 + width - 5, y1);
-						g2.drawString(text, start1 + width - 5, y1);
-						g2.setTransform(t);
+					final double d[] = this.path.getOpticalDistanceFromStart(pathElement);
+					final int start1 = index2coord((int) Math.round(d[0] / this.deltaX));
+					final int end1 = index2coord((int) Math.round(d[1] / this.deltaX));
+					Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
+					if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
+						final SchemeElement se = pathElement.getSchemeElement();
+						// if muff - paint only small box and dashed line
+
+						EquipmentType type;
+						try {
+							type = se.getProtoEquipment().getType();
+						} catch (ApplicationException e) {
+							Log.errorException(e);
+							type = EquipmentType.OTHER;
+						}
+						if (type.equals(EquipmentType.MUFF)) {
+							g.fill3DRect(start1 - 1, 6, 2, 8, true);
+							((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+							g.drawLine(start1, 6, start1, getHeight());
+							((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+						} else { // paint large box, dashed line and name of SE
+							g.fill3DRect(start1 - 4, 6, 8, 8, true);
+							((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+							g.drawLine(start1, 6, start1, getHeight());
+							((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+
+							final String text = pathElement.getName();
+							final FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
+							final int height = fm.stringWidth(text);
+							final int width = fm.getHeight();
+							final int y1 = 6;
+							final Graphics2D g2 = (Graphics2D) g;
+							final AffineTransform t = g2.getTransform();
+							g2.translate(0, height + 10);
+							g2.rotate(Math.toRadians(270), start1 + width - 5, y1);
+							g2.drawString(text, start1 + width - 5, y1);
+							g2.setTransform(t);
+						}
+					} else {
+						g.drawLine(start1, 3, start1, 5);
+						g.drawLine(start1, 5, end1, 5);
+						g.drawLine(end1, 5, end1, 3);
 					}
-				} else {
-					g.drawLine(start1, 3, start1, 5);
-					g.drawLine(start1, 5, end1, 5);
-					g.drawLine(end1, 5, end1, 3);
 				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 	}
