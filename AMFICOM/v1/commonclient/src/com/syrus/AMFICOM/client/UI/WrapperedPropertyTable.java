@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedPropertyTable.java,v 1.15 2005/09/30 07:31:43 bob Exp $
+* $Id: WrapperedPropertyTable.java,v 1.16 2005/10/18 14:11:20 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/30 07:31:43 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/18 14:11:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -148,7 +148,7 @@ public class WrapperedPropertyTable<T> extends ATable {
 			this.editingStopFocusListener = new FocusAdapter() {
 				@Override
 				public void focusLost(final FocusEvent e) {
-					WrapperedPropertyTable.this.editingStopped(null);
+					WrapperedPropertyTable.this.editingCanceled(null);
 				}
 			};
 		}
