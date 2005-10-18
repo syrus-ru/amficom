@@ -77,7 +77,21 @@ final class TestLine extends TimeLine {
 		TestTimeLine testTimeLine;
 
 		public int compareTo(final TestTimeItem item) {
-			return (this.x - item.x);
+			final int diff0 = this.x + this.width - item.x;
+			if (diff0 < 0) {
+				return diff0;				
+			}
+			
+			final int diff1 = this.x - (item.x + item.width);
+			if (diff1 > 0) {
+				return diff1;
+			}
+			
+			if (!this.testTimeLine.testId.equals(item.testTimeLine.testId)) {			
+				return (this.x - item.x);
+			}
+			
+			return 0;
 		}
 
 		@Override
