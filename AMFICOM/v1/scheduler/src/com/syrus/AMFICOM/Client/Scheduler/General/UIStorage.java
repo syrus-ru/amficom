@@ -19,6 +19,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
+
 /**
  * Storage for frequency used gui routines
  * 
@@ -36,9 +37,7 @@ public final class UIStorage {
 
 	public static final Icon				MINUS_ICON				= UIStorage.getStringIcon("-");				//$NON-NLS-1$
 
-	public static final Icon				CALENDAR_ICON			= UIStorage.getStringIcon("..");				//$NON-NLS-1$
-
-	public static final Icon				TIME_ICON				= UIStorage.getStringIcon("t");				//$NON-NLS-1$
+//	public static final Icon				TIME_ICON				= UIStorage.getStringIcon("t");				//$NON-NLS-1$
 
 	public static final Icon				FILTER_ICON				= UIStorage.getStringIcon("F");				//$NON-NLS-1$
 

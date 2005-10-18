@@ -35,7 +35,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -314,7 +313,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				this.startDateSpinner.addChangeListener(changeListener);
 			}
 			
-			final JButton startDateButton = new JButton(UIStorage.CALENDAR_ICON);
+			final JButton startDateButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_TIME_DATE));
 			startDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			startDateButton.setDefaultCapable(false);
 
@@ -334,19 +333,19 @@ public class TimeParametersFrame extends JInternalFrame {
 				box.add(this.startDateSpinner);
 				box.add(startDateButton);
 				box.add(Box.createHorizontalGlue());
-				final JButton	nowButton		= new JButton(UIStorage.TIME_ICON);
-				nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-				box.add(nowButton);
-				nowButton.setFocusable(false);
-				nowButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.CurrentTime")); //$NON-NLS-1$
-				nowButton.addActionListener(new ActionListener() {
-
-					public void actionPerformed(ActionEvent e) {
-						Date date = new Date(System.currentTimeMillis());
-						TimeParametersPanel.this.startDateSpinner.setValue(date);
-						TimeParametersPanel.this.startTimeSpinner.setValue(date);
-					}
-				});
+//				final JButton	nowButton		= new JButton(UIStorage.TIME_ICON);
+//				nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+//				box.add(nowButton);
+//				nowButton.setFocusable(false);
+//				nowButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.CurrentTime")); //$NON-NLS-1$
+//				nowButton.addActionListener(new ActionListener() {
+//
+//					public void actionPerformed(ActionEvent e) {
+//						Date date = new Date(System.currentTimeMillis());
+//						TimeParametersPanel.this.startDateSpinner.setValue(date);
+//						TimeParametersPanel.this.startTimeSpinner.setValue(date);
+//					}
+//				});
 				
 
 				CommonUIUtilities.fixHorizontalSize(this.startTimeSpinner);
@@ -501,7 +500,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			model.setValue(new Date(((Date)model.getValue()).getTime() + 5L * 60L * 60L * 1000L));
 			}
 			
-			this.endDateButton = new JButton(UIStorage.CALENDAR_ICON);
+			this.endDateButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_TIME_DATE));
 			this.endDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			this.endDateButton.setDefaultCapable(false);
 

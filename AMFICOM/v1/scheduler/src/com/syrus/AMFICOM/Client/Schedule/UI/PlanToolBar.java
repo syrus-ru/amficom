@@ -179,11 +179,11 @@ final class PlanToolBar {
 		CommonUIUtilities.fixHorizontalSize(this.timeSpinner);
 		this.toolBar.add(this.timeSpinner);
 
-		{
-			final JButton button = this.toolBar.add(this.createCurrentDateAction());
-			button.setFocusable(false);
-			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		}
+//		{
+//			final JButton button = this.toolBar.add(this.createCurrentDateAction());
+//			button.setFocusable(false);
+//			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+//		}
 
 		this.toolBar.addSeparator();
 		
@@ -209,7 +209,7 @@ final class PlanToolBar {
 
 	@SuppressWarnings("serial")
 	private Action createShowCalendarAction() {
-		final Action showCalendar = new AbstractAction("", UIStorage.CALENDAR_ICON) {
+		final Action showCalendar = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_TIME_DATE)) {
 			public void actionPerformed(ActionEvent e) {
 				final Calendar cal = Calendar.getInstance();
 				final Date date = (Date) PlanToolBar.this.dateSpinner.getModel().getValue();
@@ -232,19 +232,19 @@ final class PlanToolBar {
 		return showCalendar;
 	}	
 
-	@SuppressWarnings("serial")
-	private Action createCurrentDateAction() {
-		final Action currentDate = new AbstractAction("", UIStorage.TIME_ICON) {
-			public void actionPerformed(ActionEvent e) {
-				final Date date = new Date();
-				PlanToolBar.this.dateSpinner.setValue(date);
-				PlanToolBar.this.timeSpinner.setValue(date);				
-			}
-		};
-		currentDate.putValue(Action.SHORT_DESCRIPTION, 
-			I18N.getString("Scheduler.Text.Plan.Toolbar.CurrentTime"));
-		return currentDate;
-	}
+//	@SuppressWarnings("serial")
+//	private Action createCurrentDateAction() {
+//		final Action currentDate = new AbstractAction("", UIStorage.TIME_ICON) {
+//			public void actionPerformed(ActionEvent e) {
+//				final Date date = new Date();
+//				PlanToolBar.this.dateSpinner.setValue(date);
+//				PlanToolBar.this.timeSpinner.setValue(date);				
+//			}
+//		};
+//		currentDate.putValue(Action.SHORT_DESCRIPTION, 
+//			I18N.getString("Scheduler.Text.Plan.Toolbar.CurrentTime"));
+//		return currentDate;
+//	}
 
 	@SuppressWarnings("serial")
 	private Action createApplyAction() {
