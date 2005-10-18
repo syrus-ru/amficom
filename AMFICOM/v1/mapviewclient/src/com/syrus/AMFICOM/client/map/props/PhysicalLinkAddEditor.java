@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkAddEditor.java,v 1.39 2005/10/18 07:21:13 krupenn Exp $$
+ * $$Id: PhysicalLinkAddEditor.java,v 1.40 2005/10/18 07:39:05 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/10/18 07:21:13 $
+ * @version $Revision: 1.40 $, $Date: 2005/10/18 07:39:05 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -647,7 +647,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	public void cableSelected(Object or) {
-		if(this.physicalLink.getBinding().getPipeBlock(or).equals(this.pipeBlock)) {
+		if(this.pipeBlock.equals(this.physicalLink.getBinding().getPipeBlock(or))) {
 			this.tunnelLayout.setActiveElement(or);
 		}
 	}

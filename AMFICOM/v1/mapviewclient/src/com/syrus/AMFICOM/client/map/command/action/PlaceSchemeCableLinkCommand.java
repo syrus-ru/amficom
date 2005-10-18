@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.53 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.54 2005/10/18 07:37:38 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.53 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.54 $, $Date: 2005/10/18 07:37:38 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -177,7 +177,21 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 							PipeBlock block = null;
 							try {
 								block = cci.getPipeBlock();
-								block.bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
+								if(block == null) {
+									XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
+									link.getId().getXmlTransferable(xmlId, "ucm");
+									String linkUn = xmlId.getStringValue();
+									cci.getId().getXmlTransferable(xmlId, "ucm");
+									String cciUn = xmlId.getStringValue();
+									System.out.println(
+											"link '" + link.getName() 
+											+ "' (un " + linkUn 
+											+ ") cci '" + cciUn 
+											+ "' has null block!");
+								}
+								else {
+									block.bind(this.cablePath, cci.getRowX(), cci.getPlaceY());
+								}
 							} catch(ArrayIndexOutOfBoundsException e) {
 								XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance(); 
 								link.getId().getXmlTransferable(xmlId, "ucm");
