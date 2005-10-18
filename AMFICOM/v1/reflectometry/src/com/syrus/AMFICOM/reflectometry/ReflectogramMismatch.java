@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.10 2005/10/10 10:19:45 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.11 2005/10/18 05:51:46 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.TransferableObject;
  * 
  * @author Old Wise Saa
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/10/10 10:19:45 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/18 05:51:46 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -81,7 +81,7 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.10 $, $Date: 2005/10/10 10:19:45 $
+	 * @version $Revision: 1.11 $, $Date: 2005/10/18 05:51:46 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -120,7 +120,7 @@ public interface ReflectogramMismatch {
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: saa $
-	 * @version $Revision: 1.10 $, $Date: 2005/10/10 10:19:45 $
+	 * @version $Revision: 1.11 $, $Date: 2005/10/18 05:51:46 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
@@ -185,6 +185,7 @@ public interface ReflectogramMismatch {
 
 	/**
 	 * возвращает условную координату окончания участка аларма (точки).
+	 * Конечная координата должна быть "не левее" начальной.
 	 * @return условная координата окончания участка аларма (точки).
 	 */
 	int getEndCoord();
