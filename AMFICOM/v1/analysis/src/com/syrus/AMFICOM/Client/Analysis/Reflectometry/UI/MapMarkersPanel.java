@@ -9,8 +9,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.general.Identifier;
 
 public class MapMarkersPanel extends ActiveReflectogramPanel
@@ -71,13 +71,13 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 			Marker m = createMarker ("", coord2index(currpos.x) * deltaX);
 			((MapMarkersLayeredPanel)parent).setButtons();
 
-			MapNavigateEvent mne = new MapNavigateEvent(
+			MarkerEvent mne = new MarkerEvent(
 					this,
-					MapNavigateEvent.DATA_MARKER_CREATED_EVENT,
+					MarkerEvent.MARKER_CREATED_EVENT,
 					m.getId(),
-					m.pos * deltaX,
-					scheme_path_id,
-					monitored_element_id
+					m.pos * this.deltaX,
+					this.scheme_path_id,
+					this.monitored_element_id
 					);
 			if(true)
 			{
@@ -86,17 +86,20 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 //				double d = WorkWithReflectoArray.getDistanceTillLastSplash(y, deltaX, 1);
 //				mne.spd.setMeasurement (new LengthParameters (ep, deltaX, "", d));
 			}
-			dispatcher.firePropertyChange(mne);
-			dispatcher.firePropertyChange(new MapNavigateEvent (this,
-											MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
-													m.getId(), m.pos * deltaX, scheme_path_id, monitored_element_id));
+			this.dispatcher.firePropertyChange(mne);
+			this.dispatcher.firePropertyChange(new MarkerEvent(this,
+					MarkerEvent.MARKER_SELECTED_EVENT,
+					m.getId(), 
+					m.pos * this.deltaX, 
+					this.scheme_path_id, 
+					this.monitored_element_id));
 
 			return;
 		}
 
-		if (show_markers)
+		if (this.show_markers)
 		{
-			Iterator it = markers.iterator();
+			Iterator it = this.markers.iterator();
 			while(it.hasNext())
 			{
 				Marker m = (Marker)it.next();
@@ -108,7 +111,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 						setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 					}
 					active_marker = m;
-					dispatcher.firePropertyChange(new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
+					dispatcher.firePropertyChange(new MarkerEvent(this, MarkerEvent.MARKER_SELECTED_EVENT,
 														 m.getId(), m.pos * deltaX, scheme_path_id, monitored_element_id));
 				}
 			}
@@ -145,8 +148,8 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 
 	void move_notify()
 	{
-		dispatcher.firePropertyChange(new MapNavigateEvent (this,
-			MapNavigateEvent.DATA_MARKER_MOVED_EVENT,
+		dispatcher.firePropertyChange(new MarkerEvent(this,
+				MarkerEvent.MARKER_MOVED_EVENT,
 			active_marker.getId(),
 			active_marker.pos * deltaX,
 			scheme_path_id,
@@ -281,26 +284,13 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 			for (int i = 0; i < markers.size(); i++)
 			{
 				Marker m = (Marker)markers.get(i);
-				MapNavigateEvent mne;
-				if(m instanceof AlarmMarker)
-				{
-					mne = new MapNavigateEvent(
+				MarkerEvent mne = new MarkerEvent(
 						this,
-						MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
+						MarkerEvent.MARKER_DELETED_EVENT,
 						m.getId(),
 						alarms[i].getCoord() * deltaX,
 						scheme_path_id,
 						monitored_element_id);
-				} else
-				{
-					mne = new MapNavigateEvent(
-						this,
-						MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
-						m.getId(),
-						m.pos * deltaX,
-						scheme_path_id,
-						monitored_element_id);
-				}
 //				mne.setDescriptor("refevent");
 				dispatcher.firePropertyChange(mne);
 				deleteMarker(m);
@@ -398,26 +388,13 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 	public Marker deleteActiveMarker()
 	{
 		Marker m = deleteMarker(active_marker);
-		MapNavigateEvent mne;
-		if(m instanceof AlarmMarker)
-		{
-			mne = new MapNavigateEvent(
+		MarkerEvent mne = new MarkerEvent(
 				this,
-				MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
+				MarkerEvent.MARKER_DELETED_EVENT,
 				m.getId(),
 				m.pos * deltaX,
 				scheme_path_id,
 				monitored_element_id);
-		} else
-		{
-			mne = new MapNavigateEvent (
-				this,
-				MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
-				m.getId(),
-				m.pos * deltaX,
-				scheme_path_id,
-				monitored_element_id);
-		}
 		dispatcher.firePropertyChange(mne);
 		return m;
 	}

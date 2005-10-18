@@ -11,11 +11,10 @@ import javax.swing.JButton;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements PropertyChangeListener
@@ -46,71 +45,63 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 	@Override void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
-		dispatcher.addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
+		dispatcher.addPropertyChangeListener(MarkerEvent.MARKER_EVENT_TYPE, this);
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
+		if(ae.getPropertyName().equals(MarkerEvent.MARKER_EVENT_TYPE))
 		{
-			MapNavigateEvent mne = (MapNavigateEvent)ae;
+			MarkerEvent mne = (MarkerEvent)ae;
 			for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
 			{
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 				if (panel instanceof MapMarkersPanel)
 				{
-					if(mne.isMapMarkerCreated())
-					{
+					if(mne.getMarkerEventType() == MarkerEvent.MARKER_CREATED_EVENT) {
 						if ( (mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
-								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id)))
-						{
-
+								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id))) {
 //							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.deltaX, 1);
 //							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.deltaX, "", d));
 //							double dist = mne.spd.getMeasuredDistance(mne.distance);
-							double dist = mne.getDistance();
+							double dist = mne.getOpticalDistance();
 							Marker m = ((MapMarkersPanel)panel).createMarker("", dist);
 							m.setId(mne.getMarkerId());
 							((MapMarkersPanel)panel).move_notify();
-							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
-							jLayeredPane.repaint();
+							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(true);
+							this.jLayeredPane.repaint();
 						}
-					}
-					if(mne.isDataAlarmMarkerCreated())
-					{
-						if ( (mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
-								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id)))
-						{
-							double dist = mne.getDistance();
+					} else if(mne.getMarkerEventType() == MarkerEvent.ALARMMARKER_CREATED_EVENT) {
+						if ((mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
+								(mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id))) {
+							double dist = mne.getOpticalDistance();
 							AlarmMarker am = ((MapMarkersPanel)panel).get_alarm_marker();
-							if(am == null)
-							{
+							if(am == null) {
 								((MapMarkersPanel)panel).createAlarmMarker("", mne.getMarkerId(), dist);
-							} else
-							{
+							} else {
 								am.setId(mne.getMarkerId());
 								((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);
 							}
-							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
-							jLayeredPane.repaint();
+							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(true);
+							this.jLayeredPane.repaint();
 						}
 					}
-					if(mne.isMapMarkerSelected())
+					if(mne.getMarkerEventType() == MarkerEvent.MARKER_SELECTED_EVENT)
 					{
 						((MapMarkersPanel)panel).activateMarker(mne.getMarkerId());
-						jLayeredPane.repaint();
+						this.jLayeredPane.repaint();
 					}
-					if(mne.isMapMarkerMoved())
+					if(mne.getMarkerEventType() == MarkerEvent.MARKER_MOVED_EVENT)
 					{
-						((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), mne.getDistance());
-						jLayeredPane.repaint();
+						((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), mne.getOpticalDistance());
+						this.jLayeredPane.repaint();
 					}
-					if(mne.isMapMarkerDeleted())
+					if(mne.getMarkerEventType() == MarkerEvent.MARKER_DELETED_EVENT)
 					{
 						if (((MapMarkersPanel)panel).deleteMarker(mne.getMarkerId()) == null)
-							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(false);
-						jLayeredPane.repaint();
+							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(false);
+						this.jLayeredPane.repaint();
 					}
 				}
 			}
