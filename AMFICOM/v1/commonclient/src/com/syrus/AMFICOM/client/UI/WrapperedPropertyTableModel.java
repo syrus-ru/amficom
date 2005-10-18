@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/07 07:06:55 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/18 07:26:33 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -113,7 +113,6 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 		Object object = this.values[rowIndex];
 		if (object == null) {
 			object = this.wrapper.getValue(this.t, this.keys[rowIndex]);
-	
 			if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
 				final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
 				Object keyObject = null;
@@ -129,7 +128,6 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 			
 			this.values[rowIndex] = object;
 		}
-
 		return object;
 	}
 
@@ -177,6 +175,15 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 				this.values[i] = null;
 			}
 		}
+	}
+	
+	@Override
+	public void fireTableRowsUpdated(	int firstRow,
+										int lastRow) {
+		for(int index = firstRow; index <= lastRow; index++) {
+			this.values[index] = null;
+		}
+		super.fireTableRowsUpdated(firstRow, lastRow);
 	}
 	
 	@Override
