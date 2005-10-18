@@ -1,5 +1,5 @@
 /*-
- * $Id: MonitoredElementConditionWrapper.java,v 1.5 2005/08/25 10:56:12 max Exp $
+ * $Id: MonitoredElementConditionWrapper.java,v 1.6 2005/10/18 07:36:47 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,17 +14,18 @@ import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
+import com.syrus.AMFICOM.newFilter.LangModelFilter;
 /**
  * @author Maxim Selivanov
  * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/08/25 10:56:12 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/18 07:36:47 $
  * @module filterclient
  */
 public class MonitoredElementConditionWrapper implements ConditionWrapper {
 	
 	private final static short entityCode = ObjectEntities.MONITOREDELEMENT_CODE;
 	
-	private final static String NAME = "Entity name";
+	private final static String NAME = LangModelFilter.getString("filter.criteria.entityname");
 		
 	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
 	
