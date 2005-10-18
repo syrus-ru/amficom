@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.21 2005/10/06 14:34:35 bob Exp $
+ * $Id: AbstractApplication.java,v 1.22 2005/10/18 14:54:55 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/18 14:54:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -276,6 +276,10 @@ public abstract class AbstractApplication {
 		UIManager.put(ResourceKeys.ICON_COMMIT, 
 				new ImageIcon(
 					Toolkit.getDefaultToolkit().getImage("images/commit.gif")));
+		
+		UIManager.put(ResourceKeys.ICON_TIME_DATE, 
+			new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage("images/timedate.gif")));
 		
 		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, 
 			new UIDefaults.LazyValue() {

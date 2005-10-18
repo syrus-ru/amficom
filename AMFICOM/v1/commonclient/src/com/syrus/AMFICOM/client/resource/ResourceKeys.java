@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.12 2005/10/06 14:34:35 bob Exp $
+ * $Id: ResourceKeys.java,v 1.13 2005/10/18 14:54:55 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/18 14:54:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -40,10 +40,11 @@ public interface ResourceKeys {
 	String	ICON_OPEN_FILE							= "com.syrus.AMFICOM.icon.general.openfile";
 	String	ICON_ADD_FILE							= "com.syrus.AMFICOM.icon.general.addfile";
 	String	ICON_REMOVE_FILE						= "com.syrus.AMFICOM.icon.general.removefile";
-	String	ICON_REFRESH						= "com.syrus.AMFICOM.icon.general.refresh";
-	String	ICON_ADD							= "com.syrus.AMFICOM.icon.general.add";
-	String	ICON_COMMIT							= "com.syrus.AMFICOM.icon.general.commit";
-	String	ICON_SYNCHRONIZE = 					"com.syrus.AMFICOM.icon.general.synchronize";
+	String	ICON_REFRESH							= "com.syrus.AMFICOM.icon.general.refresh";
+	String	ICON_ADD								= "com.syrus.AMFICOM.icon.general.add";
+	String	ICON_COMMIT								= "com.syrus.AMFICOM.icon.general.commit";
+	String	ICON_SYNCHRONIZE						= "com.syrus.AMFICOM.icon.general.synchronize";
+	String	ICON_TIME_DATE							= "com.surus.AMFICOM.icon.general.timedate";
 
 	/* Mini Icons */
 	Object	ICON_MINI_FOLDER						= "com.syrus.AMFICOM.icon.mini.general.folder";
