@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.42 2005/09/29 12:50:56 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.43 2005/10/18 13:17:12 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,10 +10,11 @@ package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
@@ -49,8 +50,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/09/29 12:50:56 $
+ * @author $Author: max $
+ * @version $Revision: 1.43 $, $Date: 2005/10/18 13:17:12 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -116,6 +117,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(scheme.getDomainId());
 				case SCHEMEELEMENT_CODE:
 					return super.conditionTest(scheme.parentSchemeElementId);
+				case MAP_CODE:
+					return super.conditionTest(scheme.getMapId());
 				default:
 					throw newIllegalObjectEntityException();	
 				}
