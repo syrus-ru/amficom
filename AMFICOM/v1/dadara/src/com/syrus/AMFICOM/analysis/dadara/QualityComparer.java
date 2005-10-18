@@ -1,5 +1,5 @@
 /*-
- * $Id: QualityComparer.java,v 1.3 2005/10/17 13:45:11 saa Exp $
+ * $Id: QualityComparer.java,v 1.4 2005/10/18 09:34:37 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
  * Определяет параметры качества линии.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/10/17 13:45:11 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/18 09:34:37 $
  * @module dadara
  */
 public class QualityComparer
@@ -96,8 +96,8 @@ implements EvaluationPerEventResult, ReflectometryEvaluationOverallResult {
 				double dyc = ((HavingLoss)ce).getLoss();
 				double dye = ((HavingLoss)ee).getLoss();
 				double delta = Math.abs(dyc - dye);
-				double t = Math.max(mtm.getDYScaleForEventBeginning(etalonEot),
-						mtm.getDYScaleForEventEnd(etalonEot));
+				double t = Math.max(mtm.getDYScaleForEventBeginning(j),
+						mtm.getDYScaleForEventEnd(j));
 				double qi = delta / t;
 				double ki = delta / Math.max(Math.abs(dyc), Math.abs(dye)); // FIXME: implement another formulae for ki
 				//double ki = delta / (Math.abs(dye) + noise);
