@@ -64,7 +64,12 @@ implements BsHashChangeListener, PrimaryMTAEListener,
 				this.formatter.setMaximumFractionDigits(5);
 				this.formatter.setMinimumFractionDigits(1);
 			}
-			super.label.setText((value == null) ? "" : this.formatter.format(value));
+//			super.label.setText((value == null) ? "" : this.formatter.format(value));
+			if (value instanceof Double) {
+				super.label.setText(this.formatter.format(value));
+			} else {
+				super.setValue(value);
+			}
 		}
 	};
 
