@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.20 2005/10/18 13:14:05 bob Exp $
+* $Id: PermissionAttributes.java,v 1.21 2005/10/18 13:47:51 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/18 13:14:05 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/18 13:47:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -57,7 +57,7 @@ public class PermissionAttributes extends StorableObject {
 		ANALYSIS(true),
 		RESEARCH(true),
 		EVALUATION(true),
-		SURVEY(true),
+		OBSERVE(true),
 		PREDICTION(false),
 		REPORT(true);
 		
@@ -408,11 +408,11 @@ public class PermissionAttributes extends StorableObject {
 	}
 	
 	/**
-	 * Survey permission enum
+	 * Observe permission enum
 	 * 
 	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
 	 */
-	private enum Survey implements SwitchableGroupNumber {
+	private enum Observe implements SwitchableGroupNumber {
 		ENTER(true),
 		OPEN_MAP(true),
 		OPEN_SCHEME(true),
@@ -422,7 +422,7 @@ public class PermissionAttributes extends StorableObject {
 		
 		private final boolean	enable;
 
-		private Survey(final boolean enable) {
+		private Observe(final boolean enable) {
 			this.enable = enable;			
 		}	
 		
@@ -431,7 +431,7 @@ public class PermissionAttributes extends StorableObject {
 		}
 		
 		public final Module getModule() {
-			return Module.SURVEY;
+			return Module.OBSERVE;
 		}
 	}
 	
@@ -574,13 +574,13 @@ public class PermissionAttributes extends StorableObject {
 		EVALUATION_SAVE_REFLECTOGRAM_FILE(Evaluation.SAVE_REFLECTOGRAM_FILE),
 		EVALUATION_EDIT_ETALON(Evaluation.EDIT_ETALON),
 		
-		// Survey
-		SURVEY_ENTER(Survey.ENTER),
-		SURVEY_OPEN_MAP(Survey.OPEN_MAP),
-		SURVEY_OPEN_SCHEME(Survey.OPEN_SCHEME),
-		SURVEY_OPEN_MEASUREMENT_ARCHIVE(Survey.OPEN_MEASUREMENT_ARCHIVE),
-		SURVEY_QUICK_TASK(Survey.QUICK_TASK),
-		SURVEY_ALARM_MANAGE(Survey.ALARM_MANAGE),
+		// Observe
+		OBSERVE_ENTER(Observe.ENTER),
+		OBSERVE_OPEN_MAP(Observe.OPEN_MAP),
+		OBSERVE_OPEN_SCHEME(Observe.OPEN_SCHEME),
+		OBSERVE_OPEN_MEASUREMENT_ARCHIVE(Observe.OPEN_MEASUREMENT_ARCHIVE),
+		OBSERVE_QUICK_TASK(Observe.QUICK_TASK),
+		OBSERVE_ALARM_MANAGE(Observe.ALARM_MANAGE),
 		
 		// Prediction
 		PREDICTION_ENTER(Prediction.ENTER),
