@@ -1,5 +1,5 @@
 /*-
- * $Id: ConnectorDetailedEvent.java,v 1.6 2005/10/11 13:26:14 saa Exp $
+ * $Id: ConnectorDetailedEvent.java,v 1.7 2005/10/18 08:06:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.analysis.dadara.events;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
@@ -21,7 +17,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * y2 - уровень в максимуме события, дБ (отрицательное значение или ноль)
  * loss - уровень потерь на событии (это не совсем то же, что и разница уровня на конце и в начале)
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/11 13:26:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/18 08:06:07 $
  * @module
  */
 public class ConnectorDetailedEvent extends DetailedEvent
@@ -62,22 +58,5 @@ implements HavingY0, HavingLoss {
 	}
 	public double getAmpl() {
 		return this.y2 - this.y0;
-	}
-	@Override
-	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(this.y0);
-		dos.writeDouble(this.y1);
-		dos.writeDouble(this.y2);
-//        dos.writeDouble(this.refl);
-		dos.writeDouble(this.loss);
-	}
-
-	@Override
-	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-		this.y0 = dis.readDouble();
-		this.y1 = dis.readDouble();
-		this.y2 = dis.readDouble();
-//        this.refl = dis.readDouble();
-		this.loss = dis.readDouble();
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: NotIdentifiedDetailedEvent.java,v 1.6 2005/10/11 13:26:14 saa Exp $
+ * $Id: NotIdentifiedDetailedEvent.java,v 1.7 2005/10/18 08:06:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.analysis.dadara.events;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
@@ -23,7 +19,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * maxDev - максимальное отклонение рефлектограммы от аналитической кривой, дЅ
  * loss - предполагаемый уровень потерь на событии
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/11 13:26:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/18 08:06:07 $
  * @module
  */
 public class NotIdentifiedDetailedEvent extends DetailedEvent
@@ -66,24 +62,5 @@ implements HavingY0, HavingLoss {
 	}
 	public double getLoss() {
 		return this.loss;
-	}
-	@Override
-	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(this.y0);
-		dos.writeDouble(this.y1);
-		dos.writeDouble(this.loss);
-		dos.writeDouble(this.yMin);
-		dos.writeDouble(this.yMax);
-		dos.writeDouble(this.maxDev);
-	}
-
-	@Override
-	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-		this.y0 = dis.readDouble();
-		this.y1 = dis.readDouble();
-		this.loss = dis.readDouble();
-		this.yMin = dis.readDouble();
-		this.yMax = dis.readDouble();
-		this.maxDev = dis.readDouble();
 	}
 }

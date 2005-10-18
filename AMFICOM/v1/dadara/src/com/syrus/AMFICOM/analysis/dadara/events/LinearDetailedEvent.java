@@ -1,5 +1,5 @@
 /*-
- * $Id: LinearDetailedEvent.java,v 1.6 2005/10/11 13:26:14 saa Exp $
+ * $Id: LinearDetailedEvent.java,v 1.7 2005/10/18 08:06:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.analysis.dadara.events;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
@@ -26,7 +22,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  *   более-менее точно и воспроизводимо). Это может приводить к неправильному
  *   определению (завышению) K- и Q- параметров для лин. участков.
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/11 13:26:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/18 08:06:07 $
  * @module
  */
 public class LinearDetailedEvent extends DetailedEvent
@@ -65,21 +61,5 @@ implements HavingY0, HavingLoss {
 	}
 	public double getAttenuation() {
 		return (this.y0 - this.y1) / (this.end - this.begin);
-	}
-	//public LinearDetailedEvent(int begin, int end, int eventType,)
-	@Override
-	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(this.y0);
-		dos.writeDouble(this.y1);
-		dos.writeDouble(this.rmsDev);
-		dos.writeDouble(this.maxDev);
-	}
-
-	@Override
-	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-		this.y0 = dis.readDouble();
-		this.y1 = dis.readDouble();
-		this.rmsDev = dis.readDouble();
-		this.maxDev = dis.readDouble();
 	}
 }

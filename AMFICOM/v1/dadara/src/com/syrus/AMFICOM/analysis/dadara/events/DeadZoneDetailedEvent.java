@@ -1,5 +1,5 @@
 /*-
- * $Id: DeadZoneDetailedEvent.java,v 1.5 2005/10/06 13:34:02 saa Exp $
+ * $Id: DeadZoneDetailedEvent.java,v 1.6 2005/10/18 08:06:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,6 @@
  */
 
 package com.syrus.AMFICOM.analysis.dadara.events;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
@@ -20,7 +16,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * adz - ширина ADZ, в точках
  * edz - ширина EDZ, в точках
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/10/06 13:34:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/18 08:06:07 $
  * @module
  */
 public class DeadZoneDetailedEvent extends DetailedEvent {
@@ -53,20 +49,4 @@ public class DeadZoneDetailedEvent extends DetailedEvent {
 	public double getY1() {
 		return this.y1;
 	}
-	@Override
-	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(this.po);
-		dos.writeDouble(this.y1);
-		dos.writeInt(this.edz);
-		dos.writeInt(this.adz);
-	}
-
-	@Override
-	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-		this.po = dis.readDouble();
-		this.y1 = dis.readDouble();
-		this.edz = dis.readInt();
-		this.adz = dis.readInt();
-	}
-
 }
