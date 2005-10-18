@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.27 2005/10/16 16:53:21 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.28 2005/10/18 09:35:43 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.27 $, $Date: 2005/10/16 16:53:21 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/18 09:35:43 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -114,6 +114,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 			   ModelTraceAndEventsImpl.this.rse[nEvent].getEventType() == SimpleReflectogramEvent.LINEAR
 			|| ModelTraceAndEventsImpl.this.rse[nEvent].getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED;
 		}
+
 		protected int getEdz(int i) {
 			return this.edz[i];
 		}
@@ -291,7 +292,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 					y0 - this.cinfo.getYTop(),
 					y1 - this.cinfo.getYTop(),
 					this.cinfo.getRmsDev(i),
-					this.cinfo.getMaxDev(i));
+					this.cinfo.getMaxDev(i),
+					ReflectogramMath.getRmsLoss(ev, this.mt));
 		case SimpleReflectogramEvent.GAIN:
 			// fall through
 		case SimpleReflectogramEvent.LOSS:

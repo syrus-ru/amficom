@@ -269,4 +269,27 @@ public class ReflectogramMath
 		}
 		return y0 + Math.sqrt(acc / (iToEx - iFrom));
 	}
+
+	/**
+	 * Определяет потери для линейного события по RMS.
+	 * Потери равны длине события умножить на наклон RMS прямой.
+	 * @param ev событие, по которому проводим лин. участок
+	 * @param mt фитируемая кривая
+	 * @return потери для линейного события по RMS
+	 */
+	public static double getRmsLoss(SimpleReflectogramEvent ev,
+			ModelTrace mt) {
+		int xBeg = ev.getBegin();
+		int xEnd = ev.getEnd();
+		double x0 = (xBeg + xEnd) / 2.0; // это строго середина
+		double mxy = 0.0;
+		double mxx = 0.0;
+		for (int i = xBeg; i <= xEnd; i++) {
+			final double vx = i - x0;
+			final double vy = mt.getY(i);
+			mxx += vx * vx;
+			mxy += vy * vx;
+		}
+		return -mxy / mxx * (xEnd - xBeg);
+	}
 }
