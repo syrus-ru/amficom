@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.126 2005/10/17 13:51:01 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.127 2005/10/18 13:12:48 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.126 $, $Date: 2005/10/17 13:51:01 $
+ * @version $Revision: 1.127 $, $Date: 2005/10/18 13:12:48 $
  * @module
  */
 
@@ -830,9 +830,10 @@ public class CoreAnalysisManager
 		if (breakPos < 0 && ar.getTraceLength() < etMinLength)
 			breakPos = ar.getTraceLength();
 
-		// проблема - breakPos случится при первом же уходе ниже minTraceLevel,
+		// [fixed] проблема - breakPos случится при первом же уходе ниже minTraceLevel,
 		// что очень вероятно на последних километрах абс. нормальной р/г
 		// при работе на пределе динамического дипазона (see traces #38, #65)
+		// Решено предварительной фильтрацией [/fixed]
 		if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
 		{
 			ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
