@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventUtil.java,v 1.4 2005/07/22 06:39:51 saa Exp $
+ * $Id: DetailedEventUtil.java,v 1.5 2005/10/18 08:02:36 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,11 @@
 package com.syrus.AMFICOM.analysis.dadara.events;
 
 /**
+ * XXX [outdated?] этот класс дублирует интерфейсы типа HavingLoss. Заменить его целиком интерефейсами?
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
- * @module
+ * @version $Revision: 1.5 $, $Date: 2005/10/18 08:02:36 $
+ * @module dadara
  */
 public class DetailedEventUtil {
 	private DetailedEventUtil() {
