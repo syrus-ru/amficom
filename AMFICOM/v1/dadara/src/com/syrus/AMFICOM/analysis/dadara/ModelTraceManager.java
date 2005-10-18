@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.103 2005/10/13 11:45:39 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.104 2005/10/18 09:33:35 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.103 $, $Date: 2005/10/13 11:45:39 $
+ * @version $Revision: 1.104 $, $Date: 2005/10/18 09:33:35 $
  * @module
  */
 public class ModelTraceManager
@@ -1227,7 +1227,7 @@ implements DataStreamable, Cloneable
 	public double getDYScaleForEventEnd(int nEvent) {
 		double ret = 0.0;
 		for (int i = 0; i < this.tDY.length; i++) {
-			if (! this.tDY[i].isRelevantToNEvent(nEvent)) {
+			if (this.tDY[i].isRelevantToNEvent(nEvent)) {
 				ret = (Math.abs(this.tDY[i].getDY(Thresh.SOFT_UP))
 						+ Math.abs(this.tDY[i].getDY(Thresh.SOFT_DOWN))) / 2.0;
 			}
