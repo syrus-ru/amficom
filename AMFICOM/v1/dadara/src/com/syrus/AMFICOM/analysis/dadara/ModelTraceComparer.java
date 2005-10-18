@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.38 2005/10/12 13:24:31 bass Exp $
+ * $Id: ModelTraceComparer.java,v 1.39 2005/10/18 13:30:46 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_EVENTLISTCHANGED;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK;
-import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_NONE;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_SOFT;
 import static java.util.logging.Level.INFO;
@@ -38,15 +37,19 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/10/12 13:24:31 $
+ * @author $Author: saa $
+ * @version $Revision: 1.39 $, $Date: 2005/10/18 13:30:46 $
  * @module
  */
 public class ModelTraceComparer
 {
 	private static final Severity ALARM_LEVEL_FOR_EVENT_CHANGE =
 		SEVERITY_SOFT;
-	
+	private static final Severity ALARM_LEVEL_FOR_SOFT_MASKS =
+		SEVERITY_SOFT;
+	private static final Severity ALARM_LEVEL_FOR_HARD_MASKS =
+		SEVERITY_SOFT;
+
 	private ModelTraceComparer() {
 		// non-instantiable
 	}
@@ -287,8 +290,8 @@ public class ModelTraceComparer
 				if (alarmEnd < alarmCoord)
 					alarmEnd = alarmCoord;
 				Severity level = Thresh.IS_KEY_HARD[key]
-					? SEVERITY_HARD
-					: SEVERITY_SOFT;
+					? ALARM_LEVEL_FOR_HARD_MASKS
+					: ALARM_LEVEL_FOR_SOFT_MASKS;
 				if (level == alarm.getSeverity() && alarmCoord < alarm.getCoord()
 						|| level.compareTo(alarm.getSeverity()) > 0)
 				{
