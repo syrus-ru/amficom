@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.23 2005/10/19 10:53:20 arseniy Exp $
+# $Id: Makefile,v 1.24 2005/10/19 11:24:44 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -62,7 +62,8 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerOperations.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/_EventServerStub.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHelper.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHolder.class
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHolder.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerPackage
 	$(CP) $@ $(LIBDIR)
 
 .mach: .corba $(CLASSDIR)
