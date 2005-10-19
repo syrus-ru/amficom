@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.7 2005/10/19 07:51:22 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.8 2005/10/19 11:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/19 07:51:22 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/19 11:51:41 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -189,10 +189,10 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.eventv2.ReflectogramMismatchEvent#getCreated()
+	 * @see ReflectogramMismatchEvent#getCreated()
 	 */
 	public Date getCreated() {
-		throw new UnsupportedOperationException();
+		return (Date) this.created.clone();
 	}
 
 	/**
@@ -374,7 +374,7 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2005/10/19 07:51:22 $
+	 * @version $Revision: 1.8 $, $Date: 2005/10/19 11:51:41 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {

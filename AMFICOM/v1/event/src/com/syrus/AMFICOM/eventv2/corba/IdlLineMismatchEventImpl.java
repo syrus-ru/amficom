@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlLineMismatchEventImpl.java,v 1.4 2005/10/13 10:47:42 bass Exp $
+ * $Id: IdlLineMismatchEventImpl.java,v 1.5 2005/10/19 11:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.eventv2.corba;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import com.syrus.AMFICOM.eventv2.DefaultLineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
@@ -20,12 +22,11 @@ import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.reflectometry.corba.IdlAlarmType;
 import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
-import static com.syrus.AMFICOM.general.Identifier.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/13 10:47:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/19 11:51:41 $
  * @module event
  */
 final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
@@ -39,7 +40,11 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 			final IdlSeverity severity,
 			final IdlMismatchData mismatchData,
 			final IdlIdentifier affectedPathElementId,
-			final IdlSpatialData spatialData) {
+			final IdlSpatialData spatialData,
+			final IdlIdentifier resultId,
+			final double mismatchOpticalDistance,
+			final double mismatchPhysicalDistance,
+			final long mismatchCreated) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
 		this.id = voidId;
 		this.creatorId = voidId;
@@ -50,6 +55,11 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 		this.mismatchData = mismatchData;
 		this.affectedPathElementId = affectedPathElementId;
 		this.spatialData = spatialData;
+
+		this.resultId = resultId;
+		this.mismatchOpticalDistance = mismatchOpticalDistance;
+		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
+		this.mismatchCreated = mismatchCreated;
 	}
 
 	/**
@@ -141,6 +151,38 @@ final class IdlLineMismatchEventImpl extends IdlLineMismatchEvent {
 	 */
 	public IdlEventType getType() {
 		return IdlEventType.LINE_MISMATCH;
+	}
+
+	/**
+	 * @see IdlLineMismatchEvent#getResultId()
+	 */
+	@Override
+	public IdlIdentifier getResultId() {
+		return this.resultId;
+	}
+
+	/**
+	 * @see IdlLineMismatchEvent#getMismatchOpticalDistance()
+	 */
+	@Override
+	public double getMismatchOpticalDistance() {
+		return this.mismatchOpticalDistance;
+	}
+
+	/**
+	 * @see IdlLineMismatchEvent#getMismatchPhysicalDistance()
+	 */
+	@Override
+	public double getMismatchPhysicalDistance() {
+		return this.mismatchPhysicalDistance;
+	}
+
+	/**
+	 * @see IdlLineMismatchEvent#getMismatchCreated()
+	 */
+	@Override
+	public long getMismatchCreated() {
+		return this.mismatchCreated;
 	}
 
 	/**

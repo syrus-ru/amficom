@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEvent.java,v 1.4 2005/10/18 16:19:41 bass Exp $
+ * $Id: ReflectogramMismatchEvent.java,v 1.5 2005/10/19 11:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/18 16:19:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/19 11:51:41 $
  * @module event
  */
 public interface ReflectogramMismatchEvent
@@ -25,5 +25,8 @@ public interface ReflectogramMismatchEvent
 		ReflectogramMismatch {
 	Date getCreated();
 
+	/**
+	 * @see PopupNotificationEvent#getResultId()
+	 */
 	Identifier getResultId();
 }

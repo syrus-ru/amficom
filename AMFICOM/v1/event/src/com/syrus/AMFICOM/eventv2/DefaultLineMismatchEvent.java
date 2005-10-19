@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.3 2005/10/18 16:19:41 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.4 2005/10/19 11:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/18 16:19:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/19 11:51:41 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -78,6 +78,26 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 	 */
 	private double physicalDistanceToEnd;
 
+	/**
+	 * @serial include
+	 */
+	private Identifier resultId;
+
+	/**
+	 * @serial include
+	 */
+	private double mismatchOpticalDistance;
+
+	/**
+	 * @serial include
+	 */
+	private double mismatchPhysicalDistance;
+
+	/**
+	 * @serial include
+	 */
+	private Date mismatchCreated;
+
 	private DefaultLineMismatchEvent(final IdlLineMismatchEvent lineMismatchEvent) {
 		this.alarmType = AlarmType.valueOf(lineMismatchEvent.getAlarmType());
 		this.severity = Severity.valueOf(lineMismatchEvent.getSeverity());
@@ -97,6 +117,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			this.physicalDistanceToStart = lineMismatchEvent.getPhysicalDistanceToStart();
 			this.physicalDistanceToEnd = lineMismatchEvent.getPhysicalDistanceToEnd();
 		}
+
+		this.resultId = Identifier.valueOf(lineMismatchEvent.getResultId());
+		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
+		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
+		this.mismatchCreated = new Date(lineMismatchEvent.getMismatchCreated());
 	}
 
 	private DefaultLineMismatchEvent(final AlarmType alarmType,
@@ -109,8 +134,8 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd,
 			final Identifier resultId,
-			final double eventOpticalDistance,
-			final double eventPhysicalDistance,
+			final double mismatchOpticalDistance,
+			final double mismatchPhysicalDistance,
 			final Date mismatchCreated) {
 		this.alarmType = alarmType;
 		this.severity = severity;
@@ -130,6 +155,11 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			this.physicalDistanceToStart = physicalDistanceToStart;
 			this.physicalDistanceToEnd = physicalDistanceToEnd;
 		}
+
+		this.resultId = resultId;
+		this.mismatchOpticalDistance = mismatchOpticalDistance;
+		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
+		this.mismatchCreated = (Date) mismatchCreated.clone();
 	}
 
 	/**
@@ -161,8 +191,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 				this.getAlarmType().getTransferable(orb),
 				this.getSeverity().getTransferable(orb),
 				mismatchData,
-				this.affectedPathElementId.getTransferable(orb),
-				spatialData);
+				this.getAffectedPathElementId().getTransferable(orb),
+				spatialData,
+				this.getResultId().getTransferable(orb),
+				this.getMismatchOpticalDistance(),
+				this.getMismatchPhysicalDistance(),
+				this.mismatchCreated.getTime());
 	}
 
 	public static LineMismatchEvent valueOf(
@@ -180,14 +214,14 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			final double physicalDistanceToStart,
 			final double physicalDistanceToEnd,
 			final Identifier resultId,
-			final double eventOpticalDistance,
-			final double eventPhysicalDistance,
+			final double mismatchOpticalDistance,
+			final double mismatchPhysicalDistance,
 			final Date mismatchCreated) {
 		return new DefaultLineMismatchEvent(alarmType, severity, mismatch,
 				minMismatch, maxMismatch, affectedPathElementId,
 				affectedPathElementSpatious, physicalDistanceToStart,
-				physicalDistanceToEnd, resultId, eventOpticalDistance,
-				eventPhysicalDistance, mismatchCreated);
+				physicalDistanceToEnd, resultId, mismatchOpticalDistance,
+				mismatchPhysicalDistance, mismatchCreated);
 	}
 
 	public AlarmType getAlarmType() {
@@ -236,5 +270,37 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 			return this.physicalDistanceToEnd;
 		}
 		throw new IllegalStateException();
+	}
+
+	/**
+	 * @see LineMismatchEvent#getResultId()
+	 * @see PopupNotificationEvent#getResultId()
+	 */
+	public Identifier getResultId() {
+		return this.resultId;
+	}
+
+	/**
+	 * @see LineMismatchEvent#getMismatchOpticalDistance()
+	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
+	 */
+	public double getMismatchOpticalDistance() {
+		return this.mismatchOpticalDistance;
+	}
+
+	/**
+	 * @see LineMismatchEvent#getMismatchPhysicalDistance()
+	 * @see PopupNotificationEvent#getMismatchPhysicalDistance()
+	 */
+	public double getMismatchPhysicalDistance() {
+		return this.mismatchPhysicalDistance;
+	}
+
+	/**
+	 * @see LineMismatchEvent#getMismatchCreated()
+	 * @see PopupNotificationEvent#getMismatchCreated()
+	 */
+	public Date getMismatchCreated() {
+		return (Date) this.mismatchCreated.clone();
 	}
 }

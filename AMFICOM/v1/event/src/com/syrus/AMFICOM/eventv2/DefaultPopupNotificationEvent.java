@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.3 2005/10/19 07:50:31 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.4 2005/10/19 11:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/19 07:50:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/19 11:51:41 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -36,11 +36,49 @@ public final class DefaultPopupNotificationEvent extends
 	 */
 	private String message;
 
+	/**
+	 * @serial include 
+	 */
+	private Identifier resultId;
+
+	/**
+	 * @serial include 
+	 */
+	private double mismatchOpticalDistance;
+
+	/**
+	 * @serial include 
+	 */
+	private double mismatchPhysicalDistance;
+
+	/**
+	 * @serial include 
+	 */
+	private Date mismatchCreated;
+
 	private DefaultPopupNotificationEvent(
 			final IdlPopupNotificationEvent popupNotificationEvent) {
 		this.targetUserId = Identifier.valueOf(
 				popupNotificationEvent.getTargetUserId());
 		this.message = popupNotificationEvent.getMessage();
+		this.resultId = Identifier.valueOf(
+				popupNotificationEvent.getResultId());
+		this.mismatchOpticalDistance =
+				popupNotificationEvent.getMismatchOpticalDistance();
+		this.mismatchPhysicalDistance =
+				popupNotificationEvent.getMismatchPhysicalDistance();
+		this.mismatchCreated = new Date(popupNotificationEvent.getMismatchCreated());
+	}
+
+	private DefaultPopupNotificationEvent(
+			final LineMismatchEvent lineMismatchEvent,
+			final Identifier targetUserId) {
+		this.targetUserId = targetUserId;
+		this.message = "";
+		this.resultId = lineMismatchEvent.getResultId();
+		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
+		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
+		this.mismatchCreated = (Date) lineMismatchEvent.getMismatchCreated().clone();
 	}
 
 	/**
@@ -49,13 +87,24 @@ public final class DefaultPopupNotificationEvent extends
 	 */
 	public IdlPopupNotificationEvent getTransferable(final ORB orb) {
 		return IdlPopupNotificationEventHelper.init(orb,
-				this.targetUserId.getTransferable(orb),
-				this.message);
+				this.getTargetUserId().getTransferable(orb),
+				this.getMessage(),
+				this.getResultId().getTransferable(orb),
+				this.getMismatchOpticalDistance(),
+				this.getMismatchPhysicalDistance(),
+				this.mismatchCreated.getTime());
 	}
 
 	public static PopupNotificationEvent valueOf(
 			final IdlPopupNotificationEvent popupNotificationEvent) {
 		return new DefaultPopupNotificationEvent(popupNotificationEvent);
+	}
+
+	public static PopupNotificationEvent valueOf(
+			final LineMismatchEvent lineMismatchEvent,
+			final Identifier targetUserId) {
+		return new DefaultPopupNotificationEvent(lineMismatchEvent,
+				targetUserId);
 	}
 
 	/**
@@ -76,27 +125,27 @@ public final class DefaultPopupNotificationEvent extends
 	 * @see PopupNotificationEvent#getResultId()
 	 */
 	public Identifier getResultId() {
-		throw new UnsupportedOperationException();
+		return this.resultId;
 	}
 
 	/**
 	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
 	 */
 	public double getMismatchOpticalDistance() {
-		throw new UnsupportedOperationException();
+		return this.mismatchOpticalDistance;
 	}
 
 	/**
 	 * @see PopupNotificationEvent#getMismatchPhysicalDistance()
 	 */
 	public double getMismatchPhysicalDistance() {
-		throw new UnsupportedOperationException();
+		return this.mismatchPhysicalDistance;
 	}
 
 	/**
 	 * @see PopupNotificationEvent#getMismatchCreated()
 	 */
 	public Date getMismatchCreated() {
-		throw new UnsupportedOperationException();
+		return (Date) this.mismatchCreated.clone();
 	}
 }

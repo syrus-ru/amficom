@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.9 2005/10/11 05:02:50 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.10 2005/10/19 11:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.eventv2;
+
+import java.util.Date;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.Identifier;
@@ -19,7 +21,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/10/11 05:02:50 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/19 11:51:41 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
@@ -149,4 +151,24 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 *         affectedPathElementSpacious}<code>&nbsp;==&nbsp;false</code>.
 	 */
 	double getPhysicalDistanceToEnd();
+
+	/**
+	 * @see PopupNotificationEvent#getResultId()
+	 */
+	Identifier getResultId();
+
+	/**
+	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
+	 */
+	double getMismatchOpticalDistance();
+
+	/**
+	 * @see PopupNotificationEvent#getMismatchPhysicalDistance()
+	 */
+	double getMismatchPhysicalDistance();
+
+	/**
+	 * @see PopupNotificationEvent#getMismatchCreated()
+	 */
+	Date getMismatchCreated();
 }

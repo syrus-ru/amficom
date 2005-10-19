@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPopupNotificationEventImpl.java,v 1.3 2005/10/13 10:47:42 bass Exp $
+ * $Id: IdlPopupNotificationEventImpl.java,v 1.4 2005/10/19 11:51:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/13 10:47:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/19 11:51:41 $
  * @module event
  */
 final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
@@ -32,7 +32,10 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 	}
 
 	IdlPopupNotificationEventImpl(final IdlIdentifier targetUserId,
-			final String message) {
+			final String message, final IdlIdentifier resultId,
+			final double mismatchOpticalDistance,
+			final double mismatchPhysicalDistance,
+			final long mismatchCreated) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
 		this.id = voidId;
 		this.creatorId = voidId;
@@ -40,6 +43,11 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 
 		this.targetUserId = targetUserId;
 		this.message = message;
+
+		this.resultId = resultId;
+		this.mismatchOpticalDistance = mismatchOpticalDistance;
+		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
+		this.mismatchCreated = mismatchCreated;
 	}
 
 	/**
@@ -69,6 +77,38 @@ final class IdlPopupNotificationEventImpl extends IdlPopupNotificationEvent {
 	 */
 	public String getMessage() {
 		return this.message;
+	}
+
+	/**
+	 * @see IdlPopupNotificationEvent#getResultId()
+	 */
+	@Override
+	public IdlIdentifier getResultId() {
+		return this.resultId;
+	}
+
+	/**
+	 * @see IdlPopupNotificationEvent#getMismatchOpticalDistance()
+	 */
+	@Override
+	public double getMismatchOpticalDistance() {
+		return this.mismatchOpticalDistance;
+	}
+
+	/**
+	 * @see IdlPopupNotificationEvent#getMismatchPhysicalDistance()
+	 */
+	@Override
+	public double getMismatchPhysicalDistance() {
+		return this.mismatchPhysicalDistance;
+	}
+
+	/**
+	 * @see IdlPopupNotificationEvent#getMismatchCreated()
+	 */
+	@Override
+	public long getMismatchCreated() {
+		return this.mismatchCreated;
 	}
 
 	/**

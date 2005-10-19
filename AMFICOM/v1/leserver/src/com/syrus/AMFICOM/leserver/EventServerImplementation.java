@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.18 2005/10/19 08:52:58 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.19 2005/10/19 11:51:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingExc
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/19 08:52:58 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/19 11:51:40 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -42,6 +42,7 @@ final class EventServerImplementation extends EventServerPOA {
 
 	EventServerImplementation() {
 		EventProcessorRegistry.registerEventProcessor(new ReflectogramMismatchEventProcessor());
+		EventProcessorRegistry.registerEventProcessor(new LineMismatchEventProcessor());
 	}
 
 	/**
