@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.126 2005/10/19 13:00:12 bob Exp $
+ * $Id: SchedulerModel.java,v 1.127 2005/10/19 13:09:56 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.126 $, $Date: 2005/10/19 13:00:12 $
+ * @version $Revision: 1.127 $, $Date: 2005/10/19 13:09:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1337,15 +1337,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					headSet.last().getTime() + measurementSetup.getMeasurementDuration() > startDate0.getTime();
 			}
 		}
-		
-		try {
-			throw new Exception("SchedulerModel.isIntersect0");
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		
 
-		
 		assert Log.debugMessage("SchedulerModel.isIntersect0 | " 
 				+ test 
 				+ (intersect ? " intersects " : " doen't intersect ") 
