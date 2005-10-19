@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.43 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.44 2005/10/19 11:55:41 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,15 +40,17 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.43 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/19 11:55:41 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -108,6 +110,12 @@ public final class MapDropTargetListener implements DropTargetListener {
 								SchemeCableLink sclreal = StorableObjectPool
 										.getStorableObject(id, true);
 								schemeCableLinkDropped(sclreal);
+							} else if(or instanceof SchemePath) {
+								SchemePath sp = (SchemePath) or;
+								Identifier id = sp.getId();
+								SchemePath spreal = StorableObjectPool
+										.getStorableObject(id, true);
+								schemePathDropped(spreal);
 							} else if(or instanceof Scheme) {
 								Scheme sc = (Scheme) or;
 								Identifier id = sc.getId();
@@ -131,6 +139,20 @@ public final class MapDropTargetListener implements DropTargetListener {
 			}
 		}
 
+	}
+
+	private void schemePathDropped(SchemePath schemePath) {
+		LogicalNetLayer logicalNetLayer = this.netMapViewer
+			.getLogicalNetLayer();
+		MapView mapView = logicalNetLayer.getMapView();
+		Map map = mapView.getMap();
+		MeasurementPath measurementPath = mapView.findMeasurementPath(schemePath);
+		if(measurementPath != null) {
+			map.setSelected(measurementPath, true);
+			logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this,
+					MapEvent.SELECTION_CHANGED,
+					map.getSelectedElements()));
+		}
 	}
 
 	protected void mapElementDropped(SiteNodeType nodeType, Point point) {
@@ -176,7 +198,9 @@ public final class MapDropTargetListener implements DropTargetListener {
 				}
 			} else {
 				map.setSelected(site, true);
-				logicalNetLayer.sendSelectionChangeEvent();
+				logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this,
+						MapEvent.SELECTION_CHANGED,
+						map.getSelectedElements()));
 			}
 		} else {
 			PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(
@@ -201,7 +225,9 @@ public final class MapDropTargetListener implements DropTargetListener {
 		CablePath cablePath = mapView.findCablePath(schemeCableLink);
 		if(cablePath != null) {
 			map.setSelected(cablePath, true);
-			logicalNetLayer.sendSelectionChangeEvent();
+			logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this,
+					MapEvent.SELECTION_CHANGED,
+					map.getSelectedElements()));
 		} else {
 			SiteNode startNode = logicalNetLayer.getMapView().getStartNode(
 					schemeCableLink);
@@ -233,21 +259,20 @@ public final class MapDropTargetListener implements DropTargetListener {
 		}
 	}
 
-	/*
-	 * else if(or instanceof SchemePath) { SchemePath sp = (SchemePath )or;
-	 * logicalNetLayer.getMapView().placeElement(sp); }
-	 */
-
-	public void dragEnter(DropTargetDragEvent dtde) {// empty
+	public void dragEnter(DropTargetDragEvent dtde) {
+		// empty
 	}
 
-	public void dragExit(DropTargetEvent dte) {// empty
+	public void dragExit(DropTargetEvent dte) {
+		// empty
 	}
 
-	public void dragOver(DropTargetDragEvent dtde) {// empty
+	public void dragOver(DropTargetDragEvent dtde) {
+		// empty
 	}
 
-	public void dropActionChanged(DropTargetDragEvent dtde) {// empty
+	public void dropActionChanged(DropTargetDragEvent dtde) {
+		// empty
 	}
 
 }
