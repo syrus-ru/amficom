@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.10 2005/10/11 14:33:25 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.11 2005/10/19 08:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
@@ -37,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/11 14:33:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/10/19 08:08:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -218,12 +217,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		}
 
 		public CommonServer getServerReference() throws CommunicationException {
-			try {
-				return MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(this.mcmId);
-			} catch (IllegalDataException e) {
-				//-Never
-				throw new CommunicationException(e);
-			}
+			return MServerSessionEnvironment.getInstance().getMServerServantManager().getVerifiedMCMReference(this.mcmId);
 		}
 
 		public CORBAServer getCORBAServer() {

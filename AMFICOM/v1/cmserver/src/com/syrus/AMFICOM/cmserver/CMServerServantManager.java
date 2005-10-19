@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.13 2005/09/21 14:12:28 arseniy Exp $
+ * $Id: CMServerServantManager.java,v 1.14 2005/10/19 08:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.corba.CommonServer;
@@ -25,13 +24,12 @@ import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
-import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/21 14:12:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/19 08:08:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
@@ -59,25 +57,11 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	}
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
-		try {
-			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
-		}
-		catch (final IllegalDataException ide) {
-			// Never
-			assert false;
-			return null;
-		}
+		return LoginServerHelper.narrow(this.getVerifiableReference(this.loginServerServantName));
 	}
 
 	public EventServer getEventServerReference() throws CommunicationException {
-		try {
-			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
-		}
-		catch (final IllegalDataException ide) {
-			// Never
-			assert false;
-			return null;
-		}
+		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
 	}
 
 	/**
@@ -89,30 +73,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	}
 
 	public CommonServer getServerReference() throws CommunicationException {
-		try {
-			return CommonServerHelper.narrow(super.getVerifiableReference(this.mServerServantName));
-		}
-		catch (final IllegalDataException ide) {
-			// Never
-			assert false;
-			return null;
-		}
-	}
-
-	/**
-	 * @deprecated Use getServerReference() instead.
-	 * @throws CommunicationException
-	 */
-	@Deprecated
-	public MServer getMServerReference() throws CommunicationException {
-		try {
-			return (MServer) super.getVerifiableReference(this.mServerServantName);
-		}
-		catch (final IllegalDataException ide) {
-			// Never
-			assert false;
-			return null;
-		}
+		return CommonServerHelper.narrow(this.getVerifiableReference(this.mServerServantName));
 	}
 
 	/**

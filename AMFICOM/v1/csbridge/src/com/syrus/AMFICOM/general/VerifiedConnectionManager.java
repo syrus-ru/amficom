@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.15 2005/10/11 10:51:48 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.16 2005/10/19 08:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/11 10:51:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/10/19 08:08:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -59,24 +59,27 @@ public class VerifiedConnectionManager {
 		this.disconnectedServants = Collections.synchronizedSet(new HashSet<String>(servantNames));
 	}
 
-	public Verifiable getVerifiableReference(final String servantName) throws CommunicationException, IllegalDataException {
-		if (this.referencesMap.containsKey(servantName)) {
-			Verifiable reference = this.referencesMap.get(servantName);
-
-			if (reference == null) {
-				reference = this.activateAndGet(servantName);
-			}
-
-			try {
-				reference.verify((byte) 1);
-			}
-			catch (SystemException se) {
-				reference = this.activateAndGet(servantName);
-			}
-
-			return reference;
+	public final Verifiable getVerifiableReference(final String servantName) throws CommunicationException {
+		if (servantName == null) {
+			throw new NullPointerException();
 		}
-		throw new IllegalDataException("Servant '" + servantName + "' not registered for this manager");
+		if (!this.referencesMap.containsKey(servantName)) {
+			throw new IllegalArgumentException("Servant '" + servantName + "' not registered for this manager");
+		}
+
+		Verifiable reference = this.referencesMap.get(servantName);
+
+		if (reference == null) {
+			reference = this.activateAndGet(servantName);
+		}
+
+		try {
+			reference.verify((byte) 1);
+		} catch (final SystemException se) {
+			reference = this.activateAndGet(servantName);
+		}
+
+		return reference;
 	}
 
 	public void addServantName(final String servantName) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.14 2005/10/11 14:33:25 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.15 2005/10/19 08:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Verifiable;
@@ -31,8 +30,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/11 14:33:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/10/19 08:08:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -60,33 +59,19 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 	}
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
-		try {
-			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
-		}
-		catch (IllegalDataException e) {
-			// Never
-			assert false;
-			return null;
-		}
+		return LoginServerHelper.narrow(this.getVerifiableReference(this.loginServerServantName));
 	}
 
 	public EventServer getEventServerReference() throws CommunicationException {
-		try {
-			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
-		}
-		catch (IllegalDataException e) {
-			// Never
-			assert false;
-			return null;
-		}
+		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
 	}
 
 	public IdentifierGeneratorServer getIGSReference() {
 		return this.databaseIdentifierGeneratorServer;
 	}
 
-	public MCM getVerifiedMCMReference(final Identifier mcmId) throws CommunicationException, IllegalDataException {
-		final Verifiable reference = super.getVerifiableReference(mcmId.toString());
+	public MCM getVerifiedMCMReference(final Identifier mcmId) throws CommunicationException {
+		final Verifiable reference = this.getVerifiableReference(mcmId.toString());
 		return (MCM) reference;
 	}
 

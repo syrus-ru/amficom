@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.14 2005/10/06 14:50:53 bob Exp $
+ * $Id: ClientServantManager.java,v 1.15 2005/10/19 08:08:09 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.CommonServerHelper;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
@@ -21,12 +22,11 @@ import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/06 14:50:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/10/19 08:08:09 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -65,51 +65,19 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	}
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
-		try {
-			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
-		}
+		return LoginServerHelper.narrow(this.getVerifiableReference(this.loginServerServantName));
 	}
 
 	public EventServer getEventServerReference() throws CommunicationException {
-		try {
-			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
-		}
+		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
 	}
 
 	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
-		try {
-			return IdentifierGeneratorServerHelper.narrow(super.getVerifiableReference(this.commonServerServantName));
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
-		}
+		return IdentifierGeneratorServerHelper.narrow(this.getVerifiableReference(this.commonServerServantName));
 	}
 
 	public CommonServer getServerReference() throws CommunicationException {
-		try {
-			return CommonServerHelper.narrow(super.getVerifiableReference(this.commonServerServantName));
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
-		}
+		return CommonServerHelper.narrow(this.getVerifiableReference(this.commonServerServantName));
 	}
 
 	@Override

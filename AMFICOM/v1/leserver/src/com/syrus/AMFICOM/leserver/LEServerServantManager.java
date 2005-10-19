@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerServantManager.java,v 1.13 2005/10/19 07:51:21 bass Exp $
+ * $Id: LEServerServantManager.java,v 1.14 2005/10/19 08:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,13 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.EventServerConnectionManager;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
 import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/19 07:51:21 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/19 08:08:10 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -71,14 +70,6 @@ final class LEServerServantManager extends RunnableVerifiedConnectionManager
 	 * @see EventServerConnectionManager#getEventServerReference()
 	 */
 	public EventServer getEventServerReference() throws CommunicationException {
-		try {
-			return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
-		}
+		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
 	}
 }

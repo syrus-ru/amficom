@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerServantManager.java,v 1.6 2005/09/21 15:14:29 arseniy Exp $
+ * $Id: MscharServerServantManager.java,v 1.7 2005/10/19 08:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
@@ -29,8 +28,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/09/21 15:14:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/10/19 08:08:10 $
  * @module mscharserver
  */
 final class MscharServerServantManager extends RunnableVerifiedConnectionManager
@@ -57,27 +56,11 @@ final class MscharServerServantManager extends RunnableVerifiedConnectionManager
 	}
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
-		try {
-			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
-		}
+		return LoginServerHelper.narrow(this.getVerifiableReference(this.loginServerServantName));
 	}
 
 	public EventServer getEventServerReference() throws CommunicationException {
-		try {
-			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
-		} catch (final IllegalDataException ide) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
-		}
+		return EventServerHelper.narrow(this.getVerifiableReference(this.eventServerServantName));
 	}
 
 	/**
