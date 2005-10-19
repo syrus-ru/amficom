@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.35 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.36 2005/10/19 15:39:06 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -30,11 +32,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.35 $, $Date: 2005/10/12 13:07:08 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/19 15:39:06 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -76,11 +79,16 @@ public class MapViewSaveCommand extends AbstractCommand {
 				Scheme scheme = (Scheme) it.next();
 				scheme.setMap(this.mapView.getMap());
 				try {
-					// save scheme
-					// StorableObjectPool.flush(scheme, userId, true);
-					for(Identifiable schemeElement : scheme
-							.getReverseDependencies(false)) {
-						StorableObjectPool.flush(schemeElement, userId, true);
+					Set<Scheme> internalSchemes = new HashSet<Scheme>();
+					for (SchemeElement se : scheme.getSchemeElements(false)) {
+						Scheme internal = se.getScheme(false);
+						if (internal != null && internal.isChanged()) {
+							internalSchemes.add(internal);
+						}
+					}
+					StorableObjectPool.flush(scheme.getReverseDependencies(false), userId, false);
+					for (Scheme changed : internalSchemes) {
+						StorableObjectPool.flush(changed.getReverseDependencies(false), userId, false);
 					}
 				} catch(VersionCollisionException e) {
 					e.printStackTrace();
