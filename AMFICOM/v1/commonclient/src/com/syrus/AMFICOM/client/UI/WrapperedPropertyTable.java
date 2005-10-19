@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedPropertyTable.java,v 1.16 2005/10/18 14:11:20 bob Exp $
+* $Id: WrapperedPropertyTable.java,v 1.17 2005/10/19 14:18:43 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,11 +7,13 @@
 */
 package com.syrus.AMFICOM.client.UI;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -30,7 +32,7 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/18 14:11:20 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/19 14:18:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -71,6 +73,14 @@ public class WrapperedPropertyTable<T> extends ATable {
 			col.setCellRenderer(renderer);
 		}
 	}
+	
+	@Override
+	public String getToolTipText(final MouseEvent e) {
+    	final Point p = e.getPoint();
+    	final int rowIndex = this.rowAtPoint(p);
+        
+        return this.getModel().getValueAt(rowIndex, 0).toString();
+    }
 
 	/**
 	 * set custom renderer
