@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.17 2005/09/23 05:39:50 bob Exp $
+ * $Id: TimeLine.java,v 1.18 2005/10/19 08:52:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/23 05:39:50 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/19 08:52:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -118,7 +118,7 @@ public abstract class TimeLine extends JComponent {
 	}
 	
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected void paintComponent(final Graphics g) {
 		super.paintComponent(g);
 		
 		int height = getHeight();
@@ -133,7 +133,12 @@ public abstract class TimeLine extends JComponent {
 		g.drawLine(0, height - 1, width, height - 1);
 	}
 	
-	protected final void drawItemRect(Graphics g, int x, int y, int width, int height, Color c) {
+	protected final void drawItemRect(final Graphics g, 
+	                                  final int x, 
+	                                  final int y, 
+	                                  final int width, 
+	                                  final int height, 
+	                                  final Color c) {
 		g.setColor(c);
 //		Log.debugMessage("TimeLine.drawItemRect | x: " + x + ", width: " + width, Log.FINEST);
 		g.fillRect(x + 2, y + 2, width - 3, height - 3);

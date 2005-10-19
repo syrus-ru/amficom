@@ -475,7 +475,7 @@ final class TestLine extends TimeLine {
 				if (TestLine.this.previousPoint != null && TestLine.this.selectedItems != null
 						&& !TestLine.this.selectedItems.isEmpty()) {
 
-					int dx = (TestLine.this.currentPoint.x - TestLine.this.previousPoint.x);
+					final int dx = TestLine.this.currentPoint.x - TestLine.this.previousPoint.x;
 
 					if (dx == 0) {
 						return;
@@ -489,6 +489,7 @@ final class TestLine extends TimeLine {
 							}
 						} catch (final ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
+							return;
 						}
 						
 						testTimeItem.x += dx;
