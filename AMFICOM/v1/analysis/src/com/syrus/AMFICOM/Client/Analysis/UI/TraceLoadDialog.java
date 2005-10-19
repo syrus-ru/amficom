@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.8 2005/10/07 13:06:38 bob Exp $
+ * $Id: TraceLoadDialog.java,v 1.9 2005/10/19 14:37:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/10/07 13:06:38 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/10/19 14:37:10 $
  * @module analysis
  */
 
@@ -80,12 +80,14 @@ public class TraceLoadDialog {
 				public void valueChanged(TreeSelectionEvent e) {
 					boolean b = false;
 					TreePath[] paths = treeUI.getTree().getSelectionPaths();
-					for (int i = 0; i < paths.length; i++) {
-						for (int j = 0; j < paths[i].getPathCount(); j++) {
-							Item item = (Item)paths[i].getPathComponent(j);
-							if (item.getObject() instanceof Measurement) {
-								b = true;
-								break;
+					if (paths != null) {
+						for (int i = 0; i < paths.length; i++) {
+							for (int j = 0; j < paths[i].getPathCount(); j++) {
+								Item item = (Item)paths[i].getPathComponent(j);
+								if (item.getObject() instanceof Measurement) {
+									b = true;
+									break;
+								}
 							}
 						}
 					}
