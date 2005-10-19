@@ -20,5 +20,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/report"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reportclient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
