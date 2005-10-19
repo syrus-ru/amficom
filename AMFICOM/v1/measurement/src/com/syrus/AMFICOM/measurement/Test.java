@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.172 2005/10/19 15:01:12 bob Exp $
+ * $Id: Test.java,v 1.173 2005/10/19 18:19:40 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.172 $, $Date: 2005/10/19 15:01:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.173 $, $Date: 2005/10/19 18:19:40 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -581,18 +581,16 @@ public final class Test extends StorableObject implements Describable {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+
 		if (this.temporalType == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL && !this.timeStamps.temporalPatternId.isVoid()) {
 			dependencies.add(this.timeStamps.temporalPatternId);
 		}
 
-		dependencies.addAll(this.measurementSetupIds);
-
-		dependencies.add(this.monitoredElement);
-		if (this.groupTestId != null && 
-				!this.groupTestId.isVoid() && 
-				!this.id.equals(this.groupTestId)) {
+		if (!this.groupTestId.isVoid() && !this.id.equals(this.groupTestId)) {
 			dependencies.add(this.groupTestId);
 		}
+
+		dependencies.addAll(this.measurementSetupIds);
 		
 		dependencies.remove(null);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);
