@@ -98,24 +98,24 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		final JMenuItem					menuTraceAddCompare				= new JMenuItem();
 		final JMenuItem					menuTraceRemoveCompare			= new JMenuItem();
 		final JMenuItem					menuTraceDownload				= new JMenuItem();
-		final JMenuItem					menuTraceDownloadEtalon			= new JMenuItem();
-		final JMenuItem					menuTraceCloseEtalon			= new JMenuItem();
+//		final JMenuItem					menuTraceDownloadEtalon			= new JMenuItem();
+//		final JMenuItem					menuTraceCloseEtalon			= new JMenuItem();
 		final JMenuItem					menuTraceClose					= new JMenuItem();
-		final JMenuItem					menuTraceSavePES					= new JMenuItem();
+//		final JMenuItem					menuTraceSavePES				= new JMenuItem();
 
 		final JMenuItem					menuMakeCurrentTracePrimary		= new JMenuItem();
 
 		final JMenu						menuTestSetup					= new JMenu();
 		final JMenuItem					menuCreateTestSetup				= new JMenuItem();
 		final JMenuItem					menuSaveTestSetup				= new JMenuItem();
-		final JMenuItem					menuLoadTestSetup				= new JMenuItem();
+//		final JMenuItem					menuLoadTestSetup				= new JMenuItem();
 		final JMenuItem					menuSaveTestSetupAs				= new JMenuItem();
-		final JMenuItem					menuNetStudy					= new JMenuItem();
+//		final JMenuItem					menuNetStudy					= new JMenuItem();
 
-		final JMenuItem					menuAnalyseUpload				= new JMenuItem();
+//		final JMenuItem					menuAnalyseUpload				= new JMenuItem();
 
 		final JMenu						menuOptions						= new JMenu();
-		final JMenuItem					menuOptionsColor				= new JMenuItem();
+//		final JMenuItem					menuOptionsColor				= new JMenuItem();
 
 		final JMenu						menuReport						= new JMenu();
 		final JMenuItem					menuReportCreate				= new JMenuItem();
@@ -195,9 +195,9 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTraceDownload.setText(LangModelAnalyse.getString("menuTraceDownload"));
 		menuTraceDownload.setName("menuTraceDownload");
 		menuTraceDownload.addActionListener(this.actionAdapter);
-		menuTraceDownloadEtalon.setText(LangModelAnalyse.getString("menuTraceDownloadEtalon"));
-		menuTraceDownloadEtalon.setName("menuTraceDownloadEtalon");
-		menuTraceDownloadEtalon.addActionListener(this.actionAdapter);
+//		menuTraceDownloadEtalon.setText(LangModelAnalyse.getString("menuTraceDownloadEtalon"));
+//		menuTraceDownloadEtalon.setName("menuTraceDownloadEtalon");
+//		menuTraceDownloadEtalon.addActionListener(this.actionAdapter);
 
 		menuMakeCurrentTracePrimary.setText(LangModelAnalyse.getString("menuMakeCurrentTracePrimary"));
 		menuMakeCurrentTracePrimary.setName("menuMakeCurrentTracePrimary");
@@ -206,59 +206,59 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTraceClose.setText(LangModelAnalyse.getString("menuFileClose"));
 		menuTraceClose.setName("menuFileClose");
 		menuTraceClose.addActionListener(this.actionAdapter);
-		menuTraceCloseEtalon.setText(LangModelAnalyse.getString("menuTraceCloseEtalon"));
-		menuTraceCloseEtalon.setName("menuTraceCloseEtalon");
-		menuTraceCloseEtalon.addActionListener(this.actionAdapter);
-		menuTraceSavePES.setName("menuTraceSavePES");
-		menuTraceSavePES.setText(LangModelAnalyse.getString("menuTraceSavePES"));
-		menuTraceSavePES.addActionListener(this.actionAdapter);
+//		menuTraceCloseEtalon.setText(LangModelAnalyse.getString("menuTraceCloseEtalon"));
+//		menuTraceCloseEtalon.setName("menuTraceCloseEtalon");
+//		menuTraceCloseEtalon.addActionListener(this.actionAdapter);
+//		menuTraceSavePES.setName("menuTraceSavePES");
+//		menuTraceSavePES.setText(LangModelAnalyse.getString("menuTraceSavePES"));
+//		menuTraceSavePES.addActionListener(this.actionAdapter);
 
 		menuTrace.add(menuTraceDownload);
-		menuTrace.add(menuTraceDownloadEtalon);
+//		menuTrace.add(menuTraceDownloadEtalon);
 		menuTrace.add(menuTraceAddCompare);
 		menuTrace.addSeparator();
 		menuTrace.add(menuTraceClose);
-		menuTrace.add(menuTraceCloseEtalon);
+//		menuTrace.add(menuTraceCloseEtalon);
 		menuTrace.add(menuTraceRemoveCompare);
 		menuTrace.addSeparator();
-		menuTrace.add(menuAnalyseUpload);
-		menuTrace.add(menuNetStudy);
+//		menuTrace.add(menuAnalyseUpload);
+//		menuTrace.add(menuNetStudy);
 		menuTrace.addSeparator();
 		menuTrace.add(menuMakeCurrentTracePrimary);
-		menuTrace.add(menuTraceSavePES);
+//		menuTrace.add(menuTraceSavePES);
 
 		menuTestSetup.setText(LangModelAnalyse.getString("menuTestSetup"));
 		menuTestSetup.setName("menuTestSetup");
-		menuAnalyseUpload.setText(LangModelAnalyse.getString("menuAnalyseUpload"));
-		menuAnalyseUpload.setName("menuAnalyseUpload");
-		menuAnalyseUpload.addActionListener(this.actionAdapter);
+//		menuAnalyseUpload.setText(LangModelAnalyse.getString("menuAnalyseUpload"));
+//		menuAnalyseUpload.setName("menuAnalyseUpload");
+//		menuAnalyseUpload.addActionListener(this.actionAdapter);
 		menuCreateTestSetup.setText(LangModelAnalyse.getString("menuCreateTestSetup"));
 		menuCreateTestSetup.setName("menuCreateTestSetup");
 		menuCreateTestSetup.addActionListener(this.actionAdapter);
-		menuLoadTestSetup.setText(LangModelAnalyse.getString("menuLoadTestSetup"));
-		menuLoadTestSetup.setName("menuLoadTestSetup");
-		menuLoadTestSetup.addActionListener(this.actionAdapter);
+//		menuLoadTestSetup.setText(LangModelAnalyse.getString("menuLoadTestSetup"));
+//		menuLoadTestSetup.setName("menuLoadTestSetup");
+//		menuLoadTestSetup.addActionListener(this.actionAdapter);
 		menuSaveTestSetup.setText(LangModelAnalyse.getString("menuSaveTestSetup"));
 		menuSaveTestSetup.setName("menuSaveTestSetup");
 		menuSaveTestSetup.addActionListener(this.actionAdapter);
 		menuSaveTestSetupAs.setText(LangModelAnalyse.getString("menuSaveTestSetupAs"));
 		menuSaveTestSetupAs.setName("menuSaveTestSetupAs");
 		menuSaveTestSetupAs.addActionListener(this.actionAdapter);
-		menuNetStudy.setText(LangModelAnalyse.getString("menuNetStudy"));
-		menuNetStudy.setName("menuNetStudy");
-		menuNetStudy.addActionListener(this.actionAdapter);
+//		menuNetStudy.setText(LangModelAnalyse.getString("menuNetStudy"));
+//		menuNetStudy.setName("menuNetStudy");
+//		menuNetStudy.addActionListener(this.actionAdapter);
 		menuTestSetup.add(menuCreateTestSetup);
-		menuTestSetup.add(menuLoadTestSetup);
+//		menuTestSetup.add(menuLoadTestSetup);
 		menuTestSetup.addSeparator();
 		menuTestSetup.add(menuSaveTestSetup);
 		menuTestSetup.add(menuSaveTestSetupAs);
 
 		menuOptions.setText(LangModelAnalyse.getString("menuOptions"));
 		menuOptions.setName("menuOptions");
-		menuOptionsColor.setText(LangModelAnalyse.getString("menuOptionsColor"));
-		menuOptionsColor.setName("menuOptionsColor");
-		menuOptionsColor.addActionListener(this.actionAdapter);
-		menuOptions.add(menuOptionsColor);
+//		menuOptionsColor.setText(LangModelAnalyse.getString("menuOptionsColor"));
+//		menuOptionsColor.setName("menuOptionsColor");
+//		menuOptionsColor.addActionListener(this.actionAdapter);
+//		menuOptions.add(menuOptionsColor);
 
 		menuReport.setText(LangModelAnalyse.getString("menuReport"));
 		menuReport.setName("menuReport");
@@ -385,34 +385,34 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 				menuTraceRemoveCompare.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceRemoveCompare"));
 				menuTraceRemoveCompare.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceRemoveCompare"));
 
-				menuAnalyseUpload.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuAnalyseUpload"));
-				menuAnalyseUpload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuAnalyseUpload"));
+//				menuAnalyseUpload.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuAnalyseUpload"));
+//				menuAnalyseUpload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuAnalyseUpload"));
 
 				menuTraceDownload.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceDownload"));
 				menuTraceDownload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownload"));
-				menuTraceDownloadEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceDownloadEtalon"));
-				menuTraceDownloadEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownloadEtalon"));
+//				menuTraceDownloadEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceDownloadEtalon"));
+//				menuTraceDownloadEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownloadEtalon"));
 				menuMakeCurrentTracePrimary.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuMakeCurrentTracePrimary"));
 				menuMakeCurrentTracePrimary.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuMakeCurrentTracePrimary"));
 				menuTraceClose.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceClose"));
 				menuTraceClose.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceClose"));
-				menuTraceCloseEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceCloseEtalon"));
-				menuTraceCloseEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceCloseEtalon"));
-				menuTraceSavePES.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceSavePES"));
-				menuTraceSavePES.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceSavePES"));
+//				menuTraceCloseEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceCloseEtalon"));
+//				menuTraceCloseEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceCloseEtalon"));
+//				menuTraceSavePES.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceSavePES"));
+//				menuTraceSavePES.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceSavePES"));
 
 				menuTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTestSetup"));
 				menuTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTestSetup"));
 				menuCreateTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuCreateTestSetup"));
 				menuCreateTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuCreateTestSetup"));
-				menuLoadTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuLoadTestSetup"));
-				menuLoadTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuLoadTestSetup"));
+//				menuLoadTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuLoadTestSetup"));
+//				menuLoadTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuLoadTestSetup"));
 				menuSaveTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuSaveTestSetup"));
 				menuSaveTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuSaveTestSetup"));
 				menuSaveTestSetupAs.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuSaveTestSetupAs"));
 				menuSaveTestSetupAs.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuSaveTestSetupAs"));
-				menuNetStudy.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuNetStudy"));
-				menuNetStudy.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuNetStudy"));
+//				menuNetStudy.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuNetStudy"));
+//				menuNetStudy.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuNetStudy"));
 
 				menuReport.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuReport"));
 				menuReport.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuReport"));

@@ -22,16 +22,11 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAllTracesCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
@@ -227,17 +222,17 @@ implements BsHashChangeListener, EtalonMTMListener,
 		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(this.aContext,
 				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
 		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(this.aContext));
-		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(this.aContext));
+//		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(this.aContext));
 
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext));
-		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
+//		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(null, this.aContext));
 		aModel.setCommand("menuTraceClose", new FileCloseCommand());
-		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand());
-		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
-		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
-		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
+//		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand());
+//		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
+//		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
+//		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
@@ -280,14 +275,14 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
 
-		aModel.setVisible("menuAnalyseUpload", false);
-		aModel.setVisible("menuAnalyseSaveCriteria", false);
-		aModel.setVisible("menuSaveEtalon", false);
-		aModel.setVisible("menuSaveThresholds", false);
+//		aModel.setVisible("menuAnalyseUpload", false);
+//		aModel.setVisible("menuAnalyseSaveCriteria", false);
+//		aModel.setVisible("menuSaveEtalon", false);
+//		aModel.setVisible("menuSaveThresholds", false);
 		aModel.setVisible("menuWindowNoiseFrame", false);
 		aModel.setVisible("menuWindowFilteredFrame", false);
 		aModel.setVisible("menuWindowDerivHistoFrame", false);
-		aModel.setVisible("menuNetStudy", false);
+//		aModel.setVisible("menuNetStudy", false);
 
 		aModel.setEnabled("commandCheckMismatch", false);
 		aModel.setVisible("commandCheckMismatch", true);
@@ -319,12 +314,12 @@ implements BsHashChangeListener, EtalonMTMListener,
 		aModel.setEnabled("menuFileAddCompare", false);
 		aModel.setEnabled("menuTraceDownload", false);
 		aModel.setEnabled("menuTraceAddCompare", false);
-		aModel.setEnabled("menuTraceDownloadEtalon", false);
+//		aModel.setEnabled("menuTraceDownloadEtalon", false);
 
-		aModel.setEnabled("menuAnalyseUpload", false);
-		aModel.setEnabled("menuSaveEtalon", false);
-		aModel.setEnabled("menuSaveThresholds", false);
-		aModel.setEnabled("menuAnalyseSaveCriteria", false);
+//		aModel.setEnabled("menuAnalyseUpload", false);
+//		aModel.setEnabled("menuSaveEtalon", false);
+//		aModel.setEnabled("menuSaveThresholds", false);
+//		aModel.setEnabled("menuAnalyseSaveCriteria", false);
 		aModel.setEnabled("menuSaveTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetupAll", false);
 
@@ -364,21 +359,21 @@ implements BsHashChangeListener, EtalonMTMListener,
 			aModel.setEnabled("menuFileClose", true);
 			aModel.setEnabled("menuFileAddCompare", true);
 
-			aModel.setEnabled("menuTraceDownloadEtalon", true);
-			aModel.setEnabled("menuTraceUpload", true);
+//			aModel.setEnabled("menuTraceDownloadEtalon", true);
+//			aModel.setEnabled("menuTraceUpload", true);
 			aModel.setEnabled("menuTraceClose", true);
-			aModel.setEnabled("menuTraceCurrentMakeReference", true);
-			aModel.setEnabled("menuTraceReference", true);
-			aModel.setEnabled("menuTraceCurrent", true);
+//			aModel.setEnabled("menuTraceCurrentMakeReference", true);
+//			aModel.setEnabled("menuTraceReference", true);
+//			aModel.setEnabled("menuTraceCurrent", true);
 			aModel.setEnabled("menuTraceAddCompare", true);
 
 			aModel.setEnabled("menuCreateTestSetup", true);
 			aModel.setEnabled("menuSaveTestSetup", true);
 			aModel.setEnabled("menuSaveTestSetupAs", true);
-			aModel.setEnabled("menuLoadTestSetup", true);
-			aModel.setEnabled("menuAnalyseSaveCriteria", true);
-			aModel.setEnabled("menuSaveEtalon", true);
-			aModel.setEnabled("menuSaveThresholds", true);
+//			aModel.setEnabled("menuLoadTestSetup", true);
+//			aModel.setEnabled("menuAnalyseSaveCriteria", true);
+//			aModel.setEnabled("menuSaveEtalon", true);
+//			aModel.setEnabled("menuSaveThresholds", true);
 
 			aModel.setEnabled("menuReportCreate", true);
 
@@ -431,24 +426,24 @@ implements BsHashChangeListener, EtalonMTMListener,
 		aModel.setEnabled("menuFileAddCompare", false);
 		aModel.setEnabled("menuFileRemoveCompare", false);
 
-		aModel.setEnabled("menuTraceDownloadEtalon", false);
+//		aModel.setEnabled("menuTraceDownloadEtalon", false);
 		aModel.setEnabled("menuTraceClose", false);
-		aModel.setEnabled("menuTraceCloseEtalon", false);
-		aModel.setEnabled("menuTraceCurrentMakeReference", false);
+//		aModel.setEnabled("menuTraceCloseEtalon", false);
+//		aModel.setEnabled("menuTraceCurrentMakeReference", false);
 		aModel.setEnabled("menuTraceAddCompare", false);
 		aModel.setEnabled("menuFileRemoveCompare", false);
 		aModel.setEnabled("menuTraceRemoveCompare", false);
-		aModel.setEnabled("menuTraceUpload", false);
-		aModel.setEnabled("menuTraceReference", false);
-		aModel.setEnabled("menuTraceCurrent", false);
+//		aModel.setEnabled("menuTraceUpload", false);
+//		aModel.setEnabled("menuTraceReference", false);
+//		aModel.setEnabled("menuTraceCurrent", false);
 
 		aModel.setEnabled("menuCreateTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetupAs", false);
-		aModel.setEnabled("menuLoadTestSetup", false);
-		aModel.setEnabled("menuAnalyseSaveCriteria", false);
-		aModel.setEnabled("menuSaveEtalon", false);
-		aModel.setEnabled("menuSaveThresholds", false);
+//		aModel.setEnabled("menuLoadTestSetup", false);
+//		aModel.setEnabled("menuAnalyseSaveCriteria", false);
+//		aModel.setEnabled("menuSaveEtalon", false);
+//		aModel.setEnabled("menuSaveThresholds", false);
 
 		aModel.setEnabled("menuReportCreate", false);
 
@@ -471,16 +466,16 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 	public void etalonMTMCUpdated() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuTraceCloseEtalon", true);
+//		aModel.setEnabled("menuTraceCloseEtalon", true);
 		aModel.setEnabled("commandCheckMismatch", true);
-		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
+//		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
 	}
 
 	public void etalonMTMRemoved() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuTraceCloseEtalon", false);
+//		aModel.setEnabled("menuTraceCloseEtalon", false);
 		aModel.setEnabled("commandCheckMismatch", false);
-		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
+//		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
 	}
 
 	public void currentTraceChanged(String id) {

@@ -19,13 +19,8 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceOpenReferenceCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
@@ -185,14 +180,14 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 		//aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(super.dispatcher, this.aContext));
-		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
+//		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(null, this.aContext));
 		aModel.setCommand("menuTraceClose", new FileCloseCommand());
-		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand());
-		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
-		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
-		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
+//		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand());
+//		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
+//		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
+//		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
@@ -230,7 +225,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
 
 		aModel.setVisible("menuTestSetup", false);
-		aModel.setVisible("menuNetStudy", false);
+//		aModel.setVisible("menuNetStudy", false);
 		aModel.setVisible("menuWindowThresholdsSelection", false);
 		aModel.setVisible("menuWindowThresholds", false);
 		aModel.setVisible("menuWindowNoiseFrame", false);
@@ -266,12 +261,12 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setEnabled("menuFileAddCompare", false);
 		aModel.setEnabled("menuTraceDownload", false);
 		aModel.setEnabled("menuTraceAddCompare", false);
-		aModel.setEnabled("menuTraceDownloadEtalon", false);
+//		aModel.setEnabled("menuTraceDownloadEtalon", false);
 
-		aModel.setEnabled("menuAnalyseUpload", false);
-		aModel.setEnabled("menuSaveEtalon", false);
-		aModel.setEnabled("menuSaveThresholds", false);
-		aModel.setEnabled("menuAnalyseSaveCriteria", false);
+//		aModel.setEnabled("menuAnalyseUpload", false);
+//		aModel.setEnabled("menuSaveEtalon", false);
+//		aModel.setEnabled("menuSaveThresholds", false);
+//		aModel.setEnabled("menuAnalyseSaveCriteria", false);
 		aModel.setEnabled("menuSaveTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetupAs", false);
 		aModel.setEnabled("menuHelpAbout", false);
@@ -309,14 +304,14 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 			aModel.setEnabled("menuFileClose", true);
 			aModel.setEnabled("menuFileAddCompare", true);
 
-			aModel.setEnabled("menuTraceDownloadEtalon", true);
-			aModel.setEnabled("menuTraceUpload", true);
+//			aModel.setEnabled("menuTraceDownloadEtalon", true);
+//			aModel.setEnabled("menuTraceUpload", true);
 			aModel.setEnabled("menuTraceClose", true);
-			aModel.setEnabled("menuTraceCurrentMakeReference", true);
-			aModel.setEnabled("menuTraceReference", true);
-			aModel.setEnabled("menuTraceCurrent", true);
+//			aModel.setEnabled("menuTraceCurrentMakeReference", true);
+//			aModel.setEnabled("menuTraceReference", true);
+//			aModel.setEnabled("menuTraceCurrent", true);
 			aModel.setEnabled("menuTraceAddCompare", true);
-			aModel.setEnabled("menuAnalyseUpload", true);
+//			aModel.setEnabled("menuAnalyseUpload", true);
 
 			aModel.setEnabled("menuReportCreate", true);
 
@@ -369,17 +364,17 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setEnabled("menuFileAddCompare", false);
 		aModel.setEnabled("menuFileRemoveCompare", false);
 
-		aModel.setEnabled("menuTraceDownloadEtalon", false);
+//		aModel.setEnabled("menuTraceDownloadEtalon", false);
 		aModel.setEnabled("menuTraceClose", false);
-		aModel.setEnabled("menuTraceCloseEtalon", false);
-		aModel.setEnabled("menuTraceCurrentMakeReference", false);
+//		aModel.setEnabled("menuTraceCloseEtalon", false);
+//		aModel.setEnabled("menuTraceCurrentMakeReference", false);
 		aModel.setEnabled("menuTraceAddCompare", false);
 		aModel.setEnabled("menuFileRemoveCompare", false);
 		aModel.setEnabled("menuTraceRemoveCompare", false);
-		aModel.setEnabled("menuTraceUpload", false);
-		aModel.setEnabled("menuTraceReference", false);
-		aModel.setEnabled("menuTraceCurrent", false);
-		aModel.setEnabled("menuAnalyseUpload", false);
+//		aModel.setEnabled("menuTraceUpload", false);
+//		aModel.setEnabled("menuTraceReference", false);
+//		aModel.setEnabled("menuTraceCurrent", false);
+//		aModel.setEnabled("menuAnalyseUpload", false);
 
 		aModel.setEnabled("menuReportCreate", false);
 
@@ -397,14 +392,14 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	public void etalonMTMCUpdated() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuTraceCloseEtalon", true);
-		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon"});
+//		aModel.setEnabled("menuTraceCloseEtalon", true);
+//		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon"});
 	}
 
 	public void etalonMTMRemoved() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuTraceCloseEtalon", false);
-		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon"});
+//		aModel.setEnabled("menuTraceCloseEtalon", false);
+//		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon"});
 	}
 
 	public void currentTraceChanged(String id) {

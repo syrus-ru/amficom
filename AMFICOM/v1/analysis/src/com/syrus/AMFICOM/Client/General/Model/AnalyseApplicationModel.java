@@ -16,17 +16,18 @@ import com.syrus.AMFICOM.client.resource.I18N;
 public class AnalyseApplicationModel extends ApplicationModel {
 
 	public AnalyseApplicationModel() {
-    add(ApplicationModel.MENU_SESSION);
-    add(ApplicationModel.MENU_SESSION_NEW);
-    add(ApplicationModel.MENU_SESSION_CLOSE);
-//  add(ApplicationModel.MENU_SESSION_CONNECTION);
-    add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
-    add(ApplicationModel.MENU_SESSION_DOMAIN);
-    add(ApplicationModel.MENU_EXIT);
+	    add(ApplicationModel.MENU_SESSION);
+	    add(ApplicationModel.MENU_SESSION_NEW);
+	    add(ApplicationModel.MENU_SESSION_CLOSE);
+//	    add(ApplicationModel.MENU_SESSION_CONNECTION);
+	    add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
+	    add(ApplicationModel.MENU_SESSION_DOMAIN);
+	    add(ApplicationModel.MENU_EXIT);
 
-    add(ApplicationModel.MENU_HELP);
-    add(ApplicationModel.MENU_HELP_ABOUT);
+	    add(ApplicationModel.MENU_HELP);
+	    add(ApplicationModel.MENU_HELP_ABOUT);
 
+		add("menuFile");
 		add("menuFileOpen");
 		add("menuFileOpenAs");
 		add("menuFileOpenAsBellcore");
@@ -43,22 +44,22 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add("menuTraceAddCompare");
 		add("menuTraceRemoveCompare");
 		add("menuTraceDownload");
-		add("menuTraceDownloadEtalon");
-		add("menuTraceCloseEtalon");
 		add("menuTraceClose");
-		add("menuTraceReferenceClose");
-		add("menuTraceSavePES");
+//		add("menuTraceDownloadEtalon"); // нет
+//		add("menuTraceCloseEtalon"); // нет
+//		add("menuTraceReferenceClose"); // нет
+//		add("menuTraceSavePES"); // нет
 
+		add("menuTestSetup");
 		add("menuCreateTestSetup");
 		add("menuSaveTestSetup");
 		add("menuSaveTestSetupAs");
-		add("menuAnalyseUpload");
-		add("menuLoadTestSetup");
-		add("menuTestSetup");
-		add("menuNetStudy");
+//		add("menuLoadTestSetup"); // нет
+//		add("menuAnalyseUpload"); // нет
+//		add("menuNetStudy"); // нет
 
-		add("menuOptions");
-		add("menuOptionsColor");
+//		add("menuOptions"); // нет
+//		add("menuOptionsColor"); // нет
 
 		add("menuReport");
 		add("menuReportCreate");
@@ -79,10 +80,15 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add("menuWindowThresholdsSelection");
 		add("menuWindowThresholds");
 
-		add("menuBar");
-		add("toolBar");
-		add("statusBar");
-		add("reflectometryFrame");
+		add("menuHelp");
+
+//		add("menuBar"); // нет
+//		add("toolBar"); // нет
+//		add("statusBar"); // нет
+//		add("reflectometryFrame"); // нет
+
+//	    add(ApplicationModel.MENU_VIEW_ARRANGE); // ??
+//	    add("menuHelpAbout"); // ??
 
 		add("commandCheckMismatch");
 		add("menuMakeCurrentTracePrimary");
