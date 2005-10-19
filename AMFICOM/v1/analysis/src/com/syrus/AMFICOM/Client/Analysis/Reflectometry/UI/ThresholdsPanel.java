@@ -12,6 +12,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager.Operation;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
@@ -29,7 +31,9 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 public class ThresholdsPanel extends MapMarkersPanel
 {
 	protected boolean paint_thresholds = true;
-	protected boolean edit_thresholds = true;
+	// возможность редактирования порогов определяется из прав на момент создания окна
+	private boolean edit_thresholds = true &&
+		PermissionManager.isPermitted(Operation.EDIT_ETALON);
 
 	private ModelTraceManager.ThresholdHandle c_TH = null;
 

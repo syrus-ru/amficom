@@ -1,20 +1,46 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
  
-import java.awt.*;
-import java.awt.event.*;
-import java.beans.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager.Operation;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateEtalonCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.Thresh;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
@@ -26,10 +52,10 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
  *    увеличить/уменьшить пороги, и, вроде как, загрузить начальные пороги(?)
  * </ol>
  */
+@SuppressWarnings("all")
 public class ThresholdsSelectionFrame extends JInternalFrame
 implements PropertyChangeListener, BsHashChangeListener, ReportTable,
-	CurrentEventChangeListener, EtalonMTMListener
-{
+	CurrentEventChangeListener, EtalonMTMListener {
 	protected Dispatcher dispatcher;
 	ATable jTable;
 
@@ -199,6 +225,8 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		this.setContentPane(mainPanel);
 
+		analysisDefaultsButton.setEnabled(
+				PermissionManager.isPermitted(Operation.EDIT_ETALON));
 		analysisInitialButton.setEnabled(false);
 		increaseThreshButton.setEnabled(false);
 		decreaseThreshButton.setEnabled(false);
@@ -412,7 +440,8 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		@Override
 		public boolean isCellEditable(int row, int column)
 		{
-			return column > 0;
+			return column > 0 &&
+					PermissionManager.isPermitted(Operation.EDIT_ETALON);
 		}
 
 		@Override
@@ -443,9 +472,12 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	public void etalonMTMCUpdated()
 	{
 		updateThresholds();
-		analysisInitialButton.setEnabled(true);
-		increaseThreshButton.setEnabled(true);
-		decreaseThreshButton.setEnabled(true);
+		analysisInitialButton.setEnabled(
+				PermissionManager.isPermitted(Operation.EDIT_ETALON));
+		increaseThreshButton.setEnabled(
+				PermissionManager.isPermitted(Operation.EDIT_ETALON));
+		decreaseThreshButton.setEnabled(
+				PermissionManager.isPermitted(Operation.EDIT_ETALON));
 		previuosEventButton.setEnabled(true);
 		nextEventButton.setEnabled(true);
 	}

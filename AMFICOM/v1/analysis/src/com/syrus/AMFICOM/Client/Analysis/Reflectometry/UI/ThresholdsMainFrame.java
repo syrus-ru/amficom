@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager.Operation;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CheckMismatchCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
@@ -291,11 +292,16 @@ implements BsHashChangeListener, EtalonMTMListener,
 	public void setDomainSelected() {
 		super.setDomainSelected();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuFileOpen", true);
-		aModel.setEnabled("menuFileOpenAs", true);
-		aModel.setEnabled("menuFileOpenAsBellcore", true);
-		aModel.setEnabled("menuFileOpenAsWavetek", true);
-		aModel.setEnabled("menuTraceDownload", true);
+		aModel.setEnabled("menuFileOpen",
+				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
+		aModel.setEnabled("menuFileOpenAs",
+				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
+		aModel.setEnabled("menuFileOpenAsBellcore",
+				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
+		aModel.setEnabled("menuFileOpenAsWavetek",
+				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
+		aModel.setEnabled("menuTraceDownload",
+				PermissionManager.isPermitted(Operation.LOAD_TRACE));
 		aModel.setEnabled("menuHelpAbout", true);
 
 		aModel.fireModelChanged("");
@@ -351,12 +357,17 @@ implements BsHashChangeListener, EtalonMTMListener,
 		String id = key;
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
-			aModel.setEnabled("menuFileSave", true);
-			aModel.setEnabled("menuFileSaveAll", true);
-			aModel.setEnabled("menuFileSaveAs", true);
-			aModel.setEnabled("menuFileSaveAsText", true);
+			aModel.setEnabled("menuFileSave",
+					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
+			aModel.setEnabled("menuFileSaveAll",
+					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
+			aModel.setEnabled("menuFileSaveAs",
+					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
+			aModel.setEnabled("menuFileSaveAsText",
+					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
 			aModel.setEnabled("menuFileClose", true);
-			aModel.setEnabled("menuFileAddCompare", true);
+			aModel.setEnabled("menuFileAddCompare",
+					PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
 
 //			aModel.setEnabled("menuTraceDownloadEtalon", true);
 //			aModel.setEnabled("menuTraceUpload", true);
@@ -364,11 +375,15 @@ implements BsHashChangeListener, EtalonMTMListener,
 //			aModel.setEnabled("menuTraceCurrentMakeReference", true);
 //			aModel.setEnabled("menuTraceReference", true);
 //			aModel.setEnabled("menuTraceCurrent", true);
-			aModel.setEnabled("menuTraceAddCompare", true);
+			aModel.setEnabled("menuTraceAddCompare",
+					PermissionManager.isPermitted(Operation.LOAD_TRACE));
 
-			aModel.setEnabled("menuCreateTestSetup", true);
-			aModel.setEnabled("menuSaveTestSetup", true);
-			aModel.setEnabled("menuSaveTestSetupAs", true);
+			aModel.setEnabled("menuCreateTestSetup",
+					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));
+			aModel.setEnabled("menuSaveTestSetup",
+					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));
+			aModel.setEnabled("menuSaveTestSetupAs",
+					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));
 //			aModel.setEnabled("menuLoadTestSetup", true);
 //			aModel.setEnabled("menuAnalyseSaveCriteria", true);
 //			aModel.setEnabled("menuSaveEtalon", true);

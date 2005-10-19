@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -115,7 +116,8 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 				// пытаемся загрузить параметры анализа
 				AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
 				// пытаемся загрузить эталон
-				if (ms.getEtalon() != null) {
+				if (ms.getEtalon() != null &&
+						PermissionManager.isPermitted(PermissionManager.Operation.LOAD_ETALON)) {
 					AnalysisUtil.loadEtalon(ms);
 				} else {
 					Heap.unSetEtalonPair();
