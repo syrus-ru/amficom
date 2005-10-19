@@ -82,8 +82,7 @@ cleancorba: idlclean
 
 .PHONY: idlclean
 idlclean:
-	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general/corba
 	$(RM) .idl
 
 #### Install ####
