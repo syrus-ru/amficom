@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.17 2005/10/19 07:51:21 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.18 2005/10/19 08:52:58 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingExc
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/19 07:51:21 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/19 08:52:58 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
-public class EventServerImplementation extends EventServerPOA {
+final class EventServerImplementation extends EventServerPOA {
 	private static final long serialVersionUID = 3257569516216398643L;
 
 	/**
@@ -39,6 +39,10 @@ public class EventServerImplementation extends EventServerPOA {
 	 */
 	private static final Map<Identifier, UserEventNotifier> USER_EVENT_NOTIFIERS_MAP =
 		Collections.synchronizedMap(new HashMap<Identifier, UserEventNotifier>());
+
+	EventServerImplementation() {
+		EventProcessorRegistry.registerEventProcessor(new ReflectogramMismatchEventProcessor());
+	}
 
 	/**
 	 * @param idlEvent
@@ -75,14 +79,20 @@ public class EventServerImplementation extends EventServerPOA {
 	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
 	public void receiveEvents(final IdlEvent[] idlEvents) throws IdlEventProcessingException {
-		Log.debugMessage("EventServerImplementation.receiveEvents() | Received "
-				+ idlEvents.length + " event(s)",
-				INFO);
-		for (final IdlEvent idlEvent : idlEvents) {
-			final Event event = idlEvent.getNativeEvent();
-			Log.debugMessage("EventServerImplementation.receiveEvents() | Event: "
-					+ event + " delivered successfully",
+		try {
+			Log.debugMessage("EventServerImplementation.receiveEvents() | Received "
+					+ idlEvents.length + " event(s)",
 					INFO);
+			for (final IdlEvent idlEvent : idlEvents) {
+				@SuppressWarnings(value = {"unchecked"})
+				final Event<? extends IdlEvent> event = idlEvent.getNativeEvent();
+				EventProcessorRegistry.processEvent(event);
+				Log.debugMessage("EventServerImplementation.receiveEvents() | Event: "
+						+ event + " delivered successfully",
+						INFO);
+			}
+		} catch (final EventProcessingException epe) {
+			throw epe.getTransferable(this._orb());
 		}
 	}
 
