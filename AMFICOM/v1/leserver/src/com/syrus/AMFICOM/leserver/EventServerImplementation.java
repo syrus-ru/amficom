@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.16 2005/10/13 09:57:25 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.17 2005/10/19 07:51:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,11 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
+import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/13 09:57:25 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/19 07:51:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -70,10 +71,10 @@ public class EventServerImplementation extends EventServerPOA {
 
 	/**
 	 * @param idlEvents
-	 * @throws AMFICOMRemoteException
+	 * @throws IdlEventProcessingException
 	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
-	public void receiveEvents(final IdlEvent[] idlEvents) throws AMFICOMRemoteException {
+	public void receiveEvents(final IdlEvent[] idlEvents) throws IdlEventProcessingException {
 		Log.debugMessage("EventServerImplementation.receiveEvents() | Received "
 				+ idlEvents.length + " event(s)",
 				INFO);

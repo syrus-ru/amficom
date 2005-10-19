@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.7 2005/10/18 16:19:41 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.8 2005/10/19 07:51:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/18 16:19:41 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/19 07:51:22 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -38,6 +38,7 @@ final class IdlReflectogramMismatchEventImpl
 	}
 
 	/**
+	 * @param created
 	 * @param mismatchData
 	 * @param severity
 	 * @param anchorData
@@ -47,14 +48,17 @@ final class IdlReflectogramMismatchEventImpl
 	 * @param deltaX
 	 * @param resultId
 	 */
-	IdlReflectogramMismatchEventImpl(final IdlMismatchData mismatchData,
+	IdlReflectogramMismatchEventImpl(final long created,
+			final IdlMismatchData mismatchData,
 			final IdlSeverity severity,
 			final IdlAnchorData anchorData, final int coord,
 			final int endCoord, final IdlAlarmType alarmType,
 			final double deltaX,
 			final IdlIdentifier resultId) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
+
 		this.id = voidId;
+		this.created = created;
 		this.creatorId = voidId;
 		this.modifierId = voidId;
 
@@ -66,6 +70,14 @@ final class IdlReflectogramMismatchEventImpl
 		this.alarmType = alarmType;
 		this.deltaX = deltaX;
 		this.resultId = resultId;
+	}
+
+	/**
+	 * @see IdlReflectogramMismatchEvent#getCreated()
+	 */
+	@Override
+	public long getCreated() {
+		return this.created;
 	}
 
 	@Override

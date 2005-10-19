@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.1 2005/10/12 12:24:50 bass Exp $
+ * $Id: EventQueue.java,v 1.2 2005/10/19 07:51:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,13 +21,13 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.BaseConnectionManager;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
+import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/12 12:24:50 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/19 07:51:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -81,12 +81,12 @@ final class EventQueue extends SleepButWorkThread {
 				final IdlEvent[] idlEvents = this.createIdlEventArray(connectionManager);
 				eventServer.receiveEvents(idlEvents);
 				this.eventEqueue.clear();
-			} catch (CommunicationException ce) {
+			} catch (final CommunicationException ce) {
 				Log.errorException(ce);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 				super.sleepCauseOfFall();
-			} catch (AMFICOMRemoteException are) {
-				Log.errorMessage("EventQueue.run() | Cannot transmit events -- " + are.message);
+			} catch (final IdlEventProcessingException epe) {
+				Log.errorMessage("EventQueue.run() | Cannot transmit events -- " + epe.message);
 				super.fallCode = FALL_CODE_TRANSMIT_EVENTS;
 				super.sleepCauseOfFall();
 			}

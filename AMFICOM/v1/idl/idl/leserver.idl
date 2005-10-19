@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.7 2005/10/15 16:47:19 arseniy Exp $
+ * $Id: leserver.idl,v 1.8 2005/10/19 07:51:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,13 +54,16 @@ module corba {
 
 
 	interface EventServer : general::corba::Verifiable {
+		exception IdlEventProcessingException {
+			wstring message;
+		};
+
 		void eventGeneration(in event::corba::IdlEvent event)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void receiveEvents(in eventv2::corba::IdlEventSeq events)
-			raises (general::corba::AMFICOMRemoteException);
+			raises (IdlEventProcessingException);
 	};
-
 };
 };
 

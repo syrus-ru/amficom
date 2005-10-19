@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.35 2005/10/18 16:19:41 bass Exp $
+ * $Id: event.idl,v 1.36 2005/10/19 07:51:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -159,6 +159,7 @@ module eventv2 {
 			private double deltaX;
 			private general::corba::IdlIdentifier resultId;
 
+			long long getCreated();
 			boolean hasMismatch();
 			double getMinMismatch();
 			double getMaxMismatch();
@@ -174,7 +175,8 @@ module eventv2 {
 			double getDeltaX();
 			general::corba::IdlIdentifier getResultId();
 
-			factory init(in IdlMismatchData mismatchData,
+			factory init(in long long created,
+					in IdlMismatchData mismatchData,
 					in reflectometry::corba::IdlSeverity severity,
 					in IdlAnchorData anchorData,
 					in long coord,

@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.6 2005/10/18 16:19:41 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.7 2005/10/19 07:51:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,12 +31,17 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/10/18 16:19:41 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/19 07:51:22 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
 		AbstractReflectogramMismatchEvent {
 	private static final long serialVersionUID = -1232479623372509377L;
+
+	/**
+	 * @serial include
+	 */
+	private Date created;
 
 	/**
 	 * @serial include
@@ -111,6 +116,8 @@ public final class DefaultReflectogramMismatchEvent extends
 	private DefaultReflectogramMismatchEvent(
 			final ReflectogramMismatch reflectogramMismatch,
 			final Identifier resultId) {
+		this.created = new Date();
+
 		if (resultId == null) {
 			throw new NullPointerException();
 		}
@@ -154,6 +161,8 @@ public final class DefaultReflectogramMismatchEvent extends
 
 	private DefaultReflectogramMismatchEvent(
 			final IdlReflectogramMismatchEvent reflectogramMismatchEvent) {
+		this.created = new Date(reflectogramMismatchEvent.getCreated());
+
 		if (!!(this.mismatch = reflectogramMismatchEvent.hasMismatch())) {
 			this.minMismatch = reflectogramMismatchEvent.getMinMismatch();
 			this.maxMismatch = reflectogramMismatchEvent.getMaxMismatch();
@@ -210,6 +219,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		}
 
 		return IdlReflectogramMismatchEventHelper.init(orb,
+				this.created.getTime(),
 				mismatchData,
 				this.getSeverity().getTransferable(orb),
 				anchorData,
@@ -364,7 +374,7 @@ public final class DefaultReflectogramMismatchEvent extends
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.6 $, $Date: 2005/10/18 16:19:41 $
+	 * @version $Revision: 1.7 $, $Date: 2005/10/19 07:51:22 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
