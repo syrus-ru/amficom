@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentDatabase.java,v 1.2 2005/09/29 08:18:07 arseniy Exp $
+ * $Id: ProtoEquipmentDatabase.java,v 1.3 2005/10/19 10:23:02 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/29 08:18:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/10/19 10:23:02 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -109,7 +109,7 @@ public final class ProtoEquipmentDatabase extends StorableObjectDatabase<ProtoEq
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				EquipmentType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
+				EquipmentType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
 				(name != null) ? name : "",
 				(description != null) ? description : "",
 				DatabaseString.fromQuerySubString(resultSet.getString(ProtoEquipmentWrapper.COLUMN_MANUFACTURER)),

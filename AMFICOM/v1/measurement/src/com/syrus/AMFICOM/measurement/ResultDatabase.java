@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.108 2005/09/18 18:19:01 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.109 2005/10/19 10:23:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/09/18 18:19:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.109 $, $Date: 2005/10/19 10:23:24 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -225,7 +225,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
-				final ParameterType parameterType = ParameterType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
+				final ParameterType parameterType = ParameterType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
 				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						parameterType,
 						ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.53 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.54 2005/10/19 10:23:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/10/19 10:23:24 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -108,7 +108,7 @@ public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				ModelingType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
+				ModelingType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
 				DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				argumentSet);

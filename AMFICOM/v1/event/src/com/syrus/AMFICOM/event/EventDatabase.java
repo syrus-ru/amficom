@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.45 2005/09/14 18:53:52 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.46 2005/10/19 10:23:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/09/14 18:53:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/10/19 10:23:42 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -143,7 +143,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 			resultSet = statement.executeQuery(stringBuffer.toString());
 
 			while (resultSet.next()) {
-				final ParameterType parameterType = ParameterType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
+				final ParameterType parameterType = ParameterType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
 				final EventParameter eventParameter = new EventParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						parameterType,
 						DatabaseString.fromQuerySubString(resultSet.getString(EventWrapper.LINK_COLUMN_PARAMETER_VALUE)));

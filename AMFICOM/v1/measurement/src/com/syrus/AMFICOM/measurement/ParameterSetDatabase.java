@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.18 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.19 2005/10/19 10:23:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/10/19 10:23:24 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -135,7 +135,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
-				final ParameterType parameterType = ParameterType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
+				final ParameterType parameterType = ParameterType.valueOf(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
 				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						parameterType,
 						ByteArrayDatabase.toByteArray(resultSet.getBlob(ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE)));

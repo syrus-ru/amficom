@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.36 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.37 2005/10/19 10:22:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/10/19 10:22:28 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -98,7 +98,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase<Cha
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DataType.fromInt(resultSet.getInt(CharacteristicTypeWrapper.COLUMN_DATA_TYPE_CODE)),
+				DataType.valueOf(resultSet.getInt(CharacteristicTypeWrapper.COLUMN_DATA_TYPE_CODE)),
 				resultSet.getInt(CharacteristicTypeWrapper.COLUMN_SORT));
 
 		return characteristicType;

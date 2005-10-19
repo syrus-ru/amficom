@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.130 2005/09/23 13:31:49 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.131 2005/10/19 10:23:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.130 $, $Date: 2005/09/23 13:31:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.131 $, $Date: 2005/10/19 10:23:24 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -183,8 +183,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
 				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID),
-				MeasurementType.fromInt(resultSet.getInt(TestWrapper.COLUMN_MEASUREMENT_TYPE_CODE)),
-				AnalysisType.fromInt(resultSet.getInt(TestWrapper.COLUMN_ANALYSIS_TYPE_CODE)),
+				MeasurementType.valueOf(resultSet.getInt(TestWrapper.COLUMN_MEASUREMENT_TYPE_CODE)),
+				AnalysisType.valueOf(resultSet.getInt(TestWrapper.COLUMN_ANALYSIS_TYPE_CODE)),
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_GROUP_TEST_ID),
 				resultSet.getInt(TestWrapper.COLUMN_STATUS),
 				monitoredElement,

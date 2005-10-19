@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.197 2005/09/27 15:16:03 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.198 2005/10/19 10:22:28 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.197 $, $Date: 2005/09/27 15:16:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.198 $, $Date: 2005/10/19 10:22:28 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -462,7 +462,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					linkedCodesMap.put(storabeObjectId, linkedCodes);
 				}
 				try {
-					linkedCodes.add(EnumUtil.reflectFromInt(enumClass, resultSet.getInt(linkedCodeColumnName)));
+					linkedCodes.add(EnumUtil.valueOf(enumClass, resultSet.getInt(linkedCodeColumnName)));
 				} catch (IllegalArgumentException iae) {
 					Log.errorException(iae);
 				}
