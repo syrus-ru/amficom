@@ -1,5 +1,5 @@
 /*
- * $Id: Alerter.java,v 1.6 2005/09/14 18:18:39 arseniy Exp $
+ * $Id: Alerter.java,v 1.7 2005/10/19 08:51:13 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/14 18:18:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/10/19 08:51:13 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -51,6 +51,7 @@ abstract class Alerter {
 		}
 	}
 
+	@SuppressWarnings(value = {"unused"})
 	void notifyUserIfLoggedIn(final Identifier userId) throws EventNotificationException {
 		final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
 		/**
