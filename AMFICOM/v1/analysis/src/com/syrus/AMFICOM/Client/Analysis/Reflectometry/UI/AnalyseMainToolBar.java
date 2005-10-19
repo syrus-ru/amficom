@@ -102,7 +102,7 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 				buttonFileClose.setVisible(aModel.isVisible("menuFileClose"));
 				buttonFileClose.setEnabled(aModel.isEnabled("menuFileClose"));
 				buttonExit.setVisible(aModel.isVisible(ApplicationModel.MENU_EXIT));
-				buttonExit.setEnabled(aModel.isEnabled("menuExit"));
+				buttonExit.setEnabled(aModel.isEnabled(ApplicationModel.MENU_EXIT));
 
 				if (checkMismatch != null) {
 					checkMismatch.setVisible(aModel.isVisible("commandCheckMismatch"));
