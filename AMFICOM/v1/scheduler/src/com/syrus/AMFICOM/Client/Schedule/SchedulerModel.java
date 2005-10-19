@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.124 2005/10/14 14:47:56 bob Exp $
+ * $Id: SchedulerModel.java,v 1.125 2005/10/19 08:53:37 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.124 $, $Date: 2005/10/14 14:47:56 $
+ * @version $Revision: 1.125 $, $Date: 2005/10/19 08:53:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -135,7 +135,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private TestTemporalStamps	testTimeStamps						= null;
 
 	private Date				startGroupDate;
-	private long				interval;
 	private boolean				aloneGroupTest;
 
 	private Map<Identifier, Identifier>					meTestGroup;
@@ -230,30 +229,26 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void propertyChange(final PropertyChangeEvent evt) {
-		String propertyName = evt.getPropertyName();
-		if (propertyName.equals(COMMAND_CLEAN)) {
+		final String propertyName = evt.getPropertyName().intern();
+		if (propertyName == COMMAND_CLEAN) {
 			if (this.testIds != null) {
 				this.testIds.clear();
 			}			
 			TestView.clearCache();
 			this.refreshEditors();
-		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
+		} else if (propertyName == COMMAND_SET_ANALYSIS_TYPE) {
 			this.analysisType = (AnalysisType) evt.getNewValue();
-		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
+		} else if (propertyName == COMMAND_SET_MEASUREMENT_TYPE) {
 			this.setSelectedMeasurementType((MeasurementType) evt.getNewValue());
-		} else if (propertyName.equals(COMMAND_SET_MONITORED_ELEMENT)) {
+		} else if (propertyName == COMMAND_SET_MONITORED_ELEMENT) {
 			this.setSelectedMonitoredElement((MonitoredElement) evt.getNewValue());
-		} 
-//		else if (propertyName.equals(COMMAND_SET_SET)) {
-//			this.set = (ParameterSet) evt.getNewValue();
-//		} 
-		else if (propertyName.equals(COMMAND_SET_MEASUREMENT_SETUP)) {
+		} else if (propertyName == COMMAND_SET_MEASUREMENT_SETUP) {
 			this.measurementSetup = (MeasurementSetup) evt.getNewValue();
-		} else if (propertyName.equals(COMMAND_SET_TEMPORAL_STAMPS)) {
+		} else if (propertyName == COMMAND_SET_TEMPORAL_STAMPS) {
 			this.testTimeStamps = (TestTemporalStamps) evt.getNewValue();
-		} else if (propertyName.equals(COMMAND_SET_NAME)) {
+		} else if (propertyName == COMMAND_SET_NAME) {
 			this.name = (String) evt.getNewValue();
-		} else if (propertyName.equals(COMMAND_SET_GROUP_TEST)) {
+		} else if (propertyName == COMMAND_SET_GROUP_TEST) {
 			this.groupTest = true;
 		} 
 	}
@@ -346,16 +341,18 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	public void applyTest() throws ApplicationException {
 		this.flag = FLAG_APPLY;
-		this.startGetData();
+		this.startGetData(true);
 	}
 
 	public void createTest() throws ApplicationException {
 		this.flag = FLAG_CREATE;		
-		this.startGetData();
+		this.startGetData(true);
 	}
 
-	private void startGetData() throws ApplicationException {
-		this.groupTest = false;
+	private void startGetData(final boolean simple) throws ApplicationException {
+		if (simple) {
+			this.groupTest = false;
+		}
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_TYPE, null, null));
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MONITORED_ELEMENT, null, null));
@@ -368,13 +365,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_SETUP, null, null));
 		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_TEMPORAL_STAMPS, null, null));
-		}
-		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_NAME, null, null));
 		}
-		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-			this.generateTest();
+		if (simple) {
+			if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_TEMPORAL_STAMPS, null, null));
+			}
+			if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+				this.generateTest();
+			}
 		}
 	}
 
@@ -788,19 +787,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 	}
 
-	public void addGroupTest(final Date date) throws ApplicationException {
-		this.aloneGroupTest = true;
-		this.startGroupDate = date;
-		this.addGroupTests();
-	}
-
-	public void addGroupTests(final Date date, final long interval1) throws ApplicationException {
-		this.aloneGroupTest = false;
-		this.startGroupDate = date;
-		this.interval = interval1;
-		this.addGroupTests();
-	}
-
 	public void moveSelectedTests(final Date startDate) throws ApplicationException {
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			final Set<Test> tests;
@@ -878,11 +864,30 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 		}
 	}
-	
-	private void addGroupTests() throws ApplicationException {
+
+	public void addGroupTest(final Date date) throws ApplicationException {
+		this.aloneGroupTest = true;
+		this.startGroupDate = date;
+		this.addGroupTests(0L);
+	}
+
+	public void addGroupTests(final Date date, 
+		final long interval) 
+	throws ApplicationException {		
+		this.aloneGroupTest = false;
+		this.startGroupDate = date;
+		this.addGroupTests(interval);
+	}
+
+	private void addGroupTests(final long interval) throws ApplicationException {
 		Log.debugMessage("SchedulerModel.addGroupTests | ", Log.DEBUGLEVEL10);
+		this.flag = FLAG_CREATE;
+		this.startGetData(false);
+		if (this.flag != FLAG_APPLY && this.flag != FLAG_CREATE) {
+			return;
+		}
 		final Identifier meId = this.monitoredElement.getId();
-		Identifier testGroupId = this.meTestGroup != null ? this.meTestGroup.get(meId) : null;
+		final Identifier testGroupId = this.meTestGroup != null ? this.meTestGroup.get(meId) : null;
 		if (testGroupId != null) {
 			Test testGroup = null;
 			try {
@@ -892,7 +897,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 			if (this.aloneGroupTest) {					
 				final String reason;
-				if ((reason = this.isValid(this.monitoredElement.getId(), this.startGroupDate, this.startGroupDate, Identifier.VOID_IDENTIFIER, this.measurementSetup))
+				if ((reason = this.isValid(this.monitoredElement.getId(), 
+								this.startGroupDate, 
+								this.startGroupDate, 
+								Identifier.VOID_IDENTIFIER, 
+								this.measurementSetup))
 						== null) {
 					try {
 						final Test test = Test.createInstance(LoginManager.getUserId(),
@@ -913,9 +922,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 							this.selectedTestIds = new HashSet<Identifier>();
 						}
 						this.selectedTestIds.add(test.getId());
+						
+						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
+						return;
 					} catch (final CreateObjectException coe) {
 						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
-					}
+					}					
 				} else {
 					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") + ':'
 						+ "\n" 
@@ -924,13 +936,16 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 			
 		}
-		if (this.selectedTestIds == null || (this.selectedTestIds.isEmpty())) {
+		
+		assert Log.debugMessage("SchedulerModel.addGroupTests | " + this.selectedTestIds, Log.DEBUGLEVEL09);
+		
+		if (this.selectedTestIds == null || this.selectedTestIds.isEmpty()) {
 			if (testGroupId == null) {
 				this.createTest();
 			} else {
-				this.startGroupDate = new Date(this.startGroupDate.getTime() + this.interval);
+				this.startGroupDate = new Date(this.startGroupDate.getTime() + interval);
 				this.aloneGroupTest = true;
-				this.addGroupTests();
+				this.addGroupTests(interval);
 			}
 		} else {
 
@@ -947,7 +962,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 			final Date endTime = lastTest.getEndTime();
 			final long firstTime = firstTest.getStartTime().getTime();
-			final long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval - firstTime;
+			final long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + interval - firstTime;
 
 			assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime), Level.FINEST);
 			assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Level.FINEST);
@@ -996,8 +1011,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 							selectedTest.getMeasurementSetupIds());
 					final Identifier testId = test.getId();
 					if (testGroupId == null || testGroupId.isVoid()) {
-						testGroupId = testId;
-						test.setGroupTestId(testGroupId);
+						test.setGroupTestId(testId);
 					}
 					this.testIds.add(testId.getId());
 					this.selectedTestIds.add(testId);
@@ -1319,6 +1333,14 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					headSet.last().getTime() + measurementSetup.getMeasurementDuration() > startDate0.getTime();
 			}
 		}
+		
+		try {
+			throw new Exception("SchedulerModel.isIntersect0");
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		
+
 		
 		assert Log.debugMessage("SchedulerModel.isIntersect0 | " 
 				+ test 
