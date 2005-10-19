@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.59 2005/10/07 10:04:20 bass Exp $
+ * $Id: ModelingType.java,v 1.60 2005/10/19 10:23:18 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/10/07 10:04:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/10/19 10:23:18 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -48,20 +48,20 @@ public enum ModelingType implements TransferableObject<IdlModelingType>,
 		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
 	}
 
-	public static ModelingType fromInt(final int code) {
+	public static ModelingType valueOf(final int code) {
 		switch (code) {
 			case IdlModelingType._DADARA_MODELING:
 				return DADARA_MODELING;
 			case IdlModelingType._UNKNOWN_MODELINGTYPE:
 				return UNKNOWN;
 			default:
-				Log.errorMessage("ModelingType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
+				Log.errorMessage("ModelingType.valueOf | Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;
 		}
 	}
 
 	public static ModelingType fromTransferable(final IdlModelingType idlModelingType) {
-		return fromInt(idlModelingType.value());
+		return valueOf(idlModelingType.value());
 	}
 
 	public int getCode() {

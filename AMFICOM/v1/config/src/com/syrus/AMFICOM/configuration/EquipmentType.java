@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.107 2005/10/11 09:28:07 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.108 2005/10/19 10:22:56 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.util.Codeable;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/10/11 09:28:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.108 $, $Date: 2005/10/19 10:22:56 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -57,7 +57,7 @@ public enum EquipmentType implements Namable, Codeable,
 		this.description = LangModelConfiguration.getString(KEY_ROOT + this.codename);
 	}
 
-	public static EquipmentType fromInt(final int code) {
+	public static EquipmentType valueOf(final int code) {
 		switch (code) {
 			case IdlEquipmentType._REFLECTOMETER:
 				return REFLECTOMETER;
@@ -92,11 +92,11 @@ public enum EquipmentType implements Namable, Codeable,
 	}
 
 	public static EquipmentType fromTransferable(final IdlEquipmentType idlEquipmentType) {
-		return fromInt(idlEquipmentType.value());
+		return valueOf(idlEquipmentType.value());
 	}
 
 	public static EquipmentType fromXmlTransferable(final XmlEquipmentType.Enum xmlEquipmentType) {
-		return fromInt(xmlEquipmentType.intValue() - 1);
+		return valueOf(xmlEquipmentType.intValue() - 1);
 	}
 
 	public int getCode() {

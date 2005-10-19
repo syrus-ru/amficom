@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.103 2005/10/06 15:19:43 bass Exp $
+ * $Id: MeasurementType.java,v 1.104 2005/10/19 10:23:18 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/10/06 15:19:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.104 $, $Date: 2005/10/19 10:23:18 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -59,20 +59,20 @@ public enum MeasurementType implements ActionType<IdlMeasurementType> {
 		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
 	}
 
-	public static MeasurementType fromInt(final int code) {
+	public static MeasurementType valueOf(final int code) {
 		switch (code) {
 			case IdlMeasurementType._REFLECTOMETRY:
 				return REFLECTOMETRY;
 			case IdlMeasurementType._UNKNOWN_MEASUREMENTTYPE:
 				return UNKNOWN;
 			default:
-				Log.errorMessage("MeasurementType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
+				Log.errorMessage("MeasurementType.valueOf | Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;
 		}
 	}
 
 	public static MeasurementType fromTransferable(final IdlMeasurementType idlMeasurementType) {
-		return fromInt(idlMeasurementType.value());
+		return valueOf(idlMeasurementType.value());
 	}
 
 	public int getCode() {

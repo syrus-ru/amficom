@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.66 2005/10/12 13:06:42 arseniy Exp $
+ * $Id: ParameterType.java,v 1.67 2005/10/19 10:22:14 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/10/12 13:06:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.67 $, $Date: 2005/10/19 10:22:14 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -71,13 +71,13 @@ public enum ParameterType implements TransferableObject<IdlParameterType>,
 		this.description = LangModelGeneral.getString(KEY_ROOT + this.codename);
 	}
 
-	public static ParameterType fromInt(final int code) {
+	public static ParameterType valueOf(final int code) {
 		final ParameterType[] types = ParameterType.values();
 		return types[code];
 	}
 
 	public static ParameterType fromTransferable(final IdlParameterType idlParameterType) {
-		return fromInt(idlParameterType.value());
+		return valueOf(idlParameterType.value());
 	}
 
 	public int getCode() {

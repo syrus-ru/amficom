@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.101 2005/10/07 10:04:19 bass Exp $
+ * $Id: AnalysisType.java,v 1.102 2005/10/19 10:23:18 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/10/07 10:04:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.102 $, $Date: 2005/10/19 10:23:18 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -64,20 +64,20 @@ public enum AnalysisType implements TransferableObject<IdlAnalysisType>,
 		this.description = LangModelMeasurement.getString(KEY_ROOT + this.codename);
 	}
 
-	public static AnalysisType fromInt(final int code) {
+	public static AnalysisType valueOf(final int code) {
 		switch (code) {
 			case IdlAnalysisType._DADARA:
 				return DADARA;
 			case IdlAnalysisType._UNKNOWN_ANALYSISTYPE:
 				return UNKNOWN;
 			default:
-				Log.errorMessage("AnalysisType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
+				Log.errorMessage("AnalysisType.valueOf | Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;
 		}
 	}
 
 	public static AnalysisType fromTransferable(final IdlAnalysisType idlAnalysisType) {
-		return fromInt(idlAnalysisType.value());
+		return valueOf(idlAnalysisType.value());
 	}
 
 	public int getCode() {

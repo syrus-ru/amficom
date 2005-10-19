@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.7 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.8 2005/10/19 10:22:14 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/10/19 10:22:14 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -42,7 +42,7 @@ public enum MeasurementUnit implements Codeable {
 		this.name = LangModelGeneral.getString(KEY_ROOT + this.codename);
 	}
 
-	public static MeasurementUnit fromInt(final int code) {
+	public static MeasurementUnit valueOf(final int code) {
 		switch (code) {
 			case IdlMeasurementUnit._NONDIMENSIONAL:
 				return NONDIMENSIONAL;
@@ -62,13 +62,13 @@ public enum MeasurementUnit implements Codeable {
 			case IdlMeasurementUnit._UNKNOWN_MEASUREMENTUNIT:
 				return UNKNOWN;
 			default:
-				Log.errorMessage("MeasurementUnit.fromInt | Illegal IDL code: " + code + ", returning RAW");
+				Log.errorMessage("MeasurementUnit.valueOf | Illegal IDL code: " + code + ", returning RAW");
 				return UNKNOWN;
 		}
 	}
 
 	public static MeasurementUnit fromTransferable(final IdlMeasurementUnit idlMeasurementUnit) {
-		return fromInt(idlMeasurementUnit.value());
+		return valueOf(idlMeasurementUnit.value());
 	}
 
 	public int getCode() {
