@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEvent.java,v 1.3 2005/10/13 10:55:04 bass Exp $
+ * $Id: PopupNotificationEvent.java,v 1.4 2005/10/19 07:50:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/13 10:55:04 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/19 07:50:31 $
  * @module event
  */
 public interface PopupNotificationEvent extends NotificationEvent<IdlPopupNotificationEvent> {
@@ -28,13 +28,13 @@ public interface PopupNotificationEvent extends NotificationEvent<IdlPopupNotifi
 	 * @return optical distance from the mismatch event to the start of the
 	 *         reflectogram.
 	 */
-	double getOpticalDistance();
+	double getMismatchOpticalDistance();
 
 	/**
 	 * @return physical distance from the mismatch event to the start of the
 	 *         reflectogram.
 	 */
-	double getPhysicalDistance();
+	double getMismatchPhysicalDistance();
 
 	/**
 	 * @return the date when mismatch event was created, that triggered

@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.2 2005/10/13 10:55:04 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.3 2005/10/19 07:50:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/13 10:55:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/19 07:50:31 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -80,16 +80,16 @@ public final class DefaultPopupNotificationEvent extends
 	}
 
 	/**
-	 * @see PopupNotificationEvent#getOpticalDistance()
+	 * @see PopupNotificationEvent#getMismatchOpticalDistance()
 	 */
-	public double getOpticalDistance() {
+	public double getMismatchOpticalDistance() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see PopupNotificationEvent#getPhysicalDistance()
+	 * @see PopupNotificationEvent#getMismatchPhysicalDistance()
 	 */
-	public double getPhysicalDistance() {
+	public double getMismatchPhysicalDistance() {
 		throw new UnsupportedOperationException();
 	}
 
