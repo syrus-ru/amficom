@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.57 2005/10/19 11:56:41 bob Exp $
+ * $Id: TableFrame.java,v 1.58 2005/10/19 14:56:17 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
@@ -55,7 +56,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/10/19 11:56:41 $
+ * @version $Revision: 1.58 $, $Date: 2005/10/19 14:56:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -96,7 +97,14 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 				final Set<Test> selectedTests = this.schedulerModel.getSelectedTests();				
 				final Set<TestView> testViews = new HashSet<TestView>(selectedTests.size());
 				for (final Test test : selectedTests) {
-					testViews.add(TestView.valueOf(test));
+					final Identifier groupTestId = test.getGroupTestId();
+					if (!groupTestId.isVoid()) {
+						final Test groupTest = 
+							StorableObjectPool.getStorableObject(groupTestId, true);
+						testViews.add(TestView.valueOf(groupTest));
+					} else {
+						testViews.add(TestView.valueOf(test));
+					}
 				}
 				this.listTable.setSelectedValues(testViews);				
 			} catch (final ApplicationException e) {
@@ -149,7 +157,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			this.listTable = new WrapperedTable<TestView>(TestViewAdapter.getInstance(), new String[] {
 					TestViewAdapter.KEY_TEMPORAL_TYPE, 
 					TestViewAdapter.KEY_MONITORED_ELEMENT,
-					TestViewAdapter.KEY_TEST_OBJECT, 
+					TestViewAdapter.KEY_PORT, 
 					TestViewAdapter.KEY_MEASUREMENT_TYPE, 
 					TestViewAdapter.KEY_START_TIME,
 					TestViewAdapter.KEY_STATUS,
