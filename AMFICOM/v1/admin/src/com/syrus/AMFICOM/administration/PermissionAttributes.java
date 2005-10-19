@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.21 2005/10/18 13:47:51 bob Exp $
+* $Id: PermissionAttributes.java,v 1.22 2005/10/19 06:57:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/18 13:47:51 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/19 06:57:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -386,6 +386,7 @@ public class PermissionAttributes extends StorableObject {
 	 */
 	private enum Evaluation implements SwitchableGroupNumber {
 		ENTER(true),
+		OPEN_REFLECTOGRAM(true),
 		OPEN_REFLECTOGRAM_FILE(true),
 		OPEN_ETALON_REFLECTOGRAM(true),
 		SAVE_MEASUREMENT_SETUP(true),
@@ -568,6 +569,7 @@ public class PermissionAttributes extends StorableObject {
 		
 		// Evaluation 
 		EVALUATION_ENTER(Evaluation.ENTER),
+		EVALUATION_OPEN_REFLECTOGRAM(Evaluation.OPEN_REFLECTOGRAM),
 		EVALUATION_OPEN_REFLECTOGRAM_FILE(Evaluation.OPEN_REFLECTOGRAM_FILE),
 		EVALUATION_OPEN_ETALON_REFLECTOGRAM(Evaluation.OPEN_ETALON_REFLECTOGRAM),
 		EVALUATION_SAVE_MEASUREMENT_SETUP(Evaluation.SAVE_MEASUREMENT_SETUP),
