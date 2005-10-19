@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.1 2005/10/18 16:08:08 saa Exp $
+ * $Id: PermissionManager.java,v 1.2 2005/10/19 10:34:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/10/18 16:08:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/19 10:34:38 $
  * @module analysis
  */
 public class PermissionManager {
@@ -28,7 +28,7 @@ public class PermissionManager {
 		SAVE_TRACE_FILE,
 		LOAD_TRACE,
 		LOAD_ETALON,
-		EDIT_ETALON,
+		EDIT_ETALON, // FIXME: implement
 		SAVE_MEASUREMENT_SETUP;
 	}
 
@@ -78,7 +78,7 @@ public class PermissionManager {
 		currentTranslation = defaultTranslation;
 	}
 
-	{
+	static {
 		analysisTranslation = new HashMap<Operation, PermissionCodename>();
 		analysisTranslation.put(Operation.READ_TRACE_FILE, PermissionCodename.ANALYSIS_OPEN_REFLECTOGRAM_FILE);
 		analysisTranslation.put(Operation.LOAD_TRACE, PermissionCodename.ANALYSIS_OPEN_REFLECTOGRAM);
@@ -93,7 +93,7 @@ public class PermissionManager {
 		evaluationTranslation = new HashMap<Operation, PermissionCodename>();
 		evaluationTranslation.put(Operation.READ_TRACE_FILE, PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE);
 		evaluationTranslation.put(Operation.SAVE_TRACE_FILE, PermissionCodename.EVALUATION_SAVE_REFLECTOGRAM_FILE);
-		evaluationTranslation.put(Operation.LOAD_TRACE, PermissionCodename.EVALUATION_ENTER); // FIXME: should be EVALUATION_OPEN_REFKECTOGRAM; the present choice works as 'yes'
+		evaluationTranslation.put(Operation.LOAD_TRACE, PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM);
 		evaluationTranslation.put(Operation.LOAD_ETALON, PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM);
 		evaluationTranslation.put(Operation.EDIT_ETALON, PermissionCodename.EVALUATION_EDIT_ETALON);
 		evaluationTranslation.put(Operation.SAVE_MEASUREMENT_SETUP, PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP);
