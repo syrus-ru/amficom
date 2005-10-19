@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 
+// FIXME: unused
 public class LoadEtalonCommand extends AbstractCommand
 {
 	public LoadEtalonCommand()

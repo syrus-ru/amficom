@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
+// FIXME: unused
 public class LoadTestSetupCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;

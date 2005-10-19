@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
+//FIXME: unused
 public class TraceMakeCurrentCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;

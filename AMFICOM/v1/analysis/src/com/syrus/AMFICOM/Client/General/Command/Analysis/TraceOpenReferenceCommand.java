@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.TraceReader;
 
+//FIXME: unused
 public class TraceOpenReferenceCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;

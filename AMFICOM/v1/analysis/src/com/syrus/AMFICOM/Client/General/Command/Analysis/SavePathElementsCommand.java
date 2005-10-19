@@ -1,5 +1,5 @@
 /*-
- * $Id: SavePathElementsCommand.java,v 1.2 2005/10/17 14:20:09 saa Exp $
+ * $Id: SavePathElementsCommand.java,v 1.3 2005/10/19 08:03:55 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
+//FIXME: unused
 public class SavePathElementsCommand  extends AbstractCommand {
 
 	public SavePathElementsCommand(ApplicationContext aContext) {

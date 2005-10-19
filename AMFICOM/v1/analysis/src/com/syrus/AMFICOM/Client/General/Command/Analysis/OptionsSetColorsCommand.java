@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-
+// FIXME: unused
 public class OptionsSetColorsCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
