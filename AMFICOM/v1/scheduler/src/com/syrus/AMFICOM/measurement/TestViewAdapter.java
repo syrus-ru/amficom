@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.2 2005/10/14 13:53:10 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.3 2005/10/19 14:55:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/14 13:53:10 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/19 14:55:51 $
  * @author $Author: bob $
  * @module module
  */
@@ -37,7 +37,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 	public static final String KEY_TEMPORAL_TYPE_NAME = "TemporalTypeName";
 	public static final String KEY_KIS = "RTU";
 	public static final String KEY_MONITORED_ELEMENT = "MonitoredElement";
-	public static final String KEY_TEST_OBJECT = "TestObject";
+	public static final String KEY_PORT = "Port";
 	public static final String KEY_MEASUREMENT_TYPE = "MeasurementType";
 	public static final String KEY_START_TIME = "TestStartTime";
 	public static final String KEY_STATUS = "Status";
@@ -54,7 +54,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 
 		final String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, 
 				KEY_MONITORED_ELEMENT, 
-				KEY_TEST_OBJECT,
+				KEY_PORT,
 				KEY_MEASUREMENT_TYPE, 
 				KEY_START_TIME, 
 				KEY_STATUS,
@@ -100,42 +100,45 @@ public class TestViewAdapter implements Wrapper<TestView> {
 		return this.keys;
 	}
 
-	public String getName(final String key) {
+	public String getName(String key) {
 		String name = null;
-		if (key.equals(KEY_TEMPORAL_TYPE)) {
+		key = key != null ? key.intern() : null;
+		if (key == KEY_TEMPORAL_TYPE) {
 			name = I18N.getString("Scheduler.Text.Test.Field.TemporalType"); //$NON-NLS-1$
-		} else if (key.equals(KEY_KIS)) {
+		} else if (key == KEY_KIS) {
 			name = I18N.getString("Scheduler.Text.Test.Field.RTU"); //$NON-NLS-1$
-		} else if (key.equals(KEY_MONITORED_ELEMENT)) {
+		} else if (key == KEY_MONITORED_ELEMENT) {
+			name = I18N.getString("Scheduler.Text.Test.Field.TestingLine"); //$NON-NLS-1$
+		} else if (key == KEY_PORT) {
 			name = I18N.getString("Scheduler.Text.Test.Field.Port"); //$NON-NLS-1$
-		} else if (key.equals(KEY_TEST_OBJECT)) {
-			name = I18N.getString("Scheduler.Text.Test.Field.TestingObject"); //$NON-NLS-1$
-		} else if (key.equals(KEY_MEASUREMENT_TYPE)) {
+		} else if (key == KEY_MEASUREMENT_TYPE) {
 			name = I18N.getString("Scheduler.Text.Test.Field.MeasurementType"); //$NON-NLS-1$
-		} else if (key.equals(KEY_START_TIME)) {
+		} else if (key == KEY_START_TIME) {
 			name = I18N.getString("Scheduler.Text.Test.Field.TimeOfTheFirstMeasurement"); //$NON-NLS-1$
-		} else if (key.equals(KEY_STATUS)) {
+		} else if (key == KEY_STATUS) {
 			name = I18N.getString("Scheduler.Text.Test.Field.Status"); //$NON-NLS-1$
-		} else if (key.equals(KEY_D)) {
+		} else if (key == KEY_D) {
 			name = key + ", " + I18N.getString("Scheduler.Text.Table.dMeasurementUnit");
-		} else if (key.equals(KEY_Q)) {
+		} else if (key == KEY_Q) {
 			name = key;
 		}
 
 		return name;
 	}
 
-	public Class getPropertyClass(final String key) {
+	public Class getPropertyClass(String key) {
 		Class clazz = String.class;
-		if ((key.equals(KEY_STATUS))) {
+		key = key != null ? key.intern() : null;
+		if ((key == KEY_STATUS)) {
 			clazz = Map.class;
 		}
 		return clazz;
 	}
 
-	public Object getPropertyValue(final String key) {
+	public Object getPropertyValue(String key) {
 		Object value = null;
-		if (key.equals(KEY_STATUS)) {
+		key = key != null ? key.intern() : null;
+		if (key == KEY_STATUS) {
 			value = this.statusMap;
 		}
 		return value;
@@ -147,28 +150,30 @@ public class TestViewAdapter implements Wrapper<TestView> {
 		// TODO Auto-generated method stub
 	}
 
-	public Object getValue(final TestView testView, final String key) {
+	public Object getValue(final TestView testView, 
+	                       String key) {
 		if (testView != null) {
-			if (key.equals(KEY_TEMPORAL_TYPE)) {
+			key = key != null ? key.intern() : null;
+			if (key == KEY_TEMPORAL_TYPE) {
 				return testView.getTemporalType();
-			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
+			} else if (key == KEY_TEMPORAL_TYPE_NAME) {
 				return testView.getTemporalName();
-			} else if (key.equals(KEY_KIS)) {
+			} else if (key == KEY_KIS) {
 				return testView.getKISName();
-			} else if (key.equals(KEY_MONITORED_ELEMENT)) {
+			} else if (key == KEY_MONITORED_ELEMENT) {
 				return testView.getMonitoredElementName();
-			} else if (key.equals(KEY_TEST_OBJECT)) {
+			} else if (key == KEY_PORT) {
 				return testView.getPortName();
-			} else if (key.equals(KEY_MEASUREMENT_TYPE)) {
+			} else if (key == KEY_MEASUREMENT_TYPE) {
 				return testView.getTest().getMeasurementType().getDescription();
-			} else if (key.equals(KEY_START_TIME)) {
+			} else if (key == KEY_START_TIME) {
 				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 				return sdf.format(testView.getTest().getStartTime());
-			} else if (key.equals(KEY_STATUS)) {
+			} else if (key == KEY_STATUS) {
 				return testView.getTest().getStatus();
-			} else if (key.equals(KEY_D)) {
+			} else if (key == KEY_D) {
 				return testView.getTestD();
-			} else if (key.equals(KEY_Q)) {
+			} else if (key == KEY_Q) {
 				return testView.getTestQ();
 			}
 		}
