@@ -2,10 +2,14 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
