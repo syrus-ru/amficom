@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.2 2005/10/19 10:34:38 saa Exp $
+ * $Id: PermissionManager.java,v 1.3 2005/10/19 12:40:12 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/10/19 10:34:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/19 12:40:12 $
  * @module analysis
  */
 public class PermissionManager {
@@ -28,7 +28,7 @@ public class PermissionManager {
 		SAVE_TRACE_FILE,
 		LOAD_TRACE,
 		LOAD_ETALON,
-		EDIT_ETALON, // FIXME: implement
+		EDIT_ETALON,
 		SAVE_MEASUREMENT_SETUP;
 	}
 
@@ -39,6 +39,9 @@ public class PermissionManager {
 	private static Map<Operation, PermissionCodename> currentTranslation;
 
 	public static boolean isPermitted(Operation op) {
+		return true; // FIXME: debug mode due to bug #199
+	}
+	private static boolean isPermitted0(Operation op) { // will be back when bug is #199 resolved
 		PermissionCodename code = currentTranslation.get(op);
 		if (code == null) {
 			// the functionality requested is not defined for this mode
