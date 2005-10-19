@@ -1,5 +1,5 @@
 /*-
- * $Id: EnumUtil.java,v 1.4 2005/09/14 18:28:26 arseniy Exp $
+ * $Id: EnumUtil.java,v 1.5 2005/10/19 10:21:44 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/14 18:28:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/10/19 10:21:44 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public final class EnumUtil {
-	private static final String METHOD_NAME_FROM_INT = "fromInt";
+	private static final String VALUE_OF_METHOD_NAME = "valueOf";
 
-	private static final Map<Class, Method> FROM_INT_METHODS = new HashMap<Class, Method>();
+	private static final Map<Class, Method> VALUE_OF_METHODS = new HashMap<Class, Method>();
 
 	private EnumUtil() {
 		//singleton
@@ -31,19 +31,19 @@ public final class EnumUtil {
 		return (e instanceof Codeable) ? ((Codeable) e).getCode() : e.ordinal();
 	}
 
-	public static <E extends Enum<E>> E reflectFromInt(final Class<E> enumClass, final int intValue) {
+	public static <E extends Enum<E>> E valueOf(final Class<E> enumClass, final int intValue) {
 		if (!enumClass.isEnum()) {
 			throw new IllegalArgumentException("Class not enum");
 		}
 
-		Method fromIntMethod = FROM_INT_METHODS.get(enumClass);
-		if (fromIntMethod == null) {
-			fromIntMethod = reflectMethodFromInt(enumClass);
-			FROM_INT_METHODS.put(enumClass, fromIntMethod);
+		Method valueOfMethod = VALUE_OF_METHODS.get(enumClass);
+		if (valueOfMethod == null) {
+			valueOfMethod = reflectMethodFromInt(enumClass);
+			VALUE_OF_METHODS.put(enumClass, valueOfMethod);
 		}
 
 		try {
-			return (E) fromIntMethod.invoke(null, new Integer(intValue));
+			return (E) valueOfMethod.invoke(null, new Integer(intValue));
 		} catch (Exception e) {
 			Log.errorException(e);
 			throw new IllegalArgumentException(e.getMessage(), e);
@@ -53,7 +53,7 @@ public final class EnumUtil {
 
 	private static Method reflectMethodFromInt(final Class enumClass) {
 		try {
-			return enumClass.getDeclaredMethod(METHOD_NAME_FROM_INT, Integer.TYPE);
+			return enumClass.getDeclaredMethod(VALUE_OF_METHOD_NAME, int.class);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
