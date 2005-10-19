@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.56 2005/10/19 08:53:02 bob Exp $
+ * $Id: TableFrame.java,v 1.57 2005/10/19 11:56:41 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/10/19 08:53:02 $
+ * @version $Revision: 1.57 $, $Date: 2005/10/19 11:56:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -129,7 +129,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
 			assert Log.debugMessage("TableFrame.setTests | " + tests, Log.DEBUGLEVEL09);
 			for (final Test test : tests) {
-				if (!test.getId().equals(test.getGroupTestId())) {
+				final Identifier groupTestId = test.getGroupTestId();
+				if (!groupTestId.isVoid() && !test.getId().equals(groupTestId)) {
 					continue;
 				}
 				model.addObject(TestView.valueOf(test));
