@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.22 2005/10/18 16:19:42 bass Exp $
+# $Id: Makefile,v 1.23 2005/10/19 10:53:20 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -29,7 +29,7 @@ event \
 csbridge \
 util \
 reflectometry \
-comfiguration \
+configuration \
 measurement \
 map \
 scheme
