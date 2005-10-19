@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.1 2005/10/19 11:51:40 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.2 2005/10/19 13:50:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
+import com.syrus.util.Log;
+import static java.util.logging.Level.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/19 11:51:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/19 13:50:15 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -48,6 +50,9 @@ final class LineMismatchEventProcessor implements EventProcessor {
 	 */
 	public void processEvent(final Event event) throws EventProcessingException {
 		final LineMismatchEvent lineMismatchEvent = (LineMismatchEvent) event;
+		Log.debugMessage("LineMismatchEventProcessor.processEvent() | LineMismatchEvent: "
+				+ lineMismatchEvent + " started being processed",
+				SEVERE);
 
 		try {
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();

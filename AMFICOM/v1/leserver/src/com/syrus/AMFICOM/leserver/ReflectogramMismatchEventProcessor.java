@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.2 2005/10/19 07:51:21 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.3 2005/10/19 13:50:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.leserver;
 import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Set;
 
@@ -31,12 +32,13 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/19 07:51:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/19 13:50:15 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor implements
@@ -55,6 +57,9 @@ final class ReflectogramMismatchEventProcessor implements
 	 */
 	public void processEvent(final Event event) throws EventProcessingException {
 		final ReflectogramMismatchEvent reflectogramMismatchEvent = (ReflectogramMismatchEvent) event;
+		Log.debugMessage("ReflectogramMismatchEventProcessor.processEvent() | ReflectogramMismatchEvent: "
+				+ reflectogramMismatchEvent + " started being processed",
+				SEVERE);
 
 		try {
 			final Identifier resultId = reflectogramMismatchEvent.getResultId();
