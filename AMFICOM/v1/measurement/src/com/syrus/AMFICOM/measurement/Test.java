@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.170 2005/10/07 10:04:20 bass Exp $
+ * $Id: Test.java,v 1.171 2005/10/19 14:58:06 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.170 $, $Date: 2005/10/07 10:04:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.171 $, $Date: 2005/10/19 14:58:06 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -588,6 +588,11 @@ public final class Test extends StorableObject implements Describable {
 		dependencies.addAll(this.measurementSetupIds);
 
 		dependencies.add(this.monitoredElement);
+		dependencies.add(this.groupTestId);
+		
+		dependencies.remove(null);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		
 		return dependencies;
 	}
 
