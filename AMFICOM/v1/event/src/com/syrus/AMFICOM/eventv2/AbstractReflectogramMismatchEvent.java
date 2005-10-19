@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractReflectogramMismatchEvent.java,v 1.3 2005/10/18 16:19:41 bass Exp $
+ * $Id: AbstractReflectogramMismatchEvent.java,v 1.4 2005/10/19 13:46:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import static com.syrus.AMFICOM.eventv2.EventType.REFLECTORGAM_MISMATCH;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/18 16:19:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/19 13:46:13 $
  * @module event
  */
 public abstract class AbstractReflectogramMismatchEvent
@@ -25,7 +25,7 @@ public abstract class AbstractReflectogramMismatchEvent
 	protected String paramString() {
 		return "alarmType = " + this.getAlarmType()
 				+ "; severity = " + this.getSeverity()
-				+ "; monitoredElementId = " + this.getResultId();
+				+ "; resultId = " + this.getResultId();
 	}
 
 	@Override
