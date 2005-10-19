@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.125 2005/10/19 08:53:37 bob Exp $
+ * $Id: SchedulerModel.java,v 1.126 2005/10/19 13:00:12 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.125 $, $Date: 2005/10/19 08:53:37 $
+ * @version $Revision: 1.126 $, $Date: 2005/10/19 13:00:12 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -437,7 +437,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					compoundCondition2);
 
 			this.testIds.clear();
-			this.testIds.addAll(Identifier.createIdentifiers(StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true)));
+			final Set<Identifier> testIds = 
+				Identifier.createIdentifiers(StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true));
+			assert Log.debugMessage("SchedulerModel.updateTests | " + testIds + ", " + testIds.size(),
+				Log.DEBUGLEVEL03);
+			this.testIds.addAll(testIds);
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"));
 		}
