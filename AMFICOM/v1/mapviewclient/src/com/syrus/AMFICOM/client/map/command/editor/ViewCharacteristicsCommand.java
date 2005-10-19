@@ -1,5 +1,5 @@
 /*-
- * $$Id: ViewCharacteristicsCommand.java,v 1.12 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: ViewCharacteristicsCommand.java,v 1.13 2005/10/19 11:56:52 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,9 @@ import java.awt.Dimension;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * 
- * @version $Revision: 1.12 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/19 11:56:52 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -32,7 +33,10 @@ public class ViewCharacteristicsCommand extends AbstractCommand {
 
 	JDesktopPane desktop;
 
-	public MapCharacteristicPropertiesFrame frame;
+	public CharacteristicPropertiesFrame frame;
+
+	@SuppressWarnings("unused")
+	private MapPropertiesEventHandler handler;
 
 	public ViewCharacteristicsCommand(
 			JDesktopPane desktop,
@@ -44,10 +48,11 @@ public class ViewCharacteristicsCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		this.frame = MapDesktopCommand
-				.findMapCharacteristicsFrame(this.desktop);
+				.findCharacteristicsFrame(this.desktop);
 
 		if(this.frame == null) {
-			this.frame = new MapCharacteristicPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_CHARACTERISTICS), this.aContext);
+			this.frame = new CharacteristicPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_CHARACTERISTICS));
+			this.handler = new MapPropertiesEventHandler(this.frame, this.aContext);
 			this.frame.setClosable(true);
 			this.frame.setResizable(true);
 			this.frame.setMaximizable(false);

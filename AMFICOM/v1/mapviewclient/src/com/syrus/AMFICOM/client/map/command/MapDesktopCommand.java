@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDesktopCommand.java,v 1.12 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: MapDesktopCommand.java,v 1.13 2005/10/19 11:56:52 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,45 +12,45 @@ import java.awt.Component;
 
 import javax.swing.JDesktopPane;
 
-import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
-import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:36 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/19 11:56:52 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public abstract class MapDesktopCommand {
-	public static MapGeneralPropertiesFrame findMapGeneralPropertiesFrame(
+	public static GeneralPropertiesFrame findGeneralPropertiesFrame(
 			JDesktopPane desktop) {
 		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null && comp instanceof MapGeneralPropertiesFrame)
-				return (MapGeneralPropertiesFrame )comp;
+			if(comp != null && comp instanceof GeneralPropertiesFrame)
+				return (GeneralPropertiesFrame )comp;
 		}
 		return null;
 	}
 
-	public static MapAdditionalPropertiesFrame findMapAdditionalPropertiesFrame(
+	public static AdditionalPropertiesFrame findAdditionalPropertiesFrame(
 			JDesktopPane desktop) {
 		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null && comp instanceof MapAdditionalPropertiesFrame)
-				return (MapAdditionalPropertiesFrame )comp;
+			if(comp != null && comp instanceof AdditionalPropertiesFrame)
+				return (AdditionalPropertiesFrame )comp;
 		}
 		return null;
 	}
 
-	public static MapCharacteristicPropertiesFrame findMapCharacteristicsFrame(
+	public static CharacteristicPropertiesFrame findCharacteristicsFrame(
 			JDesktopPane desktop) {
 		for(int i = 0; i < desktop.getComponents().length; i++) {
 			Component comp = desktop.getComponent(i);
-			if(comp != null && comp instanceof MapCharacteristicPropertiesFrame)
-				return (MapCharacteristicPropertiesFrame )comp;
+			if(comp != null && comp instanceof CharacteristicPropertiesFrame)
+				return (CharacteristicPropertiesFrame )comp;
 		}
 		return null;
 	}

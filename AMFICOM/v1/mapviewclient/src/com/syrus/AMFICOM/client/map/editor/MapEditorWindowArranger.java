@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorWindowArranger.java,v 1.22 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapEditorWindowArranger.java,v 1.23 2005/10/19 11:56:52 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,16 +13,16 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
-import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/19 11:56:52 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -78,7 +78,7 @@ public class MapEditorWindowArranger extends WindowArranger
 //		}
 
 /*----- Правая сторона ------*/
-		MapGeneralPropertiesFrame propFrame = MapDesktopCommand.findMapGeneralPropertiesFrame(this.desktop);
+		GeneralPropertiesFrame propFrame = MapDesktopCommand.findGeneralPropertiesFrame(this.desktop);
 		if (propFrame != null)
 		{
 			normalize(propFrame);		
@@ -86,7 +86,7 @@ public class MapEditorWindowArranger extends WindowArranger
 			propFrame.setLocation(4 * w / 5, 0);
 		}
 
-		MapAdditionalPropertiesFrame addFrame = MapDesktopCommand.findMapAdditionalPropertiesFrame(this.desktop);
+		AdditionalPropertiesFrame addFrame = MapDesktopCommand.findAdditionalPropertiesFrame(this.desktop);
 		if (addFrame != null)
 		{
 			normalize(addFrame);		
@@ -94,7 +94,7 @@ public class MapEditorWindowArranger extends WindowArranger
 			addFrame.setLocation(4 * w / 5, h * 2 / 5);
 		}
 
-		MapCharacteristicPropertiesFrame charFrame = MapDesktopCommand.findMapCharacteristicsFrame(this.desktop);
+		CharacteristicPropertiesFrame charFrame = MapDesktopCommand.findCharacteristicsFrame(this.desktop);
 		if (charFrame != null)
 		{
 			normalize(charFrame);

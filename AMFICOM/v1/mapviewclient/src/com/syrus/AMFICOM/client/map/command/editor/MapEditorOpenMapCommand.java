@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenMapCommand.java,v 1.30 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorOpenMapCommand.java,v 1.31 2005/10/19 11:56:52 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
@@ -17,7 +18,6 @@ import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapOpenCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.30 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/19 11:56:52 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -49,7 +49,7 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 
 	MapFrame mapFrame = null;
 
-	MapGeneralPropertiesFrame propFrame = null;
+	GeneralPropertiesFrame propFrame = null;
 
 	MapViewTreeFrame treeFrame = null;
 
@@ -159,7 +159,7 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 		return this.mapFrame;
 	}
 
-	public MapGeneralPropertiesFrame getPropertiesFrame() {
+	public GeneralPropertiesFrame getPropertiesFrame() {
 		return this.propFrame;
 	}
 

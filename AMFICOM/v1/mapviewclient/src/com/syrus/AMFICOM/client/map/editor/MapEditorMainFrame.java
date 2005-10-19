@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMainFrame.java,v 1.66 2005/10/17 14:11:54 krupenn Exp $$
+ * $$Id: MapEditorMainFrame.java,v 1.67 2005/10/19 11:56:52 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,9 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.UIDefaults;
 
+import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
+import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseLibraryCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
@@ -56,10 +59,7 @@ import com.syrus.AMFICOM.client.map.command.map.MapLibraryImportCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapRemoveMapCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewAddSchemeCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewRemoveSchemeCommand;
-import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
-import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
-import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * @version $Revision: 1.66 $, $Date: 2005/10/17 14:11:54 $
+ * @version $Revision: 1.67 $, $Date: 2005/10/19 11:56:52 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -370,12 +370,12 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 					if(comp instanceof MapFrame) {
 						((MapFrame) comp).setVisible(false);
 //						((MapFrame) comp).setContext(null);
-					} else if(comp instanceof MapGeneralPropertiesFrame) {
-						((MapGeneralPropertiesFrame) comp).setVisible(false);
-					} else if(comp instanceof MapAdditionalPropertiesFrame) {
-						((MapAdditionalPropertiesFrame) comp).setVisible(false);
-					} else if(comp instanceof MapCharacteristicPropertiesFrame) {
-						((MapCharacteristicPropertiesFrame) comp).setVisible(false);
+					} else if(comp instanceof GeneralPropertiesFrame) {
+						((GeneralPropertiesFrame) comp).setVisible(false);
+					} else if(comp instanceof AdditionalPropertiesFrame) {
+						((AdditionalPropertiesFrame) comp).setVisible(false);
+					} else if(comp instanceof CharacteristicPropertiesFrame) {
+						((CharacteristicPropertiesFrame) comp).setVisible(false);
 					}
 				}
 				ApplicationModel aModel = this.aContext.getApplicationModel();
