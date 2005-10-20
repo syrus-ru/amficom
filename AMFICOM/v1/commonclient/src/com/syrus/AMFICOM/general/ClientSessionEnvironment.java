@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.27 2005/10/15 17:49:34 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.28 2005/10/20 08:57:51 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/15 17:49:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/10/20 08:57:51 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -25,7 +25,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	public enum SessionKind {
 		UNKNOWN, MEASUREMENT, MAPSCHEME;
 
-		public static SessionKind fromInt(final int value) {
+		public static SessionKind valueOf(final int value) {
 			switch (value) {
 				case 1:
 					return MEASUREMENT;
