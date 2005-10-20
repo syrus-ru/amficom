@@ -344,11 +344,7 @@ final class TestLine extends TimeLine {
 			return; 
 		}
 		
-		new ProcessingDialog(new Runnable() {
-			public void run() {
-				acquireTests();
-			};	
-		},I18N.getString("Scheduler.StatusMessage.UpdatingTests"));
+		this.acquireTests();
 		
 		
 		this.updateTest();
