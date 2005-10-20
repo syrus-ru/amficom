@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.8 2005/10/06 14:34:35 bob Exp $
+* $Id: LoginRestoreCommand.java,v 1.9 2005/10/20 14:22:09 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
@@ -22,13 +23,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/06 14:34:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/10/20 14:22:09 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
-public final class LoginRestoreCommand extends OpenSessionCommand 
-implements LoginRestorer{
+public final class LoginRestoreCommand extends OpenSessionCommand implements LoginRestorer {
 	
 	public LoginRestoreCommand(Dispatcher dispatcher) {
 		super(dispatcher);
@@ -53,7 +53,7 @@ implements LoginRestorer{
 	public String getLogin() {
 		assert super.logged : ErrorMessages.NATURE_INVALID;
 
-		String value = super.login;
+		final String value = super.login;
 		super.login = null;
 		return value;
 	}
@@ -61,8 +61,16 @@ implements LoginRestorer{
 	public String getPassword() {
 		assert super.logged : ErrorMessages.NATURE_INVALID;
 
-		String value = super.password;
+		final String value = super.password;
 		super.password = null;
+		return value;
+	}
+
+	public Identifier getDomainId() {
+		assert super.logged : ErrorMessages.NATURE_INVALID;
+
+		final Identifier value = super.domainId;
+		super.domainId = null;
 		return value;
 	}
 

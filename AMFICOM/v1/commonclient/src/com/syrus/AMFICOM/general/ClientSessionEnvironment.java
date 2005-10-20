@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.28 2005/10/20 08:57:51 bob Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.29 2005/10/20 14:22:09 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/20 08:57:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/10/20 14:22:09 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -156,8 +156,10 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	@Override
-	public void login(final String login, final String password) throws CommunicationException, LoginException {
-		super.login(login, password);
+	public void login(final String login, final String password, final Identifier domainId)
+			throws CommunicationException,
+				LoginException {
+		super.login(login, password, domainId);
 		this.activateServant();
 	}
 
@@ -183,8 +185,8 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private void deactivateServant() throws CommunicationException {
 		final String servantName = LoginManager.getSessionKey().toString()
-		+ Identifier.SEPARATOR
-		+ ContextNameFactory.generateContextName();
+				+ Identifier.SEPARATOR
+				+ ContextNameFactory.generateContextName();
 		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
 		corbaServer.deactivateServant(servantName, true);
 	}
