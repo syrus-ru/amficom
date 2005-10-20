@@ -1,4 +1,4 @@
--- $Id: permittionattributes.sql,v 1.3 2005/10/20 11:14:06 arseniy Exp $
+-- $Id: permittionattributes.sql,v 1.4 2005/10/20 11:29:47 bob Exp $
 
 CREATE TABLE PermissionAttributes(
  id NUMBER(19),
@@ -8,7 +8,7 @@ CREATE TABLE PermissionAttributes(
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- domain_id NOT NULL,
+ domain_id,
  parent_id NUMBER(19) NOT NULL,
  module_code VARCHAR2(64 CHAR) NOT NULL,
  permission_mask NUMBER(12),
