@@ -39,6 +39,7 @@ resource.jar \
 map.jar \
 mapxml.jar \
 scheme.jar \
+schemexml.jar \
 mapview.jar \
 report.jar \
 filter.jar \
