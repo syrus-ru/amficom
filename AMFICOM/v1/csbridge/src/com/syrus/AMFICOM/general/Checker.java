@@ -1,5 +1,5 @@
 /*-
-* $Id: Checker.java,v 1.5 2005/10/20 11:51:29 bob Exp $
+* $Id: Checker.java,v 1.6 2005/10/20 12:08:29 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
  * 
  * Permission checker for a user logged in 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/10/20 11:51:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/20 12:08:29 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module csbridge
@@ -42,10 +42,16 @@ public abstract class Checker {
 	 */
 	public static boolean isPermitted(final PermissionCodename codename) 
 	throws ApplicationException {
-		final Domain domain = 
-			StorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
-		
+		final Identifier domainId = LoginManager.getDomainId();
 		final Identifier userId = LoginManager.getUserId();		
+
+		if (domainId == null || userId == null || domainId.isVoid() || userId.isVoid()) {
+			return false;
+		}
+		
+		final Domain domain = 
+			StorableObjectPool.getStorableObject(domainId, true);
+		
 		final Module module = codename.getModule();
 		
 		final PermissionAttributes permissionAttributes = 
