@@ -1,6 +1,6 @@
--- $Id: permittionattribute.sql,v 1.1 2005/10/20 11:13:19 arseniy Exp $
+-- $Id: permittionattributes.sql,v 1.3 2005/10/20 11:14:06 arseniy Exp $
 
-CREATE TABLE PermissionAttribute(
+CREATE TABLE PermissionAttributes(
  id NUMBER(19),
  created DATE NOT NULL,
  modified DATE NOT NULL,
@@ -23,4 +23,4 @@ CREATE TABLE PermissionAttribute(
    REFERENCES Domain (id) ON DELETE CASCADE   
 );
 
-CREATE SEQUENCE PermissionAttribute_Seq ORDER;
+CREATE SEQUENCE PermissionAttributes_Seq ORDER;
