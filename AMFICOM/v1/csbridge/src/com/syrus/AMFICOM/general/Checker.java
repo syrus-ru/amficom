@@ -1,5 +1,5 @@
 /*-
-* $Id: Checker.java,v 1.4 2005/10/11 08:06:01 bob Exp $
+* $Id: Checker.java,v 1.5 2005/10/20 11:51:29 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
  * 
  * Permission checker for a user logged in 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/10/11 08:06:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/20 11:51:29 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module csbridge
@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 public abstract class Checker {
 
 	private Checker() {
-		// singleton
 		assert false;
 	}
 
@@ -52,12 +51,14 @@ public abstract class Checker {
 		final PermissionAttributes permissionAttributes = 
 			domain.getPermissionAttributes(userId, module);
 		
-		if (permissionAttributes.isDenied(codename)) {
-			return false;
-		}
-		
-		if (permissionAttributes.isPermissionEnable(codename)) {
-			return true;
+		if (permissionAttributes != null) {
+			if (permissionAttributes.isDenied(codename)) {
+				return false;
+			}
+			
+			if (permissionAttributes.isPermissionEnable(codename)) {
+				return true;
+			}
 		}
 		
 		final SystemUser systemUser = 
