@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.27 2005/10/20 14:54:14 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.28 2005/10/20 17:48:32 arseniy Exp $
  *
  * Copyright ╘ 2004 Syrus Systems.
  * мЮСВМН-РЕУМХВЕЯЙХИ ЖЕМРП.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.27 $, $Date: 2005/10/20 14:54:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/10/20 17:48:32 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -147,39 +147,43 @@ public class OpenSessionCommand extends AbstractCommand {
 			return;
 		}
 
-		boolean trying = false;
+		/**
+		 * Наверное, возможен расклад, когда moreAttemps == true и this.logged = false.
+		 */
+		boolean moreAttemps = true;
 		do {
 			try {
-				trying = this.logging();
-			} catch (final CommunicationException e) {
-				Log.errorException(e);
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-//						LangModelGeneral.getString("Error.ServerConnection"),
-						e.getMessage(),
-						I18N.getString("Error.OpenSession"),
-					JOptionPane.ERROR_MESSAGE, null);
-				this.dispatcher.firePropertyChange(
-					new StatusMessageEvent(this, 
-						StatusMessageEvent.STATUS_PROGRESS_BAR,
-						false));
-				this.logged = false;
-			} catch (final LoginException e) {
-				Log.errorException(e);
+				moreAttemps = !this.logging();
+				this.logged = true;
+			} catch (final CommunicationException ce) {
+				Log.errorException(ce);
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						e.getMessage(), 
+						ce.getMessage(),
 						I18N.getString("Error.OpenSession"),
-						JOptionPane.ERROR_MESSAGE, 
+						JOptionPane.ERROR_MESSAGE,
 						null);
-				this.dispatcher.firePropertyChange(
-						new StatusMessageEvent(this, 
-							StatusMessageEvent.STATUS_PROGRESS_BAR,
-							false));
-				this.logged = e.isAlreadyLoggedIn();
-				trying = this.logged;
-			}			
-		} while (!trying);
+				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+				moreAttemps = this.logged = false;
+			} catch (final LoginException le) {
+				Log.errorException(le);
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						le.getMessage(),
+						I18N.getString("Error.OpenSession"),
+						JOptionPane.ERROR_MESSAGE,
+						null);
+				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+				moreAttemps = this.logged = !le.isAlreadyLoggedIn();
+			}
+		} while (moreAttemps);
+
 	}
 
+	/**
+	 * @return "Да" если больше не надо предпринимать попыток входа в систему,
+	 * 				т. е., вход либо удался, либо отменён пользователем.
+	 * @throws CommunicationException
+	 * @throws LoginException
+	 */
 	protected boolean logging() throws CommunicationException, LoginException {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
@@ -210,11 +214,10 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		clientSessionEnvironment.login(this.login, this.password, this.domainId);
 		this.disposeDialog();
-		this.logged = true;
 
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 
-		return this.logged;
+		return true;
 	}
 	
 	protected void createUIItems() {
