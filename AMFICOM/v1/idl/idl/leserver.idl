@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.8 2005/10/19 07:51:21 bass Exp $
+ * $Id: leserver.idl,v 1.9 2005/10/20 14:08:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,19 +25,18 @@ module corba {
 
 	interface LoginServer : general::corba::Verifiable {
 
-		security::corba::IdlSessionKey login(in general::corba::WString32 login,
+		administration::corba::IdlDomainSeq transmitAvailableDomains()
+			raises (general::corba::AMFICOMRemoteException);
+
+		void login(in general::corba::WString32 login,
 			in general::corba::WString32 password,
+			in general::corba::IdlIdentifier domainId,
 			in general::corba::WString64 userHostName,
+			out security::corba::IdlSessionKey sessionKey,
 			out general::corba::IdlIdentifier userId)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void logout(in security::corba::IdlSessionKey sessionKeyT)
-			raises (general::corba::AMFICOMRemoteException);
-
-		administration::corba::IdlDomainSeq transmitAvailableDomains(in security::corba::IdlSessionKey sessionKeyT)
-			raises (general::corba::AMFICOMRemoteException);
-
-		void selectDomain(in security::corba::IdlSessionKey sessionKeyT, in general::corba::IdlIdentifier domainId)
 			raises (general::corba::AMFICOMRemoteException);
 
 		void validateAccess(in security::corba::IdlSessionKey sessionKeyT,
