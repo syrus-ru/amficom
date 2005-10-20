@@ -1,11 +1,14 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.31 2005/10/15 16:48:19 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.32 2005/10/20 14:15:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.leserver;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NOT_LOGGED_IN;
 
 import java.util.Set;
 
@@ -17,7 +20,6 @@ import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -36,10 +38,11 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.ShadowDatabase;
 import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
+import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/15 16:48:19 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/20 14:15:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -51,12 +54,46 @@ final class LoginServerImplementation extends LoginServerPOA {
 	private ShadowDatabase shadowDatabase;
 
 	protected LoginServerImplementation() {
-		this.tc = new TypicalCondition("", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
+		this.tc = new TypicalCondition("",
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.SYSTEMUSER_CODE,
+				SystemUserWrapper.COLUMN_LOGIN);
 		this.shadowDatabase = new ShadowDatabase();
 	}
 
-	public IdlSessionKey login(final String login, final String password, final String userHostName, final IdlIdentifierHolder userIdTH)
-			throws AMFICOMRemoteException {
+
+	public IdlDomain[] transmitAvailableDomains() throws AMFICOMRemoteException {
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
+		try {
+			final Set<Domain> domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
+
+			if (domains.size() == 0) {
+				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NO_DOMAINS_AVAILABLE,
+						IdlCompletionStatus.COMPLETED_YES,
+						"No domains found");
+			}
+
+			final ORB orb = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer().getOrb();
+			final IdlDomain[] domainsT = new IdlDomain[domains.size()];
+			int i = 0;
+			for (final Domain domain : domains) {
+				Log.debugMessage("LoginServerImplementation.transmitAvailableDomains | Domain '" + domain.getId() + "', '"
+						+ domain.getName()
+						+ "'", Log.DEBUGLEVEL08);
+				domainsT[i] = domain.getTransferable(orb);
+			}
+			return domainsT;
+		} catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+	}
+
+	public void login(final String login,
+			final String password,
+			final IdlIdentifier idlDomainId,
+			final String userHostName,
+			final IdlSessionKeyHolder idlSessionKeyHolder,
+			final IdlIdentifierHolder userIdTH) throws AMFICOMRemoteException {
 		this.tc.setValue(login);
 		Set<SystemUser> systemUsers = null;
 		try {
@@ -84,11 +121,31 @@ final class LoginServerImplementation extends LoginServerPOA {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND, IdlCompletionStatus.COMPLETED_YES, onfe.getMessage());
 		}
 
-		if (Encryptor.crypt(password).equals(localPassword)) {
-			userIdTH.value = userId.getTransferable();
-			return LoginProcessor.addUserLogin(userId, userHostName).getTransferable();
+		if (!Encryptor.crypt(password).equals(localPassword)) {
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_PASSWORD, IdlCompletionStatus.COMPLETED_YES, "Illegal password");
 		}
-		throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_PASSWORD, IdlCompletionStatus.COMPLETED_YES, "Illegal password");
+
+		final Identifier domainId = new Identifier(idlDomainId);
+		if (!this.validateDomainAccess(userId, domainId)) {
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ACCESS_VALIDATION, IdlCompletionStatus.COMPLETED_YES, "Access to domain denied");
+		}
+
+		idlSessionKeyHolder.value = LoginProcessor.addUserLogin(userId, domainId, userHostName).getTransferable();
+		userIdTH.value = userId.getTransferable();
+		return;
+	}
+
+	/**
+	 * @todo Implement
+	 * @param userId
+	 * @param domainId
+	 * @return
+	 */
+	private boolean validateDomainAccess(final Identifier userId, final Identifier domainId) {
+		assert userId != null : NON_NULL_EXPECTED;
+		assert domainId != null : NON_NULL_EXPECTED;
+
+		return true;
 	}
 
 	public void logout(final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
@@ -96,57 +153,8 @@ final class LoginServerImplementation extends LoginServerPOA {
 		if (!LoginProcessor.removeUserLogin(sessionKey)) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NOT_LOGGED_IN,
 					IdlCompletionStatus.COMPLETED_YES,
-					ErrorMessages.NOT_LOGGED_IN);
+					NOT_LOGGED_IN);
 		}
-	}
-
-	/**
-	 * Currently this method simply returns all existing domains.
-	 * No checks user's access on domains.
-	 * TODO Implement check user access on domains and return only accesible for the user.
-	 */
-	public IdlDomain[] transmitAvailableDomains(final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
-		final SessionKey sessionKey = new SessionKey(sessionKeyT);
-		if (!LoginProcessor.isUserLoginPresent(sessionKey)) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NOT_LOGGED_IN,
-					IdlCompletionStatus.COMPLETED_YES,
-					ErrorMessages.NOT_LOGGED_IN);
-		}
-
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
-		try {
-			final Set<Domain> domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
-
-			if (domains.size() == 0) {
-				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NO_DOMAINS_AVAILABLE,
-						IdlCompletionStatus.COMPLETED_YES,
-						"No domains found for session key '" + sessionKey + "'");
-			}
-
-			final ORB orb = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer().getOrb();
-			final IdlDomain[] domainsT = new IdlDomain[domains.size()];
-			int i = 0;
-			for (final Domain domain : domains) {
-				Log.debugMessage("LoginServerImplementation.transmitAvailableDomains | Domain '" + domain.getId()
-						+ "', '" + domain.getName() + "'", Log.DEBUGLEVEL08);
-				domainsT[i] = domain.getTransferable(orb);
-			}
-			return domainsT;
-		}
-		catch (ApplicationException ae) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
-		}
-	}
-
-	public void selectDomain(final IdlSessionKey sessionKeyT, final IdlIdentifier domainIdT) throws AMFICOMRemoteException {
-		final SessionKey sessionKey = new SessionKey(sessionKeyT);
-		if (!LoginProcessor.isUserLoginPresent(sessionKey)) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NOT_LOGGED_IN,
-					IdlCompletionStatus.COMPLETED_YES,
-					ErrorMessages.NOT_LOGGED_IN);
-		}
-		final Identifier domainId = new Identifier(domainIdT);
-		LoginProcessor.setUserLoginDomain(sessionKey, domainId);
 	}
 
 	/**
@@ -163,7 +171,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		if (!LoginProcessor.isUserLoginPresent(sessionKey)) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_NOT_LOGGED_IN,
 					IdlCompletionStatus.COMPLETED_YES,
-					ErrorMessages.NOT_LOGGED_IN);
+					NOT_LOGGED_IN);
 		}
 
 		LoginProcessor.updateUserLoginLastActivityDate(sessionKey);
