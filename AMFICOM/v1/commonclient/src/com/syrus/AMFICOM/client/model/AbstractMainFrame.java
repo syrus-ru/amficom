@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.24 2005/10/12 12:39:08 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.25 2005/10/20 12:09:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.StatusBar;
@@ -43,14 +44,16 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/12 12:39:08 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/20 12:09:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -142,16 +145,16 @@ implements PropertyChangeListener {
 		return this.aContext.getApplicationModel();
 	}
 
-	public void propertyChange(PropertyChangeEvent evt) {
-		String propertyName = evt.getPropertyName();
-		if (propertyName.equals(ContextChangeEvent.TYPE)) {
-			ContextChangeEvent cce = (ContextChangeEvent) evt;
+	public void propertyChange(final PropertyChangeEvent evt) {
+		final String propertyName = evt.getPropertyName().intern();
+		if (propertyName == ContextChangeEvent.TYPE) {			
+			final ContextChangeEvent cce = (ContextChangeEvent) evt;
 			if (cce.isSessionOpened()) {
 				this.setSessionOpened();
 
 				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
 
-				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 				final Identifier userId = LoginManager.getUserId();
 				try {
 					final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
@@ -162,7 +165,6 @@ implements PropertyChangeListener {
 				} catch (final ApplicationException e) {
 					assert Log.debugMessage("AbstractMainFrame.propertyChange | Cannot acquire " + userId,
 						Log.DEBUGLEVEL02);
-//					e.printStackTrace();
 				}
 			}
 			if (cce.isSessionClosed()) {
@@ -195,7 +197,9 @@ implements PropertyChangeListener {
 				this.setConnectionFailed();
 			}
 			if (cce.isDomainSelected()) {
-				this.setDomainSelected();
+				if (this.checkEnter()) {
+					this.setDomainSelected();
+				}
 			}
 		}
 
@@ -232,8 +236,42 @@ implements PropertyChangeListener {
 		this.setModel(aContext.getApplicationModel());
 	}
 
-	public void setDomainSelected() {
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+	private final boolean checkEnter() {
+		final String action;
+		if ((action = this.isEnterModuleEnable()) != null) {
+			showErrorMessage("<html>" 
+				+ I18N.getString("Common.Permission.DenyAccess") 
+				+ " : <br>" 
+				+ action
+				+ "</html>");
+			return false;
+		}
+		return true;
+	}
+	
+	private final String isEnterModuleEnable() {
+		final String codename = Application.getApplicationName().toUpperCase() + "_ENTER";		
+		final PermissionCodename permissionCodename = 
+			Enum.valueOf(PermissionCodename.class, codename);
+		
+		try {
+			if (Checker.isPermitted(permissionCodename)) {
+				return null;
+			}
+		} catch (final ApplicationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			
+			// and return problems
+		}
+		return permissionCodename.getDescription() 
+			+ " \"" 
+			+ permissionCodename.getModule().getDescription() 
+			+ "\".";
+	}
+	
+	public void setDomainSelected() {		
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
