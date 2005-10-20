@@ -1,4 +1,4 @@
--- $Id: permittionattributes.sql,v 1.4 2005/10/20 11:29:47 bob Exp $
+-- $Id: permissionattributes.sql,v 1.1 2005/10/20 11:36:13 arseniy Exp $
 
 CREATE TABLE PermissionAttributes(
  id NUMBER(19),
