@@ -301,10 +301,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 		this.analysisLabel.setEnabled(enable);
 	}
 
-	public AnalysisType getAnalysisType() {
-		return this.useAnalysisSetupsCheckBox.isSelected()
-				? (AnalysisType) this.analysisComboBox.getSelectedItem()
-					: AnalysisType.UNKNOWN;
+	public final AnalysisType getAnalysisType() {
+		final AnalysisType analysisType = (AnalysisType) this.analysisComboBox.getSelectedItem();
+		return analysisType != null ? analysisType : AnalysisType.UNKNOWN;
 	}
 
 	public MeasurementSetup getMeasurementSetup() {
