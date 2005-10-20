@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.25 2005/10/20 14:17:20 arseniy Exp $
+ * $Id: LoginManager.java,v 1.26 2005/10/20 14:55:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/20 14:17:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/10/20 14:55:46 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -61,7 +61,9 @@ public final class LoginManager {
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			final IdlDomain[] domainsT = loginServer.transmitAvailableDomains();
-			return StorableObjectPool.fromTransferables(domainsT, true);
+			final Set<Domain> availableDomains = StorableObjectPool.fromTransferables(domainsT, true);
+			StorableObjectPool.putAllStorableObject(availableDomains);
+			return availableDomains;
 		} catch (AMFICOMRemoteException are) {
 			throw new LoginException("Cannot get available domains -- " + are.message);
 		} catch (ApplicationException ae) {
@@ -73,14 +75,13 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void login(final String login, final String password, final Identifier loginDomainId)
-			throws CommunicationException,
-				LoginException {
+			throws CommunicationException, LoginException {
 		assert login != null : NON_NULL_EXPECTED;
 		assert password != null : NON_NULL_EXPECTED;
 		assert loginDomainId != null : NON_NULL_EXPECTED;
 
 		if (sessionKeyT != EMPTY_SESSION_KEY_T) {
-			throw new LoginException(I18N.getString("Error.AlreadyLogged"));
+			throw new LoginException(I18N.getString("Error.AlreadyLogged"), true);
 		}
 
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
