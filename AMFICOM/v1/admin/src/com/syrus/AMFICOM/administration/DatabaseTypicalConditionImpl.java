@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.16 2005/10/20 10:49:42 bob Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.17 2005/10/20 11:40:10 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/20 10:49:42 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/20 11:40:10 $
  * @author $Author: bob $
  * @module administration
  */
@@ -55,6 +55,11 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return key;
 				}
 				break;
+			case ObjectEntities.ROLE_CODE:
+				if (key == StorableObjectWrapper.COLUMN_CODENAME) {
+					return key;
+				}
+				break;				
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
 						+ "' and key '" + key + "' are not supported.",
