@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.79 2005/10/15 16:46:02 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.80 2005/10/20 15:00:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/10/15 16:46:02 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/20 15:00:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -101,6 +101,11 @@ final class MeasurementServer extends SleepButWorkThread {
 	/**
 	 * Login of the corresponding user */
 	static String login;
+
+	/**
+	 * Identifier of domain to log in 
+	 */
+	static Identifier domainId;
 
 	/**
 	 * Map of tests to transmit to MCMs	*/
@@ -179,6 +184,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
 
 			login = user.getLogin();
+			domainId = server.getDomainId();
 
 			/*	Create map of test queues*/
 			mcmTestQueueMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Test>>(mcmIds.size()));
@@ -198,8 +204,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			/*	Login*/
 			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 			try {
-				sessionEnvironment.login(login, PASSWORD);
-				LoginManager.selectDomain(server.getDomainId());
+				sessionEnvironment.login(login, PASSWORD, domainId);
 			}
 			catch (final LoginException le) {
 				Log.errorException(le);
@@ -300,7 +305,7 @@ final class MeasurementServer extends SleepButWorkThread {
 						} catch (AMFICOMRemoteException are) {
 							if (are.errorCode.value() == IdlErrorCode._ERROR_NOT_LOGGED_IN) {
 								try {
-									LoginManager.login(loginRestorer.getLogin(), loginRestorer.getPassword());
+									LoginManager.login(loginRestorer.getLogin(), loginRestorer.getPassword(), loginRestorer.getDomainId());
 								} catch (ApplicationException ae) {
 									Log.errorException(ae);
 								}
@@ -463,6 +468,10 @@ final class MeasurementServer extends SleepButWorkThread {
 
 		public String getPassword() {
 			return PASSWORD;
+		}
+
+		public Identifier getDomainId() {
+			return domainId;
 		}
 	}
 

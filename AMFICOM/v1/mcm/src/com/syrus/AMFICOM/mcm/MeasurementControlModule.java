@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.136 2005/10/19 18:20:09 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.137 2005/10/20 15:00:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.136 $, $Date: 2005/10/19 18:20:09 $
+ * @version $Revision: 1.137 $, $Date: 2005/10/20 15:00:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -121,22 +121,37 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	/**
 	 * Login of the corresponding user.
-	 */
+	 * */
 	static String login;
 
-	/*	Scheduled tests transferred from server	*/
+	/**
+	 * Identifier of domain to log in
+	 * */
+	static Identifier domainId;
+
+	/**
+	 * Scheduled tests transferred from server
+	 * */
 	static List<Test> testList;
 
-	/*	key - test_id, value - corresponding test processor	*/
+	/**	
+	 * key - test_id, value - corresponding test processor
+	 * */
 	static Map<Identifier, TestProcessor> testProcessors;
 
-	/*	Reference to KISConnectionManager*/
+	/**
+	 * Reference to KISConnectionManager
+	 * */
 	static KISConnectionManager kisConnectionManager;
 
-	/*	Key - kisId, value - corresponding transmitter-receiver*/
+	/**
+	 * Key - kisId, value - corresponding transmitter-receiver
+	 * */
 	static Map<Identifier, Transceiver> transceivers;
 
-	/*	Thread with event queue*/
+	/**
+	 * Thread with event queue
+	 * */
 	static EventQueue eventQueue;
 
 	private long forwardProcessing;
@@ -201,6 +216,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			final Server server = serverDatabase.retrieveForId(mcm.getServerId());
 
 			login = user.getLogin();
+			domainId = mcm.getDomainId();
 
 			/*	Create session environment*/
 			MCMSessionEnvironment.createInstance(server.getHostName(), new MCMLoginRestorer());
@@ -208,8 +224,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			/*	Login*/
 			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 			try {
-				sessionEnvironment.login(login, PASSWORD);
-				LoginManager.selectDomain(mcm.getDomainId());
+				sessionEnvironment.login(login, PASSWORD, domainId);
 			} catch (final LoginException le) {
 				Log.errorException(le);
 			}
@@ -505,6 +520,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 		public String getPassword() {
 			return PASSWORD;
+		}
+
+		public Identifier getDomainId() {
+			return domainId;
 		}
 	}
 

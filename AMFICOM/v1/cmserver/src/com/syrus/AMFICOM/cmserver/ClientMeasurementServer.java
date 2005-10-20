@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.65 2005/10/15 16:44:33 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.66 2005/10/20 15:00:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/10/15 16:44:33 $
+ * @version $Revision: 1.66 $, $Date: 2005/10/20 15:00:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -67,6 +66,11 @@ final class ClientMeasurementServer {
 	 * Login of the corresponding user
 	 */
 	static String login;
+
+	/**
+	 * Identifier of domain to log in 
+	 */
+	static Identifier domainId;
 
 	/**
 	 * Process codename.
@@ -120,6 +124,7 @@ final class ClientMeasurementServer {
 			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
 
 			login = user.getLogin();
+			domainId = server.getDomainId();
 
 			/*	Create session environment*/
 			CMServerSessionEnvironment.createInstance(server.getHostName(), new CMServerLoginRestorer());
@@ -127,8 +132,7 @@ final class ClientMeasurementServer {
 			/*	Login*/
 			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
 			try {
-				sessionEnvironment.login(login, PASSWORD);
-				LoginManager.selectDomain(server.getDomainId());
+				sessionEnvironment.login(login, PASSWORD, domainId);
 			} catch (final LoginException le) {
 				Log.errorException(le);
 			}
@@ -172,6 +176,10 @@ final class ClientMeasurementServer {
 
 		public String getPassword() {
 			return PASSWORD;
+		}
+
+		public Identifier getDomainId() {
+			return domainId;
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.13 2005/10/11 14:33:51 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.14 2005/10/20 15:00:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/11 14:33:51 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/20 15:00:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -43,10 +43,12 @@ final class MCMSetup {
 	private static final String KEY_SETUP_SERVER_HOST_NAME = "SetupServerHostName";
 	private static final String KEY_MCM_USER_LOGIN = "MCMUserLogin";
 	private static final String KEY_MCM_USER_PASSWORD = "MCMUserPassword";
+	private static final String KEY_MCM_DOMAIN_ID = "MCMDomainId";
 
 	private static final String SETUP_SERVER_HOST_NAME = "amficom";
 	private static final String MCM_USER_LOGIN = "mcm";
 	private static final String MCM_USER_PASSWORD = "MCM";
+	private static final String MCM_DOMAIN_ID = "Domain_1";
 
 	private static final Identifier ID;
 
@@ -92,7 +94,8 @@ final class MCMSetup {
 		/*-Login*/
 		final String mcmUserLogin = ApplicationProperties.getString(KEY_MCM_USER_LOGIN, MCM_USER_LOGIN);
 		final String mcmUserPassword = ApplicationProperties.getString(KEY_MCM_USER_PASSWORD, MCM_USER_PASSWORD);
-		MCMSessionEnvironment.getInstance().login(mcmUserLogin, mcmUserPassword);
+		final Identifier mcmDomainId = new Identifier(ApplicationProperties.getString(KEY_MCM_DOMAIN_ID, MCM_DOMAIN_ID));
+		MCMSessionEnvironment.getInstance().login(mcmUserLogin, mcmUserPassword, mcmDomainId);
 
 		/*-Retrieve data for this MCM*/
 		final IdlMCM idlMCM = retrieveIdlMCM();
