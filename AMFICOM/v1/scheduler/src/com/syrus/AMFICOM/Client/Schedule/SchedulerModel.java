@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.128 2005/10/20 08:56:23 bob Exp $
+ * $Id: SchedulerModel.java,v 1.129 2005/10/20 10:03:07 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/10/20 08:56:23 $
+ * @version $Revision: 1.129 $, $Date: 2005/10/20 10:03:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -253,6 +253,14 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		} 
 	}
 
+	public final boolean isAddingGroupTestEnable() {
+		if (this.monitoredElement != null && this.meTestGroup != null) {
+			final Identifier groupTestId = this.meTestGroup.get(this.monitoredElement.getId());
+			return groupTestId != null && !groupTestId.isVoid();
+		}
+		return false;
+	}
+	
 	public void removeTest(final Test test) throws ApplicationException {
 		
 		int status = test.getStatus().value();
@@ -263,15 +271,18 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		final Identifier groupTestId = test.getGroupTestId();
 		if (groupTestId != null && !groupTestId.isVoid()) {
-				try {
-					final Set<Test> testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
-						new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
-					final Set<Identifier> testIdsToRemove = Identifier.createIdentifiers(testsByCondition);
-					this.testIds.removeAll(testIdsToRemove);
-					StorableObjectPool.delete(testIdsToRemove);
-				} catch (final ApplicationException e) {
-					throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
-				}
+			if (this.meTestGroup != null) {
+				this.meTestGroup.remove(test.getMonitoredElementId());
+			}
+			try {
+				final Set<Test> testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
+					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
+				final Set<Identifier> testIdsToRemove = Identifier.createIdentifiers(testsByCondition);
+				this.testIds.removeAll(testIdsToRemove);
+				StorableObjectPool.delete(testIdsToRemove);
+			} catch (final ApplicationException e) {
+				throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
+			}
 		} else {
 			Identifier testId = test.getId();
 			this.testIds.remove(testId);
@@ -479,8 +490,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 	}
 
-	public void addSelectedTest(final Object source, final Test selectedTest) 
+	public void addSelectedTest(final Object source, 
+	                            final Test selectedTest) 
 	throws ApplicationException {
+		
+		assert Log.debugMessage("SchedulerModel.addSelectedTest | " + selectedTest,
+			Log.DEBUGLEVEL09);
+		
 		synchronized (this) {
 			if (this.selectedTestIds == null) {
 				this.selectedTestIds = new HashSet<Identifier>();
