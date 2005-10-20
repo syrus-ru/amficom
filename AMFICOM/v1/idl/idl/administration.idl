@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.23 2005/10/10 16:01:18 bob Exp $
+ * $Id: administration.idl,v 1.24 2005/10/20 11:47:18 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -95,7 +95,18 @@ module administration {
 			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum IdlModule {
 				ADMINISTRATION,
-				SCHEME
+				SCHEME,
+				SCHEME_EDITOR,
+				MAPVIEW,
+				OPTIMIZATION,
+				MODELING,
+				SCHEDULER,
+				ANALYSIS,
+				RESEARCH,
+				EVALUATION,
+				OBSERVE,
+				PREDICTION,
+				REPORT
 			};
 
 			public general::corba::IdlIdentifier domainId;			
