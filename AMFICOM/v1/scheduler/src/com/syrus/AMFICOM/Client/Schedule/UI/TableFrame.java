@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.58 2005/10/19 14:56:17 bob Exp $
+ * $Id: TableFrame.java,v 1.59 2005/10/20 08:53:38 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,6 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
@@ -56,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/10/19 14:56:17 $
+ * @version $Revision: 1.59 $, $Date: 2005/10/20 08:53:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
