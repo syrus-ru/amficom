@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.32 2005/08/31 05:50:36 bass Exp $
+ * $Id: MarkDatabase.java,v 1.33 2005/10/20 11:11:23 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,8 +25,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/08/31 05:50:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/10/20 11:11:23 $
+ * @author $Author: krupenn $
  * @module map
  */
 public final class MarkDatabase extends StorableObjectDatabase<Mark> {
@@ -69,8 +68,8 @@ public final class MarkDatabase extends StorableObjectDatabase<Mark> {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION
-				+ QUESTION
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -80,7 +79,7 @@ public final class MarkDatabase extends StorableObjectDatabase<Mark> {
 	@Override
 	protected int setEntityForPreparedStatementTmpl(final Mark storableObject,
 			final PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException, SQLException {
+			int startParameterNumber) throws SQLException {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setDouble(++startParameterNumber, storableObject.getLocation().getX());
@@ -94,7 +93,7 @@ public final class MarkDatabase extends StorableObjectDatabase<Mark> {
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final Mark storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(final Mark storableObject) {
 		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ storableObject.getLocation().getX() + COMMA
@@ -109,8 +108,7 @@ public final class MarkDatabase extends StorableObjectDatabase<Mark> {
 	
 	@Override
 	protected Mark updateEntityFromResultSet(final Mark storableObject, final ResultSet resultSet)
-			throws IllegalDataException,
-				RetrieveObjectException,
+			throws RetrieveObjectException,
 				SQLException {
 		final Mark mark = (storableObject == null) ? new Mark(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID),
