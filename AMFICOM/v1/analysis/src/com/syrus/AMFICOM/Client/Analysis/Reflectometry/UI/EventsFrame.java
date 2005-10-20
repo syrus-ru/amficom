@@ -35,10 +35,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.DetailedEventResource;
 import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
-import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.TraceResource;
-import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
@@ -445,15 +443,12 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 			final DetailedEventResource res = new DetailedEventResource();
 			res.initGeneral(ev, nPri + 1, resKm, sigma);
 			if (this.showComparison) {
-				final EtalonComparison eComp = Heap.getEtalonComparison();
-				final EvaluationPerEventResult perEvent = eComp == null
-						? null : eComp.getPerEventResult();
 				if (nPri >= 0 && nEt >= 0 && Heap.getMTMEtalon() != null) {
 					res.initComparative(pevents[nPri],
 							eevents[nEt],
 							Heap.getMTMEtalon().getMTAE().getModelTrace(),
 							resMt,
-							perEvent,
+							Heap.getEvaluationPerEventResult(),
 							nPri);
 				}
 			}

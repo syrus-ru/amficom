@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.DetailedEventResource;
 import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
-import com.syrus.AMFICOM.analysis.EtalonComparison;
 import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
@@ -181,9 +180,7 @@ implements EtalonMTMListener, CurrentEventChangeListener,
 		((CompareTableRenderer) this.comparativeTable.getDefaultRenderer(Object.class)).setSameType(dataType == etalonType
 				&& dataType != SimpleReflectogramEvent.RESERVED);
 
-		final EtalonComparison eComp = Heap.getEtalonComparison();
-		final EvaluationPerEventResult perEvent = eComp != null
-				? eComp.getPerEventResult() : null;
+		final EvaluationPerEventResult perEvent = Heap.getEvaluationPerEventResult();
 
 		// сравнение по модельной кривой
 		final ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();

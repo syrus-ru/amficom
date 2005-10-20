@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.119 2005/10/17 14:20:09 saa Exp $
+ * $Id: Heap.java,v 1.120 2005/10/20 09:17:02 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
+import com.syrus.AMFICOM.analysis.dadara.EvaluationPerEventResult;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
@@ -46,6 +47,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -79,7 +81,9 @@ import com.syrus.util.Log;
  * currentTrace;
  * currentEvent, currentEtalonEvent;
  * etalonComparison - с той оговоркой, что предполагается, что клиент не будет явно изменять эти объекты;
- * refMismatch (read only) - часть etalonComparison 
+ * refMismatch (read only) - часть etalonComparison
+ * evaluationPerEventResult (read only) - часть etalonComparison
+ * evaluationOverallResult (read only) - часть etalonComparison
  *
  * Кроме того, есть свойство primaryMTAE, которое изменяется вместе и только
  * вместе с refAnalysisPrimary; по его изменению тоже рассылаются уведомления.
@@ -96,7 +100,7 @@ import com.syrus.util.Log;
  * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
  * 
  * @author $Author: saa $
- * @version $Revision: 1.119 $, $Date: 2005/10/17 14:20:09 $
+ * @version $Revision: 1.120 $, $Date: 2005/10/20 09:17:02 $
  * @module analysis
  */
 public class Heap
@@ -1130,6 +1134,15 @@ public class Heap
 		return Heap.etalonComparison;
 	}
 
+	public static EvaluationPerEventResult getEvaluationPerEventResult() {
+		return Heap.etalonComparison == null ? null
+				: Heap.etalonComparison.getPerEventResult();
+	}
+
+	public static ReflectometryEvaluationOverallResult getEvaluationOverallResult() {
+		return Heap.etalonComparison == null ? null
+				: Heap.etalonComparison.getOverallResult();
+	}
 	/*
 	 * ===============================================================
 	 * Other methods
