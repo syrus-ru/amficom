@@ -1,5 +1,5 @@
 /*
- * $Id: TestRole.java,v 1.1 2005/10/11 12:51:55 bob Exp $
+ * $Id: TestRole.java,v 1.2 2005/10/20 11:25:21 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/11 12:51:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/20 11:25:21 $
  * @author $Author: bob $
  * @module test
  */
@@ -34,7 +34,7 @@ public class TestRole extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testAttachToMonitoredElement() throws ApplicationException {
+	public void testCreateRoles() throws ApplicationException {
 		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
 		final Identifier userId = sysUser.getId();
 		for(final RoleCodename roleCodename : RoleCodename.values()) {
@@ -43,6 +43,7 @@ public class TestRole extends TestCase {
 				roleCodename.getDescription()));
 		}
 		
+		StorableObjectPool.flush(ObjectEntities.ROLE_CODE, userId, true);
 		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
 	}
 }
