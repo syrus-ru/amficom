@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.25 2005/10/12 15:32:01 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.26 2005/10/20 14:17:36 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/12 15:32:01 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/20 14:17:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -90,8 +90,10 @@ public abstract class BaseSessionEnvironment {
 	 * @throws CommunicationException
 	 * @throws LoginException
 	 */
-	public void login(final String login, final String password) throws CommunicationException, LoginException {
-		LoginManager.login(login, password);
+	public void login(final String login, final String password, final Identifier domainId)
+			throws CommunicationException,
+				LoginException {
+		LoginManager.login(login, password, domainId);
 		IdentifierPool.deserialize();
 		try {
 			StorableObjectPool.deserialize(this.poolContext.getLRUSaver());

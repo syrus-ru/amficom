@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.24 2005/10/15 16:49:36 arseniy Exp $
+ * $Id: LoginManager.java,v 1.25 2005/10/20 14:17:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,10 @@
  */
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.SystemException;
@@ -22,15 +23,17 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/15 16:49:36 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/20 14:17:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public final class LoginManager {
+	private static final IdlSessionKey EMPTY_SESSION_KEY_T = new IdlSessionKey("");
+
 	private static LoginServerConnectionManager loginServerConnectionManager;
 	private static SessionKey sessionKey;
 	private static IdlSessionKey sessionKeyT;
@@ -43,31 +46,62 @@ public final class LoginManager {
 	}
 
 	static {
-		sessionKeyT = new IdlSessionKey("");
-		sessionKey = new SessionKey(sessionKeyT);
+		resetSessionKey();
 	}
 
 	public static void init(final LoginServerConnectionManager loginServerConnectionManager1) {
 		loginServerConnectionManager = loginServerConnectionManager1;
 	}
 
+
+	/*
+	 * @todo Write meaningful processing of all possible error codes
+	 */
+	public static Set<Domain> getAvailableDomains() throws CommunicationException, LoginException {
+		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
+		try {
+			final IdlDomain[] domainsT = loginServer.transmitAvailableDomains();
+			return StorableObjectPool.fromTransferables(domainsT, true);
+		} catch (AMFICOMRemoteException are) {
+			throw new LoginException("Cannot get available domains -- " + are.message);
+		} catch (ApplicationException ae) {
+			throw new LoginException("Cannot get available domains -- " + ae.getMessage(), ae);
+		}
+	}
+
 	/*
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
-	public static void login(final String login, final String password) throws CommunicationException, LoginException {
+	public static void login(final String login, final String password, final Identifier loginDomainId)
+			throws CommunicationException,
+				LoginException {
+		assert login != null : NON_NULL_EXPECTED;
+		assert password != null : NON_NULL_EXPECTED;
+		assert loginDomainId != null : NON_NULL_EXPECTED;
+
+		if (sessionKeyT != EMPTY_SESSION_KEY_T) {
+			throw new LoginException(I18N.getString("Error.AlreadyLogged"));
+		}
+
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			final String localHostName = InetAddress.getLocalHost().getHostName();
-			IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
-			sessionKeyT = loginServer.login(login, password, localHostName, userIdHolder);
+			final IdlSessionKeyHolder idlSessionKeyHolder = new IdlSessionKeyHolder();
+			final IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
+			loginServer.login(login, password, loginDomainId.getTransferable(), localHostName, idlSessionKeyHolder, userIdHolder);
+
+			sessionKeyT = idlSessionKeyHolder.value;
 			sessionKey = new SessionKey(sessionKeyT);
 			userId = new Identifier(userIdHolder.value);
+			domainId = loginDomainId;
 		} catch (final AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
 				case IdlErrorCode._ERROR_ILLEGAL_LOGIN:
 					throw new LoginException(I18N.getString("Error.IllegalLogin"));
 				case IdlErrorCode._ERROR_ILLEGAL_PASSWORD:
 					throw new LoginException(I18N.getString("Error.IllegalPassword"));
+				case IdlErrorCode._ERROR_ACCESS_VALIDATION:
+					throw new LoginException(I18N.getString("Error.AccessValidation"));
 				case IdlErrorCode._ERROR_ALREADY_LOGGED:
 					throw new LoginException(I18N.getString("Error.AlreadyLogged"));
 				default:
@@ -84,11 +118,15 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void logout() throws CommunicationException, LoginException {
+		if (sessionKeyT == EMPTY_SESSION_KEY_T) {
+			throw new LoginException(I18N.getString("Error.AlreadyLogged"));
+		}
+
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.logout(sessionKey.getTransferable());
-		}
-		catch (AMFICOMRemoteException are) {
+			loginServer.logout(sessionKeyT);
+			resetSessionKey();
+		} catch (AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
 				case IdlErrorCode._ERROR_NOT_LOGGED_IN:
 					throw new LoginException("Not logged in");
@@ -98,46 +136,9 @@ public final class LoginManager {
 		}
 	}
 
-	/*
-	 * @todo Write meaningful processing of all possible error codes
-	 * */
-	public static Set<Domain> getAvailableDomains() throws CommunicationException, LoginException {
-		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
-		try {
-			final IdlDomain[] domainsT = loginServer.transmitAvailableDomains(sessionKey.getTransferable());
-			final Set<Domain> domains = new HashSet<Domain>(domainsT.length);
-			for (int i = 0; i < domainsT.length; i++) {
-				try {
-					domains.add(new Domain(domainsT[i]));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-			}
-			return domains;
-		}
-		catch (AMFICOMRemoteException are) {
-			switch (are.errorCode.value()) {
-				case IdlErrorCode._ERROR_NO_DOMAINS_AVAILABLE:
-					throw new LoginException("No domains available");
-				default:
-					throw new LoginException("Cannot get available domains -- " + are.message);
-			}
-		}
-	}
-
-	/*
-	 * @todo Write meaningful processing of all possible error codes
-	 * */
-	public static void selectDomain(final Identifier domainId1) throws CommunicationException {
-		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
-		try {
-			loginServer.selectDomain(sessionKey.getTransferable(), domainId1.getTransferable());
-			domainId = domainId1;
-		}
-		catch (AMFICOMRemoteException are) {
-			Log.errorMessage(are.message);
-		}
+	private static void resetSessionKey() {
+		sessionKeyT = EMPTY_SESSION_KEY_T;
+		sessionKey = new SessionKey(EMPTY_SESSION_KEY_T);
 	}
 
 	public static SessionKey getSessionKey() {
