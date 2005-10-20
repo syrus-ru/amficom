@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.23 2005/10/07 15:00:15 bob Exp $
+* $Id: WrapperedTable.java,v 1.24 2005/10/20 08:58:46 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,10 +38,11 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/07 15:00:15 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/20 08:58:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -176,16 +177,28 @@ public final class WrapperedTable<T> extends ATable {
 		for (int i=1; i < tsIndices.length; i++) {
 			if (tsIndices[i] - prevIndex > 1) {
 				if (addSelection) {
+					assert Log.debugMessage("WrapperedTable.selectIndices | add selection "
+							+ prevIndex + " .. " + tsIndices[i - 1],
+						Log.DEBUGLEVEL09);
 					this.addRowSelectionInterval(prevIndex, tsIndices[i - 1]);
 				} else {
+					assert Log.debugMessage("WrapperedTable.selectIndices | set selection "
+						+ prevIndex + " .. " + tsIndices[i - 1],
+					Log.DEBUGLEVEL09);
 					this.setRowSelectionInterval(prevIndex, tsIndices[i - 1]);
 				}
 				prevIndex = tsIndices[i]; 
 			}
 		}
 		if (addSelection) {
+			assert Log.debugMessage("WrapperedTable.selectIndices | add selection "
+				+ prevIndex + " .. " + tsIndices[tsIndices.length - 1],
+			Log.DEBUGLEVEL09);
 			this.addRowSelectionInterval(prevIndex, tsIndices[tsIndices.length - 1]);
 		} else {
+			assert Log.debugMessage("WrapperedTable.selectIndices | set selection "
+				+ prevIndex + " .. " + tsIndices[tsIndices.length - 1],
+			Log.DEBUGLEVEL09);
 			this.setRowSelectionInterval(prevIndex, tsIndices[tsIndices.length - 1]);
 		}
 	}
@@ -194,19 +207,36 @@ public final class WrapperedTable<T> extends ATable {
 		if (ts.isEmpty()) {
 			return new int[] {};
 		}
-		final int[] indices = new int[ts.size()];
+		
+		final int[] tmpIndices = new int[ts.size()];
 		int index = 0;
 		final WrapperedTableModel<T> tableModel = this.getModel();
 		for(final T t : ts) {
 			for (int i = 0; i < tableModel.getRowCount(); i++) {
 				final T tInTable = tableModel.getObject(i);
 				if (tInTable.equals(t)) {
-					indices[index++] = i;
+					tmpIndices[index++] = i;
 					break;
 				}
 			}
 		}
+		
+		final int[] indices;
+		if (index == ts.size()) {
+			indices = tmpIndices;
+		} else {
+			assert Log.debugMessage("WrapperedTable.indexOfTs | allocate size:" 
+					+ tmpIndices.length 
+					+ ", fill only first " 
+					+ index 
+					+ " elements", 
+				Log.DEBUGLEVEL09);
+			indices = new int[index];
+			System.arraycopy(tmpIndices, 0, indices, 0, index);
+		}
+
 		Arrays.sort(indices);
+		
 		return indices;
 	}
 
