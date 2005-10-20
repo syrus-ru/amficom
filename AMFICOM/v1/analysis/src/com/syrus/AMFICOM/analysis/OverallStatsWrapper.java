@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStatsWrapper.java,v 1.6 2005/09/07 02:56:49 arseniy Exp $
+ * $Id: OverallStatsWrapper.java,v 1.7 2005/10/20 09:17:40 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/09/07 02:56:49 $
+ * @author $Author: saa $
+ * @version $Revision: 1.7 $, $Date: 2005/10/20 09:17:40 $
  * @module analysis
  */
 
@@ -36,6 +36,8 @@ public class OverallStatsWrapper implements Wrapper<OverallStats> {
 	public static final String KEY_MEAN_DEVIATION = "meanDeviation";
 	public static final String KEY_D_LOSS = "dLoss";
 	public static final String KEY_MISMATCH = "mismatch";
+	public static final String KEY_QUALITY_Q = "qualityQ";
+	public static final String KEY_QUALITY_D = "qualityD";
 
 	private static OverallStatsWrapper instance;
 
@@ -59,7 +61,9 @@ public class OverallStatsWrapper implements Wrapper<OverallStats> {
 				KEY_MAX_DEVIATION,
 				KEY_MEAN_DEVIATION,
 				KEY_D_LOSS,
-				KEY_MISMATCH };
+				KEY_MISMATCH,
+				KEY_QUALITY_Q,
+				KEY_QUALITY_D};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -123,6 +127,10 @@ public class OverallStatsWrapper implements Wrapper<OverallStats> {
 			return stats.getMeanDeviation();
 		} else if (key.equals(KEY_MISMATCH)) {
 			return stats.getMismatch();
+		} else if (key.equals(KEY_QUALITY_Q)) {
+			return stats.getQualityQ();
+		} else if (key.equals(KEY_QUALITY_D)) {
+			return stats.getQualityD();
 		}
 		return null;
 	}

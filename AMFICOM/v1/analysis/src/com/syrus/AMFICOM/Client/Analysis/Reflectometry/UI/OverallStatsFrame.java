@@ -130,8 +130,10 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 						OverallStatsWrapper.KEY_ETALON_LENGTH,
 						OverallStatsWrapper.KEY_MAX_DEVIATION,
 						OverallStatsWrapper.KEY_MEAN_DEVIATION,
-						OverallStatsWrapper.KEY_D_LOSS,
-						OverallStatsWrapper.KEY_MISMATCH });
+						//OverallStatsWrapper.KEY_D_LOSS,
+						OverallStatsWrapper.KEY_MISMATCH,
+						OverallStatsWrapper.KEY_QUALITY_D,
+						OverallStatsWrapper.KEY_QUALITY_Q});
 		this.jTableWholeComp = new WrapperedPropertyTable<OverallStats>(this.wctModel);
 		this.jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(130);
 
@@ -169,7 +171,9 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		// deltaX;
 		final double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
 
-		this.stats.initCompareStatistics(maxDeviation, meanDeviation, etalonLength, lossDifference, mismatch);
+		this.stats.initCompareStatistics(maxDeviation, meanDeviation,
+				etalonLength, lossDifference, mismatch,
+				Heap.getEvaluationOverallResult());
 		this.jTableWholeComp.getModel().fireTableDataChanged();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.12 2005/10/17 14:20:09 saa Exp $
+ * $Id: OverallStats.java,v 1.13 2005/10/20 09:17:40 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/10/17 14:20:09 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/20 09:17:40 $
  * @module analysis
  */
 
@@ -41,6 +42,9 @@ public class OverallStats {
 	private String dLoss;
 
 	private String mismatch;
+
+	private String qualityQ;
+	private String qualityD;
 
 	private List<PropertyChangeListener> propertyChangeListeners;
 	
@@ -68,7 +72,8 @@ public class OverallStats {
 			double meanDeviation1,
 			double etalonLength1,
 			double lossDifference1,
-			ReflectogramMismatchImpl alarm) {
+			ReflectogramMismatchImpl alarm,
+			ReflectometryEvaluationOverallResult evaluationOverall) {
 		setEtalonLength(String.valueOf(MathRef.round_3(etalonLength1)) + " " + LangModelAnalyse.getString("km"));
 		setMaxDeviation(String.valueOf(MathRef.round_4(maxDeviation1)) + " " + LangModelAnalyse.getString("dB"));
 		setMeanDeviation(String.valueOf(MathRef.round_4(meanDeviation1)) + " " + LangModelAnalyse.getString("dB"));
@@ -80,8 +85,22 @@ public class OverallStats {
 					+ " "
 					+ LangModelAnalyse.getString(("mismatchDistance")));
 		}
+		if (evaluationOverall == null) {
+			setQualityD("");
+			setQualityQ("");
+		} else {
+			if (evaluationOverall.hasDQ()) {
+				setQualityD(
+						String.valueOf(MathRef.round_3(
+								evaluationOverall.getD())) + " " +
+						LangModelAnalyse.getString("qualityDSuffix"));
+			} else {
+				setQualityD("");
+				setQualityQ("");
+			}
+		}
 	}
-	
+
 	public String getTotalAttenuation() {
 		return this.totalAttenuation;
 	}
@@ -259,6 +278,30 @@ public class OverallStats {
 	public synchronized void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
 		if (this.propertyChangeListeners != null && !this.propertyChangeListeners.contains(propertyChangeListener)) {
 			this.propertyChangeListeners.remove(propertyChangeListener);
+		}
+	}
+
+	public String getQualityD() {
+		return this.qualityD;
+	}
+
+	public void setQualityD(String qualityD) {
+		if (this.qualityD == null || !this.qualityD.equals(qualityD)) {
+			String oldValue = this.qualityD;
+			this.qualityD = qualityD;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, OverallStatsWrapper.KEY_QUALITY_D, oldValue, qualityD));
+		}
+	}
+
+	public String getQualityQ() {
+		return this.qualityQ;
+	}
+
+	public void setQualityQ(String qualityQ) {
+		if (this.qualityQ == null || !this.qualityQ.equals(qualityQ)) {
+			String oldValue = this.qualityQ;
+			this.qualityQ = qualityQ;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, OverallStatsWrapper.KEY_QUALITY_Q, oldValue, qualityQ));
 		}
 	}
 }
