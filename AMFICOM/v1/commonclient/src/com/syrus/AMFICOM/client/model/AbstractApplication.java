@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.22 2005/10/18 14:54:55 bob Exp $
+ * $Id: AbstractApplication.java,v 1.23 2005/10/20 08:58:20 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/18 14:54:55 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/20 08:58:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -376,7 +376,7 @@ public abstract class AbstractApplication {
 		boolean usingXMLSession = xmlSession.equalsIgnoreCase("true") || xmlSession.equalsIgnoreCase("yes");
 		if (!usingXMLSession) {
 			final int kind = ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1);
-			final SessionKind sessionKind = SessionKind.fromInt(kind);
+			final SessionKind sessionKind = SessionKind.valueOf(kind);
 			try {
 				ClientSessionEnvironment.createInstance(sessionKind, loginRestorer);				
 			} catch (final CommunicationException ce) {
