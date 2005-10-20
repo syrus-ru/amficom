@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.1 2005/10/20 11:39:25 bob Exp $
+ * $Id: TestRoleAttributtes.java,v 1.2 2005/10/20 13:14:54 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/20 11:39:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/20 13:14:54 $
  * @author $Author: bob $
  * @module test
  */
@@ -238,6 +238,7 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_EDIT_ETALON, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_REFLECTOGRAM_FILE, true);
 			}
@@ -366,6 +367,7 @@ public class TestRoleAttributtes extends TestCase {
 				
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
 			}
@@ -441,6 +443,7 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 			}
 			
 			{
@@ -634,6 +637,7 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
 			}
 			
