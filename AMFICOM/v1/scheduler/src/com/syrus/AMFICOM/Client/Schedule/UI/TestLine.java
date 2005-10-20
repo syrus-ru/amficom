@@ -343,7 +343,14 @@ final class TestLine extends TimeLine {
 		if (this.skip) { 
 			return; 
 		}
-		this.acquireTests();
+		
+		new ProcessingDialog(new Runnable() {
+			public void run() {
+				acquireTests();
+			};	
+		},I18N.getString("Scheduler.StatusMessage.UpdatingTests"));
+		
+		
 		this.updateTest();
 	}
 
