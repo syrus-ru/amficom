@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.195 2005/10/17 09:45:31 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.196 2005/10/20 13:16:36 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.195 $, $Date: 2005/10/17 09:45:31 $
+ * @version $Revision: 1.196 $, $Date: 2005/10/20 13:16:36 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -1053,7 +1053,7 @@ public final class StorableObjectPool {
 			final boolean continueOnError) throws ApplicationException {
 		final int length = transferables.length;
 		final Set<T> storableObjects = new HashSet<T>(length);
-		
+
 		for (int i = 0; i < length; i++) {
 			try {
 				final T storableObject = StorableObjectPool.<T>fromTransferable(transferables[i]);

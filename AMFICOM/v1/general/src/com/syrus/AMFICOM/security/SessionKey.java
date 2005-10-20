@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKey.java,v 1.10 2005/10/07 10:04:20 bass Exp $
+ * $Id: SessionKey.java,v 1.11 2005/10/20 13:17:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/07 10:04:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/10/20 13:17:14 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -27,11 +27,11 @@ public final class SessionKey implements TransferableObject<IdlSessionKey> {
 	 * Only for generator and database driver
 	 * @param sessionCode
 	 */
-	protected SessionKey(String sessionCode) {
+	SessionKey(final String sessionCode) {
 		this.sessionCode = sessionCode;
 	}
 
-	public SessionKey(IdlSessionKey skT) {
+	public SessionKey(final IdlSessionKey skT) {
 		this.sessionCode = skT.sessionCode;
 	}
 
@@ -48,12 +48,14 @@ public final class SessionKey implements TransferableObject<IdlSessionKey> {
 	}
 
 	@Override
-	public boolean equals(Object object) {
-		if (this == object)
+	public boolean equals(final Object object) {
+		if (this == object) {
 			return true;
+		}
 
-		if (object instanceof SessionKey)
+		if (object instanceof SessionKey) {
 			return this.sessionCode.equals(((SessionKey) object).sessionCode);
+		}
 		return false;
 	}
 
