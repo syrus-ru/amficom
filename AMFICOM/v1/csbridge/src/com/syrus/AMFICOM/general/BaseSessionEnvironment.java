@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.26 2005/10/20 14:17:36 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.27 2005/10/20 17:49:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/10/20 14:17:36 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/20 17:49:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -94,16 +94,17 @@ public abstract class BaseSessionEnvironment {
 			throws CommunicationException,
 				LoginException {
 		LoginManager.login(login, password, domainId);
-		IdentifierPool.deserialize();
 		try {
 			StorableObjectPool.deserialize(this.poolContext.getLRUSaver());
-		} catch (final CommunicationException ce) {
+		} catch (final ApplicationException ae) {
+			LoginManager.logout();
 			StorableObjectPool.clean();
-			throw ce;
-		} catch (final ApplicationException e) {
-			StorableObjectPool.clean();
-			throw new LoginException(I18N.getString("Error.Text.DeserializationFailed"));
+			if (ae instanceof CommunicationException) {
+				throw (CommunicationException) ae;
+			}
+			throw new LoginException(I18N.getString("Error.Text.DeserializationFailed"), ae);
 		}
+		IdentifierPool.deserialize();
 
 		this.baseConnectionManager.getCORBAServer().addShutdownHook(this.logoutShutdownHook);
 
