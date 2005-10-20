@@ -692,21 +692,10 @@ public class TimeParametersFrame extends JInternalFrame {
 						setPeriodEnabled(true);
 					}				
 			});
-			
-//			this.continuosRadioButton.addActionListener(new ActionListener() {
-//
-//				public void actionPerformed(ActionEvent e) {
-////						setPeriodEnabled(false);
-//						setContinousEnable(true);			
-//						
-//					
-//				}
-//			});
-			
+
 			this.groupRadioButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-//						setEndDateEnable(true);						
 						setGroupEnabled(true);
 					}				
 			});
@@ -724,7 +713,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.pediodTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 
 			
-			ActionListener actionListener = new ActionListener() {
+			final ActionListener actionListener = new ActionListener() {
 				
 				public void actionPerformed(final ActionEvent event) {
 					TimeParametersPanel.this.choosedButton = (JButton)event.getSource();
@@ -806,6 +795,9 @@ public class TimeParametersFrame extends JInternalFrame {
 									test.getTemporalType());
 						} else {
 							this.setGroupTestSelected(test.getStartTime());
+							if (this.groupRadioButton.isSelected()) {
+								this.setGroupEnabled(true);
+							}
 						}
 					}
 				} catch (final ApplicationException e) {
@@ -841,7 +833,10 @@ public class TimeParametersFrame extends JInternalFrame {
 				this.startTimeButton.setEnabled(enable);
 				this.endTimeButton.setEnabled(enable);				
 				enable = enable || !selectedTest.getGroupTestId().isVoid();
-				this.pediodTimeButton.setEnabled(enable);				
+				this.pediodTimeButton.setEnabled(enable);	
+				if (this.groupRadioButton.isSelected()) {
+					this.setGroupEnabled(true);
+				}
 			}
 			this.propertyChangeEvent = null;
 		}
@@ -876,16 +871,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		void setGroupEnabled(boolean enable) {
-			final Test selectedTest;
-			try {
-				selectedTest = this.schedulerModel.getSelectedTest();
-			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(e.getMessage());
-				return;
-			}
-			
 			this.interavalLabel.setText(I18N.getString("Scheduler.Text.TimePanel.Interval") + ':');
-			// this.endTimeButton.setEnabled(false);
 			this.endTimeButton.setVisible(false);
 			this.startTimeButton.setVisible(enable);
 			this.pediodTimeButton.setVisible(enable);
@@ -894,11 +880,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.periodDaySpinner.setVisible(enable);
 			this.dayIntervalLabel.setVisible(enable);
 			this.interavalLabel.setVisible(enable);
-
-			if (selectedTest != null && !selectedTest.getGroupTestId().isVoid()) {
-				this.pediodTimeButton.setEnabled(true);
-			}
-			
+			this.pediodTimeButton.setEnabled(this.schedulerModel.isAddingGroupTestEnable());			
 			this.endingLabel.setVisible(false);
 			this.endTimeSpinner.setVisible(false);
 			this.endDateSpinner.setVisible(false);
