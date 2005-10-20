@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.24 2005/10/06 14:34:35 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.25 2005/10/20 13:48:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,10 +39,11 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.24 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/20 13:48:10 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -98,6 +99,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			try {
 				trying = this.logging();
 			} catch (final CommunicationException e) {
+				Log.errorException(e);
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 //						LangModelGeneral.getString("Error.ServerConnection"),
 						e.getMessage(),
@@ -109,6 +111,7 @@ public class OpenSessionCommand extends AbstractCommand {
 						false));
 				this.logged = false;
 			} catch (final LoginException e) {
+				Log.errorException(e);
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						e.getMessage(), 
 						I18N.getString("Error.OpenSession"),
