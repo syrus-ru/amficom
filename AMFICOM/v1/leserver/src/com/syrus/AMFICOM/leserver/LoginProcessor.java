@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.18 2005/10/15 17:52:30 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.19 2005/10/20 14:12:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/15 17:52:30 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/20 14:12:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -140,9 +140,10 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 	}
 
-	static SessionKey addUserLogin(final Identifier userId, final String userHostName) {
-		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userId + "'", Log.DEBUGLEVEL08);
-		final UserLogin userLogin = UserLogin.createInstance(userId, userHostName);
+	static SessionKey addUserLogin(final Identifier userId, final Identifier domainId, final String userHostName) {
+		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userId + "' to domain '" + domainId + "'",
+				Log.DEBUGLEVEL08);
+		final UserLogin userLogin = UserLogin.createInstance(userId, domainId, userHostName);
 		loginMap.put(userLogin.getSessionKey(), userLogin);
 		try {
 			userLoginDatabase.insert(userLogin);
@@ -167,17 +168,6 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	static boolean isUserLoginPresent(final SessionKey sessionKey) {
 		return loginMap.containsKey(sessionKey);
-	}
-
-	static void setUserLoginDomain(final SessionKey sessionKey, final Identifier domainId) {
-		final UserLogin userLogin = loginMap.get(sessionKey);
-		userLogin.setDomainId(domainId);
-		try {
-			userLoginDatabase.update(userLogin);
-		} catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
-		}
-		printUserLogins();
 	}
 
 	static void updateUserLoginLastActivityDate(final SessionKey sessionKey) {
