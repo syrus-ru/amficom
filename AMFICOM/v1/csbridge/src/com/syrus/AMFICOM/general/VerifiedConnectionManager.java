@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.16 2005/10/19 08:08:10 bass Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.17 2005/10/20 15:56:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/19 08:08:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/10/20 15:56:27 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -102,7 +102,7 @@ public class VerifiedConnectionManager {
 
 	private Verifiable activateAndGet(final String servantName) throws CommunicationException {
 		this.activateVerifiableReference(servantName);
-		Verifiable reference = this.referencesMap.get(servantName);
+		final Verifiable reference = this.referencesMap.get(servantName);
 		if (reference != null) {
 			return reference;
 		}
@@ -113,10 +113,10 @@ public class VerifiedConnectionManager {
 		try {
 			final Verifiable reference = VerifiableHelper.narrow(this.corbaServer.resolveReference(servantName));
 			this.referencesMap.put(servantName, reference);
-			if (this.disconnectedServants.remove(servantName))
+			if (this.disconnectedServants.remove(servantName)) {
 				this.onRestoreConnection(servantName);
-		}
-		catch (CommunicationException ce) {
+			}
+		} catch (CommunicationException ce) {
 			Log.errorException(ce);
 			this.referencesMap.put(servantName, null);
 			this.disconnectedServants.add(servantName);
