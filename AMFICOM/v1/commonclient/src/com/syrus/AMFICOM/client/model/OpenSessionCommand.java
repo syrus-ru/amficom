@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.26 2005/10/20 14:19:28 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.27 2005/10/20 14:54:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/10/20 14:19:28 $
+ * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/10/20 14:54:14 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -88,7 +88,9 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.password = passwordProperty;
 		}
 		if (domainIdProperty != null) {
-			this.domainId = new Identifier(domainIdProperty);
+			this.domainId = new Identifier(domainIdProperty);			
+		} else {
+			this.domainId = Environment.getDomainId();
 		}
 
 	}
@@ -126,7 +128,7 @@ public class OpenSessionCommand extends AbstractCommand {
 					JOptionPane.ERROR_MESSAGE,
 					null);
 			return false;
-		} catch (LoginException le) {
+		} catch (final LoginException le) {
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
 					I18N.getString("Common.StatusBar.NoSession")));
@@ -172,7 +174,8 @@ public class OpenSessionCommand extends AbstractCommand {
 						new StatusMessageEvent(this, 
 							StatusMessageEvent.STATUS_PROGRESS_BAR,
 							false));
-				this.logged = false;
+				this.logged = e.isAlreadyLoggedIn();
+				trying = this.logged;
 			}			
 		} while (!trying);
 	}
@@ -233,6 +236,8 @@ public class OpenSessionCommand extends AbstractCommand {
 					new ArrayList<Domain>(this.availableDomains),
 					StorableObjectWrapper.COLUMN_NAME,
 					StorableObjectWrapper.COLUMN_ID);
+			
+			
 
 			{
 				final GridBagConstraints gbc = new GridBagConstraints();
@@ -293,11 +298,6 @@ public class OpenSessionCommand extends AbstractCommand {
 
 		this.createUIItems();
 
-		this.loginTextField.setText(this.login);
-		this.passwordTextField.setText("");
-		if (this.domainId == null) {
-			this.domainId = Environment.getDomainId();
-		}
 		if (this.domainId != null) {
 			try {
 				final Domain domain = StorableObjectPool.getStorableObject(this.domainId, false);
@@ -309,6 +309,9 @@ public class OpenSessionCommand extends AbstractCommand {
 				assert false;
 			}
 		}
+		
+		this.loginTextField.setText(this.login);
+		this.passwordTextField.setText("");
 
 		if (this.dialog == null) {
 			this.okButton = 
@@ -341,7 +344,7 @@ public class OpenSessionCommand extends AbstractCommand {
 
 			this.loginTextField.addActionListener(this.actionListener);
 			this.passwordTextField.addActionListener(this.actionListener);
-			this.domainComboBox.addActionListener(this.actionListener);
+//			this.domainComboBox.addActionListener(this.actionListener);
 		}
 		
 
@@ -380,7 +383,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			if (this.loginTextField != null && this.passwordTextField != null && this.domainComboBox != null) {
 				this.loginTextField.removeActionListener(this.actionListener);
 				this.passwordTextField.removeActionListener(this.actionListener);
-				this.domainComboBox.removeActionListener(this.actionListener);
+//				this.domainComboBox.removeActionListener(this.actionListener);
 			}
 		}
 		if (this.dialog != null) {
