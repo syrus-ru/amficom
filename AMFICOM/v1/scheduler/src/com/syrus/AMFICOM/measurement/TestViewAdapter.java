@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.3 2005/10/19 14:55:51 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.4 2005/10/20 08:52:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/19 14:55:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/20 08:52:34 $
  * @author $Author: bob $
  * @module module
  */
@@ -154,6 +154,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 	                       String key) {
 		if (testView != null) {
 			key = key != null ? key.intern() : null;
+			final Test test = testView.getTest();
 			if (key == KEY_TEMPORAL_TYPE) {
 				return testView.getTemporalType();
 			} else if (key == KEY_TEMPORAL_TYPE_NAME) {
@@ -165,12 +166,14 @@ public class TestViewAdapter implements Wrapper<TestView> {
 			} else if (key == KEY_PORT) {
 				return testView.getPortName();
 			} else if (key == KEY_MEASUREMENT_TYPE) {
-				return testView.getTest().getMeasurementType().getDescription();
+				return test.getMeasurementType().getDescription();
 			} else if (key == KEY_START_TIME) {
 				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				return sdf.format(testView.getTest().getStartTime());
+				return sdf.format(test.getStartTime());
 			} else if (key == KEY_STATUS) {
-				return testView.getTest().getStatus();
+//				assert Log.debugMessage("TestViewAdapter.getValue | " + test + " >> " + test.getStatus().value(),
+//					Log.DEBUGLEVEL09);
+				return test.getStatus();
 			} else if (key == KEY_D) {
 				return testView.getTestD();
 			} else if (key == KEY_Q) {
