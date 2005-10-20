@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.57 2005/10/06 13:18:02 bob Exp $
+ * $Id: PlanPanel.java,v 1.58 2005/10/20 08:52:55 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/10/06 13:18:02 $
+ * @version $Revision: 1.58 $, $Date: 2005/10/20 08:52:55 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -388,7 +388,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		setStartDate(startDate);
 		final SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
 		try {
-			model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
+			model.updateTests(this.scaleStart, this.scaleEnd);
 			updateTestLines();
 		} catch (final ApplicationException e) {
 			e.printStackTrace();
