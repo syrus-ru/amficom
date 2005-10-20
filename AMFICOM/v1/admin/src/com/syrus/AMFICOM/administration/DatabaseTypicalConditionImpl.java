@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.15 2005/09/14 19:01:23 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.16 2005/10/20 10:49:42 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/10/20 10:49:42 $
+ * @author $Author: bob $
  * @module administration
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -30,24 +30,34 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 	@Override
 	protected String getColumnName() throws IllegalObjectEntityException {
 		/* check key support */
+		final String key = this.condition.getKey().intern();
 		switch(super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.SYSTEMUSER_CODE:
-				if (this.condition.getKey().equals(SystemUserWrapper.COLUMN_LOGIN))
-					return SystemUserWrapper.COLUMN_LOGIN;
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME))
-					return StorableObjectWrapper.COLUMN_NAME;
+				if (key == SystemUserWrapper.COLUMN_LOGIN) {
+					return key;
+				}
+				if (key == StorableObjectWrapper.COLUMN_NAME) {
+					return key;
+				}
 				break;
 			case ObjectEntities.DOMAIN_CODE:
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME))
-					return StorableObjectWrapper.COLUMN_NAME;
+				if (key == StorableObjectWrapper.COLUMN_NAME) {
+					return key;
+				}
 				break;
 			case ObjectEntities.SERVERPROCESS_CODE:
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME))
-					return StorableObjectWrapper.COLUMN_CODENAME;
+				if (key == StorableObjectWrapper.COLUMN_CODENAME) {
+					return key;
+				}
+				break;
+			case ObjectEntities.PERMATTR_CODE:
+				if (key == PermissionAttributesWrapper.COLUMN_MODULE) {
+					return key;
+				}
 				break;
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ "' and key '" + this.condition.getKey() + "' are not supported.",
+						+ "' and key '" + key + "' are not supported.",
 						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return null;
