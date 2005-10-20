@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.127 2005/10/19 13:09:56 bob Exp $
+ * $Id: SchedulerModel.java,v 1.128 2005/10/20 08:56:23 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.127 $, $Date: 2005/10/19 13:09:56 $
+ * @version $Revision: 1.128 $, $Date: 2005/10/20 08:56:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -381,7 +381,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.flag = 0;
 	}
 	
-	public void updateTests(final long startTime, final long endTime) throws ApplicationException {
+	public void updateTests(final Date startDate, 
+	                        final Date endDate) 
+	throws ApplicationException {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Scheduler.StatusMessage.UpdatingTests"))); //$NON-NLS-1$
@@ -391,12 +393,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		if (this.measurementSetupIdMap != null) {
 			this.measurementSetupIdMap.clear();
 		}
+		
+		TestView.clearCache();
+		
 		try {
 			StorableObjectPool.refresh();
 
-			final Date startDate = new Date(startTime);
-			final Date endDate = new Date(endTime);
-			
 			final TypicalCondition startTypicalCondition = new TypicalCondition(startDate,
 					endDate,
 					OperationSort.OPERATION_IN_RANGE,
