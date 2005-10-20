@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveWrapper.java,v 1.2 2005/10/18 07:21:12 krupenn Exp $
+ * $Id: MapRemoveWrapper.java,v 1.3 2005/10/20 09:16:55 krupenn Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,8 @@ public class MapRemoveWrapper extends DefaultStorableObjectRemoveWrapper {
 	
 	@Override
 	public boolean remove(Object object) {
-		try {
+//		try {
+/* TODO uncomment when conditions are working at CB server!!!
 			Map map = (Map) object;
 			LinkedIdsCondition condition = new LinkedIdsCondition(map.getId(), ObjectEntities.MAP_CODE);
 			Set<StorableObject> maps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -52,16 +53,22 @@ public class MapRemoveWrapper extends DefaultStorableObjectRemoveWrapper {
 			if(!mapViews.isEmpty()) {
 				return false;
 			}
+			condition = new LinkedIdsCondition(map.getId(), ObjectEntities.SCHEME_CODE);
+			Set<StorableObject> schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if(!schemes.isEmpty()) {
+				return false;
+			}
 			condition = new LinkedIdsCondition(Identifier.createIdentifiers(map.getSiteNodes()), ObjectEntities.MAP_CODE);
 			maps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if(!maps.isEmpty()) {
 				return false;
 			}
+*/
 			return super.remove(object);
-		} catch(ApplicationException e) {
-			e.printStackTrace();
-		}
-		return false;
+//		} catch(ApplicationException e) {
+//			e.printStackTrace();
+//		}
+//		return false;
 	}
 
 }
