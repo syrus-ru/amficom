@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.29 2005/10/21 06:58:41 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.30 2005/10/21 06:59:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.29 $, $Date: 2005/10/21 06:58:41 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/21 06:59:22 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -158,7 +158,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			} catch (final CommunicationException ce) {
 				Log.errorException(ce);
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						ce.getMessage(),
+						I18N.getString("Error.ServerConnection"),
 						I18N.getString("Error.OpenSession"),
 						JOptionPane.ERROR_MESSAGE,
 						null);
