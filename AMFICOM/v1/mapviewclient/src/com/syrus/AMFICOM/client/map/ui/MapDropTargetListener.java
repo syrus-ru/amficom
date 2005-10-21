@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.45 2005/10/21 14:45:35 krupenn Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.46 2005/10/21 15:34:18 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,9 @@ import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.map.Map;
@@ -51,7 +53,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.45 $, $Date: 2005/10/21 14:45:35 $
+ * @version $Revision: 1.46 $, $Date: 2005/10/21 15:34:18 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -98,43 +100,34 @@ public final class MapDropTargetListener implements DropTargetListener {
 						for(Iterator iter = items.iterator(); iter.hasNext();) {
 							or = iter.next();
 
-							if(or instanceof SiteNodeType) {
-								SiteNodeType snt = (SiteNodeType) or;
-								Identifier id = snt.getId();
-								SiteNodeType mpe = StorableObjectPool
-										.getStorableObject(id, true);
-								System.out.println("dropped site node type " + mpe.getName());
-								mapElementDropped(mpe, point);
-							}
-							if(or instanceof SchemeElement) {
-								SchemeElement se = (SchemeElement) or;
-								Identifier id = se.getId();
-								SchemeElement sereal = StorableObjectPool
-										.getStorableObject(id, true);
-								System.out.println("dropped scheme element " + sereal.getName());
-								schemeElementDropped(sereal, point);
-							} else if(or instanceof SchemeCableLink) {
-								SchemeCableLink scl = (SchemeCableLink) or;
-								Identifier id = scl.getId();
-								SchemeCableLink sclreal = StorableObjectPool
-										.getStorableObject(id, true);
-								System.out.println("dropped scheme cable link " + sclreal.getName());
-								schemeCableLinkDropped(sclreal);
-							} else if(or instanceof SchemePath) {
-								SchemePath sp = (SchemePath) or;
-								Identifier id = sp.getId();
-								SchemePath spreal = StorableObjectPool
-										.getStorableObject(id, true);
-								System.out.println("dropped scheme path " + spreal.getName());
-								schemePathDropped(spreal);
-							} else if(or instanceof Scheme) {
-								Scheme sc = (Scheme) or;
-								Identifier id = sc.getId();
-								Scheme screal = StorableObjectPool
-										.getStorableObject(id, true);
-								SchemeElement sereal = screal
-										.getParentSchemeElement();
-								schemeElementDropped(sereal, point);
+							if(or instanceof Identifiable) {
+								Identifiable identifiable = (Identifiable) or;
+								StorableObject storableObject = 
+									StorableObjectPool.getStorableObject(identifiable.getId(), true);
+							
+								if(storableObject instanceof SiteNodeType) {
+									SiteNodeType snt = (SiteNodeType) storableObject;
+									System.out.println("dropped site node type " + snt.getName());
+									mapElementDropped(snt, point);
+								}
+								if(storableObject instanceof SchemeElement) {
+									SchemeElement se = (SchemeElement) storableObject;
+									System.out.println("dropped scheme element " + se.getName());
+									schemeElementDropped(se, point);
+								} else if(storableObject instanceof SchemeCableLink) {
+									SchemeCableLink scl = (SchemeCableLink) storableObject;
+									System.out.println("dropped scheme cable link " + scl.getName());
+									schemeCableLinkDropped(scl);
+								} else if(storableObject instanceof SchemePath) {
+									SchemePath sp = (SchemePath) storableObject;
+									System.out.println("dropped scheme path " + sp.getName());
+									schemePathDropped(sp);
+								} else if(storableObject instanceof Scheme) {
+									Scheme sc = (Scheme) storableObject;
+									SchemeElement se = sc
+											.getParentSchemeElement();
+									schemeElementDropped(se, point);
+								}
 							}
 						}
 					} else {
