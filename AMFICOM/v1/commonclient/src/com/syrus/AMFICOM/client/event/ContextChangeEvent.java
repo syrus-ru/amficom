@@ -4,6 +4,7 @@ package com.syrus.AMFICOM.client.event;
 import java.beans.PropertyChangeEvent;
 
 public final class ContextChangeEvent extends PropertyChangeEvent {
+	private static final long serialVersionUID = 2436584537754581760L;
 
 	public static final long	LOGGED_IN_EVENT				= 0x00000001;
 	public static final long	LOGGED_OUT_EVENT			= 0x00000002;
