@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkEditor.java,v 1.30 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: PhysicalLinkEditor.java,v 1.31 2005/10/21 16:24:42 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/21 16:24:42 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -591,35 +591,33 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 	public void commitChanges() {
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name)) {
-		try 
-		{
-			if(!name.equals(this.link.getName()))
-				this.link.setName(name);
-			this.link.setType((PhysicalLinkType )this.typeComboBox.getSelectedItem());
-			this.link.setDescription(this.descTextArea.getText());
-
-			this.link.setCity(this.cityTextField.getText());
-			this.link.setStreet(this.streetTextField.getText());
-			this.link.setBuilding(this.buildingTextField.getText());
-
-			PhysicalLinkController physicalLinkController = 
-				(PhysicalLinkController )
-					this.netMapViewer.getLogicalNetLayer()
-						.getMapViewController().getController(this.link);
-			Color color = (Color)this.colorComboBox.getSelectedItem();
-			if(! color.equals(physicalLinkController.getColor(this.link)))
-				physicalLinkController.setColor(this.link, color);
-			int size = this.thicknessComboBox.getSelectedValue();
-			if(size != physicalLinkController.getLineSize(this.link))
-				physicalLinkController.setLineSize(this.link, size);
-//			String style = (String)this.styleComboBox.getSelectedItem();
-//			if(! style.equals(physicalLinkController.getStyle(this.link)))
-//				physicalLinkController.setStyle(this.link, style);
-		} 
-		catch (Exception ex) 
-		{
-			ex.printStackTrace();
-		}
+			try 
+			{
+				if(!name.equals(this.link.getName()))
+					this.link.setName(name);
+				this.link.setDescription(this.descTextArea.getText());
+	
+				this.link.setCity(this.cityTextField.getText());
+				this.link.setStreet(this.streetTextField.getText());
+				this.link.setBuilding(this.buildingTextField.getText());
+	
+				PhysicalLinkController physicalLinkController = 
+					(PhysicalLinkController )
+						this.netMapViewer.getLogicalNetLayer()
+							.getMapViewController().getController(this.link);
+				Color color = (Color)this.colorComboBox.getSelectedItem();
+				if(! color.equals(physicalLinkController.getColor(this.link)))
+					physicalLinkController.setColor(this.link, color);
+				int size = this.thicknessComboBox.getSelectedValue();
+				if(size != physicalLinkController.getLineSize(this.link))
+					physicalLinkController.setLineSize(this.link, size);
+	//			String style = (String)this.styleComboBox.getSelectedItem();
+	//			if(! style.equals(physicalLinkController.getStyle(this.link)))
+	//				physicalLinkController.setStyle(this.link, style);
+				this.link.setType((PhysicalLinkType )this.typeComboBox.getSelectedItem());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 		super.commitChanges();
 	}
