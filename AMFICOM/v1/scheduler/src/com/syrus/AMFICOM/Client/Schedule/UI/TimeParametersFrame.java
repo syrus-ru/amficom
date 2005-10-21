@@ -700,15 +700,15 @@ public class TimeParametersFrame extends JInternalFrame {
 					}				
 			});
 			
-			this.startTimeButton = new JButton(">>");
+			this.startTimeButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_INTRODUCE));
 			this.startTimeButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.AddTimeItem"));
 			this.startTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			
-			this.endTimeButton = new JButton(">>");
+			this.endTimeButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_INTRODUCE));
 			this.endTimeButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.AddTimeItem"));
 			this.endTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			
-			this.pediodTimeButton = new JButton(">>");
+			this.pediodTimeButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_INTRODUCE));
 			this.pediodTimeButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.AddPeriodicalSequence"));
 			this.pediodTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 
@@ -872,6 +872,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		
 		void setGroupEnabled(boolean enable) {
 			this.interavalLabel.setText(I18N.getString("Scheduler.Text.TimePanel.Interval") + ':');
+			this.pediodTimeButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_FURTHER));
 			this.endTimeButton.setVisible(false);
 			this.startTimeButton.setVisible(enable);
 			this.pediodTimeButton.setVisible(enable);
@@ -904,6 +905,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.endDateButton.setVisible(enable);
 
 			
+			this.pediodTimeButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_INTRODUCE));
 			this.pediodTimeButton.setVisible(enable);
 			this.pediodTimeButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.AddPeriodicalSequence"));
 			this.interavalLabel.setText(I18N.getString("Scheduler.Text.TimePanel.Period") + ':');
