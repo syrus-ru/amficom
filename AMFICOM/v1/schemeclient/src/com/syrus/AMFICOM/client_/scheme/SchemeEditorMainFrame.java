@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.29 2005/10/17 14:59:14 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.30 2005/10/21 11:55:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2005/10/17 14:59:14 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/21 11:55:14 $
  * @module schemeclient
  */
 
@@ -377,24 +377,16 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	}
 	
 	@Override
-	public void setSessionOpened() {
-		super.setSessionOpened();
+	public void loggedIn() {
 		SchemeObjectsFactory.init(this.aContext);
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
 		aModel.setEnabled("menuWindowUgo", true);
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
-		aModel.fireModelChanged("");
-	}
-
-	@Override
-	public void setDomainSelected() {
-		super.setDomainSelected();
-		final ApplicationModel aModel = this.aContext.getApplicationModel();
-
+		
 		aModel.setEnabled("Menu.export", true);
 		aModel.setEnabled("Menu.export.scheme", true);
 		aModel.setEnabled("Menu.export.config", true);
@@ -410,6 +402,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuSchemeSaveAs", true);
 		aModel.setEnabled("menuPathNew", true);
 		aModel.setEnabled("menuReportCreate", true);
+		
 		aModel.fireModelChanged("");
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -420,8 +413,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	}
 
 	@Override
-	public void setSessionClosed() {
-		super.setSessionClosed();
+	public void loggedOut() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuSchemeNew", false);

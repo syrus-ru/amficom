@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditor.java,v 1.6 2005/09/21 14:20:17 stas Exp $
+ * $Id: ElementsEditor.java,v 1.7 2005/10/21 11:55:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,13 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/09/21 14:20:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/21 11:55:14 $
  * @module schemeclient
  */
 
 public class ElementsEditor extends AbstractApplication {
 	
-	public static final String APPLICATION_NAME = "elements";
+	public static final String APPLICATION_NAME = "elements_editor";
 	
 	public ElementsEditor() {
 		super(APPLICATION_NAME);
