@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.25 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.26 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import java.util.TooManyListenersException;
 import java.util.logging.Level;
 
 import javax.swing.JPopupMenu;
+import javax.swing.MenuElement;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -59,7 +60,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -126,18 +127,24 @@ public class SchemeGraphUI extends GPGraphUI {
 								SchemeGraph sgraph = (SchemeGraph)SchemeGraphUI.this.graph;
 								JPopupMenu pop = PopupFactory.createProtoOpenPopup(sgraph.aContext, transferable, p);
 								if (pop.getSubElements().length != 0) {
+									pop.addSeparator();
+									pop.add(PopupFactory.createCancelMenuItem());
 									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
 							} else if (transferable.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext,
 										transferable, p, SchemeEvent.INSERT_SCHEMEELEMENT, editable);
 								if (pop.getSubElements().length != 0) {
+									pop.addSeparator();
+									pop.add(PopupFactory.createCancelMenuItem());
 									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
 							} else if (transferable.getMajor() == ObjectEntities.SCHEME_CODE) {
 								JPopupMenu pop = PopupFactory.createSEOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext,
 										transferable, p, SchemeEvent.INSERT_SCHEME, editable);
 								if (pop.getSubElements().length != 0) {
+									pop.addSeparator();
+									pop.add(PopupFactory.createCancelMenuItem());
 									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
 							}
@@ -187,12 +194,30 @@ public class SchemeGraphUI extends GPGraphUI {
 
 				
 				if (this.cell != null && this.cell.getCell() instanceof DefaultGraphCell) {
-					Map attributes = ((DefaultGraphCell)this.cell.getCell()).getAttributes();
-					if (attributes.containsKey(Constants.SELECTABLE) 
-							&& attributes.get(Constants.SELECTABLE).equals(Boolean.FALSE)) {
-						this.cell = SchemeGraphUI.this.focus;
-						e.consume();
-					}
+//					if (this.cell.getCell() instanceof PortEdge) { // transfer focus to port
+//						PortEdge portEdge = (PortEdge)this.cell.getCell();
+//						Object sourceParent = ((DefaultPort)portEdge.getSource()).getParent();
+//						if (sourceParent instanceof PortCell
+//								|| sourceParent instanceof CablePortCell) {
+//							this.cell = SchemeGraphUI.this.graph.getGraphLayoutCache().getMapping(sourceParent, true);
+//							SchemeGraphUI.this.focus = this.cell;
+//						} else {
+//							Object targetParent = ((DefaultPort)portEdge.getTarget()).getParent();
+//							if (targetParent instanceof PortCell
+//									|| targetParent instanceof CablePortCell) {
+//								this.cell = SchemeGraphUI.this.graph.getGraphLayoutCache().getMapping(targetParent, true);
+//								SchemeGraphUI.this.focus = this.cell;
+//							}
+//						}
+//					} else {
+						
+						Map attributes = ((DefaultGraphCell)this.cell.getCell()).getAttributes();
+						if (attributes.containsKey(Constants.SELECTABLE) 
+								&& attributes.get(Constants.SELECTABLE).equals(Boolean.FALSE)) {
+							this.cell = SchemeGraphUI.this.focus;
+							e.consume();
+						}
+//					}
 				}
 				
 				if (SchemeGraphUI.this.focus == null)
@@ -323,10 +348,10 @@ public class SchemeGraphUI extends GPGraphUI {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			super.mousePressed(e);
-			if (SchemeGraph.getMode().equals(Constants.PATH_MODE)) {
-				Object cell = graph.getSelectionCell();
-				graph.getMarqueeHandler().mousePressed(e);
-			}
+//			if (SchemeGraph.getMode().equals(Constants.PATH_MODE)) {
+//				Object cell = graph.getSelectionCell();
+//				graph.getMarqueeHandler().mousePressed(e);
+//			}
 		}
 		
 		@Override // fixes bug when move cell in scale differ from 1

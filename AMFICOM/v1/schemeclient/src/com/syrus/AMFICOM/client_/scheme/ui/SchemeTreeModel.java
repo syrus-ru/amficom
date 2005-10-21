@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.46 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.47 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.46 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.47 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
+import com.syrus.AMFICOM.filterclient.SchemeCableLinkConditionWrapper;
 import com.syrus.AMFICOM.filterclient.SchemeConditionWrapper;
 import com.syrus.AMFICOM.filterclient.SchemeElementConditionWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -278,8 +279,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 							child.setObject(SchemeResourceKeys.SCHEME_CABLELINK);
 							child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLELINK));
 							child.setDefaultCondition(condition);
-							//XXX
-//							child.setFilter(new Filter(new SchemeCableLinkConditionWrapper()));
+							child.setFilter(new Filter(new SchemeCableLinkConditionWrapper()));
 							node.addChild(child);
 						}
 						if (!contents.contains(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION) && !s.getSchemeMonitoringSolutions(false).isEmpty()) {

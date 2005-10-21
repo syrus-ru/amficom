@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.18 2005/10/17 14:59:15 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.19 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import javax.swing.JScrollPane;
 
 import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -116,7 +117,14 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					SchemeGraph graph = p.getGraph();
 					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(graph, imageResource, true, see.getInsertionPoint(), false);
 					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-					newProto.getSchemeCell().setData((List<Object>)graph.getArchiveableState());
+					
+					ApplicationContext internalContext =  new ApplicationContext();
+					internalContext.setDispatcher(new Dispatcher());
+					final SchemeGraph invisibleGraph = new UgoTabbedPane(internalContext).getGraph();
+					invisibleGraph.setMakeNotifications(false);
+					clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, imageResource, true);
+					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+					newProto.getSchemeCell().setData((List<Object>)invisibleGraph.getArchiveableState());
 				} catch (CloneNotSupportedException e) {
 					Log.errorException(e);
 				} catch (ApplicationException e) {

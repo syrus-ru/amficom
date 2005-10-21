@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.30 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.31 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -406,7 +406,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							}
 						}
 						if (targetPort != null) {
-							SchemeActions.performAutoCommutation(sourcePort, schemeCableLink, true);
+							SchemeActions.performAutoCommutation(targetPort, schemeCableLink, true);
 							
 							targetPortCell = SchemeActions.findCablePortCellById(graph, targetPort.getId());
 							try {

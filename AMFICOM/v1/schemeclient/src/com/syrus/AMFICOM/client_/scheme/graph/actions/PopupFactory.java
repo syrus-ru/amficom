@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.16 2005/10/17 14:59:15 stas Exp $
+ * $Id: PopupFactory.java,v 1.17 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -104,9 +104,6 @@ public class PopupFactory {
 			pop.add(createOpenMenuItem(aContext, transferable, SchemeEvent.INSERT_PROTOELEMENT));
 			pop.add(createOpenAsCopyMenuItem(aContext, transferable));
 		}
-		
-		pop.addSeparator();
-		pop.add(createCancelMenuItem());
 		return pop;
 	}
 	
@@ -116,8 +113,6 @@ public class PopupFactory {
 			pop.add(createInsertMenuItem(aContext, transferable, p, actionType));
 		}
 		pop.add(createOpenMenuItem(aContext, transferable, actionType));
-		pop.addSeparator();
-		pop.add(createCancelMenuItem());
 		return pop;
 	}
 	
@@ -132,22 +127,14 @@ public class PopupFactory {
 						pop.add(createCutMenuItem(pane));
 						pop.add(createPasteMenuItem(pane, e.getPoint()));
 					}
-					pop.addSeparator();
-					pop.add(PopupFactory.createCancelMenuItem());
 				} else {
 					JMenuItem item = createOpenSchemeElementMenuItem(aContext, se);
 					if (item != null) {
 						pop.add(item);
-						if (!e.isControlDown()) {
-							pop.addSeparator();
-							pop.add(PopupFactory.createCancelMenuItem());
-						}
 					}
 					if (editable && e.isControlDown()) {
 						pop.add(createCutMenuItem(pane));
 						pop.add(createPasteMenuItem(pane, e.getPoint()));
-						pop.addSeparator();
-						pop.add(PopupFactory.createCancelMenuItem());
 					}
 				}
 			}
@@ -160,28 +147,20 @@ public class PopupFactory {
 		JMenuItem item = createOpenSchemeMenuItem(aContext, group.getScheme());
 		if (item != null) {
 			pop.add(item);
-			pop.addSeparator();
-			pop.add(PopupFactory.createCancelMenuItem());
 		}
 	}
 	
 	public static void createCablePopup(final JPopupMenu pop, SchemeTabbedPane pane, DefaultCableLink cell, final MouseEvent e, boolean editable) {
 		JMenuItem i1 = null;
 		if (editable) {
-			createMuffMenuItem(pane.getGraph(), cell);
+			i1 = createMuffMenuItem(pane.getGraph(), cell);
 		}
 		if (i1 != null) {
 			pop.add(i1);
-			if (!e.isControlDown()) {
-				pop.addSeparator();
-				pop.add(PopupFactory.createCancelMenuItem());
-			}
 		}
 		if (editable && e.isControlDown()) {
 			pop.add(createCutMenuItem(pane));
 			pop.add(createPasteMenuItem(pane, e.getPoint()));
-			pop.addSeparator();
-			pop.add(PopupFactory.createCancelMenuItem());
 		}
 //		pop.add(createCableSchemeMenuItem(aContext, graph, cell));
 	}
@@ -190,8 +169,6 @@ public class PopupFactory {
 		if (editable && e.isControlDown()) {
 			pop.add(createCutMenuItem(pane));
 			pop.add(createPasteMenuItem(pane, e.getPoint()));
-			pop.addSeparator();
-			pop.add(PopupFactory.createCancelMenuItem());
 		}
 	}
 	

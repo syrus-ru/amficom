@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.15 2005/10/17 14:59:15 stas Exp $
+ * $Id: ElementsPanel.java,v 1.16 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
@@ -29,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -52,10 +53,12 @@ public class ElementsPanel extends UgoPanel {
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
 			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
+			this.aContext.getDispatcher().removePropertyChangeListener(MarkerEvent.MARKER_EVENT_TYPE, this);
 		}
 		super.setContext(aContext);
 		if (aContext != null) {
 			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
+			this.aContext.getDispatcher().addPropertyChangeListener(MarkerEvent.MARKER_EVENT_TYPE, this);
 		}
 	}
 
@@ -183,6 +186,11 @@ public class ElementsPanel extends UgoPanel {
 				if (ev.isSelected(ObjectSelectedEvent.INSURE_VISIBLE)) { 
 					this.graph.insureSelectionVisible();
 				}
+			}
+		} else if (ae.getPropertyName().equals(MarkerEvent.MARKER_EVENT_TYPE)) {
+			MarkerEvent ev = (MarkerEvent)ae;
+			if (ev.getMarkerEventType() == MarkerEvent.ALARMMARKER_CREATED_EVENT) {
+				
 			}
 		}
 		// TODO разобраться с созданием пути 

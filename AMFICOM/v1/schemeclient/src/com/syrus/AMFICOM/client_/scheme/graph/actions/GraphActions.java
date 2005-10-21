@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.19 2005/10/12 10:08:41 stas Exp $
+ * $Id: GraphActions.java,v 1.20 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/10/12 10:08:41 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -303,6 +303,12 @@ public class GraphActions {
 		return null;
 	}
 
+	public static void setObjectColor(SchemeGraph graph, Object obj, Color color) {
+		if (obj instanceof Edge) {
+			setEdgeColor(graph, obj, color);
+		}
+	}
+	
 	public static void setObjectsBackColor(SchemeGraph graph, Object[] objs,
 			Color color) {
 		Map map = GraphConstants.createMap();

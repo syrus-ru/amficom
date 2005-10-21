@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.25 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.26 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,18 +40,21 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -99,7 +102,11 @@ public class SchemeTreeUI extends IconedTreeUI {
 						if (object instanceof Scheme) {
 							Scheme scheme = (Scheme)object;
 							try {
-								if (scheme.getParentSchemeElement() == null) {
+								LinkedIdsCondition condition = new LinkedIdsCondition(scheme.getId(), 
+										ObjectEntities.MAPVIEW_CODE);
+								Set<MapView> views = StorableObjectPool.getStorableObjectsByCondition(condition, false);
+								
+								if (views.isEmpty() && scheme.getParentSchemeElement() == null) {
 									// отцепляем линки
 									for (SchemeCableLink link : scheme.getSchemeCableLinks(false)) {
 										link.setSourceAbstractSchemePort(null);
@@ -118,6 +125,12 @@ public class SchemeTreeUI extends IconedTreeUI {
 									
 									Identifier userId = LoginManager.getUserId();
 									StorableObjectPool.flush(ids, userId, false);
+								} else {
+									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+											LangModelScheme.getString("Message.error.delete.scheme"),
+											LangModelScheme.getString("Message.error"),
+											JOptionPane.OK_OPTION);
+									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
@@ -171,13 +184,17 @@ public class SchemeTreeUI extends IconedTreeUI {
 								Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 								if (protos.isEmpty()) {
 									LinkedIdsCondition condition2 = new LinkedIdsCondition(protoEq.getId(), ObjectEntities.SCHEMEELEMENT_CODE);
-									//TODO condition
-//									Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
-//									if (schemeElements.isEmpty()) {
+									Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+									if (schemeElements.isEmpty()) {
 										StorableObjectPool.delete(protoEq.getId());
 										StorableObjectPool.flush(protoEq, LoginManager.getUserId(), false);
-								} else {
-									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
+									} else {
+										JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+												LangModelScheme.getString("Message.error.delete.proto_equipment"),
+												LangModelScheme.getString("Message.error"),
+												JOptionPane.OK_OPTION);
+										Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
+									}
 								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
@@ -191,6 +208,10 @@ public class SchemeTreeUI extends IconedTreeUI {
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
 								} else {
+									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+											LangModelScheme.getString("Message.error.delete.link_type"),
+											LangModelScheme.getString("Message.error"),
+											JOptionPane.OK_OPTION);
 									Log.debugMessage("Can not delete LinkType as there are SchemeLinks with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
@@ -211,6 +232,10 @@ public class SchemeTreeUI extends IconedTreeUI {
 									StorableObjectPool.delete(ids);
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 								} else {
+									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+											LangModelScheme.getString("Message.error.delete.cable_link_type"),
+											LangModelScheme.getString("Message.error"),
+											JOptionPane.OK_OPTION);
 									Log.debugMessage("Can not delete CableLinkType as there are SchemeCableLinks with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
@@ -218,14 +243,18 @@ public class SchemeTreeUI extends IconedTreeUI {
 							}
 						} else if (object instanceof PortType) {
 							PortType type = (PortType)object;
-//						TODO condition
 							try {
-//								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMEPORT_CODE);
-//								Set<SchemePort> ports = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-//								if (ports.isEmpty()) {
+								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMEPORT_CODE);
+								Set<SchemePort> ports = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+								if (ports.isEmpty()) {
 									StorableObjectPool.delete(type.getId());
 									StorableObjectPool.flush(type, LoginManager.getUserId(), false);
-							
+								} else {
+									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+											LangModelScheme.getString("Message.error.delete.port_type"),
+											LangModelScheme.getString("Message.error"),
+											JOptionPane.OK_OPTION);
+								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}

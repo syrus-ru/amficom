@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigExportCommand.java,v 1.3 2005/10/17 14:59:14 stas Exp $
+ * $Id: ConfigExportCommand.java,v 1.4 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,14 +70,14 @@ public class ConfigExportCommand extends ImportExportCommand {
 				linkType.getXmlTransferable(xmlLinkType, AMFICOM_IMPORT, false);
 				xmlLinkTypes.add(xmlLinkType);
 			}
-//			condition2 = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE); 
-//			Collection<CableLinkType> cableLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+			condition2 = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE); 
+			Collection<CableLinkType> cableLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlCableLinkType> xmlCableLinkTypes = new HashSet<XmlCableLinkType>();
-//			for (CableLinkType linkType : cableLinkTypes) {
-//				XmlCableLinkType xmlCableLinkType = XmlCableLinkType.Factory.newInstance();
-//				linkType.getXmlTransferable(xmlCableLinkType, AMFICOM_IMPORT, false);
-//				xmlCableLinkTypes.add(xmlCableLinkType);
-//			}
+			for (CableLinkType linkType : cableLinkTypes) {
+				XmlCableLinkType xmlCableLinkType = XmlCableLinkType.Factory.newInstance();
+				linkType.getXmlTransferable(xmlCableLinkType, AMFICOM_IMPORT, false);
+				xmlCableLinkTypes.add(xmlCableLinkType);
+			}
 			condition2 = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE); 
 			Collection<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlPortType> xmlPortTypes = new HashSet<XmlPortType>();
@@ -135,9 +135,8 @@ public class ConfigExportCommand extends ImportExportCommand {
 		XmlLinkTypeSeq xmlLinkTypeSeq = doc.addNewLinkTypes();
 		xmlLinkTypeSeq.setLinkTypeArray(xmlLinkTypes.toArray(new XmlLinkType[xmlLinkTypes.size()]));
 		
-		//XXX
-//		XmlCableLinkTypeSeq xmlCableLinkTypeSeq = doc.addNewCableLinkTypes();
-//		xmlCableLinkTypeSeq.setCableLinkTypeArray(xmlCableLinkTypes.toArray(new XmlCableLinkType[xmlCableLinkTypes.size()]));
+		XmlCableLinkTypeSeq xmlCableLinkTypeSeq = doc.addNewCableLinkTypes();
+		xmlCableLinkTypeSeq.setCableLinkTypeArray(xmlCableLinkTypes.toArray(new XmlCableLinkType[xmlCableLinkTypes.size()]));
 		
 		XmlPortTypeSeq xmlPortTypeSeq = doc.addNewPortTypes();
 		xmlPortTypeSeq.setPortTypeArray(xmlPortTypes.toArray(new XmlPortType[xmlPortTypes.size()]));

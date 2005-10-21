@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.19 2005/10/17 14:59:15 stas Exp $
+ * $Id: Notifier.java,v 1.20 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,9 @@ import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_
 import static com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent.SCHEME_PROTOELEMENT;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -49,6 +51,10 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
 import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -63,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 

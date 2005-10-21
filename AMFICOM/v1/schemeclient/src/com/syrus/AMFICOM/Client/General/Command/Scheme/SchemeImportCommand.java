@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.31 2005/10/10 11:07:38 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.32 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 
 import org.apache.xmlbeans.XmlException;
 
@@ -25,6 +27,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -133,12 +136,12 @@ public class SchemeImportCommand extends ImportExportCommand {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_target") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
 			}
-//			if (errorMessages.size() > 0) {
-//				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
-//						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
-//					throw new CreateObjectException("incorrect input data");
-//				}
-//			}
+			if (errorMessages.size() > 0) {
+				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
+						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
+					throw new CreateObjectException("incorrect input data");
+				}
+			}
 			
 			if (xmlScheme.getImportType().equals(UCM_IMPORT)) {
 				try {

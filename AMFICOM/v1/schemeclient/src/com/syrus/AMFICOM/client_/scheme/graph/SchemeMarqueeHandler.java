@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.34 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.35 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,14 +70,16 @@ import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -614,12 +616,23 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 								UgoPanel panel = this.pane.getCurrentPanel();
 								if (panel instanceof ElementsPanel) {
 									SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
-									if (res.getCellContainerType() == SchemeResource.SCHEME)
-										link.setParentScheme(res.getScheme(), false);
-									else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT)
-										link.setParentSchemeElement(res.getSchemeElement(), false);
-									else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT)
-										link.setParentSchemeProtoElement(res.getSchemeProtoElement(), false);
+									if (res.getCellContainerType() == SchemeResource.SCHEME) {
+										final Scheme scheme = res.getScheme();
+										if (scheme != null) {
+											link.setParentScheme(scheme, false);
+										}
+									} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+										final SchemeElement schemeElement = res.getSchemeElement();
+										if (schemeElement != null) {
+											link.setParentSchemeElement(schemeElement, false);
+										}
+									}
+									else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
+										final SchemeProtoElement schemeProtoElement = res.getSchemeProtoElement();
+										if (schemeProtoElement != null) {
+											link.setParentSchemeProtoElement(schemeProtoElement, false);
+										}
+									}
 								}
 								Notifier.notify(graph, this.pane.aContext, link);
 							} catch (CreateObjectException e1) {
@@ -668,6 +681,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					if (this.pane instanceof SchemeTabbedPane && event.isControlDown()) {
 						JPopupMenu pop = new JPopupMenu();
 						PopupFactory.createCopyPastePopup(pop, (SchemeTabbedPane)this.pane, event, editable);
+						MenuElement[] items = pop.getSubElements();
+						if (items.length != 0) {
+							pop.addSeparator();
+							pop.add(PopupFactory.createCancelMenuItem());
+						}
 						if (pop.getSubElements().length != 0) {
 							pop.show(graph, event.getX(), event.getY());
 							event.consume();
@@ -681,6 +699,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							|| SchemeGraph.getMode().equals(Constants.RACK_MODE)) {
 						JPopupMenu pop = new JPopupMenu();
 						PopupFactory.getSuitablePopup(pop, cell, (SchemeTabbedPane)this.pane, event, editable);
+						MenuElement[] items = pop.getSubElements();
+						if (items.length != 0) {
+							pop.addSeparator();
+							pop.add(PopupFactory.createCancelMenuItem());
+						}
 						if (pop != null && pop.getSubElements().length != 0) {
 							pop.show(graph, event.getX(), event.getY());
 							event.consume();
@@ -699,13 +722,12 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						PopupFactory.getSuitablePopup(pop, cell, (SchemeTabbedPane)this.pane, event, editable);
 						MenuElement[] items = pop.getSubElements();
 						if (items.length != 0) {
-							if (items.length < 2) {
-								pop.add(PopupFactory.createCancelMenuItem());
-							}
-							pop.show(graph, event.getX(), event.getY());
-							event.consume();
+							pop.addSeparator();
+							pop.add(PopupFactory.createCancelMenuItem());
 						}
-					}
+						pop.show(graph, event.getX(), event.getY());
+						event.consume();
+						}
 					}
 				}
 		}

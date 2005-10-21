@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.12 2005/10/17 14:59:15 stas Exp $
+ * $Id: CreateUgo.java,v 1.13 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -194,6 +194,14 @@ public class CreateUgo {
 	}
 	
 	public static void createMuffUgo(SchemeProtoElement element, SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
+//		try {
+//			for (SchemeProtoElement proto : element.getSchemeProtoElements(false)) {
+//				proto.setSchemeCell(null);
+//			}
+//		} catch (ApplicationException e) {
+//			e.printStackTrace();
+//		}
+		
 		createMuff(graph, blockports_in, blockports_out);
 		Object[] cells = CreateGroup.getCellsToAdd(graph);
 		if (cells.length == 0)

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.44 2005/10/17 15:10:13 stas Exp $
+ * $Id: SchemeActions.java,v 1.45 2005/10/21 16:46:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -96,7 +97,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.44 $, $Date: 2005/10/17 15:10:13 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/21 16:46:20 $
  * @module schemeclient
  */
 
@@ -684,6 +685,10 @@ public class SchemeActions {
 		PortEdge edge = PortEdge.createInstance(name, devPort, ellipsePort, p, new Point(dev_bounds.x
 					+ dev_bounds.width, p.y), labelPosition, viewMap, cs);
 		
+//		viewMap = new HashMap<Object, Map>();
+//		Map map = GraphConstants.createMap();
+//		map.put(Constants.SELECTABLE, new Boolean(false));
+//		viewMap.put(edge, map);
 
 		graph.getModel().insert(new Object[] { edge }, viewMap, cs, null, null);
 		graph.addSelectionCell(visualPort);
