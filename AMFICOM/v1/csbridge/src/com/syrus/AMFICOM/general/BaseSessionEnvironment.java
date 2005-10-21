@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.27 2005/10/20 17:49:25 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.28 2005/10/21 12:03:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/20 17:49:25 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/21 12:03:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -40,26 +40,29 @@ public abstract class BaseSessionEnvironment {
 
 	protected LogoutShutdownHook logoutShutdownHook;
 
-	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager, final PoolContext poolContext) {
-		this.baseConnectionManager = baseConnectionManager;
-		this.poolContext = poolContext;
+	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
+			final PoolContext poolContext,
+			final LoginRestorer loginRestorer) {
+		this.init0(baseConnectionManager, poolContext, loginRestorer);
 		IdentifierPool.init(this.baseConnectionManager);
-		this.init0();
 	}
 
 	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
 			final PoolContext poolContext,
+			final LoginRestorer loginRestorer,
 			final CORBAActionProcessor identifierPoolCORBAActionProcessor) {
-		this.baseConnectionManager = baseConnectionManager;
-		this.poolContext = poolContext;
+		this.init0(baseConnectionManager, poolContext, loginRestorer);
 		IdentifierPool.init(this.baseConnectionManager, identifierPoolCORBAActionProcessor);
-		this.init0();
 	}
 
-	private void init0() {
-		LoginManager.init(this.baseConnectionManager);
+	private void init0(final BaseConnectionManager baseConnectionManager1,
+			final PoolContext poolContext1,
+			final LoginRestorer loginRestorer) {
+		this.baseConnectionManager = baseConnectionManager1;
+		this.poolContext = poolContext1;
 
 		this.poolContext.init();
+		LoginManager.init(this.baseConnectionManager, loginRestorer);
 
 		this.logoutShutdownHook = new LogoutShutdownHook();
 

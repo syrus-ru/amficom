@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.80 2005/10/20 15:00:38 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.81 2005/10/21 12:04:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/10/20 15:00:38 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/21 12:04:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -199,7 +199,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			createTestLoadCondition();
 
 			/*	Create session environment*/
-			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds, new MServerLoginRestorer());
+			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds);
 
 			/*	Login*/
 			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();

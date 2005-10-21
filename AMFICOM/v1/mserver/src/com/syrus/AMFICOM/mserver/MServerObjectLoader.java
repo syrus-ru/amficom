@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.11 2005/10/19 08:08:10 bass Exp $
+ * $Id: MServerObjectLoader.java,v 1.12 2005/10/21 12:04:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -36,18 +35,16 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/19 08:08:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/10/21 12:04:08 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
 final class MServerObjectLoader extends DatabaseObjectLoader {
-	private LoginRestorer loginRestorer;
 	private Map<Identifier, CORBAObjectLoader> mcmObjectLoaders;
 	private Identifier preferredMCMId;
 
-	public MServerObjectLoader(final LoginRestorer loginRestorer) {
-		this.loginRestorer = loginRestorer;
+	public MServerObjectLoader() {
 		this.mcmObjectLoaders = new HashMap<Identifier, CORBAObjectLoader>();
 	}
 
@@ -233,7 +230,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 
 		final ServerConnectionManager serverConnectionManager = new MCMConnectionManager(mcmId);
 
-		corbaObjectLoader = new CORBAObjectLoader(serverConnectionManager, this.loginRestorer);
+		corbaObjectLoader = new CORBAObjectLoader(serverConnectionManager);
 		this.mcmObjectLoaders.put(mcmId, corbaObjectLoader);
 		return corbaObjectLoader;
 	}

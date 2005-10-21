@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.5 2005/10/11 14:33:42 arseniy Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.6 2005/10/21 12:04:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/10/11 14:33:42 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/21 12:04:23 $
  * @module mscharserver
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
@@ -31,7 +31,9 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 
 	private MscharServerSessionEnvironment(final MscharServerServantManager mscharServerServantManager,
 			final MscharServerPoolContext mscharServerPoolContext) {
-		super(mscharServerServantManager, mscharServerPoolContext);
+		super(mscharServerServantManager,
+				mscharServerPoolContext,
+				new MapSchemeAdministrationResourceServer.MscharServerLoginRestorer());
 	}
 
 	public MscharServerServantManager getMscharServerServantManager() {

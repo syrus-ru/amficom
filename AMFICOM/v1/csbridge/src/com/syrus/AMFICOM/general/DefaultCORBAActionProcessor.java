@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultCORBAActionProcessor.java,v 1.4 2005/10/20 14:17:47 arseniy Exp $
+ * $Id: DefaultCORBAActionProcessor.java,v 1.5 2005/10/21 12:03:12 arseniy Exp $
  *
  * Copyright ø 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,16 +14,15 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/20 14:17:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/21 12:03:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public class DefaultCORBAActionProcessor implements CORBAActionProcessor {
-	LoginRestorer loginRestorer;
 
-	public DefaultCORBAActionProcessor(final LoginRestorer loginRestorer) {
-		this.loginRestorer = loginRestorer;
+	public DefaultCORBAActionProcessor() {
+		//≥Õ–‘… Œ¡»ﬂ
 	}
 
 	public void performAction(final CORBAAction action) throws ApplicationException {
@@ -50,18 +49,7 @@ public class DefaultCORBAActionProcessor implements CORBAActionProcessor {
 		}
 	}
 
-	/**
-	 *
-	 * @return true, only when LoginRestorer.restoreLogin() returned true,
-	 * i.e., when user or application decided to restore login
-	 * @throws LoginException
-	 * @throws CommunicationException
-	 */
 	boolean restoreLogin() throws LoginException, CommunicationException {
-		if (this.loginRestorer != null && this.loginRestorer.restoreLogin()) {
-			LoginManager.login(this.loginRestorer.getLogin(), this.loginRestorer.getPassword(), this.loginRestorer.getDomainId());
-			return true;
-		}
-		return false;
+		return LoginManager.restoreLogin();
 	}
 }

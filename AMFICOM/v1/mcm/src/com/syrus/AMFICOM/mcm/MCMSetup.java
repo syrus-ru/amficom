@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.14 2005/10/20 15:00:38 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.15 2005/10/21 12:04:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/20 15:00:38 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/21 12:04:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -89,7 +89,7 @@ final class MCMSetup {
 
 		/*-Create SessionEnvironment*/
 		final String setupServerHostName = ApplicationProperties.getString(KEY_SETUP_SERVER_HOST_NAME, SETUP_SERVER_HOST_NAME);
-		MCMSessionEnvironment.createInstance(setupServerHostName, new MeasurementControlModule.MCMLoginRestorer());
+		MCMSessionEnvironment.createInstance(setupServerHostName);
 
 		/*-Login*/
 		final String mcmUserLogin = ApplicationProperties.getString(KEY_MCM_USER_LOGIN, MCM_USER_LOGIN);

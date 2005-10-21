@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.11 2005/10/11 14:33:36 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.12 2005/10/21 12:04:14 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,15 +20,15 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/11 14:33:36 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/21 12:04:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -40,10 +40,8 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 	private long refreshTimeout;
 	private long lastRefreshTime;
 
-	protected CMServerObjectLoader(final CMServerServantManager cmServerServantManager,
-			final long refreshTimeout,
-			final LoginRestorer loginRestorer) {
-		this.corbaObjectLoader = new CORBAObjectLoader(cmServerServantManager, loginRestorer);
+	protected CMServerObjectLoader(final CMServerServantManager cmServerServantManager, final long refreshTimeout) {
+		this.corbaObjectLoader = new CORBAObjectLoader(cmServerServantManager);
 		this.refreshTimeout = refreshTimeout;
 		this.lastRefreshTime = System.currentTimeMillis();
 	}

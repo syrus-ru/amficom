@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientCORBAActionProcessor.java,v 1.3 2005/10/15 17:47:14 arseniy Exp $
+ * $Id: ClientCORBAActionProcessor.java,v 1.4 2005/10/21 12:03:18 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,15 +18,16 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/15 17:47:14 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/21 12:03:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 public class ClientCORBAActionProcessor extends DefaultCORBAActionProcessor {
 
-	public ClientCORBAActionProcessor(final LoginRestorer loginRestorer) {
-		super(loginRestorer);
+	public ClientCORBAActionProcessor() {
+		super();
+		// Может, ещё чего надо?
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.66 2005/10/20 15:00:39 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.67 2005/10/21 12:04:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/10/20 15:00:39 $
+ * @version $Revision: 1.67 $, $Date: 2005/10/21 12:04:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -127,7 +127,7 @@ final class ClientMeasurementServer {
 			domainId = server.getDomainId();
 
 			/*	Create session environment*/
-			CMServerSessionEnvironment.createInstance(server.getHostName(), new CMServerLoginRestorer());
+			CMServerSessionEnvironment.createInstance(server.getHostName());
 	
 			/*	Login*/
 			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();

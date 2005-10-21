@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.29 2005/10/20 14:22:09 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.30 2005/10/21 12:03:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/20 14:22:09 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/21 12:03:18 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -45,8 +45,8 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,
-			final CORBAActionProcessor corbaActionProcesssor) {
-		super(clientServantManager, clientPoolContext, corbaActionProcesssor);
+			final LoginRestorer loginRestorer) {
+		super(clientServantManager, clientPoolContext, loginRestorer, new ClientCORBAActionProcessor());
 	}
 
 	public ClientServantManager getClientServantManager() {
@@ -84,7 +84,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private static void createMeasurementSession(final LoginRestorer loginRestorer) throws CommunicationException {
 		final ClientServantManager mClientServantManager = MClientServantManager.create();
-		final ClientCORBAActionProcessor clientCORBAActionProcessor = new ClientCORBAActionProcessor(loginRestorer);
+		final ClientCORBAActionProcessor clientCORBAActionProcessor = new ClientCORBAActionProcessor();
 
 		final MultiServantCORBAObjectLoader objectLoader = new MultiServantCORBAObjectLoader();
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE,
@@ -105,13 +105,13 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 		final ClientPoolContext clientPoolContext = new MClientPoolContext(objectLoader);
 
-		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, clientCORBAActionProcessor);
+		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, loginRestorer);
 	}
 
 	private static void createMapSchemeSession(final LoginRestorer loginRestorer) throws CommunicationException {
 		final MClientServantManager mClientServantManager = MClientServantManager.create();
 		final MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
-		final ClientCORBAActionProcessor clientCORBAActionProcessor = new ClientCORBAActionProcessor(loginRestorer);
+		final ClientCORBAActionProcessor clientCORBAActionProcessor = new ClientCORBAActionProcessor();
 
 		final MultiServantCORBAObjectLoader objectLoader = new MultiServantCORBAObjectLoader();
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE,
@@ -144,7 +144,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
 
-		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, clientCORBAActionProcessor);
+		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
 	}
 
 	public void addPropertyListener(final PropertyChangeListener listener) {
