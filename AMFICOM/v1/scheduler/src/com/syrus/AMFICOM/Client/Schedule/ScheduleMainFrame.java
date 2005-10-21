@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.40 2005/10/06 13:18:02 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.41 2005/10/21 08:51:24 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/10/06 13:18:02 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/21 08:51:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -170,12 +170,11 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 //		return new LazyCommand(this.frames, commandKey);
 //	}
 
-	@Override
-	public void setDomainSelected() {
-		super.setDomainSelected();
-
+	private void logged(final boolean loggedIn) {
 		ElementsTreeFrame treeFrame = (ElementsTreeFrame) this.frames.get(TREE_FRAME);
-		treeFrame.init();
+		if (loggedIn) {
+			treeFrame.init();
+		}
 
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE);
@@ -184,14 +183,25 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));
 
-		((Component) this.frames.get(PARAMETERS_FRAME)).setVisible(true);
-		((Component) this.frames.get(PROPERTIES_FRAME)).setVisible(true);
-		treeFrame.setVisible(true);
-		((Component) this.frames.get(TIME_PARAMETERS_FRAME)).setVisible(true);
-		((Component) this.frames.get(PLAN_FRAME)).setVisible(true);
-//		((Component) this.frames.get(SAVE_PARAMETERS_FRAME)).setVisible(true);
-		((Component) this.frames.get(TABLE_FRAME)).setVisible(true);
-		// testFilterFrame.setVisible(true);
+		((Component) this.frames.get(PARAMETERS_FRAME)).setVisible(loggedIn);
+		((Component) this.frames.get(PROPERTIES_FRAME)).setVisible(loggedIn);
+		treeFrame.setVisible(loggedIn);
+		((Component) this.frames.get(TIME_PARAMETERS_FRAME)).setVisible(loggedIn);
+		((Component) this.frames.get(PLAN_FRAME)).setVisible(loggedIn);
+//		((Component) this.frames.get(SAVE_PARAMETERS_FRAME)).setVisible(loggedIn);
+		((Component) this.frames.get(TABLE_FRAME)).setVisible(loggedIn);
+		// testFilterFrame.setVisible(loggedIn);		
+		this.setEnableViewItems(loggedIn);
+	}
+	
+	@Override
+	public void loggedIn() {
+		this.logged(true);
+	}
+
+	@Override
+	public void loggedOut() {
+		this.logged(false);
 	}
 
 	@Override
@@ -264,7 +274,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 			}
 		});
 		
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.getShowWindowLazyCommand(this.frames, PLAN_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TREE, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, this.getShowWindowLazyCommand(this.frames, PARAMETERS_FRAME));
@@ -300,21 +310,6 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_REPORT, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, false);
 	}
-
-	@Override
-	public void setConnectionOpened() {
-		super.setConnectionOpened();
-//		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
-		this.setEnableViewItems(true);
-		
-	}
-
-	@Override
-	public void setSessionOpened() {
-		super.setSessionOpened();		
-//		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
-		this.setEnableViewItems(true);
-	}
 	
 	private void setEnableViewItems(boolean enable) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -331,13 +326,5 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, enable);
 		
 		aModel.fireModelChanged("");
-	}
-
-	@Override
-	public void setConnectionClosed() {
-		super.setConnectionClosed();
-//		Log.debugMessage("ScheduleMainFrame.setConnectionClosed | ", Log.FINEST);
-		this.setEnableViewItems(false);
-
 	}
 }
