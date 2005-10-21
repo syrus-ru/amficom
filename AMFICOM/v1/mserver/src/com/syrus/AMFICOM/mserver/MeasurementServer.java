@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.81 2005/10/21 12:04:08 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.82 2005/10/21 12:13:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/10/21 12:04:08 $
+ * @version $Revision: 1.82 $, $Date: 2005/10/21 12:13:55 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -305,7 +305,7 @@ final class MeasurementServer extends SleepButWorkThread {
 						} catch (AMFICOMRemoteException are) {
 							if (are.errorCode.value() == IdlErrorCode._ERROR_NOT_LOGGED_IN) {
 								try {
-									LoginManager.login(loginRestorer.getLogin(), loginRestorer.getPassword(), loginRestorer.getDomainId());
+									LoginManager.restoreLogin();
 								} catch (ApplicationException ae) {
 									Log.errorException(ae);
 								}
