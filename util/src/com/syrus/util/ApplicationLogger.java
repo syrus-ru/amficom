@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.12 2005/09/14 18:28:26 arseniy Exp $
+ * $Id: ApplicationLogger.java,v 1.13 2005/10/21 15:09:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,22 +9,23 @@
 package com.syrus.util;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/14 18:28:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/10/21 15:09:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
-public final class ApplicationLogger extends AbstractLogger {
-	public ApplicationLogger(String appName, String hostName) {
+final class ApplicationLogger extends AbstractLogger {
+	public ApplicationLogger(final String appName, final String hostName) {
 		super(appName, hostName);
 	}
 
 	@Override
 	void initSpec() {
-		super.echoDebug = Boolean.valueOf(ApplicationProperties.getString(KEY_ECHO_DEBUG, DEFAULT_LOG_ECHO_DEBUG)).booleanValue();
-		super.echoError = Boolean.valueOf(ApplicationProperties.getString(KEY_ECHO_ERROR, DEFAULT_LOG_ECHO_ERROR)).booleanValue();
-		super.thisLevelOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_THIS_LEVEL_ONLY, DEFAULT_LOG_ONLY_THIS_LEVEL)).booleanValue();
-		super.setDebugLevel(ApplicationProperties.getInt(KEY_LOG_DEBUG_LEVEL, DEFAULT_LOG_DEBUG_LEVEL));
-		super.baseLogPath = ApplicationProperties.getString(KEY_LOG_PATH, DEFAULT_LOG_PATH);
+		this.echoDebug = ApplicationProperties.getBoolean(KEY_ECHO_DEBUG, DEFAULT_ECHO_DEBUG);
+		this.echoError = ApplicationProperties.getBoolean(KEY_ECHO_ERROR, DEFAULT_ECHO_ERROR);
+		this.thisLevelOnly = ApplicationProperties.getBoolean(KEY_LOG_ONLY_THIS_LEVEL, DEFAULT_LOG_ONLY_THIS_LEVEL);
+		this.setDebugLevel(ApplicationProperties.getInt(KEY_LOG_DEBUG_LEVEL, DEFAULT_LOG_DEBUG_LEVEL));
+		this.baseLogPath = ApplicationProperties.getString(KEY_LOG_PATH, DEFAULT_LOG_PATH);
+		this.fullSte = ApplicationProperties.getBoolean(KEY_FULL_STE, DEFAULT_FULL_STE);
 	}
 }

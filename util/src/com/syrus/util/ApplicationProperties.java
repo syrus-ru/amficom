@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.13 2005/09/14 18:28:26 arseniy Exp $
+ * $Id: ApplicationProperties.java,v 1.14 2005/10/21 15:09:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/14 18:28:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/21 15:09:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -45,9 +45,14 @@ public class ApplicationProperties {
 
 	private static ResourceBundle createResourceBundle(final String fileName) {
 		ResourceBundle resourceBundle = null;
-		String filepath = DOT + File.separator + fileName;
+		String filepath = System.getProperty("user.dir", ".") + File.separator + fileName;
 		File file = new File(filepath);
-		String absolutePath = file.getAbsolutePath();
+		String absolutePath;
+		try {
+			absolutePath = file.getCanonicalPath();
+		} catch (final IOException ioe) {
+			absolutePath = file.getAbsolutePath();
+		}
 		System.out.println("Reading file:" + absolutePath);
 		if (file.exists()) {
 			try {
@@ -107,6 +112,11 @@ public class ApplicationProperties {
 
 		Log.debugMessage("Returning default for key '" + key + "' -- " + defaultValue, Log.DEBUGLEVEL02);
 		return defaultValue;
+	}
+
+	public static boolean getBoolean(final String key,
+			final boolean defaultValue) {
+		return Boolean.valueOf(getString(key, Boolean.valueOf(defaultValue).toString())).booleanValue();
 	}
 
 	public static String getCommonFileName() {

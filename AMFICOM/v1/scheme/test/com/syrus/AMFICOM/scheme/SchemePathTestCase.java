@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.29 2005/10/13 11:54:04 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.30 2005/10/21 15:09:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/10/13 11:54:04 $
+ * @version $Revision: 1.30 $, $Date: 2005/10/21 15:09:07 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -91,7 +91,7 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public static void oneTimeSetUp() {
-		Log.initialize(new Logger() {
+		Log.setLogger(new Logger() {
 			@SuppressWarnings("all")
 			public void debugMessage(final String message, final Level debugLevel) {
 			}

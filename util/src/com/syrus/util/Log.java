@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.13 2005/10/12 13:25:22 bass Exp $
+ * $Id: Log.java,v 1.14 2005/10/21 15:09:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/12 13:25:22 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/21 15:09:07 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -52,8 +52,33 @@ public class Log {
 		assert false;
 	}
 
-	public static void initialize(Logger logger1) {
-		logger = logger1;
+	private static void setDefaultLogger() {
+		setLogger(new Logger() {
+			public void debugMessage(final String message, final Level debugLevel) {
+				System.out.println(message);
+			}
+
+			public void debugException(final Throwable t, final Level debugLevel) {
+				System.out.println(t);
+				t.printStackTrace(System.out);
+			}
+
+			public void errorMessage(final String message) {
+				System.err.println(message);
+			}
+
+			public void errorException(final Throwable t) {
+				System.err.println(t);
+				t.printStackTrace(System.err);
+			}
+		});
+	}
+
+	public static void setLogger(final Logger logger) {
+		if (logger == null) {
+			throw new NullPointerException();
+		}
+		Log.logger = logger;
 	}
 
 	/**
@@ -62,45 +87,41 @@ public class Log {
 	 * @return always true, can be used as <code>assert Log.debugMessage(...)</code>
 	 */
 	public static boolean debugMessage(final String message, final Level debugLevel) {
-		try {
-			logger.debugMessage(message, debugLevel);
-		} catch (final NullPointerException npe) {
-			System.out.println(message);
+		if (logger == null) {
+			setDefaultLogger();
 		}
+		logger.debugMessage(message, debugLevel);
 		return true;
 	}
 
-	public static void debugException(final Throwable t, final Level debugLevel) {
-		try {
-			logger.debugException(t, debugLevel);
-		} catch (NullPointerException npe) {
-			System.out.println(t.getMessage());
-			t.printStackTrace();
+	public static boolean debugException(final Throwable t, final Level debugLevel) {
+		if (logger == null) {
+			setDefaultLogger();
 		}
+		logger.debugException(t, debugLevel);
+		return true;
 	}
 
-	public static void errorMessage(String mesg) {
-		try {
-			logger.errorMessage(mesg);
-		} catch (NullPointerException npe) {
-			System.out.println(mesg);
+	public static boolean errorMessage(final String mesg) {
+		if (logger == null) {
+			setDefaultLogger();
 		}
+		logger.errorMessage(mesg);
+		return true;
 	}
 
 	public static boolean errorException(final Throwable throwable) {
-		try {
-			logger.errorException(throwable);
-		} catch (final NullPointerException npe) {
-			System.out.println(throwable.getMessage());
-			throwable.printStackTrace();
+		if (logger == null) {
+			setDefaultLogger();
 		}
+		logger.errorException(throwable);
 		return true;
 	}
 
 	private static class CustomLevel extends Level {
 		private static final long serialVersionUID = 8040407643584688402L;
 
-		private CustomLevel(String name, int value) {
+		private CustomLevel(final String name, int value) {
 			super(name, value);
 		}
 	}

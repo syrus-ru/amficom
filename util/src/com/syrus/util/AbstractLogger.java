@@ -1,5 +1,5 @@
-/*
- * $Id: AbstractLogger.java,v 1.4 2005/07/11 10:24:30 bass Exp $
+/*-
+ * $Id: AbstractLogger.java,v 1.5 2005/10/21 15:09:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.util.Log.DEBUG_LEVEL_MAP;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,25 +20,32 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 10:24:30 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/21 15:09:07 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
 	static final String DELIMITER = ".";
 	static final String ERROR = "error";
 	static final String DEBUG = "debug";
+	
 	static final String KEY_LOG_DEBUG_LEVEL = "LogDebugLevel";
 	static final String KEY_ECHO_DEBUG = "EchoDebug";
 	static final String KEY_ECHO_ERROR = "EchoError";
-	static final String KEY_THIS_LEVEL_ONLY = "LogOnlyThisLevel";
+	static final String KEY_LOG_ONLY_THIS_LEVEL = "LogOnlyThisLevel";
 	static final String KEY_LOG_PATH = "LogPath";
+	static final String KEY_FULL_STE = "FullSte";
+
 
 	static final String DEFAULT_APPNAME = "defaultApp";
 	static final String DEFAULT_HOSTNAME = "defaultHost";
-	static final String DEFAULT_LOG_ECHO_DEBUG = "false";
-	static final String DEFAULT_LOG_ECHO_ERROR = "false";
-	static final String DEFAULT_LOG_ONLY_THIS_LEVEL = "false";
+
 	static final int DEFAULT_LOG_DEBUG_LEVEL = 5;
+	static final boolean DEFAULT_ECHO_DEBUG = false;
+	static final boolean DEFAULT_ECHO_ERROR = false;
+	static final boolean DEFAULT_LOG_ONLY_THIS_LEVEL = false;
+	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "logs";
+	static final boolean DEFAULT_FULL_STE = false;
+
 
 	private String appName;
 	private String hostName;
@@ -51,8 +59,11 @@ abstract class AbstractLogger implements Logger {
 	private String errorLogFileName;
 	private PrintWriter errorLog;
 	private PrintWriter debugLog;
-
-	static final String DEFAULT_LOG_PATH = System.getProperty("user.home") + File.separatorChar + "/logs";
+	/**
+	 * Whether full or short form of a stack trace element should be 
+	 * printed.
+	 */
+	boolean fullSte;
 
 	public AbstractLogger(String appName, String hostName) {
 		this.appName = (appName != null)?appName:DEFAULT_APPNAME;
@@ -74,12 +85,10 @@ abstract class AbstractLogger implements Logger {
 		try {
 			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue()) || debugLevel.intValue() == this.logDebugLevel.intValue()) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
-				logTimeStamp(this.debugLog);
-				this.debugLog.println(message);
+				logMessage(this.debugLog, message);
 				this.debugLog.close();
 				if (this.echoDebug) {
-					echoTimeStamp();
-					System.out.println(message);
+					logMessage(System.out, message);
 				}
 			}
 		} catch (Exception e) {
@@ -93,14 +102,10 @@ abstract class AbstractLogger implements Logger {
 		try {
 			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue()) || debugLevel.intValue() == this.logDebugLevel.intValue()) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
-				logTimeStamp(this.debugLog);
-				this.debugLog.println("Exception: " + t.getMessage());
-				t.printStackTrace(this.debugLog);
+				logThrowable(this.debugLog, t);
 				this.debugLog.close();
 				if (this.echoDebug) {
-					echoTimeStamp();
-					System.out.println("Exception: " + t.getMessage());
-					t.printStackTrace();
+					logThrowable(System.out, t);
 				}
 			}
 		} catch (Exception e) {
@@ -109,17 +114,15 @@ abstract class AbstractLogger implements Logger {
 		}
 	}
 
-	public synchronized void errorMessage(String mesg) {
+	public synchronized void errorMessage(final String message) {
 		this.checkLogRollover();
 		try {
 			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
-			logTimeStamp(this.errorLog);
-			this.errorLog.println(mesg);
+			logMessage(this.errorLog, message);
 			this.errorLog.close();
-			this.debugMessage(mesg, Log.DEBUGLEVEL01);
+
 			if (this.echoError) {
-				echoTimeStamp();
-				System.out.println(mesg);
+				logMessage(System.err, message);
 			}
 		} catch (Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
@@ -127,19 +130,16 @@ abstract class AbstractLogger implements Logger {
 		}
 	}
 
-	public synchronized void errorException(Throwable throwable) {
+	public synchronized void errorException(final Throwable t) {
 		this.checkLogRollover();
 		try {
 			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
-			logTimeStamp(this.errorLog);
-			this.errorLog.println("Exception: " + throwable.getMessage());
-				throwable.printStackTrace(this.errorLog);
-				this.errorLog.close();
-				if (this.echoError) {
-					echoTimeStamp();
-					System.out.println("Exception: " + throwable.getMessage());
-					throwable.printStackTrace();
-				}
+			logThrowable(this.errorLog, t);
+			this.errorLog.close();
+
+			if (this.echoError) {
+				logThrowable(System.err, t);
+			}
 		} catch (Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
 			e.printStackTrace();
@@ -157,14 +157,66 @@ abstract class AbstractLogger implements Logger {
 		}
 	}
 
-	private static void logTimeStamp(PrintWriter pw) {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		pw.print(sdf.format(new Date()) + "| ");
+	private void logMessage(final PrintWriter out, final String message) {
+		logTimestamp(out);
+		logStackTraceElement(out);
+		out.println(message);
 	}
 
-	private static void echoTimeStamp() {
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		System.out.print(sdf.format(new Date()) + "| ");
+	private void logMessage(final PrintStream out, final String message) {
+		logTimestamp(out);
+		logStackTraceElement(out);
+		out.println(message);
+	}
+
+	private void logThrowable(final PrintWriter out, final Throwable t) {
+		logTimestamp(out);
+		logStackTraceElement(out);
+		out.println("Exception (stack trace follows): " + t.getMessage());
+		t.printStackTrace(out);
+	}
+
+	private void logThrowable(final PrintStream out, final Throwable t) {
+		logTimestamp(out);
+		logStackTraceElement(out);
+		out.println("Exception (stack trace follows): " + t.getMessage());
+		t.printStackTrace(out);
+	}
+
+	private static final SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
+
+	private static void logTimestamp(final PrintWriter out) {
+		out.print(SIMPLE_DATE_FORMAT.format(new Date()) + "| ");
+	}
+
+	private static void logTimestamp(final PrintStream out) {
+		out.print(SIMPLE_DATE_FORMAT.format(new Date()) + "| ");
+	}
+
+	private void logStackTraceElement(final PrintWriter out) {
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		final int i = 6;
+		if (stackTrace.length > i) {
+			final StackTraceElement stackTraceElement = stackTrace[i];
+			out.print((this.fullSte
+					? stackTraceElement
+					: stackTraceElement.getClassName().replaceAll("^.*\\.(\\w+)$", "$1")
+							+ '.' + stackTraceElement.getMethodName() + "()")
+					+ " | ");
+		}
+	}
+
+	private void logStackTraceElement(final PrintStream out) {
+		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+		final int i = 6;
+		if (stackTrace.length > i) {
+			final StackTraceElement stackTraceElement = stackTrace[i];
+			out.print((this.fullSte
+					? stackTraceElement
+					: stackTraceElement.getClassName().replaceAll("^.*\\.(\\w+)$", "$1")
+							+ '.' + stackTraceElement.getMethodName() + "()")
+					+ " | ");
+		}
 	}
 
 	private String createLogFileName(String logType) {
