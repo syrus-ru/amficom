@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapOpenCommand.java,v 1.35 2005/10/17 14:08:46 krupenn Exp $$
+ * $$Id: MapOpenCommand.java,v 1.36 2005/10/21 15:44:44 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,12 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapRemoveWrapper;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.controllers.MarkController;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapTableController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -31,11 +36,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.Mark;
 
 /**
  * открыть карту. карта открывается в новом виде
  * 
- * @version $Revision: 1.35 $, $Date: 2005/10/17 14:08:46 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/21 15:44:44 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -64,6 +70,7 @@ public class MapOpenCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
+		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
 						this,
@@ -111,6 +118,19 @@ public class MapOpenCommand extends AbstractCommand {
 		}
 
 		this.map.open();
+
+		final MapViewController mapViewController = mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController();
+		MarkController controller = null;
+		for(Mark mark : this.map.getMarks()) {
+			if(controller == null) {
+				controller = (MarkController) mapViewController.getController(mark);
+			}
+			try {
+				controller.moveToFromStartLt(mark, mark.getDistance());
+			} catch(MapException e) {
+				e.printStackTrace();
+			}
+		}
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
 						this,

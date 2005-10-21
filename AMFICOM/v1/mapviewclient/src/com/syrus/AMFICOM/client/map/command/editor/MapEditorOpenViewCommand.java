@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenViewCommand.java,v 1.32 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorOpenViewCommand.java,v 1.33 2005/10/21 15:44:44 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewOpenCommand;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.controllers.MarkController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -21,6 +23,7 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
@@ -29,7 +32,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.32 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/21 15:44:44 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -99,6 +102,21 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 
 			if(this.mapFrame == null) {
 				return;
+			}
+
+			this.mapView.getMap().open();
+
+			final MapViewController mapViewController = this.mapFrame.getMapViewer().getLogicalNetLayer().getMapViewController();
+			MarkController controller = null;
+			for(Mark mark : this.mapView.getMap().getMarks()) {
+				if(controller == null) {
+					controller = (MarkController) mapViewController.getController(mark);
+				}
+				try {
+					controller.moveToFromStartLt(mark, mark.getDistance());
+				} catch(MapException e) {
+					e.printStackTrace();
+				}
 			}
 
 			try {
