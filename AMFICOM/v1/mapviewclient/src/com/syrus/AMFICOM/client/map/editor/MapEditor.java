@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditor.java,v 1.17 2005/09/30 16:08:39 krupenn Exp $$
+ * $$Id: MapEditor.java,v 1.18 2005/10/21 14:08:39 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,13 @@ import com.syrus.AMFICOM.client.model.DefaultMapEditorApplicationModelFactory;
 /**
  * Запуск основного окна модуля "Редактор топологических схем".
  * 
- * @version $Revision: 1.17 $, $Date: 2005/09/30 16:08:39 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/21 14:08:39 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
 public class MapEditor extends AbstractApplication {
-	public static final String APPLICATION_NAME = "mapeditor"; //$NON-NLS-1$
+	public static final String APPLICATION_NAME = "map_editor"; //$NON-NLS-1$
 
 	public MapEditor() {
 		super(MapEditor.APPLICATION_NAME);
