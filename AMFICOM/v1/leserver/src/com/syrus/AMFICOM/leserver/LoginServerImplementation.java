@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.32 2005/10/20 14:15:00 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.33 2005/10/21 08:00:33 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/20 14:15:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/10/21 08:00:33 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -139,7 +139,6 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * @todo Implement
 	 * @param userId
 	 * @param domainId
-	 * @return
 	 */
 	private boolean validateDomainAccess(final Identifier userId, final Identifier domainId) {
 		assert userId != null : NON_NULL_EXPECTED;
