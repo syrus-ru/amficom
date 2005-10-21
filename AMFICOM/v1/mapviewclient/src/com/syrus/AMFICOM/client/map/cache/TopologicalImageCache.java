@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageCache.java,v 1.22 2005/10/11 08:56:11 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.23 2005/10/21 15:44:16 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/21 15:44:16 $
  * @author $Author: krupenn $
  * @author Peter Peskovsky
  * @module mapviewclient
@@ -397,6 +397,9 @@ public class TopologicalImageCache implements MapImageRenderer {
 	
 	public void analyzeMouseLocation(MouseEvent event)
 			throws MapDataException, MapConnectionException {
+		if(this.imageSize == null) {
+			return;
+		}
 		Log.debugMessage(" TIC | analyzeMouseLocation | just entered.",Level.FINEST); //$NON-NLS-1$
 		
 		if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
