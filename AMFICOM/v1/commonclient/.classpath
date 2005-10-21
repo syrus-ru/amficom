@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/leserver"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/leserver_interface.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapview"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/kunststoff.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filter"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/trove"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
