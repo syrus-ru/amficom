@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.44 2005/10/19 11:55:41 krupenn Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.45 2005/10/21 14:45:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -50,7 +51,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.44 $, $Date: 2005/10/19 11:55:41 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/21 14:45:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -70,11 +71,16 @@ public final class MapDropTargetListener implements DropTargetListener {
 
 		Point point = dtde.getLocation();
 
+		System.out.println("drop at point " + point.getX() + ", " + point.getY());
+
 		if(logicalNetLayer.getMapView() != null) {
 			DataFlavor[] df = dtde.getCurrentDataFlavors();
 			Transferable transferable = dtde.getTransferable();
 			for(int i = 0; i < df.length; i++) {
 				try {
+					System.out.println("drop name - " + df[i].getHumanPresentableName());
+					System.out.println("transferable is " + transferable);
+					System.out.println("dropped element is " + transferable.getTransferData(df[(i)]));
 					if(df[i].getHumanPresentableName().equals("ElementLabel")) //$NON-NLS-1$
 					{
 						Identifier id = (Identifier) transferable
@@ -82,9 +88,10 @@ public final class MapDropTargetListener implements DropTargetListener {
 						SiteNodeType mpe = StorableObjectPool
 								.getStorableObject(id, false);
 
+						System.out.println("dropped site node type " + mpe.getName());
 						mapElementDropped(mpe, point);
 					} else if(df[i].getHumanPresentableName().equals(
-							"IconedTreeUI.object")) //$NON-NLS-1$
+							LogicalTreeUI.TRANSFERABLE_OBJECTS)) //$NON-NLS-1$
 					{
 						ArrayList items = (ArrayList) transferable
 								.getTransferData(df[i]);
@@ -96,6 +103,7 @@ public final class MapDropTargetListener implements DropTargetListener {
 								Identifier id = snt.getId();
 								SiteNodeType mpe = StorableObjectPool
 										.getStorableObject(id, true);
+								System.out.println("dropped site node type " + mpe.getName());
 								mapElementDropped(mpe, point);
 							}
 							if(or instanceof SchemeElement) {
@@ -103,18 +111,21 @@ public final class MapDropTargetListener implements DropTargetListener {
 								Identifier id = se.getId();
 								SchemeElement sereal = StorableObjectPool
 										.getStorableObject(id, true);
+								System.out.println("dropped scheme element " + sereal.getName());
 								schemeElementDropped(sereal, point);
 							} else if(or instanceof SchemeCableLink) {
 								SchemeCableLink scl = (SchemeCableLink) or;
 								Identifier id = scl.getId();
 								SchemeCableLink sclreal = StorableObjectPool
 										.getStorableObject(id, true);
+								System.out.println("dropped scheme cable link " + sclreal.getName());
 								schemeCableLinkDropped(sclreal);
 							} else if(or instanceof SchemePath) {
 								SchemePath sp = (SchemePath) or;
 								Identifier id = sp.getId();
 								SchemePath spreal = StorableObjectPool
 										.getStorableObject(id, true);
+								System.out.println("dropped scheme path " + spreal.getName());
 								schemePathDropped(spreal);
 							} else if(or instanceof Scheme) {
 								Scheme sc = (Scheme) or;
