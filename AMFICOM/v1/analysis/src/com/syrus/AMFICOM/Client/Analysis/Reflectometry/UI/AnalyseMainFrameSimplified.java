@@ -236,9 +236,8 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	}
 
 	@Override
-	public void setDomainSelected() {
-		super.setDomainSelected();
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+	public void loggedIn() {
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen",
 				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
@@ -256,9 +255,8 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	}
 
 	@Override
-	public void setSessionClosed() {
-		super.setSessionClosed();
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+	public void loggedOut() {
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen", false);
 		aModel.setEnabled("menuFileOpenAs", false);
@@ -276,9 +274,9 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setEnabled("menuSaveTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetupAs", false);
 		aModel.setEnabled("menuHelpAbout", false);
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged("");		
 	}
-
+	
 	void setActiveRefId(String id) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.getCommand("menuFileRemoveCompare").setParameter("activeRefId", id);

@@ -116,8 +116,9 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		});
 
 		PermissionManager.setReseachTranslation();
-}
+	}
 	
+	@SuppressWarnings("unqualified-field-access")
 	protected void initFrames() {
 		this.frames = new UIDefaults();
 		this.tables = new LinkedList<ReportTable>();
@@ -483,11 +484,9 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		
 //		aModel.setVisible("menuTraceSavePES", true);
 	}
-
+	
 	@Override
-	public void setDomainSelected() {
-		super.setDomainSelected();
-
+	public void loggedIn() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen",
@@ -503,12 +502,10 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setEnabled("menuHelpAbout", true);
 //		aModel.setEnabled("menuNetStudy", true);
 		aModel.fireModelChanged("");
-
 	}
 
 	@Override
-	public void setSessionClosed() {
-		super.setSessionClosed();
+	public void loggedOut() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen", false);
@@ -529,7 +526,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		aModel.setEnabled("menuNetStudy", false);
 		aModel.setEnabled("menuHelpAbout", false);
 		aModel.fireModelChanged("");
-
 	}
 
 	void updFrames() {

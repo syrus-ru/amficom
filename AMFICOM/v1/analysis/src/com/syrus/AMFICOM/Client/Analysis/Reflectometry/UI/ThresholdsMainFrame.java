@@ -289,9 +289,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 	}
 
 	@Override
-	public void setDomainSelected() {
-		super.setDomainSelected();
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+	public void loggedIn() {
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuFileOpen",
 				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
 		aModel.setEnabled("menuFileOpenAs",
@@ -308,9 +307,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 	}
 
 	@Override
-	public void setSessionClosed() {
-		super.setSessionClosed();
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+	public void loggedOut() {
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen", false);
 		aModel.setEnabled("menuFileOpenAs", false);
