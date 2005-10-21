@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.10 2005/10/06 14:34:35 bob Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.11 2005/10/21 10:11:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/21 10:11:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -81,11 +81,6 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 		menuSessionChangePassword.setName(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
 		menuSessionChangePassword.addActionListener(this.actionAdapter);
 
-		final JMenuItem menuSessionDomain = new JMenuItem();
-		menuSessionDomain.setText(I18N.getString(ApplicationModel.MENU_SESSION_DOMAIN));
-		menuSessionDomain.setName(ApplicationModel.MENU_SESSION_DOMAIN);
-		menuSessionDomain.addActionListener(this.actionAdapter);
-
 		final JMenuItem menuExit = new JMenuItem();
 		menuExit.setText(I18N.getString(ApplicationModel.MENU_EXIT));
 		menuExit.setName(ApplicationModel.MENU_EXIT);
@@ -95,9 +90,6 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 		menuSession.add(menuSessionClose);
 		menuSession.add(menuSessionOptions);
 		menuSession.add(menuSessionChangePassword);
-		menuSession.addSeparator();
-		menuSession.addSeparator();
-		menuSession.add(menuSessionDomain);
 		menuSession.addSeparator();
 		menuSession.add(menuExit);
 
@@ -136,8 +128,6 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 				menuSessionOptions.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_OPTIONS));
 				menuSessionChangePassword.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
 				menuSessionChangePassword.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
-				menuSessionDomain.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_DOMAIN));
-				menuSessionDomain.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_DOMAIN));
 
 				menuHelpAboutItem.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_HELP_ABOUT));
 				menuHelpAboutItem.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_HELP_ABOUT));
@@ -171,7 +161,7 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 		return this.applicationModel;
 	}
 
-	public List getApplicationModelListeners() {
+	public List<ApplicationModelListener> getApplicationModelListeners() {
 		return this.applicationModelListeners;
 	}
 

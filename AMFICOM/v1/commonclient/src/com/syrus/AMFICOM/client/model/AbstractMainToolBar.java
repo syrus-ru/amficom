@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.14 2005/10/06 14:34:35 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.15 2005/10/21 10:11:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/21 10:11:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -74,17 +74,8 @@ public abstract class AbstractMainToolBar extends JToolBar {
 		this.closeSessionButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.closeSessionButton.addActionListener(this.actionListener);
 
-		this.sessionDomainButton = new JButton();
-		this.sessionDomainButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DOMAIN_SELECTION));
-		this.sessionDomainButton.setToolTipText(I18N.getString(ApplicationModel.MENU_SESSION_DOMAIN));
-		this.sessionDomainButton.setName(ApplicationModel.MENU_SESSION_DOMAIN);
-		this.sessionDomainButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.sessionDomainButton.addActionListener(this.actionListener);
-
 		this.add(this.openSessionButton);
 		this.add(this.closeSessionButton);
-		this.addSeparator();
-		this.add(this.sessionDomainButton);
 
 		this.addApplicationModelListener(new ApplicationModelListener() {
 
@@ -98,9 +89,6 @@ public abstract class AbstractMainToolBar extends JToolBar {
 
 				AbstractMainToolBar.this.closeSessionButton.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(ApplicationModel.MENU_SESSION_CLOSE));
 				AbstractMainToolBar.this.closeSessionButton.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(ApplicationModel.MENU_SESSION_CLOSE));
-				AbstractMainToolBar.this.sessionDomainButton.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(ApplicationModel.MENU_SESSION_DOMAIN));
-				AbstractMainToolBar.this.sessionDomainButton.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(ApplicationModel.MENU_SESSION_DOMAIN));
-
 			}
 		});
 
@@ -130,7 +118,7 @@ public abstract class AbstractMainToolBar extends JToolBar {
 		}
 	}
 
-	public List getApplicationModelListeners() {
+	public List<ApplicationModelListener> getApplicationModelListeners() {
 		return this.applicationModelListeners;
 	}
 

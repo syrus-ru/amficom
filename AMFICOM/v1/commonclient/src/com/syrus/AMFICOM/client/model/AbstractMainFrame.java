@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.27 2005/10/21 08:48:39 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.28 2005/10/21 10:11:26 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -53,7 +52,7 @@ import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/21 08:48:39 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/21 10:11:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -120,9 +119,9 @@ implements PropertyChangeListener {
 		this.mainPanel.add(this.statusBarPanel, BorderLayout.SOUTH);
 		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
 
-		GraphicsEnvironment localGraphicsEnvironment = 
+		final GraphicsEnvironment localGraphicsEnvironment = 
 			GraphicsEnvironment.getLocalGraphicsEnvironment();
-		Rectangle maximumWindowBounds = 
+		final Rectangle maximumWindowBounds = 
 			localGraphicsEnvironment.getMaximumWindowBounds();
 		this.setSize(new Dimension(maximumWindowBounds.width, 
 			maximumWindowBounds.height));
@@ -149,59 +148,6 @@ implements PropertyChangeListener {
 		final String propertyName = evt.getPropertyName().intern();
 		if (propertyName == ContextChangeEvent.TYPE) {			
 			final ContextChangeEvent cce = (ContextChangeEvent) evt;
-//			if (cce.isSessionOpened()) {
-//				this.setSessionOpened();
-//
-//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
-//
-//				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-//				final Identifier userId = LoginManager.getUserId();
-//				try {
-//					final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
-//					this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
-//
-//					final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
-//					this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
-//				} catch (final ApplicationException e) {
-//					assert Log.debugMessage("AbstractMainFrame.propertyChange | Cannot acquire " + userId,
-//						Log.DEBUGLEVEL02);
-//				}
-//			}
-//			if (cce.isSessionClosed()) {
-//				this.setSessionClosed();
-//
-//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
-//				this.statusBar.setText(StatusBar.FIELD_SESSION, I18N.getString("Common.StatusBar.NoSession"));
-//				this.statusBar.setText(StatusBar.FIELD_USER, I18N.getString("Common.StatusBar.NoUser"));
-//			}
-//			if (cce.isConnectionOpened()) {
-//				this.setConnectionOpened();
-//
-//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
-//				final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
-//				this.statusBar.setText(StatusBar.FIELD_SERVER, clientSessionEnvironment.getServerName());
-//			}
-//			if (cce.isConnectionClosed()) {
-//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
-//				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
-//
-//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Disconnected"));
-//				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.NoConnection"));
-//
-//				this.setConnectionClosed();
-//			}
-//			if (cce.isConnectionFailed()) {
-//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
-//				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
-//
-//				this.setConnectionFailed();
-//			}
-//			if (cce.isDomainSelected()) {
-//				if (this.checkEnter()) {
-//					this.setDomainSelected();
-//				}
-//			}
-			
 			if (cce.isLoggedIn()) {
 				this.loggedIn0();
 			}
@@ -215,6 +161,7 @@ implements PropertyChangeListener {
 	private final void loggedIn0() {
 		if (this.checkEnter()) {
 			final ApplicationModel aModel = this.aContext.getApplicationModel();
+			aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
 			aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
 			aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
 			aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
@@ -263,50 +210,12 @@ implements PropertyChangeListener {
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, false);
 		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
 		aModel.fireModelChanged();
 		this.loggedOut();
 	}
 	
 	public abstract void loggedOut();
-	
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void setConnectionClosed() {
-		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, false);
-		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
-		aModel.fireModelChanged();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void setConnectionFailed() {
-		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, false);
-		aModel.fireModelChanged();
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void setConnectionOpened() {
-		// nothing 
-	}
 
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -336,10 +245,8 @@ implements PropertyChangeListener {
 			if (Checker.isPermitted(permissionCodename)) {
 				return null;
 			}
-		} catch (final ApplicationException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			
+		} catch (final ApplicationException ae) {
+			Log.errorException(ae);
 			// and return problems
 		}
 		return permissionCodename.getDescription() 
@@ -347,37 +254,8 @@ implements PropertyChangeListener {
 			+ permissionCodename.getModule().getDescription() 
 			+ "\".";
 	}
-	
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void setDomainSelected() {		
-		final ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
 
-		aModel.fireModelChanged();
-
-		final Identifier domainId = LoginManager.getDomainId();
-		try {
-			Domain domain = StorableObjectPool.getStorableObject(
-					domainId, 
-					true);
-			this.statusBar.setText(StatusBar.FIELD_DOMAIN, domain.getName());
-		} catch (final ApplicationException e) {
-			assert Log.debugMessage("AbstractMainFrame.propertyChange | Cannot acquire " + domainId,
-				Log.DEBUGLEVEL02);
-			showErrorMessage(this, e);
-			return;
-		}
-
-		this.windowArranger.arrange();
-
-	}
-
-	public void setModel(ApplicationModel aModel) {
+	public void setModel(final ApplicationModel aModel) {
 		this.toolBar.setApplicationModel(aModel);
 		this.menuBar.setApplicationModel(aModel);
 		this.addListeners(aModel, this.menuBar.getApplicationModelListeners());
@@ -385,62 +263,18 @@ implements PropertyChangeListener {
 		aModel.fireModelChanged();
 	}
 
-	private void addListeners(	ApplicationModel aModel,
-								List applicationModelListeners) {
+	private void addListeners(final ApplicationModel aModel,
+			final List<ApplicationModelListener> applicationModelListeners) {
 		if (applicationModelListeners != null && 
 				!applicationModelListeners.isEmpty()) {
-			for (Iterator iterator = applicationModelListeners.iterator(); 
-					iterator.hasNext();) {
-				ApplicationModelListener listener = 
-					(ApplicationModelListener) iterator.next();
+			for (final ApplicationModelListener listener : applicationModelListeners) {
 				aModel.addListener(listener);
 			}
 		}
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void setSessionClosed() {
-		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
-
-		aModel.fireModelChanged();
-
-		this.statusBar.setText(StatusBar.FIELD_DOMAIN, 
-				I18N.getString("Common.StatusBar.NoDomain"));
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public void setSessionOpened() {
-		// TODO check ?
-		// this.checker = new
-		// Checker(aContext.getDataSourceInterface());
-		final ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
-		aModel.fireModelChanged();
-		Identifier domainId = LoginManager.getDomainId();
-		if (domainId != null && !domainId.isVoid()) {
-			this.dispatcher.firePropertyChange(
-					new ContextChangeEvent(domainId,
-						ContextChangeEvent.DOMAIN_SELECTED_EVENT));
-		}
-	}
-
 	@Override
-	protected void processWindowEvent(WindowEvent e) {
+	protected void processWindowEvent(final WindowEvent e) {
 		super.processWindowEvent(e);
 		int id = e.getID();
 		switch(id) {
