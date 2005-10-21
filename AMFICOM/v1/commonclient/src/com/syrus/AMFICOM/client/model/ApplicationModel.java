@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.10 2005/09/07 02:37:31 arseniy Exp $
+ * $Id: ApplicationModel.java,v 1.11 2005/10/21 12:36:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
  * ћодель приложени€ описывает действи€, которые пользователь (оператор) может
  * производить с системой
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/09/07 02:37:31 $
+ * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/10/21 12:36:41 $
  * @module commonclient
  */
 public class ApplicationModel {
@@ -49,8 +49,6 @@ public class ApplicationModel {
 	public static final String MENU_SESSION_OPTIONS = MENU_SESSION + ".Options";
 
 	public static final String MENU_SESSION_CHANGE_PASSWORD = MENU_SESSION + ".ChangePassword";
-
-	public static final String MENU_SESSION_DOMAIN = MENU_SESSION + ".Domain";
 
 	public static final String MENU_VIEW = MENU + ".View";
 
@@ -347,8 +345,8 @@ public class ApplicationModel {
 	 * и флаги видимости и доступности команды пользователю. конструктора без
 	 * параметров нет, так как элемент определ€етс€ идентификатором
 	 * 
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.10 $, $Date: 2005/09/07 02:37:31 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.11 $, $Date: 2005/10/21 12:36:41 $
 	 * @module commonclient
 	 */
 	class ApplicationEntry {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.129 2005/10/20 10:03:07 bob Exp $
+ * $Id: SchedulerModel.java,v 1.130 2005/10/21 12:37:26 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.129 $, $Date: 2005/10/20 10:03:07 $
+ * @version $Revision: 1.130 $, $Date: 2005/10/21 12:37:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -190,7 +190,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.add(MENU_SESSION_CLOSE);
 		this.add(MENU_SESSION_OPTIONS);
 		this.add(MENU_SESSION_CHANGE_PASSWORD);
-		this.add(MENU_SESSION_DOMAIN);
 		this.add(MENU_EXIT);
 
 		this.add(ScheduleMainMenuBar.MENU_VIEW);

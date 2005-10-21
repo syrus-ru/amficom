@@ -19,9 +19,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 	    add(ApplicationModel.MENU_SESSION);
 	    add(ApplicationModel.MENU_SESSION_NEW);
 	    add(ApplicationModel.MENU_SESSION_CLOSE);
-//	    add(ApplicationModel.MENU_SESSION_CONNECTION);
 	    add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
-	    add(ApplicationModel.MENU_SESSION_DOMAIN);
 	    add(ApplicationModel.MENU_EXIT);
 
 	    add(ApplicationModel.MENU_HELP);
