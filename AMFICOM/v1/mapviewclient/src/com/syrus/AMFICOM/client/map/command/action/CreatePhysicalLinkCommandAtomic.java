@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.24 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.25 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,9 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.util.Log;
@@ -22,7 +24,7 @@ import com.syrus.util.Log;
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.24 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -80,11 +82,17 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
+		try {
+			StorableObjectPool.putStorableObject(this.link);
+			this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void undo() {
 		this.logicalNetLayer.getMapView().getMap().removePhysicalLink(this.link);
+		StorableObjectPool.delete(this.link.getId());
 	}
 }

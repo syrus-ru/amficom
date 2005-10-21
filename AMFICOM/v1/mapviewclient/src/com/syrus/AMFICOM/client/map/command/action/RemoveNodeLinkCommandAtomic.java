@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveNodeLinkCommandAtomic.java,v 1.16 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: RemoveNodeLinkCommandAtomic.java,v 1.17 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
@@ -19,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * удаление фрагмента линии связи из карты - атомарное действие
  * 
- * @version $Revision: 1.16 $, $Date: 2005/10/12 13:07:08 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -53,6 +55,7 @@ public class RemoveNodeLinkCommandAtomic extends MapActionCommand {
 		else {
 			mapView.getMap().removeNodeLink(this.nodeLink);
 		}
+		StorableObjectPool.delete(this.nodeLink.getId());
 		setResult(Command.RESULT_OK);
 	}
 
@@ -66,17 +69,23 @@ public class RemoveNodeLinkCommandAtomic extends MapActionCommand {
 		else {
 			mapView.getMap().removeNodeLink(this.nodeLink);
 		}
+		StorableObjectPool.delete(this.nodeLink.getId());
 	}
 
 	@Override
 	public void undo() {
-		final MapView mapView = this.logicalNetLayer.getMapView();
+		try {
+			StorableObjectPool.putStorableObject(this.nodeLink);
+			final MapView mapView = this.logicalNetLayer.getMapView();
 
-		if(this.nodeLink.getPhysicalLink() instanceof UnboundLink) {
-			mapView.addUnboundNodeLink(this.nodeLink);
-		}
-		else {
-			mapView.getMap().addNodeLink(this.nodeLink);
+			if(this.nodeLink.getPhysicalLink() instanceof UnboundLink) {
+				mapView.addUnboundNodeLink(this.nodeLink);
+			}
+			else {
+				mapView.getMap().addNodeLink(this.nodeLink);
+			}
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
 		}
 	}
 }

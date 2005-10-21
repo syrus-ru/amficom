@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateSiteCommandAtomic.java,v 1.32 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreateSiteCommandAtomic.java,v 1.33 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,9 @@ import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -26,7 +28,7 @@ import com.syrus.util.Log;
  * Разместить сетевой элемент на карте. используется при переносе (drag/drop), в
  * точке point (в экранных координатах)
  * 
- * @version $Revision: 1.32 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -111,11 +113,17 @@ public class CreateSiteCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void undo() {
-		this.map.removeNode(this.site);
+		try {
+			StorableObjectPool.putStorableObject(this.site);
+			this.map.removeNode(this.site);
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void redo() {
 		this.map.addNode(this.site);
+		StorableObjectPool.delete(this.site.getId());
 	}
 }

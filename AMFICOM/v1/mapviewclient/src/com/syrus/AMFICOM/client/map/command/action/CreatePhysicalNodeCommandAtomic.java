@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.31 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.32 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,9 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -25,7 +27,7 @@ import com.syrus.util.Log;
  * создание топологического узла, внесение его в пул и на карту - атомарное
  * действие
  * 
- * @version $Revision: 1.31 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,11 +89,17 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		this.logicalNetLayer.getMapView().getMap().addNode(this.node);
+		try {
+			StorableObjectPool.putStorableObject(this.node);
+			this.logicalNetLayer.getMapView().getMap().addNode(this.node);
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void undo() {
 		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
+		StorableObjectPool.delete(this.node.getId());
 	}
 }

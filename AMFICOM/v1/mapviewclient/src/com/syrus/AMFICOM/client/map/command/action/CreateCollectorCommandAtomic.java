@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateCollectorCommandAtomic.java,v 1.20 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreateCollectorCommandAtomic.java,v 1.21 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,9 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.util.Log;
 
@@ -20,7 +22,7 @@ import com.syrus.util.Log;
  * создание коллектора, внесение его в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.20 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -66,13 +68,19 @@ public class CreateCollectorCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		this.logicalNetLayer.getMapView().getMap().addCollector(this.collector);
+		try {
+			StorableObjectPool.putStorableObject(this.collector);
+			this.logicalNetLayer.getMapView().getMap().addCollector(this.collector);
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void undo() {
 		this.logicalNetLayer.getMapView().getMap().removeCollector(
 				this.collector);
+		StorableObjectPool.delete(this.collector.getId());
 	}
 }
 

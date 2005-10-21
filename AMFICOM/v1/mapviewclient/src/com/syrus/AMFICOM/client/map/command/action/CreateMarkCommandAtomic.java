@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkCommandAtomic.java,v 1.32 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreateMarkCommandAtomic.java,v 1.33 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,9 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.Mark;
@@ -32,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.32 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -131,11 +133,17 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 	
 	@Override
 	public void undo() {
-		this.map.removeNode(this.mark);
+		try {
+			StorableObjectPool.putStorableObject(this.mark);
+			this.map.removeNode(this.mark);
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public void redo() {
 		this.map.addNode(this.mark);
+		StorableObjectPool.delete(this.mark.getId());
 	}
 }

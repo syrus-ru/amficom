@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateNodeLinkCommandAtomic.java,v 1.22 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreateNodeLinkCommandAtomic.java,v 1.23 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,9 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -24,7 +26,7 @@ import com.syrus.util.Log;
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.22 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -90,13 +92,18 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void redo() {
-		final MapView mapView = this.logicalNetLayer.getMapView();
+		try {
+			final MapView mapView = this.logicalNetLayer.getMapView();
 
-		if(this.physicalLink instanceof UnboundLink) {
-			mapView.addUnboundNodeLink(this.nodeLink);
-		}
-		else {
-			mapView.getMap().addNodeLink(this.nodeLink);
+			StorableObjectPool.putStorableObject(this.nodeLink);
+			if(this.physicalLink instanceof UnboundLink) {
+				mapView.addUnboundNodeLink(this.nodeLink);
+			}
+			else {
+				mapView.getMap().addNodeLink(this.nodeLink);
+			}
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -110,6 +117,7 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 		else {
 			mapView.getMap().removeNodeLink(this.nodeLink);
 		}
+		StorableObjectPool.delete(this.nodeLink.getId());
 	}
 }
 

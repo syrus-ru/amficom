@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveNodeCommandAtomic.java,v 1.21 2005/10/12 13:07:08 krupenn Exp $$
+ * $$Id: RemoveNodeCommandAtomic.java,v 1.22 2005/10/21 16:51:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.UnboundNode;
@@ -19,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * удаление узла из карты - атомарное действие
  * 
- * @version $Revision: 1.21 $, $Date: 2005/10/12 13:07:08 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/21 16:51:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -54,6 +56,7 @@ public class RemoveNodeCommandAtomic extends MapActionCommand {
 		else {
 			this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
 		}
+		StorableObjectPool.delete(this.node.getId());
 		setResult(Command.RESULT_OK);
 	}
 
@@ -68,18 +71,24 @@ public class RemoveNodeCommandAtomic extends MapActionCommand {
 		else {
 			this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
 		}
+		StorableObjectPool.delete(this.node.getId());
 	}
 
 	@Override
 	public void undo() {
-		if(this.node instanceof UnboundNode) {
-			this.logicalNetLayer.getMapView().addUnboundNode((UnboundNode) this.node);
-		}
-		else if(this.node instanceof Marker) {
-			this.logicalNetLayer.getMapView().addMarker((Marker) this.node);
-		}
-		else {
-			this.logicalNetLayer.getMapView().getMap().addNode(this.node);
+		try {
+			StorableObjectPool.putStorableObject(this.node);
+			if(this.node instanceof UnboundNode) {
+				this.logicalNetLayer.getMapView().addUnboundNode((UnboundNode) this.node);
+			}
+			else if(this.node instanceof Marker) {
+				this.logicalNetLayer.getMapView().addMarker((Marker) this.node);
+			}
+			else {
+				this.logicalNetLayer.getMapView().getMap().addNode(this.node);
+			}
+		} catch(IllegalObjectEntityException e) {
+			e.printStackTrace();
 		}
 	}
 }
