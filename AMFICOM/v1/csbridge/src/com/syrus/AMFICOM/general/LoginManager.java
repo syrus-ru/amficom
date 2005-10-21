@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.27 2005/10/21 12:03:12 arseniy Exp $
+ * $Id: LoginManager.java,v 1.28 2005/10/21 12:43:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/21 12:03:12 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/21 12:43:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -125,7 +125,6 @@ public final class LoginManager {
 		if (sessionKeyT == EMPTY_SESSION_KEY_T) {
 			throw new LoginException(I18N.getString("Error.AlreadyLoggedOut"));
 		}
-		resetSessionKey();
 
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
@@ -137,6 +136,8 @@ public final class LoginManager {
 				default:
 					throw new LoginException("Cannot logout -- " + are.message);
 			}
+		} finally {
+			resetSessionKey();
 		}
 	}
 
