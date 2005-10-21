@@ -1,7 +1,7 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.26 2005/10/20 14:19:55 arseniy Exp $
+ * $Id: AbstractMainFrame.java,v 1.27 2005/10/21 08:48:39 bob Exp $
  *
- * Copyright ¿ 2005 Syrus Systems.
+ * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -53,8 +53,8 @@ import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/10/20 14:19:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/10/21 08:48:39 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -149,62 +149,132 @@ implements PropertyChangeListener {
 		final String propertyName = evt.getPropertyName().intern();
 		if (propertyName == ContextChangeEvent.TYPE) {			
 			final ContextChangeEvent cce = (ContextChangeEvent) evt;
-			if (cce.isSessionOpened()) {
-				this.setSessionOpened();
-
-				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
-
-				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-				final Identifier userId = LoginManager.getUserId();
-				try {
-					final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
-					this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
-
-					final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
-					this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
-				} catch (final ApplicationException e) {
-					assert Log.debugMessage("AbstractMainFrame.propertyChange | Cannot acquire " + userId,
-						Log.DEBUGLEVEL02);
-				}
+//			if (cce.isSessionOpened()) {
+//				this.setSessionOpened();
+//
+//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
+//
+//				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+//				final Identifier userId = LoginManager.getUserId();
+//				try {
+//					final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+//					this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
+//
+//					final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
+//					this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
+//				} catch (final ApplicationException e) {
+//					assert Log.debugMessage("AbstractMainFrame.propertyChange | Cannot acquire " + userId,
+//						Log.DEBUGLEVEL02);
+//				}
+//			}
+//			if (cce.isSessionClosed()) {
+//				this.setSessionClosed();
+//
+//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
+//				this.statusBar.setText(StatusBar.FIELD_SESSION, I18N.getString("Common.StatusBar.NoSession"));
+//				this.statusBar.setText(StatusBar.FIELD_USER, I18N.getString("Common.StatusBar.NoUser"));
+//			}
+//			if (cce.isConnectionOpened()) {
+//				this.setConnectionOpened();
+//
+//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
+//				final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+//				this.statusBar.setText(StatusBar.FIELD_SERVER, clientSessionEnvironment.getServerName());
+//			}
+//			if (cce.isConnectionClosed()) {
+//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
+//				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
+//
+//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Disconnected"));
+//				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.NoConnection"));
+//
+//				this.setConnectionClosed();
+//			}
+//			if (cce.isConnectionFailed()) {
+//				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
+//				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
+//
+//				this.setConnectionFailed();
+//			}
+//			if (cce.isDomainSelected()) {
+//				if (this.checkEnter()) {
+//					this.setDomainSelected();
+//				}
+//			}
+			
+			if (cce.isLoggedIn()) {
+				this.loggedIn0();
 			}
-			if (cce.isSessionClosed()) {
-				this.setSessionClosed();
-
-				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
-				this.statusBar.setText(StatusBar.FIELD_SESSION, I18N.getString("Common.StatusBar.NoSession"));
-				this.statusBar.setText(StatusBar.FIELD_USER, I18N.getString("Common.StatusBar.NoUser"));
-			}
-			if (cce.isConnectionOpened()) {
-				this.setConnectionOpened();
-
-				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Ready"));
-				final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
-				this.statusBar.setText(StatusBar.FIELD_SERVER, clientSessionEnvironment.getServerName());
-			}
-			if (cce.isConnectionClosed()) {
-				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
-
-				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Disconnected"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.NoConnection"));
-
-				this.setConnectionClosed();
-			}
-			if (cce.isConnectionFailed()) {
-				this.statusBar.setText(StatusBar.FIELD_STATUS, I18N.getString("Common.StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, I18N.getString("Common.StatusBar.ConnectionError"));
-
-				this.setConnectionFailed();
-			}
-			if (cce.isDomainSelected()) {
-				if (this.checkEnter()) {
-					this.setDomainSelected();
-				}
+			
+			if (cce.isLoggedOut()) {
+				this.loggedOut0();
 			}
 		}
-
 	}
+	
+	private final void loggedIn0() {
+		if (this.checkEnter()) {
+			final ApplicationModel aModel = this.aContext.getApplicationModel();
+			aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
+			aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
+			aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
 
+			aModel.fireModelChanged();
+
+			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+
+			final Identifier domainId = LoginManager.getDomainId();
+			final Identifier userId = LoginManager.getUserId();
+			try {
+				Domain domain = StorableObjectPool.getStorableObject(
+						domainId, 
+						true);
+				this.statusBar.setText(StatusBar.FIELD_DOMAIN, domain.getName());
+				
+				final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
+				this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
+			} catch (final ApplicationException ae) {
+				Log.errorException(ae);
+				showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
+				return;
+			}
+			
+			this.statusBar.setText(StatusBar.FIELD_STATUS, 
+				I18N.getString("Common.StatusBar.Ready"));
+			
+			final ClientSessionEnvironment clientSessionEnvironment = 
+				ClientSessionEnvironment.getInstance();
+			this.statusBar.setText(StatusBar.FIELD_SESSION, 
+				sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
+			this.statusBar.setText(StatusBar.FIELD_SERVER, 
+				clientSessionEnvironment.getServerName());
+			
+
+			this.windowArranger.arrange();
+			this.loggedIn();
+		}
+	}
+	
+	public abstract void loggedIn();
+	
+	private final void loggedOut0() {
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, false);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
+		aModel.fireModelChanged();
+		this.loggedOut();
+	}
+	
+	public abstract void loggedOut();
+	
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void setConnectionClosed() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
@@ -216,6 +286,10 @@ implements PropertyChangeListener {
 		aModel.fireModelChanged();
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void setConnectionFailed() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
@@ -225,7 +299,11 @@ implements PropertyChangeListener {
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, false);
 		aModel.fireModelChanged();
 	}
-
+	
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void setConnectionOpened() {
 		// nothing 
 	}
@@ -270,6 +348,10 @@ implements PropertyChangeListener {
 			+ "\".";
 	}
 	
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void setDomainSelected() {		
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
@@ -316,6 +398,10 @@ implements PropertyChangeListener {
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void setSessionClosed() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
@@ -330,6 +416,10 @@ implements PropertyChangeListener {
 				I18N.getString("Common.StatusBar.NoDomain"));
 	}
 
+	/**
+	 * @deprecated
+	 */
+	@Deprecated
 	public void setSessionOpened() {
 		// TODO check ?
 		// this.checker = new
