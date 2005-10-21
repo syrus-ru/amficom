@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.44 2005/10/13 09:54:21 max Exp $
+ * $Id: MapViewDatabase.java,v 1.45 2005/10/21 13:35:48 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/10/13 09:54:21 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/21 13:35:48 $
  * @author $Author: max $
  * @module mapview
  */
@@ -194,28 +194,6 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		//TODO: may be wrong correction
 		//super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
-	}
-
-	@Override
-	public void delete(final Set<? extends Identifiable> ids) {
-		
-		Set<MapView> dbMapViews = null;
-		try {
-			dbMapViews = this.retrieveByCondition(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true).toString());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			return;
-		}
-		final Set<Scheme> schemes = new HashSet<Scheme>();
-		for (final MapView mapView : dbMapViews) {
-			schemes.addAll(mapView.getSchemes());
-		}
-		if (!schemes.isEmpty()) {
-			StorableObjectDatabase<Scheme> database = DatabaseContext.<Scheme>getDatabase(ObjectEntities.SCHEME_CODE);
-			database.delete(schemes);
-		}
-		super.delete(ids);
-		
 	}
 
 	@Override
