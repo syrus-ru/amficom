@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.16 2005/09/07 02:37:31 arseniy Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.17 2005/10/21 15:47:34 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -45,10 +44,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/09/07 02:37:31 $
+ * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/10/21 15:47:34 $
  * @module commonclient
  */
 
@@ -221,8 +221,9 @@ public class CharacteristicAddDialog {
 								this.nameField.getText(),
 								DataType.STRING,
 								this.sort);
-					} catch (CreateObjectException ex) {
-						ex.printStackTrace();
+						StorableObjectPool.flush(this.selectedType, LoginManager.getUserId(), false); 
+					} catch (ApplicationException e) {
+						Log.errorException(e);
 					}
 				}
 			}

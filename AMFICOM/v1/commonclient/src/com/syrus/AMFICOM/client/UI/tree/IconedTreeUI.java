@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.9 2005/10/06 14:34:35 bob Exp $
+ * $Id: IconedTreeUI.java,v 1.10 2005/10/21 15:47:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.logic.Populatable;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/10/06 14:34:35 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/21 15:47:34 $
  * @module commonclient
  */
 
@@ -41,17 +41,38 @@ public class IconedTreeUI {
 	JScrollPane scrollPane;
 	private JToolBar toolBar;
 	protected boolean linkObjects = false;
-	
+		
 	public IconedTreeUI(final Item rootItem) {
+//		this(rootItem, true);
+		
+		//XXX
 		this.treeUI = new LogicalTreeUI(rootItem);
 		this.treeUI.setRenderer(IconedNode.class, IconedRenderer.getInstance());
 		this.treeUI.setRenderer(PopulatableIconedNode.class, IconedRenderer.getInstance());
-		this.treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);		
-		
+		this.treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		this.treeUI.getTreeModel().setAllwaysSort(true);
 		if (rootItem instanceof Populatable) {
 			((Populatable)rootItem).populate();
 		}
 		this.treeUI.getTree().expandPath(new TreePath(rootItem));
+	}
+	
+	public IconedTreeUI(final Item rootItem, boolean alwaysSorting) {
+		this(alwaysSorting);
+		this.treeUI.setRootItem(rootItem);
+
+		if (rootItem instanceof Populatable) {
+			((Populatable)rootItem).populate();
+		}
+		this.treeUI.getTree().expandPath(new TreePath(rootItem));
+	}
+	
+	public IconedTreeUI(boolean alwaysSorting) {
+		this.treeUI = new LogicalTreeUI(false);
+		this.treeUI.setRenderer(IconedNode.class, IconedRenderer.getInstance());
+		this.treeUI.setRenderer(PopulatableIconedNode.class, IconedRenderer.getInstance());
+		this.treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		this.treeUI.getTreeModel().setAllwaysSort(alwaysSorting);
 	}
 	
 	public LogicalTreeUI getTreeUI() {
