@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.59 2005/10/20 08:53:38 bob Exp $
+ * $Id: TableFrame.java,v 1.60 2005/10/21 13:31:49 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/10/20 08:53:38 $
+ * @version $Revision: 1.60 $, $Date: 2005/10/21 13:31:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -131,15 +131,23 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 	private void setTests() {
 		final WrapperedTableModel<TestView> model = this.listTable.getModel();
+		assert Log.debugMessage("TableFrame.setTests | this.schedulerModel.getMainTestIds().size() " + this.schedulerModel.getMainTestIds().size(), Log.DEBUGLEVEL09);
+		assert Log.debugMessage("TableFrame.setTests | model.getRowCount() " + model.getRowCount(), Log.DEBUGLEVEL09);
+		if (this.schedulerModel.getMainTestIds().size() == model.getRowCount()){
+			return;
+		}
+		
+		try {
+			throw new Exception("TableFrame.setTests");
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		
 		model.clear();
 		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getMainTestIds(), true);
 			assert Log.debugMessage("TableFrame.setTests | " + tests, Log.DEBUGLEVEL09);
 			for (final Test test : tests) {
-				final Identifier groupTestId = test.getGroupTestId();
-				if (!groupTestId.isVoid() && !test.getId().equals(groupTestId)) {
-					continue;
-				}
 				model.addObject(TestView.valueOf(test));
 			}
 		} catch (final ApplicationException e) {
