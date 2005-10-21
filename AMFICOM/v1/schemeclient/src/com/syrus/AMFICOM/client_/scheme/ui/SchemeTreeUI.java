@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.26 2005/10/21 16:46:20 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.27 2005/10/21 17:00:50 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/10/21 16:46:20 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/21 17:00:50 $
  * @module schemeclient
  */
 
@@ -195,6 +195,12 @@ public class SchemeTreeUI extends IconedTreeUI {
 												JOptionPane.OK_OPTION);
 										Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 									}
+								} else {
+									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+											LangModelScheme.getString("Message.error.delete.proto_equipment"),
+											LangModelScheme.getString("Message.error"),
+											JOptionPane.OK_OPTION);
+									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
@@ -219,28 +225,30 @@ public class SchemeTreeUI extends IconedTreeUI {
 							}
 						} else if (object instanceof CableLinkType) {
 							CableLinkType type = (CableLinkType)object;
-							try {
-								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMECABLELINK_CODE);
-								Set<SchemeCableLink> links = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-								if (links.isEmpty()) {
-									Set<CableThreadType> threadTypes = type.getCableThreadTypes(false);
-									Set<Identifier> ids = new HashSet<Identifier>();
-									for (CableThreadType ctt : threadTypes) {
-										ids.add(ctt.getId());
-									}
-									ids.add(type.getId());
-									StorableObjectPool.delete(ids);
-									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
-								} else {
+							
+							//XXX remove comment after condition realyzation
+//							try {
+//								LinkedIdsCondition condition1 = new LinkedIdsCondition(type.getId(), ObjectEntities.SCHEMECABLELINK_CODE);
+//								Set<SchemeCableLink> links = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+//								if (links.isEmpty()) {
+//									Set<CableThreadType> threadTypes = type.getCableThreadTypes(false);
+//									Set<Identifier> ids = new HashSet<Identifier>();
+//									for (CableThreadType ctt : threadTypes) {
+//										ids.add(ctt.getId());
+//									}
+//									ids.add(type.getId());
+//									StorableObjectPool.delete(ids);
+//									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
+//								} else {
 									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 											LangModelScheme.getString("Message.error.delete.cable_link_type"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
-									Log.debugMessage("Can not delete CableLinkType as there are SchemeCableLinks with such type", Level.WARNING);
-								}
-							} catch (ApplicationException e1) {
-								Log.errorException(e1);
-							}
+//									Log.debugMessage("Can not delete CableLinkType as there are SchemeCableLinks with such type", Level.WARNING);
+//								}
+//							} catch (ApplicationException e1) {
+//								Log.errorException(e1);
+//							}
 						} else if (object instanceof PortType) {
 							PortType type = (PortType)object;
 							try {
