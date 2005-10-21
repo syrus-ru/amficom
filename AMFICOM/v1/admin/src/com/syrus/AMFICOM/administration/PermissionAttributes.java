@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.22 2005/10/19 06:57:13 bob Exp $
+* $Id: PermissionAttributes.java,v 1.23 2005/10/21 11:45:49 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/19 06:57:13 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/21 11:45:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -49,8 +49,8 @@ public class PermissionAttributes extends StorableObject {
 	public static enum Module {
 		ADMINISTRATION(true),
 		SCHEME(true),
-		SCHEME_EDITOR(true),
-		MAPVIEW(true),
+		ELEMENTS_EDITOR(true),
+		MAP_EDITOR(true),
 		OPTIMIZATION(false),
 		MODELING(false),
 		SCHEDULER(true),
@@ -156,11 +156,11 @@ public class PermissionAttributes extends StorableObject {
 	}
 	
 	/**
-	 * SchemeEditor permission enum
+	 * ElementsEditor permission enum
 	 * 
 	 *  <p><b>ОХНУНГ !!! Стасег и иво прадалжатили, Never change the order or delete items, only appending to the end of list permitted</b></p>  
 	 */
-	private enum SchemeEditor implements SwitchableGroupNumber {		
+	private enum ElementsEditor implements SwitchableGroupNumber {		
 		ENTER(true),
 		CREATE_AND_EDIT(true),
 		SAVING(true),
@@ -168,7 +168,7 @@ public class PermissionAttributes extends StorableObject {
 		
 		private final boolean	enable;
 		
-		private SchemeEditor(final boolean enable) {
+		private ElementsEditor(final boolean enable) {
 			this.enable = enable;			
 		}			
 		
@@ -177,7 +177,7 @@ public class PermissionAttributes extends StorableObject {
 		}
 		
 		public final Module getModule() {
-			return Module.SCHEME_EDITOR;
+			return Module.ELEMENTS_EDITOR;
 		}
 	}
 	
@@ -207,11 +207,11 @@ public class PermissionAttributes extends StorableObject {
 	}
 	
 	/**
-	 * MapView permission enum
+	 * MapEditor permission enum
 	 * 
 	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
 	 */
-	private enum MapView implements SwitchableGroupNumber {
+	private enum MapEditor implements SwitchableGroupNumber {
 		ENTER(true),
 		
 		EDIT_TOPOLOGICAL_SCHEME(true),
@@ -223,7 +223,7 @@ public class PermissionAttributes extends StorableObject {
 
 		private final boolean	enable;
 
-		private MapView(final boolean enable) {
+		private MapEditor(final boolean enable) {
 			this.enable = enable;			
 		}	
 		
@@ -232,7 +232,7 @@ public class PermissionAttributes extends StorableObject {
 		}
 		
 		public final Module getModule() {
-			return Module.MAPVIEW;
+			return Module.MAP_EDITOR;
 		}
 	}
 	
@@ -506,26 +506,26 @@ public class PermissionAttributes extends StorableObject {
 		ADMINISTRATION_DELETE_GROUP(Adminstration.DELETE_GROUP),
 		ADMINISTRATION_DELETE_USER(Adminstration.DELETE_USER),
 		
-		//SchemeEditor		
-		SCHEME_EDITOR_ENTER(SchemeEditor.ENTER),
-		SCHEME_EDITOR_CREATE_AND_EDIT(SchemeEditor.CREATE_AND_EDIT),
-		SCHEME_EDITOR_SAVING(SchemeEditor.SAVING),
-		SCHEME_EDITOR_CREATE_CHANGE_SAVE_TYPE(SchemeEditor.CREATE_CHANGE_SAVE_TYPE),
+		// ElementsEditor		
+		ELEMENTS_EDITOR_ENTER(ElementsEditor.ENTER),
+		ELEMENTS_EDITOR_CREATE_AND_EDIT(ElementsEditor.CREATE_AND_EDIT),
+		ELEMENTS_EDITOR_SAVING(ElementsEditor.SAVING),
+		ELEMENTS_EDITOR_CREATE_CHANGE_SAVE_TYPE(ElementsEditor.CREATE_CHANGE_SAVE_TYPE),
 		
 		// Scheme
 		SCHEME_ENTER(Scheme.ENTER),
 		SCHEME_CREATE_AND_EDIT(Scheme.CREATE_AND_EDIT),
 		SCHEME_SAVING(Scheme.SAVING),
 		
-		// MapView		
-		MAPVIEW_ENTER(MapView.ENTER),
+		// MapEditor		
+		MAP_EDITOR_ENTER(MapEditor.ENTER),
 		
-		MAPVIEW_EDIT_TOPOLOGICAL_SCHEME(MapView.EDIT_TOPOLOGICAL_SCHEME),
-		MAPVIEW_SAVE_TOPOLOGICAL_SCHEME(MapView.SAVE_TOPOLOGICAL_SCHEME),
-		MAPVIEW_SAVE_TOPOLOGICAL_VIEW(MapView.SAVE_TOPOLOGICAL_VIEW),
+		MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME(MapEditor.EDIT_TOPOLOGICAL_SCHEME),
+		MAP_EDITOR_SAVE_TOPOLOGICAL_SCHEME(MapEditor.SAVE_TOPOLOGICAL_SCHEME),
+		MAP_EDITOR_SAVE_TOPOLOGICAL_VIEW(MapEditor.SAVE_TOPOLOGICAL_VIEW),
 		
-		MAPVIEW_EDIT_BINDING(MapView.EDIT_BINDING),
-		MAPVIEW_SAVE_BINDING(MapView.SAVE_BINDING),
+		MAP_EDITOR_EDIT_BINDING(MapEditor.EDIT_BINDING),
+		MAP_EDITOR_SAVE_BINDING(MapEditor.SAVE_BINDING),
 		
 		// Optimization
 		OPTIMIZATION_ENTER(Optimization.ENTER),

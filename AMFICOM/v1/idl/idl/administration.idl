@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.24 2005/10/20 11:47:18 bob Exp $
+ * $Id: administration.idl,v 1.25 2005/10/21 11:47:03 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,8 +96,8 @@ module administration {
 			enum IdlModule {
 				ADMINISTRATION,
 				SCHEME,
-				SCHEME_EDITOR,
-				MAPVIEW,
+				ELEMENTS_EDITOR,
+				MAP_EDITOR,
 				OPTIMIZATION,
 				MODELING,
 				SCHEDULER,
