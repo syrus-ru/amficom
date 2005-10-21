@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.44 2005/10/18 16:19:42 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.45 2005/10/21 09:05:10 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
@@ -31,8 +32,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import java.util.Set;
 
@@ -51,8 +52,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/10/18 16:19:42 $
+ * @author $Author: max $
+ * @version $Revision: 1.45 $, $Date: 2005/10/21 09:05:10 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -132,6 +133,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(schemeElement.parentSchemeId);
 				case SITENODE_CODE:
 					return super.conditionTest(schemeElement.getSiteNodeId());
+				case PROTOEQUIPMENT_CODE:
+					return super.conditionTest(schemeElement.getProtoEquipmentId());
 				default:
 					throw newIllegalObjectEntityException();
 				}
@@ -184,6 +187,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (super.linkedEntityCode) {
 				case SCHEMEDEVICE_CODE:
 					return super.conditionTest(schemePort.parentSchemeDeviceId);
+				case PORT_TYPE_CODE:
+					return super.conditionTest(schemePort.getPortTypeId());
 				default:
 					throw newIllegalObjectEntityException();
 				}

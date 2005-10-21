@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.41 2005/10/18 13:17:12 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.42 2005/10/21 09:05:10 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
@@ -46,7 +47,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.41 $, $Date: 2005/10/18 13:17:12 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/21 09:05:10 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -99,6 +100,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ID);
 				case SITENODE_CODE:
 					return super.getQuery(SchemeElementWrapper.COLUMN_SITE_NODE_ID);
+				case PROTOEQUIPMENT_CODE:
+					return super.getQuery(SchemeElementWrapper.COLUMN_PROTO_EQUIPMENT_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -145,6 +148,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEMEDEVICE_CODE:
 					return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				case PORT_TYPE_CODE:
+					return super.getQuery(SchemePortWrapper.COLUMN_PORT_TYPE_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();	
 				}
