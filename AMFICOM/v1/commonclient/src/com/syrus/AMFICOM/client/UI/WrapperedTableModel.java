@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/12 08:02:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/21 13:33:26 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -69,9 +69,7 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 	 * clear model
 	 */
 	public void clear() {
-		synchronized (this.list) {
-			this.list.clear();
-		}
+		this.list.clear();
 		super.fireTableDataChanged();
 	}
 
@@ -102,15 +100,11 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 	}
 
 	public int getIndexOfObject(final Object object) {
-		synchronized (this.list) {
-			return this.list.indexOf(object);
-		}
+		return this.list.indexOf(object);
 	}
 
 	public T getObject(final int index) {
-		synchronized (this.list) {
-			return this.list.get(index);
-		}
+		return this.list.get(index);
 	}
 
 	public int getRowCount() {
@@ -121,11 +115,7 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 
 	public Object getValueAt(final int rowIndex, final int columnIndex) {
 		final String key = this.keys[columnIndex];
-		final T object;
-		
-		synchronized (this.list) {			
-			object = this.list.get(rowIndex);
-		}
+		final T object = this.list.get(rowIndex);
 		
 		Object obj = this.wrapper.getValue(object, key);
 
@@ -167,14 +157,13 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 
 	public void setValues(final List<T> list) {
 		if (this.list == null) {
-			this.list = new ArrayList<T>();
+			this.list = Collections.synchronizedList(new ArrayList<T>());
+		} else {
+			this.list.clear();
 		}
 		
-		synchronized (this.list) {
-			this.list.clear();
-			if (list != null) {
-				this.list.addAll(list);
-			}
+		if (list != null) {
+			this.list.addAll(list);
 		}
 
 		if (this.lastSortedModelIndex >= 0) {
@@ -189,11 +178,9 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 		if (this.list == null) {
 			this.list = new ArrayList<T>();
 		} 
-		synchronized (this.list) {
-			this.list.clear();
-			if (collection != null) {
-				this.list.addAll(collection);
-			}
+		this.list.clear();
+		if (collection != null) {
+			this.list.addAll(collection);
 		}
 
 		if (this.lastSortedModelIndex >= 0) {
@@ -208,14 +195,13 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 	public void setValueAt(final Object obj, final int rowIndex, final int columnIndex) {
 		final String key = this.keys[columnIndex];
 		final Object object;
-		synchronized (this.list) {
-			object = this.list.get(rowIndex);
-		}
+		object = this.list.get(rowIndex);
+		final T t = (T) object;
 		if (this.wrapper.getPropertyValue(key) instanceof Map) {
 			final Map map = (Map) this.wrapper.getPropertyValue(key);
-			this.wrapper.setValue((T) object, key, map.get(obj));
+			this.wrapper.setValue(t, key, map.get(obj));
 		} else {
-			this.wrapper.setValue((T) object, key, obj);
+			this.wrapper.setValue(t, key, obj);
 		}
 
 		if (this.lastSortedModelIndex >= 0) {
@@ -239,9 +225,7 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 		if (this.list != null) {
 			this.lastSortedModelIndex = columnIndex;
 			final String sortedKey = this.keys[columnIndex];
-			synchronized (this.list) {
-				Collections.sort(this.list, new WrapperComparator<T>(this.wrapper, sortedKey, ascending));
-			}
+			Collections.sort(this.list, new WrapperComparator<T>(this.wrapper, sortedKey, ascending));
 			super.fireTableDataChanged();
 		}
 	}
@@ -251,29 +235,23 @@ public class WrapperedTableModel<T> extends AbstractTableModel {
 	}
 
 	public int addObject(final int index, final T object) {
-		synchronized (this.list) {
-			this.list.add(index, object);
-			if (this.lastSortedModelIndex >= 0) {
-				// sortRows just do fireTableDataChanged self
-				this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
-			} else {
-				super.fireTableDataChanged();
-			}
-			return this.list.indexOf(object);
+		this.list.add(index, object);
+		if (this.lastSortedModelIndex >= 0) {
+			// sortRows just do fireTableDataChanged self
+			this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
+		} else {
+			super.fireTableDataChanged();
 		}
+		return this.list.indexOf(object);
 	}
 
 	public void removeObject(final T object) {
-		synchronized (this.list) {
-			this.list.remove(object);
-		}
+		this.list.remove(object);
 		this.fireTableDataChanged();
 	}
 
 	public void removeObject(int index) {
-		synchronized (this.list) {
-			this.list.remove(index);
-		}
+		this.list.remove(index);
 		this.fireTableDataChanged();
 	}
 }
