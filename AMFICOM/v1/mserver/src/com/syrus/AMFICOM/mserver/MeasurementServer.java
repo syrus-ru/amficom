@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.82 2005/10/21 12:13:55 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.83 2005/10/21 12:25:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/10/21 12:13:55 $
+ * @version $Revision: 1.83 $, $Date: 2005/10/21 12:25:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -255,7 +255,6 @@ final class MeasurementServer extends SleepButWorkThread {
 	@Override
 	public void run() {
 		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
-		final LoginRestorer loginRestorer = new MServerLoginRestorer();
 
 		while (this.running) {
 			/*	Now Measurement Server can get new tests only from database
@@ -277,6 +276,9 @@ final class MeasurementServer extends SleepButWorkThread {
 							mcmRef = servantManager.getVerifiedMCMReference(mcmId);
 						} catch (ApplicationException ae) {
 							Log.errorException(ae);
+							super.fallCode = FALL_CODE_RECEIVE_TESTS;
+							mcmIdsToAbortTests.add(mcmId);
+							super.sleepCauseOfFall();
 							continue;
 						}
 
