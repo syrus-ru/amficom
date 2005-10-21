@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMarkElementStrategy.java,v 1.33 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapMarkElementStrategy.java,v 1.34 2005/10/21 16:24:15 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * —тратеги€ управлени€ метки на физической линии.
  * 
- * @version $Revision: 1.33 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/21 16:24:15 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -114,8 +114,10 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 	{
 		MapCoordinatesConverter converter = super.logicalNetLayer.getConverter();
 
-		if (this.command == null)
+		if (this.command == null) {
 			this.command = new MoveMarkCommand(this.mark);
+			this.command.setLogicalNetLayer(super.logicalNetLayer);
+		}
 		if (super.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 		{
 			NodeLink nodeLink = this.mark.getNodeLink();
