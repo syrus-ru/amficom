@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.80 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapFrame.java,v 1.81 2005/10/21 14:22:28 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
@@ -205,7 +204,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.80 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/21 14:22:28 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -486,19 +485,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	 * обработка событий
 	 */
 	public void propertyChange(final PropertyChangeEvent pce) {
-		if (pce.getPropertyName().equals(ContextChangeEvent.TYPE)) {
-			final ContextChangeEvent cce = (ContextChangeEvent) pce;
-			if (cce.isDomainSelected()) {
-				final Identifier di = LoginManager.getDomainId();
-				if (this.getMapView() == null) {
-					return;
-				}
-				final Identifier di2 = this.getMapView().getDomainId();
-				if (!di.equals(di2)) {
-					this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
-				}
-			}
-		} else if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
+		if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
 			MapEvent mapEvent = (MapEvent )pce;
 			String mapEventType = mapEvent.getMapEventType();
 

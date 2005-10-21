@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMainFrame.java,v 1.67 2005/10/19 11:56:52 krupenn Exp $$
+ * $$Id: MapEditorMainFrame.java,v 1.68 2005/10/21 14:22:28 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * @version $Revision: 1.67 $, $Date: 2005/10/19 11:56:52 $
+ * @version $Revision: 1.68 $, $Date: 2005/10/21 14:22:28 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -414,37 +414,27 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		}
 	}
 
-	@Override
-	public void setConnectionClosed() {
-		super.setConnectionClosed();
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+	void thisComponentShown(@SuppressWarnings("unused") ComponentEvent e) {
+//		initModule();
+		this.desktopPane.setPreferredSize(this.desktopPane.getSize());
+	}
 
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, false);
-
-		aModel.fireModelChanged();
+	private MapFrame getMapFrame() {
+		return this.mapFrame;
 	}
 
 	@Override
-	public void setConnectionFailed() {
-		super.setConnectionFailed();
-		ApplicationModel aModel = this.aContext.getApplicationModel();
-
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, false);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, false);
-
-		aModel.fireModelChanged();
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			if (this.mapFrame != null && this.mapFrame.checkChangesPresent()) {
+				return;
+			}
+		}
+		super.processWindowEvent(e);
 	}
 
 	@Override
-	public void setDomainSelected() {
-		super.setDomainSelected();
+	public void loggedIn() {
 		new CloseAllInternalCommand(this.desktopPane).execute();
 
 		new ViewMapAllCommand(
@@ -511,29 +501,10 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	}
 
 	@Override
-	public void setSessionClosed() {
+	public void loggedOut() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		setDefaultModel(aModel);
 		aModel.fireModelChanged();
 		new CloseAllInternalCommand(this.desktopPane).execute();
-	}
-
-	void thisComponentShown(@SuppressWarnings("unused") ComponentEvent e) {
-//		initModule();
-		this.desktopPane.setPreferredSize(this.desktopPane.getSize());
-	}
-
-	private MapFrame getMapFrame() {
-		return this.mapFrame;
-	}
-
-	@Override
-	protected void processWindowEvent(WindowEvent e) {
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			if (this.mapFrame != null && this.mapFrame.checkChangesPresent()) {
-				return;
-			}
-		}
-		super.processWindowEvent(e);
 	}
 }

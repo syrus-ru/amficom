@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.13 2005/10/17 14:10:55 krupenn Exp $$
+ * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.14 2005/10/21 14:22:28 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -34,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/17 14:10:55 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/21 14:22:28 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
