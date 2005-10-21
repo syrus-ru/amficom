@@ -1,9 +1,9 @@
-/*
- * $Id: OpenSessionCommand.java,v 1.30 2005/10/21 06:59:22 bob Exp $
+/*-
+ * $Id: OpenSessionCommand.java,v 1.31 2005/10/21 08:48:09 bob Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.model;
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.30 $, $Date: 2005/10/21 06:59:22 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/21 08:48:09 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -188,7 +188,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Common.StatusBar.OpeningSession")));
-		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
+//		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
 
 		if (this.login == null || this.password == null || this.domainId == null) {
 			final boolean wannaNotLogin = !this.showOpenSessionDialog(Environment.getActiveWindow());
@@ -215,7 +215,8 @@ public class OpenSessionCommand extends AbstractCommand {
 		clientSessionEnvironment.login(this.login, this.password, this.domainId);
 		this.disposeDialog();
 
-		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+//		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.LOGGED_IN_EVENT));
 
 		return true;
 	}
