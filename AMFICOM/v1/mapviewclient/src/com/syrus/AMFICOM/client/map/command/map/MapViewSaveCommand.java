@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.36 2005/10/19 15:39:06 krupenn Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.37 2005/10/21 14:08:21 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
@@ -37,7 +36,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.36 $, $Date: 2005/10/19 15:39:06 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/21 14:08:21 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
