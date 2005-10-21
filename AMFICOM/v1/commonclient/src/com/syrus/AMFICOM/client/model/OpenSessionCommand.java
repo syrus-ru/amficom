@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.28 2005/10/20 17:48:32 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.29 2005/10/21 06:58:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/10/20 17:48:32 $
+ * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/10/21 06:58:41 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -167,8 +167,8 @@ public class OpenSessionCommand extends AbstractCommand {
 			} catch (final LoginException le) {
 				Log.errorException(le);
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						le.getMessage(),
 						I18N.getString("Error.OpenSession"),
+						I18N.getString("Error"),
 						JOptionPane.ERROR_MESSAGE,
 						null);
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
