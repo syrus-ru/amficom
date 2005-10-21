@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.131 2005/10/21 13:31:49 bob Exp $
+ * $Id: SchedulerModel.java,v 1.132 2005/10/21 15:12:36 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -63,9 +62,9 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
-import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
@@ -73,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/10/21 13:31:49 $
+ * @version $Revision: 1.132 $, $Date: 2005/10/21 15:12:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -117,8 +116,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public static final String	COMMAND_GET_TEMPORAL_STAMPS			= "GetTestTemporalStamps";
 	public static final String	COMMAND_SET_TEMPORAL_STAMPS			= "SetTestTemporalStamps";
 
+	public static final String	COMMAND_ADD_TEST					= "AddTest";
 	public static final String	COMMAND_REFRESH_TEST				= "RefreshTest";
 	public static final String	COMMAND_REFRESH_TESTS				= "RefreshTests";
+	public static final String	COMMAND_REMOVE_TEST					= "RemoveTest";
 	
 	public static final String	COMMAND_REFRESH_TEMPORAL_STAMPS		= "RefreshTemporalStamps";
 	public static final String	COMMAND_REFRESH_MEASUREMENT_SETUP	= "RefreshMeasurementSetup";
@@ -230,6 +231,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 	
 	public Set<Identifier> getMainTestIds() {
+		assert Log
+				.debugMessage("SchedulerModel.getMainTestIds | " + this.mainTestIds, Log.DEBUGLEVEL09);
 		return this.mainTestIds;
 	}
 
@@ -302,6 +305,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.selectedTestIds.clear();
 			this.selectedFirstTestId = null;
 		}
+//		this.refreshTest(this);
+//		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REMOVE_TEST, null, test));
 		this.refreshTests();
 	}
 
@@ -718,18 +723,21 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 		}							
 		
+		final Set<Identifier> changedTestId = new HashSet<Identifier>(); 
 		for (final Test test : tests) {
 			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+				changedTestId.add(test.getId());
 				test.setMeasurementSetupIds(measurementSetupIdSet);
 			}
 		}
 		
-		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, null));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_REFRESH_TESTS, null, changedTestId));
 	}
 
 	private void generateTest() throws ApplicationException {
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 
+			final Set<Identifier> newTestIds = new HashSet<Identifier>();
 			Test test = null;
 			test = (this.flag == FLAG_APPLY) ? this.getSelectedTest() : null;
 			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
@@ -761,7 +769,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 								Identifier.VOID_IDENTIFIER,
 								this.monitoredElement,
 								this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
-								measurementSetupIds);						
+								measurementSetupIds);
+						newTestIds.add(test.getId());
 					} catch (final CreateObjectException e) {
 						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
 					}
@@ -819,7 +828,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (this.selectedTestIds != null) {
 				this.selectedTestIds.clear();
 			}
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
+			if (newTestIds.isEmpty()) {
+				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_ADD_TEST, null, newTestIds));
+			} else {
+				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
+			}
 			this.addSelectedTest(this, test);
 		}
 	}
@@ -923,6 +936,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		if (this.flag != FLAG_APPLY && this.flag != FLAG_CREATE) {
 			return;
 		}
+		final Set<Identifier> newTestIds = new HashSet<Identifier>();
 		final Identifier meId = this.monitoredElement.getId();
 		final Identifier testGroupId = this.meTestGroup != null ? this.meTestGroup.get(meId) : null;
 		if (testGroupId != null) {
@@ -952,6 +966,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 								testGroup.getMonitoredElement(),
 								testGroup.getDescription(),
 								testGroup.getMeasurementSetupIds());
+						newTestIds.add(test.getId());
 						this.addTest(test);
 						if (this.selectedTestIds != null) {
 							this.selectedTestIds.clear();
@@ -960,7 +975,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						}
 						this.selectedTestIds.add(test.getId());
 						
-						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
+						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_ADD_TEST, null, newTestIds));
 						return;
 					} catch (final CreateObjectException coe) {
 						throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
@@ -1050,6 +1065,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					if (testGroupId == null || testGroupId.isVoid()) {
 						test.setGroupTestId(testId);
 					}
+					newTestIds.add(test.getId());
 					this.addTest(test);
 					this.selectedTestIds.add(testId);
 					assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()
@@ -1060,13 +1076,14 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 
 		}
-		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_ADD_TEST, null, newTestIds));
 	}
 	
 	private void addTest(final Test test) {
 		final Identifier testId = test.getId();
 		this.testIds.add(testId);
-		if (test.getGroupTestId() != null && !test.getGroupTestId().isVoid()) {
+		final Identifier groupTestId = test.getGroupTestId();
+		if (groupTestId.isVoid() || groupTestId.equals(testId)) {
 			this.mainTestIds.add(testId);
 		}
 	}

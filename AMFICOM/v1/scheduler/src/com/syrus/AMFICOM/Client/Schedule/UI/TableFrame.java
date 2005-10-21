@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.60 2005/10/21 13:31:49 bob Exp $
+ * $Id: TableFrame.java,v 1.61 2005/10/21 15:12:36 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,10 +52,9 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/10/21 13:31:49 $
+ * @version $Revision: 1.61 $, $Date: 2005/10/21 15:12:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -81,6 +80,8 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		if (aContext != null) {
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 			this.dispatcher = aContext.getDispatcher();
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_ADD_TEST, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REMOVE_TEST, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		}
@@ -120,41 +121,45 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 	public void propertyChange(final PropertyChangeEvent evt) {
 		this.propertyChangeEvent = evt;
-		final String propertyName = evt.getPropertyName();
-		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
+		final String propertyName = evt.getPropertyName().intern();
+		if (propertyName == SchedulerModel.COMMAND_ADD_TEST) {
+			this.addTest((Set<Identifier>) evt.getNewValue());
+		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TESTS) {
 			this.updateTests();
-		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TEST) {
 			this.updateTest();
+		} else if (propertyName == SchedulerModel.COMMAND_REMOVE_TEST) {
+			this.updateTests();
 		}
 		this.propertyChangeEvent = null;
 	}
 
-	private void setTests() {
+	private void addTest(final Set<Identifier> testIds) {
 		final WrapperedTableModel<TestView> model = this.listTable.getModel();
-		assert Log.debugMessage("TableFrame.setTests | this.schedulerModel.getMainTestIds().size() " + this.schedulerModel.getMainTestIds().size(), Log.DEBUGLEVEL09);
-		assert Log.debugMessage("TableFrame.setTests | model.getRowCount() " + model.getRowCount(), Log.DEBUGLEVEL09);
-		if (this.schedulerModel.getMainTestIds().size() == model.getRowCount()){
-			return;
-		}
-		
 		try {
-			throw new Exception("TableFrame.setTests");
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		
-		model.clear();
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getMainTestIds(), true);
-			assert Log.debugMessage("TableFrame.setTests | " + tests, Log.DEBUGLEVEL09);
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
 			for (final Test test : tests) {
-				model.addObject(TestView.valueOf(test));
+				final Identifier groupTestId = test.getGroupTestId();
+				if (groupTestId.isVoid() || test.getId().equals(groupTestId)) {
+					model.addObject(TestView.valueOf(test));
+				}
 			}
 		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(this, e);
 		}
 		this.listTable.revalidate();
 		this.listTable.repaint();
+	}
+	
+	private void setTests() {
+		final WrapperedTableModel<TestView> model = this.listTable.getModel();
+		if (this.schedulerModel.getMainTestIds().size() == model.getRowCount()){
+			return;
+		}
+		
+		model.clear();
+		
+		this.addTest(this.schedulerModel.getMainTestIds());
 	}
 
 	private JPanel getPanel() {

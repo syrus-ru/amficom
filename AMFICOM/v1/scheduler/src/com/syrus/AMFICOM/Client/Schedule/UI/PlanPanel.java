@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.58 2005/10/20 08:52:55 bob Exp $
+ * $Id: PlanPanel.java,v 1.59 2005/10/21 15:12:36 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/10/20 08:52:55 $
+ * @version $Revision: 1.59 $, $Date: 2005/10/21 15:12:36 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -174,6 +174,9 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_ADD_TEST, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REMOVE_TEST, this);
+		// 
 		
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		
@@ -365,10 +368,10 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 	
 	public void propertyChange(final PropertyChangeEvent evt) {
-		final String propertyName = evt.getPropertyName();
-		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-			this.updateTests();
-		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+		final String propertyName = evt.getPropertyName().intern();
+		if (propertyName == SchedulerModel.COMMAND_REFRESH_TESTS) {
+			this.updateTests((Set<Identifier>)evt.getNewValue());
+		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TEST) {
 			if (!this.testLines.containsValue(evt.getSource())) {
 				try {
 					this.updateTest();
@@ -377,7 +380,11 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 					AbstractMainFrame.showErrorMessage(e.getMessage());
 				}
 			}
-		}	
+		} else if (propertyName == SchedulerModel.COMMAND_ADD_TEST) {
+			this.addTest((Set<Identifier>)evt.getNewValue());
+		} else if (propertyName == SchedulerModel.COMMAND_REMOVE_TEST) {
+			this.updateTests((Set<Identifier>)evt.getNewValue());
+		}
 	}
 	
 
@@ -614,14 +621,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.repaint();
 	}
 
-	private void updateTests() {
+	private void updateTests(final Set<Identifier> testIds) {
 		this.updateTestLines();
 		super.repaint();
 		super.revalidate();
 		this.parent.repaint();
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
 			final TestLine line = this.testLines.get(monitoredElementId);
-			line.updateTests();
+			line.updateTests(testIds);
 			line.refreshTimeItems();
 		}
 	}
@@ -655,6 +662,18 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
 			final TestLine line = this.testLines.get(monitoredElementId);
 			line.updateTest();
+			final Rectangle visibleRectangle = line.getVisibleRectangle();
+//			System.out.println("PlanPanel.updateTest() | " + visibleRectangle);
+			if (visibleRectangle != null) {
+				this.scrollRectToVisible(visibleRectangle);
+			}
+		}
+	}
+	
+	private void addTest(final Set<Identifier> testIds) {
+		for (final Identifier monitoredElementId : this.testLines.keySet()) {
+			final TestLine line = this.testLines.get(monitoredElementId);
+			line.addTest(testIds);
 			final Rectangle visibleRectangle = line.getVisibleRectangle();
 //			System.out.println("PlanPanel.updateTest() | " + visibleRectangle);
 			if (visibleRectangle != null) {
