@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.23 2005/10/20 08:58:20 bob Exp $
+ * $Id: AbstractApplication.java,v 1.24 2005/10/21 12:36:54 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/20 08:58:20 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/21 12:36:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -215,10 +215,15 @@ public abstract class AbstractApplication {
 		UIManager.put(ResourceKeys.ICON_GENERAL, 
 				new ImageIcon(
 					Toolkit.getDefaultToolkit().getImage("images/general.gif")));
+		UIManager.put(ResourceKeys.ICON_FURTHER, 
+			new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage("images/further.gif")));
 		UIManager.put(ResourceKeys.ICON_DELETE,
 				new ImageIcon(
 					Toolkit.getDefaultToolkit().getImage("images/delete.gif")));
-
+		UIManager.put(ResourceKeys.ICON_INTRODUCE, 
+			new ImageIcon(
+				Toolkit.getDefaultToolkit().getImage("images/introduce.gif")));
 		UIManager.put(ResourceKeys.ICON_OPEN_FILE, 
 				new ImageIcon(
 					Toolkit.getDefaultToolkit().getImage("images/openfile.gif")));

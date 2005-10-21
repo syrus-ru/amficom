@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.13 2005/10/18 14:54:55 bob Exp $
+ * $Id: ResourceKeys.java,v 1.14 2005/10/21 12:36:54 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/18 14:54:55 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/21 12:36:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -36,7 +36,9 @@ public interface ResourceKeys {
 	String	ICON_CLOSE_SESSION						= "com.syrus.AMFICOM.icon.general.closesession";
 	String	ICON_DOMAIN_SELECTION					= "com.syrus.AMFICOM.icon.general.domainselection";
 	String	ICON_DELETE								= "com.syrus.AMFICOM.icon.general.delete";
+	String	ICON_FURTHER							= "com.syrus.AMFICOM.icon.general.further";
 	String	ICON_GENERAL							= "com.syrus.AMFICOM.icon.general";
+	String	ICON_INTRODUCE							= "com.syrus.AMFICOM.icon.general.introduce";
 	String	ICON_OPEN_FILE							= "com.syrus.AMFICOM.icon.general.openfile";
 	String	ICON_ADD_FILE							= "com.syrus.AMFICOM.icon.general.addfile";
 	String	ICON_REMOVE_FILE						= "com.syrus.AMFICOM.icon.general.removefile";
