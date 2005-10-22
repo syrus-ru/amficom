@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmReceiver.java,v 1.2 2005/10/22 15:47:29 stas Exp $
+ * $Id: AlarmReceiver.java,v 1.3 2005/10/22 16:27:48 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ public class AlarmReceiver implements PopupMessageReceiver {
 		
 		Identifier resultId = new Identifier("Result_985");
 		
-		double optDistance = 1020;
+		double optDistance = 1000;
 		
 		try {
 			Result result = StorableObjectPool.getStorableObject(resultId, true);
