@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.36 2005/10/07 10:04:21 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.37 2005/10/22 16:02:29 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.resource;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/10/07 10:04:21 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/22 16:02:29 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
@@ -176,7 +178,7 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 		ByteArrayOutputStream subOut = null;
 		try {
 			subOut = new ByteArrayOutputStream();
-			out = new ObjectOutputStream(new GZIPOutputStream(subOut));
+			out = new ObjectOutputStream(new BufferedOutputStream(new GZIPOutputStream(subOut)));
 			out.writeObject(data1);
 			out.flush();
 		} finally {
@@ -216,7 +218,7 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 	private List<Object> unpack(final byte packedData[]) throws IOException, ClassNotFoundException {
 		ObjectInputStream in = null;
 		try {
-			in = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(packedData)));
+			in = new ObjectInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(packedData))));
 			return (List) in.readObject();
 		} finally {
 			if (in != null)
