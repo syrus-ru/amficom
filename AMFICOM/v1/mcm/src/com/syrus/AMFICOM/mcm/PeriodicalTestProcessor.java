@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTestProcessor.java,v 1.51 2005/10/15 17:45:22 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.52 2005/10/22 15:23:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/10/15 17:45:22 $
+ * @version $Revision: 1.52 $, $Date: 2005/10/22 15:23:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -58,21 +58,27 @@ final class PeriodicalTestProcessor extends TestProcessor {
 				final SortedSet<Date> timeStamps = this.temporalPattern.getTimes(fromDateLong, toDateLong);
 				if (!includeFromDate) {
 					if (timeStamps.remove(startDate)) {
-						Log.debugMessage("PeriodicalTestProcessor.getNextMeasurementStartTime | Removed from set of time stamps date: " + startDate,
-								Log.DEBUGLEVEL10);
+						Log.debugMessage("Removed from set of time stamps date: " + startDate, Log.DEBUGLEVEL10);
 					} else {
-						Log.debugMessage("PeriodicalTestProcessor.getNextMeasurementStartTime | Date: " + startDate + " not found in set of time stamps",
-								Log.DEBUGLEVEL10);
+						Log.debugMessage("Date: " + startDate + " not found in set of time stamps", Log.DEBUGLEVEL10);
 					}
 				}
 
 				//--------
-				Log.debugMessage("PeriodicalTestProcessor.getCurrentTimeStamp | From " + startDate
-						+ " to " + (new Date(toDateLong))
-						+ ", include fromDate: " + includeFromDate, Log.DEBUGLEVEL09);
+				final StringBuffer stringBuffer = new StringBuffer();
+				stringBuffer.append("From ");
+				stringBuffer.append(startDate);
+				stringBuffer.append(" to ");
+				stringBuffer.append(new Date(toDateLong));
+				stringBuffer.append(", include fromDate: ");
+				stringBuffer.append(includeFromDate);
+				stringBuffer.append("\n");
 				for (final Date date : timeStamps) {
-					Log.debugMessage("date: " + date, Log.DEBUGLEVEL09);
+					stringBuffer.append("\t date: ");
+					stringBuffer.append(date);
+					stringBuffer.append("\n");
 				}
+				Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL09);
 				//--------
 
 				if (!timeStamps.isEmpty()) {

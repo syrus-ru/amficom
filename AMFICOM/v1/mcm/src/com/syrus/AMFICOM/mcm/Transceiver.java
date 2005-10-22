@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.72 2005/10/12 07:12:20 arseniy Exp $
+ * $Id: Transceiver.java,v 1.73 2005/10/22 15:23:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/10/12 07:12:20 $
+ * @version $Revision: 1.73 $, $Date: 2005/10/22 15:23:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -76,13 +76,13 @@ final class Transceiver extends SleepButWorkThread {
 	synchronized void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
-			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+			Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.scheduledMeasurements.add(measurement);
 			this.testProcessors.put(measurementId, testProcessor);
 
 			this.notifyAll();
 		} else {
-			Log.errorMessage("Transceiver.transmitMeasurementToKIS | ERROR: Status: " + measurement.getStatus().value()
+			Log.errorMessage("ERROR: Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
 		}
 	}
@@ -90,12 +90,12 @@ final class Transceiver extends SleepButWorkThread {
 	synchronized void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
-			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+			Log.debugMessage("Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
 
 			this.notifyAll();
 		} else {
-			Log.errorMessage("Transceiver.addAcquiringMeasurement | ERROR: Status: " + measurement.getStatus().value()
+			Log.errorMessage("ERROR: Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
 		}
 	}
@@ -141,7 +141,7 @@ final class Transceiver extends SleepButWorkThread {
 						try {
 							this.kisConnection.transmitMeasurement(measurement, super.initialTimeToSleep);
 
-							Log.debugMessage("Transceiver.run | Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+							Log.debugMessage("Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 							this.scheduledMeasurements.remove(measurement);
 							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
@@ -170,7 +170,7 @@ final class Transceiver extends SleepButWorkThread {
 						}
 					} else {// if (this.kisReport == null)
 						final Identifier measurementId = this.kisReport.getMeasurementId();
-						Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+						Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 						Measurement measurement = null;
 						try {
 							measurement = StorableObjectPool.getStorableObject(measurementId, true);
@@ -189,7 +189,7 @@ final class Transceiver extends SleepButWorkThread {
 								StorableObjectPool.flush(saveObjects, LoginManager.getUserId(), false);
 							} catch (ApplicationException ae) {
 								Log.errorException(ae);
-								Log.debugMessage("Transceiver.run | Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
+								Log.debugMessage("Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
 								try {
 									MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 								} catch (CommunicationException ce) {
@@ -204,7 +204,7 @@ final class Transceiver extends SleepButWorkThread {
 							if (result != null) {
 								TestProcessor testProcessor = this.testProcessors.remove(measurementId);
 								if (testProcessor == null) {
-									Log.errorMessage("Transceiver.run | WARNING: Cannot find test processor for measurement '" + measurementId
+									Log.errorMessage("WARNING: Cannot find test processor for measurement '" + measurementId
 											+ "'; searching in global MCM map");
 									testProcessor = MeasurementControlModule.testProcessors.get(measurement.getTestId());
 								}
@@ -212,19 +212,20 @@ final class Transceiver extends SleepButWorkThread {
 									testProcessor.addMeasurementResult(result);
 									this.kisReport = null;
 								} else {// if (testProcessor != null)
-									Log.errorMessage("Transceiver.run | ERROR: Test processor for measurement '" + measurementId + "' + not found");
+									Log.errorMessage("ERROR: Test processor for measurement '" + measurementId + "' + not found");
 									this.throwAwayKISReport();
 								}// else if (testProcessor != null)
 							}
 
 						} else {// if (measurement != null)
-							Log.errorMessage("Transceiver.run | ERROR: Measurement for id '" + measurementId + "' + not found");
+							Log.errorMessage("ERROR: Measurement for id '" + measurementId + "' + not found");
 							this.throwAwayKISReport();
 						}// else if (measurement != null)
 					}// else if (this.kisReport == null)
 
 				} else {// if (this.kisConnection.isEstablished())
-					final long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT, MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
+					final long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT,
+							MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
 					try {
 						this.kisConnection.establish(kisConnectionTimeout, true);
 						super.clearFalls();
@@ -254,25 +255,26 @@ final class Transceiver extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			case FALL_CODE_ESTABLISH_CONNECTION:
-				Log.errorMessage("Transceiver.processFall | ERROR: Many errors during establishing connection");
+				Log.errorMessage("ERROR: Many errors during establishing connection");
 				break;
 			case FALL_CODE_TRANSMIT_MEASUREMENT:
 				this.removeMeasurement();
 				break;
 			case FALL_CODE_RECEIVE_KIS_REPORT:
-				Log.errorMessage("Transceiver.processFall | ERROR: Many errors during readig KIS report");
+				Log.errorMessage("ERROR: Many errors during readig KIS report");
 				break;
 			case FALL_CODE_CREATE_RESULT:
 				this.abortMeasurementAndReport();
 				break;
 		default:
-				Log.errorMessage("processFall | ERROR: Unknown error code: " + super.fallCode);
+				Log.errorMessage("ERROR: Unknown error code: " + super.fallCode);
 		}
 	}
 
 	private void removeMeasurement() {
 		if (this.measurementToRemove != null) {
-			Log.debugMessage("Transceiver.throwAwayKISReport | removing measurement '" + this.measurementToRemove.getId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL07);
+			Log.debugMessage("Removing measurement '" + this.measurementToRemove.getId() + "' from KIS '" + this.kis.getId() + "'",
+					Log.DEBUGLEVEL07);
 			this.scheduledMeasurements.remove(this.measurementToRemove);
 			this.testProcessors.remove(this.measurementToRemove.getId());
 
@@ -285,12 +287,12 @@ final class Transceiver extends SleepButWorkThread {
 
 			this.measurementToRemove = null;
 		} else {
-			Log.errorMessage("Transceiver.removeMeasurement | ERROR: Measurement to remove is null -- nothing to remove");
+			Log.errorMessage("ERROR: Measurement to remove is null -- nothing to remove");
 		}
 	}
 
 	private void abortMeasurementAndReport() {
-		Log.errorMessage("Transceiver.processFall | ERROR: Cannot create result");
+		Log.errorMessage("ERROR: Cannot create result");
 		if (this.measurementToRemove != null) {
 			this.measurementToRemove.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 			try {
@@ -300,18 +302,18 @@ final class Transceiver extends SleepButWorkThread {
 			}
 			this.measurementToRemove = null;
 		} else {
-			Log.errorMessage("Transceiver.abortMeasurementAndReport | ERROR: Measurement to abort is null -- nothing to abort");
+			Log.errorMessage("ERROR: Measurement to abort is null -- nothing to abort");
 		}
 		this.throwAwayKISReport();
 	}
 
 	private void throwAwayKISReport() {
 		if (this.kisReport != null) {
-			Log.debugMessage("Transceiver.throwAwayKISReport | Throwing away report of measurement '"
-					+ this.kisReport.getMeasurementId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL07);
+			Log.debugMessage("Throwing away report of measurement '" + this.kisReport.getMeasurementId()
+					+ "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL07);
 			this.kisReport = null;
 		} else {
-			Log.errorMessage("Transceiver.throwAwayKISReport | ERROR: KIS report is null -- nothing to throw away");
+			Log.errorMessage("ERROR: KIS report is null -- nothing to throw away");
 		}
 	}
 

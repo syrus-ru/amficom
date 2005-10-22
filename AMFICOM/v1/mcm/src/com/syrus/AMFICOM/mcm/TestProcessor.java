@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.80 2005/09/30 14:37:37 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.81 2005/10/22 15:23:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/09/30 14:37:37 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/22 15:23:39 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -93,12 +93,12 @@ abstract class TestProcessor extends SleepButWorkThread {
 			if (measurementSetups != null && !measurementSetups.isEmpty()) {
 				this.measurementSetup = measurementSetups.iterator().next();
 			} else {
-				Log.errorMessage("TestProcessor<init> | Measurement setups for test '" + this.test.getId() + "' not found");
+				Log.errorMessage("Measurement setups for test '" + this.test.getId() + "' not found");
 				this.shutdown();
 				return;
 			}
 		} catch (ApplicationException ae) {
-			Log.errorMessage("TestProcessor<init> | Cannot load measurement setups for test '" + this.test.getId() + "'");
+			Log.errorMessage("Cannot load measurement setups for test '" + this.test.getId() + "'");
 			Log.errorException(ae);
 			this.shutdown();
 			return;
@@ -107,7 +107,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		final Identifier kisId = test.getKISId();
 		this.transceiver = MeasurementControlModule.transceivers.get(kisId);
 		if (this.transceiver == null) {
-			Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
+			Log.errorMessage("Cannot find transceiver for kis '" + kisId + "'");
 			this.shutdown();
 			return;
 		}
@@ -129,15 +129,14 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		final int testStatus = this.test.getStatus().value();
 		if (testStatus != TestStatus._TEST_STATUS_SCHEDULED && testStatus != TestStatus._TEST_STATUS_PROCESSING) {
-			Log.errorMessage("TestProcessor.setup | ERROR: Test '" + testId + "' has status " + testStatus
+			Log.errorMessage("ERROR: Test '" + testId + "' has status " + testStatus
 					+ " -- not SCHEDULED or PROCESSING; shutting down");
 			this.shutdown();
 			return;
 		}
 
 		final int numberOfMeasurements = this.test.getNumberOfMeasurements();
-		Log.debugMessage("TestProcessor.setup | Test '" + testId + "' -- number of measurements: " + numberOfMeasurements,
-				Log.DEBUGLEVEL06);
+		Log.debugMessage("Test '" + testId + "' -- number of measurements: " + numberOfMeasurements, Log.DEBUGLEVEL06);
 		if (numberOfMeasurements == 0) {
 			this.numberOfMResults = 0;
 			this.lastMeasurementStartTime = null;
@@ -156,14 +155,13 @@ abstract class TestProcessor extends SleepButWorkThread {
 			Log.errorException(roe);
 			this.abort(ABORT_REASON_DATABASE_ERROR);
 		} catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("TestProcessor.setup | Last measurement for test '" + testId
-					+ "' not found; assume test has none measurements", Log.DEBUGLEVEL06);
+			Log.debugMessage("Last measurement for test '" + testId + "' not found; assume test has none measurements",
+					Log.DEBUGLEVEL06);
 			this.numberOfMResults = 0;
 			this.lastMeasurementStartTime = null;
 			return;
 		}
-		Log.debugMessage("TestProcessor.setup | Test '" + testId + "' -- last measurement: " + lastMeasurement.getId(),
-				Log.DEBUGLEVEL06);
+		Log.debugMessage("Test '" + testId + "' -- last measurement: " + lastMeasurement.getId(), Log.DEBUGLEVEL06);
 
 		try {
 			this.numberOfMResults = resultDatabase.retrieveNumberOf(testId, ResultSort.RESULT_SORT_MEASUREMENT);
@@ -171,8 +169,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			Log.errorException(roe);
 			this.abort(ABORT_REASON_DATABASE_ERROR);
 		}
-		Log.debugMessage("TestProcessor.setup | Test '" + testId + "' -- number of measurement results: " + this.numberOfMResults,
-				Log.DEBUGLEVEL06);
+		Log.debugMessage("Test '" + testId + "' -- number of measurement results: " + this.numberOfMResults, Log.DEBUGLEVEL06);
 
 		this.lastMeasurementStartTime = lastMeasurement.getStartTime();
 		final int lastMeasurementStatus = lastMeasurement.getStatus().value();
@@ -192,19 +189,18 @@ abstract class TestProcessor extends SleepButWorkThread {
 						this.addMeasurementResult(results.iterator().next());
 						this.numberOfMResults = numberOfMResultsSave;
 					} else {
-						Log.errorMessage("TestProcessor.setup | ERROR: Cannot find result for acquired measurement '" + lastMeasurement.getId()
+						Log.errorMessage("ERROR: Cannot find result for acquired measurement '" + lastMeasurement.getId()
 								+ "'; setting measurement as ABORTED");
 						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 					}
 				} catch (ApplicationException ae) {
-					Log.errorMessage("TestProcessor.setup | ERROR: Cannot load results for acquired measurement '" + lastMeasurement.getId()
+					Log.errorMessage("ERROR: Cannot load results for acquired measurement '" + lastMeasurement.getId()
 							+ "'; setting measurement as ABORTED");
 					lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 				}
 				break;
 			default:
-				Log.debugMessage("TestProcessor.setupMeasurements | Test '" + testId + "' -- status of last measurement: "
-						+ lastMeasurementStatus, Log.DEBUGLEVEL06);
+				Log.debugMessage("Test '" + testId + "' -- status of last measurement: " + lastMeasurementStatus, Log.DEBUGLEVEL06);
 		}
 
 		try {
@@ -222,7 +218,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				this.numberOfMResults++;
 			}
 		} else {
-			Log.errorMessage("TestProcessor.addMeasurementResult | ERROR: Result '" + measurementResult.getId()
+			Log.errorMessage("ERROR: Result '" + measurementResult.getId()
 					+ "' has sort " + resultSort.value() + " -- not MEASUREMENT; adding failed");
 		}
 	}
@@ -300,8 +296,8 @@ abstract class TestProcessor extends SleepButWorkThread {
 					final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
 					for (int i = 0; i < aeResults.length; i++) {
 						if (aeResults[i] != null) {
-							Log.debugMessage("TestProcessor.processMeasurementResult | Analysis result: '" + aeResults[i].getId()
-									+ "' of measurement '" + measurement.getId() + "'", Log.DEBUGLEVEL07);
+							Log.debugMessage("Analysis result: '" + aeResults[i].getId() + "' of measurement '" + measurement.getId() + "'",
+									Log.DEBUGLEVEL07);
 							objectsToFlush.add(aeResults[i]);
 						}
 					}
@@ -326,7 +322,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	private void checkIfOver() {
 		final int numberOfMeasurements = this.test.getNumberOfMeasurements();
 
-		final StringBuffer mesg = new StringBuffer();
+		final StringBuffer mesg = new StringBuffer("\n");
 		mesg.append("'");
 		mesg.append(this.test.getId());
 		mesg.append("' on '");
@@ -370,7 +366,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				this.continueWithNextMeasurement();
 				break;
 			default:
-				Log.errorMessage("TestProcessor.processFall | Unknown error code: " + super.fallCode);
+				Log.errorMessage("Unknown error code: " + super.fallCode);
 		}
 	}
 
@@ -383,7 +379,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	void complete() {
-		Log.debugMessage("TestProcessor.complete | Test '" + this.test.getId() + "' is completed", Log.DEBUGLEVEL07);
+		Log.debugMessage("Test '" + this.test.getId() + "' is completed", Log.DEBUGLEVEL07);
 		this.test.setStatus(TestStatus.TEST_STATUS_COMPLETED);
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
