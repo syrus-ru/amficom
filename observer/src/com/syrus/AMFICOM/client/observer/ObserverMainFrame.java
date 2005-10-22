@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.MapSurveyApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ObserverApplicationModel;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.observer.alarm.AlarmReceiver;
 import com.syrus.AMFICOM.client.observer.command.OpenMapViewCommand;
 import com.syrus.AMFICOM.client.observer.command.OpenSchemeViewCommand;
 import com.syrus.AMFICOM.client.observer.command.start.OpenAnalysisCommand;
@@ -49,6 +50,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeViewerFrame;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeAlarmHandler;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeSelectionListener;
@@ -86,6 +88,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 	protected void initFrames() {
 		this.frames = new UIDefaults();
 		this.schemePane = new SchemeTabbedPane(this.aContext);
+		new SchemeAlarmHandler(this.aContext, this.schemePane);
 		this.schemePane.setEditable(false);
 		this.schemePane.setToolBarVisible(false);
 		
@@ -369,8 +372,8 @@ public class ObserverMainFrame extends AbstractMainFrame {
 	}
 
 	@Override
-	public void setDomainSelected() {
-		super.setDomainSelected();
+	public void loggedIn() {
+		AlarmReceiver.getInstance().setContext(this.aContext);
 
 		Command command = new OpenSchemeViewCommand(this.aContext);
 		command.execute();
@@ -404,9 +407,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 	}
 
 	@Override
-	public void setSessionClosed() {
-		super.setSessionClosed();
-
+	public void loggedOut() {
 		setFramesVisible(false);
 	}
 }

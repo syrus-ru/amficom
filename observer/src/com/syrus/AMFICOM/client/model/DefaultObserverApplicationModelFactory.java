@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.client.model;
 
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 public class DefaultObserverApplicationModelFactory extends
 		ObserverApplicationModelFactory {

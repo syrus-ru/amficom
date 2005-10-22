@@ -6,7 +6,6 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 
@@ -43,7 +42,6 @@ public class ObserverApplicationModel extends ApplicationModel {
 		add(ApplicationModel.MENU_SESSION_NEW);
 		add(ApplicationModel.MENU_SESSION_CLOSE);
 		add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
-		add(ApplicationModel.MENU_SESSION_DOMAIN);
 		add(ApplicationModel.MENU_EXIT);
 
 		add(ObserverApplicationModel.MENU_START);
