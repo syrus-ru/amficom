@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorOpenMapCommand.java,v 1.31 2005/10/19 11:56:52 krupenn Exp $$
+ * $$Id: MapEditorOpenMapCommand.java,v 1.32 2005/10/22 15:00:35 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.31 $, $Date: 2005/10/19 11:56:52 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/22 15:00:35 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -88,7 +88,8 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 		if(this.mapFrame != null) {
 			Map openedMap = this.mapFrame.getMap();
 			try {
-				if(StorableObjectPool.getStorableObject(openedMap.getId(), false) == null) {
+				if(StorableObjectPool.getStorableObject(openedMap.getId(), false) == null
+						&& mapOpenCommand.getResult() != Command.RESULT_OK) {
 					// current mapFrame map was deleted
 					MapNewCommand cmd = new MapNewCommand(this.mapFrame.getContext());
 					cmd.execute();
