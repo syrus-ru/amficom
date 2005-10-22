@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.46 2005/10/22 08:35:58 stas Exp $
+ * $Id: SchemeActions.java,v 1.47 2005/10/22 10:04:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -97,7 +97,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.46 $, $Date: 2005/10/22 08:35:58 $
+ * @version $Revision: 1.47 $, $Date: 2005/10/22 10:04:18 $
  * @module schemeclient
  */
 
@@ -298,7 +298,8 @@ public class SchemeActions {
 		return false;
 	}
 	
-	public static DefaultCableLink[] splitCableLink(SchemeGraph graph, DefaultCableLink cell) throws ApplicationException {//DefaultCableLink[]
+	public static DefaultCableLink[] splitCableLink(ElementsPanel panel, DefaultCableLink cell) throws ApplicationException {//DefaultCableLink[]
+		SchemeGraph graph = panel.getGraph();
 //		DefaultPort source = (DefaultPort)cell.getSource(); 
 //		DefaultPort target = (DefaultPort)cell.getTarget();
 //		PortView source = (PortView)cell.getSource(); 
@@ -340,7 +341,7 @@ public class SchemeActions {
 			Point middle1 = graph.snap(new Point (x - 3 * grid, y));
 			Point middle2 = graph.snap(new Point (x + 3 * grid, y));
 			
-			DeleteAction.delete(graph, cell);
+			DeleteAction.delete(panel, cell);
 			DefaultCableLink cell1 = createCableLink(graph, source, null, left, middle1, cl1.getId(), true);
 			DefaultCableLink cell2 = createCableLink(graph, null, target, middle2, right, cl2.getId(), true);
 //			if (source != null && source.getParent() instanceof CablePortCell) {

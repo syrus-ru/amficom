@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.17 2005/10/21 16:46:20 stas Exp $
+ * $Id: PopupFactory.java,v 1.18 2005/10/22 10:04:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -153,7 +153,7 @@ public class PopupFactory {
 	public static void createCablePopup(final JPopupMenu pop, SchemeTabbedPane pane, DefaultCableLink cell, final MouseEvent e, boolean editable) {
 		JMenuItem i1 = null;
 		if (editable) {
-			i1 = createMuffMenuItem(pane.getGraph(), cell);
+			i1 = createMuffMenuItem(pane, cell);
 		}
 		if (i1 != null) {
 			pop.add(i1);
@@ -297,7 +297,9 @@ public class PopupFactory {
 		return menu;
 	}
 	
-	private static JMenuItem createMuffMenuItem(final SchemeGraph graph, final DefaultCableLink cell) {
+	private static JMenuItem createMuffMenuItem(final SchemeTabbedPane pane, final DefaultCableLink cell) {
+		final SchemeGraph graph = pane.getGraph();
+		
 		JMenu menu = new JMenu(LangModelScheme.getString("Menu.path.insert_muff")); //$NON-NLS-1$
 		try {
 			TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF, OperationSort.OPERATION_EQUALS, ObjectEntities.PROTOEQUIPMENT_CODE, StorableObjectWrapper.COLUMN_TYPE_CODE);
@@ -323,7 +325,7 @@ public class PopupFactory {
 							SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, parentScheme);
 							EdgeView view = (EdgeView)graph.getGraphLayoutCache().getMapping(cell, true);
 							
-							DefaultCableLink[] newCells = SchemeActions.splitCableLink(graph, cell);
+							DefaultCableLink[] newCells = SchemeActions.splitCableLink(pane.getCurrentPanel(), cell);
 							if (newCells != null) {
 								
 								Point p = getCenterPoint(graph, view);
@@ -365,7 +367,8 @@ public class PopupFactory {
 		return menu;
 	}
 	
-	private static JMenuItem createCableSchemeMenuItem(final ApplicationContext aContext, final SchemeGraph graph, final DefaultCableLink cell) {
+	private static JMenuItem createCableSchemeMenuItem(final ApplicationContext aContext, final SchemeTabbedPane pane, final DefaultCableLink cell) {
+		final SchemeGraph graph = pane.getGraph();
 		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				final SchemeCableLink cableLink = cell.getSchemeCableLink();
@@ -377,7 +380,7 @@ public class PopupFactory {
 					
 					SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), internalScheme, parentScheme);
 
-					DefaultCableLink[] newCells = SchemeActions.splitCableLink(graph, cell);
+					DefaultCableLink[] newCells = SchemeActions.splitCableLink(pane.getCurrentPanel(), cell);
 					if (newCells != null) {
 						
 					}

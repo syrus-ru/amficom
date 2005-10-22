@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.47 2005/10/17 14:59:14 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.48 2005/10/22 10:04:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
@@ -80,7 +81,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.47 $, $Date: 2005/10/17 14:59:14 $
+ * @version $Revision: 1.48 $, $Date: 2005/10/22 10:04:18 $
  * @module schemeclient
  */
 
@@ -94,6 +95,9 @@ public class SchemeObjectsFactory {
 	private static String stubName = "should not see me";
 	
 	private static ApplicationContext aContext;
+	
+	// TODO add objects here when deleted and flush on exit
+	Set<Identifier> deletedObjects = new HashSet<Identifier>();
 	
 	public static void init(final ApplicationContext aContext1) {
 		aContext = aContext1;

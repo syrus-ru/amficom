@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.28 2005/10/17 14:59:15 stas Exp $
+ * $Id: DeleteAction.java,v 1.29 2005/10/22 10:04:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
@@ -58,17 +59,17 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.28 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/22 10:04:18 $
  * @module schemeclient
  */
 
 public class DeleteAction extends AbstractAction {
 	private static final long serialVersionUID = -8819605194892661368L;
-	UgoTabbedPane pane;
+	ElementsTabbedPane pane;
 	private static Set<DefaultGraphCell> cellsToDelete = new HashSet<DefaultGraphCell>();
 	private static Set<Identifier> objectsToDelete = new HashSet<Identifier>();
 	
-	public DeleteAction(UgoTabbedPane pane) {
+	public DeleteAction(ElementsTabbedPane pane) {
 		super(Constants.DELETE);
 		this.pane = pane; 
 	}
@@ -102,7 +103,7 @@ public class DeleteAction extends AbstractAction {
 
 			DefaultGraphCell[] cells1 = GraphActions.getTopLevelCells(cells);
 
-			delete(graph, cells1);
+			delete(this.pane.getCurrentPanel(), cells1);
 			
 			this.pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, Identifier.VOID_IDENTIFIER, SchemeEvent.DELETE_OBJECT));
 			graph.selectionNotify();
@@ -116,7 +117,8 @@ public class DeleteAction extends AbstractAction {
 		}
 	}
 	
-	public static void delete(SchemeGraph graph, Object cell) {
+	public static void delete(ElementsPanel panel, Object cell) {
+		SchemeGraph graph = panel.getGraph();
 		deleteCell(graph, (DefaultGraphCell)cell);
 
 		StorableObjectPool.delete(objectsToDelete);
@@ -127,7 +129,8 @@ public class DeleteAction extends AbstractAction {
 		graph.getModel().remove(cells);
 	}
 	
-	public static void delete(SchemeGraph graph, Object[] cells) {
+	public static void delete(ElementsPanel panel, Object[] cells) {
+		SchemeGraph graph = panel.getGraph();		
 		for (int i = 0; i < cells.length; i++) {
 			deleteCell(graph, (DefaultGraphCell)cells[i]);
 		}

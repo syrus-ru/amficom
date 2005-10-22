@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsToolBar.java,v 1.13 2005/10/17 14:59:15 stas Exp $
+ * $Id: ElementsToolBar.java,v 1.14 2005/10/22 10:04:18 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/10/17 14:59:15 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/22 10:04:18 $
  * @module schemeclient
  */
 
@@ -86,7 +86,7 @@ public class ElementsToolBar extends UgoToolBar {
 		bttns.put(Constants.REDO, createToolButton(mh.redo, this.btn_size, null,
 				LangModelGraph.getString(Constants.REDO), Constants.ICON_REDO, new RedoAction(this.pane), false));
 		bttns.put(Constants.DELETE, createToolButton(mh.del, this.btn_size, null,
-				LangModelGraph.getString(Constants.DELETE), Constants.ICON_DELETE, new DeleteAction(this.pane), false));
+				LangModelGraph.getString(Constants.DELETE), Constants.ICON_DELETE, new DeleteAction((ElementsTabbedPane)this.pane), false));
 		// bttns.put(Constants.hierarchyUpKey,
 		// createToolButton(mh.hup, btn_size, null, "вверх",
 		// new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hand.gif")),
