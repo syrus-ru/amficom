@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlReflectogramMismatchEventImpl.java,v 1.8 2005/10/19 07:51:22 bass Exp $
+ * $Id: IdlReflectogramMismatchEventImpl.java,v 1.9 2005/10/22 19:07:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.reflectometry.corba.IdlSeverity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/19 07:51:22 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/22 19:07:25 $
  * @module event
  */
 final class IdlReflectogramMismatchEventImpl
@@ -47,6 +47,7 @@ final class IdlReflectogramMismatchEventImpl
 	 * @param alarmType
 	 * @param deltaX
 	 * @param resultId
+	 * @param monitoredElementId
 	 */
 	IdlReflectogramMismatchEventImpl(final long created,
 			final IdlMismatchData mismatchData,
@@ -54,7 +55,8 @@ final class IdlReflectogramMismatchEventImpl
 			final IdlAnchorData anchorData, final int coord,
 			final int endCoord, final IdlAlarmType alarmType,
 			final double deltaX,
-			final IdlIdentifier resultId) {
+			final IdlIdentifier resultId,
+			final IdlIdentifier monitoredElementId) {
 		final IdlIdentifier voidId = VOID_IDENTIFIER.getTransferable();
 
 		this.id = voidId;
@@ -70,6 +72,7 @@ final class IdlReflectogramMismatchEventImpl
 		this.alarmType = alarmType;
 		this.deltaX = deltaX;
 		this.resultId = resultId;
+		this.monitoredElementId = monitoredElementId;
 	}
 
 	/**
@@ -166,6 +169,14 @@ final class IdlReflectogramMismatchEventImpl
 	@Override
 	public IdlIdentifier getResultId() {
 		return this.resultId;
+	}
+
+	/**
+	 * @see IdlReflectogramMismatchEvent#getMonitoredElementId()
+	 */
+	@Override
+	public IdlIdentifier getMonitoredElementId() {
+		return this.monitoredElementId;
 	}
 
 	public IdlEventType getType() {

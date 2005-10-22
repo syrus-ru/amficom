@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.3 2005/10/19 13:50:15 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.4 2005/10/22 19:07:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
@@ -38,7 +37,7 @@ import com.syrus.util.Log;
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/19 13:50:15 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/22 19:07:25 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor implements
@@ -66,8 +65,11 @@ final class ReflectogramMismatchEventProcessor implements
 			if (resultId.isVoid()) {
 				throw new NullPointerException("Result is null");
 			}
-			final Result result = StorableObjectPool.getStorableObject(resultId, true);
-			final MonitoredElement monitoredElement = result.getAction().getMonitoredElement();
+			final Identifier monitoredElementId = reflectogramMismatchEvent.getMonitoredElementId();
+			if (monitoredElementId.isVoid()) {
+				throw new NullPointerException("MonitoredElement is null");
+			}
+			final MonitoredElement monitoredElement = StorableObjectPool.getStorableObject(monitoredElementId, true);
 			final MeasurementPort measurementPort = monitoredElement.getMeasurementPort();
 			final Identifier portId = measurementPort.getPortId();
 			if (portId.isVoid()) {

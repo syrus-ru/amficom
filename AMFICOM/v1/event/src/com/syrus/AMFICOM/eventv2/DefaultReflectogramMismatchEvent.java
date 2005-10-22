@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultReflectogramMismatchEvent.java,v 1.8 2005/10/19 11:51:41 bass Exp $
+ * $Id: DefaultReflectogramMismatchEvent.java,v 1.9 2005/10/22 19:07:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.eventv2;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 
 import java.io.Serializable;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.reflectometry.SOAnchor;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/19 11:51:41 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/22 19:07:25 $
  * @module event
  */
 public final class DefaultReflectogramMismatchEvent extends
@@ -113,13 +114,22 @@ public final class DefaultReflectogramMismatchEvent extends
 	 */
 	private Identifier resultId;
 
+	/**
+	 * @serial include
+	 */
+	private Identifier monitoredElementId;
+
 	private DefaultReflectogramMismatchEvent(
 			final ReflectogramMismatch reflectogramMismatch,
-			final Identifier resultId) {
+			final Identifier resultId,
+			final Identifier monitoredElementId) {
 		this.created = new Date();
 
 		if (resultId == null) {
-			throw new NullPointerException();
+			throw new NullPointerException("resultId is null");
+		}
+		if (monitoredElementId == null) {
+			throw new NullPointerException("monitoredElementId is null");
 		}
 		/*
 		 * Currently, the second check is unnecessary. But
@@ -127,7 +137,11 @@ public final class DefaultReflectogramMismatchEvent extends
 		 */
 		if (resultId.getMajor() != RESULT_CODE
 				|| resultId.isVoid()) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Either resultId is void or its type is invalid");
+		}
+		if (monitoredElementId.getMajor() != MONITOREDELEMENT_CODE
+				|| monitoredElementId.isVoid()) {
+			throw new IllegalArgumentException("Either monitoredElementId is void or its type is invalid");
 		}
 
 
@@ -157,6 +171,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.alarmType = reflectogramMismatch.getAlarmType();
 		this.deltaX = reflectogramMismatch.getDeltaX();
 		this.resultId = resultId;
+		this.monitoredElementId = monitoredElementId;
 	}
 
 	private DefaultReflectogramMismatchEvent(
@@ -186,6 +201,7 @@ public final class DefaultReflectogramMismatchEvent extends
 		this.alarmType = AlarmType.valueOf(reflectogramMismatchEvent.getAlarmType());
 		this.deltaX = reflectogramMismatchEvent.getDeltaX();
 		this.resultId = Identifier.valueOf(reflectogramMismatchEvent.getResultId());
+		this.monitoredElementId = Identifier.valueOf(reflectogramMismatchEvent.getMonitoredElementId());
 	}
 
 	/**
@@ -227,14 +243,16 @@ public final class DefaultReflectogramMismatchEvent extends
 				this.getEndCoord(),
 				this.getAlarmType().getTransferable(orb),
 				this.getDeltaX(),
-				this.getResultId().getTransferable(orb));
+				this.getResultId().getTransferable(orb),
+				this.getMonitoredElementId().getTransferable(orb));
 	}
 
 	public static ReflectogramMismatchEvent valueOf(
 			final ReflectogramMismatch reflectogramMismatch,
-			final Identifier resultId) {
+			final Identifier resultId,
+			final Identifier monitoredElementId) {
 		return new DefaultReflectogramMismatchEvent(reflectogramMismatch,
-				resultId);
+				resultId, monitoredElementId);
 	}
 
 	public static ReflectogramMismatchEvent valueOf(
@@ -372,9 +390,16 @@ public final class DefaultReflectogramMismatchEvent extends
 	}
 
 	/**
+	 * @see ReflectogramMismatchEvent#getMonitoredElementId()
+	 */
+	public Identifier getMonitoredElementId() {
+		return this.monitoredElementId;
+	}
+
+	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2005/10/19 11:51:41 $
+	 * @version $Revision: 1.9 $, $Date: 2005/10/22 19:07:25 $
 	 * @module event
 	 */
 	private class SoAnchorImpl implements SOAnchor, Identifiable, Serializable {
