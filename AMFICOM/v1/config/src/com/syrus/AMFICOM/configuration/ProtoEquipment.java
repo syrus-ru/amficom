@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.14 2005/10/14 06:18:17 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.15 2005/10/22 16:11:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/22 16:11:16 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -291,7 +291,7 @@ public final class ProtoEquipment extends StorableObject
 			protoEquipment.unsetCharacteristics();
 		}
 		final Set<Characteristic> characteristics = this.getCharacteristics(false);
-		if (!characteristics.isEmpty()) {
+		if (false && !characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = protoEquipment.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
 				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType, usePool);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.120 2005/10/14 06:18:19 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.121 2005/10/22 16:11:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.120 $, $Date: 2005/10/14 06:18:19 $
+ * @version $Revision: 1.121 $, $Date: 2005/10/22 16:11:16 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -756,7 +756,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			schemeProtoElement.unsetCharacteristics();
 		}
 		final Set<Characteristic> characteristics = this.getCharacteristics0(usePool);
-		if (!characteristics.isEmpty()) {
+		if (false && !characteristics.isEmpty()) {
 			final XmlCharacteristicSeq xmlCharacteristicSeq = schemeProtoElement.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {
 				characteristic.getXmlTransferable(xmlCharacteristicSeq.addNewCharacteristic(), importType, usePool);
