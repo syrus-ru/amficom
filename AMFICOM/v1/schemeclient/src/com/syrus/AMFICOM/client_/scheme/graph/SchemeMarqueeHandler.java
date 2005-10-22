@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.35 2005/10/21 16:46:20 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.36 2005/10/22 09:05:42 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.35 $, $Date: 2005/10/21 16:46:20 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/22 09:05:42 $
  * @module schemeclient
  */
 
@@ -289,6 +289,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					  panel.getSchemeResource().setCashedPathMemberIds(ids);
 					  }*/
 					
+					this.start = graph.snap(event.getPoint());
+					this.firstPort = this.port;
 					event.consume();
 				}
 			}
