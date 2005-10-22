@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.19 2005/10/20 14:12:54 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.20 2005/10/22 14:15:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/20 14:12:54 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/22 14:15:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -136,13 +136,12 @@ final class LoginProcessor extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			default:
-				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+				Log.errorMessage("Unknown error code: " + super.fallCode);
 		}
 	}
 
 	static SessionKey addUserLogin(final Identifier userId, final Identifier domainId, final String userHostName) {
-		Log.debugMessage("LoginProcessor.addUserLogin | Adding login for user '" + userId + "' to domain '" + domainId + "'",
-				Log.DEBUGLEVEL08);
+		Log.debugMessage("Adding login for user '" + userId + "' to domain '" + domainId + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = UserLogin.createInstance(userId, domainId, userHostName);
 		loginMap.put(userLogin.getSessionKey(), userLogin);
 		try {
@@ -155,7 +154,7 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	static boolean removeUserLogin(final SessionKey sessionKey) {
-		Log.debugMessage("LoginProcessor.getUserLogin | Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
+		Log.debugMessage("Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = loginMap.remove(sessionKey);
 		if (userLogin == null) {
 			return false;
@@ -182,8 +181,8 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	static UserLogin getUserLogin(final SessionKey sessionKey) {
-		Log.debugMessage("LoginProcessor.getUserLogin | Getting login for session key '" + sessionKey
-				+ "'; found: " + loginMap.containsKey(sessionKey), Log.DEBUGLEVEL08);
+		Log.debugMessage("Getting login for session key '" + sessionKey + "'; found: " + loginMap.containsKey(sessionKey),
+				Log.DEBUGLEVEL08);
 		return loginMap.get(sessionKey);
 	}
 

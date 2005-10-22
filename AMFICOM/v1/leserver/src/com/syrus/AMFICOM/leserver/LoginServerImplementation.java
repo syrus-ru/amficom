@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.33 2005/10/21 08:00:33 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.34 2005/10/22 14:15:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/21 08:00:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/10/22 14:15:08 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -77,9 +77,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			final IdlDomain[] domainsT = new IdlDomain[domains.size()];
 			int i = 0;
 			for (final Domain domain : domains) {
-				Log.debugMessage("LoginServerImplementation.transmitAvailableDomains | Domain '" + domain.getId() + "', '"
-						+ domain.getName()
-						+ "'", Log.DEBUGLEVEL08);
+				Log.debugMessage("Domain '" + domain.getId() + "', '" + domain.getName() + "'", Log.DEBUGLEVEL08);
 				domainsT[i] = domain.getTransferable(orb);
 			}
 			return domainsT;
@@ -98,13 +96,14 @@ final class LoginServerImplementation extends LoginServerPOA {
 		Set<SystemUser> systemUsers = null;
 		try {
 			systemUsers = StorableObjectPool.getStorableObjectsByCondition(this.tc, true, true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 		if (systemUsers.isEmpty()) {
-			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND, IdlCompletionStatus.COMPLETED_YES, "Illegal login -- '" + login + "'");
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND,
+					IdlCompletionStatus.COMPLETED_YES,
+					"Illegal login -- '" + login + "'");
 		}
 
 		final SystemUser user = systemUsers.iterator().next();
@@ -112,12 +111,10 @@ final class LoginServerImplementation extends LoginServerPOA {
 		String localPassword = null;
 		try {
 			localPassword = this.shadowDatabase.retrieve(userId);
-		}
-		catch (RetrieveObjectException roe) {
+		} catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (ObjectNotFoundException onfe) {
+		} catch (ObjectNotFoundException onfe) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND, IdlCompletionStatus.COMPLETED_YES, onfe.getMessage());
 		}
 
