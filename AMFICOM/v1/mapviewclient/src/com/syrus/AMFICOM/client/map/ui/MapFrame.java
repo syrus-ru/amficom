@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.81 2005/10/21 14:22:28 krupenn Exp $$
+ * $$Id: MapFrame.java,v 1.82 2005/10/22 14:59:15 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
@@ -79,6 +80,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
 import com.syrus.util.Log;
 
@@ -204,7 +206,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.81 $, $Date: 2005/10/21 14:22:28 $
+ * @version $Revision: 1.82 $, $Date: 2005/10/22 14:59:15 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -527,18 +529,29 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		final MapView mapView = this.getMapView();
 
 		if (mapView != null) {
-			if (mapView.isChanged() && getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP_VIEW)) {
-				changesPresent = true;
+			if (mapView.isChanged()) {
+				if(getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP_VIEW)) {
+					changesPresent = true;
+				}
+				else {
+					cleanChangedObjects();
+				}
 			} else {
-				final Map map = this.getMapView().getMap();
+				final Map map = mapView.getMap();
 				if (map != null) {
-					if (map.isChanged() && getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP)) {
-						changesPresent = true;
+					if (map.isChanged()) {
+						if(getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP)) {
+							changesPresent = true;
+						}
+						else {
+							cleanChangedObjects();
+						}
 					}
 				}
 			}
 		}
 		if (changesPresent) {
+
 			final String message = I18N.getString(MapEditorResourceKeys.MESSAGE_UNSAVED_ELEMENTS_PRESENT);
 
 			final int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
@@ -547,17 +560,50 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if (ret == JOptionPane.YES_OPTION) {
-				// TODO should clean not only changes in map, mapview, mapview.schemes
-				// but also in underlaying objects
-				StorableObjectPool.cleanChangedStorableObjects(
-						Collections.singleton(this.getMapView().getMap()));
-				StorableObjectPool.cleanChangedStorableObjects(
-						Collections.singleton(this.getMapView()));
-				StorableObjectPool.cleanChangedStorableObjects(this.getMapView().getSchemes());
+				cleanChangedObjects();
 				changesPresent = false;
 			}
 		}
 		return changesPresent;
+	}
+
+	/**
+	 * @param map
+	 */
+	private void cleanChangedObjects() {
+		final MapView mapView = this.getMapView();
+		final Map map = mapView.getMap();
+		// TODO should clean not only changes in map, mapview, mapview.schemes
+		// but also in underlaying objects
+
+		StorableObjectPool.cleanChangedStorableObjects(
+				Collections.singleton(map));
+		StorableObjectPool.cleanChangedStorableObjects(
+				map.getAllCollectors());
+		StorableObjectPool.cleanChangedStorableObjects(
+				map.getAllMarks());
+		StorableObjectPool.cleanChangedStorableObjects(
+				map.getAllNodeLinks());
+		StorableObjectPool.cleanChangedStorableObjects(
+				map.getAllPhysicalLinks());
+		StorableObjectPool.cleanChangedStorableObjects(
+				map.getAllSiteNodes());
+		StorableObjectPool.cleanChangedStorableObjects(
+				map.getAllTopologicalNodes());
+		StorableObjectPool.cleanChangedStorableObjects(
+				map.getMaps());
+
+		StorableObjectPool.cleanChangedStorableObjects(
+				Collections.singleton(mapView));
+
+		final Set<Scheme> schemes = mapView.getSchemes();
+		for(Scheme scheme : schemes) {
+			try {
+				StorableObjectPool.cleanChangedStorableObjects(scheme.getReverseDependencies(false));
+			} catch(ApplicationException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public Map getMap() {
