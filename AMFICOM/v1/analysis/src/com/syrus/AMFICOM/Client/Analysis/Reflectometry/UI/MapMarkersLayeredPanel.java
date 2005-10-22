@@ -4,7 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.JButton;
@@ -145,6 +147,24 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 		}
 	}
 
+	public void deleteNonAlarmMarkers() {
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof MapMarkersPanel)
+			{
+				for (Iterator it = new ArrayList(((MapMarkersPanel)panel).markers).iterator(); it.hasNext();) {
+					Marker m = (Marker)it.next();
+					if (!(m instanceof AlarmMarker)) {
+						((MapMarkersPanel)panel).deleteMarker(m);
+					}
+				}
+				((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(false);
+				repaint();
+			}
+		}
+	}
+	
 	public Marker deleteActiveMarker ()
 	{
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
@@ -237,6 +257,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				true));
 
 		buttons2.putAll(super.createGraphButtons());
+		deleteMarkerButton.setEnabled(false);
 		return buttons2;
 	}
 
