@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.6 2005/10/22 12:17:06 arseniy Exp $
+ * $Id: AbstractLogger.java,v 1.7 2005/10/22 18:35:20 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/10/22 12:17:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/10/22 18:35:20 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -215,7 +215,7 @@ abstract class AbstractLogger implements Logger {
 			final StackTraceElement stackTraceElement = stackTrace[i];
 			out.print((this.fullSte
 					? stackTraceElement
-					: stackTraceElement.getClassName().replaceAll("^.*\\.(\\w+)$", "$1")
+					: stackTraceElement.getClassName().replaceAll("^([^\\.]+\\.)*([^\\.]+)$", "$2")
 							+ '.' + stackTraceElement.getMethodName() + "()")
 					+ " | ");
 		}
