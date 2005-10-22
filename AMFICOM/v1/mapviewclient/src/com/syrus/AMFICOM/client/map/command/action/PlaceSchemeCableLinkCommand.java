@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.54 2005/10/18 07:37:38 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.55 2005/10/22 13:50:43 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.54 $, $Date: 2005/10/18 07:37:38 $
+ * @version $Revision: 1.55 $, $Date: 2005/10/22 13:50:43 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -102,7 +102,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			XmlIdentifier xmlId1 = XmlIdentifier.Factory.newInstance();
 			this.schemeCableLink.getId().getXmlTransferable(xmlId1, "ucm");
 			if(xmlId1.getStringValue().equals("682647")) {
-				int a = 0;
+				@SuppressWarnings("unused") int a = 0;
 			}
 			final SortedSet<CableChannelingItem> pathMembers = this.schemeCableLink.getPathMembers();
 //			System.out.println("SchemeCableLink " + xmlId1.getStringValue() + " has " + pathMembers.size() + " cci's");
