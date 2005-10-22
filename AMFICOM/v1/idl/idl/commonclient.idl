@@ -1,5 +1,5 @@
 /*-
- * $Id: commonclient.idl,v 1.3 2005/10/19 13:36:32 bass Exp $
+ * $Id: commonclient.idl,v 1.4 2005/10/22 17:47:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@
 #define	COMMONCLIENT_IDL
 
 #include "event.idl"
+#include "leserver.idl"
  
 #ifndef MY_COMPILER_IS_NOT_BRAINDEAD
 module com {
@@ -26,10 +27,11 @@ module general {
 ///////////////////////// Client interface //////////////////////////
 
 		/**
-		 * interface for all clients
-		\u002a\u002f@SuppressWarnings("all")/**/
-		interface CORBAClient : Verifiable, eventv2::corba::MessageReceiver {
-			general::corba::IdlIdentifier getSystemUserId();
+		 * Interface for all clients.
+		 *
+		 * \u002a\u002f@SuppressWarnings("all")/*
+		 */
+		interface CORBAClient : Verifiable, eventv2::corba::MessageReceiver, leserver::corba::MessageReceiverExt {
 		};
 	};
 };

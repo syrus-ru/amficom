@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.9 2005/10/20 14:08:37 arseniy Exp $
+ * $Id: leserver.idl,v 1.10 2005/10/22 17:47:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,6 +51,15 @@ module corba {
 		
 	};
 
+	/**
+	 * This is just a temporary interface that will be removed
+	 * as soon as alternative message delivery technique is implemented.
+	 *
+	 * \u002a\u002f@SuppressWarnings("all")/*
+	 */
+	interface MessageReceiverExt {
+		general::corba::IdlIdentifier getSystemUserId();
+	};
 
 	interface EventServer : general::corba::Verifiable {
 		exception IdlEventProcessingException {
