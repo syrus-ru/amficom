@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.42 2005/10/21 09:05:10 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.43 2005/10/22 20:48:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
@@ -46,8 +47,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.42 $, $Date: 2005/10/21 09:05:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/10/22 20:48:35 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -220,6 +221,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case SCHEMEPATH_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+				case TRANSMISSIONPATH_CODE:
+					return super.getQuery(SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID);
 				case SCHEMEMONITORINGSOLUTION_CODE:
 					return super.getQuery(SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID);
 				default:
