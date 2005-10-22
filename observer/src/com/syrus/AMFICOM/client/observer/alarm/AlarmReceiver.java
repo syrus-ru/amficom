@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmReceiver.java,v 1.1 2005/10/22 13:23:11 stas Exp $
+ * $Id: AlarmReceiver.java,v 1.2 2005/10/22 15:47:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ public class AlarmReceiver implements PopupMessageReceiver {
 		
 		Identifier resultId = new Identifier("Result_985");
 		
-		double optDistance = 1000;
+		double optDistance = 1020;
 		
 		try {
 			Result result = StorableObjectPool.getStorableObject(resultId, true);
@@ -78,7 +78,7 @@ public class AlarmReceiver implements PopupMessageReceiver {
 					Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(
 							new LinkedIdsCondition(tpathIds.iterator().next(), ObjectEntities.SCHEMEPATH_CODE), true);
 					
-					if (schemePaths.isEmpty()) {
+					if (!schemePaths.isEmpty()) {
 						SchemePath path = schemePaths.iterator().next();
 						PathElement pe = path.getPathElementByOpticalDistance(optDistance);
 

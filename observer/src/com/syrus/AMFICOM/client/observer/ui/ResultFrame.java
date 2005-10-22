@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.6 2005/10/22 13:22:24 stas Exp $
+ * $Id: ResultFrame.java,v 1.7 2005/10/22 15:47:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/10/22 13:22:24 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/22 15:47:29 $
  * @module surveyclient_v1
  */
 
@@ -332,6 +332,8 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		
 		if (this.layeredPanel == null) {
 			this.layeredPanel = new MapThresholdsLayeredPanel(this.aContext.getDispatcher());
+		} else {
+			this.layeredPanel.deleteNonAlarmMarkers();
 		}
 			
 		ThresholdsPanel reflectogramPanel = new ThresholdsPanel(this.layeredPanel, this.aContext.getDispatcher(), data, deltaX);
