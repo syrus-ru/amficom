@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.5 2005/10/21 15:09:07 bass Exp $
+ * $Id: AbstractLogger.java,v 1.6 2005/10/22 12:17:06 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/21 15:09:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/10/22 12:17:06 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -65,9 +65,9 @@ abstract class AbstractLogger implements Logger {
 	 */
 	boolean fullSte;
 
-	public AbstractLogger(String appName, String hostName) {
-		this.appName = (appName != null)?appName:DEFAULT_APPNAME;
-		this.hostName = (hostName != null)?hostName:DEFAULT_HOSTNAME;
+	public AbstractLogger(final String appName, final String hostName) {
+		this.appName = (appName != null) ? appName : DEFAULT_APPNAME;
+		this.hostName = (hostName != null) ? hostName : DEFAULT_HOSTNAME;
 		this.init();
 	}
 
@@ -83,12 +83,13 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void debugMessage(final String message, final Level debugLevel) {
 		this.checkLogRollover();
 		try {
-			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue()) || debugLevel.intValue() == this.logDebugLevel.intValue()) {
+			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue())
+					|| debugLevel.intValue() == this.logDebugLevel.intValue()) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
-				logMessage(this.debugLog, message);
+				this.logMessage(this.debugLog, message);
 				this.debugLog.close();
 				if (this.echoDebug) {
-					logMessage(System.out, message);
+					this.logMessage(System.out, message);
 				}
 			}
 		} catch (Exception e) {
@@ -100,12 +101,13 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void debugException(final Throwable t, final Level debugLevel) {
 		this.checkLogRollover();
 		try {
-			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue()) || debugLevel.intValue() == this.logDebugLevel.intValue()) {
+			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue())
+					|| debugLevel.intValue() == this.logDebugLevel.intValue()) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
-				logThrowable(this.debugLog, t);
+				this.logThrowable(this.debugLog, t);
 				this.debugLog.close();
 				if (this.echoDebug) {
-					logThrowable(System.out, t);
+					this.logThrowable(System.out, t);
 				}
 			}
 		} catch (Exception e) {
@@ -118,11 +120,11 @@ abstract class AbstractLogger implements Logger {
 		this.checkLogRollover();
 		try {
 			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
-			logMessage(this.errorLog, message);
+			this.logMessage(this.errorLog, message);
 			this.errorLog.close();
 
 			if (this.echoError) {
-				logMessage(System.err, message);
+				this.logMessage(System.err, message);
 			}
 		} catch (Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
@@ -134,11 +136,11 @@ abstract class AbstractLogger implements Logger {
 		this.checkLogRollover();
 		try {
 			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
-			logThrowable(this.errorLog, t);
+			this.logThrowable(this.errorLog, t);
 			this.errorLog.close();
 
 			if (this.echoError) {
-				logThrowable(System.err, t);
+				this.logThrowable(System.err, t);
 			}
 		} catch (Exception e) {
 			System.out.println("Exception in error logging: " + e.getMessage());
@@ -147,9 +149,9 @@ abstract class AbstractLogger implements Logger {
 	}
 
 	private void checkLogRollover() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String currd = sdf.format(this.logDate);
-		String d = sdf.format(new Date());
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		final String currd = sdf.format(this.logDate);
+		final String d = sdf.format(new Date());
 		if(!currd.equals(d)) {
 			this.logDate = new Date();
 			this.errorLogFileName = this.createLogFileName(ERROR);
@@ -159,26 +161,26 @@ abstract class AbstractLogger implements Logger {
 
 	private void logMessage(final PrintWriter out, final String message) {
 		logTimestamp(out);
-		logStackTraceElement(out);
+		this.logStackTraceElement(out);
 		out.println(message);
 	}
 
 	private void logMessage(final PrintStream out, final String message) {
 		logTimestamp(out);
-		logStackTraceElement(out);
+		this.logStackTraceElement(out);
 		out.println(message);
 	}
 
 	private void logThrowable(final PrintWriter out, final Throwable t) {
 		logTimestamp(out);
-		logStackTraceElement(out);
+		this.logStackTraceElement(out);
 		out.println("Exception (stack trace follows): " + t.getMessage());
 		t.printStackTrace(out);
 	}
 
 	private void logThrowable(final PrintStream out, final Throwable t) {
 		logTimestamp(out);
-		logStackTraceElement(out);
+		this.logStackTraceElement(out);
 		out.println("Exception (stack trace follows): " + t.getMessage());
 		t.printStackTrace(out);
 	}
@@ -219,20 +221,21 @@ abstract class AbstractLogger implements Logger {
 		}
 	}
 
-	private String createLogFileName(String logType) {
+	private String createLogFileName(final String logType) {
 		return this.getLogPath(logType) +	File.separator +
 				logType +	DELIMITER +
 				this.appName + DELIMITER +
 				this.hostName + ".log";
 	}
 
-	private String getLogPath(String logType) {
+	private String getLogPath(final String logType) {
 		String logPath = this.baseLogPath;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		logPath += File.separator + sdf.format(this.logDate) + File.separator + logType;
-		File file = new File(logPath);
-		if (!file.exists())
+		final File file = new File(logPath);
+		if (!file.exists()) {
 			file.mkdirs();
+		}
 		return logPath;
 	}
 
