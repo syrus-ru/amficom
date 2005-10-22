@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.45 2005/10/21 16:46:20 stas Exp $
+ * $Id: SchemeActions.java,v 1.46 2005/10/22 08:35:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,7 +97,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.45 $, $Date: 2005/10/21 16:46:20 $
+ * @version $Revision: 1.46 $, $Date: 2005/10/22 08:35:58 $
  * @module schemeclient
  */
 
@@ -930,6 +930,11 @@ public class SchemeActions {
 			PortCell port, boolean is_source) {
 
 		SchemePort sp = port.getSchemePort();
+		if (sp == null) {
+			Log.debugMessage("SchemePort is null for " + port.getId() + " during import it's normal otherwise not", Level.INFO);
+			return false;
+		}
+		
 		AbstractSchemeLink connectedLink = sp.getAbstractSchemeLink();
 		if (connectedLink != null && link.getSchemeLinkId().equals(connectedLink.getId())) {
 			return true;
@@ -1013,6 +1018,11 @@ public class SchemeActions {
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
 		
 		SchemeCablePort sp = port.getSchemeCablePort();
+		if (sp == null) {
+			Log.debugMessage("SchemePort is null for " + port.getId() + " during import it's normal otherwise not", Level.INFO);
+			return false;
+		}
+		
 		AbstractSchemeLink connectedLink = sp.getAbstractSchemeLink();
 		if (connectedLink != null && link.getSchemeCableLinkId().equals(connectedLink.getId())) {
 			return true;

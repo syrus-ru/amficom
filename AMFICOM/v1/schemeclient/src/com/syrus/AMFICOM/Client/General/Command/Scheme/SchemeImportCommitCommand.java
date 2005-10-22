@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.5 2005/10/08 13:49:03 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.6 2005/10/22 08:35:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -53,6 +54,7 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			LinkedIdsCondition condition = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, 
 					ObjectEntities.SCHEMEPROTOGROUP_CODE);
 			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition, false);
+			groups.remove(SchemeObjectsFactory.stubProtoGroup);
 
 			for (SchemeProtoGroup group : groups) {
 				Set<Identifiable> ids = group.getReverseDependencies(false);
