@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.72 2005/10/17 14:43:20 bass Exp $
+* $Id: MapView.java,v 1.73 2005/10/22 13:46:44 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -59,9 +60,9 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: bass $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.72 $, $Date: 2005/10/17 14:43:20 $
+ * @version $Revision: 1.73 $, $Date: 2005/10/22 13:46:44 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -104,6 +105,27 @@ public final class MapView extends DomainMember implements Describable {
 	private transient Set<AbstractNode> nodeElements;
 	private transient Set<PhysicalLink> linkElements;
 	private transient Set<NodeLink> nodeLinkElements;
+
+	private void initialize() {
+		if(this.markers == null) {
+			this.markers = new HashSet<Marker>();
+		}
+		if(this.unboundNodes == null) {
+			this.unboundNodes = new HashSet<UnboundNode>();
+		}
+		if(this.unboundLinks == null) {
+			this.unboundLinks = new HashSet<UnboundLink>();
+		}
+		if(this.unboundNodeLinks == null) {
+			this.unboundNodeLinks = new HashSet<NodeLink>();
+		}
+		if(this.cablePaths == null) {
+			this.cablePaths = new HashSet<CablePath>();
+		}
+		if(this.measurementPaths == null) {
+			this.measurementPaths = new HashSet<MeasurementPath>();
+		}
+	}
 
 	public MapView(final IdlMapView mvt) throws CreateObjectException {
 		try {
@@ -508,6 +530,7 @@ public final class MapView extends DomainMember implements Describable {
 	public SiteNode findElement(final SchemeElement schemeElement) {
 		if (schemeElement == null)
 			return null;
+		this.initialize();
 		for (final UnboundNode unboundNode : this.getUnboundNodes()) {
 			if(unboundNode.getSchemeElement().equals(schemeElement)) {
 				return unboundNode;
@@ -527,6 +550,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return топологический кабель
 	 */
 	public CablePath findCablePath(final SchemeCableLink schemeCableLink) {
+		this.initialize();
 		for (final CablePath cablePath : this.getCablePaths()) {
 			if (cablePath.getSchemeCableLink().equals(schemeCableLink)) {
 				return cablePath;
@@ -541,6 +565,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return топологический путь
 	 */
 	public MeasurementPath findMeasurementPath(final SchemePath schemePath) {
+		this.initialize();
 		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
 			if (measurementPath.getSchemePath().equals(schemePath)) {
 				return measurementPath;
@@ -550,38 +575,47 @@ public final class MapView extends DomainMember implements Describable {
 	}
 
 	public Set<UnboundNode> getUnboundNodes() {
+		this.initialize();
 		return this.unboundNodes;
 	}
 
 	public void addUnboundNode(final UnboundNode node) {
+		this.initialize();
 		this.unboundNodes.add(node);
 	}
 	
 	public void removeUnboundNode(final UnboundNode node) {
+		this.initialize();
 		this.unboundNodes.remove(node);
 	}
 	
 	public Set<UnboundLink> getUnboundLinks() {
+		this.initialize();
 		return this.unboundLinks;
 	}
 
 	public void addUnboundLink(final UnboundLink link) {
+		this.initialize();
 		this.unboundLinks.add(link);
 	}
 	
 	public void removeUnboundLink(final UnboundLink link) {
+		this.initialize();
 		this.unboundLinks.remove(link);
 	}
 	
 	public Set<NodeLink> getUnboundNodeLinks() {
+		this.initialize();
 		return this.unboundNodeLinks;
 	}
 
 	public void addUnboundNodeLink(final NodeLink link) {
+		this.initialize();
 		this.unboundNodeLinks.add(link);
 	}
 	
 	public void removeUnboundNodeLink(final NodeLink link) {
+		this.initialize();
 		this.unboundNodeLinks.remove(link);
 	}
 	
@@ -687,6 +721,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return список топологических кабелей
 	 */
 	public Set<CablePath> getCablePaths() {
+		this.initialize();
 		return Collections.unmodifiableSet(this.cablePaths);
 	}
 
@@ -695,6 +730,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param cablePath топологический кабель
 	 */
 	public void addCablePath(final CablePath cablePath) {
+		this.initialize();
 		this.cablePaths.add(cablePath);
 	}
 
@@ -703,6 +739,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param cablePath топологический кабель
 	 */
 	public void removeCablePath(final CablePath cablePath) {
+		this.initialize();
 		this.cablePaths.remove(cablePath);
 		this.map.setSelected(cablePath, false);
 	}
@@ -714,6 +751,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return список топологических кабелей
 	 */
 	public Set<CablePath> getCablePaths(final PhysicalLink physicalLink) {
+		this.initialize();
 		if(physicalLink instanceof UnboundLink) {
 			return Collections.<CablePath>singleton(
 					((UnboundLink)physicalLink).getCablePath());
@@ -744,6 +782,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return список путей тестирования
 	 */
 	public Set<MeasurementPath> getMeasurementPaths() {
+		this.initialize();
 		return Collections.unmodifiableSet(this.measurementPaths);
 	}
 
@@ -752,6 +791,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param path новый путь тестирования
 	 */
 	public void addMeasurementPath(final MeasurementPath path) {
+		this.initialize();
 		this.measurementPaths.add(path);
 	}
 
@@ -760,6 +800,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param path путь тестирования
 	 */
 	public void removeMeasurementPath(final MeasurementPath path) {
+		this.initialize();
 		this.measurementPaths.remove(path);
 		this.map.setSelected(path, false);
 	}
@@ -771,6 +812,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return список топологических путей
 	 */
 	public List<MeasurementPath> getMeasurementPaths(final CablePath cablePath) {
+		this.initialize();
 		final LinkedList<MeasurementPath> returnVector = new LinkedList<MeasurementPath>();
 		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
 			if (measurementPath.getSortedCablePaths().contains(cablePath)) {
@@ -789,6 +831,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @throws ApplicationException
 	 */
 	public List<MeasurementPath> getMeasurementPaths(final AbstractNode abstractNode) throws ApplicationException {
+		this.initialize();
 		final LinkedList<MeasurementPath> returnVector = new LinkedList<MeasurementPath>();
 		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
 			for (final CablePath cablePath : measurementPath.getSortedCablePaths()) {
@@ -806,6 +849,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * Удалить все маркеры.
 	 */
 	public void removeMarkers() {
+		this.initialize();
 		for (final Marker marker : this.markers) {
 			removeMarker(marker);
 		}
@@ -816,6 +860,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param marker маркер
 	 */
 	public void removeMarker(final Marker marker) {
+		this.initialize();
 		this.markers.remove(marker);
 		this.map.setSelected(marker, false);
 	}
@@ -825,6 +870,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return список маркеров
 	 */
 	public Set<Marker> getMarkers() {
+		this.initialize();
 		return Collections.unmodifiableSet(this.markers);
 	}
 
@@ -833,6 +879,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @param marker маркер
 	 */
 	public void addMarker(final Marker marker) {
+		this.initialize();
 		this.markers.add(marker);
 	}
 
@@ -842,6 +889,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * @return маркер
 	 */
 	public Marker getMarker(final Identifier markerId) {
+		this.initialize();
 		for (final Marker marker : this.markers) {
 			if (marker.equals(markerId)) {
 				return marker;
@@ -855,6 +903,7 @@ public final class MapView extends DomainMember implements Describable {
 	 * without saving.
 	 */
 	public void revert() {
+		this.initialize();
 		this.removeMarkers();
 		this.unboundLinks.clear();
 		this.unboundNodeLinks.clear();
