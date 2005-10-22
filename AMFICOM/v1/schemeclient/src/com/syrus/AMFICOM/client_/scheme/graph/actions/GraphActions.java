@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.20 2005/10/21 16:46:20 stas Exp $
+ * $Id: GraphActions.java,v 1.21 2005/10/22 10:17:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/10/21 16:46:20 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/22 10:17:30 $
  * @module schemeclient
  */
 
@@ -303,9 +303,31 @@ public class GraphActions {
 		return null;
 	}
 
+	public static void setObjectsColor(SchemeGraph graph, Object[] objs, Color color) {
+		Set<Edge> edges = new HashSet<Edge>();
+		Set<DefaultGraphCell> cells = new HashSet<DefaultGraphCell>();
+		
+		for (Object obj : objs) {
+			if (obj instanceof Edge) {
+				edges.add((Edge)obj);
+			} else if (obj instanceof DefaultGraphCell) {
+				cells.add((DefaultGraphCell)obj);
+			}
+		}
+		
+		if (!edges.isEmpty()) {
+			setEdgeColor(graph, edges.toArray(new Edge[edges.size()]), color);
+		}
+		if (!cells.isEmpty()) {
+			setObjectsForeColor(graph, cells.toArray(new DefaultGraphCell[cells.size()]), color);
+		}
+	}
+	
 	public static void setObjectColor(SchemeGraph graph, Object obj, Color color) {
 		if (obj instanceof Edge) {
 			setEdgeColor(graph, obj, color);
+		} else {
+			setObjectForeColor(graph, obj, color);
 		}
 	}
 	

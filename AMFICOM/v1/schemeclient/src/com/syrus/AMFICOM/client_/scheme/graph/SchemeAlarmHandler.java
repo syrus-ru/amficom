@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.1 2005/10/21 17:01:52 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.2 2005/10/22 10:17:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/10/21 17:01:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/22 10:17:30 $
  * @module schemeclient_v1
  */
 
@@ -171,21 +171,19 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 		@Override
 		public void run() {
 			while (true) {
-				synchronized (this) {
-					if (this.cells.length == 0) {
-						break;
-					}
-					GraphActions.setEdgeColor(this.graph, this.cells, Color.RED);
+				if (this.cells.length == 0) {
+					break;
 				}
+				GraphActions.setObjectsColor(this.graph, this.cells, Color.RED);
+
 				try {
 					sleep(REPAINT_TIME);
 				} catch (InterruptedException e) {
 					Log.errorException(e);
 				}
 				
-				synchronized (this) {
-					GraphActions.setEdgeColor(this.graph, this.cells, Color.BLACK);
-				}
+				GraphActions.setObjectsColor(this.graph, this.cells, Color.BLACK);
+
 				try {
 					sleep(REPAINT_TIME);
 				} catch (InterruptedException e) {
