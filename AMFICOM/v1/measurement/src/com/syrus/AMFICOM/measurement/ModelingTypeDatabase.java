@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingTypeDatabase.java,v 1.55 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.56 2005/10/22 14:08:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.56 $, $Date: 2005/10/22 14:08:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -49,12 +49,11 @@ public final class ModelingTypeDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage("ModelingTypeDatabase.insertAll | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final ModelingType modelingType : ModelingType.values()) {
 				preparedStatement.setInt(1, modelingType.getCode());
 				preparedStatement.setString(2, modelingType.getCodename());
-				Log.debugMessage("ModelingTypeDatabase.insertAll | Inserting modiling type '" + modelingType.getCodename() + "'",
-						Log.DEBUGLEVEL09);
+				Log.debugMessage("Inserting modiling type '" + modelingType.getCodename() + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.5 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.6 2005/10/22 14:08:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/22 14:08:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -205,8 +205,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				buffer.append(TRANSMISSIONPATH_ME_LINK);
 				break;
 			default:
-				final String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
-						+ meSort;
+				final String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
 				throw new CreateObjectException(mesg);
 		}
 		buffer.append(OPEN_BRACKET);
@@ -218,8 +217,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
 				break;
 			default:
-				final String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
-						+ meSort;
+				final String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
 				throw new CreateObjectException(mesg);
 		}
 		buffer.append(COMMA);
@@ -242,14 +240,14 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				mdmId = it.next();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, mdmId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, meId);
-				Log.debugMessage("MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '"
+				Log.debugMessage("Inserting link for monitored element '"
 						+ meId.getIdentifierString()
 						+ "' and monitored domain member '" + mdmId.getIdentifierString() + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
-			final String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '"
+			final String mesg = "Cannot insert link for monitored element '"
 					+ meId.getIdentifierString()
 					+ "' and monitored domain member '" + mdmId.getIdentifierString() + "'";
 			throw new CreateObjectException(mesg, sqle);

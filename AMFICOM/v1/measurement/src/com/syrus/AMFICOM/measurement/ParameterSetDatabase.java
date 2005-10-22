@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.19 2005/10/19 10:23:24 bob Exp $
+ * $Id: ParameterSetDatabase.java,v 1.20 2005/10/22 14:08:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/10/19 10:23:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/10/22 14:08:33 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -131,7 +131,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("ParameterSetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
@@ -148,8 +148,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				setParameters.add(parameter);
 			}
 		} catch (SQLException sqle) {
-			final String mesg = "ParameterSetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for set -- "
-					+ sqle.getMessage();
+			final String mesg = "Cannot retrieve parameters for set -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -182,8 +181,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 
 			if (setParameters != null) {
 				set.setParameters0(setParameters.toArray(new Parameter[setParameters.size()]));
-			}
-			else {
+			} else {
 				set.setParameters0(new Parameter[0]);
 			}
 		}
@@ -222,10 +220,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 	}
 
 	private void insertSetParameters(final ParameterSet set) throws CreateObjectException {
-		Log.debugMessage("ParameterSetDatabase.insertSetParameters | ", Log.DEBUGLEVEL01);
 		final Identifier setId = set.getId();		
 		final Parameter[] setParameters = set.getParameters();
-		Log.debugMessage("ParameterSetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
+		Log.debugMessage("setParameters count:" + setParameters.length, Log.DEBUGLEVEL09);
 		final String sql = SQL_INSERT_INTO + ObjectEntities.PARAMETER + OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID  + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
@@ -237,7 +234,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				+ QUESTION + COMMA
 				+ SQL_FUNCTION_EMPTY_BLOB
 				+ CLOSE_BRACKET;
-		Log.debugMessage("ParameterSetDatabase.insertSetParameters | Trying:" + sql, Log.DEBUGLEVEL01);
+		Log.debugMessage("Trying:" + sql, Log.DEBUGLEVEL09);
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		ParameterType parameterType = null;
@@ -253,8 +250,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				preparedStatement.setInt(2, parameterType.getCode());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, setId);
 
-				Log.debugMessage("ParameterSetDatabase.insertSetParameters | Inserting parameter " + parameterType.getDescription()
-						+ " for set '" + setId + "'", Log.DEBUGLEVEL09);
+				Log.debugMessage("Inserting parameter " + parameterType.getDescription() + " for set '" + setId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(parameter.getValue(),
 						connection,
@@ -264,7 +260,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
-			final String mesg = "ParameterSetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
+			final String mesg = "Cannot insert parameter '" + parameterId.toString()
 					+ "' of type '" + parameterType.getDescription() + "' for set '" + setId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.131 2005/10/19 10:23:24 bob Exp $
+ * $Id: TestDatabase.java,v 1.132 2005/10/22 14:08:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/10/19 10:23:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.132 $, $Date: 2005/10/22 14:08:33 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -238,7 +238,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.retrieveStops | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, SortedMap<Date, String>> stopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
@@ -255,9 +255,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 			return stopsMap;
 		} catch (SQLException sqle) {
-			final String mesg = this.getEntityName()
-					+ "Database.retrieveStops | Cannot retrieve linked entity identifiers for entity -- "
-					+ sqle.getMessage();
+			final String mesg = "Cannot retrieve linked entity identifiers for entity -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -322,13 +320,12 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			for (final Iterator<Identifier> idIt = stopsMap.keySet().iterator(); idIt.hasNext();) {
 				id = idIt.next();
 				final SortedMap<Date, String> stopping = stopsMap.get(id);
-				for (final Date stoppingTime : stopping.keySet()) {
-					final String reason = stopping.get(stoppingTime);
+				for (final Date stopTime : stopping.keySet()) {
+					final String reason = stopping.get(stopTime);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
-					preparedStatement.setTimestamp(2, new Timestamp(stoppingTime.getTime()));
+					preparedStatement.setTimestamp(2, new Timestamp(stopTime.getTime()));
 					DatabaseString.setString(preparedStatement, 3, reason, StorableObjectDatabase.SIZE_DESCRIPTION_COLUMN);
-					Log.debugMessage(this.getEntityName() + "Database.insertStops | Inserting stopping  '"
-							+ reason + "' at " + stoppingTime + " for '" + id + "'", Log.DEBUGLEVEL09);
+					Log.debugMessage("Inserting stop  '" + reason + "' at " + stopTime + " for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 				connection.commit();
@@ -341,8 +338,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 					Log.errorException(sqle1);
 				}
 			}
-			final String mesg = this.getEntityName()
-					+ "Database.insertStops | Cannot insert stopping for '" + id + "' -- " + sqle.getMessage();
+			final String mesg = "Cannot insert stop for '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {

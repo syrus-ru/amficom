@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractLRUMapSaver.java,v 1.5 2005/10/14 12:04:27 arseniy Exp $
+* $Id: AbstractLRUMapSaver.java,v 1.6 2005/10/22 14:08:26 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/14 12:04:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/22 14:08:26 $
  * @author $Author: arseniy $
  * @author Maxim Selivanov
  * @author Vladimir Dolzhenko
@@ -68,8 +68,8 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 			final File saveFile = new File(this.saveDir.getPath() + File.separator + objectEntityName + this.extension);
 			tempFile = new File(saveFile.getPath() + ".swp");
 			final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
-			Log.debugMessage("AbstractLRUMapSaver.save | Trying to save LRUMap with " + objectEntityName
-					+ " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
+			Log.debugMessage("Trying to save LRUMap with " + objectEntityName + " to file " + saveFile.getAbsolutePath(),
+					Log.DEBUGLEVEL10);
 			final Object keys = this.saving(lruMap);
 			out.writeObject(objectEntityName);
 			out.writeObject(keys);
@@ -80,9 +80,9 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 				lruMap.clear();
 			}
 		} catch (FileNotFoundException fnfe) {
-			Log.errorMessage("AbstractLRUMapSaver.save | Error: " + fnfe.getMessage());
+			Log.errorMessage("Error: " + fnfe.getMessage());
 		} catch (IOException ioe) {
-			Log.errorMessage("AbstractLRUMapSaver.save | Error: " + ioe.getMessage());
+			Log.errorMessage("Error: " + ioe.getMessage());
 		} finally {
 			if (tempFile != null) {
 				tempFile.delete();
@@ -99,21 +99,21 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 	 */
 	public final Set<StorableObject> load(final String objectEntityName) {
 		try {
-			Log.debugMessage("AbstractLRUMapSaver.load | Trying to load LRUMap with " + objectEntityName, Log.DEBUGLEVEL10);
+			Log.debugMessage("Trying to load LRUMap with " + objectEntityName, Log.DEBUGLEVEL10);
 			final File saveFile = new File(this.saveDir.getPath() + File.separator + objectEntityName + this.extension);
 			final ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile));
 			final String keyObjectEntityName = (String) in.readObject();
 			if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
-				Log.errorMessage("AbstractLRUMapSaver.load | Wrong input file " + saveFile.getAbsolutePath() + ". Loading failed");
+				Log.errorMessage("Wrong input file " + saveFile.getAbsolutePath() + ". Loading failed");
 				return Collections.emptySet();
 			}
 			return this.loading(in);
 		} catch (FileNotFoundException fnfe) {
-			Log.debugMessage("AbstractLRUMapSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
+			Log.debugMessage("Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
 		} catch (ClassNotFoundException cnfe) {
-			Log.errorMessage("AbstractLRUMapSaver.load | Error: " + cnfe.getMessage());
+			Log.errorMessage("Error: " + cnfe.getMessage());
 		} catch (IOException ioe) {
-			Log.errorMessage("AbstractLRUMapSaver.load | Error: " + ioe.getMessage());
+			Log.errorMessage("Error: " + ioe.getMessage());
 		}
 		return Collections.emptySet();
 	}

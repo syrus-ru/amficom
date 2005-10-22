@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.20 2005/10/11 14:13:30 arseniy Exp $
+ * $Id: DatabaseConnection.java,v 1.21 2005/10/22 14:08:29 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/10/11 14:13:30 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/22 14:08:29 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -39,19 +39,15 @@ public class DatabaseConnection {
 		assert false;
 	}
 
-	public static void establishConnection(final String db_hostname,
-			 final String db_sid,
-			 final long db_conn_timeout) throws SQLException {
-		establishConnection(db_hostname,
-				db_sid,
-				db_conn_timeout,
-				USERNAME);
+	public static void establishConnection(final String dbHostname, final String dbSID, final long dbConnTimeout)
+			throws SQLException {
+		establishConnection(dbHostname, dbSID, dbConnTimeout, USERNAME);
 	}
 
-	public static void establishConnection(final String db_hostname,
-			final String db_sid,
-			final long db_conn_timeout,
-			final String db_login_name) throws SQLException {
+	public static void establishConnection(final String dbHostname,
+			final String dbSID,
+			final long dbConnTimeout,
+			final String dbLoginName) throws SQLException {
 		if (dataSource == null) {
 			final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			try {
@@ -64,16 +60,16 @@ public class DatabaseConnection {
 				throw new SQLException("Cannot locate driver: " + JDBCDRIVER + ", " + cnfe.getMessage());
 			}
 			
-			final String url = URLPREFIX + db_hostname + ":" + Integer.toString(DBPORT) + ":" + db_sid;
-			final long deadtime = System.currentTimeMillis() + db_conn_timeout;
+			final String url = URLPREFIX + dbHostname + ":" + Integer.toString(DBPORT) + ":" + dbSID;
+			final long deadtime = System.currentTimeMillis() + dbConnTimeout;
 			boolean connected = false;
 			for (connected = false; System.currentTimeMillis() < deadtime && !connected;) {
-				Log.debugMessage("DatabaseConnection.establishConnection() | Attempting to connect to database: " + url + " as " + db_login_name, Log.DEBUGLEVEL07);
+				Log.debugMessage("Attempting to connect to database: " + url + " as " + dbLoginName, Log.DEBUGLEVEL07);
 				try {
 					dataSource = new OracleDataSource();
 					
 					dataSource.setURL(url);
-					dataSource.setUser(db_login_name);
+					dataSource.setUser(dbLoginName);
 					dataSource.setPassword(PASSWORD);
 
 					dataSource.setConnectionCachingEnabled(true);
@@ -119,7 +115,7 @@ public class DatabaseConnection {
 			try {
 				connection.close();
 				openConnections--;
-				Log.debugMessage("DatabaseConnection | releaseConnection(Connection)", Log.DEBUGLEVEL10);
+				Log.debugMessage("releaseConnection(Connection)", Log.DEBUGLEVEL10);
 			} catch (Exception e) {
 				Log.errorException(e);
 			}

@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.22 2005/10/15 17:46:06 arseniy Exp $
+* $Id: CORBAServer.java,v 1.23 2005/10/22 14:08:22 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/15 17:46:06 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/22 14:08:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -112,7 +112,7 @@ public class CORBAServer {
 		final Properties properties = System.getProperties();
 		final String host = ApplicationProperties.getString("ORBInitialHost", DEFAULT_ORB_INITIAL_HOST);
 		final int port = ApplicationProperties.getInt("ORBInitialPort", DEFAULT_ORB_INITIAL_PORT);
-		Log.debugMessage("CORBAServer.initORB | host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
+		Log.debugMessage("host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
 		properties.setProperty("org.omg.CORBA.ORBInitialHost", host);
 		properties.setProperty("org.omg.CORBA.ORBInitialPort", Integer.toString(port));
 		final String[] args = null;
@@ -248,9 +248,9 @@ public class CORBAServer {
 
 	public org.omg.CORBA.Object resolveReference(final String name) throws CommunicationException {
 		try {
-			Log.debugMessage("CORBAServer.resolveReference | Resolving name: " + name, Log.DEBUGLEVEL08);
+			Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
 			final org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
-			Log.debugMessage("CORBAServer.resolveReference | Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
+			Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
 			return ref;
 		} catch (UserException nf) {
 			throw new CommunicationException('\'' + name + "' " + I18N.getString("Error.Text.NotFound"), nf);
@@ -306,11 +306,11 @@ public class CORBAServer {
 					if (!this.hooks.contains(wrappedHook)) {
 						this.hooks.add(wrappedHook);
 					} else {
-						Log.errorMessage("CORBAServer | Cannot add shutdown hook -- it is already added");
+						Log.errorMessage("Cannot add shutdown hook -- it is already added");
 					}
 				}
 			} else {
-				Log.errorMessage("CORBAServer | Cannot add shutdown hook -- it is already running");
+				Log.errorMessage("Cannot add shutdown hook -- it is already running");
 			}
 		} else {
 			Log.errorMessage("CORBAServer | Cannot add shutdown hook -- shutting down");
@@ -330,10 +330,10 @@ public class CORBAServer {
 				}
 				return ret;
 			}
-			Log.errorMessage("CORBAServer | Cannot remove NULL shutdown hook");
+			Log.errorMessage("Cannot remove NULL shutdown hook");
 			return false;
 		}
-		Log.errorMessage("CORBAServer | Cannot remove shutdown hook -- shutting down");
+		Log.errorMessage("Cannot remove shutdown hook -- shutting down");
 		return false;
 	}
 
@@ -408,6 +408,8 @@ public class CORBAServer {
 	}
 
 	public void printNamingContext() {
+		final StringBuffer stringBuffer = new StringBuffer();
+
 		final BindingListHolder bindingListHolder = new BindingListHolder();
 		final BindingIteratorHolder bindingIteratorHolder = new BindingIteratorHolder();
 		this.namingContext.list(Integer.MAX_VALUE, bindingListHolder, bindingIteratorHolder);
@@ -418,14 +420,18 @@ public class CORBAServer {
 			try {
 				final String name = this.namingContext.to_string(nameComponents);
 				if (binding.binding_type.value() == BindingType._nobject) {
-					Log.debugMessage("---- " + name, Log.DEBUGLEVEL08);
+					stringBuffer.append(" ---- ");
 				} else {
-					Log.debugMessage("+ " + name, Log.DEBUGLEVEL08);
+					stringBuffer.append(" + ");
 				}
+				stringBuffer.append(name);
+				stringBuffer.append('\n');
 			} catch (org.omg.CosNaming.NamingContextPackage.InvalidName in) {
 				Log.errorException(in);
 			}
 		}
+
+		System.out.println(stringBuffer);
 	}
 	
 	public String getRootContextName() {

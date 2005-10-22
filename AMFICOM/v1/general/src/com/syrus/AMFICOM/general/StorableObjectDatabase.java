@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.198 2005/10/19 10:22:28 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.199 2005/10/22 14:08:26 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.198 $, $Date: 2005/10/19 10:22:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.199 $, $Date: 2005/10/22 14:08:26 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -124,7 +124,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			case MODE_UPDATE:
 				return columns + this.getColumnsTmpl();
 			default:
-				Log.errorMessage(this.getEntityName() + "Database.getColumns | Unknown mode: " + mode);
+				Log.errorMessage("Unknown mode: " + mode);
 				return null;
 		}
 	}
@@ -159,7 +159,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				modeString = "";
 				break;
 			default:
-				String msg = this.getEntityName() + "Database.getUpdateSingleSQLValues | Unknown mode: " + mode;
+				final String msg = this.getEntityName() + "Database.getUpdateSingleSQLValues | Unknown mode: " + mode;
 				throw new IllegalDataException(msg);
 
 		}
@@ -251,14 +251,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				final T storableObject = this.updateEntityFromResultSet(null, resultSet);
 				storableObjects.add(storableObject);
 			}
 		} catch (SQLException sqle) {
-			final String mesg = this.getEntityName() + "Database.retrieveByCondition | Cannot execute query -- " + sqle.getMessage();
+			final String mesg = "Cannot execute query -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -370,7 +370,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.retrieveLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, Set<Identifier>> linkedEntityIdsMap = new HashMap<Identifier, Set<Identifier>>();
@@ -386,9 +386,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 			return linkedEntityIdsMap;
 		} catch (SQLException sqle) {
-			final String mesg = this.getEntityName()
-					+ "Database.retrieveLinkedEntityIds | Cannot retrieve linked entity identifiers for entity -- "
-					+ sqle.getMessage();
+			final String mesg = "Cannot retrieve linked entity identifiers for entity -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -450,7 +448,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.retrieveLinkedEnums | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, EnumSet<E>> linkedCodesMap = new HashMap<Identifier, EnumSet<E>>();
@@ -470,8 +468,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 			return linkedCodesMap;
 		} catch (SQLException sqle) {
-			final String mesg = this.getEntityName()
-					+ "Database.retrieveLinkedEnums | Cannot retrieve linked entity identifiers for entity -- " + sqle.getMessage();
+			final String mesg = "Cannot retrieve linked entity identifiers for entity -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -511,14 +508,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("StorableObjectDatabase.isPresentInDatabase | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			resultSet.next();
 			final int count = resultSet.getInt(aliasCount);
 			return count > 0;
 		}
 		catch (SQLException sqle) {
-			final String mesg = "StorableObjectDatabase.isPresentInDatabase | Cannot check presence -- " + sqle.getMessage();
+			final String mesg = "Cannot check presence -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -561,7 +558,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(tableName + "Database.retrieveVersions | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
@@ -570,7 +567,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 		}
 		catch (SQLException sqle) {
-			final String mesg = tableName + "Database.retrieveVersions | Cannot check presence -- " + sqle.getMessage();
+			final String mesg = "Cannot check presence -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -626,7 +623,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(tableName + "Database.retrievePresentInDatabaseIds | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
@@ -634,7 +631,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 		}
 		catch (SQLException sqle) {
-			final String mesg = tableName + "Database.retrievePresentInDatabaseIds | Cannot check presence -- " + sqle.getMessage();
+			final String mesg = "Cannot check presence -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -691,12 +688,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage(this.getEntityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final T storableObject : storableObjects) {
 				id = storableObject.getId();
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_INSERT);
-				Log.debugMessage(this.getEntityName() + "Database.insertEntities | Inserting  " + this.getEntityName()
-						+ " '" + id + "'", Log.DEBUGLEVEL09);
+				Log.debugMessage("Inserting  " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
@@ -764,8 +760,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					linkedId = linkedIdIt.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
-					Log.debugMessage(this.getEntityName() + "Database.insertLinkedEntityIds | Inserting linked entity  '"
-							+ linkedId + "' for '" + id + "'", Log.DEBUGLEVEL09);
+					Log.debugMessage("Inserting linked entity  '" + linkedId + "' for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 				connection.commit();
@@ -778,9 +773,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					Log.errorException(sqle1);
 				}
 			}
-			final String mesg = this.getEntityName()
-					+ "Database.insertLinkedEntityIds | Cannot insert linked entity  '" + linkedId
-					+ "' for '" + id + "' -- " + sqle.getMessage();
+			final String mesg = "Cannot insert linked entity  '" + linkedId + "' for '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -839,8 +832,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					linkedEnum = linkedCodeIt.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					preparedStatement.setInt(2, EnumUtil.getCode(linkedEnum));
-					Log.debugMessage(this.getEntityName() + "Database.insertLinkedEnums | Inserting linked enum  '"
-							+ linkedEnum + "' for '" + id + "'", Log.DEBUGLEVEL09);
+					Log.debugMessage("Inserting linked enum  '" + linkedEnum + "' for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 				connection.commit();
@@ -853,9 +845,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					Log.errorException(sqle1);
 				}
 			}
-			final String mesg = this.getEntityName()
-					+ "Database.insertLinkedEnums | Cannot insert linked enum  '" + linkedEnum
-					+ "' for '" + id + "' -- " + sqle.getMessage();
+			final String mesg = "Cannot insert linked enum  '" + linkedEnum + "' for '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -902,8 +892,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		for (final T storableObject : storableObjects) {
 			if (dbIds.contains(storableObject.getId())) {
 				updateStorableObjects.add(storableObject);
-			}
-			else {
+			} else {
 				insertStorableObjects.add(storableObject);
 			}
 		}
@@ -955,26 +944,23 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql.toString());
-			Log.debugMessage(this.getEntityName() + "Database.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final T storableObject : storableObjects) {
 				id = storableObject.getId();
 
 				try {
 					int i = this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_UPDATE);
 					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getId());
-				}
-				catch (IllegalDataException ide) {
+				} catch (IllegalDataException ide) {
 					try {
 						connection.rollback();
-					}
-					catch (SQLException sqle1) {
+					} catch (SQLException sqle1) {
 						Log.errorException(sqle1);
 					}
 					throw new UpdateObjectException("Cannot set entity for prepared statement -- " + ide.getMessage(), ide);
 				}
 
-				Log.debugMessage(this.getEntityName()
-						+ "Database.updateEntities | Updating " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
+				Log.debugMessage("Updating " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
@@ -1200,7 +1186,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.delete(List) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			statement.executeUpdate(stringBuffer.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
@@ -1257,7 +1243,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.deleteLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
@@ -1322,7 +1308,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.deleteLinkedEnums | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
@@ -1481,7 +1467,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 
 		final short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
-		assert (this.checkEntity(conditionCode)) : this.getEntityName() + "Database.retrieveByCondition | Incompatible condition ("
+		assert (this.checkEntity(conditionCode)) : "Incompatible condition ("
 					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEntityName() + ") classes";
 
 		String conditionQuery;
@@ -1525,10 +1511,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.errorException(e);
 			}

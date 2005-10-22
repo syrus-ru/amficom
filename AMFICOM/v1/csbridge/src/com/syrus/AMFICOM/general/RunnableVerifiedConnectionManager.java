@@ -1,5 +1,5 @@
 /*
- * $Id: RunnableVerifiedConnectionManager.java,v 1.7 2005/10/19 08:08:10 bass Exp $
+ * $Id: RunnableVerifiedConnectionManager.java,v 1.8 2005/10/22 14:08:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/19 08:08:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/10/22 14:08:22 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -44,10 +44,10 @@ public class RunnableVerifiedConnectionManager extends VerifiedConnectionManager
 					servantName = it.next();
 					try {
 						reference = this.getVerifiableReference(servantName);
-						Log.debugMessage("RunnableVerifiedConnectionManager.run | Verified reference to '" + servantName + "'", Log.DEBUGLEVEL08);
-						Log.debugMessage("RunnableVerifiedConnectionManager.run | " + reference.toString(), Log.DEBUGLEVEL08);
+						Log.debugMessage("Verified reference to '" + servantName + "'", Log.DEBUGLEVEL08);
+						Log.debugMessage(reference.toString(), Log.DEBUGLEVEL08);
 					} catch (final CommunicationException ce) {
-						Log.errorMessage("RunnableVerifiedConnectionManager.run | Conection with '" + servantName + "' lost");
+						Log.errorMessage("Conection with '" + servantName + "' lost");
 					}
 				}
 			}

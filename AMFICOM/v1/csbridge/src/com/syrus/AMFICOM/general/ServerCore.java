@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.36 2005/09/23 09:42:10 arseniy Exp $
+ * $Id: ServerCore.java,v 1.37 2005/10/22 14:08:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/09/23 09:42:10 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/22 14:08:22 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -63,8 +63,9 @@ public abstract class ServerCore implements CommonServer {
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
-			Log.debugMessage("ServerCore.transmitStorableObjects | Requested '"
-					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)) + "'s for ids: " + ids, Level.FINEST);
+			Log.debugMessage("Requested '"
+					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)) + "'s for ids: "
+					+ ids, Level.FINEST);
 
 			final Set<? extends StorableObject> storableObjects = StorableObjectPool.getStorableObjects(ids, true);
 			final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, this.orb);
@@ -96,11 +97,11 @@ public abstract class ServerCore implements CommonServer {
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
-			Log.debugMessage("ServerCore.transmitStorableObjectsButIdsByCondition | Requested '"
-					+ ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids, Level.FINEST);
+			Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids, Level.FINEST);
 
 			/**
-			 * NOTE: If it is impossible to load objects by Loader - return only those from Pool
+			 * NOTE: If it is impossible to load objects by Loader - return only those
+			 * from Pool
 			 */
 			final Set<? extends StorableObject> storableObjects = StorableObjectPool.getStorableObjectsButIdsByCondition(ids,
 					condition,
@@ -134,8 +135,7 @@ public abstract class ServerCore implements CommonServer {
 			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 
-			Log.debugMessage("ServerCore.transmitRemoteVersions | Versions for '"
-					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+			Log.debugMessage("Versions for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
 			final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
 			final IdVersion[] idVersions = new IdVersion[versionsMap.size()];
@@ -172,8 +172,9 @@ public abstract class ServerCore implements CommonServer {
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
-			Log.debugMessage("ServerCore.receiveStorableObjects | Received '"
-					+ ObjectEntities.codeToString(entityCode) + "'s: " + Identifier.createIdentifiers(storableObjects), Level.FINEST);
+			Log.debugMessage("Received '"
+					+ ObjectEntities.codeToString(entityCode) + "'s: "
+					+ Identifier.createIdentifiers(storableObjects), Level.FINEST);
 
 			final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityCode);
 			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
@@ -201,8 +202,7 @@ public abstract class ServerCore implements CommonServer {
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
-			Log.debugMessage("ServerCore.delete | Deleting '"
-					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+			Log.debugMessage("Deleting '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
 			StorableObjectPool.delete(ids);
 			StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
@@ -219,7 +219,7 @@ public abstract class ServerCore implements CommonServer {
 
 	public final void verify(final byte b) {
 		try {
-			Log.debugMessage("ServerCore.verify | Verify value: " + b, Level.CONFIG);
+			Log.debugMessage("Verify value: " + b, Level.CONFIG);
 		} catch (final Throwable t) {
 			Log.debugException(t, Level.SEVERE);
 		}

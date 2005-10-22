@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.28 2005/10/21 12:43:39 arseniy Exp $
+ * $Id: LoginManager.java,v 1.29 2005/10/22 14:08:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/21 12:43:39 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/22 14:08:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -65,7 +65,7 @@ public final class LoginManager {
 		try {
 			final IdlDomain[] domainsT = loginServer.transmitAvailableDomains();
 			final Set<Domain> availableDomains = StorableObjectPool.fromTransferables(domainsT, true);
-			StorableObjectPool.putAllStorableObject(availableDomains);
+			StorableObjectPool.putStorableObjects(availableDomains);
 			return availableDomains;
 		} catch (AMFICOMRemoteException are) {
 			throw new LoginException("Cannot get available domains -- " + are.message);
