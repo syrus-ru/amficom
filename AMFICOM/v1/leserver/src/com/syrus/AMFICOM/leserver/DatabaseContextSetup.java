@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.12 2005/10/11 13:27:26 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.13 2005/10/22 20:39:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,15 +15,26 @@ import com.syrus.AMFICOM.administration.RoleDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.event.EventDatabase;
 import com.syrus.AMFICOM.event.EventSourceDatabase;
 import com.syrus.AMFICOM.event.EventTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
+import com.syrus.AMFICOM.scheme.PathElementDatabase;
+import com.syrus.AMFICOM.scheme.SchemeCableLinkDatabase;
+import com.syrus.AMFICOM.scheme.SchemeCableThreadDatabase;
+import com.syrus.AMFICOM.scheme.SchemeElementDatabase;
+import com.syrus.AMFICOM.scheme.SchemeLinkDatabase;
+import com.syrus.AMFICOM.scheme.SchemePathDatabase;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/11 13:27:26 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/22 20:39:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -45,8 +56,22 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
 		DatabaseContext.registerDatabase(new RoleDatabase());
 
+		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
+		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
+
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+
 		DatabaseContext.registerDatabase(new EventTypeDatabase());
 		DatabaseContext.registerDatabase(new EventDatabase());
 		DatabaseContext.registerDatabase(new EventSourceDatabase());
+
+		DatabaseContext.registerDatabase(new SchemeLinkDatabase());
+		DatabaseContext.registerDatabase(new SchemeCableLinkDatabase());
+		DatabaseContext.registerDatabase(new SchemeCableThreadDatabase());
+		DatabaseContext.registerDatabase(new SchemeElementDatabase());
+		DatabaseContext.registerDatabase(new SchemePathDatabase());
+		DatabaseContext.registerDatabase(new PathElementDatabase());
 	}	
 }
