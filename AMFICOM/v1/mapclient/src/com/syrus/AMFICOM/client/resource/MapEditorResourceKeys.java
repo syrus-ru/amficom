@@ -1,5 +1,5 @@
 /*-
- * $Id: MapEditorResourceKeys.java,v 1.8 2005/10/17 13:52:42 krupenn Exp $
+ * $Id: MapEditorResourceKeys.java,v 1.9 2005/10/22 13:47:01 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/17 13:52:42 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/22 13:47:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapclient
@@ -250,5 +250,9 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String LABEL_PIPEBLOCK = "Label.PipeBlock"; //$NON-NLS-1$
 
 	String LABEL_NUMBER = "Label.Number";
+
+	String ERROR_UNBOUND_ELEMENTS_EXIST = "Error.UnboundElementsExist";
+
+	String ERROR = "Error.Error";
 
 }
