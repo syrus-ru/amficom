@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xbean"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/mapxml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/schemexml.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

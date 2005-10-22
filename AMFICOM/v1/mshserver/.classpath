@@ -11,10 +11,9 @@
 	<classpathentry kind="src" path="/map"/>
 	<classpathentry kind="src" path="/resource"/>
 	<classpathentry kind="src" path="/mapview"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/leserver_interface.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/mscharserver_interface.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo-common"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/dom4j"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/leserver_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

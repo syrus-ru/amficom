@@ -7,12 +7,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xalan"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mscharserver_interface"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/commonclient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo-common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/dom4j"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/mscharserver_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

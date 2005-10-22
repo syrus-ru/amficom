@@ -14,13 +14,14 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/configurationxml.jar"/>
 	<classpathentry sourcepath="/EXTLIB/xml-xmlbeans-src.zip" kind="var" path="EXTLIB/xbean.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/schemexml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/jgraphpad.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/jsr173_api.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reportclient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/report"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/configurationxml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/schemexml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapview"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

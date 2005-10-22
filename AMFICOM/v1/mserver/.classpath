@@ -8,7 +8,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/leserver_interface.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/mcm_interface.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/leserver_interface.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/mcm_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

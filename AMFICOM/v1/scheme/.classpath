@@ -10,13 +10,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/configurationxml.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapxml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/xbean.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/schemexml.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/bugs"/>
-	<classpathentry kind="lib" path="schemexml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/jsr173_api.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/schemexml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/configurationxml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/mapxml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

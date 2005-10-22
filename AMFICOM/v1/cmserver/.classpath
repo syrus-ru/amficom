@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mserver_interface"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/leserver_interface"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
@@ -11,5 +9,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/report"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/leserver_interface.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/mserver_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

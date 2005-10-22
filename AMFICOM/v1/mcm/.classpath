@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mserver_interface"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/leserver_interface"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/trove"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
@@ -14,5 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/dadara"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/leserver_interface.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/mserver_interface.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

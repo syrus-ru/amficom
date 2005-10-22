@@ -14,15 +14,14 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xbean"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/generalxml"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapxml"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/schemeclient"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jgraphpad"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/filterclient"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/schemexml"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/report"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reportclient"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/schemexml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/mapxml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
