@@ -28,6 +28,7 @@ $LIB/dadara.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
 $LIB/reportclient.jar:\
+$LIB/mapclient.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/util.jar
 
