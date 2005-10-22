@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.14 2005/10/21 14:22:28 krupenn Exp $$
+ * $$Id: MapEditorRemoveSiteTypeCommand.java,v 1.15 2005/10/22 13:50:27 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -22,6 +23,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,10 +32,11 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/21 14:22:28 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/22 13:50:27 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -76,13 +79,18 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 
 		try {
 			LinkedIdsCondition condition = new LinkedIdsCondition(siteNodeType.getId(), ObjectEntities.SITENODE_CODE);
-			final Set<StorableObject> siteNodes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			final Set<SiteNode> siteNodes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if(siteNodes.isEmpty()) {
 				StorableObjectPool.delete(siteNodeType.getId());
 				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);
 				setResult(Command.RESULT_OK);
 			}
 			else {
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(), 
+						I18N.getString(MapEditorResourceKeys.ERROR_LINKED_OBJECTS_EXIST_CANNOT_REMOVE) + " - " + siteNodes.iterator().next().getName(), 
+						I18N.getString(MapEditorResourceKeys.ERROR), 
+						JOptionPane.ERROR_MESSAGE);
 				this.aContext.getDispatcher().firePropertyChange(
 						new StatusMessageEvent(
 								this,

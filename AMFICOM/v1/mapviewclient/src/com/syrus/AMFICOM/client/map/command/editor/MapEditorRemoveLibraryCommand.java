@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveLibraryCommand.java,v 1.11 2005/10/17 14:04:05 krupenn Exp $$
+ * $$Id: MapEditorRemoveLibraryCommand.java,v 1.12 2005/10/22 13:50:27 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import java.util.Set;
 
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.client.map.ui.MapLibraryTableController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,10 +32,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/17 14:04:05 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/22 13:50:27 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -91,7 +94,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 
 		try {
 			LinkedIdsCondition condition = new LinkedIdsCondition(mapLibrary.getId(), ObjectEntities.MAP_CODE);
-			final Set<StorableObject> maps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			final Set<Map> maps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if(maps.isEmpty()) {
 				StorableObjectPool.delete(mapLibrary.getId());
 				StorableObjectPool.flush(mapLibrary, LoginManager.getUserId(), true);
@@ -103,6 +106,11 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 								this,
 								StatusMessageEvent.STATUS_MESSAGE,
 								I18N.getString(MapEditorResourceKeys.ERROR_LINKED_OBJECTS_EXIST_CANNOT_REMOVE)));
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(), 
+						I18N.getString(MapEditorResourceKeys.ERROR_LINKED_OBJECTS_EXIST_CANNOT_REMOVE) + " - " + maps.iterator().next().getName(), 
+						I18N.getString(MapEditorResourceKeys.ERROR), 
+						JOptionPane.ERROR_MESSAGE);
 				setResult(Command.RESULT_NO);
 			}
 		} catch(ApplicationException e) {
