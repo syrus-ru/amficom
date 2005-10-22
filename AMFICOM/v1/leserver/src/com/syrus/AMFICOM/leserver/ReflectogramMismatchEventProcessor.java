@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.4 2005/10/22 19:07:25 bass Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.5 2005/10/22 20:39:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/22 19:07:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/10/22 20:39:44 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor implements
@@ -75,7 +75,7 @@ final class ReflectogramMismatchEventProcessor implements
 			if (portId.isVoid()) {
 				throw new EventProcessingException("For MeasurementPort: "
 						+ measurementPort.getId()
-						+ "Port is null");
+						+ " port is null");
 			}
 			final Set<TransmissionPath> transmissionPaths =
 					StorableObjectPool.getStorableObjectsByCondition(
