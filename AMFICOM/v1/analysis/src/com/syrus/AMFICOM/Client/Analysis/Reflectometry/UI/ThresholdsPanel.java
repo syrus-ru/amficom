@@ -255,6 +255,9 @@ public class ThresholdsPanel extends MapMarkersPanel
 			if (draw_alarms) {
 				paint_alarms(g);
 			}
+			// XXX добавлено, чтобы отрисовывались маркеры в наблюдении
+			// последствия в других модулях пока не известны, но не должны быть трагическими
+			paint_markers(g);
 		}
 
 		if (isDraw_events()) {
@@ -271,7 +274,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 				paintAllThresholds(g, null);
 			else
 				paintOneThreshold(g, null);
-		}
+		} 
 	}
 
 	/**
