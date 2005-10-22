@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewSaveCommand.java,v 1.37 2005/10/21 14:08:21 krupenn Exp $$
+ * $$Id: MapViewSaveCommand.java,v 1.38 2005/10/22 13:49:59 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.JOptionPane;
+
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.props.MapViewVisualManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -36,7 +39,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * 
- * @version $Revision: 1.37 $, $Date: 2005/10/21 14:08:21 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/22 13:49:59 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -52,6 +55,20 @@ public class MapViewSaveCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
+		if(!this.mapView.getUnboundNodes().isEmpty()) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(
+									MapEditorResourceKeys.ERROR_UNBOUND_ELEMENTS_EXIST)));
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(), 
+					I18N.getString(MapEditorResourceKeys.ERROR_UNBOUND_ELEMENTS_EXIST) + " - " + this.mapView.getUnboundNodes().iterator().next().getName(), 
+					I18N.getString(MapEditorResourceKeys.ERROR), 
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		if(EditorDialog.showEditorDialog(
 				I18N.getString(MapEditorResourceKeys.TITLE_MAP_VIEW_PROPERTIES),
 				this.mapView,
