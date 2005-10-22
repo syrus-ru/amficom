@@ -83,13 +83,20 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 								am.setId(mne.getMarkerId());
 								((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);
 							}
-							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(true);
+							// we should not delete alarm marker by hand
+							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(false);
 							this.jLayeredPane.repaint();
 						}
 					}
 					if(mne.getMarkerEventType() == MarkerEvent.MARKER_SELECTED_EVENT)
 					{
-						((MapMarkersPanel)panel).activateMarker(mne.getMarkerId());
+						Marker m = ((MapMarkersPanel)panel).activateMarker(mne.getMarkerId());
+						// possibility to delete non alarm marker
+						if (m instanceof AlarmMarker) {
+							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(false);
+						} else if (m != null) {
+							((MapMarkersToolBar)this.toolbar).deleteMarkerButton.setEnabled(true);
+						}
 						this.jLayeredPane.repaint();
 					}
 					if(mne.getMarkerEventType() == MarkerEvent.MARKER_MOVED_EVENT)

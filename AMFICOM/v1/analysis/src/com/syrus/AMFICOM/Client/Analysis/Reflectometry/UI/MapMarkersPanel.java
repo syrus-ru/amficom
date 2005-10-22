@@ -68,7 +68,9 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 
 		if (creating_marker && parent instanceof MapMarkersLayeredPanel)
 		{
-			Marker m = createMarker ("", coord2index(currpos.x) * deltaX);
+			// removed createMarker() as it causes to double marker creation
+			// TODO check marker creation (here and in MapMarkersLayeredPanel)
+			Marker m = new Marker("", coord2index(currpos.x));
 			((MapMarkersLayeredPanel)parent).setButtons();
 
 			MarkerEvent mne = new MarkerEvent(
