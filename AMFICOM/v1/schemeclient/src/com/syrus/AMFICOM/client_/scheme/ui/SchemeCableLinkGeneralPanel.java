@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.22 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.23 2005/10/22 08:57:43 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkTypeWrapper;
@@ -54,11 +55,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/10/03 07:44:39 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/22 08:57:43 $
  * @module schemeclient
  */
 
@@ -508,6 +510,15 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 						|| (newType != null && !newType.equals(this.schemeCableLink.getAbstractLinkType()))
 						|| (newType != null && newType.getCableThreadTypes(false).size() != this.schemeCableLink.getSchemeCableThreads(false).size())) {
 					this.schemeCableLink.setAbstractLinkTypeExt(newType, LoginManager.getUserId(), false);
+					
+					SchemeCablePort sourcePort = this.schemeCableLink.getSourceAbstractSchemePort();
+					if (sourcePort != null) {
+						SchemeActions.performAutoCommutation(sourcePort, this.schemeCableLink, true);
+					}
+					SchemeCablePort targetPort = this.schemeCableLink.getTargetAbstractSchemePort();
+					if (targetPort != null) {
+						SchemeActions.performAutoCommutation(targetPort, this.schemeCableLink, false);
+					}
 				}
 			} catch (ApplicationException e1) {
 				Log.errorException(e1);
