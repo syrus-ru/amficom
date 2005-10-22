@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.197 2005/10/22 14:08:26 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.198 2005/10/22 20:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.197 $, $Date: 2005/10/22 14:08:26 $
+ * @version $Revision: 1.198 $, $Date: 2005/10/22 20:40:20 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -207,7 +207,7 @@ public final class StorableObjectPool {
 		}
 	}
 
-	private static void addObjectPool(final short entityCode, final int objectPoolSize) {
+	public static void addObjectPool(final short entityCode, final int objectPoolSize) {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 		try {
 			final Constructor constructor = objectPoolClass.getConstructor(new Class[] { int.class});
@@ -217,9 +217,10 @@ public final class StorableObjectPool {
 				objectPoolMap.put(entityCode, objectPool);
 				Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
 						+ "'/" + entityCode + " of size " + objectPoolSize + " added", Log.DEBUGLEVEL08);
-			} else
+			} else {
 				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | Object pool class "
 						+ objectPoolClass.getName() + " must extend LRUMap");
+			}
 		} catch (SecurityException e) {
 			throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass "
 					+ objectPoolClass.getName() + " SecurityException " + e.getMessage());
