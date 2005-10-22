@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.5 2005/10/18 06:53:29 stas Exp $
+ * $Id: ResultFrame.java,v 1.6 2005/10/22 13:22:24 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,6 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.io.BellcoreStructure;
@@ -73,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/10/18 06:53:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/22 13:22:24 $
  * @module surveyclient_v1
  */
 
@@ -268,7 +267,6 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 								}
 							});
 						}
-
 					} catch (DataFormatException e) {
 						Log.errorException(e);
 					}
@@ -345,6 +343,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			reflectogramPanel.setSchemePathId(this.spId);
 						
 		this.layeredPanel.setGraphPanel(reflectogramPanel);
+		reflectogramPanel.select_by_mouse = true;
 		this.layeredPanel.updScale2fit();
 
 		this.tabs.addTab(LangModelAnalyse.getString("trace"), this.layeredPanel);  //$NON-NLS-1$

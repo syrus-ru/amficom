@@ -272,8 +272,11 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		
 		aModel.setEnabled(ObserverApplicationModel.MENU_START, true);
 		aModel.setEnabled(ObserverApplicationModel.MENU_OPEN, true);
-		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
 		aModel.setEnabled(ObserverApplicationModel.MENU_REPORT, true);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
+		
+		aModel.setVisible(ObserverApplicationModel.MENU_REPORT, false);
+		aModel.setVisible(ObserverApplicationModel.MENU_START_PROGNOSIS, false);
 	}
 
 	@Override
@@ -409,5 +412,8 @@ public class ObserverMainFrame extends AbstractMainFrame {
 	@Override
 	public void loggedOut() {
 		setFramesVisible(false);
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		setDefaultModel(aModel);
+		aModel.fireModelChanged();
 	}
 }

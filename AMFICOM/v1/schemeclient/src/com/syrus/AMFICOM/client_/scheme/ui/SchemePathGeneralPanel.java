@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.8 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.9 2005/10/22 13:23:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -36,6 +35,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -358,6 +358,11 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 							if (!mes.isEmpty()) {
 								MonitoredElement me = mes.iterator().next();
 								me.setName(this.tfNameText.getText());
+								Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
+								if (!tpathIds.isEmpty()) {
+									Set<TransmissionPath> tPaths = StorableObjectPool.getStorableObjects(tpathIds, false);
+									this.schemePath.setTransmissionPath(tPaths.iterator().next());
+								}
 							}
 						}
 					}

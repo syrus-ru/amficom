@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.client.model.DefaultObserverApplicationModelFactory;
 
 public class Observer extends AbstractApplication {
 	
-	public static final String APPLICATION_NAME = "observer";
+	public static final String APPLICATION_NAME = "observe";
 	
 	public Observer() {
 		super(APPLICATION_NAME);

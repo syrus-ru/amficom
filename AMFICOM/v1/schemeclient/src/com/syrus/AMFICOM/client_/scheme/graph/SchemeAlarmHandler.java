@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.2 2005/10/22 10:17:30 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.3 2005/10/22 13:23:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/10/22 10:17:30 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/22 13:23:34 $
  * @module schemeclient_v1
  */
 
@@ -85,16 +85,13 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 						this.panelsMap.put(event.getMarkerId(), panel);
 						
 						AlarmPainter painter = this.paintersMap.get(panel);
-						if (painter == null) {
+						if (painter == null || painter.getState() == State.TERMINATED) {
 							painter = new AlarmPainter(panel.getGraph(), cell);
 							this.paintersMap.put(panel, painter);
 							painter.start();
 						} else {
 							synchronized (this) {
 								painter.addAlarmedCell(cell);
-							}
-							if (painter.getState() == State.TERMINATED) {
-								painter.start();
 							}
 						}
 					}
@@ -164,6 +161,7 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 		}
 		
 		synchronized void removeAlarmedCell(DefaultGraphCell cell) {
+			GraphActions.setObjectColor(this.graph, cell, Color.BLACK);
 			this.cellsSet.remove(cell);
 			this.cells = this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()]);
 		}
