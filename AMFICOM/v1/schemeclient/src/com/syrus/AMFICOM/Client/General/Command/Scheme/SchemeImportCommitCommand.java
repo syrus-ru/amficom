@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.6 2005/10/22 08:35:58 stas Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.7 2005/10/22 15:46:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,15 +51,18 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			StorableObjectPool.flush(ObjectEntities.CABLETHREAD_TYPE_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, userId, false);
 			
-			LinkedIdsCondition condition = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, 
-					ObjectEntities.SCHEMEPROTOGROUP_CODE);
-			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition, false);
-			groups.remove(SchemeObjectsFactory.stubProtoGroup);
-
-			for (SchemeProtoGroup group : groups) {
-				Set<Identifiable> ids = group.getReverseDependencies(false);
-				StorableObjectPool.flush(ids, userId, false);
-			}
+			// TODO save by hierarchy
+			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOGROUP_CODE, userId, false);
+			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOELEMENT_CODE, userId, false);
+//			LinkedIdsCondition condition = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, 
+//					ObjectEntities.SCHEMEPROTOGROUP_CODE);
+//			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition, false);
+//			groups.remove(SchemeObjectsFactory.stubProtoGroup);
+//
+//			for (SchemeProtoGroup group : groups) {
+//				Set<Identifiable> ids = group.getReverseDependencies(false);
+//				StorableObjectPool.flush(ids, userId, false);
+//			}
 			LocalXmlIdentifierPool.flush();
 			
 			ApplicationModel aModel = this.aContext.getApplicationModel();

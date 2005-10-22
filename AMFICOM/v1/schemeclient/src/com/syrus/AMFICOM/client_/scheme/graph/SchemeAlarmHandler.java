@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.3 2005/10/22 13:23:34 stas Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.4 2005/10/22 15:46:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/10/22 13:23:34 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/22 15:46:14 $
  * @module schemeclient_v1
  */
 
@@ -146,7 +146,7 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 	
 	private class AlarmPainter extends Thread {
 		Set<DefaultGraphCell> cellsSet;
-		DefaultGraphCell[] cells;
+		Object[] cells;
 		SchemeGraph graph;
 		
 		AlarmPainter(SchemeGraph graph, DefaultGraphCell cell) {
@@ -158,12 +158,14 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 		synchronized void addAlarmedCell(DefaultGraphCell cell) {
 			this.cellsSet.add(cell);
 			this.cells = this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()]);
+			this.cells = this.graph.getDescendants(this.cells);
 		}
 		
 		synchronized void removeAlarmedCell(DefaultGraphCell cell) {
 			GraphActions.setObjectColor(this.graph, cell, Color.BLACK);
 			this.cellsSet.remove(cell);
 			this.cells = this.cellsSet.toArray(new DefaultGraphCell[this.cellsSet.size()]);
+			this.cells = this.graph.getDescendants(this.cells);
 		}
 		
 		@Override
