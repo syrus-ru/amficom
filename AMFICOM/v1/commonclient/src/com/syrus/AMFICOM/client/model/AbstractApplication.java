@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.25 2005/10/21 15:47:05 bob Exp $
+ * $Id: AbstractApplication.java,v 1.26 2005/10/23 11:22:00 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/21 15:47:05 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/23 11:22:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -356,7 +356,7 @@ public abstract class AbstractApplication {
 //			defaults.put("Table.selectedFont", font);
 //		}		
 		
-		defaults.put("AComboBox.font", UIManager.getFont("Combobox.font"));		
+		defaults.put("AComboBox.font", UIManager.getFont("ComboBox.font"));		
 		defaults.put("ComboBox.background", defaults.get("window"));
 		defaults.put("ComboBox.disabledBackground", defaults.get("window"));
 
