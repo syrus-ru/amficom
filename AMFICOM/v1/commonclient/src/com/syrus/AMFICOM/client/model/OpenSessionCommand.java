@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.31 2005/10/21 08:48:09 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.32 2005/10/23 19:18:03 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,9 +32,11 @@ import com.syrus.AMFICOM.administration.DomainWrapper;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -46,8 +48,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.31 $, $Date: 2005/10/21 08:48:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/10/23 19:18:03 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -218,9 +220,28 @@ public class OpenSessionCommand extends AbstractCommand {
 //		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.LOGGED_IN_EVENT));
 
+		this.addPopupMessageReceiver();
+
 		return true;
 	}
-	
+
+	private void addPopupMessageReceiver() {
+		ClientSessionEnvironment.getInstance().addPopupMessageReceiver(new PopupMessageReceiver() {
+			public void receiveMessage(final Event event) {
+				final JOptionPane optionPane = new JOptionPane("\u041E\u0439-\u0431\u043B\u044F! \u0415-\u0431\u043B\u044F!",
+						JOptionPane.QUESTION_MESSAGE,
+						JOptionPane.DEFAULT_OPTION,
+						null,
+						new Object[] { "\u0410\u0433\u0430!" },
+						null);
+				final JDialog dialog = optionPane.createDialog(null, "\u041C\u043E\u0434\u0443\u043B\u044C \u0437\u0430\u0447\u043E\u0442\u043E\u0432 \u0410\u043C\u0444\u0438\u043A\u043E\u043C");
+				dialog.setVisible(true);
+				final Object object = optionPane.getValue();
+				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: " + object);
+			}
+		});
+	}
+
 	protected void createUIItems() {
 		if (this.mainPanel == null) {
 			this.mainPanel = new JPanel(new GridBagLayout());
