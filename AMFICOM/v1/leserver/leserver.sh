@@ -19,7 +19,11 @@ APPCLASSPATH=\
 $LIB/leserver.jar:\
 $LIB/general.jar:\
 $LIB/administration.jar:\
+$LIB/configuration.jar:\
+$LIB/measurement.jar:\
 $LIB/event.jar:\
+$LIB/scheme.jar:\
+$LIB/schemexml.jar:\
 $LIB/csbridge.jar:\
 $LIB/reflectometry.jar:\
 $LIB/util.jar
