@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.198 2005/10/22 20:40:20 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.199 2005/10/23 18:25:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,19 +18,24 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
+import org.omg.CORBA.ORB;
+
+import com.syrus.AMFICOM.bugs.Crutch235;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.io.LRUSaver;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.198 $, $Date: 2005/10/22 20:40:20 $
+ * @version $Revision: 1.199 $, $Date: 2005/10/23 18:25:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -478,7 +483,6 @@ public final class StorableObjectPool {
 			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.createStrings(loadedObjects),
 					Log.DEBUGLEVEL08);
 
-			final Set<T> poolObjectsToRefresh = new HashSet<T>();
 			for (final T loadedStorableObject : loadedObjects) {
 				final Identifier id = loadedStorableObject.getId();
 				if (!objectPool.containsKey(id)) {
@@ -487,16 +491,13 @@ public final class StorableObjectPool {
 				} else {
 					final T poolStorableObject = objectPool.get(id);
 					if (!poolStorableObject.isChanged()) {
-						poolObjectsToRefresh.add(poolStorableObject);
+						setStorableObjectAttributes(poolStorableObject, loadedStorableObject);
+						storableObjects.add(poolStorableObject);
 					} else {
 						Log.errorMessage("Local version of object '" + id
 								+ "' do not match condition, but remote version matches condition; it is changed locally -- not returning it");
 					}
 				}
-			}
-			if (!poolObjectsToRefresh.isEmpty()) {
-				refresh(Identifier.createIdentifiers(poolObjectsToRefresh));
-				storableObjects.addAll(poolObjectsToRefresh);
 			}
 
 		}
@@ -1229,11 +1230,51 @@ public final class StorableObjectPool {
 			return;
 		}
 
-		final Set<StorableObject> reloadedObjects = objectLoader.loadStorableObjects(reloadObjectIds);
-		for (final StorableObject storableObject : reloadedObjects) {
-			final Identifier id = storableObject.getId();
-			objectPool.put(id, storableObject);
-			Log.debugMessage("Reloaded: '" + id + "' with version: " + storableObject.getVersion(), Log.DEBUGLEVEL08);
+		final Set<StorableObject> reloadedStorableObjects = objectLoader.loadStorableObjects(reloadObjectIds);
+		for (final StorableObject reloadedStorableObject : reloadedStorableObjects) {
+			final Identifier id = reloadedStorableObject.getId();
+			final StorableObject poolStorableObject = objectPool.get(id);
+			setStorableObjectAttributes(poolStorableObject, reloadedStorableObject);
+			Log.debugMessage("Reloaded: '" + id + "' with version: " + reloadedStorableObject.getVersion(), Log.DEBUGLEVEL08);
+		}
+	}
+
+
+	/**
+	 * Crutch#235
+	 * @see <a href = "http://bass.science.syrus.ru/bugzilla/show_bug.cgi?id=235">This bug&apos;s homepage</a>
+	 * 
+	 * This ORB only needs to call StorableObject#fromTransferable
+	 */
+	public static final String DEFAULT_ORB_INITIAL_HOST = "127.0.0.1";
+	public static final int DEFAULT_ORB_INITIAL_PORT = 1050;
+	private static final ORB CRUTCH_ORB;
+	static {
+		final Properties properties = System.getProperties();
+		final String host = ApplicationProperties.getString("ORBInitialHost", DEFAULT_ORB_INITIAL_HOST);
+		final int port = ApplicationProperties.getInt("ORBInitialPort", DEFAULT_ORB_INITIAL_PORT);
+		Log.debugMessage("host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
+		properties.setProperty("org.omg.CORBA.ORBInitialHost", host);
+		properties.setProperty("org.omg.CORBA.ORBInitialPort", Integer.toString(port));
+		final String[] args = null;
+		CRUTCH_ORB = ORB.init(args, properties);
+	}
+
+	/**
+	 * Crutch#235
+	 * @param localStorableObject
+	 * @param remoteStorableObject
+	 */
+	@Crutch235(notes = "Implement method StorableObject#setAttributes(StorableObject)")
+	private static void setStorableObjectAttributes(final StorableObject localStorableObject, final StorableObject remoteStorableObject) {
+		assert localStorableObject != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert remoteStorableObject != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert localStorableObject.id.equals(remoteStorableObject.id) : "Local: '" + localStorableObject.id + "', remote: '" + remoteStorableObject.id + "'";
+
+		try {
+			localStorableObject.fromTransferable(remoteStorableObject.getTransferable(CRUTCH_ORB));
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
 		}
 	}
 
