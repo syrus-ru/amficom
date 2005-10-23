@@ -18,7 +18,6 @@ general \
 administration \
 configuration \
 measurement \
-event \
 filter \
 reflectometry \
 csbridge \
