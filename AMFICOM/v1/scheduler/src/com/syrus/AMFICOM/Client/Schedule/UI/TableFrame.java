@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.61 2005/10/21 15:12:36 bob Exp $
+ * $Id: TableFrame.java,v 1.62 2005/10/23 11:50:36 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/10/21 15:12:36 $
+ * @version $Revision: 1.62 $, $Date: 2005/10/23 11:50:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -84,6 +84,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REMOVE_TEST, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_CLEAN, this);
 		}
 		this.init();
 	}
@@ -114,7 +115,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		}
 	}
 
-	private void updateTests() {
+	private void updateTests(final Set<Identifier> testIds) {
 		this.setTests();
 		this.updateTest();
 	}
@@ -125,11 +126,13 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		if (propertyName == SchedulerModel.COMMAND_ADD_TEST) {
 			this.addTest((Set<Identifier>) evt.getNewValue());
 		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TESTS) {
-			this.updateTests();
+			this.updateTests((Set<Identifier>) evt.getNewValue());
 		} else if (propertyName == SchedulerModel.COMMAND_REFRESH_TEST) {
 			this.updateTest();
 		} else if (propertyName == SchedulerModel.COMMAND_REMOVE_TEST) {
-			this.updateTests();
+			this.updateTests(null);
+		} else if (propertyName == SchedulerModel.COMMAND_CLEAN) {
+			this.clearTests();
 		}
 		this.propertyChangeEvent = null;
 	}
@@ -151,14 +154,14 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		this.listTable.repaint();
 	}
 	
+	private void clearTests() {
+		final WrapperedTableModel<TestView> model = this.listTable.getModel();
+		model.clear();
+	}
+	
 	private void setTests() {
 		final WrapperedTableModel<TestView> model = this.listTable.getModel();
-		if (this.schedulerModel.getMainTestIds().size() == model.getRowCount()){
-			return;
-		}
-		
-		model.clear();
-		
+		model.clear();		
 		this.addTest(this.schedulerModel.getMainTestIds());
 	}
 

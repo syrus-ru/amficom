@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.3 2005/10/17 09:24:16 bob Exp $
+* $Id: TestView.java,v 1.4 2005/10/23 11:50:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/17 09:24:16 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/23 11:50:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -185,18 +185,24 @@ public final class TestView {
 		return this.test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION);
 	}	
 	
-	public static final synchronized TestView valueOf(final Test test) 
+	public static final synchronized TestView valueOf(final Test test) {
+		return MAP.get(test);
+	}
+	
+	public static final synchronized void addTest(final Test test) 
 	throws ApplicationException {
-		TestView view = MAP.get(test);
-		if (view == null) {
-			view = new TestView(test);
-			MAP.put(test, view);
-		}
-		return view;
+		MAP.put(test, new TestView(test));
 	}
 	
 	public static final synchronized void clearCache(){
 		MAP.clear();
+	}
+	
+	public static final synchronized void refreshCache(final Set<Test> tests) 
+	throws ApplicationException{
+		for (final Test test : tests) {
+			MAP.put(test, new TestView(test));
+		}
 	}
 	
 	private String getTestTemporalTypeName(final TestTemporalType testTemporalType) {
@@ -245,6 +251,11 @@ public final class TestView {
 	
 	public final String getTestQ() {
 		return this.testQ;
+	}
+	
+	@Override
+	public String toString() {
+		return "TestView of <" + this.test + '>';
 	}
 }
 

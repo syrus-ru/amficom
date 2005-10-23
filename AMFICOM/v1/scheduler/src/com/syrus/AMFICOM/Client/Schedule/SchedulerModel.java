@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.132 2005/10/21 15:12:36 bob Exp $
+ * $Id: SchedulerModel.java,v 1.133 2005/10/23 11:50:36 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.132 $, $Date: 2005/10/21 15:12:36 $
+ * @version $Revision: 1.133 $, $Date: 2005/10/23 11:50:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -420,8 +420,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.measurementSetupIdMap.clear();
 		}
 		
-		TestView.clearCache();
-		
 		try {
 			StorableObjectPool.refresh();
 
@@ -464,9 +462,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					CompoundConditionSort.OR, 
 					compoundCondition2);
 
-			this.testIds.clear();
-			this.mainTestIds.clear();
 			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true);
+			TestView.refreshCache(tests);
 			for (final Test test : tests) {
 				this.addTest(test);
 			}
@@ -1079,9 +1076,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_ADD_TEST, null, newTestIds));
 	}
 	
-	private void addTest(final Test test) {
+	private void addTest(final Test test) 
+	throws ApplicationException {
 		final Identifier testId = test.getId();
 		this.testIds.add(testId);
+		TestView.addTest(test);
 		final Identifier groupTestId = test.getGroupTestId();
 		if (groupTestId.isVoid() || groupTestId.equals(testId)) {
 			this.mainTestIds.add(testId);
