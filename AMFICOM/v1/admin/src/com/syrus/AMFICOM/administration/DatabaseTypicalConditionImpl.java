@@ -1,71 +1,37 @@
-/*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.17 2005/10/20 11:40:10 bob Exp $
-*
-* Copyright ¿ 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+/*-
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.18 2005/10/24 13:01:03 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/20 11:40:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/10/24 13:01:03 $
+ * @author $Author: bass $
  * @module administration
  */
-class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
+final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 
 	@SuppressWarnings("unused")
 	private DatabaseTypicalConditionImpl(final TypicalCondition typicalCondition) {
 		super(typicalCondition);
-	}
-
-	@Override
-	protected String getColumnName() throws IllegalObjectEntityException {
-		/* check key support */
-		final String key = this.condition.getKey().intern();
-		switch(super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.SYSTEMUSER_CODE:
-				if (key == SystemUserWrapper.COLUMN_LOGIN) {
-					return key;
-				}
-				if (key == StorableObjectWrapper.COLUMN_NAME) {
-					return key;
-				}
-				break;
-			case ObjectEntities.DOMAIN_CODE:
-				if (key == StorableObjectWrapper.COLUMN_NAME) {
-					return key;
-				}
-				break;
-			case ObjectEntities.SERVERPROCESS_CODE:
-				if (key == StorableObjectWrapper.COLUMN_CODENAME) {
-					return key;
-				}
-				break;
-			case ObjectEntities.PERMATTR_CODE:
-				if (key == PermissionAttributesWrapper.COLUMN_MODULE) {
-					return key;
-				}
-				break;
-			case ObjectEntities.ROLE_CODE:
-				if (key == StorableObjectWrapper.COLUMN_CODENAME) {
-					return key;
-				}
-				break;				
-			default:
-				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ "' and key '" + key + "' are not supported.",
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-		}
-		return null;
 	}
 
 	@Override
@@ -80,4 +46,23 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 				+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
+	@Override
+	protected boolean isKeySupported(final String key) {
+		switch (this.condition.getEntityCode().shortValue()) {
+		case SYSTEMUSER_CODE:
+			return key == SystemUserWrapper.COLUMN_LOGIN
+					|| key == COLUMN_NAME
+					|| key == SystemUserWrapper.COLUMN_SORT;
+		case DOMAIN_CODE:
+			return key == COLUMN_NAME;
+		case SERVERPROCESS_CODE:
+			return key == COLUMN_CODENAME;
+		case PERMATTR_CODE:
+			return key == PermissionAttributesWrapper.COLUMN_MODULE;
+		case ROLE_CODE:
+			return key == COLUMN_CODENAME;
+		default:
+			return false;
+		}
+	}
 }

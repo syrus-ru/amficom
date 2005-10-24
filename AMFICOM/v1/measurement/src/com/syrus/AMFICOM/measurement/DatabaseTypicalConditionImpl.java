@@ -1,12 +1,18 @@
-/*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.19 2005/09/20 10:00:48 arseniy Exp $
-*
-* Copyright ¿ 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+/*-
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.20 2005/10/24 13:01:03 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -16,59 +22,16 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/20 10:00:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/10/24 13:01:03 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
+final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 
 	@SuppressWarnings("unused")
 	private DatabaseTypicalConditionImpl(final TypicalCondition typicalCondition) {
 		super(typicalCondition);
-	}
-
-	@Override
-	protected String getColumnName() throws IllegalObjectEntityException {
-		/* check key support */
-		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.MEASUREMENT_CODE:
-				if (this.condition.getKey().equals(MeasurementWrapper.COLUMN_STATUS)) {
-					return MeasurementWrapper.COLUMN_STATUS;
-				}
-				break;
-			case ObjectEntities.TEST_CODE:
-				if (this.condition.getKey().equals(TestWrapper.COLUMN_START_TIME)) {
-					return TestWrapper.COLUMN_START_TIME;
-				}
-				if (this.condition.getKey().equals(TestWrapper.COLUMN_END_TIME)) {
-					return TestWrapper.COLUMN_END_TIME;
-				}
-				if (this.condition.getKey().equals(TestWrapper.COLUMN_STATUS)) {
-					return TestWrapper.COLUMN_STATUS;
-				}
-				break;
-			case ObjectEntities.PERIODICALTEMPORALPATTERN_CODE:
-				if (this.condition.getKey().equals(PeriodicalTemporalPatternWrapper.COLUMN_PERIOD)) {
-					return PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
-				}
-				break;
-			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
-				if (this.condition.getKey().equals(MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
-					return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
-				}
-				break;
-			case ObjectEntities.MEASUREMENTSETUP_CODE:
-				if (this.condition.getKey().equals(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
-					return MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
-				}
-				break;
-			default:
-				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ "' and key '" + this.condition.getKey()
-						+ "' are not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-		}
-		return null;
 	}
 
 	@Override
@@ -97,4 +60,23 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 		}
 	}
 
+	@Override
+	protected boolean isKeySupported(final String key) {
+		switch (this.condition.getEntityCode().shortValue()) {
+		case MEASUREMENT_CODE:
+			return key == MeasurementWrapper.COLUMN_STATUS;
+		case TEST_CODE:
+			return key == TestWrapper.COLUMN_START_TIME
+					|| key == TestWrapper.COLUMN_END_TIME
+					|| key == TestWrapper.COLUMN_STATUS;
+		case PERIODICALTEMPORALPATTERN_CODE:
+			return key == PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
+		case MEASUREMENTPORT_TYPE_CODE:
+			return key == MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
+		case MEASUREMENTSETUP_CODE:
+			return key == MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
+		default:
+			return false;
+		}
+	}
 }

@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.18 2005/09/30 07:45:10 max Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.19 2005/10/24 13:01:03 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/30 07:45:10 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2005/10/24 13:01:03 $
+ * @author $Author: bass $
  * @module general
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {
@@ -51,7 +51,13 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 		this.condition = delegate;
 	}
 
-	protected abstract String getColumnName() throws IllegalObjectEntityException;
+	String getColumnName() {
+		final String key = this.condition.getKey().intern();
+		assert this.isKeySupported(key) : "Entity '"
+				+ ObjectEntities.codeToString(this.condition.getEntityCode())
+				+ "' and key '" + key + "' are not supported.";
+		return key;
+	}
 
 	protected abstract String getLinkedColumnName() throws IllegalObjectEntityException;
 
@@ -365,4 +371,5 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 		return buffer.toString();
 	}
 
+	protected abstract boolean isKeySupported(final String key);
 }

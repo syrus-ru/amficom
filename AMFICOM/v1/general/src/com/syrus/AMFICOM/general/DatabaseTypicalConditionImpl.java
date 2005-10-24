@@ -1,45 +1,26 @@
-/*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.11 2005/08/28 16:41:33 arseniy Exp $
-*
-* Copyright ¿ 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+/*-
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.12 2005/10/24 13:01:03 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/28 16:41:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/10/24 13:01:03 $
+ * @author $Author: bass $
  * @module general
  */
-class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
+final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 
 	@SuppressWarnings("unused")
 	private DatabaseTypicalConditionImpl(final TypicalCondition typicalCondition) {
 		super(typicalCondition);
-	}
-
-	@Override
-	protected String getColumnName() throws IllegalObjectEntityException {
-		/* check key support */
-		switch(super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
-				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME))
-					return StorableObjectWrapper.COLUMN_CODENAME;
-				break;
-			default:
-				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ "' and key '" + this.condition.getKey() + "' are not supported.",
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-		}
-		return null;
 	}
 
 	@Override
@@ -54,4 +35,13 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 				+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
+	@Override
+	protected boolean isKeySupported(final String key) {
+		switch (this.condition.getEntityCode().shortValue()) {
+		case CHARACTERISTIC_TYPE_CODE:
+			return key == COLUMN_CODENAME;
+		default:
+			return false;
+		}
+	}
 }

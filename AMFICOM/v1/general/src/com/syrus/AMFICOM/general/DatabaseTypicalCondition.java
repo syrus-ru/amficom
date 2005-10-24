@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.13 2005/09/14 13:09:38 arseniy Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.14 2005/10/24 13:01:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
  * }
  * </pre>
  *
- * @version $Revision: 1.13 $, $Date: 2005/09/14 13:09:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/24 13:01:03 $
+ * @author $Author: bass $
  * @module general
  */
 public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
@@ -96,7 +96,7 @@ public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondi
 	}
 
 	@Override
-	protected String getColumnName() throws IllegalObjectEntityException {
+	String getColumnName() {
 		return this.delegate.getColumnName();
 	}
 
@@ -120,4 +120,14 @@ public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondi
 		return this.delegate.getEntityCode();
 	}
 
+	/**
+	 * This is not supported here and should never be.
+	 *
+	 * @param key
+	 * @see AbstractDatabaseTypicalCondition#isKeySupported(String)
+	 */
+	@Override
+	protected boolean isKeySupported(final String key) {
+		throw new UnsupportedOperationException();
+	}
 }
