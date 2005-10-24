@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.41 2005/10/21 08:51:24 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.42 2005/10/24 13:11:32 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/10/21 08:51:24 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/24 13:11:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -171,6 +171,8 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 //	}
 
 	private void logged(final boolean loggedIn) {
+		
+
 		ElementsTreeFrame treeFrame = (ElementsTreeFrame) this.frames.get(TREE_FRAME);
 		if (loggedIn) {
 			treeFrame.init();
@@ -181,7 +183,15 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PARAMETERSET_CODE);
 		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE);
 
-		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));
+		
+		if (loggedIn) {
+			this.dispatcher.firePropertyChange(
+				new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));			
+		} else {
+			final SchedulerModel schedulerModel = 
+				(SchedulerModel) this.aContext.getApplicationModel();
+			schedulerModel.unselectTests(this);
+		}
 
 		((Component) this.frames.get(PARAMETERS_FRAME)).setVisible(loggedIn);
 		((Component) this.frames.get(PROPERTIES_FRAME)).setVisible(loggedIn);
