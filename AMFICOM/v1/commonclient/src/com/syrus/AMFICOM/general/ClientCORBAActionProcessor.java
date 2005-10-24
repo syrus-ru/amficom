@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientCORBAActionProcessor.java,v 1.4 2005/10/21 12:03:18 arseniy Exp $
+ * $Id: ClientCORBAActionProcessor.java,v 1.5 2005/10/24 14:22:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/21 12:03:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/24 14:22:50 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -40,7 +40,7 @@ public class ClientCORBAActionProcessor extends DefaultCORBAActionProcessor {
 				} catch (final AMFICOMRemoteException are) {
 					switch (are.errorCode.value()) {
 						case IdlErrorCode._ERROR_NOT_LOGGED_IN:
-							if (super.restoreLogin()) {
+							if (this.restoreLogin()) {
 								continue;
 							}
 							Log.debugMessage("ClientCORBAActionProcessor.performAction | Login not restored", Level.INFO);
