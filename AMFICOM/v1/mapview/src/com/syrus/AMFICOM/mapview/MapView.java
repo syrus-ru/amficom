@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.73 2005/10/22 13:46:44 krupenn Exp $
+* $Id: MapView.java,v 1.74 2005/10/24 15:43:07 krupenn Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * 
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.73 $, $Date: 2005/10/22 13:46:44 $
+ * @version $Revision: 1.74 $, $Date: 2005/10/24 15:43:07 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -908,6 +908,8 @@ public final class MapView extends DomainMember implements Describable {
 		this.unboundLinks.clear();
 		this.unboundNodeLinks.clear();
 		this.unboundNodes.clear();
+		this.cablePaths.clear();
+		this.measurementPaths.clear();
 	}
 
 	public static SchemeElement getTopologicalSchemeElement(
