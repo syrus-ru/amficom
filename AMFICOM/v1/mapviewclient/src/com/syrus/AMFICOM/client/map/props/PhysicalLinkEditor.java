@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkEditor.java,v 1.31 2005/10/21 16:24:42 krupenn Exp $$
+ * $$Id: PhysicalLinkEditor.java,v 1.32 2005/10/24 15:44:10 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,13 +40,14 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/21 16:24:42 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/24 15:44:10 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -87,6 +88,9 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 	private JLabel thicknessLabel = new JLabel();
 	private LineThicknessComboBox thicknessComboBox = new LineThicknessComboBox(); 
 	
+	private JLabel collectorLabel = new JLabel();
+	private WrapperedComboBox collectorComboBox = null; 
+
 	private JLabel styleLabel = new JLabel();
 
 	private JButton commitButton = new JButton();
@@ -109,6 +113,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.typeComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 		this.startComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.collectorComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 //		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
@@ -117,6 +122,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.typeLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TYPE));
 		this.startLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_START_NODE));
 		this.endLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_END_NODE));
+		this.collectorLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_COLLECTOR));
 		this.topologicalLengthLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_TOPOLOGICAL_LENGTH));
 		this.addressLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_ADDRESS));
 		this.descLabel.setText(I18N.getString(MapEditorResourceKeys.LABEL_DESCRIPTION));
@@ -309,10 +315,36 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.topologicalLengthLabel, constraints);
+		this.jPanel.add(this.collectorLabel, constraints);
 
 		constraints.gridx = 2;
 		constraints.gridy = 4;
+		constraints.gridwidth = 3;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.collectorComboBox, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 5;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.topologicalLengthLabel, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 5;
 		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
@@ -325,7 +357,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.topologicalLengthTextField, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 5;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -338,7 +370,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.addressLabel, constraints);
 
 		constraints.gridx = 1;
-		constraints.gridy = 5;
+		constraints.gridy = 6;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -351,7 +383,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.cityLabel, constraints);
 
 		constraints.gridx = 2;
-		constraints.gridy = 5;
+		constraints.gridy = 6;
 		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
@@ -364,7 +396,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.cityTextField, constraints);
 
 		constraints.gridx = 1;
-		constraints.gridy = 6;
+		constraints.gridy = 7;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -377,7 +409,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.streetLabel, constraints);
 
 		constraints.gridx = 2;
-		constraints.gridy = 6;
+		constraints.gridy = 7;
 		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
@@ -388,9 +420,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.streetPanel, constraints);
-//		this.jPanel.add(this.streetTextField, ReusedGridBagConstraints.get(2, 6, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
-//		this.jPanel.add(this.buildingLabel, ReusedGridBagConstraints.get(1, 7, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-//		this.jPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(2, 7, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
 		constraints.gridx = 0;
 		constraints.gridy = 9;
@@ -508,6 +537,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		
 		this.startComboBox.setEnabled(false);
 		this.endComboBox.setEnabled(false);
+		this.collectorComboBox.setEnabled(false);
 		this.topologicalLengthTextField.setEnabled(false);
 	}
 
@@ -521,6 +551,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.typeComboBox.removeAllItems();
 		this.startComboBox.removeAllItems();
 		this.endComboBox.removeAllItems();
+		this.collectorComboBox.removeAllItems();
 
 		if(this.link == null) {
 			this.nameTextField.setEnabled(false);
@@ -529,6 +560,8 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			this.typeComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText(""); //$NON-NLS-1$
+			this.collectorLabel.setVisible(false);
+			this.collectorComboBox.setVisible(false);
 
 			this.cityTextField.setText(""); //$NON-NLS-1$
 			this.streetTextField.setText(""); //$NON-NLS-1$
@@ -567,6 +600,14 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			this.startComboBox.setSelectedItem(this.link.getStartNode());
 			this.endComboBox.addItem(this.link.getEndNode());
 			this.endComboBox.setSelectedItem(this.link.getEndNode());
+			
+			final Collector collector = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(this.link);
+			if(collector != null) {
+				this.collectorLabel.setVisible(true);
+				this.collectorComboBox.setVisible(true);
+				this.collectorComboBox.addItem(collector);
+				this.collectorComboBox.setSelectedItem(collector);
+			}
 
 			this.cityTextField.setText(this.link.getCity());
 			this.streetTextField.setText(this.link.getStreet());
