@@ -1,5 +1,5 @@
 /*-
- * $Id: MapEditorResourceKeys.java,v 1.9 2005/10/22 13:47:01 krupenn Exp $
+ * $Id: MapEditorResourceKeys.java,v 1.10 2005/10/24 15:43:25 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/22 13:47:01 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/24 15:43:25 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapclient
@@ -254,5 +254,7 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String ERROR_UNBOUND_ELEMENTS_EXIST = "Error.UnboundElementsExist";
 
 	String ERROR = "Error.Error";
+
+	String LABEL_COLLECTOR = "Label.Collector";
 
 }
