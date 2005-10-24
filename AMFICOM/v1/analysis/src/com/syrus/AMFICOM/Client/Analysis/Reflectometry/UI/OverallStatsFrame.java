@@ -102,6 +102,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 						OverallStatsWrapper.KEY_EVENTS });
 
 		this.jTable = new WrapperedPropertyTable<OverallStats>(this.tModel);
+		this.jTable.setTableHeader(null);
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
@@ -134,7 +135,9 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 						OverallStatsWrapper.KEY_MISMATCH,
 						OverallStatsWrapper.KEY_QUALITY_D,
 						OverallStatsWrapper.KEY_QUALITY_Q});
+
 		this.jTableWholeComp = new WrapperedPropertyTable<OverallStats>(this.wctModel);
+		this.jTableWholeComp.setTableHeader(null);
 		this.jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(130);
 
 		this.mainPanelWholeComp.setLayout(new BorderLayout());

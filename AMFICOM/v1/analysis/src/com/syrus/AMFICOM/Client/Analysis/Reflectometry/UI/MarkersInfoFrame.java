@@ -92,6 +92,8 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 		this.tModel = new WrapperedPropertyTableModel<MarkerResource>(MarkerResourceWrapper.getInstance(), this.res, DEFAULT_KEYS);
 
 		this.jTable = new WrapperedPropertyTable<MarkerResource>(this.tModel);
+		this.jTable.setTableHeader(null);
+
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
 		this.jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
 

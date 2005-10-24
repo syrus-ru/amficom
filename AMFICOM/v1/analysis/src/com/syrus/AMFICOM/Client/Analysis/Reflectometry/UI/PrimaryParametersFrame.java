@@ -79,6 +79,7 @@ public class PrimaryParametersFrame extends JInternalFrame implements BsHashChan
 						PrimaryParametersWrapper.KEY_TIME,
 						PrimaryParametersWrapper.KEY_BACKSCATTER });
 		this.jTable = new WrapperedPropertyTable<PrimaryParameters>(this.tModel);
+		this.jTable.setTableHeader(null);
 		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(170);
 
 		this.setContentPane(this.mainPanel);
