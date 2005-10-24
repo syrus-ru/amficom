@@ -256,6 +256,7 @@ final class PlanToolBar {
 
 					public void run() {
 						try {
+							PlanToolBar.this.schedulerModel.unselectTests(PlanToolBar.this);
 							PlanToolBar.this.dispatcher
 							.firePropertyChange(new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 							PlanToolBar.this.schedulerModel.commitChanges();
