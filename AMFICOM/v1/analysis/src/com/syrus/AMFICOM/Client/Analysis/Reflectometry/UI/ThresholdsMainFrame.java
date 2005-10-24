@@ -481,6 +481,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 //		aModel.setEnabled("menuTraceCloseEtalon", true);
 		aModel.setEnabled("commandCheckMismatch", true);
 //		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
+		aModel.fireModelChanged("commandCheckMismatch");
 	}
 
 	public void etalonMTMRemoved() {
@@ -488,6 +489,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 //		aModel.setEnabled("menuTraceCloseEtalon", false);
 		aModel.setEnabled("commandCheckMismatch", false);
 //		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
+		aModel.fireModelChanged("commandCheckMismatch");
 	}
 
 	public void currentTraceChanged(String id) {
