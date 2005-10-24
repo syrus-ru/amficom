@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.133 2005/10/23 11:50:36 bob Exp $
+ * $Id: SchedulerModel.java,v 1.134 2005/10/24 13:12:20 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.133 $, $Date: 2005/10/23 11:50:36 $
+ * @version $Revision: 1.134 $, $Date: 2005/10/24 13:12:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -421,56 +421,69 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 		
 		try {
+			final Map<Identifier, StorableObjectVersion> idVersion = new HashMap<Identifier, StorableObjectVersion>();
+			{
+				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
+				for (final Test test : tests) {
+					idVersion.put(test.getId(), test.getVersion());
+				}
+			}
+			
+			final long time0 = System.currentTimeMillis();
 			StorableObjectPool.refresh();
-
-			final TypicalCondition startTypicalCondition = new TypicalCondition(startDate,
+			final long time1 = System.currentTimeMillis();
+			final TypicalCondition startTypicalCondition = 
+				new TypicalCondition(endDate,
 					endDate,
-					OperationSort.OPERATION_IN_RANGE,
-					ObjectEntities.TEST_CODE,
-					TestWrapper.COLUMN_START_TIME);
-			final TypicalCondition endTypicalCondition = new TypicalCondition(startDate,
-					endDate,
-					OperationSort.OPERATION_IN_RANGE,
-					ObjectEntities.TEST_CODE,
-					TestWrapper.COLUMN_END_TIME);
-			final TypicalCondition startTypicalCondition1 = new TypicalCondition(startDate,
-					null,
 					OperationSort.OPERATION_LESS_EQUALS,
 					ObjectEntities.TEST_CODE,
 					TestWrapper.COLUMN_START_TIME);
-			final TypicalCondition endTypicalCondition2 = new TypicalCondition(endDate,
-					null,
+			final TypicalCondition endTypicalCondition = 
+				new TypicalCondition(startDate,
+					startDate,
 					OperationSort.OPERATION_GREAT_EQUALS,
 					ObjectEntities.TEST_CODE,
 					TestWrapper.COLUMN_END_TIME);
 			
-			// XXX rebuld using a <= d & c <= b
-			// [a,b] intersect [c,d]
-
-			final CompoundCondition compoundCondition1 = 
-				new CompoundCondition(startTypicalCondition,
-					CompoundConditionSort.OR,
-					endTypicalCondition);
-
-			final CompoundCondition compoundCondition2 = 
-				new CompoundCondition(startTypicalCondition1,
-					CompoundConditionSort.AND,
-					endTypicalCondition2);
-
 			final CompoundCondition compoundCondition = 
-				new CompoundCondition(compoundCondition1, 
-					CompoundConditionSort.OR, 
-					compoundCondition2);
+				new CompoundCondition(startTypicalCondition,
+					CompoundConditionSort.AND,
+					endTypicalCondition);
+			
+			final Set<Test> tests = 
+				StorableObjectPool.getStorableObjectsByCondition(compoundCondition, 
+					true, 
+					true);
+			final long time2 = System.currentTimeMillis();
 
-			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true);
-			TestView.refreshCache(tests);
+			final Set<Test> refreshTests = new HashSet<Test>();
 			for (final Test test : tests) {
+				final Identifier testId = test.getId();
+				final StorableObjectVersion version = idVersion.get(testId);
+				if (test.getVersion().equals(version)) {
+					idVersion.remove(testId);
+				} else {
+					refreshTests.add(test);
+				}
+			}
+			TestView.refreshCache(refreshTests);
+			
+			final long time3 = System.currentTimeMillis();
+
+			for (final Test test : refreshTests) {
 				this.addTest(test);
 			}
 			assert Log.debugMessage("SchedulerModel.updateTests | " 
 						+ this.testIds 
 						+ ", " 
 						+ this.testIds.size(),
+				Log.DEBUGLEVEL03);
+			
+			assert Log.debugMessage("SchedulerModel.updateTests | StorableObjectPool.refresh:" + (time1-time0),
+				Log.DEBUGLEVEL03);
+			assert Log.debugMessage("SchedulerModel.updateTests | StorableObjectPool.getStorableObjectsByCondition:" + (time2-time1),
+				Log.DEBUGLEVEL03);
+			assert Log.debugMessage("SchedulerModel.updateTests | TestView.refreshCache:" + (time3-time2),
 				Log.DEBUGLEVEL03);
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"));
@@ -479,7 +492,11 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Scheduler.StatusMessage.TestsUpdated"))); //$NON-NLS-1$
+		final long time0 = System.currentTimeMillis();
 		this.refreshTests();
+		final long time1 = System.currentTimeMillis();
+		assert Log.debugMessage("SchedulerModel.updateTests | refreshTests:" + (time1-time0),
+			Log.DEBUGLEVEL03);
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
 
@@ -1345,7 +1362,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                            final Date endDate0) 
 	throws ApplicationException {
 		final Identifier groupTestId = test.getGroupTestId();
-		if (groupTestId.isVoid()) {
+		if (groupTestId.isVoid() || test.getId().equals(groupTestId)) {
 			return this.isIntersect0(test, startDate0, endDate0);
 		} 
 
