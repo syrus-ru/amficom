@@ -225,8 +225,8 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 
 		this.setContentPane(mainPanel);
 
-		analysisDefaultsButton.setEnabled(
-				PermissionManager.isPermitted(Operation.EDIT_ETALON));
+//		analysisDefaultsButton.setEnabled(
+//				PermissionManager.isPermitted(Operation.EDIT_ETALON));
 		analysisInitialButton.setEnabled(false);
 		increaseThreshButton.setEnabled(false);
 		decreaseThreshButton.setEnabled(false);
@@ -451,16 +451,20 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		}
 	}
 
-	public void bsHashAdded(String key)
-	{ // ignore (?)
+	private void updateMakeEtalonButton() {
+		analysisDefaultsButton.setEnabled(
+				PermissionManager.isPermitted(Operation.EDIT_ETALON));
 	}
 
-	public void bsHashRemoved(String key)
-	{ // ignore (?)
+	public void bsHashAdded(String key) {
+		updateMakeEtalonButton();
 	}
 
-	public void bsHashRemovedAll()
-	{
+	public void bsHashRemoved(String key) {
+		updateMakeEtalonButton();
+	}
+
+	public void bsHashRemovedAll() {
 		this.jTable.setModel(this.tModel);
 	}
 
