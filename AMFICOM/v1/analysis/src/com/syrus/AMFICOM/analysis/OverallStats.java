@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.13 2005/10/20 09:17:40 saa Exp $
+ * $Id: OverallStats.java,v 1.14 2005/10/24 10:39:19 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectometryEvaluationOverallResult;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/10/20 09:17:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/24 10:39:19 $
  * @module analysis
  */
 
@@ -94,6 +94,9 @@ public class OverallStats {
 						String.valueOf(MathRef.round_3(
 								evaluationOverall.getD())) + " " +
 						LangModelAnalyse.getString("qualityDSuffix"));
+				setQualityQ(
+						String.valueOf(MathRef.round_2(
+								evaluationOverall.getQ())));
 			} else {
 				setQualityD("");
 				setQualityQ("");
