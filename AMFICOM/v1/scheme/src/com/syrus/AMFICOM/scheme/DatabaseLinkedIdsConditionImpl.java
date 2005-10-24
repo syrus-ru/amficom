@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.43 2005/10/22 20:48:35 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.44 2005/10/24 12:14:35 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,9 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
@@ -47,8 +49,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.43 $, $Date: 2005/10/22 20:48:35 $
+ * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2005/10/24 12:14:35 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -175,6 +177,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
 				case SCHEMEELEMENT_CODE:
 					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+				case LINK_TYPE_CODE:
+					return super.getQuery(SchemeLinkWrapper.COLUMN_LINK_TYPE_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -188,6 +192,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 							+ CLOSE_BRACKET;
 				case SCHEME_CODE:
 					return super.getQuery(SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID);
+				case CABLELINK_TYPE_CODE:
+					return super.getQuery(SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}

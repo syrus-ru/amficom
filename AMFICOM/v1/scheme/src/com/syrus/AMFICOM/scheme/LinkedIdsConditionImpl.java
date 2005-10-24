@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.45 2005/10/21 09:05:10 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.46 2005/10/24 12:14:35 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,9 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
@@ -53,7 +55,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.45 $, $Date: 2005/10/21 09:05:10 $
+ * @version $Revision: 1.46 $, $Date: 2005/10/24 12:14:35 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -214,6 +216,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(schemeLink.parentSchemeId);
 				case SCHEMEELEMENT_CODE:
 					return super.conditionTest(schemeLink.parentSchemeElementId);
+				case LINK_TYPE_CODE:
+					return super.conditionTest(schemeLink.getAbstractLinkTypeId());
 				default:
 					throw newIllegalObjectEntityException();
 				}
@@ -227,6 +231,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return precondition1 ^ precondition2;
 				case SCHEME_CODE:
 					return super.conditionTest(schemeCableLink.parentSchemeId);
+				case CABLELINK_TYPE_CODE:
+					return super.conditionTest(schemeCableLink.abstractLinkTypeId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
