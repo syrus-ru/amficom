@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.59 2005/10/21 15:12:36 bob Exp $
+ * $Id: PlanPanel.java,v 1.60 2005/10/24 13:12:41 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/10/21 15:12:36 $
+ * @version $Revision: 1.60 $, $Date: 2005/10/24 13:12:41 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -176,6 +176,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_ADD_TEST, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REMOVE_TEST, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_CLEAN, this);
 		// 
 		
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
@@ -384,10 +385,11 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			this.addTest((Set<Identifier>)evt.getNewValue());
 		} else if (propertyName == SchedulerModel.COMMAND_REMOVE_TEST) {
 			this.updateTests((Set<Identifier>)evt.getNewValue());
+		} else if (propertyName == SchedulerModel.COMMAND_CLEAN) {
+			this.clearTests();
 		}
 	}
 	
-
 	void setDate(	Date startDate,
 					int scale) {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -621,6 +623,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 		this.repaint();
 	}
 
+	private void clearTests() {
+		for (final Identifier monitoredElementId : this.testLines.keySet()) {
+			final TestLine line = this.testLines.get(monitoredElementId);
+			line.clearTests();
+			line.refreshTimeItems();
+		}		
+	}
+	
 	private void updateTests(final Set<Identifier> testIds) {
 		this.updateTestLines();
 		super.repaint();

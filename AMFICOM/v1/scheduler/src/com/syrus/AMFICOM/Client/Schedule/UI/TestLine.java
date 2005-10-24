@@ -741,7 +741,7 @@ final class TestLine extends TimeLine {
 	void refreshTimeItems() {
 		synchronized (this) {
 			this.unsavedTestTimeItems.clear();
-			this.timeItems.clear();
+			this.timeItems.clear();	
 			if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
 				super.scale = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
 			}
@@ -841,6 +841,13 @@ final class TestLine extends TimeLine {
 		this.updateScale();
 		this.refreshTimeItems();
 		this.updateTest();
+	}
+
+	public void clearTests() {
+		assert Log.debugMessage("TestLine.clearTests | ", Log.DEBUGLEVEL09);
+		this.measurements.clear();
+		this.unsavedTestTimeItems.clear();
+		this.timeItems.clear();		
 	}
 
 	
