@@ -1,5 +1,5 @@
 /*-
-* $Id: Checker.java,v 1.6 2005/10/20 12:08:29 bob Exp $
+* $Id: Checker.java,v 1.7 2005/10/24 09:09:34 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
  * 
  * Permission checker for a user logged in 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/10/20 12:08:29 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/24 09:09:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module csbridge
@@ -54,23 +54,34 @@ public abstract class Checker {
 		
 		final Module module = codename.getModule();
 		
+		// get user permission in logged in domain		
 		final PermissionAttributes permissionAttributes = 
 			domain.getPermissionAttributes(userId, module);
 		
+		// if it's permission is not null - check it
 		if (permissionAttributes != null) {
+			// if permission denied - return false without any additional checks
 			if (permissionAttributes.isDenied(codename)) {
 				return false;
 			}
 			
+			// otherwise, check if force permitted by self permissions
 			if (permissionAttributes.isPermissionEnable(codename)) {
 				return true;
 			}
 		}
 		
+		// if codename is not occur in self user permissions, 
+		// check permissions extended by roles 
 		final SystemUser systemUser = 
 			StorableObjectPool.getStorableObject(userId, true);
 		
 		final Set<Identifier> roleIds = systemUser.getRoleIds();
+		
+		// return false if no role for user
+		if (roleIds.isEmpty()) {
+			return false;
+		}
 		
 		final CompoundCondition compoundCondition = 
 			new CompoundCondition(
@@ -87,6 +98,7 @@ public abstract class Checker {
 		
 		boolean permitted = false;
 		
+		// check logical summ for all role permissions
 		for (final PermissionAttributes attributes : rolePermissions) {
 			permitted |= attributes.isPermissionEnable(codename);
 			if (permitted) {
