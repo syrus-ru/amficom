@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.9 2005/10/20 14:22:09 arseniy Exp $
+* $Id: LoginRestoreCommand.java,v 1.10 2005/10/24 14:34:25 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,10 +12,8 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -23,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/20 14:22:09 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/24 14:34:25 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -35,14 +33,9 @@ public final class LoginRestoreCommand extends OpenSessionCommand implements Log
 	}
 
 	@Override
-	protected boolean logging() throws CommunicationException, LoginException {
-		if (!this.logged && !this.showOpenSessionDialog(Environment.getActiveWindow())) {
-			super.logged = false;
-		} else {
-			super.logged = true;
-			super.disposeDialog();
-		}
-		return super.logged;
+	protected boolean logging() {
+		super.logged = this.showOpenSessionDialog(Environment.getActiveWindow());
+		return true;
 	}
 
 	@Override

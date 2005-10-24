@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.33 2005/10/24 11:54:59 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.34 2005/10/24 14:34:25 arseniy Exp $
  *
  * Copyright ╘ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,11 +32,9 @@ import com.syrus.AMFICOM.administration.DomainWrapper;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -48,8 +46,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.33 $, $Date: 2005/10/24 11:54:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/10/24 14:34:25 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -149,34 +147,9 @@ public class OpenSessionCommand extends AbstractCommand {
 			return;
 		}
 
-		/**
-		 * Наверное, возможен расклад, когда moreAttemps == true и this.logged = false.
-		 */
-		boolean moreAttemps = true;
 		do {
-			try {
-				moreAttemps = !this.logging();
-			} catch (final CommunicationException ce) {
-				Log.errorException(ce);
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						I18N.getString("Error.ServerConnection"),
-						I18N.getString("Error.OpenSession"),
-						JOptionPane.ERROR_MESSAGE,
-						null);
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-				moreAttemps = this.logged = false;
-			} catch (final LoginException le) {
-				Log.errorException(le);
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						I18N.getString("Error.OpenSession"),
-						I18N.getString("Error"),
-						JOptionPane.ERROR_MESSAGE,
-						null);
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
-				moreAttemps = this.logged = !le.isAlreadyLoggedIn();
-			}
-		} while (moreAttemps);
-
+			Log.debugMessage("Attempt to login; logged: " + this.logged, Log.DEBUGLEVEL04);
+		} while (!this.logging());
 	}
 
 	/**
@@ -185,61 +158,71 @@ public class OpenSessionCommand extends AbstractCommand {
 	 * @throws CommunicationException
 	 * @throws LoginException
 	 */
-	protected boolean logging() throws CommunicationException, LoginException {
+	protected boolean logging() {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Common.StatusBar.OpeningSession")));
 		if (this.login == null || this.password == null || this.domainId == null) {
-			final boolean wannaNotLogin = !this.showOpenSessionDialog(Environment.getActiveWindow());
-			if (wannaNotLogin) {
-				this.logged = false;
+			if (!this.showOpenSessionDialog((Environment.getActiveWindow()))) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_MESSAGE,
 						I18N.getString("Common.StatusBar.Aborted")));
-				return wannaNotLogin;
+				this.logged = false;
+				return true;
 			}
 		}
 
 		final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
-
 		if (clientSessionEnvironment == null) {
-			throw new LoginException(I18N.getString("Error.SessionHasNotEstablish"));
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					I18N.getString("Error.OpenSession"),
+					I18N.getString("Error.SessionHasNotEstablish"),
+					JOptionPane.ERROR_MESSAGE,
+					null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+			this.logged = false;
+			return true;
 		}
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Common.StatusBar.InitStartupData")));
-
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
-		clientSessionEnvironment.login(this.login, this.password, this.domainId);
-		
-		this.logged = true;
-		
+		try {
+			clientSessionEnvironment.login(this.login, this.password, this.domainId);
+		} catch (LoginException le) {
+			Log.errorException(le);
+			if (le.isAlreadyLoggedIn()) {
+				this.logged = true;
+				return true;
+			}
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					I18N.getString("Error.OpenSession"),
+					I18N.getString("Error"),
+					JOptionPane.ERROR_MESSAGE,
+					null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+			this.logged = false;
+			return false;
+		} catch (CommunicationException ce) {
+			Log.errorException(ce);
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					I18N.getString("Error.ServerConnection"),
+					I18N.getString("Error.OpenSession"),
+					JOptionPane.ERROR_MESSAGE,
+					null);
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+			this.logged = false;
+			return false;
+		}
+
 		this.disposeDialog();
 
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.LOGGED_IN_EVENT));
 
-		this.addPopupMessageReceiver();
-
+		this.logged = true;
 		return true;
-	}
-
-	private void addPopupMessageReceiver() {
-		ClientSessionEnvironment.getInstance().addPopupMessageReceiver(new PopupMessageReceiver() {
-			public void receiveMessage(final Event event) {
-				final JOptionPane optionPane = new JOptionPane("\u041E\u0439-\u0431\u043B\u044F! \u0415-\u0431\u043B\u044F!",
-						JOptionPane.QUESTION_MESSAGE,
-						JOptionPane.DEFAULT_OPTION,
-						null,
-						new Object[] { "\u0410\u0433\u0430!" },
-						null);
-				final JDialog dialog = optionPane.createDialog(null, "\u041C\u043E\u0434\u0443\u043B\u044C \u0437\u0430\u0447\u043E\u0442\u043E\u0432 \u0410\u043C\u0444\u0438\u043A\u043E\u043C");
-				dialog.setVisible(true);
-				final Object object = optionPane.getValue();
-				System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@: " + object);
-			}
-		});
 	}
 
 	protected void createUIItems() {
@@ -261,8 +244,7 @@ public class OpenSessionCommand extends AbstractCommand {
 					new ArrayList<Domain>(this.availableDomains),
 					StorableObjectWrapper.COLUMN_NAME,
 					StorableObjectWrapper.COLUMN_ID);
-			
-			
+
 
 			{
 				final GridBagConstraints gbc = new GridBagConstraints();
@@ -319,6 +301,12 @@ public class OpenSessionCommand extends AbstractCommand {
 		}
 	}
 
+	/**
+	 * "Да" - если пользователь всё выбрал правильно и нажал "да".
+	 * "Нет" - в остальных случаях, т. е. либо пользователь нажал "отменить", либо ввёл неправильные значения.
+	 * @param frame
+	 * @return true, if user provided correct values and pressed "yes".
+	 */
 	protected boolean showOpenSessionDialog(final JFrame frame) {
 
 		this.createUIItems();
