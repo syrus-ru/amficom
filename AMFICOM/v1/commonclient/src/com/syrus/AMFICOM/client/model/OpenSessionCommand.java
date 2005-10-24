@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.32 2005/10/23 19:18:03 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.33 2005/10/24 11:54:59 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/10/23 19:18:03 $
+ * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/10/24 11:54:59 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -156,7 +156,6 @@ public class OpenSessionCommand extends AbstractCommand {
 		do {
 			try {
 				moreAttemps = !this.logging();
-				this.logged = true;
 			} catch (final CommunicationException ce) {
 				Log.errorException(ce);
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
@@ -190,11 +189,10 @@ public class OpenSessionCommand extends AbstractCommand {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Common.StatusBar.OpeningSession")));
-//		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
-
 		if (this.login == null || this.password == null || this.domainId == null) {
 			final boolean wannaNotLogin = !this.showOpenSessionDialog(Environment.getActiveWindow());
 			if (wannaNotLogin) {
+				this.logged = false;
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_MESSAGE,
 						I18N.getString("Common.StatusBar.Aborted")));
@@ -215,9 +213,11 @@ public class OpenSessionCommand extends AbstractCommand {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
 		clientSessionEnvironment.login(this.login, this.password, this.domainId);
+		
+		this.logged = true;
+		
 		this.disposeDialog();
 
-//		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 		this.dispatcher.firePropertyChange(new ContextChangeEvent(this.domainId, ContextChangeEvent.LOGGED_IN_EVENT));
 
 		this.addPopupMessageReceiver();
