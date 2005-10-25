@@ -1,5 +1,5 @@
 /*
- * $Id: ExitCommand.java,v 1.3 2005/09/08 14:25:57 bob Exp $
+ * $Id: ExitCommand.java,v 1.4 2005/10/25 15:33:34 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,12 @@ package com.syrus.AMFICOM.client.model;
 
 import java.awt.Window;
 
+import com.syrus.AMFICOM.client.event.ContextChangeEvent;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+
 /**
  * 
- * @version $Revision: 1.3 $, $Date: 2005/09/08 14:25:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/25 15:33:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -20,13 +23,19 @@ import java.awt.Window;
 public class ExitCommand extends AbstractCommand {
 
 	private Window	window; // Окно, из которого вызвана команда
+	private final Dispatcher	dispatcher;
 
-	public ExitCommand(Window window) {
+	public ExitCommand(final Window window,
+			final Dispatcher dispatcher) {
 		this.window = window;
+		this.dispatcher = dispatcher;		
 	}
 
 	@Override
 	public void execute() {
+		final ContextChangeEvent logOutEvent = 
+			new ContextChangeEvent(this, ContextChangeEvent.LOGGED_OUT_EVENT);
+		this.dispatcher.firePropertyChange(logOutEvent);
 		System.out.println("exit window " + this.window.getName());
 		Environment.disposeWindow(this.window); // Реально удаление окна
 		// производит
