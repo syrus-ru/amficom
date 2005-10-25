@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.6 2005/10/16 17:22:57 max Exp $
+ * $Id: PipeBlock.java,v 1.7 2005/10/25 07:45:38 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: max $
- * @version $Revision: 1.6 $, $Date: 2005/10/16 17:22:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/10/25 07:45:38 $
  * @module map
  */
 public final class PipeBlock 
@@ -251,7 +251,7 @@ public final class PipeBlock
 	 * @param dimension рамерность
 	 */
 	public void setDimension(final IntDimension dimension) {
-		this.dimension = dimension;
+		this.dimension.setSize(dimension);
 		this.initialize();
 
 		// создается новая матрица прокладки
