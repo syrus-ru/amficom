@@ -1,7 +1,7 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.11 2005/10/18 08:05:27 bob Exp $
+* $Id: ProcessingDialog.java,v 1.12 2005/10/25 16:03:09 bob Exp $
 *
-* Copyright ¿ 2005 Syrus Systems.
+* Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
 * Project: AMFICOM.
 */
@@ -12,28 +12,26 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.ArrayList;
-import java.util.Date;
+import java.awt.event.ComponentListener;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 import javax.swing.JDialog;
 import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.util.Log;
+import com.syrus.util.WorkQueue;
 
 
 /**
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/10/18 08:05:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/25 16:03:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -42,140 +40,69 @@ public final class ProcessingDialog {
 
 	final static Level LOGLEVEL = Log.DEBUGLEVEL10;
 	
-	final static Object LOCK = new Object(); 
-	
-	volatile static List<Runnable> runnableTasks = 
-		new ArrayList<Runnable>();
 	volatile static Map<Runnable, String> runnableTaskNames = 
-		new HashMap<Runnable, String>();
+		new HashMap<Runnable, String>();	
+	
+	private static final DisplayQueue DISPLAY_QUEUE = new DisplayQueue();
 	
 	public ProcessingDialog(final Runnable runnable, final String title) {
-		final String threadName = Thread.currentThread().getName();
-		assert Log.debugMessage("ProcessingDialog.ProcessingDialog | before LOCK " + new Date() + " " + title + '[' + threadName + ']',
-			LOGLEVEL);
-		synchronized (LOCK) {
-			assert Log.debugMessage("ProcessingDialog.ProcessingDialog | LOCK " + new Date() + " " + title + '[' + threadName + ']',
-				LOGLEVEL);			
-			runnableTasks.add(runnable);
-			runnableTaskNames.put(runnable, title);
-		}
-		assert Log.debugMessage("ProcessingDialog.ProcessingDialog | after LOCK " + new Date() + " " + title + '[' + threadName + ']',
-			LOGLEVEL);
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				startIfItNeeded();				
-			}
-		});
-		
+		DISPLAY_QUEUE.enqueue(runnable);
+		runnableTaskNames.put(runnable, title);
 	}
 	
-	final void  startIfItNeeded() {
-		final String currentThreadName = Thread.currentThread().getName();
-		assert Log.debugMessage("ProcessingDialog.startIfItNeeded | before LOCK " 
-				+ new Date()  
-				+ '[' 
-				+ currentThreadName 
-				+ ']' , 
-			LOGLEVEL);
-		synchronized (LOCK) {
-			assert Log.debugMessage("ProcessingDialog.startIfItNeeded | LOCK " 
-					+ new Date()  
-					+ '[' 
-					+ currentThreadName 
-					+ ']' , 
-				LOGLEVEL);
-			final int size = runnableTasks.size();
-			assert Log.debugMessage("ProcessingDialog.startIfItNeeded | size = " + size,
-				LOGLEVEL);
-			if (size > 1) {
-				assert Log.debugMessage("ProcessingDialog.startIfItNeeded | LOCK -- there is working queue -- return -- " 
-						+ new Date()  
-						+ '[' 
-						+ currentThreadName 
-						+ ']' , 
-					LOGLEVEL);
-				return;
-			}
+	private static class DisplayQueue extends WorkQueue {
+
+		final JDialog	modalDialog;
+		private final JProgressBar	progressBar;
+
+		public DisplayQueue() {
+			final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
+			final Dimension screenSize = defaultToolkit.getScreenSize();
+			
+			this.modalDialog = 
+				new JDialog(Environment.getActiveWindow(), true);
+			this.progressBar = new JProgressBar();
+			this.progressBar.setStringPainted(true);
+			this.progressBar.setIndeterminate(true);
+			this.modalDialog.getContentPane().add(this.progressBar);
+			this.modalDialog.pack();
+			this.modalDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+			this.modalDialog.setSize(screenSize.width / 3, this.modalDialog.getHeight());
+			this.modalDialog.setLocation((screenSize.width - this.modalDialog.getWidth())/2,
+					(screenSize.height - this.modalDialog.getHeight())/2);
 		}
-		assert Log.debugMessage("ProcessingDialog.startIfItNeeded | after LOCK " + new Date()  + '[' + currentThreadName + ']' , LOGLEVEL);
 		
-		final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
-		final Dimension screenSize = defaultToolkit.getScreenSize();
-		
-		final JDialog modalDialog = 
-			new JDialog(Environment.getActiveWindow(), true);
-		final JProgressBar progressBar = new JProgressBar();
-		progressBar.setStringPainted(true);
-		progressBar.setIndeterminate(true);
-		modalDialog.getContentPane().add(progressBar);
-		modalDialog.pack();
-		modalDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		modalDialog.setSize(screenSize.width / 3, modalDialog.getHeight());
-		modalDialog.setLocation((screenSize.width - modalDialog.getWidth())/2,
-				(screenSize.height - modalDialog.getHeight())/2);
-		
-		modalDialog.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
-				new Thread() {
-					@Override
-					public void run() {
-						assert Log.debugMessage(".run | thread in", LOGLEVEL);
-
-						final String threadName = currentThread().getName();
-
-						boolean empty;
-
-						assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
-						synchronized (LOCK) {
-							assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-							empty = runnableTasks.isEmpty();								
-						}
-						assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-
-						while(!empty) {
-							final Runnable runnable;
-							final String title;							
-							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
-							synchronized (LOCK) {
-								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-								runnable = runnableTasks.get(0);
-								title = runnableTaskNames.get(runnable);
-							}
-							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-							modalDialog.setTitle(title);
-							progressBar.setString(title);
+		@Override
+		protected void processingItem(final Runnable workItem) 
+		throws InterruptedException {
+			final String title = runnableTaskNames.remove(workItem);
+			this.modalDialog.setTitle(title);
+			this.progressBar.setString(title);
+			final ComponentListener componentListener = new ComponentAdapter() {
+				@Override
+				public void componentShown(ComponentEvent e) {
+					new Thread() {
+						@Override
+						public void run() {
 							try {
-								runnable.run();
-							} catch(final Throwable throwable) {
+								workItem.run();
+							} catch (final Throwable throwable) {
 								// too unlikely
 								new Launcher.DefaultThrowableHandler().handle(throwable);
 							}
-							
-							assert Log.debugMessage(".run | before LOCK " + new Date()  + '[' + threadName + ']' , LOGLEVEL);
-							synchronized (LOCK) {
-								assert Log.debugMessage(".run | LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
-								runnableTasks.remove(0);
-								runnableTaskNames.remove(runnable);
-								empty = runnableTasks.isEmpty();								
-							}
-							assert Log.debugMessage(".run | after LOCK " + new Date() + '[' + threadName + ']', LOGLEVEL);
+							DisplayQueue.this.modalDialog.setVisible(false);
 						}
-						SwingUtilities.invokeLater(new Runnable() {
-							
-							public void run() {
-								modalDialog.dispose();
-								
-							}
-						});
-						
-						assert Log.debugMessage(".run | thread out", LOGLEVEL);
-					}
-				}.start();								
-			}
-		});		
-		modalDialog.setVisible(true);
+					}.start();
+					
+					DisplayQueue.this.modalDialog.removeComponentListener(this);
+				}
+			};
+			this.modalDialog.addComponentListener(componentListener);
+			this.modalDialog.setVisible(true);
+			
+		}
 	}
 	
+
 }
 
