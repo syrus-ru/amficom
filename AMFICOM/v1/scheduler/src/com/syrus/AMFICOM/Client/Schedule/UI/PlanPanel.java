@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.60 2005/10/24 13:12:41 bob Exp $
+ * $Id: PlanPanel.java,v 1.61 2005/10/25 07:23:50 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/10/24 13:12:41 $
+ * @version $Revision: 1.61 $, $Date: 2005/10/25 07:23:50 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -433,7 +433,12 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 		long start2 = this.cal.getTimeInMillis(); 
 		
-		final long timeRegion = end-start;
+		final long timeRegion = end - start;
+		
+		if (timeRegion == 0) {
+			System.err.println("PlanPanel.paintScale | timeRegion is 0");
+			return;
+		}
 		
 		for (long calendarTime = start2; calendarTime <= end;) {			
 			final int currentX = (int)((w - MARGIN) * (calendarTime - start)/timeRegion) + MARGIN/2;
