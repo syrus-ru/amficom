@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.42 2005/10/24 13:11:32 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.43 2005/10/25 07:24:22 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/10/24 13:11:32 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/25 07:24:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -75,6 +75,8 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		
 		this.setWindowArranger(new WindowArranger(this) {
 
+			private int timeFrameHeight = 0;
+			
 			@Override
 			public void arrange() {
 				ScheduleMainFrame f = (ScheduleMainFrame) this.mainframe;
@@ -103,10 +105,13 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				treeFrame.setSize(w / 5, h);
 
 				propsFrame.pack();
-				propsFrame.setSize(w / 5, propsFrame.getHeight());
+				propsFrame.setSize(w / 5, propsFrame.getHeight());				
 				
 				timeFrame.pack();
-				timeFrame.setSize(w / 5, 3 * timeFrame.getHeight() / 2);
+				if (this.timeFrameHeight == 0) {
+					this.timeFrameHeight = 3 * timeFrame.getHeight() / 2;
+				}
+				timeFrame.setSize(w / 5, this.timeFrameHeight);
 //				saveFrame.pack();
 //				saveFrame.setSize(w / 5, saveFrame.getHeight());
 				tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), 2 * h / 5);
