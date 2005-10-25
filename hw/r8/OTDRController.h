@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.h,v 1.6 2005/10/13 16:56:13 arseniy Exp $
+// $Id: OTDRController.h,v 1.7 2005/10/25 14:18:04 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.6 $, $Date: 2005/10/13 16:56:13 $
+// $Revision: 1.7 $, $Date: 2005/10/25 14:18:04 $
 // $Author: arseniy $
 //
 // OTDRController.h: interface for the OTDRController class.
@@ -99,7 +99,7 @@ class OTDRController {
 
 		/*	Установить параметры измерения.
 		 * 	В случае неправильных значений возвращает FALSE.*/
-		BOOL setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) const;
+		virtual BOOL setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) = 0;
 
 		/*	Получить текущее состояние*/
 		OTDRState getState() const;
@@ -117,8 +117,6 @@ class OTDRController {
 		/*	Распечатать допустимые параметры измерений.
 		 * 	Реализована в подклассах*/
 		virtual void printAvailableParameters() const = 0;
-
-		virtual BOOL setMeasurementParameters0(const ParametersMapT parametersMap) const = 0;
 
 		/*	Главный цикл потока*/
 		static void* run(void* args);

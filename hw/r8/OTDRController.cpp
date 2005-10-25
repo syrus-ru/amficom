@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.cpp,v 1.5 2005/10/13 16:56:13 arseniy Exp $
+// $Id: OTDRController.cpp,v 1.6 2005/10/25 14:18:04 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.5 $, $Date: 2005/10/13 16:56:13 $
+// $Revision: 1.6 $, $Date: 2005/10/25 14:18:04 $
 // $Author: arseniy $
 //
 // Implementation of the OTDRController class.
@@ -59,14 +59,6 @@ void OTDRController::init() {
 
 OTDRId OTDRController::getOTDRId() const {
 	return this->otdrId;
-}
-
-BOOL OTDRController::setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) const {
-	ParametersMapT parametersMap;
-	for (int i = 0; i < parNumber; i++) {
-		parametersMap[parameters[i]->getName()->getData()] = parameters[i]->getValue();
-	}
-	return this->setMeasurementParameters0(parametersMap);
 }
 
 OTDRState OTDRController::getState() const {
