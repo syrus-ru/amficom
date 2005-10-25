@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.97 2005/10/14 06:18:17 bass Exp $
+ * $Id: Collector.java,v 1.98 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,10 +54,10 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.98 $, $Date: 2005/10/25 19:53:11 $
  * @module map
  */
-public final class Collector extends StorableObject
+public final class Collector extends StorableObject<Collector>
 		implements Describable, Characterizable,
 		MapElement, XmlBeansTransferable<XmlCollector> {
 	private static final long serialVersionUID = 4049922679379212598L;
@@ -458,6 +458,18 @@ public final class Collector extends StorableObject
 		}
 	}
 
+	public Characterizable getCharacterizable() {
+		return this;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected CollectorWrapper getWrapper() {
+		return CollectorWrapper.getInstance();
+	}
+
 	/*-********************************************************************
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
@@ -544,9 +556,5 @@ public final class Collector extends StorableObject
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
 		}
-	}
-
-	public Characterizable getCharacterizable() {
-		return this;
 	}
 }

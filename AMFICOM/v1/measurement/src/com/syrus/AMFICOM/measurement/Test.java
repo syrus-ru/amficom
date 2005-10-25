@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.173 2005/10/19 18:19:40 arseniy Exp $
+ * $Id: Test.java,v 1.174 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,13 +46,13 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.173 $, $Date: 2005/10/19 18:19:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.174 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject implements Describable {	
+public final class Test extends StorableObject<Test> implements Describable {	
 	private static final long	serialVersionUID	= 3688785890592241972L;
 
 	private int temporalType;
@@ -596,6 +596,14 @@ public final class Test extends StorableObject implements Describable {
 		dependencies.remove(Identifier.VOID_IDENTIFIER);
 		
 		return dependencies;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected TestWrapper getWrapper() {
+		return TestWrapper.getInstance();
 	}
 
 	public static IdlTest[] createTransferables(final Set<Test> tests, final ORB orb) {

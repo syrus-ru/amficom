@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.107 2005/10/07 10:04:19 bass Exp $
+ * $Id: NodeLink.java,v 1.108 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,10 +50,10 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.107 $, $Date: 2005/10/07 10:04:19 $
+ * @version $Revision: 1.108 $, $Date: 2005/10/25 19:53:11 $
  * @module map
  */
-public final class NodeLink extends StorableObject
+public final class NodeLink extends StorableObject<NodeLink>
 		implements MapElement, XmlBeansTransferable<XmlNodeLink> {
 	private static final long serialVersionUID = 3257290240262617393L;
 
@@ -182,7 +182,7 @@ public final class NodeLink extends StorableObject
 		super.markAsChanged();
 	}
 
-	public AbstractNode getEndNode() {
+	public AbstractNode<?> getEndNode() {
 		if(this.endNode == null) {
 			try {
 				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
@@ -277,7 +277,7 @@ public final class NodeLink extends StorableObject
 		markAsChanged();
 	}
 
-	public AbstractNode getStartNode() {
+	public AbstractNode<?> getStartNode() {
 		if(this.startNode == null) {
 			try {
 				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
@@ -534,5 +534,13 @@ public final class NodeLink extends StorableObject
 
 	public Characterizable getCharacterizable() {
 		return null;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected NodeLinkWrapper getWrapper() {
+		return NodeLinkWrapper.getInstance();
 	}
 }

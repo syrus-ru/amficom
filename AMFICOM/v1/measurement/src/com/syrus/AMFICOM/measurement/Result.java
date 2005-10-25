@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.79 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: Result.java,v 1.80 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,13 +34,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Result extends StorableObject {
+public final class Result extends StorableObject<Result> {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -262,5 +262,13 @@ public final class Result extends StorableObject {
 		dependencies.add(this.action);
 
 		return dependencies;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected ResultWrapper getWrapper() {
+		return ResultWrapper.getInstance();
 	}
 }

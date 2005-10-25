@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.116 2005/10/14 06:18:19 bass Exp $
+ * $Id: Scheme.java,v 1.117 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,11 +87,11 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2005/10/14 06:18:19 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
-public final class Scheme extends AbstractCloneableDomainMember
+public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		implements Describable, SchemeCellContainer,
 		ReverseDependencyContainer, XmlBeansTransferable<XmlScheme> {
 	private static final long serialVersionUID = 3257289136389173298L;
@@ -356,7 +356,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		final boolean usePool = false;
 
 		try {
-			final Scheme clone = (Scheme) super.clone();
+			final Scheme clone = super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -1230,6 +1230,14 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 
 		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, POST_IMPORT);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeWrapper getWrapper() {
+		return SchemeWrapper.getInstance();
 	}
 
 	/*-********************************************************************

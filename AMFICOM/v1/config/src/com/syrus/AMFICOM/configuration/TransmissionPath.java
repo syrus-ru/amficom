@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.100 2005/10/18 16:19:41 bass Exp $
+ * $Id: TransmissionPath.java,v 1.101 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,13 +38,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.100 $, $Date: 2005/10/18 16:19:41 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/25 19:53:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
-public final class TransmissionPath extends DomainMember 
+public final class TransmissionPath extends DomainMember<TransmissionPath>
 		implements MonitoredDomainMember,
 		Characterizable,
 		TypedObject<TransmissionPathType> {
@@ -272,6 +272,14 @@ public final class TransmissionPath extends DomainMember
 	public Set<Identifier> getMonitoredElementIds() {
 		//TODO Implement
 		throw new UnsupportedOperationException(NOT_IMPLEMENTED);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected TransmissionPathWrapper getWrapper() {
+		return TransmissionPathWrapper.getInstance();
 	}
 
 	/*-********************************************************************

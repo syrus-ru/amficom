@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.34 2005/10/01 15:13:18 bass Exp $
+ * $Id: MapLibrary.java,v 1.35 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,11 +60,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/10/01 15:13:18 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/25 19:53:11 $
  * @author $Author: bass $
  * @module map
  */
-public final class MapLibrary extends StorableObject implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
+public final class MapLibrary extends StorableObject<MapLibrary>
+		implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
 	private static final long	serialVersionUID	= -8616969914711251336L;
 
 	private String name;
@@ -490,5 +491,13 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 
 	Identifier getParentMapLibraryId() {
 		return this.parentMapLibraryId;
-	}	
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected MapLibraryWrapper getWrapper() {
+		return MapLibraryWrapper.getInstance();
+	}
 }

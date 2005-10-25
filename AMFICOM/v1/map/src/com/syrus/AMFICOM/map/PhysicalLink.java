@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.141 2005/10/17 06:59:33 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.142 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,11 +76,11 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.141 $, $Date: 2005/10/17 06:59:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.142 $, $Date: 2005/10/25 19:53:11 $
  * @module map
  */
-public class PhysicalLink extends StorableObject
+public class PhysicalLink extends StorableObject<PhysicalLink>
 		implements Characterizable, TypedObject<PhysicalLinkType>,
 		MapElement, XmlBeansTransferable<XmlPhysicalLink> {
 	private static final long serialVersionUID = 4121409622671570743L;
@@ -392,7 +392,7 @@ public class PhysicalLink extends StorableObject
 		super.markAsChanged();
 	}
 
-	public AbstractNode getEndNode() {
+	public AbstractNode<?> getEndNode() {
 		if(this.endNode == null) {
 			try {
 				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
@@ -471,7 +471,7 @@ public class PhysicalLink extends StorableObject
 		super.markAsChanged();
 	}
 
-	public AbstractNode getStartNode() {
+	public AbstractNode<?> getStartNode() {
 		if(this.startNode == null) {
 			try {
 				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
@@ -1031,6 +1031,18 @@ public class PhysicalLink extends StorableObject
 		}
 	}
 
+	public Characterizable getCharacterizable() {
+		return this;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected final PhysicalLinkWrapper getWrapper() {
+		return PhysicalLinkWrapper.getInstance();
+	}
+
 	/*-********************************************************************
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/
@@ -1125,9 +1137,5 @@ public class PhysicalLink extends StorableObject
 		for (final Characteristic characteristic : toAdd) {
 			this.addCharacteristic(characteristic, usePool);
 		}
-	}
-
-	public Characterizable getCharacterizable() {
-		return this;
 	}
 }	

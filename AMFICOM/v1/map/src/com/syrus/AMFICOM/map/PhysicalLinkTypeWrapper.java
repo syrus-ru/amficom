@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeWrapper.java,v 1.16 2005/08/12 14:24:16 arseniy Exp $
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.17 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/12 14:24:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/10/25 19:53:11 $
+ * @author $Author: bass $
  * @module map
  */
-public class PhysicalLinkTypeWrapper extends StorableObjectWrapper<PhysicalLinkType> {
+public final class PhysicalLinkTypeWrapper extends StorableObjectWrapper<PhysicalLinkType> {
 
 	// sort Number(1),
 	public static final String COLUMN_SORT = "sort";

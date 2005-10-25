@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * @module report
  */
 
-public class DataStorableElement extends StorableElement {
+public class DataStorableElement extends StorableElement<DataStorableElement> {
 	private static final long	serialVersionUID	= 3501681877580290043L;
 
 	/**
@@ -167,5 +167,13 @@ public class DataStorableElement extends StorableElement {
 	public void setReportObjectId(Identifier reportObjectId) {
 		this.reportObjectId = reportObjectId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected DataWrapper getWrapper() {
+		return DataWrapper.getInstance();
 	}
 }

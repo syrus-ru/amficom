@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.115 2005/10/17 15:25:51 max Exp $
+ * $Id: Map.java,v 1.116 2005/10/25 19:53:10 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,11 +67,12 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: max $
- * @version $Revision: 1.115 $, $Date: 2005/10/17 15:25:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.116 $, $Date: 2005/10/25 19:53:10 $
  * @module map
  */
-public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
+public final class Map extends DomainMember<Map>
+		implements Namable, XmlBeansTransferable<XmlMap> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -1350,5 +1351,13 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	Set<Identifier> getTopologicalNodeIds() {
 		return this.topologicalNodeIds;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected MapWrapper getWrapper() {
+		return MapWrapper.getInstance();
 	}
 }

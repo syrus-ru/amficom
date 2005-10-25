@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.104 2005/10/14 06:18:17 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.105 2005/10/25 19:53:10 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,10 +61,10 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.104 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.105 $, $Date: 2005/10/25 19:53:10 $
  * @module map
  */
-public final class PhysicalLinkType extends StorableObjectType 
+public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType> 
 		implements Characterizable, Namable,
 		LibraryEntry, XmlBeansTransferable<XmlPhysicalLinkType> {
 
@@ -529,6 +529,14 @@ public final class PhysicalLinkType extends StorableObjectType
 	
 	protected void setMapLibrary0(MapLibrary mapLibrary) {
 		this.mapLibraryId = mapLibrary.getId();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected PhysicalLinkTypeWrapper getWrapper() {
+		return PhysicalLinkTypeWrapper.getInstance();
 	}
 
 	/*-********************************************************************

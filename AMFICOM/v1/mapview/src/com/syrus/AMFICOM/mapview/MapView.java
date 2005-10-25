@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.74 2005/10/24 15:43:07 krupenn Exp $
+* $Id: MapView.java,v 1.75 2005/10/25 19:53:14 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -60,12 +59,12 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * 
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.74 $, $Date: 2005/10/24 15:43:07 $
+ * @version $Revision: 1.75 $, $Date: 2005/10/25 19:53:14 $
  * @module mapview
  */
-public final class MapView extends DomainMember implements Describable {
+public final class MapView extends DomainMember<MapView> implements Describable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -210,7 +209,7 @@ public final class MapView extends DomainMember implements Describable {
 		}
 
 		try {
-			this.schemes = new HashSet(StorableObjectPool.getStorableObjects(schemeIds, true));
+			this.schemes = new HashSet<Scheme>(StorableObjectPool.<Scheme>getStorableObjects(schemeIds, true));
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
@@ -1001,4 +1000,11 @@ public final class MapView extends DomainMember implements Describable {
 		return top;
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected MapViewWrapper getWrapper() {
+		return MapViewWrapper.getInstance();
+	}
 }

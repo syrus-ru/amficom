@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternWrapper.java,v 1.12 2005/08/08 13:33:51 arseniy Exp $
+ * $Id: TemporalPatternWrapper.java,v 1.13 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 13:33:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @module measurement
  */
-public class TemporalPatternWrapper extends StorableObjectWrapper<CronTemporalPattern> {
+public final class TemporalPatternWrapper extends StorableObjectWrapper<CronTemporalPattern> {
 
 	public static final String COLUMN_VALUE = "value";
 

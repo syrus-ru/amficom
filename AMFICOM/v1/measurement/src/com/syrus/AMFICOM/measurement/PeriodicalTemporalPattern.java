@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.24 2005/10/19 06:46:04 bob Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.25 2005/10/25 19:53:05 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,12 +29,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/19 06:46:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
+public final class PeriodicalTemporalPattern
+		extends AbstractTemporalPattern<PeriodicalTemporalPattern> {
 
 	private static final long serialVersionUID = 3257567312898175032L;
 
@@ -230,5 +231,11 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 		this.period = period;
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected PeriodicalTemporalPatternWrapper getWrapper() {
+		return PeriodicalTemporalPatternWrapper.getInstance();
+	}
 }
-

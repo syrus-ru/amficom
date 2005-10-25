@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.79 2005/10/17 12:09:36 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.80 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,11 +66,11 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/10/17 12:09:36 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
 public final class CableChannelingItem
-		extends StorableObject
+		extends StorableObject<CableChannelingItem>
 		implements Comparable<CableChannelingItem>,
 		PathMember<SchemeCableLink, CableChannelingItem>,
 		ReverseDependencyContainer,
@@ -1025,5 +1025,13 @@ public final class CableChannelingItem
 
 		this.pipeBlockId = newPipeBlockId;
 		this.pipeBlock = pipeBlock;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected CableChannelingItemWrapper getWrapper() {
+		return CableChannelingItemWrapper.getInstance();
 	}
 }

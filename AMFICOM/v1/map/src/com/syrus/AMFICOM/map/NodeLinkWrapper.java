@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkWrapper.java,v 1.14 2005/09/05 10:36:59 max Exp $
+ * $Id: NodeLinkWrapper.java,v 1.15 2005/10/25 19:53:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/05 10:36:59 $
- * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2005/10/25 19:53:10 $
+ * @author $Author: bass $
  * @module map
  */
-public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
+public final class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
 
 	// name VARCHAR2(128),
 	// physical_link_id VARCHAR2(32),

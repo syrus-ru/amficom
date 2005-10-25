@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.69 2005/10/22 16:11:16 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.70 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,11 +47,11 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/10/22 16:11:16 $
+ * @version $Revision: 1.70 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public abstract class AbstractSchemeElement
-		extends AbstractCloneableStorableObject
+public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
+		extends AbstractCloneableStorableObject<T>
 		implements Describable, Characterizable,
 		ReverseDependencyContainer {
 	static final long serialVersionUID = 4644766113809681630L;

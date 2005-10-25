@@ -1,5 +1,5 @@
 /*-
- * $Id: ImageWrapper.java,v 1.1 2005/09/30 12:34:07 max Exp $
+ * $Id: ImageWrapper.java,v 1.2 2005/10/25 19:53:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,26 +9,30 @@ package com.syrus.AMFICOM.report;
 
 import java.util.List;
 
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 12:34:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:08 $
  * @module report
  */
-public class ImageWrapper extends StorableObjectWrapper {
+public final class ImageWrapper extends StorableElementWrapper<ImageStorableElement> {
 
 	public static final String COLUMN_BITMAP_IMAGE_RESOURCE_ID = "bitmap_image_res_id";
-	
-	@Override
-	public void setValue(StorableObject storableObject, String key, Object value) throws PropertyChangeException {
+
+	private static ImageWrapper instance;
+
+	private ImageWrapper() {
 		throw new UnsupportedOperationException();
 	}
 
-	public List getKeys() {
+	@Override
+	public void setValue(final ImageStorableElement image, String key, Object value) throws PropertyChangeException {
+		throw new UnsupportedOperationException();
+	}
+
+	public List<String> getKeys() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -44,7 +48,8 @@ public class ImageWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException();
 	}
 
-	public Object getValue(Object object, String key) {
+	@Override
+	public Object getValue(final ImageStorableElement image, String key) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -52,8 +57,10 @@ public class ImageWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setValue(Object object, String key, Object value) throws PropertyChangeException {
-		throw new UnsupportedOperationException();
+	public static ImageWrapper getInstance() {
+		if (instance == null) {
+			instance = new ImageWrapper();
+		}
+		return instance;
 	}
-
 }

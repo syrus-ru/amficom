@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.87 2005/10/11 07:14:29 max Exp $
+ * $Id: TopologicalNode.java,v 1.88 2005/10/25 19:53:10 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,11 +47,12 @@ import com.syrus.util.Log;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: max $
- * @version $Revision: 1.87 $, $Date: 2005/10/11 07:14:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2005/10/25 19:53:10 $
  * @module map
  */
-public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
+public final class TopologicalNode extends AbstractNode<TopologicalNode>
+		implements XmlBeansTransferable<XmlTopologicalNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -363,5 +364,13 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 
 	public Characterizable getCharacterizable() {
 		return null;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected TopologicalNodeWrapper getWrapper() {
+		return TopologicalNodeWrapper.getInstance();
 	}
 }

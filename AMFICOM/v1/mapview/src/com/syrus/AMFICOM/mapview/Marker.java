@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.40 2005/09/29 11:19:54 krupenn Exp $
+ * $Id: Marker.java,v 1.41 2005/10/25 19:53:14 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -48,13 +49,13 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *         и окно рефлектограммы инициализирует маркер такой            *
  *         информацией, после чего опять используется Lo.               *
  *
- * @version $Revision: 1.40 $, $Date: 2005/09/29 11:19:54 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/25 19:53:14 $
  * @module mapview
- * @author $Author: krupenn $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  */
 
-public class Marker extends AbstractNode {
+public class Marker extends AbstractNode<Marker> {
 	private static final long serialVersionUID = 02L;
 	
 	/**
@@ -480,4 +481,12 @@ public class Marker extends AbstractNode {
 		return null;
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected final StorableObjectWrapper<Marker> getWrapper() {
+		throw new UnsupportedOperationException(
+				"Marker#getWrapper() is unsupported");
+	}
 }

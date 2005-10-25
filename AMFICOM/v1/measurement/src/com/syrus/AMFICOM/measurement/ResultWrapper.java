@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.20 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ResultWrapper.java,v 1.21 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,12 +20,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public class ResultWrapper extends StorableObjectWrapper<Result> {
+public final class ResultWrapper extends StorableObjectWrapper<Result> {
 
 	// measurementId VARCHAR2(32) NOT NULL,
 	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";

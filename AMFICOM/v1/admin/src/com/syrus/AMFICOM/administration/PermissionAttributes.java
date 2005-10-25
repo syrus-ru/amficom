@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.23 2005/10/21 11:45:49 bob Exp $
+* $Id: PermissionAttributes.java,v 1.24 2005/10/25 19:53:15 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,12 +37,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/21 11:45:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
-public class PermissionAttributes extends StorableObject {
+public final class PermissionAttributes extends StorableObject<PermissionAttributes> {
 
 	// TODO generate serialVersionUID when all enum will be made 
 
@@ -999,6 +999,14 @@ public class PermissionAttributes extends StorableObject {
 	
 	public final Module getModule() {
 		return this.module;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected PermissionAttributesWrapper getWrapper() {
+		return PermissionAttributesWrapper.getInstance();
 	}
 	
 	/**

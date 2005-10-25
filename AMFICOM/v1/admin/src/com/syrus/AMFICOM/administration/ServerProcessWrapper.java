@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.13 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: ServerProcessWrapper.java,v 1.14 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
-public class ServerProcessWrapper extends StorableObjectWrapper<ServerProcess> {
+public final class ServerProcessWrapper extends StorableObjectWrapper<ServerProcess> {
 	public static final String KEY_LOGIN_PROCESS_CODENAME = "LoginProcessCodename";
 	public static final String KEY_EVENT_PROCESS_CODENAME = "EventProcessCodename";
 	public static final String KEY_MSERVER_PROCESS_CODENAME = "MServerProcessCodename";

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.54 2005/10/17 14:43:20 bass Exp $
+ * $Id: MeasurementPath.java,v 1.55 2005/10/25 19:53:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
@@ -39,7 +38,7 @@ import com.syrus.util.Log;
  *
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.54 $, $Date: 2005/10/17 14:43:20 $
+ * @version $Revision: 1.55 $, $Date: 2005/10/25 19:53:14 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -319,7 +318,7 @@ public final class MeasurementPath implements MapElement {
 	 * @throws ApplicationException	
 	 */
 	public double getLengthLf() throws ApplicationException {
-		return SchemeUtils.getPhysicalLength(this.schemePath);
+		return this.schemePath.getPhysicalLength();
 	}
 
 	/**
@@ -329,7 +328,7 @@ public final class MeasurementPath implements MapElement {
 	 * @throws ApplicationException
 	 */
 	public double getLengthLo() throws ApplicationException {
-		return SchemeUtils.getOpticalLength(this.schemePath);
+		return this.schemePath.getOpticalLength();
 	}
 
 	/**

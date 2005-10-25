@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.77 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemePort.java,v 1.78 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,10 +63,10 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.78 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemePort extends AbstractSchemePort
+public final class SchemePort extends AbstractSchemePort<SchemePort>
 		implements XmlBeansTransferable<XmlSchemePort> {
 	private static final long serialVersionUID = 3256436993469658930L;
 
@@ -263,11 +263,6 @@ public final class SchemePort extends AbstractSchemePort
 		}
 	}
 
-	@Override
-	public SchemePort clone() throws CloneNotSupportedException {
-		return (SchemePort) super.clone();
-	}
-
 	/**
 	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
@@ -447,5 +442,13 @@ public final class SchemePort extends AbstractSchemePort
 
 		this.parentSchemeDeviceId = newParentSchemeDeviceId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemePortWrapper getWrapper() {
+		return SchemePortWrapper.getInstance();
 	}
 }

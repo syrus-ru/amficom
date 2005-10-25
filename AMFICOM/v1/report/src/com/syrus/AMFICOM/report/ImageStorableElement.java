@@ -43,7 +43,8 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * @module report
  */
 
-public final class ImageStorableElement extends StorableElement {
+public final class ImageStorableElement
+		extends StorableElement<ImageStorableElement> {
 
 	private static final long serialVersionUID = 336147260496995306L;
 	private Identifier bitmapImageResourceId;
@@ -203,5 +204,13 @@ public final class ImageStorableElement extends StorableElement {
 	
 	Identifier getBitmapImageResourceId() {
 		return this.bitmapImageResourceId;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected ImageWrapper getWrapper() {
+		return ImageWrapper.getInstance();
 	}
 }

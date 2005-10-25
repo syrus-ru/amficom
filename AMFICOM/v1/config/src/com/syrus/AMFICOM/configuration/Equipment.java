@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.145 2005/10/22 16:11:16 bass Exp $
+ * $Id: Equipment.java,v 1.146 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,12 +60,12 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.145 $, $Date: 2005/10/22 16:11:16 $
+ * @version $Revision: 1.146 $, $Date: 2005/10/25 19:53:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class Equipment extends DomainMember
+public final class Equipment extends DomainMember<Equipment>
 		implements MonitoredDomainMember,
 		Characterizable,
 		XmlBeansTransferable<XmlEquipment> {
@@ -635,6 +635,14 @@ public final class Equipment extends DomainMember
 			Log.debugException(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected EquipmentWrapper getWrapper() {
+		return EquipmentWrapper.getInstance();
 	}
 
 	/*-********************************************************************

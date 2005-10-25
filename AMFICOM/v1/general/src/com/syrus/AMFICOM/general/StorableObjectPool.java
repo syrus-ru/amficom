@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.199 2005/10/23 18:25:09 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.200 2005/10/25 19:53:04 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.199 $, $Date: 2005/10/23 18:25:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.200 $, $Date: 2005/10/25 19:53:04 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 8
@@ -896,7 +896,7 @@ public final class StorableObjectPool {
 		}
 	}
 
-	private static void checkChangedWithDependencies(final StorableObject storableObject, int dependencyLevel)
+	private static void checkChangedWithDependencies(final StorableObject<?> storableObject, int dependencyLevel)
 			throws ApplicationException {
 		final Identifier id = storableObject.getId();
 		if (SAVING_OBJECT_IDS.contains(id)) {
@@ -976,7 +976,7 @@ public final class StorableObjectPool {
 		final Set<StorableObject> setUpdatedObjects = new HashSet<StorableObject>(storableObjects.size());
 		try {
 			final Map<Identifier, StorableObjectVersion> versionsMap = objectLoader.getRemoteVersions(ids);
-			for (final StorableObject storableObject : storableObjects) {
+			for (final StorableObject<?> storableObject : storableObjects) {
 				final Identifier id = storableObject.getId();
 				final StorableObjectVersion version = storableObject.getVersion();
 				final StorableObjectVersion remoteVersion = versionsMap.get(id);

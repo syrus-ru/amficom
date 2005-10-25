@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.84 2005/10/14 06:18:19 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.85 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,10 +64,10 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/10/14 06:18:19 $
+ * @version $Revision: 1.85 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeProtoGroup extends StorableObject
+public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 		implements Describable, SchemeSymbolContainer,
 		ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeProtoGroup> {
@@ -603,6 +603,14 @@ public final class SchemeProtoGroup extends StorableObject
 		}
 
 		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, POST_IMPORT);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeProtoGroupWrapper getWrapper() {
+		return SchemeProtoGroupWrapper.getInstance();
 	}
 
 	/*-********************************************************************

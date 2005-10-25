@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.27 2005/09/28 19:06:21 bass Exp $
+ * $Id: DomainMember.java,v 1.28 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,13 +20,13 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/09/28 19:06:21 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/25 19:53:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public abstract class DomainMember extends StorableObject {
+public abstract class DomainMember<T extends DomainMember<T>> extends StorableObject<T> {
 	private static final long serialVersionUID = -5921180280594867215L;
 
 	public static final String	COLUMN_DOMAIN_ID	= "domain_id";

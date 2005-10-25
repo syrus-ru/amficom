@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.108 2005/10/22 16:11:16 bass Exp $
+ * $Id: SchemeDevice.java,v 1.109 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,10 +78,11 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.108 $, $Date: 2005/10/22 16:11:16 $
+ * @version $Revision: 1.109 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeDevice extends AbstractCloneableStorableObject
+public final class SchemeDevice
+		extends AbstractCloneableStorableObject<SchemeDevice>
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeDevice> {
@@ -346,7 +347,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			}
 		}
 		try {
-			final SchemeDevice clone = (SchemeDevice) super.clone();
+			final SchemeDevice clone = super.clone();
 	
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -847,6 +848,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 
 		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, POST_IMPORT);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeDeviceWrapper getWrapper() {
+		return SchemeDeviceWrapper.getInstance();
 	}
 
 	/*-********************************************************************

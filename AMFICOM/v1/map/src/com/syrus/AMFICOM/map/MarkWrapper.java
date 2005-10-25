@@ -1,5 +1,5 @@
 /*
- * $Id: MarkWrapper.java,v 1.13 2005/08/12 10:05:08 arseniy Exp $
+ * $Id: MarkWrapper.java,v 1.14 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/12 10:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/25 19:53:11 $
+ * @author $Author: bass $
  * @module map
  */
-public class MarkWrapper extends StorableObjectWrapper<Mark> {
+public final class MarkWrapper extends StorableObjectWrapper<Mark> {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),

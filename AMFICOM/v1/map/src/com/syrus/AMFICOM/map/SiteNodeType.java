@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.105 2005/10/14 06:18:17 bass Exp $
+ * $Id: SiteNodeType.java,v 1.106 2005/10/25 19:53:10 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,10 +79,10 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.106 $, $Date: 2005/10/25 19:53:10 $
  * @module map
  */
-public final class SiteNodeType extends StorableObjectType 
+public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 		implements Characterizable, Namable,
 		LibraryEntry, XmlBeansTransferable<XmlSiteNodeType> {
 
@@ -594,6 +594,14 @@ public final class SiteNodeType extends StorableObjectType
 		in.read(data);
 		in.close();
 		return data;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SiteNodeTypeWrapper getWrapper() {
+		return SiteNodeTypeWrapper.getInstance();
 	}
 
 	/*-********************************************************************

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.45 2005/10/21 13:35:48 max Exp $
+ * $Id: MapViewDatabase.java,v 1.46 2005/10/25 19:53:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,15 +24,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -43,14 +40,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/10/21 13:35:48 $
- * @author $Author: max $
+ * @version $Revision: 1.46 $, $Date: 2005/10/25 19:53:14 $
+ * @author $Author: bass $
  * @module mapview
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {

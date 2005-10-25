@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.34 2005/08/19 16:22:05 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.35 2005/10/25 19:53:05 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.Undoable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
@@ -44,12 +45,14 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/08/19 16:22:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
-public final class IntervalsTemporalPattern extends AbstractTemporalPattern implements Undoable {
+public final class IntervalsTemporalPattern
+		extends AbstractTemporalPattern<IntervalsTemporalPattern>
+		implements Undoable {
 
 	private static final long serialVersionUID = 3257567312898175032L;
 
@@ -826,5 +829,14 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			}
 
 		}
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected StorableObjectWrapper<IntervalsTemporalPattern> getWrapper() {
+		throw new UnsupportedOperationException(
+				"IntervalsTemporalPattern#getWrapper() is unsupported");
 	}
 }

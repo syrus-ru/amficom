@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.95 2005/09/21 16:21:05 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.96 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,13 +34,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/09/21 16:21:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.96 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class MeasurementSetup extends StorableObject {
+public final class MeasurementSetup extends StorableObject<MeasurementSetup> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -453,5 +453,13 @@ public final class MeasurementSetup extends StorableObject {
 		dependencies.addAll(this.monitoredElementIds);
 
 		return dependencies;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected MeasurementSetupWrapper getWrapper() {
+		return MeasurementSetupWrapper.getInstance();
 	}
 }

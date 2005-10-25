@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.74 2005/10/18 07:37:31 bob Exp $
+ * $Id: Characteristic.java,v 1.75 2005/10/25 19:53:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,12 +32,12 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/10/18 07:37:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.75 $, $Date: 2005/10/25 19:53:04 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public final class Characteristic extends AbstractCloneableStorableObject
+public final class Characteristic extends AbstractCloneableStorableObject<Characteristic>
 		implements TypedObject<CharacteristicType>,
 		ReverseDependencyContainer,
 		XmlBeansTransferable<XmlCharacteristic> {
@@ -535,5 +535,13 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		clone.clonedIdMap.put(this.id, clone.id);
 
 		return clone;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected CharacteristicWrapper getWrapper() {
+		return CharacteristicWrapper.getInstance();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Role.java,v 1.4 2005/10/11 10:40:32 bob Exp $
+ * $Id: Role.java,v 1.5 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/11 10:40:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 
-public final class Role extends StorableObject
+public final class Role extends StorableObject<Role>
 		implements Describable {
 	
 	public enum RoleCodename {
@@ -232,5 +232,13 @@ public final class Role extends StorableObject
 	public void setCodename(final String codename) {
 		this.codename = codename;
 		super.markAsChanged();
-	}	
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected RoleWrapper getWrapper() {
+		return RoleWrapper.getInstance();
+	}
 }

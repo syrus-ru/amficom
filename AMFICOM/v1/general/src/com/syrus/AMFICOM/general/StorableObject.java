@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.122 2005/10/17 07:54:06 bass Exp $
+ * $Id: StorableObject.java,v 1.123 2005/10/25 19:53:04 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,12 +36,12 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.122 $, $Date: 2005/10/17 07:54:06 $
+ * @version $Revision: 1.123 $, $Date: 2005/10/25 19:53:04 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public abstract class StorableObject implements Identifiable,
+public abstract class StorableObject<T extends StorableObject<T>> implements Identifiable,
 		TransferableObject<IdlStorableObject> {
 	private static final long serialVersionUID = 3904998894075738999L;
 
@@ -352,8 +352,9 @@ public abstract class StorableObject implements Identifiable,
 	 * @see Object#clone()
 	 */
 	@Override
-	protected StorableObject clone() throws CloneNotSupportedException {
-		final StorableObject clone = (StorableObject) super.clone();
+	protected T clone() throws CloneNotSupportedException {
+		@SuppressWarnings("unchecked")
+		final T clone = (T) super.clone();
 		try {
 			clone.id = IdentifierPool.getGeneratedIdentifier(this.id.getMajor());
 		} catch (final IdentifierGenerationException ige) {
@@ -575,6 +576,13 @@ public abstract class StorableObject implements Identifiable,
 				+ "; persistent: " + this.isPersistent() + '}';
 	}
 
+	protected abstract StorableObjectWrapper<T> getWrapper();
+
+	@SuppressWarnings("unchecked")
+	public final Object getValue(final String key) {
+		return this.getWrapper().getValue((T) this, key);
+	}
+
 	/**
 	 * @see #getEntityCodeOfIdentifiables(Set)
 	 */
@@ -660,7 +668,7 @@ public abstract class StorableObject implements Identifiable,
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.122 $, $Date: 2005/10/17 07:54:06 $
+	 * @version $Revision: 1.123 $, $Date: 2005/10/25 19:53:04 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -785,7 +793,7 @@ public abstract class StorableObject implements Identifiable,
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.122 $, $Date: 2005/10/17 07:54:06 $
+	 * @version $Revision: 1.123 $, $Date: 2005/10/25 19:53:04 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

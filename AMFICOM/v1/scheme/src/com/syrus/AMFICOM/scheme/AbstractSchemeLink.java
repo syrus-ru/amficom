@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.43 2005/10/01 15:13:19 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.44 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,10 +47,11 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/10/01 15:13:19 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public abstract class AbstractSchemeLink extends AbstractSchemeElement {
+public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
+		extends AbstractSchemeElement<T> {
 	private static final long serialVersionUID = 1423195997939538835L;
 
 	/**
@@ -181,7 +182,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 *
 	 * Overridden by descendants to add extra checks.
 	 */
-	public AbstractLink getAbstractLink() {
+	public AbstractLink<?> getAbstractLink() {
 		try {
 			return StorableObjectPool.getStorableObject(this.getAbstractLinkId(), true);
 		} catch (final ApplicationException ae) {

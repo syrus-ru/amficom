@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.18 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: MCMWrapper.java,v 1.19 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
-public class MCMWrapper extends StorableObjectWrapper<MCM> {
+public final class MCMWrapper extends StorableObjectWrapper<MCM> {
 
 	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";

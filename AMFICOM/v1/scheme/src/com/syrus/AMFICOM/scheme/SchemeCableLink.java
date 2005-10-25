@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.110 2005/10/17 12:09:36 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.111 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,10 +92,10 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/10/17 12:09:36 $
+ * @version $Revision: 1.111 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeCableLink extends AbstractSchemeLink
+public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
 		implements PathOwner<CableChannelingItem>,
 		XmlBeansTransferable<XmlSchemeCableLink> {
 	private static final long serialVersionUID = 3760847878314274867L;
@@ -318,7 +318,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			}
 		}
 		try {
-			final SchemeCableLink clone = (SchemeCableLink) super.clone();
+			final SchemeCableLink clone = super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -847,6 +847,14 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		}
 		assert pathMembers.size() == 1;
 		return pathMembers.iterator().next();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeCableLinkWrapper getWrapper() {
+		return SchemeCableLinkWrapper.getInstance();
 	}
 
 	/*-********************************************************************

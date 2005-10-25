@@ -1,5 +1,5 @@
 /*-
- * $Id: ReportTemplateWrapper.java,v 1.1 2005/09/30 16:22:15 max Exp $
+ * $Id: ReportTemplateWrapper.java,v 1.2 2005/10/25 19:53:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,30 +9,36 @@ package com.syrus.AMFICOM.report;
 
 import java.util.List;
 
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 16:22:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:08 $
  * @module report
  */
-public class ReportTemplateWrapper extends StorableObjectWrapper {
+public final class ReportTemplateWrapper
+		extends StorableObjectWrapper<ReportTemplate> {
 
 	public static final String COLUMN_SHEET_SIZE = "sheet_size";
 	public static final String COLUMN_ORIENTATION = "orientation";
 	public static final String COLUMN_MARGIN_SIZE = "margin_size";
 	public static final String COLUMN_DESTINATION_MODULE = "destination_module";
 	public static final int SIZE_DESTINATION_MODULE_COLUMN = 64;
-		
-	@Override
-	public void setValue(StorableObject storableObject, String key, Object value) throws PropertyChangeException {
+
+	private static ReportTemplateWrapper instance;
+
+	private ReportTemplateWrapper() {
 		throw new UnsupportedOperationException();
 	}
 
-	public List getKeys() {
+	@Override
+	public void setValue(final ReportTemplate reportTemplate, String key, Object value) throws PropertyChangeException {
+		throw new UnsupportedOperationException();
+	}
+
+	public List<String> getKeys() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -48,7 +54,8 @@ public class ReportTemplateWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException();
 	}
 
-	public Object getValue(Object object, String key) {
+	@Override
+	public Object getValue(final ReportTemplate reportTemplate, String key) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -56,8 +63,10 @@ public class ReportTemplateWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException();
 	}
 
-	public void setValue(Object object, String key, Object value) throws PropertyChangeException {
-		throw new UnsupportedOperationException();
+	public static ReportTemplateWrapper getInstance() {
+		if (instance == null) {
+			instance = new ReportTemplateWrapper();
+		}
+		return instance;
 	}
-	
 }

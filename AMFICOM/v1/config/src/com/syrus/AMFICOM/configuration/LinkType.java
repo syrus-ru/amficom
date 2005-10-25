@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.87 2005/10/07 10:04:24 bass Exp $
+ * $Id: LinkType.java,v 1.88 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,12 +46,12 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/10/07 10:04:24 $
+ * @version $Revision: 1.88 $, $Date: 2005/10/25 19:53:09 $
  * @author $Author: bass $
  * @module config
  */
 
-public final class LinkType extends AbstractLinkType implements XmlBeansTransferable<XmlLinkType> {
+public final class LinkType extends AbstractLinkType<LinkType> implements XmlBeansTransferable<XmlLinkType> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -445,5 +445,13 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	public void setSort(final LinkTypeSort sort) {
 		this.sort = sort.value();
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected LinkTypeWrapper getWrapper() {
+		return LinkTypeWrapper.getInstance();
 	}
 }

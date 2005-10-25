@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.100 2005/10/14 06:18:17 bass Exp $
+ * $Id: Port.java,v 1.101 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,12 +42,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/25 19:53:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class Port extends StorableObject
+public final class Port extends StorableObject<Port>
 		implements Characterizable, TypedObject<PortType> {
 	private static final long serialVersionUID = -5139393638116159453L;
 
@@ -230,6 +230,14 @@ public final class Port extends StorableObject
 		}
 		this.type = type;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected PortWrapper getWrapper() {
+		return PortWrapper.getInstance();
 	}
 
 	/*-********************************************************************

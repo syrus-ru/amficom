@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.32 2005/10/14 06:18:17 bass Exp $
+* $Id: SystemUser.java,v 1.33 2005/10/25 19:53:15 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,13 +39,13 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/25 19:53:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class SystemUser extends StorableObject
+public final class SystemUser extends StorableObject<SystemUser>
 		implements Characterizable, Namable {
 	private static final long serialVersionUID = 7173419705878464356L;
 
@@ -293,7 +293,15 @@ public final class SystemUser extends StorableObject
 			this.roleIds.addAll(roleIds);
 		}
 	}
-	
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SystemUserWrapper getWrapper() {
+		return SystemUserWrapper.getInstance();
+	}
+
 	/*-********************************************************************
 	 * Children manipulation: characteristics                             *
 	 **********************************************************************/

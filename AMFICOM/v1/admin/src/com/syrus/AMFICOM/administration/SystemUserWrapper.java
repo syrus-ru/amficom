@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.16 2005/10/11 11:39:11 bob Exp $
+ * $Id: SystemUserWrapper.java,v 1.17 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/11 11:39:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
-public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
+public final class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	public static final String SYS_LOGIN = "sys";
 	public static final String LOGINPROCESSOR_LOGIN = "loginprocessor";
 	public static final String EVENTPROCESSOR_LOGIN = "eventprocessor";

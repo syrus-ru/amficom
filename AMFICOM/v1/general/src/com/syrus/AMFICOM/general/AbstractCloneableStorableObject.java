@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableStorableObject.java,v 1.11 2005/09/28 19:06:21 bass Exp $
+ * $Id: AbstractCloneableStorableObject.java,v 1.12 2005/10/25 19:53:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/09/28 19:06:21 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/25 19:53:04 $
  * @module general
  */
-public abstract class AbstractCloneableStorableObject extends StorableObject
+public abstract class AbstractCloneableStorableObject<T extends AbstractCloneableStorableObject<T>>
+		extends StorableObject<T>
 		implements CloneableStorableObject {
 	/**
 	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses

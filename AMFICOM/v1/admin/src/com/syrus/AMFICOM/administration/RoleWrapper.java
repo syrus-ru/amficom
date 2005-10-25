@@ -1,5 +1,5 @@
 /*
- * $Id: RoleWrapper.java,v 1.1 2005/10/10 15:41:59 bob Exp $
+ * $Id: RoleWrapper.java,v 1.2 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/10 15:41:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
-public class RoleWrapper extends StorableObjectWrapper<Role> {
+public final class RoleWrapper extends StorableObjectWrapper<Role> {
 
 	private static RoleWrapper instance;
 

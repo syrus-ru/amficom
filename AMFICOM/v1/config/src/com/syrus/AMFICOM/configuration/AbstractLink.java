@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.16 2005/10/14 06:18:17 bass Exp $
+ * $Id: AbstractLink.java,v 1.17 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 
-public abstract class AbstractLink extends DomainMember
+public abstract class AbstractLink<T extends AbstractLink<T>>
+		extends DomainMember<T>
 		implements Characterizable, TypedObject<AbstractLinkType> {
 	AbstractLinkType type;
 	String name;

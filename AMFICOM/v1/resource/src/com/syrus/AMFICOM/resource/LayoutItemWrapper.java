@@ -1,5 +1,5 @@
 /*
- * $Id: LayoutItemWrapper.java,v 1.1 2005/08/22 12:10:45 bob Exp $
+ * $Id: LayoutItemWrapper.java,v 1.2 2005/10/25 19:53:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 12:10:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:14 $
+ * @author $Author: bass $
  * @module general
  */
-public class LayoutItemWrapper extends StorableObjectWrapper<LayoutItem> {
+public final class LayoutItemWrapper extends StorableObjectWrapper<LayoutItem> {
 
 	public static final String COLUMN_PARENT_ID = "parent_id";
 	public static final String COLUMN_LAYOUT_NAME = "layout_name";

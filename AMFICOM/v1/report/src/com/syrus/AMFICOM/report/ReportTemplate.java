@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.19 2005/10/14 12:44:35 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.20 2005/10/25 19:53:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.report;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTEMPLATE_CODE;
 
 import java.awt.Rectangle;
@@ -57,11 +57,12 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.19 $, $Date: 2005/10/14 12:44:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/10/25 19:53:08 $
  * @module report
  */
-public class ReportTemplate extends StorableObject implements Namable, Describable, ReverseDependencyContainer {
+public class ReportTemplate extends StorableObject<ReportTemplate>
+		implements Namable, Describable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
 	public enum Orientation {PORTRAIT,LANDSCAPE}
@@ -479,5 +480,13 @@ public class ReportTemplate extends StorableObject implements Namable, Describab
 
 	public void setNew(boolean isNew) {
 		this.isNew = isNew;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected ReportTemplateWrapper getWrapper() {
+		return ReportTemplateWrapper.getInstance();
 	}
 }

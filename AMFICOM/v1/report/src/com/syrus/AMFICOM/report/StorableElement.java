@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.10 2005/10/14 12:44:35 peskovsky Exp $
+ * $Id: StorableElement.java,v 1.11 2005/10/25 19:53:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,11 +21,12 @@ import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: peskovsky $
- * @version $Revision: 1.10 $, $Date: 2005/10/14 12:44:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/10/25 19:53:08 $
  * @module report
  */
-public abstract class StorableElement extends StorableObject {
+public abstract class StorableElement<T extends StorableElement<T>>
+		extends StorableObject<T> {
 
 	protected IntPoint location;
 	protected IntDimension size;

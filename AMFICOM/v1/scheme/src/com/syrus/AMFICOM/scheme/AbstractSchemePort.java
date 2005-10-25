@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.82 2005/10/22 16:11:16 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.83 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,11 +58,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/10/22 16:11:16 $
+ * @version $Revision: 1.83 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public abstract class AbstractSchemePort
-		extends AbstractCloneableStorableObject
+public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
+		extends AbstractCloneableStorableObject<T>
 		implements Describable, Characterizable,
 		ReverseDependencyContainer {
 	private static final long serialVersionUID = 6943625949984422779L;
@@ -580,7 +580,7 @@ public abstract class AbstractSchemePort
 	 * @see Object#clone()
 	 */
 	@Override
-	public AbstractSchemePort clone() throws CloneNotSupportedException {
+	public final T clone() throws CloneNotSupportedException {
 		final boolean usePool = false;
 
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
@@ -604,7 +604,7 @@ public abstract class AbstractSchemePort
 			}
 		}
 		try {
-			final AbstractSchemePort clone = (AbstractSchemePort) super.clone();
+			final T clone = super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();

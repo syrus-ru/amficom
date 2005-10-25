@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternWrapper.java,v 1.7 2005/08/08 13:33:50 arseniy Exp $
+ * $Id: PeriodicalTemporalPatternWrapper.java,v 1.8 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/08 13:33:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @module measurement
  */
-public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper<PeriodicalTemporalPattern> {
+public final class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper<PeriodicalTemporalPattern> {
 
 	public static final String COLUMN_PERIOD = "PERIOD";
 

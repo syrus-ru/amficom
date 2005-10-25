@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.111 2005/10/14 06:18:17 bass Exp $
+ * $Id: SiteNode.java,v 1.112 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
@@ -67,10 +67,10 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.112 $, $Date: 2005/10/25 19:53:11 $
  * @module map
  */
-public class SiteNode extends AbstractNode
+public class SiteNode extends AbstractNode<SiteNode>
 		implements Characterizable,
 		TypedObject<SiteNodeType>, XmlBeansTransferable<XmlSiteNode> {
 
@@ -541,6 +541,14 @@ public class SiteNode extends AbstractNode
 
 	public Characterizable getCharacterizable() {
 		return this;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected final SiteNodeWrapper getWrapper() {
+		return SiteNodeWrapper.getInstance();
 	}
 
 	/*-********************************************************************

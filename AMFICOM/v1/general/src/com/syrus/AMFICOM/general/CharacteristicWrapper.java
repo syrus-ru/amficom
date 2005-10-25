@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.24 2005/09/23 11:45:45 bass Exp $
+ * $Id: CharacteristicWrapper.java,v 1.25 2005/10/25 19:53:04 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import java.util.List;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/23 11:45:45 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/25 19:53:04 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic> {
+public final class CharacteristicWrapper extends StorableObjectWrapper<Characteristic> {
 	// table :: Characteristic
 	// type_id VARCHAR2(32) NOT NULL,
 	// name VARCHAR2(64) NOT NULL,

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.13 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ParameterSetWrapper.java,v 1.14 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
+public final class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
 
 	public static final String COLUMN_SORT = "sort";
 

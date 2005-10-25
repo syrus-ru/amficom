@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.30 2005/10/07 10:04:23 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.31 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,10 +50,11 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/10/07 10:04:23 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeOptimizeInfoRtu extends StorableObject
+public final class SchemeOptimizeInfoRtu
+		extends StorableObject<SchemeOptimizeInfoRtu>
 		implements Namable, ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeOptimizeInfoRtu> {
 	private static final long serialVersionUID = 6687067380421014690L;
@@ -390,5 +391,13 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 			this.rangeDb = rangeDb;
 			this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
 		}
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeOptimizeInfoRtuWrapper getWrapper() {
+		return SchemeOptimizeInfoRtuWrapper.getInstance();
 	}
 }

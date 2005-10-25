@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.15 2005/09/15 09:33:08 max Exp $
+ * $Id: CollectorWrapper.java,v 1.16 2005/10/25 19:53:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/15 09:33:08 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2005/10/25 19:53:11 $
+ * @author $Author: bass $
  * @module map
  */
-public class CollectorWrapper extends StorableObjectWrapper<Collector> {
+public final class CollectorWrapper extends StorableObjectWrapper<Collector> {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),

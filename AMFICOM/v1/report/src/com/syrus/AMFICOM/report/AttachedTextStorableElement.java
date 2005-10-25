@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * @module report
  */
 
-public final class AttachedTextStorableElement extends StorableElement
+public final class AttachedTextStorableElement extends StorableElement<AttachedTextStorableElement>
 {
 	private static final long serialVersionUID = 276389622206172004L;
 	
@@ -477,5 +477,13 @@ public final class AttachedTextStorableElement extends StorableElement
 	
 	public int getDistanceY() {
 		return this.distanceY;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected AttachedTextWrapper getWrapper() {
+		return AttachedTextWrapper.getInstance();
 	}
 }

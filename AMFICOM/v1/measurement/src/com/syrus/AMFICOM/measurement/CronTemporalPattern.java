@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.27 2005/10/07 10:04:19 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.28 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,18 +32,19 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/07 10:04:19 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/25 19:53:05 $
  * @author $Author: bass $
  * @module measurement
  */
 
-public final class CronTemporalPattern extends AbstractTemporalPattern {
+public final class CronTemporalPattern extends AbstractTemporalPattern<CronTemporalPattern> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -1019,5 +1020,14 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected StorableObjectWrapper<CronTemporalPattern> getWrapper() {
+		throw new UnsupportedOperationException(
+				"CronTemporalPattern#getWrapper() is unsupported");
 	}
 }

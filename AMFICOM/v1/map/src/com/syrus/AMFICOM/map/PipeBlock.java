@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.7 2005/10/25 07:45:38 krupenn Exp $
+ * $Id: PipeBlock.java,v 1.8 2005/10/25 19:53:10 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,12 +48,12 @@ import com.syrus.util.Log;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/10/25 07:45:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/10/25 19:53:10 $
  * @module map
  */
 public final class PipeBlock 
-		extends StorableObject 
+		extends StorableObject<PipeBlock>
 		implements XmlBeansTransferable<XmlPipeBlock>,
 		Comparable<PipeBlock> {
 	private static final long serialVersionUID = -6089210980096232608L;
@@ -576,5 +576,13 @@ public final class PipeBlock
 
 	public int compareTo(PipeBlock o) {
 		return this.number - o.getNumber();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected PipeBlockWrapper getWrapper() {
+		return PipeBlockWrapper.getInstance();
 	}
 }

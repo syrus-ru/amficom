@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.24 2005/10/07 10:04:21 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.25 2005/10/25 19:53:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,11 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/10/07 10:04:21 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/25 19:53:14 $
  * @module resource
  */
-public abstract class AbstractImageResource extends StorableObject {
+public abstract class AbstractImageResource
+		extends StorableObject<AbstractImageResource> {
 	static final long serialVersionUID = -730035505208725678L;
 
 	/**
@@ -73,4 +74,12 @@ public abstract class AbstractImageResource extends StorableObject {
 	 */
 	@Override
 	public abstract IdlImageResource getTransferable(final ORB orb);
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected final ImageResourceWrapper getWrapper() {
+		return ImageResourceWrapper.getInstance();
+	}
 }

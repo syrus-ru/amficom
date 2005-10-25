@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.9 2005/10/10 15:48:03 bob Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.10 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/10 15:48:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
-public class PermissionAttributesWrapper extends StorableObjectWrapper<PermissionAttributes> {
+public final class PermissionAttributesWrapper extends StorableObjectWrapper<PermissionAttributes> {
 
 	public static final String	COLUMN_PARENT_ID		= "parent_id";
 	public static final String	COLUMN_MODULE			= "module_code";

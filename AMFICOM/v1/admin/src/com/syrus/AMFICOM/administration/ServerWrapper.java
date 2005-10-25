@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.16 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: ServerWrapper.java,v 1.17 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/10/25 19:53:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
-public class ServerWrapper extends StorableObjectWrapper<Server> {
+public final class ServerWrapper extends StorableObjectWrapper<Server> {
 
 	// description VARCHAR2(256),
 	// name VARCHAR2(64) NOT NULL,

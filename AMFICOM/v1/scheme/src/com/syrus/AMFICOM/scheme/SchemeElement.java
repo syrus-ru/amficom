@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.143 2005/10/14 06:18:19 bass Exp $
+ * $Id: SchemeElement.java,v 1.144 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,10 +96,10 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.143 $, $Date: 2005/10/14 06:18:19 $
+ * @version $Revision: 1.144 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeElement extends AbstractSchemeElement
+public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 		implements SchemeCellContainer,
 		XmlBeansTransferable<XmlSchemeElement> {
 	private static final long serialVersionUID = 3618977875802797368L;
@@ -620,7 +620,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		final boolean usePool = false;
 
 		try {
-			final SchemeElement clone = (SchemeElement) super.clone();
+			final SchemeElement clone = super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -1639,6 +1639,14 @@ public final class SchemeElement extends AbstractSchemeElement
 		return IdlSchemeElementKind.from_int(this.kind);
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeElementWrapper getWrapper() {
+		return SchemeElementWrapper.getInstance();
+	}
+
 	/*-********************************************************************
 	 * Children manipulation: scheme devices                              *
 	 **********************************************************************/
@@ -2294,7 +2302,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	@Shitlet
 	@Deprecated
 	public boolean containsAbstractSchemePort(
-			final AbstractSchemePort abstractSchemePort,
+			final AbstractSchemePort<?> abstractSchemePort,
 			final boolean usePool)
 	throws ApplicationException {
 		if (this.getSchemeDevices0(usePool).contains(abstractSchemePort.getParentSchemeDeviceId())) {

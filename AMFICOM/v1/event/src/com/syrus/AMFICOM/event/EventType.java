@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.52 2005/10/07 10:04:19 bass Exp $
+ * $Id: EventType.java,v 1.53 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,13 +37,13 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/10/07 10:04:19 $
+ * @version $Revision: 1.53 $, $Date: 2005/10/25 19:53:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 
-public final class EventType extends StorableObjectType {
+public final class EventType extends StorableObjectType<EventType> {
 	private static final long serialVersionUID = -8660055955879452510L;
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
@@ -295,5 +295,13 @@ public final class EventType extends StorableObjectType {
 				System.out.println("	alert kind: " + alertKind.value());
 			}
 		}
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected EventTypeWrapper getWrapper() {
+		return EventTypeWrapper.getInstance();
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.15 2005/10/22 16:11:16 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.16 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,12 +53,12 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/22 16:11:16 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/25 19:53:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
-public final class ProtoEquipment extends StorableObject
+public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		implements Characterizable, Namable,
 		XmlBeansTransferable<XmlProtoEquipment> {
 	private static final long serialVersionUID = 7066410483749919904L;
@@ -369,6 +369,14 @@ public final class ProtoEquipment extends StorableObject
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return Collections.emptySet();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected ProtoEquipmentWrapper getWrapper() {
+		return ProtoEquipmentWrapper.getInstance();
 	}
 
 	/*-********************************************************************

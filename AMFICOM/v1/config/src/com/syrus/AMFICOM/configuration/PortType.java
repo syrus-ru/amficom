@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.104 2005/10/14 06:18:17 bass Exp $
+ * $Id: PortType.java,v 1.105 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,13 +56,13 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.105 $, $Date: 2005/10/25 19:53:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 
-public final class PortType extends StorableObjectType
+public final class PortType extends StorableObjectType<PortType>
 		implements Characterizable, Namable,
 		XmlBeansTransferable<XmlPortType> {
 	private static final long serialVersionUID = -115251480084275101L;
@@ -378,6 +378,14 @@ public final class PortType extends StorableObjectType
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		return Collections.emptySet();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected PortTypeWrapper getWrapper() {
+		return PortTypeWrapper.getInstance();
 	}
 
 	/*-********************************************************************

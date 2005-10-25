@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.14 2005/10/18 16:19:41 bass Exp $
+ * $Id: MeasurementPort.java,v 1.15 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,12 +39,12 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/18 16:19:41 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/25 19:53:05 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class MeasurementPort extends StorableObject
+public final class MeasurementPort extends StorableObject<MeasurementPort>
 		implements Characterizable,
 		TypedObject<MeasurementPortType> {
 	private static final long serialVersionUID = -5100885507408715167L;
@@ -252,6 +252,14 @@ public final class MeasurementPort extends StorableObject
 	public void setPortId(Identifier portId) {
 		this.portId = portId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected MeasurementPortWrapper getWrapper() {
+		return MeasurementPortWrapper.getInstance();
 	}
 
 	/*-********************************************************************

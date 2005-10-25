@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.95 2005/09/20 18:06:51 arseniy Exp $
+ * $Id: Measurement.java,v 1.96 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,13 +33,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStat
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/09/20 18:06:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.96 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Measurement extends Action {
+public final class Measurement extends Action<Measurement> {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
@@ -312,4 +312,11 @@ public final class Measurement extends Action {
 		super.markAsChanged();
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected MeasurementWrapper getWrapper() {
+		return MeasurementWrapper.getInstance();
+	}
 }

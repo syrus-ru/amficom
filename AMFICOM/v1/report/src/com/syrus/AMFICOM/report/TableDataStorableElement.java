@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.13 2005/10/08 13:16:31 arseniy Exp $
+ * $Id: TableDataStorableElement.java,v 1.14 2005/10/25 19:53:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/10/08 13:16:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/10/25 19:53:08 $
  * @module report
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
@@ -154,5 +154,16 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 	public void setFont(Font font) {
 		this.font = font;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.report.DataStorableElement#getWrapper()
+	 * @todo create a common abstract supertype for Data and TableData.
+	 */
+	@Override
+//	protected TableDataWrapper getWrapper() {
+	protected DataWrapper getWrapper() {
+//		return TableDataWrapper.getInstance();
+		throw new UnsupportedOperationException();
 	}
 }

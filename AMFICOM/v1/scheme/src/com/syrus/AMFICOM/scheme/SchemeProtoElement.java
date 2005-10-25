@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.121 2005/10/22 16:11:16 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.122 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,10 +84,11 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.121 $, $Date: 2005/10/22 16:11:16 $
+ * @version $Revision: 1.122 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeProtoElement extends AbstractCloneableStorableObject
+public final class SchemeProtoElement
+		extends AbstractCloneableStorableObject<SchemeProtoElement>
 		implements Describable, SchemeCellContainer,
 		Characterizable, ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeProtoElement> {
@@ -392,7 +393,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		final boolean usePool = false;
 
 		try {
-			final SchemeProtoElement clone = (SchemeProtoElement) super.clone();
+			final SchemeProtoElement clone = super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -1281,6 +1282,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 
 		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, POST_IMPORT);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeProtoElementWrapper getWrapper() {
+		return SchemeProtoElementWrapper.getInstance();
 	}
 
 	/*-********************************************************************

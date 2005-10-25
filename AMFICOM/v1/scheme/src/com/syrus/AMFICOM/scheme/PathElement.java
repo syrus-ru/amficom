@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.85 2005/10/18 16:19:42 bass Exp $
+ * $Id: PathElement.java,v 1.86 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,12 +71,12 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/10/18 16:19:42 $
+ * @version $Revision: 1.86 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
  */
-public final class PathElement extends StorableObject
+public final class PathElement extends StorableObject<PathElement>
 		implements Describable, Comparable<PathElement>,
 		PathMember<SchemePath, PathElement>, ReverseDependencyContainer,
 		XmlBeansTransferable<XmlPathElement>{
@@ -1277,6 +1277,14 @@ public final class PathElement extends StorableObject
 			this.sequentialNumber = thatSequentialNumber;
 		}
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected PathElementWrapper getWrapper() {
+		return PathElementWrapper.getInstance();
 	}
 
 	/*-********************************************************************

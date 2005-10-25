@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.73 2005/10/07 10:04:24 bass Exp $
+ * $Id: Link.java,v 1.74 2005/10/25 19:53:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,10 +29,10 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/10/07 10:04:24 $
+ * @version $Revision: 1.74 $, $Date: 2005/10/25 19:53:09 $
  * @module config
  */
-public final class Link extends AbstractLink {
+public final class Link extends AbstractLink<Link> {
 	private static final long serialVersionUID = 3257283626012783672L;
 
 	public Link(final IdlLink idlLink) throws CreateObjectException {
@@ -211,5 +211,13 @@ public final class Link extends AbstractLink {
 	 */
 	public void setType(final LinkType type) {
 		super.setType(type);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected LinkWrapper getWrapper() {
+		return LinkWrapper.getInstance();
 	}
 }

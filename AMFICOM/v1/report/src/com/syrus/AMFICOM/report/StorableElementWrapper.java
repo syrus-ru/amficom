@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableElementWrapper.java,v 1.1 2005/09/30 12:34:07 max Exp $
+ * $Id: StorableElementWrapper.java,v 1.2 2005/10/25 19:53:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,15 +7,16 @@
  */
 package com.syrus.AMFICOM.report;
 
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/30 12:34:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:08 $
  * @module report
  */
 
-public class StorableElementWrapper {
-	
+public abstract class StorableElementWrapper<T extends StorableElement<T>> extends StorableObjectWrapper<T> {
 	public static final String COLUMN_LOCATION_X = "location_x";
 	public static final String COLUMN_LOCATION_Y = "location_y";
 	public static final String COLUMN_SIZE_WIDTH = "width";

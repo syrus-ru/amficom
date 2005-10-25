@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.103 2005/10/22 16:11:16 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.104 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,10 +76,11 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/10/22 16:11:16 $
+ * @version $Revision: 1.104 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeCableThread extends AbstractCloneableStorableObject
+public final class SchemeCableThread
+		extends AbstractCloneableStorableObject<SchemeCableThread>
 		implements Describable, Characterizable,
 		ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeCableThread> {
@@ -312,7 +313,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			}
 		}
 		try {
-			final SchemeCableThread clone = (SchemeCableThread) super.clone();
+			final SchemeCableThread clone = super.clone();
 
 			if (clone.clonedIdMap == null) {
 				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -918,6 +919,14 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert linkId.isVoid() || linkId.getMajor() == LINK_CODE;
 		this.linkId = linkId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeCableThreadWrapper getWrapper() {
+		return SchemeCableThreadWrapper.getInstance();
 	}
 
 	/**

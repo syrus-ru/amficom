@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.75 2005/10/14 06:18:19 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.76 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,10 +53,10 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/10/14 06:18:19 $
+ * @version $Revision: 1.76 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemeOptimizeInfo extends StorableObject
+public final class SchemeOptimizeInfo extends StorableObject<SchemeOptimizeInfo>
 		implements Describable, ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeOptimizeInfo> {
 	private static final long serialVersionUID = 3761127137155232822L;
@@ -686,6 +686,14 @@ public final class SchemeOptimizeInfo extends StorableObject
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeOptimizeInfoWrapper getWrapper() {
+		return SchemeOptimizeInfoWrapper.getInstance();
 	}
 
 	/*-********************************************************************

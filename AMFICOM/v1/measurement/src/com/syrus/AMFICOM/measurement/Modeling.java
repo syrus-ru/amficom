@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.62 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: Modeling.java,v 1.63 2005/10/25 19:53:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,12 +31,12 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/10/25 19:53:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
-public final class Modeling extends Action {
+public final class Modeling extends Action<Modeling> {
 	
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -229,5 +229,13 @@ public final class Modeling extends Action {
 	public void setName(final String name) {
 		this.name = name;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected ModelingWrapper getWrapper() {
+		return ModelingWrapper.getInstance();
 	}
 }

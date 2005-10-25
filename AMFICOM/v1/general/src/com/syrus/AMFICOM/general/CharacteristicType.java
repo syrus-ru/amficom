@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.55 2005/10/01 15:13:21 bass Exp $
+ * $Id: CharacteristicType.java,v 1.56 2005/10/25 19:53:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,13 +33,14 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/10/01 15:13:21 $
+ * @version $Revision: 1.56 $, $Date: 2005/10/25 19:53:04 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 
-public final class CharacteristicType extends StorableObjectType
+public final class CharacteristicType
+		extends StorableObjectType<CharacteristicType>
 		implements Namable, XmlBeansTransferable<XmlCharacteristicType> {
 	private static final long serialVersionUID = 6153350736368296076L;
 
@@ -365,5 +366,13 @@ public final class CharacteristicType extends StorableObjectType
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
-	}	
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected CharacteristicTypeWrapper getWrapper() {
+		return CharacteristicTypeWrapper.getInstance();
+	}
 }

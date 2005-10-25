@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.57 2005/10/14 06:18:17 bass Exp $
+ * $Id: MCM.java,v 1.58 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,13 +36,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.58 $, $Date: 2005/10/25 19:53:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class MCM extends DomainMember
+public final class MCM extends DomainMember<MCM>
 		implements Characterizable, Namable {
 	private static final long serialVersionUID = 4622885259080741046L;
 
@@ -257,6 +257,14 @@ public final class MCM extends DomainMember
 	public void setUserId(final Identifier userId) {
 		this.userId = userId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected MCMWrapper getWrapper() {
+		return MCMWrapper.getInstance();
 	}
 
 	/*-********************************************************************

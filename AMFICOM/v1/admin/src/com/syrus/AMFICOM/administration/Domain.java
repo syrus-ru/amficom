@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.67 2005/10/14 06:18:17 bass Exp $
+ * $Id: Domain.java,v 1.68 2005/10/25 19:53:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,13 +42,13 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/10/14 06:18:17 $
+ * @version $Revision: 1.68 $, $Date: 2005/10/25 19:53:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
-public final class Domain extends DomainMember
+public final class Domain extends DomainMember<Domain>
 		implements Characterizable {
 	private static final long serialVersionUID = 6401785674412391641L;
 
@@ -254,6 +254,14 @@ public final class Domain extends DomainMember
 			dependencies.add(super.domainId);
 		}
 		return dependencies;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected DomainWrapper getWrapper() {
+		return DomainWrapper.getInstance();
 	}
 
 	/*-********************************************************************

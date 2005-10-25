@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.81 2005/10/14 06:18:19 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.82 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,11 +55,11 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/10/14 06:18:19 $
+ * @version $Revision: 1.82 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
-		extends StorableObject
+		extends StorableObject<SchemeMonitoringSolution>
 		implements Describable, ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeMonitoringSolution> {
 	private static final long serialVersionUID = 3906364939487949361L;
@@ -726,6 +726,14 @@ public final class SchemeMonitoringSolution
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemeMonitoringSolutionWrapper getWrapper() {
+		return SchemeMonitoringSolutionWrapper.getInstance();
 	}
 
 	/*-********************************************************************

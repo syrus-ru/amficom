@@ -1,25 +1,25 @@
 /*-
- * $Id: MapViewWrapper.java,v 1.1 2005/09/06 14:16:19 max Exp $
+ * $Id: MapViewWrapper.java,v 1.2 2005/10/25 19:53:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.mapview;
 
 import java.util.List;
 
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/06 14:16:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/10/25 19:53:14 $
  * @module mapview
  */
 
-public class MapViewWrapper extends StorableObjectWrapper {
+public final class MapViewWrapper extends StorableObjectWrapper<MapView> {
 
 //	 domain_id VARCHAR2(32),
 	public static final String COLUMN_DOMAIN_ID = "domain_id";
@@ -40,46 +40,47 @@ public class MapViewWrapper extends StorableObjectWrapper {
 	public static final String LINK_COLUMN_MAPVIEW_ID = "mapview_id";
 	// scheme_id VARCHAR2(32),
 	public static final String LINK_COLUMN_SCHEME_ID = "scheme_id";
-	
-	@Override
-	public void setValue(StorableObject object, String key, Object value) {
-		// TODO Auto-generated method stub
-		
+
+	private static MapViewWrapper instance;
+
+	private MapViewWrapper() {
+		throw new UnsupportedOperationException();
 	}
 
-	public List getKeys() {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public void setValue(final MapView mapView, String key, Object value) {
+		throw new UnsupportedOperationException();
+	}
+
+	public List<String> getKeys() {
+		throw new UnsupportedOperationException();
 	}
 
 	public String getName(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public Object getPropertyValue(String key) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
-	public Object getValue(Object object, String key) {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public Object getValue(final MapView mapView, String key) {
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean isEditable(String key) {
-		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
-	public void setValue(Object object, String key, Object value) {
-		// TODO Auto-generated method stub
-		
+	public static MapViewWrapper getInstance() {
+		if (instance == null) {
+			instance = new MapViewWrapper();
+		}
+		return instance;
 	}
-
 }

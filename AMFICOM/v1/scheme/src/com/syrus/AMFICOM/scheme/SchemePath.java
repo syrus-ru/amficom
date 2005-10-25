@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.107 2005/10/18 16:19:42 bass Exp $
+ * $Id: SchemePath.java,v 1.108 2005/10/25 19:53:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,10 +71,10 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.107 $, $Date: 2005/10/18 16:19:42 $
+ * @version $Revision: 1.108 $, $Date: 2005/10/25 19:53:13 $
  * @module scheme
  */
-public final class SchemePath extends StorableObject
+public final class SchemePath extends StorableObject<SchemePath>
 		implements Describable, Characterizable,
 		PathOwner<PathElement>, ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemePath> {
@@ -516,6 +516,14 @@ public final class SchemePath extends StorableObject
 		}
 		assert pathMembers.size() == 1;
 		return pathMembers.iterator().next();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
+	 */
+	@Override
+	protected SchemePathWrapper getWrapper() {
+		return SchemePathWrapper.getInstance();
 	}
 
 	/*-********************************************************************
