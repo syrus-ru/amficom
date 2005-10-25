@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.61 2005/10/25 07:23:50 bob Exp $
+ * $Id: PlanPanel.java,v 1.62 2005/10/25 12:02:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.Timer;
@@ -43,18 +42,17 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/10/25 07:23:50 $
+ * @version $Revision: 1.62 $, $Date: 2005/10/25 12:02:22 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -698,36 +696,28 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	}
 
 	protected void updateTestLines() {
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(((SchedulerModel) this.aContext.getApplicationModel()).getTestIds(), true);
-			for (final Test test : tests) {
-				final MonitoredElement monitoredElement = test.getMonitoredElement();
-				final Identifier monitoredElementId = monitoredElement.getId();
-				if (!this.testLines.containsKey(monitoredElementId)) {
-					final TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElementId);
-					// testLine.setTestTemporalStamps((TestTemporalStamps)
-					// this.testTemporalLines.get(monitoredElement));
-					this.testLines.put(monitoredElementId, testLine);
-					testLine.setPreferredSize(new Dimension(this.getWidth(), 25));
-				}
+		Set<Identifier> testIds = ((SchedulerModel) this.aContext.getApplicationModel()).getTestIds();
+		for (final Identifier testId : testIds) {
+			final Test test = TestView.valueOf(testId).getTest();
+			final MonitoredElement monitoredElement = test.getMonitoredElement();
+			final Identifier monitoredElementId = monitoredElement.getId();
+			if (!this.testLines.containsKey(monitoredElementId)) {
+				final TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElementId);
+				// testLine.setTestTemporalStamps((TestTemporalStamps)
+				// this.testTemporalLines.get(monitoredElement));
+				this.testLines.put(monitoredElementId, testLine);
+				testLine.setPreferredSize(new Dimension(this.getWidth(), 25));
 			}
-
-			this.removeAll();
-			for (final Identifier monitoredElementId : this.testLines.keySet()) {
-				final TestLine testLine = this.testLines.get(monitoredElementId);
-				this.add(testLine);
-			}
-
-			super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
-			this.updateTestLinesTimeRegion();
-		} catch (final ApplicationException e) {
-			
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				I18N.getString("Error.CannotAcquireObject"),
-				I18N.getString("Error"),
-				JOptionPane.OK_OPTION);
-			return;
 		}
+
+		this.removeAll();
+		for (final Identifier monitoredElementId : this.testLines.keySet()) {
+			final TestLine testLine = this.testLines.get(monitoredElementId);
+			this.add(testLine);
+		}
+
+		super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
+		this.updateTestLinesTimeRegion();
 		
 		this.revalidate();
 	}

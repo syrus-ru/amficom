@@ -222,15 +222,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 				final JComboBox comboBox = (JComboBox) e.getSource();
 				final AnalysisType analysisType = (AnalysisType) comboBox.getSelectedItem();
 				if (TestParametersPanel.this.propertyChangeEvent == null) {
-					try {
-						final Set<Test> tests = TestParametersPanel.this.schedulerModel.getSelectedTests();
-						for (final Test test : tests) {
-							if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-								test.setAnalysisType(analysisType);
-							}
+					final Set<Test> tests = TestParametersPanel.this.schedulerModel.getSelectedTests();
+					for (final Test test : tests) {
+						if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+							test.setAnalysisType(analysisType);
 						}
-					} catch (final ApplicationException e1) {
-						AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 					}
 				}
 			}

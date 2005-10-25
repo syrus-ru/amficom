@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.135 2005/10/25 09:23:07 bob Exp $
+ * $Id: SchedulerModel.java,v 1.136 2005/10/25 12:02:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.135 $, $Date: 2005/10/25 09:23:07 $
+ * @version $Revision: 1.136 $, $Date: 2005/10/25 12:02:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -408,6 +408,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public void updateTests(final Date startDate, 
 	                        final Date endDate) 
 	throws ApplicationException {
+		
+		try {
+			throw new Exception("SchedulerModel.updateTests");
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+		
+
+		
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Scheduler.StatusMessage.UpdatingTests"))); //$NON-NLS-1$
@@ -421,8 +430,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		try {
 			final Map<Identifier, StorableObjectVersion> idVersion = new HashMap<Identifier, StorableObjectVersion>();
 			{
-				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
-				for (final Test test : tests) {
+				for (final Identifier testId : this.testIds) {
+					final Test test = TestView.valueOf(testId).getTest();
 					idVersion.put(test.getId(), test.getVersion());
 				}
 			}
@@ -464,11 +473,12 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					refreshTests.add(test);
 				}
 			}
-			TestView.refreshCache(refreshTests);
+			TestView.refreshCache(refreshTests, startDate, endDate);
 			
 			final long time3 = System.currentTimeMillis();
 
 			for (final Test test : refreshTests) {
+				TestView.addTest(test, startDate, endDate);
 				this.addTest(test);
 			}
 			assert Log.debugMessage("SchedulerModel.updateTests | " 
@@ -505,9 +515,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return Collections.emptySet();
 	}
 	
-	public Set<Test> getSelectedTests() throws ApplicationException{
-		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) { 
-			return StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
+	public Set<Test> getSelectedTests(){
+		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+			final Set<Test> selectedTests = new HashSet<Test>(this.selectedTestIds.size());
+			for (final Identifier testId : this.selectedTestIds) {
+				selectedTests.add(TestView.valueOf(testId).getTest());
+			}			
+			return selectedTests;
 		}
 		return Collections.emptySet();
 	}	
@@ -740,7 +754,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 				changedTestId.add(test.getId());
 				test.setMeasurementSetupIds(measurementSetupIdSet);
-				TestView.addTest(test);
+				final TestView testView = TestView.valueOf(test);
+				TestView.addTest(test, testView.getStart(), testView.getEnd());
 			}
 		}
 		
@@ -802,6 +817,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						test.setGroupTestId(testGroupId);
 					}
 					this.addTest(test);
+					TestView.addTest(test, test.getStartTime(), test.getEndTime());
 				} else {
 					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest") 
 						+ "\n" 
@@ -912,7 +928,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					}
 					selectedTest.setStartTime(newStartDate);
 					selectedTest.setEndTime(newEndDate);
-					TestView.addTest(selectedTest);
+					final TestView testView = TestView.valueOf(selectedTest);
+					TestView.addTest(selectedTest, testView.getStart(), testView.getEnd());
 				}
 			}
 			this.refreshTests();			
@@ -982,6 +999,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 								testGroup.getMeasurementSetupIds());
 						newTestIds.add(test.getId());
 						this.addTest(test);
+						TestView.addTest(test, test.getStartTime(), test.getEndTime());
 						if (this.selectedTestIds != null) {
 							this.selectedTestIds.clear();
 						} else {
@@ -1080,6 +1098,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					}
 					newTestIds.add(test.getId());
 					this.addTest(test);
+					TestView.addTest(test, test.getStartTime(), test.getEndTime());
 					this.selectedTestIds.add(testId);
 					assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()
 							+ " at " + startDate + "," + endDate, Level.FINEST);
@@ -1092,11 +1111,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_ADD_TEST, null, newTestIds));
 	}
 	
-	private void addTest(final Test test) 
-	throws ApplicationException {
+	private void addTest(final Test test) {
 		final Identifier testId = test.getId();
 		this.testIds.add(testId);
-		TestView.addTest(test);
 		final Identifier groupTestId = test.getGroupTestId();
 		if (groupTestId.isVoid() || groupTestId.equals(testId)) {
 			this.mainTestIds.add(testId);

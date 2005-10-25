@@ -208,30 +208,20 @@ final class TestLine extends TimeLine {
 					}
 					
 					this.selectedTestIds.add(testTimeItem.testTimeLine.testId);
-					try {
-						
-						final Test test = 
-							StorableObjectPool.getStorableObject(
-								testTimeItem.testTimeLine.testId,
-								true);
-						new ProcessingDialog(new Runnable() {
-	
-							public void run() {
-								TestLine.this.skip = true;
-								try {
-									TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
-								} catch (final ApplicationException e) {
-									AbstractMainFrame.showErrorMessage(
-										I18N.getString("Scheduler.Error.CannotSelectTest"));
-								}
-								TestLine.this.skip = false;
+					final Test test = TestView.valueOf(testTimeItem.testTimeLine.testId).getTest();
+					new ProcessingDialog(new Runnable() {
+
+						public void run() {
+							TestLine.this.skip = true;
+							try {
+								TestLine.this.schedulerModel.addSelectedTest(TestLine.this, test);
+							} catch (final ApplicationException e) {
+								AbstractMainFrame.showErrorMessage(
+									I18N.getString("Scheduler.Error.CannotSelectTest"));
 							}
-						}, I18N.getString("Common.ProcessingDialog.PlsWait"));
-					} catch (final ApplicationException e) {
-						AbstractMainFrame.showErrorMessage(
-							I18N.getString("Scheduler.Error.CannotSelectTest"));
-						return false;
-					}
+							TestLine.this.skip = false;
+						}
+					}, I18N.getString("Common.ProcessingDialog.PlsWait"));
 					
 					for (final TestTimeItem testTimeItem2 : testTimeItems) {
 						if (testTimeItem2.testTimeLine.testId.equals(testTimeItem.testTimeLine.testId)) {
@@ -485,14 +475,9 @@ final class TestLine extends TimeLine {
 					}
 
 					for (final TestTimeItem testTimeItem : TestLine.this.selectedItems) {
-						try {
-							final Test test = StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
-							if (!TestLine.this.schedulerModel.isTestNewer(test)) {
-								continue;
-							}
-						} catch (final ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
-							return;
+						final Test test = TestView.valueOf(testTimeItem.testTimeLine.testId).getTest();
+						if (!TestLine.this.schedulerModel.isTestNewer(test)) {
+							continue;
 						}
 						
 						testTimeItem.x += dx;
@@ -511,7 +496,9 @@ final class TestLine extends TimeLine {
 		
 		final Identifier testId = test.getId();
 		
-		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+		final TestView testView = TestView.valueOf(test);
+		
+		final MeasurementSetup measurementSetup = testView.getMeasurementSetup();
 		final long measurementDuration = measurementSetup.getMeasurementDuration();
 		final SortedMap<Date, String> stoppings = test.getStoppingMap();
 		final Date testTime = test.getStartTime();
@@ -532,9 +519,9 @@ final class TestLine extends TimeLine {
 		final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
 		this.measurements.put(testId, measurementTestList);
 		
-		final TestView view = TestView.valueOf(test);
 		
-		final Set<Measurement> testMeasurements = view.getMeasurements();
+		
+		final Set<Measurement> testMeasurements = testView.getMeasurements();
 		
 		switch (test.getTemporalType().value()) {
 			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
@@ -675,10 +662,8 @@ final class TestLine extends TimeLine {
 				}
 			}
 			try {
-				final Set<Test> tests = StorableObjectPool.getStorableObjects(
-					testIds != null ? testIds : this.schedulerModel.getTestIds(), 
-					true);
-				for (final Test test : tests) {
+				for (final Identifier testId : testIds != null ? testIds : this.schedulerModel.getTestIds()) {
+					final Test test = TestView.valueOf(testId).getTest();
 					if (!test.getMonitoredElementId().equals(this.monitoredElementId)) {
 						continue;
 					}					
@@ -746,35 +731,31 @@ final class TestLine extends TimeLine {
 				super.scale = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
 			}
 	
-			try {
-				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
-				for (final Test test : tests) {				
-					final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
-					if (testTimeLineList == null || testTimeLineList.isEmpty()) {
-						System.err.println("TestLine.refreshTimeItems | List<TestTimeLine> for " + test.getId() + " is null or empty ");
-						continue;
+			for (final Identifier testId : this.testIds) {
+				final Test test = TestView.valueOf(testId).getTest();
+				final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
+				if (testTimeLineList == null || testTimeLineList.isEmpty()) {
+					System.err.println("TestLine.refreshTimeItems | List<TestTimeLine> for " + test.getId() + " is null or empty ");
+					continue;
+				}
+
+				for (final TestTimeLine testTimeLine : testTimeLineList) {
+					final TestTimeItem testTimeItem = new TestTimeItem();
+
+					testTimeItem.x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
+					int width = (int) (this.scale * testTimeLine.duration);
+
+					width = width > this.minimalWidth ? width : this.minimalWidth;
+					testTimeItem.setWidth(width);						
+					
+					testTimeItem.testTimeLine = testTimeLine;
+					
+					if (this.schedulerModel.isTestNewer(test)) {
+						this.unsavedTestTimeItems.add(testTimeItem);
+					} else {
+						this.timeItems.add(testTimeItem);
 					}
-	
-					for (final TestTimeLine testTimeLine : testTimeLineList) {
-						final TestTimeItem testTimeItem = new TestTimeItem();
-	
-						testTimeItem.x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
-						int width = (int) (this.scale * testTimeLine.duration);
-	
-						width = width > this.minimalWidth ? width : this.minimalWidth;
-						testTimeItem.setWidth(width);						
-						
-						testTimeItem.testTimeLine = testTimeLine;
-						
-						if (this.schedulerModel.isTestNewer(test)) {
-							this.unsavedTestTimeItems.add(testTimeItem);
-						} else {
-							this.timeItems.add(testTimeItem);
-						}
-					}	
 				}	
-			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 			}
 		}
 		super.repaint();
@@ -805,21 +786,17 @@ final class TestLine extends TimeLine {
 			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.width) {
 				
-				try {
-					final Test test = StorableObjectPool.getStorableObject(testTimeItem.testTimeLine.testId, true);
-					final TestView view = TestView.valueOf(test);
-					return "<html>" + testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
-							+ "<br>" + testController.getName(TestViewAdapter.KEY_START_TIME) 
-							+ " : " 
-							+ testController.getValue(view, TestViewAdapter.KEY_START_TIME) 
-							+ "<br><br>" 
-							+ sdf.format(testTimeItem.testTimeLine.date)
-							+ " : "
-							+ testTimeItem.testTimeLine.title
-							+ "</html>";
-				} catch (final ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
-				}
+				final Test test = TestView.valueOf(testTimeItem.testTimeLine.testId).getTest();
+				final TestView view = TestView.valueOf(test);
+				return "<html>" + testController.getValue(view, TestViewAdapter.KEY_TEMPORAL_TYPE_NAME).toString()
+						+ "<br>" + testController.getName(TestViewAdapter.KEY_START_TIME) 
+						+ " : " 
+						+ testController.getValue(view, TestViewAdapter.KEY_START_TIME) 
+						+ "<br><br>" 
+						+ sdf.format(testTimeItem.testTimeLine.date)
+						+ " : "
+						+ testTimeItem.testTimeLine.title
+						+ "</html>";
 			}
 		}
 		return null;
@@ -827,8 +804,8 @@ final class TestLine extends TimeLine {
 
 	public void addTest(final Set<Identifier> testIds) {
 		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
-			for (final Test test : tests) {
+			for (final Identifier testId : testIds) {
+				final Test test = TestView.valueOf(testId).getTest();
 				if (!test.getMonitoredElementId().equals(this.monitoredElementId)) {
 					continue;
 				}					

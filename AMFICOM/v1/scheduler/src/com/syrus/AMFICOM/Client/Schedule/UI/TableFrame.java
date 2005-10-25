@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.63 2005/10/25 09:23:54 bob Exp $
+ * $Id: TableFrame.java,v 1.64 2005/10/25 12:02:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,14 +47,13 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestView;
 import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/10/25 09:23:54 $
+ * @version $Revision: 1.64 $, $Date: 2005/10/25 12:02:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -94,24 +93,18 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 		if (selectedTestIds.isEmpty()) {
 			this.listTable.clearSelection();
 		} else {
-			try { 
-				final Set<Test> selectedTests = this.schedulerModel.getSelectedTests();				
-				final Set<TestView> testViews = new HashSet<TestView>(selectedTests.size());
-				for (final Test test : selectedTests) {
-					final Identifier groupTestId = test.getGroupTestId();
-					if (!groupTestId.isVoid()) {
-						final Test groupTest = 
-							StorableObjectPool.getStorableObject(groupTestId, true);
-						testViews.add(TestView.valueOf(groupTest));
-					} else {
-						testViews.add(TestView.valueOf(test));
-					}
+			final Set<TestView> testViews = new HashSet<TestView>(selectedTestIds.size());
+			for (final Identifier testId : selectedTestIds) {
+				final Test test = TestView.valueOf(testId).getTest();
+				final Identifier groupTestId = test.getGroupTestId();
+				if (!groupTestId.isVoid()) {
+					final Test groupTest = TestView.valueOf(groupTestId).getTest();
+					testViews.add(TestView.valueOf(groupTest));
+				} else {
+					testViews.add(TestView.valueOf(test));
 				}
-				this.listTable.setSelectedValues(testViews);				
-			} catch (final ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
-				return;
 			}
+			this.listTable.setSelectedValues(testViews);
 		}
 	}
 
@@ -139,16 +132,13 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 	private void addTest(final Set<Identifier> testIds) {
 		final WrapperedTableModel<TestView> model = this.listTable.getModel();
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(testIds, true);
-			for (final Test test : tests) {
-				final Identifier groupTestId = test.getGroupTestId();
-				if (groupTestId.isVoid() || test.getId().equals(groupTestId)) {
-					model.addObject(TestView.valueOf(test));
-				}
+		for (final Identifier testId : testIds) {
+			final TestView testView = TestView.valueOf(testId);
+			final Test test = testView.getTest();
+			final Identifier groupTestId = test.getGroupTestId();
+			if (groupTestId.isVoid() || test.getId().equals(groupTestId)) {
+				model.addObject(TestView.valueOf(test));
 			}
-		} catch (final ApplicationException e) {
-			AbstractMainFrame.showErrorMessage(this, e);
 		}
 		this.listTable.revalidate();
 		this.listTable.repaint();
