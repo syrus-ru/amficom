@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.3 2005/08/30 19:58:39 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.4 2005/10/25 10:42:25 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,13 +30,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/30 19:58:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/25 10:42:25 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 public class TestMonitoredElement extends TestCase {
 
-	public TestMonitoredElement(String name) {
+	public TestMonitoredElement(final String name) {
 		super(name);
 	}
 
