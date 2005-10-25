@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.28 2005/10/21 10:11:26 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.29 2005/10/25 15:32:56 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/21 10:11:26 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/25 15:32:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -355,7 +355,7 @@ implements PropertyChangeListener {
 				new SessionChangePasswordCommand(theDispatcher, this.aContext));
 //		aModel.setCommand(ApplicationModel.MENU_SESSION_DOMAIN, 
 //				new SessionDomainCommand(theDispatcher));
-		aModel.setCommand(ApplicationModel.MENU_EXIT, new ExitCommand(this));
+		aModel.setCommand(ApplicationModel.MENU_EXIT, new ExitCommand(this, this.dispatcher));
 
 		// this.setWindowArranger(this.windowArranger);
 		// if (this.windowArranger != null) {
