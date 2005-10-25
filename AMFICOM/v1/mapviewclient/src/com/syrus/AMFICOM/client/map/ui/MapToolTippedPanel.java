@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapToolTippedPanel.java,v 1.15 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapToolTippedPanel.java,v 1.16 2005/10/25 08:02:45 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/25 08:02:45 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -105,7 +105,7 @@ public class MapToolTippedPanel extends JComponent {
 		if(mapState.getActionMode() != MapState.NULL_ACTION_MODE)
 			return null;
 		try {
-			MapElement me = logicalNetLayer.getMapElementAtPoint(
+			MapElement me = logicalNetLayer.getVisibleMapElementAtPoint(
 					logicalNetLayer.getCurrentPoint(),
 					this.parent.getVisibleBounds());
 			String toolTipText = logicalNetLayer.getMapViewController().getController(me).getToolTipText(me);
@@ -122,7 +122,7 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2005/09/30 16:08:42 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/25 08:02:45 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

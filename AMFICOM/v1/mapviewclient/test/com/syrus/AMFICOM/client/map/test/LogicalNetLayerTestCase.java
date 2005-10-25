@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayerTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
+ * $Id: LogicalNetLayerTestCase.java,v 1.3 2005/10/25 08:02:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -72,14 +72,14 @@ public class LogicalNetLayerTestCase extends TestCase {
 
 		Rectangle2D.Double visibleBounds = METS.netMapViewer.getVisibleBounds();
 
-		assertSame(METS.logicalNetLayer.getMapElementAtPoint(new Point(20, 20), visibleBounds), startnode);
-		assertSame(METS.logicalNetLayer.getMapElementAtPoint(new Point(121, 122), visibleBounds), endnode);
-		assertSame(METS.logicalNetLayer.getMapElementAtPoint(new Point(50, 50), visibleBounds), link);
+		assertSame(METS.logicalNetLayer.getVisibleMapElementAtPoint(new Point(20, 20), visibleBounds), startnode);
+		assertSame(METS.logicalNetLayer.getVisibleMapElementAtPoint(new Point(121, 122), visibleBounds), endnode);
+		assertSame(METS.logicalNetLayer.getVisibleMapElementAtPoint(new Point(50, 50), visibleBounds), link);
 
 		Command com2 = METS.aContext.getApplicationModel().getCommand(MapApplicationModel.MODE_NODE_LINK);
 		com2.execute();
 		
-		assertSame(METS.logicalNetLayer.getMapElementAtPoint(new Point(50, 50), visibleBounds), nodeLink);
+		assertSame(METS.logicalNetLayer.getVisibleMapElementAtPoint(new Point(50, 50), visibleBounds), nodeLink);
 	}
 
 	public void testGetSelectedElements() throws Exception {

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.69 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapMouseListener.java,v 1.70 2005/10/25 08:02:45 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.69 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.70 $, $Date: 2005/10/25 08:02:45 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -306,7 +306,7 @@ public final class MapMouseListener implements MouseListener {
 		Point point = me.getPoint();
 		// Берём фокус
 		this.netMapViewer.getVisualComponent().grabFocus();
-		MapElement mapElement = logicalNetLayer.getMapElementAtPoint(
+		MapElement mapElement = logicalNetLayer.getVisibleMapElementAtPoint(
 				point,
 				this.netMapViewer.getVisibleBounds());
 		MapElement curElement = logicalNetLayer.getCurrentMapElement();
@@ -424,7 +424,7 @@ public final class MapMouseListener implements MouseListener {
 		logicalNetLayer.deselectAll();
 		Map map = logicalNetLayer.getMapView().getMap();
 		map.setSelected(logicalNetLayer.getFixedNode(), true);
-		MapElement mapElement = logicalNetLayer.getMapElementAtPoint(
+		MapElement mapElement = logicalNetLayer.getVisibleMapElementAtPoint(
 				point,
 				this.netMapViewer.getVisibleBounds());
 		if(logicalNetLayer.getFixedNodeList().contains(mapElement)) {

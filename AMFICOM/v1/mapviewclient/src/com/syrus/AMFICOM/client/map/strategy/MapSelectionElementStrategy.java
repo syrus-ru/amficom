@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapSelectionElementStrategy.java,v 1.31 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: MapSelectionElementStrategy.java,v 1.32 2005/10/25 08:02:45 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 /**
  * Стратегия управления выделенными объектами.
  * 
- * @version $Revision: 1.31 $, $Date: 2005/09/30 16:08:41 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/25 08:02:45 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -81,7 +81,7 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 		int actionMode = mapState.getActionMode();
 		Map map = super.logicalNetLayer.getMapView().getMap(); 
 
-		MapElement mapElement = super.logicalNetLayer.getMapElementAtPoint(point, super.netMapViewer.getVisibleBounds());
+		MapElement mapElement = super.logicalNetLayer.getVisibleMapElementAtPoint(point, super.netMapViewer.getVisibleBounds());
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
 			if (!(mapElement instanceof VoidElement))

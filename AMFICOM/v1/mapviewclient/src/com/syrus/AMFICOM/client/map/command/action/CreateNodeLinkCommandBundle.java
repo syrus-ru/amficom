@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateNodeLinkCommandBundle.java,v 1.34 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreateNodeLinkCommandBundle.java,v 1.35 2005/10/25 08:02:45 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
  * курсор в нужное место и отпускает. В момент отпускания выполняется 
  * данная команда
  * 
- * @version $Revision: 1.34 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/25 08:02:45 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -194,7 +194,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 					+ " (" + this.startNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 			// анализируется элемент в точке, в которой отпущена мышка		
-			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint, this.netMapViewer.getVisibleBounds());
+			MapElement curElementAtPoint = this.logicalNetLayer.getVisibleMapElementAtPoint(this.endPoint, this.netMapViewer.getVisibleBounds());
 			// если мышка отпущена на том же элементе, то линию не рисовать
 			if(curElementAtPoint.equals(this.startNode))
 				return;

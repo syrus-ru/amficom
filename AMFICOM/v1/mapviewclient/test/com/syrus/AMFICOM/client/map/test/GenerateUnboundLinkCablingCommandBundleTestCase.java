@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.7 2005/10/18 07:07:41 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.8 2005/10/25 08:02:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -310,7 +310,7 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertTrue(cciList.contains(cci1));
 		assertTrue(cciList.contains(cci2));
 
-		SiteNode unbound = (SiteNode )METS.logicalNetLayer.getMapElementAtPoint(unbound2location, METS.netMapViewer.getVisibleBounds());
+		SiteNode unbound = (SiteNode )METS.logicalNetLayer.getVisibleMapElementAtPoint(unbound2location, METS.netMapViewer.getVisibleBounds());
 		
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), unbound);

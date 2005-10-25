@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.132 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.133 2005/10/25 08:02:45 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.132 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.133 $, $Date: 2005/10/25 08:02:45 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -699,6 +699,102 @@ public final class LogicalNetLayer {
 	 *        экранная координата
 	 * @return элемент в точке
 	 */
+	public MapElement getVisibleMapElementAtPoint(
+			final Point point, 
+			final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException, MapDataException {
+		Log.debugMessage(this.getClass().getName() + "::" + "getMapElementAtPoint(" + point + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+
+		final int showMode = this.getMapState().getShowMode();
+		MapElement curME = VoidElement.getInstance(this.mapView);
+		for(final AbstractNode abstractNode : this.getVisibleNodes(visibleBounds)) {
+			boolean visible = true;
+			if(abstractNode instanceof TopologicalNode) {
+				visible = MapPropertiesManager.isShowPhysicalNodes();
+			} else if(abstractNode instanceof SiteNode) {
+				visible = MapPropertiesManager.isLayerVisible(((SiteNode)abstractNode).getType());
+			}
+			if (visible && this.mapViewController.isMouseOnElement(abstractNode, point)) {
+				return abstractNode;
+			}
+		}
+
+		// Здесь пробегаемся по всем элементам и если на каком-нибудь из них
+		// курсор
+		// то устанавливаем его текущим элементом
+		for(final NodeLink nodeLink : this.getVisibleNodeLinks(visibleBounds)) {
+			if(this.mapViewController.isMouseOnElement(nodeLink, point)) {
+				switch(showMode) {
+					case MapState.SHOW_NODE_LINK:
+						return nodeLink;
+					case MapState.SHOW_PHYSICAL_LINK:
+						return nodeLink.getPhysicalLink();
+					case MapState.SHOW_CABLE_PATH: {
+						PhysicalLink physicalLink = nodeLink.getPhysicalLink();
+						if(physicalLink instanceof UnboundLink) {
+							return ((UnboundLink)physicalLink).getCablePath();
+						}
+						List<Object> bindObjects = physicalLink.getBinding()
+								.getBindObjects();
+						if(bindObjects.isEmpty()) {
+							curME = physicalLink;
+						} else {
+							return (MapElement)bindObjects.iterator().next();
+						}
+						break;
+					}
+					case MapState.SHOW_MEASUREMENT_PATH: {
+						PhysicalLink physicalLink = nodeLink.getPhysicalLink();
+						curME = physicalLink;
+						for(Object boundObject : physicalLink.getBinding().getBindObjects()) {
+							CablePath cablePath = (CablePath) boundObject;
+							curME = cablePath;
+							boolean doBreak = false;
+							LinkedIdsCondition condition = new LinkedIdsCondition(
+									cablePath.getSchemeCableLink().getId(),
+									ObjectEntities.PATHELEMENT_CODE);
+							try {
+								Set<PathElement> pathElements = StorableObjectPool
+										.<PathElement> getStorableObjectsByCondition(
+												condition,
+												true);
+								for(PathElement pathElement : pathElements) {
+									SchemePath schemePath = pathElement
+											.getParentPathOwner();
+									MeasurementPath measurementPath = this.mapView
+											.findMeasurementPath(schemePath);
+									if(measurementPath != null) {
+										curME = measurementPath;
+										doBreak = true;
+										break;
+									}
+								}
+							} catch(ApplicationException e) {
+								e.printStackTrace();
+							}
+							if(doBreak) {
+								return curME;
+							}
+						}
+						break;
+					}
+					default:
+						throw new UnsupportedOperationException(
+								"Unknown show mode: " + showMode); //$NON-NLS-1$
+				}
+//				break;
+			}
+		}
+		return curME;
+	}
+
+	/**
+	 * Получить текущий элемент по экранной коордитате на карте.
+	 * 
+	 * @param point
+	 *        экранная координата
+	 * @return элемент в точке
+	 */
 	public MapElement getMapElementAtPoint(
 			final Point point, 
 			final Rectangle2D.Double visibleBounds)
@@ -982,7 +1078,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.132 $, $Date: 2005/10/18 07:21:12 $
+	 * @version $Revision: 1.133 $, $Date: 2005/10/25 08:02:45 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
