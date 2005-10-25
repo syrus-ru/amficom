@@ -20,6 +20,7 @@ CXX_SOURCES := r8 \
 	PK7600OTDRController \
 	PK7600Management \
 	QP1640OTDRController \
+	QP1640Management \
 	OTAUController \
 	MCMTransceiver
 INCLUDE_DIRS := $(AKP_DIR) \
