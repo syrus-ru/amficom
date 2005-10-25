@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLinkTypeCommand.java,v 1.15 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: MapEditorNewLinkTypeCommand.java,v 1.16 2005/10/25 08:01:48 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/25 08:01:48 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -77,6 +78,11 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 					physicalLinkType,
 					physicalLinkTypeEditor) ) {
 				StorableObjectPool.flush(physicalLinkType, LoginManager.getUserId(), true);
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(
+								this, 
+								MapEvent.LIBRARY_SET_CHANGED, 
+								mapFrame.getMapView().getMap().getMapLibraries()));
 				setResult(Command.RESULT_OK);
 			} else {
 				StorableObjectPool.delete(physicalLinkType.getId());

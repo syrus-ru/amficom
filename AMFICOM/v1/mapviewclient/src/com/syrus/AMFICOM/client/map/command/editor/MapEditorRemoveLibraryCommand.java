@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveLibraryCommand.java,v 1.12 2005/10/22 13:50:27 krupenn Exp $$
+ * $$Id: MapEditorRemoveLibraryCommand.java,v 1.13 2005/10/25 08:01:48 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/22 13:50:27 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/25 08:01:48 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -98,6 +99,11 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 			if(maps.isEmpty()) {
 				StorableObjectPool.delete(mapLibrary.getId());
 				StorableObjectPool.flush(mapLibrary, LoginManager.getUserId(), true);
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(
+								this, 
+								MapEvent.LIBRARY_SET_CHANGED, 
+								mapFrame.getMapView().getMap().getMapLibraries()));
 				setResult(Command.RESULT_OK);
 			}
 			else {

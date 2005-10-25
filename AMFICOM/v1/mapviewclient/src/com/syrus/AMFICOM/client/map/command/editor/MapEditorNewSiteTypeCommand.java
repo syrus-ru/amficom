@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewSiteTypeCommand.java,v 1.11 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MapEditorNewSiteTypeCommand.java,v 1.12 2005/10/25 08:01:48 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/11 08:56:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/25 08:01:48 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -74,6 +75,11 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 					siteNodeType,
 					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(
+								this, 
+								MapEvent.LIBRARY_SET_CHANGED, 
+								mapFrame.getMapView().getMap().getMapLibraries()));
 				setResult(Command.RESULT_OK);
 			} else {
 				StorableObjectPool.delete(siteNodeType.getId());
