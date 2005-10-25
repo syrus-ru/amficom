@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.4 2005/10/23 11:50:36 bob Exp $
+* $Id: TestView.java,v 1.5 2005/10/25 09:22:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.text.NumberFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +35,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/23 11:50:36 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/25 09:22:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -44,6 +45,11 @@ public final class TestView {
 	private static final Map<Test, TestView> MAP = new HashMap<Test, TestView>();
 
 	private final Test test;
+	
+	private Date firstDate;
+	private Date lastDate;
+	
+	private MeasurementSetup measurementSetup;
 	
 	private String kisName;
 	private String portName;	
@@ -59,11 +65,25 @@ public final class TestView {
 	private TestView(final Test test) throws ApplicationException {
 		this.test = test;
 		
+		this.createStartEndTimes();
+		
+//		final long t0 = System.currentTimeMillis();
 		this.createKISName();
+//		final long t1 = System.currentTimeMillis();
 		this.createMeasurementPortName();		
+//		final long t2 = System.currentTimeMillis();
 		this.createTemporalNames();
+//		final long t3 = System.currentTimeMillis();
 		this.createMeasurements();
+//		final long t4 = System.currentTimeMillis();
 		this.createQuality();
+//		final long t5 = System.currentTimeMillis();
+		
+//		assert Log.debugMessage("TestView.TestView | " + test + " createKISName " + (t1-t0), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage("TestView.TestView | " + test + " createMeasurementPortName " + (t2-t1), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage("TestView.TestView | " + test + " createTemporalNames " + (t3-t2), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage("TestView.TestView | " + test + " createMeasurements " + (t4-t3), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage("TestView.TestView | " + test + " createQuality " + (t5-t4), Log.DEBUGLEVEL03);
 	}
 
 	@Override
@@ -78,6 +98,18 @@ public final class TestView {
 			return this.test.equals(that.test);
 		}
 		return false;
+	}
+	
+	private final void createStartEndTimes() throws ApplicationException {
+		this.firstDate = this.test.getStartTime();
+		
+		final Identifier mainMeasurementSetupId = this.test.getMainMeasurementSetupId();
+		
+		this.measurementSetup = 
+			StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
+		
+		this.lastDate = new Date(this.test.getEndTime().getTime() 
+			+ this.measurementSetup.getMeasurementDuration());
 	}
 	
 	private final void createKISName() throws ApplicationException {
@@ -242,7 +274,6 @@ public final class TestView {
 	public final Set<Measurement> getMeasurements() {
 		return this.measurements;
 	}
-
 	
 	public final String getTestD() {
 		return this.testD;
@@ -253,9 +284,22 @@ public final class TestView {
 		return this.testQ;
 	}
 	
+	public final Date getFirstDate() {
+		return this.firstDate;
+	}
+	
+	public final Date getLastDate() {
+		return this.lastDate;
+	}
+	
+	public final MeasurementSetup getMeasurementSetup() {
+		return this.measurementSetup;
+	}
+	
 	@Override
 	public String toString() {
 		return "TestView of <" + this.test + '>';
 	}
+
 }
 
