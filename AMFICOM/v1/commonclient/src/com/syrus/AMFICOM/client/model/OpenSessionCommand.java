@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.34 2005/10/24 14:34:25 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.35 2005/10/25 14:35:44 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/10/24 14:34:25 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/25 14:35:44 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -204,6 +204,7 @@ public class OpenSessionCommand extends AbstractCommand {
 					null);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 			this.logged = false;
+			this.password = null;
 			return false;
 		} catch (CommunicationException ce) {
 			Log.errorException(ce);
