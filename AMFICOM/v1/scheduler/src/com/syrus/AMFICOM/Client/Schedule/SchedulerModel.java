@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.134 2005/10/24 13:12:20 bob Exp $
+ * $Id: SchedulerModel.java,v 1.135 2005/10/25 09:23:07 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.134 $, $Date: 2005/10/24 13:12:20 $
+ * @version $Revision: 1.135 $, $Date: 2005/10/25 09:23:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -305,8 +305,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			this.selectedTestIds.clear();
 			this.selectedFirstTestId = null;
 		}
-//		this.refreshTest(this);
-//		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REMOVE_TEST, null, test));
 		this.refreshTests();
 	}
 
@@ -742,6 +740,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 				changedTestId.add(test.getId());
 				test.setMeasurementSetupIds(measurementSetupIdSet);
+				TestView.addTest(test);
 			}
 		}
 		
@@ -913,6 +912,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					}
 					selectedTest.setStartTime(newStartDate);
 					selectedTest.setEndTime(newEndDate);
+					TestView.addTest(selectedTest);
 				}
 			}
 			this.refreshTests();			
@@ -1034,7 +1034,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Level.FINEST);
 
 			this.selectedTestIds.clear();
-
 			
 			for (final Test selectedTest : selectedTests) {
 				final Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
@@ -1135,7 +1134,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 	
 	private String isValid0(final Identifier monitoredElementId,
-	                       final Set<Date> times,
+	                       final SortedSet<Date> times,
 	                       final MeasurementSetup measurementSetup,
 	                       final Identifier testId) 
 	throws ApplicationException {
@@ -1146,10 +1145,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		String result = null;
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
-			for (final Test test : tests) {
+			for (final Test test : tests) {				
 				
-				
-//				 ignore sub group tests,   
+				// ignore sub group tests,   
 				// since they are taken into account in the main group test 
 				final Identifier groupTestId = test.getGroupTestId();
 				
@@ -1168,6 +1166,22 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					if (!test.getKISId().equals(measurementPort.getKISId())) {
 						continue;
 					}
+				}
+				
+				final TestView view = TestView.valueOf(test);
+				
+				final Date firstDate = view.getFirstDate();
+				final Date lastDate = view.getLastDate();
+				
+				// rough estimation of intersection
+				final boolean before = times.last().before(firstDate);
+				final boolean after = times.first().after(lastDate);
+				if (before || after) {
+					assert Log.debugMessage("SchedulerModel.isValid0 | rough estimation of intersection that inspected time is "
+						+ (after ? "after" : "before") 
+						+ " test " + test.getId(),
+						Log.DEBUGLEVEL09);
+					continue;
 				}
 				
 				for(final Date stDate : times) {
@@ -1210,7 +1224,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final MeasurementSetup measurementSetup) 
 	throws ApplicationException {
 		
-		final Set<Date> times = this.getTestTimes(temporalPattern, startDate, endDate, 0L); 
+		final SortedSet<Date> times = this.getTestTimes(temporalPattern, startDate, endDate, 0L); 
 		
 		final String result = this.isValid0(monitoredElementId, 
 			times, 
@@ -1301,7 +1315,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final  MeasurementSetup measurementSetup) 
 	throws ApplicationException {
 		
-		final Set<Date> times = this.getTestTimes(test, 0L);
+		final SortedSet<Date> times = this.getTestTimes(test, 0L);
 		
 		final String result = this.isValid0(test.getMonitoredElementId(), 
 			times, 
@@ -1321,7 +1335,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                       final long offset) 
 	throws ApplicationException {
 		
-		final Set<Date> times = this.getTestTimes(test, offset);
+		final SortedSet<Date> times = this.getTestTimes(test, offset);
 		
 		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
 		
@@ -1345,7 +1359,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	               		   final Date endDate) 
 	throws ApplicationException {
 		
-		final Set<Date> times = this.getTestTimes(test, startDate, endDate, 0L);
+		final SortedSet<Date> times = this.getTestTimes(test, startDate, endDate, 0L);
 		
 		final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
 		
@@ -1389,8 +1403,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	private String isIntersect0(final Test test, 
 	                            final Date startDate0, 
 	                            final Date endDate0) 
-	throws ApplicationException {	
-		
+	throws ApplicationException {
 		final SortedSet<Date> testTimes = this.getTestTimes(test, 0);
 		
 		assert Log.debugMessage("SchedulerModel.isIntersect0 | " + testTimes, Log.DEBUGLEVEL10);
@@ -1405,8 +1418,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		if (!intersect) {
 			final SortedSet<Date> headSet = testTimes.headSet(endDate0);			
 			if (!headSet.isEmpty()) {
-				final MeasurementSetup measurementSetup = 
-					StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+				final TestView view = TestView.valueOf(test);
+				final MeasurementSetup measurementSetup = view.getMeasurementSetup();
 				intersect = 
 					headSet.last().getTime() + measurementSetup.getMeasurementDuration() > startDate0.getTime();
 			}
