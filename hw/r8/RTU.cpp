@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTU.cpp,v 1.5 2005/10/13 17:00:53 arseniy Exp $
+// $Id: RTU.cpp,v 1.6 2005/10/25 14:16:06 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.5 $, $Date: 2005/10/13 17:00:53 $
+// $Revision: 1.6 $, $Date: 2005/10/25 14:16:06 $
 // $Author: arseniy $
 //
 // RTU.cpp: implementation of the RTU class.
@@ -19,6 +19,9 @@
 #include "RTU.h"
 
 BOOL initPK7600Cards(const OTDRReportListener* otdrReportListener,
+			OTDRContainer* otdrContainer,
+			const unsigned int timewait);
+BOOL initQP1640Cards(const OTDRReportListener* otdrReportListener,
 			OTDRContainer* otdrContainer,
 			const unsigned int timewait);
 
@@ -37,6 +40,12 @@ RTU::RTU(const unsigned short comPortNumber, const unsigned int timewait) {
 	this->timewait = timewait;
 
 	if (initPK7600Cards(this, this, this->timewait)) {
+		this->state = RTU_STATE_OTDR_INITIALIZED;
+	} else {
+		this->state = RTU_STATE_OTDR_INIT_FAILED;
+	}
+
+	if (initQP1640Cards(this, this, this->timewait)) {
 		this->state = RTU_STATE_OTDR_INITIALIZED;
 	} else {
 		this->state = RTU_STATE_OTDR_INIT_FAILED;
@@ -265,7 +274,7 @@ void* RTU::run(void* args) {
 
 			const Parameter** parameters = (const Parameter**) measurementSegment->getParameters();
 			const unsigned int parNumber = measurementSegment->getParnumber();
-			if (!otdrController->setMeasurementParameters(parameters, parNumber)) {
+			if (!((OTDRController*) otdrController)->setMeasurementParameters(parameters, parNumber)) {
 				printf("RTU | ERROR: Cannot set measurement parameters; abort measurement\n");
 				delete measurementSegment;
 				//TODO: Create special segment to report to MCM.
