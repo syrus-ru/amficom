@@ -25,7 +25,7 @@ BOOL initPK7600Cards(const OTDRReportListener* otdrReportListener,
 	}
 
 	for (OTDRId id = 0; id < foundCount; id++) {
-		int errorcode = PK7600Initialize(id, otdrCardProgressIndicate);
+		const int errorcode = PK7600Initialize(id, otdrCardProgressIndicate);
 		if (errorcode == 0) {
 			printf("PK7600OTDRController | Init card %u - success; report: '%s'\n",
 				id,

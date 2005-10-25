@@ -126,8 +126,7 @@ class RTU : public OTDRContainer, public SegmentProcessor, public OTDRReportList
 		 * 		с данным адресом на данном последовательном порту,
 		 * 		в случае успеха - зарегистрировать и вернуть ссылку на новый смотритель;
 		 * 	3) если предыдущие действия успеха не принесли - вернуть NULL.*/
-		OTAUController* prepareOTAUController(const COMPortId comPortId,
-			const OTAUAddress otauAddress);
+		OTAUController* prepareOTAUController(const COMPortId comPortId, const OTAUAddress otauAddress);
 
 		void freeOTDRs();
 
