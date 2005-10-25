@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.38 2005/09/21 10:29:29 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.39 2005/10/25 12:02:12 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/09/21 10:29:29 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/25 12:02:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -140,6 +141,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case MEASUREMENTPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
+					case PORT_CODE:
+						return super.getQuery(MeasurementPortWrapper.COLUMN_PORT_ID);
 					case KIS_CODE:
 						return super.getQuery(MeasurementPortWrapper.COLUMN_KIS_ID);
 					case MCM_CODE:

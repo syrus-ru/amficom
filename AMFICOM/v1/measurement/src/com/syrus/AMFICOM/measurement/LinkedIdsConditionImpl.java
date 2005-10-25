@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.62 2005/09/22 15:16:51 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.63 2005/10/25 12:02:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/09/22 15:16:51 $
+ * @version $Revision: 1.63 $, $Date: 2005/10/25 12:02:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -178,8 +179,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			case MEASUREMENTPORT_CODE:
-				MeasurementPort measurementPort = (MeasurementPort) storableObject;
+				final MeasurementPort measurementPort = (MeasurementPort) storableObject;
 				switch (this.linkedEntityCode) {
+					case PORT_CODE:
+						condition = super.conditionTest(measurementPort.getPortId());
+						break;
 					case KIS_CODE:
 						condition = super.conditionTest(measurementPort.getKISId());
 						break;
