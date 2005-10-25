@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.43 2005/10/25 07:24:22 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.44 2005/10/25 15:33:53 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,9 +36,10 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/10/25 07:24:22 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/25 15:33:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -183,19 +184,19 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 			treeFrame.init();
 		}
 
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PARAMETERSET_CODE);
-		StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE);
-
-		
 		if (loggedIn) {
+			StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.TEST_CODE);
+			StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE);
+			StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PARAMETERSET_CODE);
+			StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE);
+
 			this.dispatcher.firePropertyChange(
 				new PropertyChangeEvent(this, SchedulerModel.COMMAND_CLEAN, null, null));			
 		} else {
 			final SchedulerModel schedulerModel = 
 				(SchedulerModel) this.aContext.getApplicationModel();
 			schedulerModel.unselectTests(this);
+			StorableObjectPool.clean();
 		}
 
 		((Component) this.frames.get(PARAMETERS_FRAME)).setVisible(loggedIn);
@@ -216,6 +217,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 	@Override
 	public void loggedOut() {
+		assert Log.debugMessage("ScheduleMainFrame.loggedOut | ", Log.DEBUGLEVEL09);
 		this.logged(false);
 	}
 
