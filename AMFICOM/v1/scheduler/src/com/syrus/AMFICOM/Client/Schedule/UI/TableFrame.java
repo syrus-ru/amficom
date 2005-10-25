@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.62 2005/10/23 11:50:36 bob Exp $
+ * $Id: TableFrame.java,v 1.63 2005/10/25 09:23:54 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestViewAdapter;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/10/23 11:50:36 $
+ * @version $Revision: 1.63 $, $Date: 2005/10/25 09:23:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -281,9 +281,12 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 											I18N.getString("Scheduler.Text.Table.DeleteTest.ConfirmMessage"),
 											I18N.getString("Scheduler.Text.Table.DeleteTest.ConfirmTitle"),
 											JOptionPane.YES_NO_OPTION);
-									if (temp == JOptionPane.YES_OPTION) {										
+									if (temp == JOptionPane.YES_OPTION) {
+										TestView[] testViews = new TestView[rowIndices.length];
 										for (int i = 0; i < rowIndices.length; i++) {
-											final TestView testView = model.getObject(rowIndices[i]);
+											testViews[i] = model.getObject(rowIndices[i]);
+										}
+										for (final TestView testView : testViews) {											
 											try {
 												TableFrame.this.schedulerModel.removeTest(testView.getTest());
 											} catch (final ApplicationException e1) {
