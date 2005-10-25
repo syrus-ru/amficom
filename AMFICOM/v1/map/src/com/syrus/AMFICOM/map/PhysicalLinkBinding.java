@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkBinding.java,v 1.19 2005/10/16 14:25:02 max Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.20 2005/10/25 07:46:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,25 +12,33 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+
 /**
  * Объект привязки кабелей к тоннелю. Принадлежит определенному тоннелю.
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: max $
- * @version $Revision: 1.19 $, $Date: 2005/10/16 14:25:02 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/10/25 07:46:27 $
  * @module map
  */
 public final class PhysicalLinkBinding implements Serializable {
 	private static final long serialVersionUID = -6384653393124814845L;
 
-	private SortedSet<PipeBlock> pipeBlocks;
+	private Set<Identifier> pipeBlockIds;
+
+	private transient SortedSet<PipeBlock> pipeBlocks;
 
 	/** список кабелей, проложенных по данному тоннелю */
 	private transient ArrayList<Object> bindObjects = new ArrayList<Object>();
@@ -38,7 +46,17 @@ public final class PhysicalLinkBinding implements Serializable {
 	private void initialize() {
 		if(this.bindObjects == null) {
 			this.bindObjects = new ArrayList<Object>();
-		}		
+		}
+		if(this.pipeBlocks == null) {
+			this.pipeBlocks = new TreeSet<PipeBlock>();
+			final Set<PipeBlock> pipeBlocksFromPool;
+			try {
+				pipeBlocksFromPool = StorableObjectPool.<PipeBlock>getStorableObjects(this.pipeBlockIds, true);
+				this.pipeBlocks.addAll(pipeBlocksFromPool);
+			} catch(ApplicationException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -47,8 +65,10 @@ public final class PhysicalLinkBinding implements Serializable {
 	public PhysicalLinkBinding(
 			Collection<PipeBlock> pipeBlocks) {
 		this.pipeBlocks = new TreeSet<PipeBlock>();
+		this.pipeBlockIds = new HashSet<Identifier>();
 		if(pipeBlocks != null) {
 			this.pipeBlocks.addAll(pipeBlocks);
+			this.pipeBlockIds.addAll(Identifier.createIdentifiers(this.pipeBlocks));
 		}
 	}
 
@@ -140,6 +160,7 @@ public final class PhysicalLinkBinding implements Serializable {
 	public void addPipeBlock(PipeBlock pipeBlock) {
 		pipeBlock.setNumber(this.pipeBlocks.size() + 1);
 		this.pipeBlocks.add(pipeBlock);
+		this.pipeBlockIds.add(pipeBlock.getId());
 	}
 
 	public SortedSet<PipeBlock> getPipeBlocks() {
@@ -147,9 +168,11 @@ public final class PhysicalLinkBinding implements Serializable {
 	}
 
 	public void setPipeBlocks(Set<PipeBlock> pipeBlocks) {
+		this.pipeBlockIds.clear();
 		this.pipeBlocks.clear();
 		if(pipeBlocks != null) {
 			this.pipeBlocks.addAll(pipeBlocks);
+			this.pipeBlockIds.addAll(Identifier.createIdentifiers(this.pipeBlocks));
 		}
 	}
 
@@ -158,6 +181,7 @@ public final class PhysicalLinkBinding implements Serializable {
 		final SortedSet<PipeBlock> blocksToShift = this.pipeBlocks.tailSet(block);
 		block.setNumber(-1);
 		this.pipeBlocks.remove(block);
+		this.pipeBlockIds.remove(block.getId());
 		for(PipeBlock pipeBlock : blocksToShift) {
 			final int number = pipeBlock.getNumber();
 			if(number > removedNumber) {
