@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.5 2005/10/25 09:22:23 bob Exp $
+* $Id: TestView.java,v 1.6 2005/10/25 12:01:56 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,12 +19,16 @@ import java.util.TreeSet;
 
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.AMFICOM.reflectometry.MeasurementReflectometryAnalysisResult;
@@ -35,7 +39,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/25 09:22:23 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/25 12:01:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -43,7 +47,8 @@ import com.syrus.util.WrapperComparator;
 public final class TestView {
 	
 	private static final Map<Test, TestView> MAP = new HashMap<Test, TestView>();
-
+	private static final Map<Identifier, TestView> IDMAP = new HashMap<Identifier, TestView>();
+	
 	private final Test test;
 	
 	private Date firstDate;
@@ -61,9 +66,16 @@ public final class TestView {
 	private String testD;
 	
 	private SortedSet<Measurement> measurements;
+
+	private final Date	start;
+	private final Date	end;
 	
-	private TestView(final Test test) throws ApplicationException {
+	private TestView(final Test test,
+	                 final Date start,
+	                 final Date end) throws ApplicationException {
 		this.test = test;
+		this.start = start;
+		this.end = end;
 		
 		this.createStartEndTimes();
 		
@@ -161,10 +173,30 @@ public final class TestView {
 						MeasurementWrapper.getInstance(),
 						MeasurementWrapper.COLUMN_START_TIME)); 
 		if (!newerTest) {
-			final LinkedIdsCondition linkedIdsCondition = 
-				new LinkedIdsCondition(this.test.getId(), ObjectEntities.MEASUREMENT_CODE);	
+			
+			final TypicalCondition startTypicalCondition = 
+				new TypicalCondition(this.end,
+					this.end,
+					OperationSort.OPERATION_LESS_EQUALS,
+					ObjectEntities.MEASUREMENT_CODE,
+					MeasurementWrapper.COLUMN_START_TIME);
+			final TypicalCondition endTypicalCondition = 
+				new TypicalCondition(this.start,
+					this.start,
+					OperationSort.OPERATION_GREAT_EQUALS,
+					ObjectEntities.MEASUREMENT_CODE,
+					MeasurementWrapper.COLUMN_START_TIME);
+			
+			final CompoundCondition compoundCondition = 
+				new CompoundCondition(startTypicalCondition,
+					CompoundConditionSort.AND,
+					endTypicalCondition);
+			
+			compoundCondition.addCondition(
+				new LinkedIdsCondition(this.test.getId(), 
+					ObjectEntities.MEASUREMENT_CODE));
 			final Set<Measurement> measurements1 = 
-				StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
+				StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 			set.addAll(measurements1);			
 		}		
 		this.measurements  = Collections.unmodifiableSortedSet(set);
@@ -221,19 +253,32 @@ public final class TestView {
 		return MAP.get(test);
 	}
 	
-	public static final synchronized void addTest(final Test test) 
+	public static final synchronized TestView valueOf(final Identifier testId) {
+		return IDMAP.get(testId);
+	}
+	
+	public static final synchronized void addTest(final Test test,
+		final Date start,
+	    final Date end) 
 	throws ApplicationException {
-		MAP.put(test, new TestView(test));
+		final TestView testView = new TestView(test, start, end);
+		MAP.put(test, testView);
+		IDMAP.put(test.getId(), testView);
 	}
 	
 	public static final synchronized void clearCache(){
 		MAP.clear();
+		IDMAP.clear();
 	}
 	
-	public static final synchronized void refreshCache(final Set<Test> tests) 
+	public static final synchronized void refreshCache(final Set<Test> tests,
+		final Date start,
+		final Date end) 
 	throws ApplicationException{
 		for (final Test test : tests) {
-			MAP.put(test, new TestView(test));
+			final TestView testView = new TestView(test, start, end);
+			MAP.put(test, testView);
+			IDMAP.put(test.getId(), testView);
 		}
 	}
 	
@@ -290,6 +335,14 @@ public final class TestView {
 	
 	public final Date getLastDate() {
 		return this.lastDate;
+	}
+	
+	public final Date getEnd() {
+		return this.end;
+	}
+	
+	public final Date getStart() {
+		return this.start;
 	}
 	
 	public final MeasurementSetup getMeasurementSetup() {
