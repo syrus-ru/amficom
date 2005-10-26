@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.20 2005/10/24 13:01:03 bass Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.21 2005/10/26 09:24:05 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/24 13:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/10/26 09:24:05 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -64,7 +64,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 	protected boolean isKeySupported(final String key) {
 		switch (this.condition.getEntityCode().shortValue()) {
 		case MEASUREMENT_CODE:
-			return key == MeasurementWrapper.COLUMN_STATUS;
+			return key == MeasurementWrapper.COLUMN_STATUS
+					|| key == MeasurementWrapper.COLUMN_START_TIME;
 		case TEST_CODE:
 			return key == TestWrapper.COLUMN_START_TIME
 					|| key == TestWrapper.COLUMN_END_TIME
