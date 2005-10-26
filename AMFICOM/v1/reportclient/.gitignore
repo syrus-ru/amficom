@@ -9,3 +9,4 @@ makereportclient
 *.swp
 *.jar
 .mach
+.settings
