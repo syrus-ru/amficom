@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 
 /**
  * Отчёт "Прокладка кабеля"
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/10/11 08:56:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/10/26 10:12:32 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -66,10 +66,10 @@ public class CableLayoutReport {
 		List<Integer> tableColumnWidths = new ArrayList<Integer>();
 		
 		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(SITE_NAME_COLUMN_WIDTH);
-			tableColumnWidths.add(CABLE_ENTRANCE_RESERVE_COLUMN_WIDTH);
-			tableColumnWidths.add(CABLE_EXIT_RESERVE_COLUMN_WIDTH);
-			tableColumnWidths.add(TUNNEL_INFO_COLUMN_WIDTH);
+			tableColumnWidths.add(Integer.valueOf(SITE_NAME_COLUMN_WIDTH));
+			tableColumnWidths.add(Integer.valueOf(CABLE_ENTRANCE_RESERVE_COLUMN_WIDTH));
+			tableColumnWidths.add(Integer.valueOf(CABLE_EXIT_RESERVE_COLUMN_WIDTH));
+			tableColumnWidths.add(Integer.valueOf(TUNNEL_INFO_COLUMN_WIDTH));
 		}
 		return tableColumnWidths;
 	}

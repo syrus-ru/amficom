@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorInfoReport.java,v 1.2 2005/10/11 08:56:12 krupenn Exp $
+ * $Id: CollectorInfoReport.java,v 1.3 2005/10/26 10:12:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ public class CollectorInfoReport {
 		List<Integer> tableColumnWidths = new ArrayList<Integer>();
 		
 		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(PROPERTY_NAME_COLUMN_WIDTH);
-			tableColumnWidths.add(PROPERTY_VALUE_COLUMN_WIDTH);
+			tableColumnWidths.add(Integer.valueOf(PROPERTY_NAME_COLUMN_WIDTH));
+			tableColumnWidths.add(Integer.valueOf(PROPERTY_VALUE_COLUMN_WIDTH));
 		}
 		return tableColumnWidths;
 	}

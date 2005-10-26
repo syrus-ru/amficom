@@ -1,5 +1,5 @@
 /*
- * $Id: TestReport.java,v 1.4 2005/10/13 06:21:41 peskovsky Exp $
+ * $Id: TestReport.java,v 1.5 2005/10/26 10:12:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ public class TestReport {
 		List<Integer> tableColumnWidths = new ArrayList<Integer>();
 		
 		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(PROPERTY_NAME_COLUMN_WIDTH);
-			tableColumnWidths.add(PROPERTY_VALUE_COLUMN_WIDTH);
+			tableColumnWidths.add(Integer.valueOf(PROPERTY_NAME_COLUMN_WIDTH));
+			tableColumnWidths.add(Integer.valueOf(PROPERTY_VALUE_COLUMN_WIDTH));
 		}
 		return tableColumnWidths;
 	}

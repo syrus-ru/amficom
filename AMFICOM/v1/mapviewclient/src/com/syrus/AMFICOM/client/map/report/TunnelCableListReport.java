@@ -55,8 +55,8 @@ public class TunnelCableListReport {
 		List<Integer> tableColumnWidths = new ArrayList<Integer>();
 		
 		for (int j = 0; j < vertDivisionsCount; j++) {
-			tableColumnWidths.add(PROPERTY_NAME_COLUMN_WIDTH);
-			tableColumnWidths.add(PROPERTY_VALUE_COLUMN_WIDTH);
+			tableColumnWidths.add(Integer.valueOf(PROPERTY_NAME_COLUMN_WIDTH));
+			tableColumnWidths.add(Integer.valueOf(PROPERTY_VALUE_COLUMN_WIDTH));
 		}
 		return tableColumnWidths;
 	}
