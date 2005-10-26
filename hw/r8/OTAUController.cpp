@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.cpp,v 1.3 2005/10/09 13:44:33 arseniy Exp $
+// $Id: OTAUController.cpp,v 1.4 2005/10/26 08:12:55 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.3 $, $Date: 2005/10/09 13:44:33 $
+// $Revision: 1.4 $, $Date: 2005/10/26 08:12:55 $
 // $Author: arseniy $
 //
 // OTAUController.cpp: implementation of the OTAUController class.
@@ -219,7 +219,7 @@ OTAUController* OTAUController::createOTAUController(const COMPortId cpId,
 
 	char* reply = new char[OTAU_REPLY_SIZE];
 
-	BOOL ret = OTAUController::sendCOMPortMessage(cpHandle, message, reply, OTAU_REPLY_SIZE);
+	const BOOL ret = OTAUController::sendCOMPortMessage(cpHandle, message, reply, OTAU_REPLY_SIZE);
 	delete[] message;
 	delete[] reply;
 
