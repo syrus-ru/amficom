@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.134 2005/10/26 11:07:01 bass Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.135 2005/10/26 14:17:18 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,8 +76,8 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.134 $, $Date: 2005/10/26 11:07:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.135 $, $Date: 2005/10/26 14:17:18 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -1077,8 +1077,8 @@ public final class LogicalNetLayer {
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
-	 * @author $Author: bass $
-	 * @version $Revision: 1.134 $, $Date: 2005/10/26 11:07:01 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.135 $, $Date: 2005/10/26 14:17:18 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1383,6 +1383,9 @@ public final class LogicalNetLayer {
 			return;
 		}
 
+		if(nodesCalculated.get(nodeProcessed) == null) {
+			@SuppressWarnings("unused") int a = 0;
+		}
 		if (nodesCalculated.get(nodeProcessed).booleanValue()
 				|| (allLinksForNodeProcessed.size() == 1 && allLinksForNodeProcessed.contains(incomingLink))
 				|| !hasUncalculatedLinks) {
