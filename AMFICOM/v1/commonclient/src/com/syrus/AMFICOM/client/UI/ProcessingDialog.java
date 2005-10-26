@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.13 2005/10/25 16:45:39 bob Exp $
+* $Id: ProcessingDialog.java,v 1.14 2005/10/26 07:27:43 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.WorkQueue;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/10/25 16:45:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/26 07:27:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -50,12 +50,28 @@ public final class ProcessingDialog {
 		runnableTaskNames.put(runnable, title);
 	}
 	
+	private static class RunnableQueue extends WorkQueue {
+		@Override
+		protected void processingItem(final Runnable workItem) 
+		throws InterruptedException {
+			assert Log.debugMessage("RunnableQueue.processingItem | in " + workItem,
+				LOGLEVEL);
+			workItem.run();
+			assert Log.debugMessage("RunnableQueue.processingItem | out " + workItem,
+				LOGLEVEL);
+		}
+	}
+	
 	private static class DisplayQueue extends WorkQueue {
 
 		final JDialog	modalDialog;
 		private final JProgressBar	progressBar;
+		final RunnableQueue runnableQueue;
 
 		public DisplayQueue() {
+			
+			this.runnableQueue =  new RunnableQueue();
+			
 			final Toolkit defaultToolkit = Toolkit.getDefaultToolkit();
 			final Dimension screenSize = defaultToolkit.getScreenSize();
 			
@@ -76,15 +92,18 @@ public final class ProcessingDialog {
 		protected void processingItem(final Runnable workItem) 
 		throws InterruptedException {
 			final String title = runnableTaskNames.remove(workItem);
-			assert Log.debugMessage("DisplayQueue.processingItem | thread " + title + " in",
+			assert Log.debugMessage("DisplayQueue.processingItem | thread " 
+					+ title 
+					+ " in " 
+					+ workItem,
 				LOGLEVEL);
 			this.modalDialog.setTitle(title);
 			this.progressBar.setString(title);
 			final ComponentListener componentListener = new ComponentAdapter() {
 				@Override
 				public void componentShown(ComponentEvent e) {
-					new Thread() {
-						@Override
+					DisplayQueue.this.runnableQueue.enqueue(new Runnable() {
+
 						public void run() {
 							try {
 								workItem.run();
@@ -92,13 +111,16 @@ public final class ProcessingDialog {
 								// too unlikely
 								new Launcher.DefaultThrowableHandler().handle(throwable);
 							}
-							DisplayQueue.this.modalDialog.setVisible(false);
-							assert Log.debugMessage("DisplayQueue.processingItem | thread " + title + " out",
-								LOGLEVEL);
+							DisplayQueue.this.modalDialog.setVisible(false);							
 						}
-					}.start();
+					});
 					
 					DisplayQueue.this.modalDialog.removeComponentListener(this);
+					assert Log.debugMessage("DisplayQueue.processingItem | thread " 
+							+ title 
+							+ " out " 
+							+ workItem,
+						LOGLEVEL);
 				}
 			};
 			this.modalDialog.addComponentListener(componentListener);
