@@ -91,6 +91,7 @@ AMFICOM_v1	&tools\
 		&mapper-servlet \
 		&bugs \
 		&reflectometry \
+		&oldobserver \
 		&manager \
 		&манагер
 
