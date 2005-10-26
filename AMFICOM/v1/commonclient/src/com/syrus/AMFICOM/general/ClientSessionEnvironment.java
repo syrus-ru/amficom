@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.30 2005/10/21 12:03:18 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.31 2005/10/26 13:07:05 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.general;
 
 import java.beans.PropertyChangeListener;
 
+import com.syrus.AMFICOM.client.UI.dialogs.DefaultPopupMessageReceiver;
 import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/10/21 12:03:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/10/26 13:07:05 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -42,6 +43,8 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	private static ClientSessionEnvironment instance;
 
 	private CORBAClientImpl corbaClientImpl;
+
+	private PopupMessageReceiver	receiver;
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,
@@ -179,6 +182,10 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				+ ContextNameFactory.generateContextName();
 		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
 		this.corbaClientImpl = new CORBAClientImpl();
+		if (this.receiver == null) {
+			this.receiver = new DefaultPopupMessageReceiver();
+		}
+		this.corbaClientImpl.addPopupMessageReceiver(this.receiver);
 		corbaServer.activateServant(new CORBAClientPOATie(this.corbaClientImpl, corbaServer.getPoa()), servantName);
 		corbaServer.printNamingContext();
 	}
@@ -189,13 +196,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				+ ContextNameFactory.generateContextName();
 		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
 		corbaServer.deactivateServant(servantName, true);
+		this.corbaClientImpl.removePopupMessageReceiver(this.receiver);
 	}
 
-	public void addPopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
-		this.corbaClientImpl.addPopupMessageReceiver(popupMessageReceiver);
-	}
-
-	public void removePopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
-		this.corbaClientImpl.removePopupMessageReceiver(popupMessageReceiver);
-	}
 }
