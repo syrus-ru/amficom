@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.55 2005/10/22 13:50:43 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.56 2005/10/26 11:58:54 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,14 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PipeBlock;
@@ -31,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * –азместить кабель на карте.
  * 
- * @version $Revision: 1.55 $, $Date: 2005/10/22 13:50:43 $
+ * @version $Revision: 1.56 $, $Date: 2005/10/26 11:58:54 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -104,6 +106,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			if(xmlId1.getStringValue().equals("682647")) {
 				@SuppressWarnings("unused") int a = 0;
 			}
+			final Set<AbstractNode> siteNodesPresent = this.mapView.getAllNodes();
 			final SortedSet<CableChannelingItem> pathMembers = this.schemeCableLink.getPathMembers();
 //			System.out.println("SchemeCableLink " + xmlId1.getStringValue() + " has " + pathMembers.size() + " cci's");
 			for(Iterator iter = new LinkedList(pathMembers).iterator(); iter.hasNext();) {
@@ -116,6 +119,15 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				// прив€зки опускаетс€
 				if(currentStartNode == null
 						|| currentEndNode == null) {
+					cci.setParentPathOwner(null, false);
+					continue;
+				}
+				// если элемент прив€зки не соответствует топологической схеме
+				// (один из узлов прив€зки находитс€ в другой топологической 
+				// схеме) то элемент прив€зки опускаетс€
+				if(!siteNodesPresent.contains(currentEndNode)
+						 || !siteNodesPresent.contains(currentStartNode)) {
+					cci.setParentPathOwner(null, false);
 					continue;
 				}
 
