@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.31 2005/10/26 13:07:05 bob Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.32 2005/10/26 15:30:01 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,13 @@ import java.beans.PropertyChangeListener;
 
 import com.syrus.AMFICOM.client.UI.dialogs.DefaultPopupMessageReceiver;
 import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
+import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/26 13:07:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.32 $, $Date: 2005/10/26 15:30:01 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -74,7 +75,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				createMapSchemeSession(loginRestorer);
 				break;
 			default:
-				final String msg = LangModelGeneral.getString("Error.UnknownSessionKind") + " -- " + sessionKind;
+				final String msg = I18N.getString("Error.UnknownSessionKind") + " -- " + sessionKind;
 				Log.errorMessage(msg);
 				throw new IllegalDataException(msg);
 		}
