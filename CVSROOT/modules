@@ -277,6 +277,8 @@ mapper-servlet_v1	AMFICOM/v1/mapper-servlet
 bugs			AMFICOM/v1/bugs
 #M	reflectometry
 reflectometry		AMFICOM/v1/reflectometry
+#M	oldobserver
+oldobserver		oldobserver
 #M	manager
 manager			AMFICOM/v1/manager
 #M	манагер
