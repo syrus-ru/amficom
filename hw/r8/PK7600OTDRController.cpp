@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////
 
 PK7600OTDRController::PK7600OTDRController(const OTDRId otdrId,
-			const OTDRReportListener* otdrReportListener,
+			OTDRReportListener* otdrReportListener,
 			const unsigned int timewait,
 			const tCardType cardType)
 				: OTDRController(otdrId,
@@ -196,6 +196,70 @@ BOOL PK7600OTDRController::setMeasurementParameters(const Parameter** parameters
 			printf("unknown error code\n");
 	}
 	return FALSE;
+}
+
+BellcoreStructure* PK7600OTDRController::runMeasurement() const {
+	unsigned long maxPoints;
+	switch (this->cardType) {
+		case PK7600_ISA_CARD:
+			maxPoints = PK7600_MAX_WFM_POINTS;
+			break;
+		case PK7600_PCI_CARD:
+			maxPoints = PK7600_PCI_MAX_WFM_POINTS;
+			break;
+		default:
+			printf("PK7600OTDRController | ERROR: OTDR %d -- unknown card type %d\n", this->otdrId, this->cardType);
+			return NULL;
+	}
+
+	HANDLE* events = PK7600AcqStart(this->otdrId, NULL);
+	int ret, cnt = 0, stat = 0;
+	do {
+		ret = WaitForSingleObject(*events, 1500l);
+		if (ret == WAIT_OBJECT_0 || ret == WAIT_TIMEOUT) {
+			PK7600AcqCheckStatus(this->otdrId, &cnt);
+			printf("PK7600OTDRController | OTDR %d, averages remaining: %d\n", this->otdrId, cnt);
+		} else if (ret == WAIT_OBJECT_0 + 2) {
+			PK7600AcqStop(this->otdrId);
+			printf("PK7600OTDRController | ERROR: OTDR %d, all data is clipped\n", this->otdrId);
+		} else if (ret != 0 && ret != WAIT_TIMEOUT) {
+			printf("PK7600OTDRController | ERROR: OTDR %d, acquisition failed\n", this->otdrId);
+			return NULL;
+		}
+	} while (ret != WAIT_OBJECT_0 && ret != (WAIT_OBJECT_0 + 2));
+
+	OTDRWaveformHeader* waveFormHeader = (OTDRWaveformHeader*) malloc(sizeof(OTDRWaveformHeader));
+	OTDRWaveformData* waveFormData = new OTDRWaveformData[maxPoints];
+
+	if (ret == WAIT_OBJECT_0) {
+		PK7600AcqStop(this->otdrId);
+		stat = PK7600RetrieveWaveform(this->otdrId, waveFormHeader, waveFormData);
+	} else if (ret == WAIT_OBJECT_0 + 2) {
+		PK7600AcqStop(this->otdrId);
+		free(waveFormHeader);
+		delete[] waveFormData;
+		return NULL;
+	}
+
+	if (stat != 0) {
+		printf("PK7600OTDRController | ERROR: OTDR %d, cannot retrieve waveform, code: %d\n", this->otdrId, stat);
+		free(waveFormHeader);
+		delete[] waveFormData;
+		return NULL;
+	}
+
+	BellcoreStructure* bellcoreStructure =  new BellcoreStructure();
+	//this->fillBellcoreStructure(bellcoreStructure, waveFormHeader, waveFormData);
+
+	free(waveFormHeader);
+	delete[] waveFormData;
+
+	return bellcoreStructure;
+}
+
+void PK7600OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStructure,
+							OTDRWaveformHeader* waveFormHeader,
+							OTDRWaveformData*  waveFormData) const {
 }
 
 tCardType PK7600OTDRController::getCardType() const {

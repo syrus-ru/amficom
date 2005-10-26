@@ -2,7 +2,7 @@
 #include "QP1640OTDRController.h"
 
 QP1640OTDRController::QP1640OTDRController(const OTDRId otdrId,
-			const OTDRReportListener* otdrReportListener,
+			OTDRReportListener* otdrReportListener,
 			const unsigned int timewait)
 				: OTDRController(otdrId,
 					otdrReportListener,
@@ -317,4 +317,153 @@ int QP1640OTDRController::getIndexInArray(DWORD val, DWORD* array, int arraySize
 		}
 	}
 	return ret;
+}
+
+BellcoreStructure* QP1640OTDRController::runMeasurement() const {
+	QPOTDRWaveformHeader* waveFormHeader = (QPOTDRWaveformHeader*) malloc(sizeof(QPOTDRWaveformHeader));
+	QPOTDRWaveformData* waveFormData = new QPOTDRWaveformData[MAX_WFM_POINTS];//0xF000
+	memset(waveFormHeader, 0, sizeof(QPOTDRWaveformHeader));
+	memset(waveFormData, 0, sizeof (MAX_WFM_POINTS * sizeof(QPOTDRWaveformData)));
+
+	printf ("QP1640OTDRController | Starting measurement on RTU %d\n", this->otdrId);
+	HANDLE* events = QPOTDRAcqStart(this->otdrId, this->filterFlagsM);
+	int ret;
+	do {
+		// Wait for notification event from DAU
+		ret = WaitForMultipleObjects(3, events, FALSE, INFINITE);
+
+		// New waveform
+		if (ret == WAIT_OBJECT_0 + 1) {
+			// Get trace data
+			QPOTDRRetrieveWaveformSync(this->otdrId, waveFormHeader, waveFormData, false);
+		} else // Life fiber / critical error
+			if (ret == WAIT_OBJECT_0 + 2) {
+				printf("RTUTransceiver | ERROR: Life fiber detected or critical error occured. Test aborted\n");
+			}
+
+	} while (ret == WAIT_OBJECT_0 + 1);
+//	ret = WaitForMultipleObjects(3, events, FALSE, INFINITE);//???
+	if (ret == WAIT_OBJECT_0) {
+		waveFormHeader->updateData = 1;
+	}
+
+//	if (wave_form_header->updateData) {//???
+//		QPOTDRFilterLastWaveform(otdr_cards[otdr_card_index], wave_form_data);
+//	}
+
+	QPOTDRAcqStop(this->otdrId);
+
+	BellcoreStructure* bellcoreStructure =  new BellcoreStructure();
+	this->fillBellcoreStructure(bellcoreStructure, waveFormHeader, waveFormData);
+
+	free(waveFormHeader);
+	delete[] waveFormData;
+
+	return bellcoreStructure;
+}
+
+void QP1640OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStructure,
+								QPOTDRWaveformHeader* waveFormHeader,
+								QPOTDRWaveformData*  waveFormData) const {
+	int offset = waveFormHeader->FPOffset >> 16;
+	int i;
+
+	bellcoreStructure->add_field_gen_params("Cable ID",
+						"Fiber ID",
+						0,
+						(short) this->waveLengthM,
+						"Originating location",
+						"Terminating location",
+						"Cable code",
+						"DF",
+						"Operator",
+						"QuestProbe OTAU");
+
+
+	char sr[5];
+	memset(sr, 0, 5);
+	sprintf(sr, "%d", this->otdrPluginInfo->revisionId);
+	bellcoreStructure->add_field_sup_params(this->otdrPluginInfo->manufacturerName,
+						this->otdrPluginInfo->modelName, //"Nettest QuestProbe"
+						this->otdrPluginInfo->serialNumber,
+						this->otdrPluginInfo->modelNumber,
+						this->otdrPluginInfo->partNumber,
+						sr,
+						"Other");
+
+
+	//Get the number of 100-nanosecond intervals since 1.01.1601
+	SYSTEMTIME sysTime;
+	GetSystemTime(&sysTime);
+	FILETIME fileTime;
+	SystemTimeToFileTime(&sysTime,&fileTime);
+	ULARGE_INTEGER * time = (ULARGE_INTEGER *) (&fileTime);
+	//Get the same value for time 00:00 1.01.1970
+	SYSTEMTIME sysTime1970;
+	sysTime1970.wYear = 1970;
+	sysTime1970.wMonth = 1;
+	sysTime1970.wDay = 1;
+	sysTime1970.wHour = 0;
+	sysTime1970.wMinute = 0;
+	sysTime1970.wSecond = 0;
+	sysTime1970.wMilliseconds = 0;
+	FILETIME fileTime1970;
+	SystemTimeToFileTime(&sysTime1970,&fileTime1970);
+	ULARGE_INTEGER * time1970 = (ULARGE_INTEGER *) (&fileTime1970);
+	//Calculate difference between theese two dates -- current time since 00:00 1.01.1970 in seconds
+	unsigned long dts = (unsigned long) (time->QuadPart/10000000 - time1970->QuadPart/10000000);
+
+	short tpw = 1;
+	short* pwu = new short[tpw];
+	pwu[0] = (short) this->pulseWidthM;
+	int* ds = new int[tpw];
+	ds[0] = (int) (10000. * this->resolutionM * this->iorM * 100. / 3.);//10000. - ???
+	int* nppw = new int[tpw];
+	nppw[0] = (long) ((float) (this->pulseWidthM) * 3. / (this->iorM * this->resolutionM * 10.));
+
+	bellcoreStructure->add_field_fxd_params(dts,
+						"mt",
+						(short) (this->waveLengthM * 10),
+						0,//offset
+						tpw,
+						pwu,
+						ds,
+						nppw,
+						this->iorM * 100000,
+						this->scansM,
+						(int) (this->traceLengthM * 1000.f * this->iorM * 100. / 3.));
+
+	delete[] pwu;
+	delete[] ds;
+	delete[] nppw;
+
+
+	int np = waveFormHeader->NumPts - offset;
+
+	int tndp = np;
+	short tsf = 1;
+	int* tps = new int[tsf];
+	tps[0] = np;
+	short* sf = new short[tsf];
+	sf[0] = 1000;
+	unsigned short** dsf = new unsigned short*[tsf];
+	dsf[0] = new unsigned short[np];
+	for (i = 0; i < np; i++) {
+		dsf[0][i] = 65535 - waveFormData[i + offset];
+	}
+	bellcoreStructure->add_field_data_pts(tndp,
+						tsf,
+						tps,
+						sf,
+						dsf);
+	delete[] tps;
+	delete[] sf;
+	//!!! Don't delete dsf - it will be deleted in the destructor of BellcoreStructure
+
+
+	bellcoreStructure->add_field_cksum(0);
+
+
+	bellcoreStructure->add_field_map();
+
 }

@@ -14,7 +14,6 @@
 #define PARAMETER_NAME_SCANS (const char*) "ref_scans"
 #define PARAMETER_NAME_FLAG_GAIN_SPLICE_ON (const char*) "ref_flag_gain_splice_on"
 #define PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT (const char*) "ref_flag_life_fiber_detect"
-#define PARAMETER_NAME_REFLECTOGRAMMA (const char*) "reflectogramma"
 
 class QP1640OTDRController : public OTDRController {
 	private:
@@ -28,12 +27,12 @@ class QP1640OTDRController : public OTDRController {
 		DWORD filterFlagsM;
 
 		/*	Этот параметр, возможно, надо перенести в структуру OTDRPluginInfo.*/
-		/*	Number of averages in hardware per scan*/
+		/*	Number of averages in hardware per scan.*/
 		DWORD fastScanCount;
 
 	public:
 		QP1640OTDRController(const OTDRId otdrId,
-			const OTDRReportListener* otdrReportListener,
+			OTDRReportListener* otdrReportListener,
 			const unsigned int timewait);
 		virtual ~QP1640OTDRController();
 
@@ -66,6 +65,15 @@ class QP1640OTDRController : public OTDRController {
 		/*	Определить индекс числа в массиве.*/
 		static int getIndexInArray(float val, float* array, int arraySize);
 		static int getIndexInArray(DWORD val, DWORD* array, int arraySize);
+
+		/*	Провести измерение.
+		 * 	В случае успеха возвращает заново созданный объект Белкор. Иначе - NULL.
+		 * 	Реализация виртуальной функции класса OTDRController.*/
+		BellcoreStructure* runMeasurement() const;
+
+		void fillBellcoreStructure(BellcoreStructure* bellcoreStructure,
+			QPOTDRWaveformHeader* waveFormHeader,
+			QPOTDRWaveformData*  waveFormData) const;
 };
 
 #endif /*QP1640OTDRCONTROLLER_H_*/

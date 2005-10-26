@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.h,v 1.7 2005/10/25 14:18:04 arseniy Exp $
+// $Id: OTDRController.h,v 1.8 2005/10/26 15:07:44 arseniy Exp $
 // 
 // Syrus Systems.
 // оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.7 $, $Date: 2005/10/25 14:18:04 $
+// $Revision: 1.8 $, $Date: 2005/10/26 15:07:44 $
 // $Author: arseniy $
 //
 // OTDRController.h: interface for the OTDRController class.
@@ -27,17 +27,20 @@
 #include "pthread.h"
 #include "OTDRReportListener.h"
 #include "Parameter.h"
+#include "BellcoreStructure.h"
+#include "OTAUController.h"
 
 
 typedef unsigned short OTDRId;
 using namespace std;
-typedef map<const char*, const ByteArray*> ParametersMapT;
 
 #define SIZE_MANUFACTORER_NAME 20
 #define SIZE_MODEL_NAME 16
 #define SIZE_SERIAL_NUMBER 32
 #define SIZE_MODEL_NUMBER 32
 #define SIZE_PART_NUMBER 16
+
+#define PARAMETER_NAME_REFLECTOGRAMMA (const char*) "reflectogramma"
 
 typedef struct {
 	char manufacturerName[SIZE_MANUFACTORER_NAME];	//Производитель
@@ -68,20 +71,27 @@ class OTDRController {
 		OTDRPluginInfo* otdrPluginInfo;
 
 	private:
-		/*	Ссылка на главный объект приложения*/
-		const OTDRReportListener* otdrReportListener;
+		/*	Ссылка на главный объект приложения.*/
+		OTDRReportListener* otdrReportListener;
 
-		/*	Текущее состояние средства управления рефлектометром */
+		/*	Текущее состояние средства управления рефлектометром.*/
 		OTDRState state;
 
-		/*	Вспомогательные величины для управления потоком */
+		/*	Вспомогательные величины для управления потоком.*/
 		pthread_t thread;
 		unsigned int timewait;
-		int running;
+
+		/*	Идентификатор текущего измерения.
+		 * 	Объект создаётся перед запуском управляющего рефлектометра.
+		 * 	Объект удаляется вместе с сегментом результата.*/
+		ByteArray* currentMeasurementId;
+
+		/*	Ссылка на средство управления оптическим переключателем при текущем измерении.*/
+		OTAUController* currentOTAUController;
 
 	public:
 		OTDRController(const OTDRId otdrId,
-			const OTDRReportListener* otdrReportListener,
+			OTDRReportListener* otdrReportListener,
 			const unsigned int timewait);
 		virtual ~OTDRController();
 
@@ -90,22 +100,22 @@ class OTDRController {
 		 * 	После вызова состояние должно быть OTDR_STATE_READY.*/
 		void init();
 
-		/*	Получить уникальный номер платы рефлектометра*/
+		/*	Получить уникальный номер платы рефлектометра.*/
 		OTDRId getOTDRId() const;
 
 		/*	Получить модель рефлектометра.
-		 * 	Реализована в подклассах*/
+		 * 	Реализована в подклассах.*/
 		virtual OTDRModel getOTDRModel() const = 0;
 
 		/*	Установить параметры измерения.
 		 * 	В случае неправильных значений возвращает FALSE.*/
 		virtual BOOL setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber) = 0;
 
-		/*	Получить текущее состояние*/
+		/*	Получить текущее состояние.*/
 		OTDRState getState() const;
 
-		/*	Управление потоком*/
-		void start();
+		/*	Управление потоком.*/
+		void start(ByteArray* measurementId, OTAUController* otauController);
 		void shutdown();
 		pthread_t getThread() const;
 
@@ -115,12 +125,16 @@ class OTDRController {
 		virtual void retrieveOTDRPluginInfo() = 0;
 
 		/*	Распечатать допустимые параметры измерений.
-		 * 	Реализована в подклассах*/
+		 * 	Реализована в подклассах.*/
 		virtual void printAvailableParameters() const = 0;
 
-		/*	Главный цикл потока*/
+		/*	Главный цикл потока.*/
 		static void* run(void* args);
 
+		/*	Провести измерение.
+		 * 	В случае успеха возвращает заново созданный объект Белкор. Иначе - NULL.
+		 * 	Реализована в подклассах.*/
+		virtual BellcoreStructure* runMeasurement() const = 0;
 };
 
 #endif // !defined(AFX_OTDRCONTROLLER_H__FF003D9F_71B8_413B_A7ED_FDBFCE325E74__INCLUDED_)

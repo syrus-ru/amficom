@@ -14,7 +14,7 @@ void _cdecl otdrCardProgressIndicate(char *s) {
 /*	Выполнить поиск всех плат вида PK7600.
 	Найденные проинициализировать и зарегистрировать в OTDRContainer.
 	При ошибке возвратить false, при отсутствии ошибок - true.*/
-BOOL initPK7600Cards(const OTDRReportListener* otdrReportListener,
+BOOL initPK7600Cards(OTDRReportListener* otdrReportListener,
 			OTDRContainer* otdrContainer,
 			const unsigned int timewait) {
 	tPK7600OTDRFound foundOTDRs[MAX_OTDRS];

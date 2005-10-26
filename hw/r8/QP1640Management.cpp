@@ -6,7 +6,7 @@
 /*	Выполнить поиск всех плат вида QP1640.
 	Найденные проинициализировать и зарегистрировать в OTDRContainer.
 	При ошибке возвратить false, при отсутствии ошибок - true.*/
-BOOL initQP1640Cards(const OTDRReportListener* otdrReportListener,
+BOOL initQP1640Cards(OTDRReportListener* otdrReportListener,
 			OTDRContainer* otdrContainer,
 			const unsigned int timewait) {
 	WORD* cards = new WORD[MAX_CARDS];

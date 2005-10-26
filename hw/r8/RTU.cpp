@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTU.cpp,v 1.6 2005/10/25 14:16:06 arseniy Exp $
+// $Id: RTU.cpp,v 1.7 2005/10/26 15:07:44 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.6 $, $Date: 2005/10/25 14:16:06 $
+// $Revision: 1.7 $, $Date: 2005/10/26 15:07:44 $
 // $Author: arseniy $
 //
 // RTU.cpp: implementation of the RTU class.
@@ -18,10 +18,10 @@
 #include <windows.h>
 #include "RTU.h"
 
-BOOL initPK7600Cards(const OTDRReportListener* otdrReportListener,
+BOOL initPK7600Cards(OTDRReportListener* otdrReportListener,
 			OTDRContainer* otdrContainer,
 			const unsigned int timewait);
-BOOL initQP1640Cards(const OTDRReportListener* otdrReportListener,
+BOOL initQP1640Cards(OTDRReportListener* otdrReportListener,
 			OTDRContainer* otdrContainer,
 			const unsigned int timewait);
 
@@ -243,7 +243,7 @@ void* RTU::run(void* args) {
 				continue;
 			}
 
-			const OTDRController* otdrController = rtu->otdrControllersMap[otdrId];
+			OTDRController* otdrController = (OTDRController*) rtu->otdrControllersMap[otdrId];
 			if (otdrController == NULL) {
 				printf("RTU | ERROR: OTDR controller for card %hd not found; abort measurement\n", otdrId);
 				rtu->otdrControllersMap.erase(otdrId);
@@ -274,7 +274,7 @@ void* RTU::run(void* args) {
 
 			const Parameter** parameters = (const Parameter**) measurementSegment->getParameters();
 			const unsigned int parNumber = measurementSegment->getParnumber();
-			if (!((OTDRController*) otdrController)->setMeasurementParameters(parameters, parNumber)) {
+			if (!otdrController->setMeasurementParameters(parameters, parNumber)) {
 				printf("RTU | ERROR: Cannot set measurement parameters; abort measurement\n");
 				delete measurementSegment;
 				//TODO: Create special segment to report to MCM.
@@ -288,7 +288,10 @@ void* RTU::run(void* args) {
 				continue;
 			}
 
-			//TODO: Start OTDRController thread
+			ByteArray* measurementId = measurementSegment->getMeasurementId()->clone();
+			otdrController->start(measurementId, otauController);
+
+			delete measurementSegment;
 
 		} else {
 			pthread_mutex_unlock(rtu->tMutex);

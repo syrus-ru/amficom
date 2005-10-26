@@ -20,7 +20,6 @@
 #define PARAMETER_NAME_IOR (const char*) "ref_ior"
 #define PARAMETER_NAME_SCANS (const char*) "ref_scans"
 #define PARAMETER_NAME_SMOOTH_FILTER (const char*) "ref_smooth_filter"
-#define PARAMETER_NAME_REFLECTOGRAMMA (const char*) "reflectogramma"
 
 class PK7600OTDRController : public OTDRController {
 	private:
@@ -38,7 +37,7 @@ class PK7600OTDRController : public OTDRController {
 
 	public:
 		PK7600OTDRController(const OTDRId otdrId,
-			const OTDRReportListener* otdrReportListener,
+			OTDRReportListener* otdrReportListener,
 			const unsigned int timewait,
 			const tCardType cardType);
 		virtual ~PK7600OTDRController();
@@ -52,7 +51,7 @@ class PK7600OTDRController : public OTDRController {
 		 * 	Реализация виртуальной функции класса OTDRController.*/
 		BOOL setMeasurementParameters(const Parameter** parameters, const unsigned int parNumber);
 
-		/*	Получить тип платы PK7600*/
+		/*	Получить тип платы PK7600.*/
 		tCardType getCardType() const;
 
 	private:
@@ -63,6 +62,15 @@ class PK7600OTDRController : public OTDRController {
 		/*	Распечатать допустимые параметры измерений.
 		 * 	Реализация виртуальной функции класса OTDRController.*/
 		void printAvailableParameters() const;
+
+		/*	Провести измерение.
+		 * 	В случае успеха возвращает заново созданный объект Белкор. Иначе - NULL.
+		 * 	Реализация виртуальной функции класса OTDRController.*/
+		BellcoreStructure* runMeasurement() const;
+
+		void fillBellcoreStructure(BellcoreStructure* bellcoreStructure,
+			OTDRWaveformHeader* waveFormHeader,
+			OTDRWaveformData*  waveFormData) const;
 };
 
 #endif // !defined(AFX_PK7600OTDRCONTROLLER_H__0C8FAC67_365A_4C54_BA86_C6F9D6ED4E7B__INCLUDED_)

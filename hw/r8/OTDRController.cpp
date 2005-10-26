@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTDRController.cpp,v 1.6 2005/10/25 14:18:04 arseniy Exp $
+// $Id: OTDRController.cpp,v 1.7 2005/10/26 15:07:44 arseniy Exp $
 // 
 // Syrus Systems.
 // оЅ’ёќѕ-‘≈»ќ…ё≈”Ћ…  √≈ќ‘“
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.6 $, $Date: 2005/10/25 14:18:04 $
+// $Revision: 1.7 $, $Date: 2005/10/26 15:07:44 $
 // $Author: arseniy $
 //
 // Implementation of the OTDRController class.
@@ -16,6 +16,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "OTDRController.h"
+#include "BellcoreWriter.h"
+#include "ResultSegment.h"
 #include <windows.h>
 #include <string.h>
 #include <stdio.h>
@@ -25,7 +27,7 @@
 //////////////////////////////////////////////////////////////////////
 
 OTDRController::OTDRController(const OTDRId otdrId,
-			const OTDRReportListener* otdrReportListener,
+			OTDRReportListener* otdrReportListener,
 			const unsigned int timewait) {
 	this->otdrId = otdrId;
 	this->otdrReportListener = otdrReportListener;
@@ -65,18 +67,20 @@ OTDRState OTDRController::getState() const {
 	return this->state;
 }
 
-void OTDRController::start() {
+void OTDRController::start(ByteArray* measurementId, OTAUController* otauController) {
 	if (this->state != OTDR_STATE_READY) {
-		printf("OTDRController | ERROR: State %d not legal to start data acquisition\n", this->state);
+		printf("OTDRController | ERROR: State %d of controller %d not legal to start data acquisition\n", this->state, this->otdrId);
 		return;
 	}
 
+	this->currentMeasurementId = measurementId;
+	this->currentOTAUController = otauController;
+
 	/*	—оздать и запустить главный поток.*/
-	this->running = 1;
 	pthread_attr_t pt_attr;
 	pthread_attr_init(&pt_attr);
 	pthread_attr_setdetachstate(&pt_attr, PTHREAD_CREATE_JOINABLE);
-	pthread_create(&this->thread, &pt_attr, OTDRController::run, (void*)this);
+	pthread_create(&this->thread, &pt_attr, OTDRController::run, (void*) this);
 	pthread_attr_destroy(&pt_attr);
 
 	/*	»зменить текущее состо€ние*/
@@ -84,8 +88,9 @@ void OTDRController::start() {
 }
 
 void OTDRController::shutdown() {
-	this->running = 0;
-	printf("OTDRController | Shutting down\n");
+	printf("OTDRController | Shutting down OTDR controller %d\n", this->otdrId);
+
+	this->currentOTAUController->shutdown();
 
 	/*	»зменить текущее состо€ние*/
 	this->state = OTDR_STATE_READY;
@@ -97,13 +102,34 @@ pthread_t OTDRController::getThread() const {
 
 void* OTDRController::run(void* args) {
 	OTDRController* otdrController = (OTDRController*) args;
-	const unsigned int twms = otdrController->timewait * 1000;	//ѕеревести в миллисекунды
 
-	while(otdrController->running) {
-		Sleep(twms);
-
-		printf("OTDRController | \n");
+	BellcoreStructure* bellcoreStructure = otdrController->runMeasurement();
+	if (bellcoreStructure == NULL) {
+		otdrController->shutdown();
+		return NULL;
 	}
 
+	const unsigned int nameLength = strlen(PARAMETER_NAME_REFLECTOGRAMMA);
+	char* nameData = new char[nameLength];
+	memcpy(nameData, PARAMETER_NAME_REFLECTOGRAMMA, nameLength);
+	ByteArray* baName = new ByteArray(nameLength, nameData);
+
+	BellcoreWriter* bellcoreWriter = new BellcoreWriter();
+	bellcoreWriter->write(bellcoreStructure);
+	char* valueData = (char*) bellcoreWriter->get_data();
+	int valueLength = bellcoreWriter->get_data_size();
+	ByteArray* baValue = new ByteArray(valueLength, valueData);
+
+	delete bellcoreWriter;
+	delete bellcoreStructure;
+
+	Parameter** resultParameters = new Parameter*[1];
+	resultParameters[0] = new Parameter(baName, baValue);
+
+	const ResultSegment* resultSegment = new ResultSegment(otdrController->currentMeasurementId, 1, resultParameters);
+	OTDRReportListener* otdrReportListener = otdrController->otdrReportListener;
+	otdrReportListener->acceptOTDRReport(resultSegment);
+
+	otdrController->shutdown();
 	return NULL;
 }
