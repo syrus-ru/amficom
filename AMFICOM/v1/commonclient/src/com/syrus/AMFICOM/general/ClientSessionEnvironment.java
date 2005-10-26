@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.32 2005/10/26 15:30:01 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.33 2005/10/26 15:47:40 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/26 15:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/10/26 15:47:40 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -200,4 +200,11 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		this.corbaClientImpl.removePopupMessageReceiver(this.receiver);
 	}
 
+	public void addPopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
+		this.corbaClientImpl.addPopupMessageReceiver(popupMessageReceiver);
+	}
+
+	public void removePopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
+		this.corbaClientImpl.removePopupMessageReceiver(popupMessageReceiver);
+	}
 }
