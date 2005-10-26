@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkController.java,v 1.35 2005/10/13 14:14:14 peskovsky Exp $$
+ * $$Id: PhysicalLinkController.java,v 1.36 2005/10/26 14:17:34 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client.map.controllers;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.35 $, $Date: 2005/10/13 14:14:14 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.36 $, $Date: 2005/10/26 14:17:34 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */

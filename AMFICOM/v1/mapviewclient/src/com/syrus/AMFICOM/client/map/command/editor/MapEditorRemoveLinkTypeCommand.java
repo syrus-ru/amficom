@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorRemoveLinkTypeCommand.java,v 1.14 2005/10/25 08:01:48 krupenn Exp $$
+ * $$Id: MapEditorRemoveLinkTypeCommand.java,v 1.15 2005/10/26 14:17:34 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,13 +31,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/25 08:01:48 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/26 14:17:34 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient

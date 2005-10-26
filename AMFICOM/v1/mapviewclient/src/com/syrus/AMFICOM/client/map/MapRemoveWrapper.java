@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveWrapper.java,v 1.4 2005/10/22 13:51:07 krupenn Exp $
+ * $Id: MapRemoveWrapper.java,v 1.5 2005/10/26 14:17:34 krupenn Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;

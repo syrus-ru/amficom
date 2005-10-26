@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateUnboundNodeCommandAtomic.java,v 1.28 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CreateUnboundNodeCommandAtomic.java,v 1.29 2005/10/26 14:17:34 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -28,7 +27,7 @@ import com.syrus.util.Log;
  * Разместить сетевой элемент на карте. используется при переносе (drag/drop), в
  * точке point (в экранных координатах)
  * 
- * @version $Revision: 1.28 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/26 14:17:34 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient

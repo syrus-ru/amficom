@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveSelectionCommandBundle.java,v 1.25 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: MoveSelectionCommandBundle.java,v 1.26 2005/10/26 14:17:34 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,9 +7,6 @@
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
-
-import static com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle.DELTA_X;
-import static com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle.DELTA_Y;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -28,7 +25,7 @@ import com.syrus.util.Log;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * 
- * @version $Revision: 1.25 $, $Date: 2005/10/18 07:21:12 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/26 14:17:34 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient

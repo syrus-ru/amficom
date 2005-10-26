@@ -1,5 +1,5 @@
 /*-
- * $$Id: StandAloneNetMapViewGenerator.java,v 1.5 2005/10/13 14:14:14 peskovsky Exp $$
+ * $$Id: StandAloneNetMapViewGenerator.java,v 1.6 2005/10/26 14:17:34 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,12 @@ import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.MapReportApplicationModelFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/13 14:14:14 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.6 $, $Date: 2005/10/26 14:17:34 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */

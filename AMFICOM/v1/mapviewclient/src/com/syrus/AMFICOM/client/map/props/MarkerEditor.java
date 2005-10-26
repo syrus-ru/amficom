@@ -1,5 +1,5 @@
 /*-
- * $$Id: MarkerEditor.java,v 1.17 2005/10/18 07:21:13 krupenn Exp $$
+ * $$Id: MarkerEditor.java,v 1.18 2005/10/26 14:17:34 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
-import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
@@ -35,7 +34,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.Marker;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/18 07:21:13 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/26 14:17:34 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
