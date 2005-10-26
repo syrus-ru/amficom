@@ -78,7 +78,6 @@ AMFICOM_v1	&tools\
 		&bugs \
 		&reflectometry \
 		&observer \
-		&oldobserver \
 		&manager \
 		&манагер
 
