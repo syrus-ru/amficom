@@ -1,5 +1,5 @@
 /*-
- * $$Id: GenerateCablePathCablingCommandBundle.java,v 1.41 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: GenerateCablePathCablingCommandBundle.java,v 1.42 2005/10/26 11:20:49 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,12 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -33,8 +32,8 @@ import com.syrus.util.Log;
  * существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам генерируютс€
  * сетевые узла и схемные элементы прив€зываютс€ к ним.
  * 
- * @version $Revision: 1.41 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/10/26 11:20:49 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -87,34 +86,28 @@ public class GenerateCablePathCablingCommandBundle extends
 			// элемент, сгенерировать на его месте сетевой узел)
 			startsite = this.checkSite(startsite);
 			// отдельный список, поскольку используетс€ удаление
-			List list  = new LinkedList();
-			list.addAll(this.cablePath.getLinks());
-			// цикл по всем лини€м, участвующим в кабельном пути
-			// по неприв€занным лини€м генерировать тоннели
-			for(Iterator it = list.iterator(); it.hasNext();) {
-				PhysicalLink link = (PhysicalLink)it.next();
-
+			for (PhysicalLink physicalLink : new LinkedList<PhysicalLink>(this.cablePath.getLinks())) {
 				// перейти к следующему узлу
-				if(startsite == link.getEndNode())
-					endsite = (SiteNode)link.getStartNode();
-				else
-					endsite = (SiteNode)link.getEndNode();
+				final AbstractNode startNode = physicalLink.getStartNode();
+				final AbstractNode endNode = physicalLink.getEndNode();
+				endsite = (startsite == endNode)
+						? (SiteNode) startNode
+						: (SiteNode) endNode;
 
 				// проверить, что узел €вл€етс€ сетевым узлом (если это неприв€занный
 				// элемент, сгенерировать на его месте сетевой узел)
 				endsite = this.checkSite(endsite);
 
 				// если неприв€занна€ лини€, генерировать тоннель
-				if(link instanceof UnboundLink) {
-					UnboundLink unbound = (UnboundLink)link;
+				if (physicalLink instanceof UnboundLink) {
+					UnboundLink unbound = (UnboundLink)physicalLink;
 
-					link = super.createPhysicalLink(startsite, endsite);
+					physicalLink = super.createPhysicalLink(startsite, endsite);
 					// фрагменты перенос€тс€ в новый сгенерированный тоннель
-					for(Iterator it2 = new LinkedList(unbound.getNodeLinks()).iterator(); it2.hasNext();) {
-						NodeLink tmpNodeLink = (NodeLink)it2.next();
+					for (final NodeLink tmpNodeLink : new LinkedList<NodeLink>(unbound.getNodeLinks())) {
 						unbound.removeNodeLink(tmpNodeLink);
-						tmpNodeLink.setPhysicalLink(link);
-						link.addNodeLink(tmpNodeLink);
+						tmpNodeLink.setPhysicalLink(physicalLink);
+						physicalLink.addNodeLink(tmpNodeLink);
 						this.mapView.removeUnboundNodeLink(tmpNodeLink);
 						this.map.addNodeLink(tmpNodeLink);
 					}
@@ -123,16 +116,16 @@ public class GenerateCablePathCablingCommandBundle extends
 					CableChannelingItem newCableChannelingItem = 
 						CableController.generateCCI(
 								this.cablePath, 
-								link,
+								physicalLink,
 								startsite,
 								endsite);
 					newCableChannelingItem.insertSelfBefore(cableChannelingItem);
 					cableChannelingItem.setParentPathOwner(null, false);
 					this.cablePath.removeLink(cableChannelingItem);
-					this.cablePath.addLink(link, newCableChannelingItem);
+					this.cablePath.addLink(physicalLink, newCableChannelingItem);
 
 					super.removePhysicalLink(unbound);
-					link.getBinding().add(this.cablePath);
+					physicalLink.getBinding().add(this.cablePath);
 					super.setUndoable(false);
 				}
 
