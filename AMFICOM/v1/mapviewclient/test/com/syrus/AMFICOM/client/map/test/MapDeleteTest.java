@@ -1,5 +1,5 @@
 /**
- * $Id: MapDeleteTest.java,v 1.1 2005/09/27 13:58:21 krupenn Exp $
+ * $Id: MapDeleteTest.java,v 1.2 2005/10/26 17:39:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,15 +19,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 public class MapDeleteTest extends TestCase {
