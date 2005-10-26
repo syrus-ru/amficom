@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.2 2005/10/19 13:50:15 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.3 2005/10/26 16:00:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,14 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_SORT;
+import static com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort._USER_SORT_REGULAR;
+import static com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort._USER_SORT_SYSADMIN;
 import static com.syrus.AMFICOM.eventv2.EventType.LINE_MISMATCH;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort.OR;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Set;
 
@@ -23,19 +29,34 @@ import com.syrus.AMFICOM.eventv2.LineMismatchEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.IdlEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
 import com.syrus.util.Log;
-import static java.util.logging.Level.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/19 13:50:15 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/26 16:00:57 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
+	private static final StorableObjectCondition CONDITION =
+			new CompoundCondition(
+					new TypicalCondition(
+							_USER_SORT_SYSADMIN,
+							OPERATION_EQUALS,
+							SYSTEMUSER_CODE,
+							COLUMN_SORT),
+					OR,
+					new TypicalCondition(
+							_USER_SORT_REGULAR,
+							OPERATION_EQUALS,
+							SYSTEMUSER_CODE,
+							COLUMN_SORT));
+
 	/**
 	 * @see EventProcessor#getEventType()
 	 */
@@ -59,9 +80,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 			final ORB orb = servantManager.getCORBAServer().getOrb();
 
 			final Set<SystemUser> systemUsers =
-					StorableObjectPool.getStorableObjectsByCondition(
-							new EquivalentCondition(SYSTEMUSER_CODE),
-							true);
+					StorableObjectPool.getStorableObjectsByCondition(CONDITION, true);
 			final IdlEvent popupNotificationEvents[] = new IdlEvent[systemUsers.size()];
 			int i = 0; 
 			for (final SystemUser systemUser : systemUsers) {
