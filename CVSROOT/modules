@@ -29,11 +29,9 @@
 AMFICOM_v1	&tools\
 		&idl \
 		&idl_meta \
-		&kisserver \
 		&general \
 		&csbridge \
 		&commonclient \
-		&generalclient \
 		&administration \
 		&adminclient \
 		&configuration \
@@ -42,13 +40,10 @@ AMFICOM_v1	&tools\
 		&main \
 		&map \
 		&mapclient \
-		&survey \
-		&surveyresource \
 		&analysis \
 		&modeling \
 		&event \
 		&measurement \
-		&prediction \
 		&scheme \
 		&schemeclient \
 		&filter \
@@ -58,15 +53,8 @@ AMFICOM_v1	&tools\
 		&reportbuilder \
 		&reportother \
 		&resource \
-		&server \
-		&servermisc \
-		&serverprocess \
-		&load \
-		&connjdbc \
-		&corbaportable \
 		&importmif \
 		&scheduler \
-		&agent \
 		&mcm_interface \
 		&mcm \
 		&mserver_interface \
@@ -80,17 +68,16 @@ AMFICOM_v1	&tools\
 		&mapview \
 		&mapviewclient \
 		&database \
-		&dbscheme \
 		&mapinfo \
 		&spatialfx \
 		&dadara \
-		&arserver \
 		&scripts \
 		&importUCM \
 		&test \
 		&mapper-servlet \
 		&bugs \
 		&reflectometry \
+		&observer \
 		&oldobserver \
 		&manager \
 		&манагер
@@ -278,6 +265,8 @@ mapper-servlet_v1	AMFICOM/v1/mapper-servlet
 bugs			AMFICOM/v1/bugs
 #M	reflectometry
 reflectometry		AMFICOM/v1/reflectometry
+#M	observer
+observer		AMFICOM/v1/observer
 #M	oldobserver
 oldobserver		observer
 #M	manager
