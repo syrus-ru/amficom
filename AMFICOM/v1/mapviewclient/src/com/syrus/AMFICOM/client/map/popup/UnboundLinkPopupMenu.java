@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundLinkPopupMenu.java,v 1.23 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: UnboundLinkPopupMenu.java,v 1.24 2005/10/26 11:07:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,14 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundLinkToPhysicalLinkCommandBundle;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/10/26 11:07:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -51,8 +52,10 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 	@Override
 	public void setElement(Object me) {
 		this.unbound = (UnboundLink)me;
-		this.generateMenuItem.setVisible( !(this.unbound.getStartNode() instanceof UnboundNode)
-			&& !(this.unbound.getEndNode() instanceof UnboundNode));
+		final AbstractNode startNode = this.unbound.getStartNode();
+		final AbstractNode endNode = this.unbound.getEndNode();
+		this.generateMenuItem.setVisible(!(startNode instanceof UnboundNode
+				|| endNode instanceof UnboundNode));
 	}
 
 	private void jbInit() {

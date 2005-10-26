@@ -1,5 +1,5 @@
 /*-
- * $$Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.35 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.36 2005/10/26 11:07:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -27,8 +28,8 @@ import com.syrus.util.Log;
 /**
  * Команда генерации тоннеля по непривязанной линии.
  * 
- * @version $Revision: 1.35 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.36 $, $Date: 2005/10/26 11:07:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -75,16 +76,18 @@ public class GenerateUnboundLinkCablingCommandBundle extends
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
 
-		if(this.unbound.getStartNode() instanceof UnboundNode
-				|| this.unbound.getEndNode() instanceof UnboundNode) {
+		final AbstractNode startNode = this.unbound.getStartNode();
+		final AbstractNode endNode = this.unbound.getEndNode();
+		if (startNode instanceof UnboundNode
+				|| endNode instanceof UnboundNode) {
 			setResult(Command.RESULT_NO);
 			return;
 		}
 		
 		try {
 			this.link = super.createPhysicalLink(
-					this.unbound.getStartNode(), 
-					this.unbound.getEndNode());
+					startNode, 
+					endNode);
 			// перенести фрагменты линии в сгенерированный тоннель
 			for(Iterator it2 = new LinkedList(this.unbound.getNodeLinks()).iterator(); it2.hasNext();) {
 				NodeLink tmpNodeLink = (NodeLink)it2.next();

@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeleteNodeLinkCommandBundle.java,v 1.41 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: DeleteNodeLinkCommandBundle.java,v 1.42 2005/10/26 11:07:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.41 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/10/26 11:07:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -105,8 +105,9 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle {
 
 		// если разрываетс€ кольцева€ лини€, содержаща€ только топологические
 		// узлы, то только обновить концевые узлы
-		if(physicalLink.getStartNode() == physicalLink.getEndNode()
-			&& physicalLink.getStartNode() instanceof TopologicalNode) {
+		final AbstractNode startNode = physicalLink.getStartNode();
+		if (startNode == physicalLink.getEndNode()
+			&& startNode instanceof TopologicalNode) {
 			physicalLink.setStartNode(leftNode);
 			physicalLink.setEndNode(rightNode);
 		}
@@ -115,8 +116,8 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle {
 
 			// создать вторую физическую линию
 			PhysicalLink newPhysicalLink = super.createPhysicalLink(
-					physicalLink.getStartNode(),
-					physicalLink.getStartNode());
+					startNode,
+					startNode);
 
 			// переносим фрагменты в новую линию пока не наткнемс€ на
 			// один из концевых узлов удаленного фрагмента
@@ -233,16 +234,18 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle {
 		try {
 			PhysicalLink physicalLink = 
 					this.nodeLink.getPhysicalLink();
-			if (this.nodeLink.getStartNode() instanceof SiteNode
-					&& this.nodeLink.getEndNode() instanceof SiteNode) {
+			final AbstractNode startNode = this.nodeLink.getStartNode();
+			final AbstractNode endNode = this.nodeLink.getEndNode();
+			if (startNode instanceof SiteNode
+					&& endNode instanceof SiteNode) {
 				this.removeNodeLinkBetweenTwoSites(this.nodeLink, physicalLink);
 			}//MapSiteNodeElement && MapSiteNodeElement
-			else if(this.nodeLink.getStartNode() instanceof TopologicalNode
-					&& this.nodeLink.getEndNode() instanceof TopologicalNode) {
+			else if (startNode instanceof TopologicalNode
+					&& endNode instanceof TopologicalNode) {
 				TopologicalNode leftNode = 
-						(TopologicalNode)this.nodeLink.getStartNode();
+						(TopologicalNode) startNode;
 				TopologicalNode rightNode = 
-						(TopologicalNode)this.nodeLink.getEndNode();
+						(TopologicalNode) endNode;
 				
 				if(leftNode.isActive() && rightNode.isActive()) {
 					this.removeNodeLinkBetweenActiveNodes(
@@ -281,16 +284,16 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle {
 				SiteNode site = null;
 				TopologicalNode node = null;
 				
-				if(this.nodeLink.getStartNode() instanceof SiteNode
-					&& this.nodeLink.getEndNode() instanceof TopologicalNode) {
-					site = (SiteNode)this.nodeLink.getStartNode();
-					node = (TopologicalNode)this.nodeLink.getEndNode();
+				if(startNode instanceof SiteNode
+					&& endNode instanceof TopologicalNode) {
+					site = (SiteNode)startNode;
+					node = (TopologicalNode)endNode;
 
 				}
-				else if(this.nodeLink.getEndNode() instanceof SiteNode
-						&& this.nodeLink.getStartNode() instanceof TopologicalNode) {
-					site = (SiteNode)this.nodeLink.getEndNode();
-					node = (TopologicalNode)this.nodeLink.getStartNode();
+				else if(endNode instanceof SiteNode
+						&& startNode instanceof TopologicalNode) {
+					site = (SiteNode)endNode;
+					node = (TopologicalNode)startNode;
 				}
 
 				if (node.isActive()) {
@@ -308,14 +311,16 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle {
 				}//if ! (node.isActive())
 			}//MapSiteNodeElement && MapPhysicalNodeElement
 			MapView mapView = this.logicalNetLayer.getMapView();
-			if(physicalLink.getStartNode() instanceof SiteNode
-					&& physicalLink.getEndNode() instanceof SiteNode) {
+			final AbstractNode startNode2 = physicalLink.getStartNode();
+			final AbstractNode endNode2 = physicalLink.getEndNode();
+			if (startNode2 instanceof SiteNode
+					&& endNode2 instanceof SiteNode) {
 				for(CablePath cablePath : mapView.getCablePaths(physicalLink)) {
 					setUndoable(false);
 					UnboundLink unbound = 
 						super.createUnboundLinkWithNodeLink(
-							physicalLink.getStartNode(),
-							physicalLink.getEndNode());
+							startNode2,
+							endNode2);
 					unbound.setCablePath(cablePath);
 
 //					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(physicalLink);

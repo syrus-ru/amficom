@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.30 2005/10/18 07:21:13 krupenn Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.31 2005/10/26 11:07:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/10/18 07:21:13 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/10/26 11:07:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -694,20 +694,22 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.startAvailableLinksCount = this.availableLinksFromStart.size();
 		for(Iterator it = this.availableLinksFromStart.iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink)it.next();
-			if(link.getType().equals(unboundType)) {
+			if (link.getType().equals(unboundType)) {
 				it.remove();
 				this.startAvailableLinksCount--;
-			}
-			else if(link.getStartNode() instanceof TopologicalNode
-				|| link.getEndNode() instanceof TopologicalNode) {
-					it.remove();
-					this.startAvailableLinksCount--;
-			}
-			else {
-				this.availableNodesFromStart.add(link.getOtherNode(this.startNode));
+			} else {
+				final AbstractNode startNode2 = link.getStartNode();
+				final AbstractNode endNode2 = link.getEndNode();
+				if (startNode2 instanceof TopologicalNode
+					|| endNode2 instanceof TopologicalNode) {
+						it.remove();
+						this.startAvailableLinksCount--;
+				} else {
+					this.availableNodesFromStart.add(link.getOtherNode(this.startNode));
+				}
 			}
 		}
-		
+
 		this.endNode = (SiteNode) this.cablePath.getEndUnboundNode();
 		if(this.endNode.equals(this.cablePath.getStartNode())) {
 			this.endLastBound = null;
@@ -727,15 +729,18 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			this.endAvailableLinksCount = this.availableLinksFromEnd.size();
 			for(Iterator it = this.availableLinksFromEnd.iterator(); it.hasNext();) {
 				PhysicalLink mle = (PhysicalLink)it.next();
-				if(mle.getType().equals(unboundType)) {
+				if (mle.getType().equals(unboundType)) {
 					it.remove();
 					this.endAvailableLinksCount--;
-				}
-				else if(mle.getStartNode() instanceof TopologicalNode
-					|| mle.getEndNode() instanceof TopologicalNode)
-						it.remove();
-				else {
-					this.availableNodesFromEnd.add(mle.getOtherNode(this.endNode));
+				} else {
+					final AbstractNode startNode2 = mle.getStartNode();
+					final AbstractNode endNode2 = mle.getEndNode();
+					if (startNode2 instanceof TopologicalNode
+						|| endNode2 instanceof TopologicalNode) {
+							it.remove();
+					} else {
+						this.availableNodesFromEnd.add(mle.getOtherNode(this.endNode));
+					}
 				}
 			}
 		}

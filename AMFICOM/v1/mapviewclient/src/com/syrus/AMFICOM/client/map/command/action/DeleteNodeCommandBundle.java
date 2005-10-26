@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeleteNodeCommandBundle.java,v 1.50 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: DeleteNodeCommandBundle.java,v 1.51 2005/10/26 11:07:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
  * 
- * @version $Revision: 1.50 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.51 $, $Date: 2005/10/26 11:07:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -216,7 +216,8 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle {
 
 					physicalLink.removeNodeLink(nodeLink);
 
-					if(physicalLink.getEndNode() == site)
+					final AbstractNode endNode = physicalLink.getEndNode();
+					if (endNode == site)
 						physicalLink.setEndNode(oppositeNode);
 					else
 						physicalLink.setStartNode(oppositeNode);
@@ -298,7 +299,8 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle {
 
 						MapElementState pls2 = physicalLink.getState();
 						
-						if(physicalLink.getEndNode() == topologicalNode)
+						final AbstractNode endNode = physicalLink.getEndNode();
+						if (endNode == topologicalNode)
 							physicalLink.setEndNode(mpne);
 						else
 							physicalLink.setStartNode(mpne);

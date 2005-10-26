@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.133 2005/10/25 08:02:45 krupenn Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.134 2005/10/26 11:07:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,8 +76,8 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.133 $, $Date: 2005/10/25 08:02:45 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.134 $, $Date: 2005/10/26 11:07:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -1077,8 +1077,8 @@ public final class LogicalNetLayer {
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
-	 * @author $Author: krupenn $
-	 * @version $Revision: 1.133 $, $Date: 2005/10/25 08:02:45 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.134 $, $Date: 2005/10/26 11:07:01 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1468,7 +1468,9 @@ public final class LogicalNetLayer {
 				//Если в основе этого элемента отображения таки один элемент - на основе его и создаём
 				NodeLink linkBetween = null;
 				for (final NodeLink outLink : this.linksForNodes.get(nodeToPullFrom)) {
-					if (outLink.getStartNode() == lastNode || outLink.getEndNode() == lastNode) {
+					final AbstractNode startNode = outLink.getStartNode();
+					final AbstractNode endNode = outLink.getEndNode();
+					if (startNode == lastNode || endNode == lastNode) {
 						linkBetween = outLink;
 						break;
 					}

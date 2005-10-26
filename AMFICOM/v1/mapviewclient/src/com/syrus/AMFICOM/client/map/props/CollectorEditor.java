@@ -1,5 +1,5 @@
 /*-
- * $$Id: CollectorEditor.java,v 1.22 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: CollectorEditor.java,v 1.23 2005/10/26 11:07:01 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.swing.JButton;
@@ -36,14 +35,15 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/10/26 11:07:01 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -58,7 +58,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 	private JLabel topologicalLengthLabel = new JLabel();
 	private JTextField topologicalLengthTextField = new JTextField();
 	private JLabel piquetsLabel = new JLabel();
-	private WrapperedList piquetsList = null;
+	private WrapperedList<SiteNode> piquetsList = null;
 	private JScrollPane piquetsScrollPane = new JScrollPane();
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
@@ -83,7 +83,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		SimpleMapElementController controller = 
 				SimpleMapElementController.getInstance();
 
-		this.piquetsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+		this.piquetsList = new WrapperedList<SiteNode>(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
 //		this.jPanel.setName(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
@@ -277,17 +277,23 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.collector.getDescription());
 
-			Set piquets = new HashSet();
+			final Set<SiteNode> piquets = new HashSet<SiteNode>();
 			
-			for(Iterator iter = this.collector.getPhysicalLinks().iterator(); iter.hasNext();) {
-				PhysicalLink link = (PhysicalLink )iter.next();
-				
-				if(link.getStartNode() instanceof SiteNode
-						&& ((SiteNode )link.getStartNode()).getType().getSort().equals(SiteNodeTypeSort.PIQUET))
-					piquets.add(link.getStartNode());
-				if(link.getEndNode() instanceof SiteNode
-						&& ((SiteNode )link.getEndNode()).getType().getSort().equals(SiteNodeTypeSort.PIQUET))
-					piquets.add(link.getEndNode());
+			for (final PhysicalLink physicalLink : this.collector.getPhysicalLinks()) {
+				final AbstractNode startNode = physicalLink.getStartNode();
+				if (startNode instanceof SiteNode) {
+					final SiteNode siteNode = (SiteNode) startNode;
+					if (siteNode.getType().getSort() == SiteNodeTypeSort.PIQUET) {
+						piquets.add(siteNode);
+					}
+				}
+				final AbstractNode endNode = physicalLink.getEndNode();
+				if (endNode instanceof SiteNode) {
+					final SiteNode siteNode = (SiteNode) endNode;
+					if (siteNode.getType().getSort() == SiteNodeTypeSort.PIQUET) {
+						piquets.add(siteNode);
+					}
+				}
 			}
 
 			this.piquetsList.addElements(piquets);
