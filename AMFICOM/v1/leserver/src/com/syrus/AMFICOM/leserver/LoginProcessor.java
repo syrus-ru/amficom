@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.20 2005/10/22 14:15:08 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.21 2005/10/26 09:07:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/22 14:15:08 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/26 09:07:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -203,7 +203,7 @@ final class LoginProcessor extends SleepButWorkThread {
 
 				stringBuffer.append("\n");
 				stringBuffer.append(i);
-				stringBuffer.append("\t Session key: '");
+				stringBuffer.append(".\t Session key: '");
 				stringBuffer.append(sessionKey);
 				stringBuffer.append("'\n");
 				stringBuffer.append("\t Id: '");
