@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.35 2005/10/25 14:35:44 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.36 2005/10/26 07:41:42 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/10/25 14:35:44 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/26 07:41:42 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -198,7 +198,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				return true;
 			}
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					I18N.getString("Error.OpenSession"),
+					I18N.getString("Error.WrongLogin"),
 					I18N.getString("Error"),
 					JOptionPane.ERROR_MESSAGE,
 					null);
