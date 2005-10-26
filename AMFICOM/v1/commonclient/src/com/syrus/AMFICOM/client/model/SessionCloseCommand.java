@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/24 11:54:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/26 07:28:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -40,10 +40,6 @@ public class SessionCloseCommand extends AbstractCommand {
 				StatusMessageEvent.STATUS_MESSAGE, 
 				I18N.getString("Common.Login.LogOut")));
 		try {
-			final ClientSessionEnvironment clientSessionEnvironment = 
-				ClientSessionEnvironment.getInstance();
-
-			clientSessionEnvironment.logout();
 			this.dispatcher.firePropertyChange(
 				new StatusMessageEvent(this, 
 					StatusMessageEvent.STATUS_MESSAGE, 
@@ -51,6 +47,10 @@ public class SessionCloseCommand extends AbstractCommand {
 			this.dispatcher.firePropertyChange(
 				new ContextChangeEvent(this, 
 					ContextChangeEvent.LOGGED_OUT_EVENT));
+			final ClientSessionEnvironment clientSessionEnvironment = 
+				ClientSessionEnvironment.getInstance();
+
+			clientSessionEnvironment.logout();
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
