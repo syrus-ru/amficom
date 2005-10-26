@@ -279,7 +279,7 @@ bugs			AMFICOM/v1/bugs
 #M	reflectometry
 reflectometry		AMFICOM/v1/reflectometry
 #M	oldobserver
-oldobserver		oldobserver
+oldobserver		observer
 #M	manager
 manager			AMFICOM/v1/manager
 #M	манагер
