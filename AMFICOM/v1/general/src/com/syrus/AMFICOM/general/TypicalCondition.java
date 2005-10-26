@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.58 2005/10/25 19:53:04 bass Exp $
+ * $Id: TypicalCondition.java,v 1.59 2005/10/26 16:47:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/10/25 19:53:04 $
+ * @version $Revision: 1.59 $, $Date: 2005/10/26 16:47:18 $
  * @author $Author: bass $
  * @module general
  */
@@ -491,10 +491,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
 	public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
-		return !(this.type == _TYPE_STRING || this.type == _TYPE_BOOLEAN)
-				|| this.operation != _OPERATION_EQUALS
-				|| identifiables == null
-				|| identifiables.isEmpty();
+		return true;
 	}
 
 	/**
