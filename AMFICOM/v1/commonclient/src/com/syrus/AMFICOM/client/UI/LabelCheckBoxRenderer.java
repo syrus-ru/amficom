@@ -1,5 +1,5 @@
 /*-
-* $Id: LabelCheckBoxRenderer.java,v 1.7 2005/09/30 07:32:15 bob Exp $
+* $Id: LabelCheckBoxRenderer.java,v 1.8 2005/10/27 14:22:35 bob Exp $
 *
 * Copyright © 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items 
- * @version $Revision: 1.7 $, $Date: 2005/09/30 07:32:15 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/27 14:22:35 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -114,15 +114,15 @@ public class LabelCheckBoxRenderer<T> implements ListCellRenderer {
 		}
 
 		if (isSelected) {
-			this.component.setBackground(list.getSelectionBackground());
-			this.component.setForeground(list.getSelectionForeground());
+			this.label.setBackground(list.getSelectionBackground());
+			this.label.setForeground(list.getSelectionForeground());
 		} else {
-			this.component.setBackground(list.getBackground());
-			this.component.setForeground(list.getForeground());
+			this.label.setBackground(list.getBackground());
+			this.label.setForeground(list.getForeground());
 		}
 
 		this.component.setEnabled(list.isEnabled());
-		this.component.setFont(list.getFont());
+		this.label.setFont(list.getFont());
 		this.component.setBorder((cellHasFocus) ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 
 		return (this.component == null) ? this.label : this.component;
