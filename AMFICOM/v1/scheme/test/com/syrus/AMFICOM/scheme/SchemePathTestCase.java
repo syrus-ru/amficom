@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.30 2005/10/21 15:09:07 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.31 2005/10/27 10:04:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/10/21 15:09:07 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/27 10:04:52 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -76,7 +76,8 @@ public final class SchemePathTestCase extends TestCase {
 		testSuite.addTest(new SchemePathTestCase("testSchemeProtoElementClone"));
 		testSuite.addTest(new SchemePathTestCase("testGetCurrentSchemeMonitoringSolution"));
 		testSuite.addTest(new SchemePathTestCase("testInvalidClone"));
-		testSuite.addTest(new SchemePathTestCase("testSchemeClone"));
+		testSuite.addTest(new SchemePathTestCase("testBug182"));
+		testSuite.addTest(new SchemePathTestCase("testBug246"));
 		return new TestSetup(testSuite) {
 			@Override
 			protected void setUp() {
@@ -188,7 +189,7 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", IdlDirectionType._IN, schemeDevice);
 		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", IdlDirectionType._OUT, schemeDevice);
 
-		final AbstractSchemeElement abstractSchemeElements[] = new AbstractSchemeElement[] {schemeElement, schemeCableLink, schemeLink};
+		final AbstractSchemeElement<?> abstractSchemeElements[] = new AbstractSchemeElement[] {schemeElement, schemeCableLink, schemeLink};
 
 		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathMembers().isEmpty() ? null : startSchemePort, endSchemePort);
 		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath, schemeCableThread);
@@ -763,5 +764,51 @@ public final class SchemePathTestCase extends TestCase {
 
 		assertNull(schemePort.getAbstractSchemeLink());
 		assertNull(schemeLink.getTargetAbstractSchemePort());
+	}
+
+	public void testBug246() throws ApplicationException {
+		final Identifier userId = new Identifier("SystemUser_0");
+		final Identifier domainId = new Identifier("Domain_0");
+
+		final Scheme scheme = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
+
+		final MapLibrary mapLibrary0 = MapLibrary.createInstance(userId, null);
+		final SiteNodeType siteNodeType0 = SiteNodeType.createInstance(userId, SiteNodeTypeSort.BUILDING, "codename", "name", "description", Identifier.VOID_IDENTIFIER, false, mapLibrary0.getId());
+		final DoublePoint doublePoint0 = new DoublePoint();
+		final SiteNode siteNode0 = SiteNode.createInstance(userId, doublePoint0, siteNodeType0);
+		final SiteNode siteNode1 = SiteNode.createInstance(userId, doublePoint0, siteNodeType0);
+
+		final SchemeCableLink schemeCableLink0 = SchemeCableLink.createInstance(userId, "schemeCableLink0", scheme);
+		final CableChannelingItem cableChannelingItem0 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+
+		final SchemeCableLink schemeCableLink1 = SchemeCableLink.createInstance(userId, "schemeCableLink1", scheme);
+		final CableChannelingItem cableChannelingItem1 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink1);
+
+		final SortedSet<CableChannelingItem> pathMembers0 = schemeCableLink0.getPathMembers();
+		final SortedSet<CableChannelingItem> pathMembers1 = schemeCableLink1.getPathMembers();
+
+		assertEquals(1, pathMembers0.size());
+		assertEquals(1, pathMembers1.size());
+		
+		assertSame(cableChannelingItem0, pathMembers0.iterator().next());
+		assertSame(cableChannelingItem1, pathMembers1.iterator().next());
+
+		assertEquals(0, cableChannelingItem0.getSequentialNumber());
+		assertEquals(0, cableChannelingItem1.getSequentialNumber());
+
+		cableChannelingItem0.setParentPathOwner(null, false);
+		cableChannelingItem1.setParentPathOwner(null, true);
+		
+		assertNull(StorableObjectPool.getStorableObject(cableChannelingItem0.getId(), true));
+		assertNull(StorableObjectPool.getStorableObject(cableChannelingItem1.getId(), true));
+
+		assertSame(Identifier.VOID_IDENTIFIER, cableChannelingItem0.parentSchemeCableLinkId);
+		assertSame(Identifier.VOID_IDENTIFIER, cableChannelingItem1.parentSchemeCableLinkId);
+
+		assertEquals(-1, cableChannelingItem0.sequentialNumber);
+		assertEquals(-1, cableChannelingItem1.sequentialNumber);
+
+		assertEquals(0, schemeCableLink0.getPathMembers().size());
+		assertEquals(0, schemeCableLink1.getPathMembers().size());
 	}
 }
