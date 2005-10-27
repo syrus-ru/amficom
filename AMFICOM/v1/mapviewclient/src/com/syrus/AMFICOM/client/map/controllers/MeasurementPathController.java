@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathController.java,v 1.44 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: MeasurementPathController.java,v 1.45 2005/10/27 10:16:08 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -41,8 +42,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Контроллер топологическиго пути.
  * 
- * @version $Revision: 1.44 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.45 $, $Date: 2005/10/27 10:16:08 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -219,13 +220,14 @@ public final class MeasurementPathController extends AbstractLinkController {
 	public MapElement getMapElement(final MeasurementPath path, final PathElement pe) throws ApplicationException {
 		MapElement mapElement = null;
 		final MapView mapView = this.logicalNetLayer.getMapView();
+		final AbstractSchemeElement abstractSchemeElement = pe.getAbstractSchemeElement();
 		switch (pe.getKind().value()) {
 			case IdlKind._SCHEME_ELEMENT:
-				final SchemeElement se = (SchemeElement) pe.getAbstractSchemeElement();
+				final SchemeElement se = (SchemeElement) abstractSchemeElement;
 				mapElement = mapView.findElement(se);
 				break;
 			case IdlKind._SCHEME_LINK:
-				final SchemeLink schemeLink = (SchemeLink) pe.getAbstractSchemeElement();
+				final SchemeLink schemeLink = (SchemeLink) abstractSchemeElement;
 				Scheme scheme = path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme();
 				SchemeElement innerSourceElement = schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
 				SchemeElement topSourceElement = MapView.getTopLevelSchemeElement(innerSourceElement);
@@ -241,7 +243,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 				}
 				break;
 			case IdlKind._SCHEME_CABLE_LINK:
-				final SchemeCableLink clink = (SchemeCableLink) pe.getAbstractSchemeElement();
+				final SchemeCableLink clink = (SchemeCableLink) abstractSchemeElement;
 				mapElement = mapView.findCablePath(clink);
 				break;
 			default:

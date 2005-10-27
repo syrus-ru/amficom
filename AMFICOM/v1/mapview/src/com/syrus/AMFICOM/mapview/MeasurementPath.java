@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.55 2005/10/25 19:53:14 bass Exp $
+ * $Id: MeasurementPath.java,v 1.56 2005/10/27 10:16:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -38,7 +39,7 @@ import com.syrus.util.Log;
  *
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.55 $, $Date: 2005/10/25 19:53:14 $
+ * @version $Revision: 1.56 $, $Date: 2005/10/27 10:16:07 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -349,9 +350,10 @@ public final class MeasurementPath implements MapElement {
 
 			this.unsortedCablePaths.clear();
 			for (final PathElement pathElement : this.schemePath.getPathMembers()) {
+				final AbstractSchemeElement abstractSchemeElement = pathElement.getAbstractSchemeElement();
 				switch (pathElement.getKind().value()) {
 					case IdlKind._SCHEME_ELEMENT:
-						final SchemeElement schemeElement = (SchemeElement) pathElement.getAbstractSchemeElement();
+						final SchemeElement schemeElement = (SchemeElement) abstractSchemeElement;
 						final SiteNode site = this.mapView.findElement(schemeElement);
 						if (site != null) {
 							// TODO think if link to 'site' is needed for mPath
@@ -359,7 +361,7 @@ public final class MeasurementPath implements MapElement {
 						}
 						break;
 					case IdlKind._SCHEME_LINK:
-						final SchemeLink schemeLink = (SchemeLink) pathElement.getAbstractSchemeElement();
+						final SchemeLink schemeLink = (SchemeLink) abstractSchemeElement;
 
 						SchemeElement innerSourceElement = schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
 						SchemeElement topSourceElement = MapView.getTopLevelSchemeElement(innerSourceElement);
@@ -377,7 +379,7 @@ public final class MeasurementPath implements MapElement {
 						}
 						break;
 					case IdlKind._SCHEME_CABLE_LINK:
-						final SchemeCableLink schemeCableLink = (SchemeCableLink) pathElement.getAbstractSchemeElement();
+						final SchemeCableLink schemeCableLink = (SchemeCableLink) abstractSchemeElement;
 						final CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
 						if (cablePath != null) {
 							this.unsortedCablePaths.add(cablePath);
