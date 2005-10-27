@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.37 2005/10/27 12:45:01 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.38 2005/10/27 13:24:36 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -44,10 +46,11 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
+import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/10/27 12:45:01 $
+ * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2005/10/27 13:24:36 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -64,7 +67,7 @@ public class OpenSessionCommand extends AbstractCommand {
 	protected JPasswordField passwordTextField;
 	protected WrapperedComboBox domainComboBox;
 
-	private Set<Domain> availableDomains;
+	private List<Domain> availableDomains;
 
 	protected String login;
 	protected String password;
@@ -108,8 +111,12 @@ public class OpenSessionCommand extends AbstractCommand {
 
 	private boolean fetchAvailableDomains() {
 		try {
-			this.availableDomains = LoginManager.getAvailableDomains();
-			if (this.availableDomains != null && !this.availableDomains.isEmpty()) {
+			final Set<Domain> domains = LoginManager.getAvailableDomains();
+			if (domains != null && !domains.isEmpty()) {
+				this.availableDomains = new ArrayList<Domain>(domains);
+				Collections.sort(this.availableDomains, 
+					new WrapperComparator<Domain>(DomainWrapper.getInstance(), 
+							StorableObjectWrapper.COLUMN_NAME));
 				return true;
 			}
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
@@ -147,6 +154,10 @@ public class OpenSessionCommand extends AbstractCommand {
 			return;
 		}
 
+		if (this.domainId == null || this.domainId.isVoid()) {
+			this.domainId = this.availableDomains.get(0).getId();
+		}
+		
 		do {
 			Log.debugMessage("Attempt to login; logged: " + this.logged, Log.DEBUGLEVEL04);
 		} while (!this.logging());
@@ -243,7 +254,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.loginTextField = new JTextField();
 			this.passwordTextField = new JPasswordField();
 			this.domainComboBox = new WrapperedComboBox<Domain>(DomainWrapper.getInstance(),
-					new ArrayList<Domain>(this.availableDomains),
+					this.availableDomains,
 					StorableObjectWrapper.COLUMN_NAME,
 					StorableObjectWrapper.COLUMN_ID);
 
@@ -359,7 +370,6 @@ public class OpenSessionCommand extends AbstractCommand {
 
 			this.loginTextField.addActionListener(this.actionListener);
 			this.passwordTextField.addActionListener(this.actionListener);
-//			this.domainComboBox.addActionListener(this.actionListener);
 		}
 		
 
@@ -377,9 +387,11 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.login = this.loginTextField.getText();
 			this.password = new String(this.passwordTextField.getPassword());
 			final Domain selectedDomain = (Domain) this.domainComboBox.getSelectedItem();
+			assert Log.debugMessage( "" + selectedDomain, Log.DEBUGLEVEL09);
 			if (selectedDomain != null) {
 				this.domainId = selectedDomain.getId();
 			} else {
+				this.domainId = null;
 				this.disposeDialog();
 				return false;
 			}
