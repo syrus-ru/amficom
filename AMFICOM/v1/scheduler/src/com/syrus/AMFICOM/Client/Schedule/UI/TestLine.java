@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.swing.JPopupMenu;
@@ -119,7 +118,7 @@ final class TestLine extends TimeLine {
 
 	}
 
-	final Set<Identifier> testIds = new HashSet<Identifier>();
+	final Set<Identifier> testIds;
 
 	Dispatcher dispatcher;
 
@@ -139,8 +138,8 @@ final class TestLine extends TimeLine {
 
 	final SortedSet<TestTimeItem> selectedItems = new TreeSet<TestTimeItem>();
 
-	SortedMap offsetIdBuffer = new TreeMap();
-	SortedMap offsetDurationBuffer = new TreeMap();
+//	SortedMap offsetIdBuffer = new TreeMap();
+//	SortedMap offsetDurationBuffer = new TreeMap();
 
 	JPopupMenu			popupMenu;
 	int					popupRelativeX;
@@ -158,7 +157,7 @@ final class TestLine extends TimeLine {
 		this.createMouseListener();
 		this.title = title;
 		this.monitoredElementId = monitoredElementId;
-
+		this.testIds = new HashSet<Identifier>();
 		this.acquireTests(null);
 
 		this.dispatcher = aContext.getDispatcher();
@@ -824,7 +823,12 @@ final class TestLine extends TimeLine {
 		assert Log.debugMessage("TestLine.clearTests | ", Log.DEBUGLEVEL09);
 		this.measurements.clear();
 		this.unsavedTestTimeItems.clear();
-		this.timeItems.clear();		
+		this.timeItems.clear();
+		this.testIds.clear();
+		if (this.selectedTestIds != null) {
+			this.selectedTestIds.clear();
+		}
+		this.selectedItems.clear();
 	}
 
 	
