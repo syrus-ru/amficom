@@ -22,6 +22,7 @@ $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
 $LIB/event.jar:\
+$LIB/resource.jar:\
 $LIB/map.jar:\
 $LIB/scheme.jar:\
 $LIB/filter.jar:\
