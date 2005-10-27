@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.20 2005/10/19 13:39:20 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.21 2005/10/27 09:21:32 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingExc
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/19 13:39:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/10/27 09:21:32 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -83,20 +83,18 @@ final class EventServerImplementation extends EventServerPOA {
 	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
 	public void receiveEvents(final IdlEvent[] idlEvents) throws IdlEventProcessingException {
-		try {
-			Log.debugMessage("EventServerImplementation.receiveEvents() | Received "
-					+ idlEvents.length + " event(s)",
-					INFO);
-			for (final IdlEvent idlEvent : idlEvents) {
-				@SuppressWarnings(value = {"unchecked"})
-				final Event<? extends IdlEvent> event = idlEvent.getNativeEvent();
+		Log.debugMessage("EventServerImplementation.receiveEvents() | Received "
+				+ idlEvents.length + " event(s)",
+				INFO);
+		for (final IdlEvent idlEvent : idlEvents) {
+			@SuppressWarnings(value = {"unchecked"})
+			final Event<? extends IdlEvent> event = idlEvent.getNativeEvent();
+			try {
 				EventProcessorRegistry.processEvent(event);
-				Log.debugMessage("EventServerImplementation.receiveEvents() | Event: "
-						+ event + " delivered successfully",
-						INFO);
+				Log.debugMessage("EventServerImplementation.receiveEvents() | Event: " + event + " delivered successfully", INFO);
+			} catch (EventProcessingException e) {
+				Log.debugException(e, Log.DEBUGLEVEL07);
 			}
-		} catch (final EventProcessingException epe) {
-			throw epe.getTransferable(this._orb());
 		}
 	}
 
