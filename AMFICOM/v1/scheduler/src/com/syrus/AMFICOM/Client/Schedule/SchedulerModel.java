@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.136 2005/10/25 12:02:22 bob Exp $
+ * $Id: SchedulerModel.java,v 1.137 2005/10/27 14:35:54 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.136 $, $Date: 2005/10/25 12:02:22 $
+ * @version $Revision: 1.137 $, $Date: 2005/10/27 14:35:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -408,15 +408,6 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public void updateTests(final Date startDate, 
 	                        final Date endDate) 
 	throws ApplicationException {
-		
-		try {
-			throw new Exception("SchedulerModel.updateTests");
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-		
-
-		
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				I18N.getString("Scheduler.StatusMessage.UpdatingTests"))); //$NON-NLS-1$
@@ -1512,6 +1503,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				color = selected ? COLOR_ABORDED_SELECTED : COLOR_ABORDED;
 				break;
 			default:
+				// too unlike
+				Log.errorException(new Exception("SchedulerModel.getColor"));
 				color = COLOR_UNRECOGNIZED;
 				break;
 		}
@@ -1520,21 +1513,23 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	public static String getStatusName(final TestStatus testStatus) {
 		switch(testStatus.value()) {
-		case TestStatus._TEST_STATUS_ABORTED: 
-			return I18N.getString("Scheduler.Text.Test.Status.Aborted");
-		case TestStatus._TEST_STATUS_COMPLETED: 
-			return I18N.getString("Scheduler.Text.Test.Status.Completed");
 		case TestStatus._TEST_STATUS_NEW: 
 			return I18N.getString("Scheduler.Text.Test.Status.New");
-		case TestStatus._TEST_STATUS_PROCESSING: 
-			return I18N.getString("Scheduler.Text.Test.Status.Processing");
 		case TestStatus._TEST_STATUS_SCHEDULED: 
 			return I18N.getString("Scheduler.Text.Test.Status.Scheduled");
+		case TestStatus._TEST_STATUS_PROCESSING: 
+			return I18N.getString("Scheduler.Text.Test.Status.Processing");
+		case TestStatus._TEST_STATUS_COMPLETED: 
+			return I18N.getString("Scheduler.Text.Test.Status.Completed");			
 		case TestStatus._TEST_STATUS_STOPPING: 
 			return I18N.getString("Scheduler.Text.Test.Status.Stopping");
 		case TestStatus._TEST_STATUS_STOPPED: 
 			return I18N.getString("Scheduler.Text.Test.Status.Stopped");
+		case TestStatus._TEST_STATUS_ABORTED: 
+			return I18N.getString("Scheduler.Text.Test.Status.Aborted");
 		}
+		// too unlike
+		Log.errorException(new Exception("SchedulerModel.getStatusName"));
 		return null;
 	}
 }
