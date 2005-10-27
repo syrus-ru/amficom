@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.86 2005/10/25 19:53:13 bass Exp $
+ * $Id: PathElement.java,v 1.87 2005/10/27 10:04:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.87 $, $Date: 2005/10/27 10:04:13 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -450,7 +450,7 @@ public final class PathElement extends StorableObject<PathElement>
 		return this.sequentialNumber <= that.sequentialNumber ? this.sequentialNumber < that.sequentialNumber ? -1 : 0 : 1;
 	}
 
-	public AbstractSchemeElement getAbstractSchemeElement() {
+	public AbstractSchemeElement<?> getAbstractSchemeElement() {
 		switch (this.getKind().value()) {
 			case _SCHEME_CABLE_LINK:
 				return this.getSchemeCableLink();
@@ -549,7 +549,7 @@ public final class PathElement extends StorableObject<PathElement>
 	/**
 	 * A wrapper around {@link #getEndAbstractSchemePortId()}.
 	 */
-	public AbstractSchemePort getEndAbstractSchemePort() {
+	public AbstractSchemePort<?> getEndAbstractSchemePort() {
 		if (this.getKind() != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		}
@@ -629,8 +629,8 @@ public final class PathElement extends StorableObject<PathElement>
 	}
 
 	public SchemeElement getSchemeElement() {
-		final AbstractSchemePort startAbstractSchemePort = this.getStartAbstractSchemePort();
-		final AbstractSchemePort endAbstractSchemePort = this.getEndAbstractSchemePort();
+		final AbstractSchemePort<?> startAbstractSchemePort = this.getStartAbstractSchemePort();
+		final AbstractSchemePort<?> endAbstractSchemePort = this.getEndAbstractSchemePort();
 		SchemeDevice parentSchemeDevice;
 		if (startAbstractSchemePort == null) {
 			if (endAbstractSchemePort == null) {
@@ -719,7 +719,7 @@ public final class PathElement extends StorableObject<PathElement>
 	/**
 	 * A wrapper around {@link #getStartAbstractSchemePortId()}.
 	 */
-	public AbstractSchemePort getStartAbstractSchemePort() {
+	public AbstractSchemePort<?> getStartAbstractSchemePort() {
 		if (this.getKind() != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		}
@@ -881,7 +881,7 @@ public final class PathElement extends StorableObject<PathElement>
 	 *
 	 * @param endAbstractSchemePort
 	 */
-	public void setEndAbstractSchemePort(final AbstractSchemePort endAbstractSchemePort) {
+	public void setEndAbstractSchemePort(final AbstractSchemePort<?> endAbstractSchemePort) {
 		/*
 		 * The two following checks are doubled in the modifier method
 		 * for id.
@@ -1110,7 +1110,7 @@ public final class PathElement extends StorableObject<PathElement>
 	 *
 	 * @param startAbstractSchemePort
 	 */
-	public void setStartAbstractSchemePort(final AbstractSchemePort startAbstractSchemePort) {
+	public void setStartAbstractSchemePort(final AbstractSchemePort<?> startAbstractSchemePort) {
 		/*
 		 * The two following checks are doubled in the modifier method
 		 * for id.
@@ -1319,7 +1319,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			return ((AbstractSchemeLink) this.getAbstractSchemeElement()).getOpticalLength();
+			return ((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).getOpticalLength();
 		case _SCHEME_ELEMENT:
 		default:
 			return 0;
@@ -1330,7 +1330,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			((AbstractSchemeLink) this.getAbstractSchemeElement()).setOpticalLength(opticalLength);
+			((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).setOpticalLength(opticalLength);
 			break;
 		case _SCHEME_ELEMENT:
 		default:
@@ -1342,7 +1342,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			return ((AbstractSchemeLink) this.getAbstractSchemeElement()).getPhysicalLength();
+			return ((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).getPhysicalLength();
 		case _SCHEME_ELEMENT:
 		default:
 			return 0;
@@ -1353,7 +1353,7 @@ public final class PathElement extends StorableObject<PathElement>
 		switch (this.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
-			((AbstractSchemeLink) this.getAbstractSchemeElement()).setPhysicalLength(physicalLength);
+			((AbstractSchemeLink<?>) this.getAbstractSchemeElement()).setPhysicalLength(physicalLength);
 			break;
 		case _SCHEME_ELEMENT:
 		default:
