@@ -118,6 +118,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		public static final long DAY_LONG = 24L * HOUR_LONG;
 
 		PropertyChangeEvent	propertyChangeEvent;
+		private JButton	startDateButton;
 
 		public TimeParametersPanel(ApplicationContext aContext) {
 			this.aContext = aContext;
@@ -312,13 +313,13 @@ public class TimeParametersFrame extends JInternalFrame {
 				this.startDateSpinner.addChangeListener(changeListener);
 			}
 			
-			final JButton startDateButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_TIME_DATE));
-			startDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			startDateButton.setDefaultCapable(false);
+			this.startDateButton = new JButton(UIManager.getIcon(ResourceKeys.ICON_TIME_DATE));
+			this.startDateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			this.startDateButton.setDefaultCapable(false);
 
-			startDateButton.setFocusable(false);
-			startDateButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.Calendar"));
-			startDateButton.addActionListener(new ActionListener() {
+			this.startDateButton.setFocusable(false);
+			this.startDateButton.setToolTipText(I18N.getString("Scheduler.Text.TimePanel.Calendar"));
+			this.startDateButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					showStartCalendar();
@@ -330,7 +331,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				Box box = new Box(BoxLayout.X_AXIS);
 				CommonUIUtilities.fixHorizontalSize(this.startDateSpinner);
 				box.add(this.startDateSpinner);
-				box.add(startDateButton);
+				box.add(this.startDateButton);
 				box.add(Box.createHorizontalGlue());
 //				final JButton	nowButton		= new JButton(UIStorage.TIME_ICON);
 //				nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
@@ -1094,7 +1095,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					cal, 
 					true, 
 					true);
-			calendarDialog.setLocationRelativeTo(this.endDateSpinner);
+			calendarDialog.setLocationRelativeTo(this.endDateButton);
 			calendarDialog.setVisible(true);
 			if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
 				this.endDateSpinner.getModel().setValue(cal.getTime());
@@ -1111,7 +1112,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					true, 
 					true);
 
-			calendarDialog.setLocationRelativeTo(this.startDateSpinner);
+			calendarDialog.setLocationRelativeTo(this.startDateButton);
 			calendarDialog.setVisible(true);			
 			
 			if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
