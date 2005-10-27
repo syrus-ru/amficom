@@ -5,7 +5,6 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -1086,26 +1085,33 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		void showEndCalendar() {
-			Calendar cal = Calendar.getInstance();
-			Date date = (Date) this.endDateSpinner.getModel().getValue();
+			final Calendar cal = Calendar.getInstance();
+			final Date date = (Date) this.endDateSpinner.getModel().getValue();
 			cal.setTime(date);
 
-			JDialog calendarDialog = CalendarUI.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
-			calendarDialog.setLocation(new Point(this.endDateSpinner.getLocationOnScreen().x - 35, this.endDateSpinner
-					.getLocationOnScreen().y + 22));
+			final JDialog calendarDialog = 
+				CalendarUI.createDialogInstance(Environment.getActiveWindow(),
+					cal, 
+					true, 
+					true);
+			calendarDialog.setLocationRelativeTo(this.endDateSpinner);
 			calendarDialog.setVisible(true);
 			if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
 				this.endDateSpinner.getModel().setValue(cal.getTime());
 		}
 
 		void showStartCalendar() {
-			Calendar cal = Calendar.getInstance();
-			Date date = (Date) this.startDateSpinner.getModel().getValue();
+			final Calendar cal = Calendar.getInstance();
+			final Date date = (Date) this.startDateSpinner.getModel().getValue();
 			cal.setTime(date);
 
-			final JDialog calendarDialog = CalendarUI.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
-			calendarDialog.setLocation(new Point(this.startDateSpinner.getLocationOnScreen().x - 35,
-													this.startDateSpinner.getLocationOnScreen().y + 22));
+			final JDialog calendarDialog = 
+				CalendarUI.createDialogInstance(Environment.getActiveWindow(), 
+					cal, 
+					true, 
+					true);
+
+			calendarDialog.setLocationRelativeTo(this.startDateSpinner);
 			calendarDialog.setVisible(true);			
 			
 			if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK)
