@@ -602,7 +602,11 @@ final class TestLine extends TimeLine {
 								testTimeLine.title = SchedulerModel.getStatusName(TestStatus.TEST_STATUS_STOPPED);
 								testTimeLine.color = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, false);
 								testTimeLine.selectedColor = SchedulerModel.getColor(TestStatus.TEST_STATUS_STOPPED, true);
-							}						
+							} else {
+								testTimeLine.title = title;
+								testTimeLine.color = color;
+								testTimeLine.selectedColor = selectedColor;
+							}
 						}
 						measurementTestList.add(testTimeLine);
 					}
@@ -820,7 +824,6 @@ final class TestLine extends TimeLine {
 	}
 
 	public void clearTests() {
-		assert Log.debugMessage("TestLine.clearTests | ", Log.DEBUGLEVEL09);
 		this.measurements.clear();
 		this.unsavedTestTimeItems.clear();
 		this.timeItems.clear();
