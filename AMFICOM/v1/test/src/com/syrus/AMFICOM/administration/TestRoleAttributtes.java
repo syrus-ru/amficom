@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.2 2005/10/20 13:14:54 bob Exp $
+ * $Id: TestRoleAttributtes.java,v 1.3 2005/10/27 10:42:46 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/20 13:14:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/27 10:42:46 $
  * @author $Author: bob $
  * @module test
  */
@@ -148,9 +148,9 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
 			}
 			
 			{
@@ -168,9 +168,9 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.MAPVIEW);
+						Module.MAP_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_ENTER, true);
 			}
 			
 //			{
@@ -248,11 +248,11 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_SCHEME, true);
 			}
 			
 //			{
@@ -284,9 +284,9 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						operator.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
 			}
 			
 			{
@@ -304,9 +304,9 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						operator.getId(), 
-						Module.MAPVIEW);
+						Module.MAP_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_ENTER, true);
 			}
 			
 //			{
@@ -377,13 +377,13 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						operator.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ALARM_MANAGE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);				
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ALARM_MANAGE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}
 			
 //			{
@@ -451,11 +451,11 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						subscriber.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);				
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}			
 		}
 		
@@ -477,12 +477,12 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						planner.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_CREATE_AND_EDIT, true);
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_CREATE_CHANGE_SAVE_TYPE, true);
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_SAVING, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_CREATE_AND_EDIT, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_CREATE_CHANGE_SAVE_TYPE, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_SAVING, true);
 			}
 			
 			{
@@ -502,14 +502,14 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						planner.getId(), 
-						Module.MAPVIEW);
+						Module.MAP_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_EDIT_BINDING, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_EDIT_TOPOLOGICAL_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_SAVE_BINDING, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_SAVE_TOPOLOGICAL_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_SAVE_TOPOLOGICAL_VIEW, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_EDIT_BINDING, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_SAVE_BINDING, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_SAVE_TOPOLOGICAL_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_SAVE_TOPOLOGICAL_VIEW, true);
 			}
 			
 //			{
@@ -560,9 +560,9 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						specialist.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
 			}
 			
 			{
@@ -646,14 +646,14 @@ public class TestRoleAttributtes extends TestCase {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						specialist.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ALARM_MANAGE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ALARM_MANAGE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}
 			
 //			{

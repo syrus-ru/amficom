@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.24 2005/10/25 19:53:15 bass Exp $
+* $Id: PermissionAttributes.java,v 1.25 2005/10/27 10:42:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/25 19:53:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/10/27 10:42:27 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -57,7 +57,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ANALYSIS(true),
 		RESEARCH(true),
 		EVALUATION(true),
-		OBSERVE(true),
+		OBSERVER(true),
 		PREDICTION(false),
 		REPORT(true);
 		
@@ -413,7 +413,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 	 * 
 	 *  <p><b>WARNING !!! Never change the order or delete items, only appending to the end of list permitted</b></p>  
 	 */
-	private enum Observe implements SwitchableGroupNumber {
+	private enum Observer implements SwitchableGroupNumber {
 		ENTER(true),
 		OPEN_MAP(true),
 		OPEN_SCHEME(true),
@@ -423,7 +423,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		
 		private final boolean	enable;
 
-		private Observe(final boolean enable) {
+		private Observer(final boolean enable) {
 			this.enable = enable;			
 		}	
 		
@@ -432,7 +432,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		}
 		
 		public final Module getModule() {
-			return Module.OBSERVE;
+			return Module.OBSERVER;
 		}
 	}
 	
@@ -577,12 +577,12 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		EVALUATION_EDIT_ETALON(Evaluation.EDIT_ETALON),
 		
 		// Observe
-		OBSERVE_ENTER(Observe.ENTER),
-		OBSERVE_OPEN_MAP(Observe.OPEN_MAP),
-		OBSERVE_OPEN_SCHEME(Observe.OPEN_SCHEME),
-		OBSERVE_OPEN_MEASUREMENT_ARCHIVE(Observe.OPEN_MEASUREMENT_ARCHIVE),
-		OBSERVE_QUICK_TASK(Observe.QUICK_TASK),
-		OBSERVE_ALARM_MANAGE(Observe.ALARM_MANAGE),
+		OBSERVER_ENTER(Observer.ENTER),
+		OBSERVER_OPEN_MAP(Observer.OPEN_MAP),
+		OBSERVER_OPEN_SCHEME(Observer.OPEN_SCHEME),
+		OBSERVER_OPEN_MEASUREMENT_ARCHIVE(Observer.OPEN_MEASUREMENT_ARCHIVE),
+		OBSERVER_QUICK_TASK(Observer.QUICK_TASK),
+		OBSERVER_ALARM_MANAGE(Observer.ALARM_MANAGE),
 		
 		// Prediction
 		PREDICTION_ENTER(Prediction.ENTER),
