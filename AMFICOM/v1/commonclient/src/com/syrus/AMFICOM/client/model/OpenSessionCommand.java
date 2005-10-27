@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.38 2005/10/27 13:24:36 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.39 2005/10/27 13:59:49 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.38 $, $Date: 2005/10/27 13:24:36 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/27 13:59:49 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -293,7 +293,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				gbc.fill = GridBagConstraints.NONE;
 				gbc.weightx = 0.0;
 				gbc.anchor = GridBagConstraints.EAST;
-				textFieldsPanel.add(new JLabel(I18N.getString("Common.SelectDomain.Title") + ':'), gbc);
+				textFieldsPanel.add(new JLabel(I18N.getString("Common.Login.Domain") + ':'), gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.fill = GridBagConstraints.HORIZONTAL;
 				gbc.weightx = 1.0;
