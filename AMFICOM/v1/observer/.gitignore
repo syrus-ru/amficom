@@ -20,3 +20,8 @@ Makefile.inc
 .mach
 *.pl
 *.txt
+cache
+images
+logs
+Application.properties
+common.properties
