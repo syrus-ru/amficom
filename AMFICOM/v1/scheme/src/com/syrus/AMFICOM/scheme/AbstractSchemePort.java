@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.83 2005/10/25 19:53:13 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.84 2005/10/27 10:04:29 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.84 $, $Date: 2005/10/27 10:04:29 $
  * @module scheme
  */
 public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
@@ -584,7 +584,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		final boolean usePool = false;
 
 		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
-		final int depth = 2;
+		final int depth = 1;
 		if (stackTrace.length > depth) {
 			final StackTraceElement stackTraceElement = stackTrace[depth];
 			final String className = stackTraceElement.getClassName();
