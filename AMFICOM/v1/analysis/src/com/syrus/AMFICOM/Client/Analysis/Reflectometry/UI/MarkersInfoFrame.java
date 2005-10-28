@@ -164,6 +164,7 @@ public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeLi
 			this.res.setAbOrl(MarkerResource.DASH);
 		}
 		this.jTable.getModel().fireTableDataChanged();
+		this.jTable.getModel().setKeys(DEFAULT_KEYS); // XXX: PERFORMANCE: needs not be updated every refresh
 	}
 
 	public void bsHashAdded(final String key) {
