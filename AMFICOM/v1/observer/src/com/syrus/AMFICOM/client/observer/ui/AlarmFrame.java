@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -24,6 +23,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.observer.ObserverMainFrame;
 import com.syrus.AMFICOM.client.observer.alarm.Alarm;
 import com.syrus.AMFICOM.client.observer.alarm.AlarmConditionWrapper;
 import com.syrus.AMFICOM.client.observer.alarm.AlarmWrapper;
@@ -59,47 +59,43 @@ public class AlarmFrame extends JInternalFrame implements
 
 	Filter filter = new Filter(new AlarmConditionWrapper());
 
-	static SimpleDateFormat sdf = new java.text.SimpleDateFormat(
-			"dd.MM.yyyy HH:mm:ss");
-
 	public AlarmFrame(ApplicationContext aContext) {
-		super();
 		this.wrapper = new AlarmWrapper();
 		this.model = new WrapperedTableModel(
 				this.wrapper,
 				(String[]) this.wrapper.getKeys().toArray(new String[0]));
 		this.table = new WrapperedTable(this.model);
 
-		try {
-			jbInit();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		this.initUI();
 		setContext(aContext);
 	}
 
-	private void jbInit() throws Exception {
+	private void initUI() {
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setClosable(true);
 		this.setIconifiable(true);
 		this.setMaximizable(true);
 		this.setResizable(true);
+		this.setName(ObserverMainFrame.ALARM_FRAME);
 
 		this.setTitle(LangModelObserver.getString("Alarm_signals"));
 		this.getContentPane().setLayout(new BorderLayout());
-		this
-				.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter() {
-					public void internalFrameActivated(InternalFrameEvent e) {
-						this_internalFrameActivated(e);
-					}
+		this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter() {
+			@Override
+			public void internalFrameActivated(InternalFrameEvent e) {
+				grabFocus();
+			}
 
-					public void internalFrameOpened(InternalFrameEvent e) {
-						this_internalFrameOpened(e);
-					}
-				});
+			@Override
+			public void internalFrameOpened(InternalFrameEvent e) {
+				grabFocus();
+			}
+		});
 		this.addComponentListener(new java.awt.event.ComponentAdapter() {
+			@Override
 			public void componentShown(ComponentEvent e) {
-				this_componentShown(e);
+				if(AlarmFrame.this.initial_init)
+					init_module();
 			}
 		});
 
@@ -128,7 +124,7 @@ public class AlarmFrame extends JInternalFrame implements
 		this.buttonClose.setText("Закрыть");
 		this.buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				buttonClose_actionPerformed(e);
+				dispose();
 			}
 		});
 		this.buttonRefresh.setText("Обновить");
@@ -170,10 +166,9 @@ public class AlarmFrame extends JInternalFrame implements
 
 	public void init_module() {
 		this.initial_init = false;
-		System.out.println("this file ");
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.fireModelChanged("");
+		aModel.fireModelChanged();
 
 		updateContents();
 
@@ -325,23 +320,6 @@ public class AlarmFrame extends JInternalFrame implements
 			}
 */
 		}
-	}
-
-	void this_componentShown(ComponentEvent e) {
-		if(this.initial_init)
-			init_module();
-	}
-
-	void this_internalFrameActivated(InternalFrameEvent e) {
-		this.grabFocus();
-	}
-
-	void this_internalFrameOpened(InternalFrameEvent e) {
-		this.grabFocus();
-	}
-
-	void buttonClose_actionPerformed(ActionEvent e) {
-		this.dispose();
 	}
 
 	void buttonRefresh_actionPerformed(ActionEvent e) {

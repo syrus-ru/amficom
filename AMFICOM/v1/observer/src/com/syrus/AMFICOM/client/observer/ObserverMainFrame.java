@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.client.observer;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.util.logging.Level;
 
@@ -191,76 +192,61 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		super.setWindowArranger(new WindowArranger(ObserverMainFrame.this) {
 			@Override
 			public void arrange() {
-				int w = ObserverMainFrame.this.desktopPane.getSize().width;
-				int h = ObserverMainFrame.this.desktopPane.getSize().height;
+				final Dimension size = ObserverMainFrame.this.desktopPane.getSize();
+				final int width = size.width;
+				final int height = size.height;
 
-				JInternalFrame resultFrame = null;
-				JInternalFrame alarmFrame = null;
-				JInternalFrame mapFrame = null;
-				JInternalFrame schemeFrame = null;
-				JInternalFrame generalFrame = null;
-				JInternalFrame additionalFrame = null;
-				JInternalFrame characteristicsFrame = null;
-				JInternalFrame treeFrame = null;
-				
-				for (Component component : ObserverMainFrame.this.desktopPane.getComponents()) {
-					if (TREE_FRAME.equals(component.getName()))
-						treeFrame = (JInternalFrame)component;
-					else if (MapFrame.NAME.equals(component.getName()))
-						mapFrame = (JInternalFrame)component;
-					else if (ResultFrame.NAME.equals(component.getName()))
-						resultFrame = (JInternalFrame)component;
-					else if (ALARM_FRAME.equals(component.getName()))
-						alarmFrame = (JInternalFrame)component;
-					else if (SchemeViewerFrame.NAME.equals(component.getName()))
-						schemeFrame = (JInternalFrame)component;
-					else if (GeneralPropertiesFrame.NAME.equals(component.getName()))
-						generalFrame = (JInternalFrame)component;
-					else if (AdditionalPropertiesFrame.NAME.equals(component.getName()))
-						additionalFrame = (JInternalFrame)component;
-					else if (CharacteristicPropertiesFrame.NAME.equals(component.getName()))
-						characteristicsFrame = (JInternalFrame)component;
-				}
-				
-				if (mapFrame != null) {
-					normalize(schemeFrame);
-					schemeFrame.setSize(3 * w / 5, 3 * h / 4);
-					schemeFrame.setLocation(w / 5, h / 4);
-				}
-				if (schemeFrame != null) {
-					normalize(schemeFrame);
-					schemeFrame.setSize(3 * w / 5, 3 * h / 4);
-					schemeFrame.setLocation(w / 5, h / 4);
-				}
-				if (generalFrame != null) {
-					normalize(generalFrame);
-					generalFrame.setSize(w / 5, h / 4);
-					generalFrame.setLocation(4 * w / 5, h / 4);
-				}
-				if (additionalFrame != null) {
-					normalize(additionalFrame);
-					additionalFrame.setSize(w / 5, h / 4);
-					additionalFrame.setLocation(4 * w / 5, 2 * h / 4);
-				}
-				if (characteristicsFrame != null) {
-					normalize(characteristicsFrame);
-					characteristicsFrame.setSize(w / 5, h / 4);
-					characteristicsFrame.setLocation(4 * w / 5, 3 * h / 4);
-				}
-				if (resultFrame != null) {
-					normalize(resultFrame);
-					resultFrame.setSize(w * 2 / 5, h / 4);			
-					resultFrame.setLocation(w * 3 / 5, 0);
-				}
-				if (alarmFrame != null) {
-					normalize(alarmFrame);
-					alarmFrame.setSize(w * 2 / 5, h / 4);
-					alarmFrame.setLocation(w / 5, 0);
-				}
-				if (treeFrame != null) {
-					normalize(treeFrame);
-					treeFrame.setSize(w / 5, h);
-					treeFrame.setLocation(0, 0);
+				for (final Component component : ObserverMainFrame.this.desktopPane.getComponents()) {
+					String componentName = component.getName();
+					if (componentName == null) {
+						Log.debugMessage("Name is null for component: "
+								+ component,
+								Level.SEVERE);
+						continue;
+						
+					}
+					componentName = componentName.intern();
+					if (componentName == TREE_FRAME) {
+						final JInternalFrame treeFrame = (JInternalFrame) component;
+						normalize(treeFrame);
+						treeFrame.setSize(width / 5, height);
+						treeFrame.setLocation(0, 0);
+					} else if (componentName == MapFrame.NAME) {
+						final JInternalFrame mapFrame = (JInternalFrame) component;
+						normalize(mapFrame);
+						mapFrame.setSize(3 * width / 5, 3 * height / 4);
+						mapFrame.setLocation(width / 5, height / 4);
+					} else if (componentName == ResultFrame.NAME) {
+						final JInternalFrame resultFrame = (JInternalFrame) component;
+						normalize(resultFrame);
+						resultFrame.setSize(width * 2 / 5, height / 4);			
+						resultFrame.setLocation(width * 3 / 5, 0);
+					} else if (componentName == ALARM_FRAME) {
+						final JInternalFrame alarmFrame = (JInternalFrame) component;
+						normalize(alarmFrame);
+						alarmFrame.setSize(width * 2 / 5, height / 4);
+						alarmFrame.setLocation(width / 5, 0);
+					} else if (componentName == SchemeViewerFrame.NAME) {
+						final JInternalFrame schemeFrame = (JInternalFrame) component;
+						normalize(schemeFrame);
+						schemeFrame.setSize(3 * width / 5, 3 * height / 4);
+						schemeFrame.setLocation(width / 5, height / 4);
+					} else if (componentName == GeneralPropertiesFrame.NAME) {
+						final JInternalFrame generalFrame = (JInternalFrame) component;
+						normalize(generalFrame);
+						generalFrame.setSize(width / 5, height / 4);
+						generalFrame.setLocation(4 * width / 5, height / 4);
+					} else if (componentName == AdditionalPropertiesFrame.NAME) {
+						final JInternalFrame additionalFrame = (JInternalFrame) component;
+						normalize(additionalFrame);
+						additionalFrame.setSize(width / 5, height / 4);
+						additionalFrame.setLocation(4 * width / 5, 2 * height / 4);
+					} else if (componentName == CharacteristicPropertiesFrame.NAME) {
+						final JInternalFrame characteristicsFrame = (JInternalFrame) component;
+						normalize(characteristicsFrame);
+						characteristicsFrame.setSize(width / 5, height / 4);
+						characteristicsFrame.setLocation(4 * width / 5, 3 * height / 4);
+					}
 				}
 			}
 		});
