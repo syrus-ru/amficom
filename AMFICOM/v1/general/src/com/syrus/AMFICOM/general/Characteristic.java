@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.75 2005/10/25 19:53:04 bass Exp $
+ * $Id: Characteristic.java,v 1.76 2005/10/28 10:08:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/10/25 19:53:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.76 $, $Date: 2005/10/28 10:08:34 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -526,7 +526,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		 * characterizableId is updated from within that code,
 		 * and not here. 
 		 */
-		final Characteristic clone = (Characteristic) super.clone();
+		final Characteristic clone = super.clone();
 
 		if (clone.clonedIdMap == null) {
 			clone.clonedIdMap = new HashMap<Identifier, Identifier>();
