@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.39 2005/10/27 13:59:49 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.40 2005/10/28 07:43:48 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.39 $, $Date: 2005/10/27 13:59:49 $
+ * @version $Revision: 1.40 $, $Date: 2005/10/28 07:43:48 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -154,7 +154,9 @@ public class OpenSessionCommand extends AbstractCommand {
 			return;
 		}
 
-		if (this.domainId == null || this.domainId.isVoid()) {
+		if (this.domainId == null || 
+				this.domainId.isVoid() || 
+				!this.availableDomains.contains(this.domainId)) {
 			this.domainId = this.availableDomains.get(0).getId();
 		}
 		
