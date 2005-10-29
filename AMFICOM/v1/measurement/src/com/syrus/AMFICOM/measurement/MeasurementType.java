@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.104 2005/10/19 10:23:18 bob Exp $
+ * $Id: MeasurementType.java,v 1.105 2005/10/29 16:59:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/10/19 10:23:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.105 $, $Date: 2005/10/29 16:59:47 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -31,8 +31,6 @@ public enum MeasurementType implements ActionType<IdlMeasurementType> {
 			EnumSet.of(ParameterType.REF_WAVE_LENGTH,
 					ParameterType.REF_TRACE_LENGTH,
 					ParameterType.REF_RESOLUTION,
-					ParameterType.REF_PULSE_WIDTH_HIGH_RES,
-					ParameterType.REF_PULSE_WIDTH_LOW_RES,
 					ParameterType.REF_INDEX_OF_REFRACTION,
 					ParameterType.REF_AVERAGE_COUNT,
 					ParameterType.REF_FLAG_GAIN_SPLICE_ON,
