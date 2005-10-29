@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.67 2005/10/19 10:22:14 bob Exp $
+ * $Id: ParameterType.java,v 1.68 2005/10/29 16:56:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,20 +21,21 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/10/19 10:22:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.68 $, $Date: 2005/10/29 16:56:42 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
-public enum ParameterType implements TransferableObject<IdlParameterType>,
-		Codeable {
+public enum ParameterType implements TransferableObject<IdlParameterType>, Codeable {
 	REF_WAVE_LENGTH("ref_wvlen", DataType.INTEGER, MeasurementUnit.NANOMETER),
 	REF_TRACE_LENGTH("ref_trclen", DataType.DOUBLE, MeasurementUnit.KILOMETER),
 	REF_RESOLUTION("ref_res", DataType.DOUBLE, MeasurementUnit.METER),
-	REF_PULSE_WIDTH_LOW_RES("ref_pulswd_low_res", DataType.INTEGER, MeasurementUnit.NANOSECOND),
-	REF_PULSE_WIDTH_HIGH_RES("ref_pulswd_high_res", DataType.INTEGER, MeasurementUnit.NANOSECOND),
 	REF_INDEX_OF_REFRACTION("ref_ior", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
 	REF_AVERAGE_COUNT("ref_scans", DataType.DOUBLE, MeasurementUnit.NONDIMENSIONAL),
+
+	REF_PULSE_WIDTH_NS("ref_pulswd_ns", DataType.INTEGER, MeasurementUnit.NANOSECOND),
+	REF_PULSE_WIDTH_M("ref_pulswd_m", DataType.INTEGER, MeasurementUnit.METER),
+	REF_FLAG_PULSE_WIDTH_LOW_RES("ref_flag_pulswd_low_res", DataType.BOOLEAN, MeasurementUnit.NONDIMENSIONAL),
 	REF_FLAG_GAIN_SPLICE_ON("ref_flag_gain_splice_on", DataType.BOOLEAN, MeasurementUnit.NONDIMENSIONAL),
 	REF_FLAG_LIFE_FIBER_DETECT("ref_flag_life_fiber_detect", DataType.BOOLEAN, MeasurementUnit.NONDIMENSIONAL),
 
@@ -72,8 +73,8 @@ public enum ParameterType implements TransferableObject<IdlParameterType>,
 	}
 
 	public static ParameterType valueOf(final int code) {
-		final ParameterType[] types = ParameterType.values();
-		return types[code];
+		final ParameterType[] parameterTypes = ParameterType.values();
+		return parameterTypes[code];
 	}
 
 	public static ParameterType fromTransferable(final IdlParameterType idlParameterType) {

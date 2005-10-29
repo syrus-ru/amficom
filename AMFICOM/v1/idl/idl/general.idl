@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.113 2005/10/12 13:06:48 arseniy Exp $
+ * $Id: general.idl,v 1.114 2005/10/29 16:55:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,10 +80,12 @@ module general {
 			REF_WAVE_LENGTH,
 			REF_TRACE_LENGTH,
 			REF_RESOLUTION,
-			REF_PULSE_WIDTH_LOW_RES,
-			REF_PULSE_WIDTH_HIGH_RES,
 			REF_INDEX_OF_REFRACTION,
 			REF_AVERAGE_COUNT,
+
+			REF_PULSE_WIDTH_NS,
+			REF_PULSE_WIDTH_M,
+			REF_FLAG_PULSE_WIDTH_LOW_RES,
 			REF_FLAG_GAIN_SPLICE_ON,
 			REF_FLAG_LIFE_FIBER_DETECT,
 
