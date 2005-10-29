@@ -1,5 +1,5 @@
 /*-
- * $Id: TableNames.java,v 1.6 2005/10/10 15:39:09 bob Exp $
+ * $Id: TableNames.java,v 1.7 2005/10/29 16:57:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/10 15:39:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/10/29 16:57:05 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -32,6 +32,7 @@ public final class TableNames {
 
 	public static final String MNT_TYP_ANA_TYP_LINK = "MntTypAnaTypLink";
 	public static final String MNTPORTTYPMNTTYPLINK = "MntPortTypMntTypLink";
+	public static final String MNTPORTTYPPARTYPLINK = "MntPortTypParTypLink";
 	public static final String PARAMETERSETMELINK = "ParameterSetMELink";
 	public static final String MEASUREMENTSETUP_ME_LINK = "MeasurementSetupMELink";
 	public static final String MEASUREMENTSETUP_MT_LINK = "MeasurementSetupMTLink";
