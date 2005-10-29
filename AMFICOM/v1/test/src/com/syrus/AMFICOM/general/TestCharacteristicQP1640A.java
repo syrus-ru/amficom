@@ -1,51 +1,47 @@
-/*
- * $Id: TestCharacteristicQP1640A.java,v 1.3 2005/08/21 16:12:06 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: TestCharacteristicQP1640A.java,v 1.4 2005/10/29 20:44:02 arseniy Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.general;
 
-import java.util.HashMap;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_WVLEN;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_TRCLEN_1625;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_RES_1625;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_PULSWD_HIGHRES_1625;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_PULSWD_LOWRES_1625;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_IOR;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_SCANS_1625;
+import static com.syrus.AMFICOM.general.CharacteristicTypeCodenames.REF_QP1640A_MAX_POINTS;
+
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeCodename;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.measurement.MeasurementPortType;
-
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/21 16:12:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/29 20:44:02 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module test
  */
-public class TestCharacteristicQP1640A extends TestCase {
-	private static final String WAVELENGTH = "1625";
-	private static final String TRACELENGTH = "5.00 20.00 50.00 75.00 125.00 250.00 300.00";
-	private static final String PULSE_WIDTH_HIGH_RES = "5 10 20 50 100 200 500 1000 2000 5000";
-	private static final String PULSE_WIDTH_LOW_RES = "1000 2000 5000 10000 20000";
-	private static final String RESOLUTION = "0.125 0.250 0.500 1.000 2.000 4.000 8.000 16.000";
-	private static final String IOR = "1.468200";
-	private static final String AVERAGES = "4096 32768 262144";
-	private static final String MAX_POINTS = "262144";
-	private static final String[] CODENAMES = new String[] { CharacteristicTypeCodenames.TRACE_WAVELENGTH,
-			CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX,
-			CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX,
-			CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX,
-			CharacteristicTypeCodenames.TRACE_RESOLUTION,
-			CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX,
-			CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX,
-			CharacteristicTypeCodenames.TRACE_MAXPOINTS,
-			CharacteristicTypeCodenames.UNITS_WAVELENGTH,
-			CharacteristicTypeCodenames.UNITS_TRACE_LENGTH,
-			CharacteristicTypeCodenames.UNITS_PULSE_WIDTH,
-			CharacteristicTypeCodenames.UNITS_RESOLUTION };
+public final class TestCharacteristicQP1640A extends TestCase {
+	private static final String REF_QP1640A_WVLEN_VALUE = "1625";
+	private static final String REF_QP1640A_TRCLEN_1625_VALUE = "5.00 20.00 50.00 75.00 125.00 300.00";
+	private static final String REF_QP1640A_RES_1625_VALUE = "0.125 0.250 0.500 1.000 2.000 4.000 8.000 16.000";
+	private static final String REF_QP1640A_PULSWD_HIGHRES_1625_VALUE = "5 10 20 50 100 200 500 1000 2000 5000";
+	private static final String REF_QP1640A_PULSWD_LOWRES_1625_VALUE = "1000 2000 5000 10000 20000";
+	private static final String REF_QP1640A_IOR_VALUE = "1.468200";
+	private static final String REF_QP1640A_SCANS_1625_VALUE = "4096 32768 262144";
+	private static final String REF_QP1640A_MAX_POINTS_VALUE = "262144";
 
 	public TestCharacteristicQP1640A(final String name) {
 		super(name);
@@ -57,202 +53,180 @@ public class TestCharacteristicQP1640A extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreate() throws ApplicationException {
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
-		final MeasurementPortType measurementPortType = (MeasurementPortType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+	public void testCreateAll() throws ApplicationException {
+		final Identifier sysUserId = DatabaseCommonTest.getSysUser().getId();
 
-		final Map<String, CharacteristicType> characteristicTypeMap = this.retrieveExistingCharacteristicTypes();
-		String codename;
-		String description;
-		CharacteristicType characteristicType;
-		final Identifier userId = DatabaseCommonTest.getSysUser().getId();
+		final TypicalCondition tc = new TypicalCondition(MeasurementPortTypeCodename.REFLECTOMETRY_QP1640A.stringValue(),
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.MEASUREMENTPORT_TYPE_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+		final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(tc, true);
+		assertTrue("Number of measurement port types: " + measurementPortTypes.size(), measurementPortTypes.size() == 1);
+		final MeasurementPortType measurementPortType = measurementPortTypes.iterator().next();
 
-		/*
-		 * ref_wvlen
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_WAVELENGTH;
-		description = "Измерительная длина волны";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Длина волны",
-					DataType.INTEGER,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId,
-				characteristicType,
-				codename,
-				description,
-				WAVELENGTH,
+
+
+		/*	Wave length*/
+
+		final CharacteristicType refWvlenType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_WVLEN,
+				"Длины волн QP1640A",
+				"Длины волн QP1640A",
+				DataType.INTEGER,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refWvlen = Characteristic.createInstance(sysUserId,
+				refWvlenType,
+				"Длины волн QP1640A",
+				"Длины волн QP1640A",
+				REF_QP1640A_WVLEN_VALUE,
 				measurementPortType,
 				false,
 				false);
 
-		/*
-		 * ref_trclen
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX;
-		description = "Длина рефлектограммы";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Длина рефлектограммы",
-					DataType.DOUBLE,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId,
-				characteristicType,
-				codename,
-				description,
-				TRACELENGTH,
+
+
+		/*	Trace length*/
+
+		final CharacteristicType refTrclenType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_TRCLEN_1625,
+				"Длина рефлектограммы 1625нм QP1640A",
+				"Длина рефлектограммы 1625нм QP1640A",
+				DataType.DOUBLE,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refTrclen = Characteristic.createInstance(sysUserId,
+				refTrclenType,
+				"Длина рефлектограммы 1625нм QP1640A",
+				"Длина рефлектограммы 1625нм QP1640A",
+				REF_QP1640A_TRCLEN_1625_VALUE,
 				measurementPortType,
 				false,
 				false);
 
-		/*
-		 * ref_pulswd_high_res
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX;
-		description = "Ширина импульса в режиме высокого разрешения";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Ширина импульса",
-					DataType.LONG,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId,
-				characteristicType,
-				codename,
-				description,
-				PULSE_WIDTH_HIGH_RES,
+
+
+		/*	Resolution*/
+
+		final CharacteristicType refResType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_RES_1625,
+				"Разрешение 1625нм QP1640A",
+				"Разрешение 1625нм QP1640A",
+				DataType.DOUBLE,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refRes = Characteristic.createInstance(sysUserId,
+				refResType,
+				"Разрешение 1625нм QP1640A",
+				"Разрешение 1625нм QP1640A",
+				REF_QP1640A_RES_1625_VALUE,
 				measurementPortType,
 				false,
 				false);
 
-		/*
-		 * ref_pulswd_low_res
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX;
-		description = "Ширина импульса в режиме низкого разрешения";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Ширина импульса",
-					DataType.LONG,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId,
-				characteristicType,
-				codename,
-				description,
-				PULSE_WIDTH_LOW_RES,
+
+
+		/*	Pulse width*/
+
+		final CharacteristicType refPulswdHighResType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_PULSWD_HIGHRES_1625,
+				"Ширина импульса высокое разрешение 1625нм QP1640A",
+				"Ширина импульса высокое разрешение 1625нм QP1640A",
+				DataType.LONG,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refPulswdHighRes = Characteristic.createInstance(sysUserId,
+				refPulswdHighResType,
+				"Ширина импульса высокое разрешение 1625нм QP1640A",
+				"Ширина импульса высокое разрешение 1625нм QP1640A",
+				REF_QP1640A_PULSWD_HIGHRES_1625_VALUE,
 				measurementPortType,
 				false,
 				false);
 
-		/*
-		 * ref_res
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_RESOLUTION;
-		description = "Разрешение (расстояние между соседними точками)";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Разрешение",
-					DataType.DOUBLE,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, RESOLUTION, measurementPortType, false, false);
+		final CharacteristicType refPulswdLowResType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_PULSWD_LOWRES_1625,
+				"Ширина импульса низкое разрешение 1625нм QP1640A",
+				"Ширина импульса низкое разрешение 1625нм QP1640A",
+				DataType.LONG,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refPulswdLowRes = Characteristic.createInstance(sysUserId,
+				refPulswdLowResType,
+				"Ширина импульса низкое разрешение 1625нм QP1640A",
+				"Ширина импульса низкое разрешение 1625нм QP1640A",
+				REF_QP1640A_PULSWD_LOWRES_1625_VALUE,
+				measurementPortType,
+				false,
+				false);
 
-		/*
-		 * ref_ior
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX;
-		description = "Показатель преломления";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Показатель преломления",
-					DataType.DOUBLE,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, IOR, measurementPortType, false, false);
-		
-		/*
-		 * ref_scans
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX;
-		description = "Количество усреднений";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Количество усреднений",
-					DataType.DOUBLE,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, AVERAGES, measurementPortType, false, false);
 
-		/*
-		 * ref_maxpoints
-		 */
-		codename = CharacteristicTypeCodenames.TRACE_MAXPOINTS;
-		description = "Максимальное количество точек на рефлектограмме";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Максимальное количество точек",
-					DataType.INTEGER,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, MAX_POINTS, measurementPortType, false, false);
-		
-		/*
-		 * Save all new objects
-		 */
-		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, DatabaseCommonTest.getSysUser().getId(), false);
-	}
 
-	private Map<String, CharacteristicType> retrieveExistingCharacteristicTypes() throws ApplicationException {
-		final Map<String, CharacteristicType> characteristicTypeMap = new HashMap<String, CharacteristicType>();
+		/*	IOR*/
 
-		final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>();
-		for (int i = 0; i < CODENAMES.length; i++) {
-			conditions.add(new TypicalCondition(CODENAMES[i],
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.CHARACTERISTIC_TYPE_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME));
-		}
-		final CompoundCondition cc = new CompoundCondition(conditions, CompoundConditionSort.OR);
-		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
-		for (final CharacteristicType characteristicType : characteristicTypes) {
-			characteristicTypeMap.put(characteristicType.getCodename(), characteristicType);
-		}
+		final CharacteristicType refIorType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_IOR,
+				"Показатель преломления QP1640A",
+				"Показатель преломления QP1640A",
+				DataType.DOUBLE,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refIor = Characteristic.createInstance(sysUserId,
+				refIorType,
+				"Показатель преломления QP1640A",
+				"Показатель преломления QP1640A",
+				REF_QP1640A_IOR_VALUE,
+				measurementPortType,
+				false,
+				false);
 
-		return characteristicTypeMap;
+
+
+		/*	Scans*/
+
+		final CharacteristicType refScansType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_SCANS_1625,
+				"Количество усреднений 1625нм QP1640A",
+				"Количество усреднений 1625нм QP1640A",
+				DataType.DOUBLE,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refScans = Characteristic.createInstance(sysUserId,
+				refScansType,
+				"Количество усреднений 1625нм QP1640A",
+				"Количество усреднений 1625нм QP1640A",
+				REF_QP1640A_SCANS_1625_VALUE,
+				measurementPortType,
+				false,
+				false);
+
+
+
+		/*	Max points*/
+
+		final CharacteristicType refMaxPointsType = CharacteristicType.createInstance(sysUserId,
+				REF_QP1640A_MAX_POINTS,
+				"Максимальное количество точек QP1640A",
+				"Максимальное количество точек QP1640A",
+				DataType.DOUBLE,
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+		final Characteristic refMaxPoints = Characteristic.createInstance(sysUserId,
+				refMaxPointsType,
+				"Максимальное количество точек QP1640A",
+				"Максимальное количество точек QP1640A",
+				REF_QP1640A_MAX_POINTS_VALUE,
+				measurementPortType,
+				false,
+				false);
+
+
+
+		/*	Save all*/
+
+		final Set<Identifiable> toFlushObjects = new HashSet<Identifiable>();
+
+		toFlushObjects.add(refWvlen);
+		toFlushObjects.add(refTrclen);
+		toFlushObjects.add(refRes);
+		toFlushObjects.add(refPulswdHighRes);
+		toFlushObjects.add(refPulswdLowRes);
+		toFlushObjects.add(refIor);
+		toFlushObjects.add(refScans);
+		toFlushObjects.add(refMaxPoints);
+
+		StorableObjectPool.flush(toFlushObjects, sysUserId, false);
 	}
 }
