@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.7 2005/10/22 18:35:20 bass Exp $
+ * $Id: AbstractLogger.java,v 1.8 2005/10/30 19:26:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/22 18:35:20 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/30 19:26:39 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -34,7 +34,6 @@ abstract class AbstractLogger implements Logger {
 	static final String KEY_LOG_ONLY_THIS_LEVEL = "LogOnlyThisLevel";
 	static final String KEY_LOG_PATH = "LogPath";
 	static final String KEY_FULL_STE = "FullSte";
-
 
 	static final String DEFAULT_APPNAME = "defaultApp";
 	static final String DEFAULT_HOSTNAME = "defaultHost";
@@ -64,6 +63,31 @@ abstract class AbstractLogger implements Logger {
 	 * printed.
 	 */
 	boolean fullSte;
+
+	/*-********************************************************************
+	 *  StackTraceDataSource                                              *
+	 **********************************************************************/
+
+	static final String STACK_TRACE_DATA_SOURCE_THREAD = "thread";
+	static final String STACK_TRACE_DATA_SOURCE_THROWABLE = "throwable";
+	static final String STACK_TRACE_DATA_SOURCE_NONE = "none";
+
+	static final String KEY_STACK_TRACE_DATA_SOURCE = "StackTraceDataSource";
+	static final String DEFAULT_STACK_TRACE_DATA_SOURCE = STACK_TRACE_DATA_SOURCE_THREAD;
+
+	/**
+	 * <p>For server-side applications, STACK_TRACE_DATA_SOURCE_THREAD is
+	 * the default.</p>
+	 * 
+	 * <p>For client-side ones (Jet-compiled to native code),
+	 * STACK_TRACE_DATA_SOURCE_THROWABLE is the default, since currently
+	 * Jet can't fetch current thread's stack trace.</p>
+	 *
+	 * <p>This field is assumed to hold a reference to a canonical string,
+	 * since further it gets compared by reference, not by value.</p>
+	 */
+	String stackTraceDataSource;
+
 
 	public AbstractLogger(final String appName, final String hostName) {
 		this.appName = (appName != null) ? appName : DEFAULT_APPNAME;
@@ -196,29 +220,44 @@ abstract class AbstractLogger implements Logger {
 	}
 
 	private void logStackTraceElement(final PrintWriter out) {
-		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		final int i = 6;
-		if (stackTrace.length > i) {
-			final StackTraceElement stackTraceElement = stackTrace[i];
+		final StackTraceElement stackTraceElement = getStackTraceData();
+		if (stackTraceElement != null) {
+			final String className = stackTraceElement.getClassName();
 			out.print((this.fullSte
 					? stackTraceElement
-					: stackTraceElement.getClassName().replaceAll("^.*\\.(\\w+)$", "$1")
+					: className.substring(className.lastIndexOf('.') + 1)
 							+ '.' + stackTraceElement.getMethodName() + "()")
 					+ " | ");
 		}
 	}
 
 	private void logStackTraceElement(final PrintStream out) {
-		final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-		final int i = 6;
-		if (stackTrace.length > i) {
-			final StackTraceElement stackTraceElement = stackTrace[i];
+		final StackTraceElement stackTraceElement = getStackTraceData();
+		if (stackTraceElement != null) {
+			final String className = stackTraceElement.getClassName();
 			out.print((this.fullSte
 					? stackTraceElement
-					: stackTraceElement.getClassName().replaceAll("^([^\\.]+\\.)*([^\\.]+)$", "$2")
+					: className.substring(className.lastIndexOf('.') + 1)
 							+ '.' + stackTraceElement.getMethodName() + "()")
 					+ " | ");
 		}
+	}
+
+	private StackTraceElement getStackTraceData() {
+		if (this.stackTraceDataSource == STACK_TRACE_DATA_SOURCE_NONE) {
+			return null;
+		}
+
+		final StackTraceElement stackTrace[];
+		final int depth;
+		if (this.stackTraceDataSource == STACK_TRACE_DATA_SOURCE_THREAD) {
+			depth = 7;
+			stackTrace = Thread.currentThread().getStackTrace();
+		} else {
+			depth = 5;
+			stackTrace = (new Throwable()).getStackTrace();
+		}
+		return (stackTrace.length > depth) ? stackTrace[depth] : null;
 	}
 
 	private String createLogFileName(final String logType) {
