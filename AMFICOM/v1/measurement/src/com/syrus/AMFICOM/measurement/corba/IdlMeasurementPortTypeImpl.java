@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementPortTypeImpl.java,v 1.4 2005/10/29 17:00:52 arseniy Exp $
+ * $Id: IdlMeasurementPortTypeImpl.java,v 1.5 2005/10/30 14:26:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/10/29 17:00:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 14:26:52 $
  * @module measurement
  */
 final class IdlMeasurementPortTypeImpl extends IdlMeasurementPortType {
@@ -40,8 +39,7 @@ final class IdlMeasurementPortTypeImpl extends IdlMeasurementPortType {
 			final String codename,
 			final String description,
 			final String name,
-			final IdlMeasurementType[] measurementTypes,
-			final IdlParameterType[] parameterTypes) {
+			final IdlMeasurementType[] measurementTypes) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -52,7 +50,6 @@ final class IdlMeasurementPortTypeImpl extends IdlMeasurementPortType {
 		this.description = description;
 		this.name = name;
 		this.measurementTypes = measurementTypes;
-		this.parameterTypes = parameterTypes;
 	}
 
 	/**

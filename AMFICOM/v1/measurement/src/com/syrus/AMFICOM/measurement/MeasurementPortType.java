@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.15 2005/10/29 17:00:33 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.16 2005/10/30 14:26:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -39,8 +38,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/29 17:00:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/10/30 14:26:52 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -51,7 +50,6 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 
 	private String name;
 	private EnumSet<MeasurementType> measurementTypes;
-	private EnumSet<ParameterType> parameterTypes;
 
 	public MeasurementPortType(final IdlMeasurementPortType mptt) throws CreateObjectException {
 		try {
@@ -67,8 +65,7 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 			final String codename,
 			final String description,
 			final String name,
-			final EnumSet<MeasurementType> measurementTypes,
-			final EnumSet<ParameterType> parameterTypes) {
+			final EnumSet<MeasurementType> measurementTypes) {
 			super(id,
 				  new Date(System.currentTimeMillis()),
 				  new Date(System.currentTimeMillis()),
@@ -80,8 +77,6 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 			this.name = name;
 			this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
 			this.setMeasurementTypes0(measurementTypes);
-			this.parameterTypes = EnumSet.noneOf(ParameterType.class);
-			this.setParameterTypes0(parameterTypes);
 	}
 	
 	/**
@@ -92,11 +87,10 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 	 * @throws CreateObjectException
 	 */
 	public static MeasurementPortType createInstance(final Identifier creatorId,
-			final MeasurementPortTypeCodename codename,
+			final String codename,
 			final String description,
 			final String name,
-			final EnumSet<MeasurementType> measurementTypes,
-			final EnumSet<ParameterType> parameterTypes) throws CreateObjectException{
+			final EnumSet<MeasurementType> measurementTypes) throws CreateObjectException{
 		if (creatorId == null || codename == null || name == null || description == null || measurementTypes == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
 		}
@@ -105,11 +99,10 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 			final MeasurementPortType measurementPortType = new MeasurementPortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_TYPE_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
-					codename.stringValue(),
+					codename,
 					description,
 					name,
-					measurementTypes,
-					parameterTypes);
+					measurementTypes);
 
 			assert measurementPortType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -127,7 +120,6 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;
 		this.measurementTypes = MeasurementType.fromTransferables(mptt.measurementTypes);
-		this.parameterTypes = ParameterType.fromTransferables(mptt.parameterTypes);
 	}
 
 	/**
@@ -146,8 +138,7 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
-				MeasurementType.createTransferables(this.measurementTypes, orb),
-				ParameterType.createTransferables(this.parameterTypes, orb));
+				MeasurementType.createTransferables(this.measurementTypes, orb));
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -184,22 +175,6 @@ public final class MeasurementPortType extends StorableObjectType<MeasurementPor
 		this.measurementTypes.clear();
 		if (measurementTypes != null) {
 			this.measurementTypes.addAll(measurementTypes);
-		}
-	}
-
-	public EnumSet<ParameterType> getParameterTypes() {
-		return this.parameterTypes;
-	}
-
-	public void setParameterTypes(final EnumSet<ParameterType> parameterTypes) {
-		this.setParameterTypes0(parameterTypes);
-		super.markAsChanged();
-	}
-
-	protected void setParameterTypes0(final EnumSet<ParameterType> parameterTypes) {
-		this.parameterTypes.clear();
-		if (parameterTypes != null) {
-			this.parameterTypes.addAll(parameterTypes);
 		}
 	}
 

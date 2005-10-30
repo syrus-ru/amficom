@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeWrapper.java,v 1.6 2005/10/29 17:00:33 arseniy Exp $
+ * $Id: MeasurementPortTypeWrapper.java,v 1.7 2005/10/30 14:26:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/29 17:00:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 14:26:52 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -32,11 +32,7 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 
 	private MeasurementPortTypeWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_CODENAME,
-				COLUMN_DESCRIPTION,
-				COLUMN_NAME,
-				LINK_COLUMN_MEASUREMENT_TYPE_CODE,
-				LINK_COLUMN_PARAMETER_TYPE_CODE };
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, LINK_COLUMN_MEASUREMENT_TYPE_CODE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -73,9 +69,6 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
 				return measurementPortType.getMeasurementTypes();
 			}
-			if (key.equals(LINK_COLUMN_PARAMETER_TYPE_CODE)) {
-				return measurementPortType.getParameterTypes();
-			}
 		}
 		return value;
 	}
@@ -89,9 +82,11 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 		if (object != null) {
 			if (key.equals(COLUMN_NAME)) {
 				object.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				object.setDescription((String) value);
-			} else if (key.equals(COLUMN_CODENAME)) {
+			}
+			else if (key.equals(COLUMN_CODENAME)) {
 				object.setCodename((String) value);
 			}
 		}
@@ -121,7 +116,7 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 				|| key.equals(COLUMN_CODENAME)) {
 			return String.class;
 		}
-		if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE) || key.equals(LINK_COLUMN_PARAMETER_TYPE_CODE)) {
+		if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
 			return EnumSet.class;
 		}
 		return null;

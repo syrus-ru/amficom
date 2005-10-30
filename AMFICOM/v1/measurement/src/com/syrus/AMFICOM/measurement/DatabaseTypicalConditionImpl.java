@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.22 2005/10/29 19:31:13 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.23 2005/10/30 14:26:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,13 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TableNames;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/29 19:31:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 14:26:52 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -74,8 +73,7 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		case PERIODICALTEMPORALPATTERN_CODE:
 			return key == PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 		case MEASUREMENTPORT_TYPE_CODE:
-			return key == StorableObjectWrapper.COLUMN_CODENAME
-						|| key == MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
+			return key == MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
 		case MEASUREMENTSETUP_CODE:
 			return key == MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
 		default:

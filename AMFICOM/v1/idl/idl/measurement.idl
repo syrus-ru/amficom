@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.90 2005/10/29 16:56:06 arseniy Exp $
+ * $Id: measurement.idl,v 1.91 2005/10/30 14:26:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -374,7 +374,6 @@ module measurement {
 			public general::corba::WString256 description;
 			public general::corba::WString128 name;
 			public IdlMeasurementTypeSeq measurementTypes;
-			public general::corba::IdlParameterTypeSeq parameterTypes;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -385,8 +384,7 @@ module measurement {
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
 					in general::corba::WString128 name,
-					in IdlMeasurementTypeSeq measurementTypes,
-					in general::corba::IdlParameterTypeSeq parameterTypes);
+					in IdlMeasurementTypeSeq measurementTypes);
 		};
 
 
