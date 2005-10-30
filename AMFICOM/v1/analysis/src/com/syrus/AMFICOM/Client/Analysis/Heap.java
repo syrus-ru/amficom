@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.122 2005/10/30 15:20:48 bass Exp $
+ * $Id: Heap.java,v 1.123 2005/10/30 18:50:18 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -99,8 +99,8 @@ import com.syrus.util.Log;
  * 
  * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
  * 
- * @author $Author: bass $
- * @version $Revision: 1.122 $, $Date: 2005/10/30 15:20:48 $
+ * @author $Author: saa $
+ * @version $Revision: 1.123 $, $Date: 2005/10/30 18:50:18 $
  * @module analysis
  */
 public class Heap
@@ -880,6 +880,7 @@ public class Heap
 	public static void setRefAnalysisPrimary(RefAnalysis ra) {
 		refAnalysisPrimary = ra;
 		fixEventList();
+		setEtalonComparison(null); // необходимо убрать результаты сравнения предыдущей р/г
 		notifyPrimaryRefAnalysisCUpdated();
 		notifyPrimaryMTAECUpdated();
 	}
