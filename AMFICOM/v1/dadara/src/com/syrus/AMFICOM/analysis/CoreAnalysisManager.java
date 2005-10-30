@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.128 2005/10/30 14:49:09 bass Exp $
+ * $Id: CoreAnalysisManager.java,v 1.129 2005/10/30 18:51:24 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,14 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.128 $, $Date: 2005/10/30 14:49:09 $
+ * @author $Author: saa $
+ * @version $Revision: 1.129 $, $Date: 2005/10/30 18:51:24 $
  * @module
  */
 
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_LINEBREAK;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
+import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 
 import java.util.ArrayList;
@@ -328,6 +329,9 @@ public class CoreAnalysisManager
 		} else {
 			res.setNoise(null);
 		}
+		assert Log.debugMessage("raw.length=" + trace.getRawTrace().length
+				+ " filtered.traceLength=" + trace.getFilteredTrace().length
+				+ " res.traceLength=" + res.traceLength, FINER);
 		return res;
 	}
 
@@ -393,6 +397,9 @@ public class CoreAnalysisManager
 			? rse[rse.length - 1].getEnd() + 1
 			: 0;
 
+		assert Log.debugMessage("y.length=" + tpa.y.length
+				+ " tpa.traceLength=" + tpa.traceLength
+				+ " rse.traceLength=" + traceLength, FINER);
 		long t2 = System.nanoTime();
 
 		// фитируем
