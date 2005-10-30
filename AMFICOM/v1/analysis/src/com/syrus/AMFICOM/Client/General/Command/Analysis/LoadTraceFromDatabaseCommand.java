@@ -115,6 +115,10 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			try {
 				// пытаемся загрузить параметры анализа
 				AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
+				// первичная р/г анализируется безусловно - чтобы получить RefAnalysis, который не сохраняется на БД
+				// считаем, что результат будет тем же самым, т.к. параметры анализа загружены те же самые
+				// XXX: вообще, неплохо бы сохранять и RefAnalysis или какую-то его замену - тогда не надо будет проводить повторный анализ.
+				Heap.makePrimaryAnalysis();
 				// пытаемся загрузить эталон
 				if (ms.getEtalon() != null &&
 						PermissionManager.isPermitted(PermissionManager.Operation.LOAD_ETALON)) {
@@ -122,10 +126,6 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 				} else {
 					Heap.unSetEtalonPair();
 				}
-				// первичная р/г анализируется безусловно - чтобы получить RefAnalysis, который не сохраняется на БД
-				// считаем, что результат будет тем же самым, т.к. параметры анализа загружены те же самые
-				// XXX: вообще, неплохо бы сохранять и RefAnalysis или какую-то его замену - тогда не надо будет проводить повторный анализ.
-				Heap.makePrimaryAnalysis();
 				// загружаем результаты сравнения с эталоном (если есть)
 				// NB: при загрузке всех р/г уже были загружены
 				// результаты анализа. Теперь мы повторно загружаем
