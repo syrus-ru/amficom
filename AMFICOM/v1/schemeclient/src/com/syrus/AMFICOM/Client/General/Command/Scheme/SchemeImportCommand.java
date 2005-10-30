@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.32 2005/10/21 16:46:20 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.33 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		} catch (XmlException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelScheme.getString("Message.error.xml_format_incorrect"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
@@ -88,9 +88,9 @@ public class SchemeImportCommand extends ImportExportCommand {
 			return;
 		}
 		catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		} catch (IOException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 	
@@ -153,7 +153,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 					scheme.setHeight(SCHEME_SIZE.height);
 					SchemeActions.putToGraph(scheme, this.pane);
 				} catch (ApplicationException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 			}
 			break;

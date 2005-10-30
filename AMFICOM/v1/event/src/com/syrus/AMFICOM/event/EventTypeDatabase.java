@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.43 2005/09/14 18:53:52 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.44 2005/10/30 14:49:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/09/14 18:53:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/10/30 14:49:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -208,7 +208,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -416,7 +416,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -454,7 +454,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
+			Log.errorMessage(sqle1);
 		}
 		finally {
 			try {
@@ -470,7 +470,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -492,14 +492,14 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 
-			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql1, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql1.toString());
 
-			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql2, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql2.toString());
 		}
 		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
+			Log.errorMessage(sqle1);
 		}
 		finally {
 			try {
@@ -515,7 +515,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

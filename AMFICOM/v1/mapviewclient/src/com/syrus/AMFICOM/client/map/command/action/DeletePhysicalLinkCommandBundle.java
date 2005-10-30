@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeletePhysicalLinkCommandBundle.java,v 1.33 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: DeletePhysicalLinkCommandBundle.java,v 1.34 2005/10/30 14:48:55 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.33 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.34 $, $Date: 2005/10/30 14:48:55 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -118,7 +118,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 }

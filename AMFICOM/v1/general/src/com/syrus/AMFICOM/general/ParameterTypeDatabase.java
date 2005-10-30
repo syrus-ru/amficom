@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeDatabase.java,v 1.39 2005/10/12 13:06:04 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.40 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/10/12 13:06:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -91,7 +91,7 @@ public final class ParameterTypeDatabase {
 				try {
 					preparedStatement.executeUpdate();
 				} catch (SQLException sqle) {
-					Log.errorException(sqle);
+					Log.errorMessage(sqle);
 					continue;
 				}
 				connection.commit();
@@ -118,7 +118,7 @@ public final class ParameterTypeDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

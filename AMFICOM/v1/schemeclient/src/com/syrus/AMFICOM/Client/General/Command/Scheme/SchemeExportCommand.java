@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.9 2005/10/17 14:59:14 stas Exp $
+ * $Id: SchemeExportCommand.java,v 1.10 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 		try {
 			scheme = this.pane.getCurrentPanel().getSchemeResource().getScheme();
 		} catch (ApplicationException e1) {
-			Log.errorException(e1);
+			Log.errorMessage(e1);
 		}
 		if (scheme != null) {
 
@@ -55,7 +55,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 				final File schemeFile = new File(fileName);
 				saveSchemeXML(schemeFile, xmlScheme);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}		
 		}
 	}

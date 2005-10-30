@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.47 2005/10/22 10:04:18 stas Exp $
+ * $Id: SchemeActions.java,v 1.48 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,8 +96,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.47 $, $Date: 2005/10/22 10:04:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -149,7 +149,7 @@ public class SchemeActions {
 			}
 		}
 		}catch (Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 	
@@ -293,7 +293,7 @@ public class SchemeActions {
 					return true;
 			}
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 		}
 		return false;
 	}
@@ -358,7 +358,7 @@ public class SchemeActions {
 
 			return new DefaultCableLink[] { cell1, cell2 };
 		} catch (CreateObjectException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return null;
 		}
 	}
@@ -383,7 +383,7 @@ public class SchemeActions {
 			}
 			seRes.setData((List<Object>)graph.getArchiveableState(clonedObjects.values().toArray()));
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 	
@@ -395,7 +395,7 @@ public class SchemeActions {
 				ugoRes = SchemeObjectsFactory.createSchemeImageResource();
 				schemeElement.setUgoCell(ugoRes);
 			} catch (CreateObjectException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 				return;
 			}
 
@@ -490,7 +490,7 @@ public class SchemeActions {
 						PortView sourceView = (PortView)schemeGraph.getGraphLayoutCache().getMapping(source, false);
 						p = sourceView.getBounds().getLocation();
 					} catch (CreateObjectException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 						return;
 					}
 				} else {
@@ -809,7 +809,7 @@ public class SchemeActions {
 					return pe;
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 		return null;
@@ -991,7 +991,7 @@ public class SchemeActions {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 
@@ -1045,7 +1045,7 @@ public class SchemeActions {
 			performAutoCommutation(sp, sl, is_source);
 			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		
 		return true;
@@ -1114,7 +1114,7 @@ public class SchemeActions {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 		} catch (final ApplicationException ae) {

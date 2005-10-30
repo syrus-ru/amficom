@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.106 2005/10/25 19:53:10 bass Exp $
+ * $Id: SiteNodeType.java,v 1.107 2005/10/30 14:49:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/10/25 19:53:10 $
+ * @version $Revision: 1.107 $, $Date: 2005/10/30 14:49:01 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType<SiteNodeType>
@@ -436,7 +436,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 				} else {
 					siteNodeType = StorableObjectPool.getStorableObject(expectedId, true);
 					if (siteNodeType == null) {
-						Log.debugMessage("SiteNodeType.createInstance() | WARNING: expected counterpart ("
+						Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -452,7 +452,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 					} else {
 						final String oldCodename = siteNodeType.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("SiteNodeType.createInstance() | WARNING: "
+							Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -473,7 +473,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("SiteNodeType.createInstance() | WARNING: expected counterpart ("
+						Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -491,7 +491,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -514,7 +514,7 @@ public final class SiteNodeType extends StorableObjectType<SiteNodeType>
 		try {
 			return StorableObjectPool.getStorableObject(this.getMapLibraryId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

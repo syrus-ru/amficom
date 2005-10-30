@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMonitoredElementImpl.java,v 1.2 2005/08/20 20:03:29 arseniy Exp $
+ * $Id: IdlMonitoredElementImpl.java,v 1.3 2005/10/30 14:49:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/20 20:03:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/10/30 14:49:06 $
  * @module measurement
  */
 final class IdlMonitoredElementImpl extends IdlMonitoredElement {
@@ -66,7 +66,7 @@ final class IdlMonitoredElementImpl extends IdlMonitoredElement {
 		try {
 			return new MonitoredElement(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

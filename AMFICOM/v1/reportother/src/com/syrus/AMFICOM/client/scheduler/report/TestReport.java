@@ -1,5 +1,5 @@
 /*
- * $Id: TestReport.java,v 1.5 2005/10/26 10:12:31 bass Exp $
+ * $Id: TestReport.java,v 1.6 2005/10/30 14:48:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ public class TestReport {
 				new TestReportTableModel(test,vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			Log.errorMessage("SchemeElementReport.createReport | " + e.getMessage());
-			Log.errorException(e);			
+			Log.errorMessage(e.getMessage());
+			Log.errorMessage(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
 					tableStorableElement.getModelClassName(),

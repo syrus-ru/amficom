@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.5 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.6 2005/10/30 14:48:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 18:13:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 14:48:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -58,7 +58,7 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 			try {
 				tests.add(new Test(testsT[i]));
 			} catch (CreateObjectException coe) {
-				Log.errorException(coe);
+				Log.errorMessage(coe);
 				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_SAVE, IdlCompletionStatus.COMPLETED_NO, coe.getMessage());
 			}
 		}
@@ -82,6 +82,6 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 		} catch (AMFICOMRemoteException are) {
 			throw are;
 		} catch (Throwable throwable) {
-			Log.errorException(throwable);
+			Log.errorMessage(throwable);
 		}
 	}}

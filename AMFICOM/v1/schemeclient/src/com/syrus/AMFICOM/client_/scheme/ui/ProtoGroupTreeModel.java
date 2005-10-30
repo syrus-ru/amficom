@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.9 2005/10/17 14:59:15 stas Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.10 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/10/17 14:59:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -151,7 +151,7 @@ public class ProtoGroupTreeModel extends AbstractChildrenFactory implements Visu
 			}
 		} 
 		catch (ApplicationException ex) {
-			Log.errorException(ex);
+			Log.errorMessage(ex);
 		}
 	}
 

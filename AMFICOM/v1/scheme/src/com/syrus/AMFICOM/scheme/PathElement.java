@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.87 2005/10/27 10:04:13 bass Exp $
+ * $Id: PathElement.java,v 1.88 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/10/27 10:04:13 $
+ * @version $Revision: 1.88 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -335,7 +335,7 @@ public final class PathElement extends StorableObject<PathElement>
 					&& (parentSchemePath.getPathMembers().isEmpty()
 							== (startAbstractSchemePort == null)): NON_NULL_EXPECTED;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 		}
 
 		try {
@@ -557,7 +557,7 @@ public final class PathElement extends StorableObject<PathElement>
 		try {
 			return StorableObjectPool.getStorableObject(this.getEndAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -592,7 +592,7 @@ public final class PathElement extends StorableObject<PathElement>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemePathId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -623,7 +623,7 @@ public final class PathElement extends StorableObject<PathElement>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSchemeCableThreadId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -634,7 +634,7 @@ public final class PathElement extends StorableObject<PathElement>
 		SchemeDevice parentSchemeDevice;
 		if (startAbstractSchemePort == null) {
 			if (endAbstractSchemePort == null) {
-				Log.debugMessage("PathElement.getSchemeElement() | Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
+				Log.debugMessage("Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
 						SEVERE);
 				return null;
 			}
@@ -665,7 +665,7 @@ public final class PathElement extends StorableObject<PathElement>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSchemeLinkId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -727,7 +727,7 @@ public final class PathElement extends StorableObject<PathElement>
 		try {
 			return StorableObjectPool.getStorableObject(this.getStartAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -1299,7 +1299,7 @@ public final class PathElement extends StorableObject<PathElement>
 		try {
 			return this.sequentialNumber + 1 == this.getParentPathOwner().getPathMembers().size();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return true;
 		}
 	}

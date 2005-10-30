@@ -37,7 +37,7 @@ public class PathNewCommand extends AbstractCommand {
 		try {
 			scheme = panel.getSchemeResource().getScheme();
 		} catch (ApplicationException e1) {
-			Log.errorException(e1);
+			Log.errorMessage(e1);
 		}
 		
 		if (scheme == null) {
@@ -80,7 +80,7 @@ public class PathNewCommand extends AbstractCommand {
 			aModel.setEnabled("menuPathCancel", true);
 			aModel.fireModelChanged();			
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 }

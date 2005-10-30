@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.17 2005/09/18 20:07:20 arseniy Exp $
+ * $Id: DatabaseDate.java,v 1.18 2005/10/30 14:48:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/09/18 20:07:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/10/30 14:48:47 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -38,7 +38,7 @@ public class DatabaseDate {
 				date = SDF.parse(dateStr);
 			}
 		} catch (ParseException pe) {
-			Log.errorMessage("DatabaseDate.fromQuerySubString | parse exception '" + pe.getMessage() + '\'');
+			Log.errorMessage("parse exception '" + pe.getMessage() + '\'');
 		}
 		return date;
 	}

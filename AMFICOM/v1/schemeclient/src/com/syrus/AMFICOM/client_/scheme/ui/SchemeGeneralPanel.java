@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.11 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.12 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -443,7 +443,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.scheme.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(this.imageId, true));
 				} catch (ApplicationException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 			}
 			Item item = (Item)this.cmbKindCombo.getSelectedItem();

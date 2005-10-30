@@ -1,5 +1,5 @@
 /*
- * $Id: UserEventNotifier.java,v 1.8 2005/09/11 15:27:43 bass Exp $
+ * $Id: UserEventNotifier.java,v 1.9 2005/10/30 14:49:11 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/11 15:27:43 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/30 14:49:11 $
  * @author $Author: bass $
  * @module leserver
  */
@@ -65,7 +65,7 @@ final class UserEventNotifier extends SleepButWorkThread {
 							delivered = true;
 						}
 						catch (EventNotificationException ene) {
-							Log.errorException(ene);
+							Log.errorMessage(ene);
 						}
 					}
 					else {

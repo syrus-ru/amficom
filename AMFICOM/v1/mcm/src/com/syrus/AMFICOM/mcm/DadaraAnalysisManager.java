@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.71 2005/10/14 11:17:04 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.72 2005/10/30 14:48:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/10/14 11:17:04 $
- * @author $Author: saa $
+ * @version $Revision: 1.72 $, $Date: 2005/10/30 14:48:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -123,7 +123,7 @@ final class DadaraAnalysisManager implements AnalysisManager {
 	}
 
 	public Parameter[] analyse() throws AnalysisException {
-		Log.debugMessage("DadaraAnalysisManager.analyse | entered", Log.DEBUGLEVEL07);
+		Log.debugMessage("entered", Log.DEBUGLEVEL07);
 
 		// output parameters (not Parameter[] yet)
 		final Map<ParameterType, byte[]> outParameters = new HashMap<ParameterType, byte[]>(); // Map<String codename, byte[] rawData>
@@ -139,12 +139,12 @@ final class DadaraAnalysisManager implements AnalysisManager {
 		// Получаем эталон (может быть null, тогда сравнение не проводим)
 		final Etalon etalon = obtainEtalon();
 
-		Log.debugMessage("DadaraAnalysisManager.analyse | bs = " + bs, Log.DEBUGLEVEL08);
-		Log.debugMessage("DadaraAnalysisManager.analyse | ap = " + ap, Log.DEBUGLEVEL08);
-		Log.debugMessage("DadaraAnalysisManager.analyse | etalon = " + etalon, Log.DEBUGLEVEL08);
+		Log.debugMessage("bs = " + bs, Log.DEBUGLEVEL08);
+		Log.debugMessage("ap = " + ap, Log.DEBUGLEVEL08);
+		Log.debugMessage("etalon = " + etalon, Log.DEBUGLEVEL08);
 
 		// === Обрабатываем входные данные, анализируем, сравниваем ===
-		Log.debugMessage("DadaraAnalysisManager.analyse | starting analysis", Log.DEBUGLEVEL07);
+		Log.debugMessage("starting analysis", Log.DEBUGLEVEL07);
 
 		// проводим анализ
 		final AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
@@ -155,7 +155,7 @@ final class DadaraAnalysisManager implements AnalysisManager {
 //		// если есть эталон, то сравниваем:
 //		// дополняем ar результатами сравнения и получаем алармы
 //		final List<ReflectogramMismatchImpl> alarmList = (etalon != null) ? CoreAnalysisManager.compareAndMakeAlarms(ar, etalon) : null;
-//		Log.debugMessage("DadaraAnalysisManager.analyse | alarmList = " + alarmList, Log.DEBUGLEVEL08);
+//		Log.debugMessage("alarmList = " + alarmList, Log.DEBUGLEVEL08);
 //
 //
 //		// === Формируем результаты ===
@@ -200,7 +200,7 @@ final class DadaraAnalysisManager implements AnalysisManager {
 			}
 		}
 
-		Log.debugMessage("DadaraAnalysisManager.analyse | done, returning Parameter[" + ret.length + "]", Log.DEBUGLEVEL07);
+		Log.debugMessage("done, returning Parameter[" + ret.length + "]", Log.DEBUGLEVEL07);
 		return ret;
 	}
 }

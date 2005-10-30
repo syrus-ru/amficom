@@ -151,13 +151,13 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 						LangModelScheme.getString("Message.error.create_scheme_clone"), //$NON-NLS-1$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
-				Log.errorException(e);
+				Log.errorMessage(e);
 			} catch (ApplicationException e) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						LangModelScheme.getString("Message.error.save_scheme") + ": " + e.getMessage(), //$NON-NLS-1$ //$NON-NLS-2$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			
 		} else {

@@ -1,5 +1,5 @@
 /*-
-* $Id: Launcher.java,v 1.6 2005/10/06 13:17:18 bob Exp $
+* $Id: Launcher.java,v 1.7 2005/10/30 14:48:51 bass Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 
 /**
  * local implementation of Винтилйатар
- * @version $Revision: 1.6 $, $Date: 2005/10/06 13:17:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 14:48:51 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -135,7 +135,7 @@ public final class Launcher {
 			System.err.println(msg);	
 			
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
-			Log.errorException(thrown);
+			Log.errorMessage(thrown);
 			
 			StackTraceElement[] stackTrace = thrown.getStackTrace();
 			DefaultMutableTreeNode root = new DefaultMutableTreeNode(thrown);

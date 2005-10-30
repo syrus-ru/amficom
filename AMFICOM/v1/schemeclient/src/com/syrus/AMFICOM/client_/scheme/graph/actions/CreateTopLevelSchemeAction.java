@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.23 2005/10/17 14:59:15 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.24 2005/10/30 14:49:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/10/17 14:59:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/10/30 14:49:19 $
  * @module schemeclient
  */
 
@@ -131,7 +131,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 //				else 
 //					res.setSchemeProtoElement(proto);
 			} catch (ApplicationException e1) {
-				Log.errorException(e1);
+				Log.errorMessage(e1);
 				return;
 			}
 		}
@@ -140,7 +140,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		try {
 			cellContainer = res.getCellContainer();
 		} catch (ApplicationException e1) {
-			Log.errorException(e1);
+			Log.errorMessage(e1);
 		}
 		if (cellContainer == null) {
 			Log.debugMessage(this.getClass().getName() + ": can't create top level for 'null' SchemeCellContainer", Level.FINER);
@@ -187,7 +187,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 					CreateUgo.createProtoUgo((SchemeProtoElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 			SchemeElement se = (SchemeElement)cellContainer;
@@ -201,7 +201,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 				}
 				
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) {
 			//FIXME когда создается УГО для схемы SchemeDevice никуда не добавляется ибо SE не создается, поэтому после выхода он пропадает
@@ -214,7 +214,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 				sir = SchemeObjectsFactory.createSchemeImageResource();
 				cellContainer.setUgoCell(sir);
 			} catch (ApplicationException ex) {
-				Log.errorException(ex);
+				Log.errorMessage(ex);
 				return;
 			}
 		}

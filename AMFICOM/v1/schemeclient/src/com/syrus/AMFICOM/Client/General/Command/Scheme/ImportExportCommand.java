@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.12 2005/10/10 11:07:38 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.13 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -558,7 +558,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				stubProtoEquipment1 = protoEquipments.iterator().next();
 			}
 		} catch (ApplicationException e1) {
-			Log.errorException(e1);
+			Log.errorMessage(e1);
 		}
 		final ProtoEquipment stubProtoEquipment = stubProtoEquipment1;
 		
@@ -806,7 +806,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				});				
 			}
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 	

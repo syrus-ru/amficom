@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlServerImpl.java,v 1.4 2005/09/14 19:01:24 arseniy Exp $
+ * $Id: IdlServerImpl.java,v 1.5 2005/10/30 14:48:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/09/14 19:01:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 14:48:49 $
  * @module administration
  */
 final class IdlServerImpl extends IdlServer {
@@ -60,7 +60,7 @@ final class IdlServerImpl extends IdlServer {
 		try {
 			return new Server(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, Level.SEVERE);
+			Log.debugMessage(coe, Level.SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

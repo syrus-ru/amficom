@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.9 2005/10/19 14:37:10 stas Exp $
+ * $Id: TraceLoadDialog.java,v 1.10 2005/10/30 14:49:13 bass Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/10/19 14:37:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 14:49:13 $
  * @module analysis
  */
 
@@ -148,7 +148,7 @@ public class TraceLoadDialog {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			if (selectedResults.isEmpty()) {
 				// XXX: error processing: выдать сообщение об ошибке, что нет результатов

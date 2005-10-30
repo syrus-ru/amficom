@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmReceiver.java,v 1.1 2005/10/26 13:51:56 bass Exp $
+ * $Id: AlarmReceiver.java,v 1.2 2005/10/30 14:48:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ public class AlarmReceiver implements PopupMessageReceiver {
 				}
 			}
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 }

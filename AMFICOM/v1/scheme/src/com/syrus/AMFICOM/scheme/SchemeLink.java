@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.98 2005/10/25 19:53:13 bass Exp $
+ * $Id: SchemeLink.java,v 1.99 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.99 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
@@ -469,7 +469,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -615,7 +615,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 
 		final Identifier parentSchemeId1 = super.getParentSchemeId();
 		if (parentSchemeId1.isVoid()) {
-			Log.debugMessage("SchemeLink.getParentSchemeId() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
+			Log.debugMessage("Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
 					FINE);
 		}
 		return parentSchemeId1;
@@ -632,7 +632,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 		if (parentSchemeElementIdVoid) {
-			Log.debugMessage("SchemeLink.getParentSchemeElementId() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
+			Log.debugMessage("Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
 					FINE);
 		}
 		return this.parentSchemeElementId;
@@ -645,7 +645,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -661,7 +661,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			Log.debugMessage("SchemeLink.getParentSchemeProtoElementId() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
+			Log.debugMessage("Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
 					FINE);
 		}
 		return this.parentSchemeProtoElementId;
@@ -674,7 +674,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -692,7 +692,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

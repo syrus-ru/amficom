@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.105 2005/10/25 19:53:09 bass Exp $
+ * $Id: PortType.java,v 1.106 2005/10/30 14:48:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/10/25 19:53:09 $
+ * @version $Revision: 1.106 $, $Date: 2005/10/30 14:48:45 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -159,7 +159,7 @@ public final class PortType extends StorableObjectType<PortType>
 				} else {
 					portType = StorableObjectPool.getStorableObject(expectedId, true);
 					if (portType == null) {
-						Log.debugMessage("PortType.createInstance() | WARNING: expected counterpart ("
+						Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -173,7 +173,7 @@ public final class PortType extends StorableObjectType<PortType>
 					} else {
 						final String oldCodename = portType.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("PortType.createInstance() | WARNING: "
+							Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -194,7 +194,7 @@ public final class PortType extends StorableObjectType<PortType>
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("PortType.createInstance() | WARNING: expected counterpart ("
+						Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -212,7 +212,7 @@ public final class PortType extends StorableObjectType<PortType>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

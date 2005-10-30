@@ -1,5 +1,5 @@
 /*-
-* $Id: TestView.java,v 1.6 2005/10/25 12:01:56 bob Exp $
+* $Id: TestView.java,v 1.7 2005/10/30 14:48:48 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/25 12:01:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 14:48:48 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -91,11 +91,11 @@ public final class TestView {
 		this.createQuality();
 //		final long t5 = System.currentTimeMillis();
 		
-//		assert Log.debugMessage("TestView.TestView | " + test + " createKISName " + (t1-t0), Log.DEBUGLEVEL03);
-//		assert Log.debugMessage("TestView.TestView | " + test + " createMeasurementPortName " + (t2-t1), Log.DEBUGLEVEL03);
-//		assert Log.debugMessage("TestView.TestView | " + test + " createTemporalNames " + (t3-t2), Log.DEBUGLEVEL03);
-//		assert Log.debugMessage("TestView.TestView | " + test + " createMeasurements " + (t4-t3), Log.DEBUGLEVEL03);
-//		assert Log.debugMessage("TestView.TestView | " + test + " createQuality " + (t5-t4), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage(test + " createKISName " + (t1-t0), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage(test + " createMeasurementPortName " + (t2-t1), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage(test + " createTemporalNames " + (t3-t2), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage(test + " createMeasurements " + (t4-t3), Log.DEBUGLEVEL03);
+//		assert Log.debugMessage(test + " createQuality " + (t5-t4), Log.DEBUGLEVEL03);
 	}
 
 	@Override
@@ -218,12 +218,12 @@ public final class TestView {
 						final NumberFormat numberFormat = NumberFormat.getInstance();
 						numberFormat.setMaximumFractionDigits(3);
 						final double d = reflectometryEvaluationOverallResult.getD();
-						assert Log.debugMessage("TestView.createQuality | d:" + d,
+						assert Log.debugMessage("d:" + d,
 							Log.DEBUGLEVEL10);
 						this.testD = numberFormat.format(d);
 						numberFormat.setMaximumFractionDigits(2);
 						final double q = reflectometryEvaluationOverallResult.getQ();
-						assert Log.debugMessage("TestView.createQuality | q:" + q,
+						assert Log.debugMessage("q:" + q,
 							Log.DEBUGLEVEL10);
 						this.testQ = numberFormat.format(q);
 					}

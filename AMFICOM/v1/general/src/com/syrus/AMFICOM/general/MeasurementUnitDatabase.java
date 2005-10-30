@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnitDatabase.java,v 1.3 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: MeasurementUnitDatabase.java,v 1.4 2005/10/30 14:49:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/10/30 14:49:08 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -93,7 +93,7 @@ public final class MeasurementUnitDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 

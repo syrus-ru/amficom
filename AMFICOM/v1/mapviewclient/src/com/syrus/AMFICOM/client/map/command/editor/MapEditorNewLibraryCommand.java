@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLibraryCommand.java,v 1.12 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: MapEditorNewLibraryCommand.java,v 1.13 2005/10/30 14:48:57 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 14:48:57 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -88,10 +88,10 @@ public class MapEditorNewLibraryCommand extends AbstractCommand {
 				setResult(Command.RESULT_CANCEL);
 			}
 		} catch(CreateObjectException e) {
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 			setResult(Command.RESULT_NO);
 		} catch(ApplicationException e) {
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 			setResult(Command.RESULT_NO);
 		}
 	}

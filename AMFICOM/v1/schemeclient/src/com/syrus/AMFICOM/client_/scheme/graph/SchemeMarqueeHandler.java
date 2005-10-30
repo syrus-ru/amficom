@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.36 2005/10/22 09:05:42 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.37 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2005/10/22 09:05:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/10/30 14:49:21 $
  * @module schemeclient
  */
 
@@ -260,7 +260,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							Notifier.notify(graph, graph.aContext,
 									((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getScheme());
 						} catch (ApplicationException e) {
-							Log.errorException(e);
+							Log.errorMessage(e);
 						}
 					}
 					
@@ -440,7 +440,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			try {
 				types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			} catch (ApplicationException e1) {
-				Log.errorException(e1);
+				Log.errorMessage(e1);
 			}
 			if (types.isEmpty()) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -472,7 +472,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							graph.snap(graph.fromScreen(p)), name, directionType, color, schemePort.getId());
 				}
 			} catch (ApplicationException e1) {
-				Log.errorException(e1);
+				Log.errorMessage(e1);
 			}
 		}
 	}
@@ -523,7 +523,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						DeviceCell cell = SchemeActions.createDevice(graph, "", this.bounds, device.getId());  //$NON-NLS-1$
 						cell.setSchemeDeviceId(device.getId());
 					} catch (ApplicationException e1) {
-						Log.errorException(e1);
+						Log.errorMessage(e1);
 					}
 				} else if (this.r.isSelected()) {
 					graph.addVertex("", this.bounds, false, Color.black); //$NON-NLS-1$
@@ -539,7 +539,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						try {
 							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 						} catch (ApplicationException e1) {
-							Log.errorException(e1);
+							Log.errorMessage(e1);
 						}
 						if (types.isEmpty()) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -556,7 +556,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							try {
 								scheme = ((SchemePanel)panel).getSchemeResource().getScheme();
 							} catch (ApplicationException e2) {
-								Log.errorException(e2);
+								Log.errorMessage(e2);
 							}
 						}
 						if (scheme != null) {
@@ -579,7 +579,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 											JOptionPane.ERROR_MESSAGE);
 								}
 							} catch (ApplicationException e1) {
-								Log.errorException(e1);
+								Log.errorMessage(e1);
 							}
 						}
 					}
@@ -592,7 +592,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						try {
 							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 						} catch (ApplicationException e1) {
-							Log.errorException(e1);
+							Log.errorMessage(e1);
 						}
 						if (types.isEmpty()) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -646,7 +646,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 										JOptionPane.ERROR_MESSAGE);
 							}
 						} catch (ApplicationException e1) {
-							Log.errorException(e1);
+							Log.errorMessage(e1);
 							return;
 						}
 					}

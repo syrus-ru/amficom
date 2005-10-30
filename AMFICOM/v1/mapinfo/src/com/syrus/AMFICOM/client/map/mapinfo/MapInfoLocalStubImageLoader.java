@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.21 2005/09/26 12:00:31 krupenn Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.22 2005/10/30 14:49:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/09/26 12:00:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 14:49:00 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -66,7 +66,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 		if(!this.alreadyPerformed ) {
 			//Осуществляется ПЕРВЫЙ поиск по всем слоям с надписями - тот, который сильно тормозит из-за
 			//MapJшного кэширования таблиц.
-			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | Starting first search.", Level.FINE);
+			Log.debugMessage("Starting first search.", Level.FINE);
 			long t1 = System.currentTimeMillis();
 			this.alreadyPerformed = true;
 			for (SpatialLayer spatialLayer : this.connection.getLayers()){
@@ -78,7 +78,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 					this.findSpatialObjects(miSpatialLayer,FIRST_SEARCH_STRING);
 			}
 			long t2 = System.currentTimeMillis();			
-			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | First search completed ( "+ (t2 - t1) + " ms).", Level.FINE);
+			Log.debugMessage("First search completed ( "+ (t2 - t1) + " ms).", Level.FINE);
 		}
 	}
 
@@ -200,8 +200,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 			long t3 = System.currentTimeMillis();			
 			featureSet.dispose();
 			
-			Log.debugMessage("MapInfoLocalStubImageLoader.findSpatialObjects | " + 
-					+ (t2 - t1) + "ms - searching all\n"
+			Log.debugMessage((t2 - t1) + "ms - searching all\n"
 					+ (t3 - t2) + "ms - comparing all, particulary:\n"
 					+ sumGettingFeature + "ms - sumGettingFeature\n"
 					+ sumGettingStringAttributes + "ms - sumGettingStringAttributes\n"

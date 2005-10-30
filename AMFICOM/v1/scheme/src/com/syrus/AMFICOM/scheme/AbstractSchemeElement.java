@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.70 2005/10/25 19:53:13 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.71 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.71 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
@@ -161,7 +161,7 @@ public abstract class AbstractSchemeElement<T extends AbstractSchemeElement<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

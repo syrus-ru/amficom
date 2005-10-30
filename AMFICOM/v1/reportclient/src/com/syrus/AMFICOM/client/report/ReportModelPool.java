@@ -1,5 +1,5 @@
 /*
- * $Id: ReportModelPool.java,v 1.3 2005/10/08 13:30:14 arseniy Exp $
+ * $Id: ReportModelPool.java,v 1.4 2005/10/30 14:48:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.util.Log;
 
 /**
  * Ïףכ הכÿ למהוכוי מעק¸עמג.
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/10/08 13:30:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/10/30 14:48:46 $
  * @module reportclient
  */
 public class ReportModelPool {
@@ -29,8 +29,8 @@ public class ReportModelPool {
 				result = (ReportModel) Class.forName(modelClassName).newInstance();
 				pool.put(modelClassName,result);
 			} catch (Exception e) {
-				Log.errorMessage("ReportBuilder.build | Can't create model for name " + modelClassName);
-				Log.errorException(e);
+				Log.errorMessage("Can't create model for name " + modelClassName);
+				Log.errorMessage(e);
 				throw new CreateModelException (modelClassName);			
 			}
 		}

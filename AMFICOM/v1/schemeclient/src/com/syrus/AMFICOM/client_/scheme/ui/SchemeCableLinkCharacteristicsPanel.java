@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.12 2005/08/09 06:52:52 stas Exp $
+ * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.13 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/09 06:52:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -66,7 +66,7 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 				showNoSelection();
 			}
 		} 

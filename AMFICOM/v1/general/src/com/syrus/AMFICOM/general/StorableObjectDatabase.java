@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.199 2005/10/22 14:08:26 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.200 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.199 $, $Date: 2005/10/22 14:08:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.200 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  * Предпочтительный уровень отладочных сообщений: 9
@@ -281,7 +281,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -409,7 +409,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -462,7 +462,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					linkedCodes.add(EnumUtil.valueOf(enumClass, resultSet.getInt(linkedCodeColumnName)));
 				} catch (IllegalArgumentException iae) {
-					Log.errorException(iae);
+					Log.errorMessage(iae);
 				}
 			}
 
@@ -491,7 +491,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -528,7 +528,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 			finally {
 				if (connection != null) {
@@ -591,7 +591,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -655,7 +655,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -702,7 +702,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					connection.rollback();
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 			final String mesg = "Cannot insert " + this.getEntityName() + " '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
@@ -720,7 +720,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -770,7 +770,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					connection.rollback();
 				} catch (SQLException sqle1) {
-					Log.errorException(sqle1);
+					Log.errorMessage(sqle1);
 				}
 			}
 			final String mesg = "Cannot insert linked entity  '" + linkedId + "' for '" + id + "' -- " + sqle.getMessage();
@@ -789,7 +789,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -842,7 +842,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					connection.rollback();
 				} catch (SQLException sqle1) {
-					Log.errorException(sqle1);
+					Log.errorMessage(sqle1);
 				}
 			}
 			final String mesg = "Cannot insert linked enum  '" + linkedEnum + "' for '" + id + "' -- " + sqle.getMessage();
@@ -861,7 +861,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -955,7 +955,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					try {
 						connection.rollback();
 					} catch (SQLException sqle1) {
-						Log.errorException(sqle1);
+						Log.errorMessage(sqle1);
 					}
 					throw new UpdateObjectException("Cannot set entity for prepared statement -- " + ide.getMessage(), ide);
 				}
@@ -971,7 +971,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					connection.rollback();
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 			final String mesg = "Cannot update " + this.getEntityName() + " '" + id + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
@@ -990,7 +990,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1190,7 +1190,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			statement.executeUpdate(stringBuffer.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
+			Log.errorMessage(sqle1);
 		} finally {
 			try {
 				try {
@@ -1205,7 +1205,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1247,7 +1247,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
+			Log.errorMessage(sqle1);
 		} finally {
 			try {
 				try {
@@ -1262,7 +1262,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1312,7 +1312,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
+			Log.errorMessage(sqle1);
 		} finally {
 			try {
 				try {
@@ -1327,7 +1327,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1474,7 +1474,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			conditionQuery = databaseStorableObjectCondition.getSQLQuery();
 		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
+			Log.errorMessage(ioee);
 			conditionQuery = DatabaseStorableObjectCondition.FALSE_CONDITION;
 		}
 		return conditionQuery;
@@ -1496,17 +1496,17 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
 		} catch (ClassNotFoundException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		} catch (SecurityException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		} catch (NoSuchMethodException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		} catch (IllegalArgumentException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		} catch (InstantiationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		} catch (IllegalAccessException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
@@ -1517,7 +1517,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					assert false : message;
 				}
 			} else {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 		return databaseStorableObjectCondition;

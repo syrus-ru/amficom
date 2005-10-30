@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.37 2005/10/22 16:02:29 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.38 2005/10/30 14:48:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/10/22 16:02:29 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/30 14:48:46 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
@@ -195,7 +195,7 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 		try {
 			return pack(data1);
 		} catch (IOException ioe) {
-			Log.errorException(ioe);
+			Log.errorMessage(ioe);
 		}
 		return new byte[0];
 	}
@@ -207,9 +207,9 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 		try {
 			return unpack(packedData);
 		} catch (IOException ioe) {
-			Log.errorException(ioe);
+			Log.errorMessage(ioe);
 		} catch (ClassNotFoundException cnfe) {
-			Log.errorException(cnfe);
+			Log.errorMessage(cnfe);
 		}
 		return Collections.emptyList();
 	}

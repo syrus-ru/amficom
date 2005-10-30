@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.200 2005/10/25 19:53:04 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.201 2005/10/30 14:49:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.200 $, $Date: 2005/10/25 19:53:04 $
+ * @version $Revision: 1.201 $, $Date: 2005/10/30 14:49:08 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -298,7 +298,7 @@ public final class StorableObjectPool {
 					try {
 						putStorableObject(storableObject);
 					} catch (final IllegalObjectEntityException ioee) {
-						Log.errorException(ioee);
+						Log.errorMessage(ioee);
 					}
 			}
 			return storableObject;
@@ -476,7 +476,7 @@ public final class StorableObjectPool {
 				if (breakOnLoadError) {
 					throw ae;
 				}
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 				loadedObjects = Collections.emptySet();
 			}
 			assert loadedObjects != null : ErrorMessages.NON_NULL_EXPECTED; 
@@ -1018,7 +1018,7 @@ public final class StorableObjectPool {
 				try {
 					Thread.sleep(LOCK_TIME_WAIT);
 				} catch (InterruptedException ie) {
-					Log.errorException(ie);
+					Log.errorMessage(ie);
 				}
 			}
 			if (!LOCKED_IDS.contains(id)) {
@@ -1056,7 +1056,7 @@ public final class StorableObjectPool {
 				storableObjects.add(storableObject);
 			} catch (final ApplicationException ae) {
 				if (continueOnError) {
-					Log.debugException(ae, Level.SEVERE);
+					Log.debugMessage(ae, Level.SEVERE);
 					continue;
 				} // else
 				throw ae;
@@ -1093,7 +1093,7 @@ public final class StorableObjectPool {
 			try {
 				storableObject = (T) transferable.getNative();
 			} catch (final IdlCreateObjectException coe) {
-				Log.debugException(coe, Level.SEVERE);
+				Log.debugMessage(coe, Level.SEVERE);
 				throw new CreateObjectException(coe.detailMessage);
 			}
 		}
@@ -1274,7 +1274,7 @@ public final class StorableObjectPool {
 		try {
 			localStorableObject.fromTransferable(remoteStorableObject.getTransferable(CRUTCH_ORB));
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -1293,7 +1293,7 @@ public final class StorableObjectPool {
 					putStorableObjects(storableObjects);
 				} catch (IllegalObjectEntityException e) {
 					Log.errorMessage("Cannot get entity '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 				final long time1 = System.currentTimeMillis();
 				refresh(Identifier.createIdentifiers(storableObjects));

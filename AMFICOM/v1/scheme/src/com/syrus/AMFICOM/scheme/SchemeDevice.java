@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.109 2005/10/25 19:53:13 bass Exp $
+ * $Id: SchemeDevice.java,v 1.110 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.109 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.110 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -314,7 +314,7 @@ public final class SchemeDevice
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -440,7 +440,7 @@ public final class SchemeDevice
 		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 		if (parentSchemeElementIdVoid) {
-			Log.debugMessage("SchemeDevice.getParentSchemeElementId() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
+			Log.debugMessage("Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
 					FINE);
 		}
 		return this.parentSchemeElementId;
@@ -453,7 +453,7 @@ public final class SchemeDevice
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -466,7 +466,7 @@ public final class SchemeDevice
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (parentSchemeProtoElementIdVoid) {
-			Log.debugMessage("SchemeDevice.getParentSchemeProtoElementId() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
+			Log.debugMessage("Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
 					FINE);
 		}
 		return this.parentSchemeProtoElementId;
@@ -479,7 +479,7 @@ public final class SchemeDevice
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

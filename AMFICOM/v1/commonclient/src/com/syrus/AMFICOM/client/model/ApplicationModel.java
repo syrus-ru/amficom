@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.11 2005/10/21 12:36:41 bob Exp $
+ * $Id: ApplicationModel.java,v 1.12 2005/10/30 14:48:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
  * ћодель приложени€ описывает действи€, которые пользователь (оператор) может
  * производить с системой
  * 
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/10/21 12:36:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/10/30 14:48:51 $
  * @module commonclient
  */
 public class ApplicationModel {
@@ -91,7 +91,7 @@ public class ApplicationModel {
 					final boolean accessible,
 					final boolean selected) {
 		if (command == null) {
-			Log.debugMessage("ApplicationModel.add | name: " + name + " , command is null ", Level.WARNING);
+			Log.debugMessage("name: " + name + " , command is null ", Level.WARNING);
 			this.add(name, VoidCommand.VOID_COMMAND, installed, visible, usable, accessible, selected);
 		} else {
 			this.appications.put(name, new ApplicationEntry(name, command, installed, visible, usable, accessible, selected));
@@ -289,7 +289,7 @@ public class ApplicationModel {
 			}
 			return entry.command;
 		} catch (NoSuchMethodException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return VoidCommand.VOID_COMMAND;
 		}
 	}
@@ -345,8 +345,8 @@ public class ApplicationModel {
 	 * и флаги видимости и доступности команды пользователю. конструктора без
 	 * параметров нет, так как элемент определ€етс€ идентификатором
 	 * 
-	 * @author $Author: bob $
-	 * @version $Revision: 1.11 $, $Date: 2005/10/21 12:36:41 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.12 $, $Date: 2005/10/30 14:48:51 $
 	 * @module commonclient
 	 */
 	class ApplicationEntry {

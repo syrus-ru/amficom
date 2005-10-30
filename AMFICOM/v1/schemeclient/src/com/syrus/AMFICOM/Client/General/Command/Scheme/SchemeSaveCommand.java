@@ -112,7 +112,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 					try {
 						se.setSchemeCell(SchemeObjectsFactory.createSchemeImageResource());
 					} catch (CreateObjectException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 						return;
 					}
 				}
@@ -136,7 +136,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			this.schemeTab.setGraphChanged(false);
 			return;
@@ -192,7 +192,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 						LangModelScheme.getString("Message.error.save_scheme") + ": " + e.getMessage(), //$NON-NLS-1$ //$NON-NLS-2$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}

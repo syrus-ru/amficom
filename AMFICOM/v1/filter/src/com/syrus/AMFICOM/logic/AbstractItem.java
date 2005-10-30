@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.21 2005/09/20 12:31:07 bob Exp $
+ * $Id: AbstractItem.java,v 1.22 2005/10/30 14:48:52 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/20 12:31:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 14:48:52 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -78,7 +78,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 
 	public void addChild(Item childItem) {
-		assert Log.debugMessage("AbstractItem.addChild | this.name: " + this.toString() + " \n\t name: "
+		assert Log.debugMessage("this.name: " + this.toString() + " \n\t name: "
 				+ childItem.toString(), Log.DEBUGLEVEL10);
 
 		if (!this.canHaveChildren())
@@ -112,7 +112,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 
 	public void setParent(Item parent) {
-		assert Log.debugMessage("AbstractItem.setParent | name:" + this.toString() + "\n\tparent:"
+		assert Log.debugMessage("name:" + this.toString() + "\n\tparent:"
 				+ (parent == null ? "'null'" : parent.toString()), Log.DEBUGLEVEL10);
 
 		Item oldParent = this.parent;

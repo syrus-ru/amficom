@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.33 2005/10/18 06:46:46 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.34 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.33 $, $Date: 2005/10/18 06:46:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @module general
  */
 public class StorableObjectXMLDriver extends StorableObjectXMLData {
@@ -121,8 +121,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 
 
 	private Object parse(final Node node) throws IllegalDataException {
-//		Log.debugMessage("StorableObjectXMLDriver.parse | node name:" +
-//		node.getNodeName(), Log.INFO);
+//		Log.debugMessage("node name:" + node.getNodeName(), Log.INFO);
 		Object object = null;
 		final NamedNodeMap attributes = node.getAttributes();
 		if (attributes == null)
@@ -153,7 +152,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 				object = this.getObject(node.getChildNodes(), className);
 			}
 		} else
-			Log.errorMessage("StorableObjectXMLDriver.parse | there is no attributes for : " + node.getNodeName());
+			Log.errorMessage("there is no attributes for : " + node.getNodeName());
 		return object;
 	}
 
@@ -173,7 +172,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 	private void addObject(final Node node, final String key, final Object object) {
 		final Element element = this.doc.createElement(key);
 		if (object == null) {
-			Log.errorMessage("StorableObjectXMLDriver.addObject | key : " + key + " , value is 'null'");
+			Log.errorMessage("key : " + key + " , value is 'null'");
 			return;
 		}
 		
@@ -230,7 +229,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 		try {
 			final NodeList sizeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/" + identifier.getIdentifierString());
 			if (sizeList.getLength() > 1) {
-				Log.errorMessage("StorableObjectXMLDriver.deleteObject | more that one entity with id "
+				Log.errorMessage("more that one entity with id "
 						+ identifier.getIdentifierString());
 				return;
 			}
@@ -240,7 +239,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 				this.root.removeChild(children);
 			}
 		} catch (TransformerException te) {
-			Log.errorException(te);
+			Log.errorMessage(te);
 		}
 	}
 
@@ -271,11 +270,11 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 			return this.doc;
 		} catch (SAXException e) {
 			// A parsing error occurred; the xml input is not valid
-			Log.errorMessage("StorableObjectXMLDriver.parseXmlFile | Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		} catch (ParserConfigurationException e) {
-			Log.errorMessage("StorableObjectXMLDriver.parseXmlFile | Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		} catch (IOException e) {
-			Log.errorMessage("StorableObjectXMLDriver.parseXmlFile | Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		}
 		return null;
 	}
@@ -296,11 +295,11 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
-			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		} catch (TransformerException e) {
-			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		} catch (FileNotFoundException e) {
-			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		}
 	}
 

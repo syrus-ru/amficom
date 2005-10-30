@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.123 2005/10/25 19:53:04 bass Exp $
+ * $Id: StorableObject.java,v 1.124 2005/10/30 14:49:08 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.123 $, $Date: 2005/10/25 19:53:04 $
+ * @version $Revision: 1.124 $, $Date: 2005/10/30 14:49:08 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -422,7 +422,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 			try {
 				storableObjects.add((T) idlStorableObject.getNative());
 			} catch (IdlCreateObjectException coe) {
-				Log.errorException(coe);
+				Log.errorMessage(coe);
 			}
 		}
 		return storableObjects;
@@ -668,7 +668,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.123 $, $Date: 2005/10/25 19:53:04 $
+	 * @version $Revision: 1.124 $, $Date: 2005/10/30 14:49:08 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -793,7 +793,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.123 $, $Date: 2005/10/25 19:53:04 $
+	 * @version $Revision: 1.124 $, $Date: 2005/10/30 14:49:08 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

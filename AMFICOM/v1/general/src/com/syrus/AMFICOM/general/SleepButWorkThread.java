@@ -1,5 +1,5 @@
 /*
- * $Id: SleepButWorkThread.java,v 1.14 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: SleepButWorkThread.java,v 1.15 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -47,7 +47,7 @@ public abstract class SleepButWorkThread extends Thread {
 			try {
 				sleep(this.timeToSleep);
 			} catch (InterruptedException ie) {
-				Log.errorException(ie);
+				Log.errorMessage(ie);
 			}
 			this.timeToSleep = this.timeToSleep * TIME_MULTIPLIER;
 		} else {

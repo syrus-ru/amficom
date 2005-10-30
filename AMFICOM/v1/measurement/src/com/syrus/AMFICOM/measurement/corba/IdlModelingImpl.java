@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlModelingImpl.java,v 1.4 2005/08/25 20:13:57 arseniy Exp $
+ * $Id: IdlModelingImpl.java,v 1.5 2005/10/30 14:49:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/25 20:13:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 14:49:05 $
  * @module measurement
  */
 final class IdlModelingImpl extends IdlModeling {
@@ -60,7 +60,7 @@ final class IdlModelingImpl extends IdlModeling {
 		try {
 			return new Modeling(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.110 2005/10/22 14:11:55 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.111 2005/10/30 14:49:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/10/22 14:11:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.111 $, $Date: 2005/10/30 14:49:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -258,7 +258,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -340,7 +340,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -406,7 +406,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

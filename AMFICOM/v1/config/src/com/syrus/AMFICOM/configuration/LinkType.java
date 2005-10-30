@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.88 2005/10/25 19:53:09 bass Exp $
+ * $Id: LinkType.java,v 1.89 2005/10/30 14:48:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/10/25 19:53:09 $
+ * @version $Revision: 1.89 $, $Date: 2005/10/30 14:48:45 $
  * @author $Author: bass $
  * @module config
  */
@@ -156,7 +156,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 				} else {
 					linkType = StorableObjectPool.getStorableObject(expectedId, true);
 					if (linkType == null) {
-						Log.debugMessage("LinkType.createInstance() | WARNING: expected counterpart ("
+						Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -170,7 +170,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 					} else {
 						final String oldCodename = linkType.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("LinkType.createInstance() | WARNING: "
+							Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -191,7 +191,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("LinkType.createInstance() | WARNING: expected counterpart ("
+						Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -209,7 +209,7 @@ public final class LinkType extends AbstractLinkType<LinkType> implements XmlBea
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

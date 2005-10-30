@@ -18,8 +18,8 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/06 08:07:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 14:48:51 $
+ * @author $Author: bass $
  * @module commonclient
  */
 public final class WrapperedListModel<T> extends AbstractListModel implements MutableComboBoxModel, Serializable {
@@ -162,14 +162,14 @@ public final class WrapperedListModel<T> extends AbstractListModel implements Mu
 
 	// implements javax.swing.MutableComboBoxModel
 	public void addElement(final Object anObject) {
-		Log.debugMessage("WrapperedListModel.addElement | before " + this.ts, Log.DEBUGLEVEL10);
+		Log.debugMessage("before " + this.ts, Log.DEBUGLEVEL10);
 		this.ts.add((T) anObject);
 		this.sort();
 		super.fireIntervalAdded(this, this.ts.size() - 1, this.ts.size() - 1);
 		if (this.ts.size() == 1 && this.selectedT == null && anObject != null) {
 			this.setSelectedItem(anObject);
 		}
-		Log.debugMessage("WrapperedListModel.addElement | after " + this.ts, Log.DEBUGLEVEL10);
+		Log.debugMessage("after " + this.ts, Log.DEBUGLEVEL10);
 	}
 
 	public void addElements(final Collection<T> addingObjects) {

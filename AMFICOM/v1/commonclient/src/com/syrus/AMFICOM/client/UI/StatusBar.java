@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.9 2005/10/06 13:16:51 bob Exp $
+ * $Id: StatusBar.java,v 1.10 2005/10/30 14:48:51 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/06 13:16:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 14:48:51 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -219,7 +219,7 @@ public class StatusBar implements PropertyChangeListener {
 				}
 			}
 		} else {
-			Log.debugMessage("StatusBar.addTimerField | fieldId '" + fieldId + "' not found.", Level.FINEST);
+			Log.debugMessage("fieldId '" + fieldId + "' not found.", Level.FINEST);
 		}
 	}
 

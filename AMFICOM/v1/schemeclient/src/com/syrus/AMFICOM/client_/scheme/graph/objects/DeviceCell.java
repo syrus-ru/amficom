@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceCell.java,v 1.9 2005/09/20 19:47:52 stas Exp $
+ * $Id: DeviceCell.java,v 1.10 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/20 19:47:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 14:49:21 $
  * @module schemeclient
  */
 
@@ -88,7 +88,7 @@ public class DeviceCell extends DefaultGraphCell implements IdentifiableCell {
 		try {
 			return (SchemeDevice) StorableObjectPool.getStorableObject(this.schemeDeviceId, true);
 		} catch (ApplicationException ex) {
-			Log.errorException(ex);
+			Log.errorMessage(ex);
 			return null;
 		}
 	}

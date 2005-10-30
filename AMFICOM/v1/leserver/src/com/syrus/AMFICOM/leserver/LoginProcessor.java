@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.21 2005/10/26 09:07:13 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.22 2005/10/30 14:49:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/26 09:07:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 14:49:11 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -81,7 +81,7 @@ final class LoginProcessor extends SleepButWorkThread {
 			}
 		}
 		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
+			Log.errorMessage(roe);
 		}
 	}
 
@@ -109,7 +109,7 @@ final class LoginProcessor extends SleepButWorkThread {
 				sleep(super.initialTimeToSleep);
 			}
 			catch (InterruptedException ie) {
-				Log.errorException(ie);
+				Log.errorMessage(ie);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ final class LoginProcessor extends SleepButWorkThread {
 				corbaServer.deactivateServant(servantName, false);
 			}
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -147,7 +147,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		try {
 			userLoginDatabase.insert(userLogin);
 		} catch (CreateObjectException coe) {
-			Log.errorException(coe);
+			Log.errorMessage(coe);
 		}
 		printUserLogins();
 		return userLogin.getSessionKey();
@@ -175,7 +175,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		try {
 			userLoginDatabase.update(userLogin);
 		} catch (final UpdateObjectException uoe) {
-			Log.errorException(uoe);
+			Log.errorMessage(uoe);
 		}
 		printUserLogins();
 	}
@@ -198,7 +198,7 @@ final class LoginProcessor extends SleepButWorkThread {
 				try {
 					systemUser = StorableObjectPool.getStorableObject(userId, true);
 				} catch (ApplicationException ae) {
-					Log.errorException(ae);
+					Log.errorMessage(ae);
 				}
 
 				stringBuffer.append("\n");

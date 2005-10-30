@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapMouseListener.java,v 1.70 2005/10/25 08:02:45 krupenn Exp $$
+ * $$Id: MapMouseListener.java,v 1.71 2005/10/30 14:48:57 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * события передается текущему активному элементу карты (посредством объекта
  * MapStrategy)
  * 
- * @version $Revision: 1.70 $, $Date: 2005/10/25 08:02:45 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.71 $, $Date: 2005/10/30 14:48:57 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -177,7 +177,7 @@ public final class MapMouseListener implements MouseListener {
 					Log
 							.debugMessage(
 									"MapMouseListener::mousePressed | current execution point with call stack:", Level.SEVERE); //$NON-NLS-1$
-					Log.debugException(e, Level.SEVERE);
+					Log.debugMessage(e, Level.SEVERE);
 				}
 				break;
 		}// switch (mapState.getOperationMode()
@@ -495,7 +495,7 @@ public final class MapMouseListener implements MouseListener {
 							Log
 									.debugMessage(
 											"MapMouseListener::mouseReleased | current execution point with call stack:", Level.SEVERE); //$NON-NLS-1$
-							Log.debugException(e, Level.SEVERE);
+							Log.debugMessage(e, Level.SEVERE);
 						}
 						break;
 				}// switch (mapState.getOperationMode()

@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.174 2005/10/25 19:53:05 bass Exp $
+ * $Id: Test.java,v 1.175 2005/10/30 14:49:05 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.174 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.175 $, $Date: 2005/10/30 14:49:05 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -538,7 +538,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupIds.iterator().next(),
 						true);
 			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 		}
 	}
@@ -555,7 +555,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 						true);
 				this.kisId = measurementPort.getKISId();
 			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 		}
 		return this.kisId;
@@ -567,7 +567,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 				final KIS kis = (KIS) StorableObjectPool.getStorableObject(this.getKISId(), true);
 				this.mcmId = kis.getMCMId();
 			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 		}
 		return this.mcmId;

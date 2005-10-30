@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.31 2005/10/21 16:46:20 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.32 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.31 $, $Date: 2005/10/21 16:46:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/10/30 14:49:21 $
  * @module schemeclient
  */
 
@@ -218,7 +218,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 		
@@ -364,7 +364,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						SchemeActions.insertSEbyPE(graph, schemeElement, schemeElement.getClonedIdMap(), see.getInsertionPoint(), true);
 						graph.selectionNotify();
 					} catch (CreateObjectException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 					setLinkMode();
 					return;
@@ -479,7 +479,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		} else if (ae.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ose = (ObjectSelectedEvent) ae;

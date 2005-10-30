@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.31 2005/10/25 19:53:13 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.32 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -193,7 +193,7 @@ public final class SchemeOptimizeInfoRtu
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeOptimizeInfoId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

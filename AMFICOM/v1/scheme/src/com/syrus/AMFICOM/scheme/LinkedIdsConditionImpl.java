@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.46 2005/10/24 12:14:35 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.47 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.46 $, $Date: 2005/10/24 12:14:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -79,7 +79,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 			}
 		} catch (final ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 		return false;
 	}

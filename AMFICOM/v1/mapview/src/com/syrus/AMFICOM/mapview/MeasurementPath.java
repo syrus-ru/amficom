@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.56 2005/10/27 10:16:07 bass Exp $
+ * $Id: MeasurementPath.java,v 1.57 2005/10/30 14:49:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
  *
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.56 $, $Date: 2005/10/27 10:16:07 $
+ * @version $Revision: 1.57 $, $Date: 2005/10/30 14:49:09 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -220,7 +220,7 @@ public final class MeasurementPath implements MapElement {
 			}
 			// else leave intact
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			// leave intact
 		}
 

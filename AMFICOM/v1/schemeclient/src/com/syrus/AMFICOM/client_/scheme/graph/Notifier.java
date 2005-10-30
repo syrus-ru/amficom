@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.20 2005/10/21 16:46:20 stas Exp $
+ * $Id: Notifier.java,v 1.21 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/10/21 16:46:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/10/30 14:49:21 $
  * @module schemeclient
  */
 
@@ -287,7 +287,7 @@ public class Notifier {
 			}
 		}
 		} catch (Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			graph.clearSelection();
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.81 2005/10/22 15:23:39 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.82 2005/10/30 14:48:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/10/22 15:23:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.82 $, $Date: 2005/10/30 14:48:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -99,7 +99,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			}
 		} catch (ApplicationException ae) {
 			Log.errorMessage("Cannot load measurement setups for test '" + this.test.getId() + "'");
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 			this.shutdown();
 			return;
 		}
@@ -119,7 +119,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			try {
 				StorableObjectPool.flush(test, LoginManager.getUserId(), false);
 			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 		}
 	}
@@ -152,7 +152,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			lastMeasurement = measurementDatabase.retrieveLast(this.test.getId());
 		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
+			Log.errorMessage(roe);
 			this.abort(ABORT_REASON_DATABASE_ERROR);
 		} catch (ObjectNotFoundException onfe) {
 			Log.debugMessage("Last measurement for test '" + testId + "' not found; assume test has none measurements",
@@ -166,7 +166,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			this.numberOfMResults = resultDatabase.retrieveNumberOf(testId, ResultSort.RESULT_SORT_MEASUREMENT);
 		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
+			Log.errorMessage(roe);
 			this.abort(ABORT_REASON_DATABASE_ERROR);
 		}
 		Log.debugMessage("Test '" + testId + "' -- number of measurement results: " + this.numberOfMResults, Log.DEBUGLEVEL06);
@@ -206,7 +206,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(lastMeasurement, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -251,7 +251,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 							this.nextMeasurementStartTime = null;
 							super.clearFalls();
 						} catch (CreateObjectException coe) {
-							Log.errorException(coe);
+							Log.errorMessage(coe);
 							if (coe.getCause() instanceof IllegalObjectEntityException) {
 								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
 							} else {
@@ -269,7 +269,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
-				Log.errorException(ie);
+				Log.errorMessage(ie);
 			}
 		}
 	}
@@ -281,7 +281,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(measurement, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -302,7 +302,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 						}
 					}
 				} catch (AnalysisException ae) {
-					Log.errorException(ae);
+					Log.errorMessage(ae);
 				}
 
 				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
@@ -315,7 +315,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(objectsToFlush, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -384,7 +384,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 		this.shutdown();
 	}
@@ -395,7 +395,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 		this.stopTest();
 	}
@@ -426,7 +426,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			}
 			StorableObjectPool.flush(measurements, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 
 		this.shutdown();

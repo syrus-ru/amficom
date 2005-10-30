@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.9 2005/10/08 13:49:03 stas Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.10 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/10/08 13:49:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 14:49:18 $
  * @module schemeclient
  */
 
@@ -287,7 +287,7 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 							LinkTypePropertiesManager.getInstance(this.aContext),
 							ObjectSelectedEvent.LINK_TYPE));
 				} catch (CreateObjectException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 					return;
 				}
 			} else {
@@ -305,7 +305,7 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		try {
 			StorableObjectPool.flush(this.linkType.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.UPDATE_OBJECT));
 	}

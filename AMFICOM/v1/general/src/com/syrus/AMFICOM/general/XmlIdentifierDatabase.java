@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.15 2005/10/03 14:37:02 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.16 2005/10/30 14:49:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/10/03 14:37:02 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/30 14:49:08 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -91,7 +91,7 @@ final class XmlIdentifierDatabase {
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		} catch (final Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			System.exit(0);
 		}
 	}
@@ -142,7 +142,7 @@ final class XmlIdentifierDatabase {
 			statement = connection.createStatement(
 	                ResultSet.TYPE_FORWARD_ONLY, 
 	                ResultSet.CONCUR_UPDATABLE);
-			Log.debugMessage("XmlIdentifierDatabase.retrieveByCondition | Trying: " + sql, DEBUGLEVEL10);
+			Log.debugMessage("Trying: " + sql, DEBUGLEVEL10);
 			resultSet = statement.executeQuery(sql.toString());
 			
 			while (resultSet.next()) {
@@ -178,7 +178,7 @@ final class XmlIdentifierDatabase {
 					}
 				}
 			} catch (final SQLException sqle) {
-				Log.errorException(sqle);
+				Log.errorMessage(sqle);
 			}
 		}
 	}
@@ -287,7 +287,7 @@ final class XmlIdentifierDatabase {
 			statement.executeUpdate(query.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
+			Log.errorMessage(sqle1);
 		} finally {
 			try {
 				try {
@@ -302,7 +302,7 @@ final class XmlIdentifierDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -326,7 +326,7 @@ final class XmlIdentifierDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql.toString());
-			Log.debugMessage("XmlIdentifierDatabase.insertEntities | Trying: " + sql, DEBUGLEVEL10);
+			Log.debugMessage("Trying: " + sql, DEBUGLEVEL10);
 			for (final Key key : keysToCreate.keySet()) {
 				Identifier id = key.getId();
 				String xmlId = keysToCreate.get(key);
@@ -344,7 +344,7 @@ final class XmlIdentifierDatabase {
 					connection.rollback();
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 			final String mesg = "Cannot insert " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
@@ -362,7 +362,7 @@ final class XmlIdentifierDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.14 2005/10/19 08:08:10 bass Exp $
+ * $Id: CMServerServantManager.java,v 1.15 2005/10/30 14:49:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/19 08:08:10 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 14:49:10 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -84,7 +84,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 */
 	@Override
 	protected void onLoseConnection(final String servantName) {
-		Log.debugMessage("CMServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 	}
 
 	/**
@@ -95,7 +95,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 */
 	@Override
 	protected void onRestoreConnection(final String servantName) {
-		Log.debugMessage("CMServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
+		Log.debugMessage("Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 	}
 

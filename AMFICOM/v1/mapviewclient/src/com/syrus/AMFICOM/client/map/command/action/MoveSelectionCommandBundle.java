@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveSelectionCommandBundle.java,v 1.26 2005/10/26 14:17:34 krupenn Exp $$
+ * $$Id: MoveSelectionCommandBundle.java,v 1.27 2005/10/30 14:48:55 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * 
- * @version $Revision: 1.26 $, $Date: 2005/10/26 14:17:34 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/10/30 14:48:55 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -121,7 +121,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle {
 			this.deltaY = ep.getY() - sp.getY();
 		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 	

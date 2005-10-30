@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventProcessor.java,v 1.2 2005/10/22 18:43:53 bass Exp $
+ * $Id: PopupNotificationEventProcessor.java,v 1.3 2005/10/30 14:49:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/22 18:43:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/30 14:49:11 $
  * @module leserver
  */
 final class PopupNotificationEventProcessor implements EventProcessor {
@@ -113,13 +113,13 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 						assert false;
 					}
 				} catch (final SystemException se) {
-					Log.debugException(se, SEVERE);
+					Log.debugMessage(se, SEVERE);
 				}
 			}				
 
 			Log.debugMessage("Exiting...", SEVERE);
 		} catch (final Throwable t) {
-			Log.debugException(t, SEVERE);
+			Log.debugMessage(t, SEVERE);
 		}
 	}
 

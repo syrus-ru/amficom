@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.67 2005/10/21 12:04:14 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.68 2005/10/30 14:49:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/10/21 12:04:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/10/30 14:49:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
@@ -134,7 +134,7 @@ final class ClientMeasurementServer {
 			try {
 				sessionEnvironment.login(login, PASSWORD, domainId);
 			} catch (final LoginException le) {
-				Log.errorException(le);
+				Log.errorMessage(le);
 			}
 	
 			/*	Activate servant*/
@@ -142,7 +142,7 @@ final class ClientMeasurementServer {
 			corbaServer.activateServant(new CMServerPOATie(new CMServerImpl(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
 		} catch (final Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			System.exit(0);
 		}
 	}
@@ -155,7 +155,7 @@ final class ClientMeasurementServer {
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		} catch (Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			System.exit(0);
 		}
 	}

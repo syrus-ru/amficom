@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.15 2005/10/21 12:04:18 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.16 2005/10/30 14:48:44 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/21 12:04:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/10/30 14:48:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -73,7 +73,7 @@ final class MCMSetup {
 			
 		}
 		catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 
 		/*-Close connection with database*/

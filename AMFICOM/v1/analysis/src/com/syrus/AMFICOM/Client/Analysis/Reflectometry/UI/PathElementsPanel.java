@@ -59,7 +59,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 					this.endPathElement = this.path.getNextPathElement(this.endPathElement);
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -91,7 +91,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 								Level.FINER);
 					}
 				} catch (ApplicationException e1) {
-					Log.errorException(e1);
+					Log.errorMessage(e1);
 				}
 				return;
 			}
@@ -136,7 +136,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 						this.path.changeOpticalLength(this.activePathElement, nextNode, -d);
 					}
 				} catch (ApplicationException e1) {
-					Log.errorException(e1);
+					Log.errorMessage(e1);
 				}
 			}
 
@@ -181,7 +181,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 						try {
 							type = se.getProtoEquipment().getType();
 						} catch (ApplicationException e) {
-							Log.errorException(e);
+							Log.errorMessage(e);
 							type = EquipmentType.OTHER;
 						}
 						if (type.equals(EquipmentType.MUFF)) {
@@ -214,7 +214,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}

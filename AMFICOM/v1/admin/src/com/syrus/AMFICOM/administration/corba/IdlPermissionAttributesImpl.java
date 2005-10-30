@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPermissionAttributesImpl.java,v 1.6 2005/10/10 15:48:25 bob Exp $
+ * $Id: IdlPermissionAttributesImpl.java,v 1.7 2005/10/30 14:48:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/10/10 15:48:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 14:48:49 $
  * @module administration
  */
 final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
@@ -63,7 +63,7 @@ final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
 		try {
 			return new PermissionAttributes(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, Level.SEVERE);
+			Log.debugMessage(coe, Level.SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

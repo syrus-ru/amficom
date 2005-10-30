@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphTransferHandler.java,v 1.3 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeGraphTransferHandler.java,v 1.4 2005/10/30 14:49:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 			}
 			clipboard.setContents(new GraphCellTransferable(alist), null);
@@ -94,7 +94,7 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 				Log.debugMessage("Unsupported object for paste in SchemeGraph", Level.WARNING); //$NON-NLS-1$
 				return false;
 			} catch (IOException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 				return false;
 			}
 			
@@ -117,7 +117,7 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 							this.insertedCells = clones.values().toArray();
 						}
 					} catch (ApplicationException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 				}
 			}
@@ -155,7 +155,7 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 				schemeLink.setParentScheme(scheme, false);
 			}
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 

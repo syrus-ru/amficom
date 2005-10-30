@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.21 2005/10/22 14:08:29 arseniy Exp $
+ * $Id: DatabaseConnection.java,v 1.22 2005/10/30 14:48:47 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import oracle.jdbc.pool.OracleDataSource;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/10/22 14:08:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 14:48:47 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -83,7 +83,7 @@ public class DatabaseConnection {
 							obj.wait(5 * 1000);
 						}
 					} catch (InterruptedException ex) {
-						Log.errorException(ex);
+						Log.errorMessage(ex);
 					}
 				}
 			}
@@ -105,7 +105,7 @@ public class DatabaseConnection {
 				}
 				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
 			} catch (Exception e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -117,7 +117,7 @@ public class DatabaseConnection {
 				openConnections--;
 				Log.debugMessage("releaseConnection(Connection)", Log.DEBUGLEVEL10);
 			} catch (Exception e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}

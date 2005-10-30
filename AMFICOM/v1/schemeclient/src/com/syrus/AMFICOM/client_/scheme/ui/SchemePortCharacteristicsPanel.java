@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortCharacteristicsPanel.java,v 1.12 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemePortCharacteristicsPanel.java,v 1.13 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/10/03 07:44:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 14:49:21 $
  * @module schemeclient
  */
 
@@ -71,7 +71,7 @@ public class SchemePortCharacteristicsPanel extends CharacteristicsPanel {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 				showNoSelection();
 			}
 		} 

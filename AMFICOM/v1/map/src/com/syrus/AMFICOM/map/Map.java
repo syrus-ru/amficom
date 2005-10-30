@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.116 2005/10/25 19:53:10 bass Exp $
+ * $Id: Map.java,v 1.117 2005/10/30 14:49:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.116 $, $Date: 2005/10/25 19:53:10 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/30 14:49:01 $
  * @module map
  */
 public final class Map extends DomainMember<Map>
@@ -1312,7 +1312,7 @@ public final class Map extends DomainMember<Map>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

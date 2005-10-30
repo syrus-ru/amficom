@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.82 2005/10/25 19:53:13 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.83 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.83 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -320,7 +320,7 @@ public final class SchemeMonitoringSolution
 					? StorableObjectPool.<Scheme>getStorableObject(this.getParentSchemeId(), true)
 					: this.getParentSchemeOptimizeInfo().getParentScheme();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -344,7 +344,7 @@ public final class SchemeMonitoringSolution
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeOptimizeInfoId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

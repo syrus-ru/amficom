@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.83 2005/10/21 12:25:51 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.84 2005/10/30 14:48:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/10/21 12:25:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.84 $, $Date: 2005/10/30 14:48:49 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -207,7 +207,7 @@ final class MeasurementServer extends SleepButWorkThread {
 				sessionEnvironment.login(login, PASSWORD, domainId);
 			}
 			catch (final LoginException le) {
-				Log.errorException(le);
+				Log.errorMessage(le);
 			}
 
 			/*	Create collection of MCM identifiers for aborting tests*/
@@ -219,7 +219,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			corbaServer.printNamingContext();
 		}
 		catch (final ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 			System.exit(0);
 		}
 	}
@@ -232,7 +232,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		} catch (Exception e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			System.exit(0);
 		}
 	}
@@ -263,7 +263,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			try {
 				fillMCMTestMaps();
 			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 
 			synchronized (mcmTestQueueMap) {
@@ -275,7 +275,7 @@ final class MeasurementServer extends SleepButWorkThread {
 						try {
 							mcmRef = servantManager.getVerifiedMCMReference(mcmId);
 						} catch (ApplicationException ae) {
-							Log.errorException(ae);
+							Log.errorMessage(ae);
 							super.fallCode = FALL_CODE_RECEIVE_TESTS;
 							mcmIdsToAbortTests.add(mcmId);
 							super.sleepCauseOfFall();
@@ -309,7 +309,7 @@ final class MeasurementServer extends SleepButWorkThread {
 								try {
 									LoginManager.restoreLogin();
 								} catch (ApplicationException ae) {
-									Log.errorException(ae);
+									Log.errorMessage(ae);
 								}
 							}
 							Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
@@ -317,7 +317,7 @@ final class MeasurementServer extends SleepButWorkThread {
 							mcmIdsToAbortTests.add(mcmId);
 							super.sleepCauseOfFall();
 						} catch (Throwable throwable) {
-							Log.errorException(throwable);
+							Log.errorMessage(throwable);
 						}
 
 					}	//if (!testQueue.isEmpty())
@@ -328,7 +328,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
-				Log.errorException(ie);
+				Log.errorMessage(ie);
 			}
 		}
 	}
@@ -357,7 +357,7 @@ final class MeasurementServer extends SleepButWorkThread {
 					addToMCMStoppingTestIdsMap(test, mcmId);
 					break;
 				default:
-					Log.errorMessage("MeasurementServer.fillMCMTestQueueMap | Illegal status: " + status.value()
+					Log.errorMessage("Illegal status: " + status.value()
 							+ " of test '" + test.getId() + "'");
 			}
 		}
@@ -398,7 +398,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(testQueue, LoginManager.getUserId(), true);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 		
 	}

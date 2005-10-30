@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.14 2005/10/07 13:47:39 arseniy Exp $
+ * $Id: ResultChildrenFactory.java,v 1.15 2005/10/30 14:49:13 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/10/07 13:47:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 14:49:13 $
  * @module analysis
  */
 
@@ -159,9 +159,9 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					}
 				} catch (IllegalObjectEntityException ex) {
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), ex.getMessage());
-					Log.errorException(ex);
+					Log.errorMessage(ex);
 				} catch (ApplicationException ex) {
-					Log.errorException(ex);
+					Log.errorMessage(ex);
 				}
 			} else if (s.equals(DATES)) {
 				/*if (item.getChildren().isEmpty()) { // add only if no children as they are constant
@@ -275,7 +275,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					item6.setFilter(f);
 					item.addChild(item6);
 				} catch (CreateObjectException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 			} else if (s.equals(MEASUREMENTSETUPS)) {
 				try {
@@ -363,7 +363,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					i++;
 				}
 			} catch (ApplicationException ex) {
-				Log.errorException(ex);
+				Log.errorMessage(ex);
 			}
 		} 
 		else if (nodeObject instanceof Test) {

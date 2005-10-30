@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.20 2005/10/25 19:53:08 bass Exp $
+ * $Id: ReportTemplate.java,v 1.21 2005/10/30 14:49:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * отчёт </p>
  * 
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/25 19:53:08 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/30 14:49:03 $
  * @module report
  */
 public class ReportTemplate extends StorableObject<ReportTemplate>
@@ -237,11 +237,11 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 		try {
 			dataElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return null;
 		}
 		if (dataElements.size() > 1) {
-			Log.errorMessage("ReportTemplate.findStorableElementForName | Error: to many of dataStorableElements");
+			Log.errorMessage("Error: to many of dataStorableElements");
 		}
 		if (!dataElements.isEmpty()) {
 			return dataElements.iterator().next();
@@ -261,7 +261,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return Collections.emptySet();
 		}
 	}
@@ -336,7 +336,7 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 		try {
 			return StorableObjectPool.getStorableObject(dreId, true);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return null;
 		}
 	}

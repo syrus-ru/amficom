@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.39 2005/10/18 13:30:46 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.40 2005/10/30 14:49:09 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: saa $
- * @version $Revision: 1.39 $, $Date: 2005/10/18 13:30:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/10/30 14:49:09 $
  * @module
  */
 public class ModelTraceComparer
@@ -305,7 +305,7 @@ public class ModelTraceComparer
 		}
 		if (alarm.getSeverity().compareTo(SEVERITY_NONE) > 0) {
 			fillAlarmMismatch(y, mtm, alarm);
-			assert Log.debugMessage("ModelTraceComparer.compareTraceToMTM | level " + alarm.getSeverity()
+			assert Log.debugMessage("level " + alarm.getSeverity()
 					+ " mismatch "
 					+ (alarm.hasMismatch()
 						? "" + alarm.getMinMismatch() + ".." + alarm.getMaxMismatch()

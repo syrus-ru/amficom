@@ -1,5 +1,5 @@
 /*-
- * $Id: EmailNotificationEventProcessor.java,v 1.1 2005/10/19 13:39:20 bass Exp $
+ * $Id: EmailNotificationEventProcessor.java,v 1.2 2005/10/30 14:49:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/19 13:39:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/30 14:49:11 $
  * @module leserver
  */
 final class EmailNotificationEventProcessor implements EventProcessor {
@@ -41,7 +41,7 @@ final class EmailNotificationEventProcessor implements EventProcessor {
 
 		if (notificationEvent instanceof EmailNotificationEvent) {
 			final EmailNotificationEvent emailNotificationEvent = (EmailNotificationEvent) notificationEvent;
-			Log.debugMessage("EmailNotificationEventProcessor.processEvent() | Event: "
+			Log.debugMessage("Event: "
 					+ emailNotificationEvent
 					+ " delivered successfully",
 					CONFIG);

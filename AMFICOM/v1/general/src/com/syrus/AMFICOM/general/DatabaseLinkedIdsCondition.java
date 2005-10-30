@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.12 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.13 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
  *	}
  * </pre>
  *
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:27:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @module general
  */
 public final class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsCondition {
@@ -81,21 +81,21 @@ public final class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsC
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 			, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 			, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Level.SEVERE);
+			Log.debugMessage(se, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 			, Level.SEVERE);
 		}

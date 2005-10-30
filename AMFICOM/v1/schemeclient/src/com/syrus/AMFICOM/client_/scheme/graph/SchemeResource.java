@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.14 2005/10/17 14:59:15 stas Exp $
+ * $Id: SchemeResource.java,v 1.15 2005/10/30 14:49:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/10/17 14:59:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 14:49:22 $
  * @module schemeclient
  */
 
@@ -172,7 +172,7 @@ public class SchemeResource {
 				ir = SchemeObjectsFactory.createSchemeImageResource();
 				cellContainer.setUgoCell(ir);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 				return;
 			}
 		}
@@ -207,7 +207,7 @@ public class SchemeResource {
 			try {
 				pes = path.getPathMembers();
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 				return new Object[0];
 			}	
 			pmIds = new TreeSet<Identifier>();

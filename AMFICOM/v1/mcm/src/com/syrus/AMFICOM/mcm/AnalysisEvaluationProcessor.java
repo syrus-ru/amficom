@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.48 2005/10/22 19:07:25 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.49 2005/10/30 14:48:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/10/22 19:07:25 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/30 14:48:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -173,13 +173,13 @@ final class AnalysisEvaluationProcessor {
 
 			return analysis.createResult(LoginManager.getUserId(), arParameters);
 		} catch (final EventQueueFullException eqfe) {
-			Log.debugException(eqfe, SEVERE);
+			Log.debugMessage(eqfe, SEVERE);
 			throw new AnalysisException(eqfe);
 		} catch (final DataFormatException dfe) {
-			Log.debugException(dfe, SEVERE);
+			Log.debugMessage(dfe, SEVERE);
 			throw new AnalysisException(dfe);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new AnalysisException(coe);
 		}
 	}

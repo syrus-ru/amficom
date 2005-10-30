@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.17 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.18 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -320,7 +320,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 				this.cmbTypeCombo.addElements(portTypes);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 
 			this.tfNameText.setText(this.schemePort.getName());

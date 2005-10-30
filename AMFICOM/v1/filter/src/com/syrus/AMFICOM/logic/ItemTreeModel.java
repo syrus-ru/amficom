@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.21 2005/09/20 13:06:36 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.22 2005/10/30 14:48:52 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import javax.swing.tree.TreePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/20 13:06:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 14:48:52 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -38,7 +38,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 		                   final Item item2) {
 			final String string1 = item1.getName();
 			final String string2 = item2.getName();
-//			assert Log.debugMessage("NameItemComparator.compare | " + item1 + " to " + item2 
+//			assert Log.debugMessage(item1 + " to " + item2 
 //					+ " as '" + string1 + "' to '" + string2 + '\'',
 //				Log.DEBUGLEVEL10);
 			return (string1 == null ? "" : string1).compareTo((string2 == null ? "" : string2));
@@ -109,12 +109,12 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 		}
 		if (!sortList.sorted) {
 			final List<Item> children = parent.getChildren();
-			assert Log.debugMessage("ItemTreeModel.getChildren | " + parent + " > " + sortList.list, Log.DEBUGLEVEL10);
+			assert Log.debugMessage(parent + " > " + sortList.list, Log.DEBUGLEVEL10);
 			if (sortList.list.isEmpty() && !children.isEmpty()) {
 				sortList.list.addAll(children);
 				for (final Iterator<Item> it = sortList.list.iterator(); it.hasNext();) {
 					final Item item = it.next();
-					assert Log.debugMessage("ItemTreeModel.getChildren | parent " + parent + ", child " + item, Log.DEBUGLEVEL10);
+					assert Log.debugMessage("parent " + parent + ", child " + item, Log.DEBUGLEVEL10);
 					if (item.isService()) {
 						it.remove();
 					}
@@ -130,13 +130,13 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 
 	public Object getChild(final Object parent, final int index) {
 		final Object object = this.getChildren((Item) parent).get(index);
-//		assert Log.debugMessage("ItemTreeModel.getChild | parent:" + parent + ", index: " + index + ", child:" + object, Log.DEBUGLEVEL10);
+//		assert Log.debugMessage("parent:" + parent + ", index: " + index + ", child:" + object, Log.DEBUGLEVEL10);
 		return object;
 	}
 
 	public int getChildCount(final Object parent) {
 		final int count = this.getChildren((Item) parent).size();
-//		assert Log.debugMessage("ItemTreeModel.getChildCount | parent:" + parent + ", count: " + count, Log.DEBUGLEVEL10);
+//		assert Log.debugMessage("parent:" + parent + ", count: " + count, Log.DEBUGLEVEL10);
 		return count;
 	}
 
@@ -174,7 +174,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 				break;
 			}
 		}
-		assert Log.debugMessage("ItemTreeModel.InsertNodeInto | insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ", Log.DEBUGLEVEL10);
+		assert Log.debugMessage("insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ", Log.DEBUGLEVEL10);
 		nodesWereInserted(parent, objects, newIndexs);
 	}
 
@@ -187,13 +187,13 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 		final SortList sortList = this.parentSortedChildren.get(parent);
 		final int[] childIndex;
 		if (sortList != null) {
-			assert Log.debugMessage("ItemTreeModel.removeNodeFromParent | sortList:" + sortList.list, Log.DEBUGLEVEL10);
+			assert Log.debugMessage("sortList:" + sortList.list, Log.DEBUGLEVEL10);
 			final int index = sortList.list.indexOf(child);
 			sortList.list.remove(index);
 			childIndex = new int[] {index};
-			assert Log.debugMessage("ItemTreeModel.removeNodeFromParent | sortList:" + sortList.list, Log.DEBUGLEVEL10);
+			assert Log.debugMessage("sortList:" + sortList.list, Log.DEBUGLEVEL10);
 		} else {
-			assert Log.debugMessage("ItemTreeModel.removeNodeFromParent | sortList == null", Log.DEBUGLEVEL10);
+			assert Log.debugMessage("sortList == null", Log.DEBUGLEVEL10);
 			final int childCount = this.getChildCount(parent);
 			childIndex = new int[1];
 			for (int i = 0; i < childCount; i++) {
@@ -204,7 +204,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 			}
 		}
 		Object[] removedArray = new Object[] { child };
-		assert Log.debugMessage("ItemTreeModel.removeNodeFromParent | delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ", Log.DEBUGLEVEL10);
+		assert Log.debugMessage("delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ", Log.DEBUGLEVEL10);
 		this.nodesWereRemoved(parent, childIndex, removedArray);
 	}
 
@@ -289,7 +289,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 	}
 	
 	protected void sortChildren(final Item parent) {
-		assert Log.debugMessage("ItemTreeModel.sortChildren | parent:" + parent, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("parent:" + parent, Log.DEBUGLEVEL10);
 		if (this.listeners != null && parent != null) {
 
 			final List<Item> children2 = parent.getChildren();
@@ -354,7 +354,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 	 * children objects that were removed.
 	 */
 	protected void nodesWereRemoved(final Item node, final int[] childIndices, final Object[] removedChildren) {
-//		assert Log.debugMessage("ItemTreeModel.nodesWereRemoved | node:" + node + ", childIndices[0]:" + childIndices[0], Log.DEBUGLEVEL10);
+//		assert Log.debugMessage("node:" + node + ", childIndices[0]:" + childIndices[0], Log.DEBUGLEVEL10);
 		if (node != null && childIndices != null) {
 			fireTreeNodesRemoved(this, getPathToRoot(node), childIndices, removedChildren);
 		}
@@ -375,13 +375,13 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 	 *            the removed elements
 	 */
 	protected void fireTreeNodesRemoved(final Object source, final Object[] path, final int[] childIndices, final Object[] children) {
-//		assert Log.debugMessage("ItemTreeModel.fireTreeNodesRemoved | ", Log.DEBUGLEVEL10);
+//		assert Log.debugMessage(Log.DEBUGLEVEL10);
 		TreeModelEvent e = null;
 		for (final TreeModelListener listener : this.listeners) {
 			if (e == null) {
 				e = new TreeModelEvent(source, path, childIndices, children);
 			}
-//			assert Log.debugMessage("ItemTreeModel.fireTreeNodesRemoved | event " + e + " > listener " + listener, Log.DEBUGLEVEL10);
+//			assert Log.debugMessage("event " + e + " > listener " + listener, Log.DEBUGLEVEL10);
 			listener.treeNodesRemoved(e);
 		}
 	}
@@ -435,7 +435,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 		if (parent == null) {
 			parent = this.root;
 		}
-		assert Log.debugMessage("ItemTreeModel.getItemNode | parent is '" + parent.getName()
+		assert Log.debugMessage("parent is '" + parent.getName()
 				+ "', item is '" + item.getName() + "'", Log.DEBUGLEVEL10);
 		final List<Item> children = parent.getChildren();
 		Item node = null;
@@ -471,8 +471,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 	public void setParentPerformed(final Item item, 
 	                               final Item oldParent, 
 	                               final Item newParent) {
-		assert Log.debugMessage("ItemTreeModel.setParentPerformed | " 
-				+ this.getClass().getName() 
+		assert Log.debugMessage(this.getClass().getName() 
 				+ ".setParentPerformed | item:" 
 				+ item + ", oldParent:" 
 				+ oldParent + ", newParent:" 
@@ -489,7 +488,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 			this.addItem(newParent, item);
 		}
 //		else {
-//			assert Log.debugMessage("ItemTreeModel.setParentPerformed | remove " + oldParent + " from parentSortedChildren",
+//			assert Log.debugMessage("remove " + oldParent + " from parentSortedChildren",
 //				Log.DEBUGLEVEL10);
 //			this.parentSortedChildren.remove(oldParent);
 //		}

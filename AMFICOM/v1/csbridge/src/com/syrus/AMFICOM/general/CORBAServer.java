@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.23 2005/10/22 14:08:22 arseniy Exp $
+* $Id: CORBAServer.java,v 1.24 2005/10/30 14:48:40 bass Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/22 14:08:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/10/30 14:48:40 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -124,7 +124,7 @@ public class CORBAServer {
 		try {
 			rootPoa = POAHelper.narrow(this.orb.resolve_initial_references("RootPOA"));
 		} catch (org.omg.CORBA.ORBPackage.InvalidName in) {
-			Log.errorException(in);
+			Log.errorMessage(in);
 			return;
 		}
 		final Policy[] policies = new Policy[7];
@@ -289,7 +289,7 @@ public class CORBAServer {
 					Log.errorMessage("Binding '" + bindingName + "' not of type object");
 				}
 			} catch (InvalidName in) {
-				Log.errorException(in);
+				Log.errorMessage(in);
 			}
 		}
 		return ret;
@@ -356,7 +356,7 @@ public class CORBAServer {
 					this.unbindServant(it.next());
 					it.remove();
 				} catch (CommunicationException ce) {
-					Log.errorException(ce);
+					Log.errorMessage(ce);
 				}
 			}
 		}
@@ -364,7 +364,7 @@ public class CORBAServer {
 		try {
 			this.poa.the_POAManager().deactivate(false, false);
 		} catch (UserException ue) {
-			Log.errorException(ue);
+			Log.errorMessage(ue);
 		}
 		this.poa.destroy(false, false);
 		this.orb.shutdown(true);
@@ -427,7 +427,7 @@ public class CORBAServer {
 				stringBuffer.append(name);
 				stringBuffer.append('\n');
 			} catch (org.omg.CosNaming.NamingContextPackage.InvalidName in) {
-				Log.errorException(in);
+				Log.errorMessage(in);
 			}
 		}
 

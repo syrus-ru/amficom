@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.14 2005/10/24 13:01:03 bass Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.15 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * }
  * </pre>
  *
- * @version $Revision: 1.14 $, $Date: 2005/10/24 13:01:03 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 14:49:07 $
  * @author $Author: bass $
  * @module general
  */
@@ -78,19 +78,19 @@ public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondi
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException", Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException", Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Level.SEVERE);
+			Log.debugMessage(se, Level.SEVERE);
 			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught a SecurityException", Level.SEVERE);
 		}
 	}

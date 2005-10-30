@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.40 2005/10/28 07:43:48 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.41 2005/10/30 14:48:51 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.40 $, $Date: 2005/10/28 07:43:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/10/30 14:48:51 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -205,7 +205,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		try {
 			clientSessionEnvironment.login(this.login, this.password, this.domainId);
 		} catch (LoginException le) {
-			Log.errorException(le);
+			Log.errorMessage(le);
 			if (le.isAlreadyLoggedIn()) {
 				this.logged = true;
 				return true;
@@ -219,7 +219,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.logged = false;
 			return false;
 		} catch (CommunicationException ce) {
-			Log.errorException(ce);
+			Log.errorMessage(ce);
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					I18N.getString("Error.ServerConnection"),
 					I18N.getString("Error.OpenSession"),
@@ -389,7 +389,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.login = this.loginTextField.getText();
 			this.password = new String(this.passwordTextField.getPassword());
 			final Domain selectedDomain = (Domain) this.domainComboBox.getSelectedItem();
-			assert Log.debugMessage( "" + selectedDomain, Log.DEBUGLEVEL09);
+			assert Log.debugMessage(selectedDomain, Log.DEBUGLEVEL09);
 			if (selectedDomain != null) {
 				this.domainId = selectedDomain.getId();
 			} else {

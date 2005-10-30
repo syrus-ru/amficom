@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUser.java,v 1.33 2005/10/25 19:53:15 bass Exp $
+* $Id: SystemUser.java,v 1.34 2005/10/30 14:48:49 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/30 14:48:49 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -139,7 +139,7 @@ public final class SystemUser extends StorableObject<SystemUser>
 		}
 		catch (final ApplicationException ae) {
 			// Never
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 		this.login = ut.login;
 		this.sort = ut.sort.value();

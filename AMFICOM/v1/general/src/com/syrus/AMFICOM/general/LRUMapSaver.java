@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.7 2005/09/28 13:54:12 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.8 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/28 13:54:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -45,7 +45,7 @@ public class LRUMapSaver extends AbstractLRUMapSaver {
 		try {
 			return StorableObjectPool.getStorableObjects((Set) in.readObject(), true);
 		} catch (final ApplicationException ae) {
-			Log.errorMessage("LRUMapSaver.load | Error: " + ae.getMessage());
+			Log.errorMessage("Error: " + ae.getMessage());
 		}
 		return Collections.emptySet();
 	}

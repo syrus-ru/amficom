@@ -1,5 +1,5 @@
 /*-
-* $Id: I18N.java,v 1.5 2005/10/19 14:34:45 bob Exp $
+* $Id: I18N.java,v 1.6 2005/10/30 14:48:51 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import javax.swing.UIManager;
 
 /**
  * Internationalization
- * @version $Revision: 1.5 $, $Date: 2005/10/19 14:34:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 14:48:51 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -28,7 +28,7 @@ public final class I18N {
 	 */
 	public static void addResourceBundle(final String bundleName) {
 		if (bundleName != null) {
-//			assert Log.debugMessage("I18N.addResourceBundle | bundleName:" + bundleName, Log.DEBUGLEVEL10);
+//			assert Log.debugMessage("bundleName:" + bundleName, Log.DEBUGLEVEL10);
 			UIManager.getDefaults().addResourceBundle(bundleName);
 		}
 	}
@@ -39,7 +39,7 @@ public final class I18N {
 	 */
 	public static String getString(final String key) {
 		final String string = UIManager.getString(key);
-//		assert Log.debugMessage("I18N.getString | key:'" 
+//		assert Log.debugMessage("key:'" 
 //				+ key 
 //				+ "', value:'"
 //				+ string 

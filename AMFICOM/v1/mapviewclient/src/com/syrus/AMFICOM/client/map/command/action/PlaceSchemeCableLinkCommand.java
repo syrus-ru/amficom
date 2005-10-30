@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeCableLinkCommand.java,v 1.56 2005/10/26 11:58:54 krupenn Exp $$
+ * $$Id: PlaceSchemeCableLinkCommand.java,v 1.57 2005/10/30 14:48:56 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.56 $, $Date: 2005/10/26 11:58:54 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.57 $, $Date: 2005/10/30 14:48:56 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -160,7 +160,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 					try {
 						newCableChannelingItem.insertSelfBefore(cci);
 					} catch(AssertionError e) {
-						Log.debugException(e, Level.SEVERE);
+						Log.debugMessage(e, Level.SEVERE);
 						this.schemeCableLink.getPathMembers().first().setParentPathOwner(null, true);
 						bufferStartSite = this.startNode;
 						break;
@@ -257,7 +257,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 

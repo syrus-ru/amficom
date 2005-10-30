@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.48 2005/10/22 10:04:18 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.49 2005/10/30 14:49:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,8 +80,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.48 $, $Date: 2005/10/22 10:04:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/10/30 14:49:22 $
  * @module schemeclient
  */
 
@@ -107,7 +107,7 @@ public class SchemeObjectsFactory {
 				stubProtoGroup = SchemeProtoGroup.createInstance(userId, stubName);
 				stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, stubProtoGroup);
 			} catch (CreateObjectException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -591,7 +591,7 @@ public class SchemeObjectsFactory {
 							Log.debugMessage("can not insert scheme without parent se for newid " + newId + " no clone performed", Level.FINE);
 						}
 					} catch (ApplicationException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 				}
 				else

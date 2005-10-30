@@ -1,5 +1,5 @@
 /*-
- * $Id: Rack.java,v 1.3 2005/10/10 15:36:14 stas Exp $
+ * $Id: Rack.java,v 1.4 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ public class Rack extends DefaultGraphCell implements IdentifiableCell {
 		try {
 			return (SchemeElement)StorableObjectPool.getStorableObject(this.seId, true);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		return null;
 	}

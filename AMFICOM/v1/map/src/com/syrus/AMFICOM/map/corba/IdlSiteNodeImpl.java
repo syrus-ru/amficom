@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSiteNodeImpl.java,v 1.6 2005/09/02 07:13:15 max Exp $
+ * $Id: IdlSiteNodeImpl.java,v 1.7 2005/10/30 14:49:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.6 $, $Date: 2005/09/02 07:13:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 14:49:02 $
  * @module map
  */
 final class IdlSiteNodeImpl extends IdlSiteNode {
@@ -72,7 +72,7 @@ final class IdlSiteNodeImpl extends IdlSiteNode {
 		try {
 			return new SiteNode(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

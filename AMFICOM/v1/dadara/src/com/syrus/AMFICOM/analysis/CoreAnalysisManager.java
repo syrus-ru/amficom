@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.127 2005/10/18 13:12:48 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.128 2005/10/30 14:49:09 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.127 $, $Date: 2005/10/18 13:12:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.128 $, $Date: 2005/10/30 14:49:09 $
  * @module
  */
 
@@ -187,7 +187,7 @@ public class CoreAnalysisManager
 		try {
 			System.loadLibrary("dadara");
 		} catch (final UnsatisfiedLinkError ule) {
-			assert Log.errorException(ule);
+			assert Log.errorMessage(ule);
 		}
 	}
 

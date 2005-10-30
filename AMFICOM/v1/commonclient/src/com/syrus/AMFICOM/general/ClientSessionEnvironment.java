@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.33 2005/10/26 15:47:40 bob Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.34 2005/10/30 14:48:51 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/26 15:47:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2005/10/30 14:48:51 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -172,7 +172,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		try {
 			this.deactivateServant();
 		} catch (CommunicationException ce) {
-			Log.errorException(ce);
+			Log.errorMessage(ce);
 		}
 		super.logout();
 	}

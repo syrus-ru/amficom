@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlRoleImpl.java,v 1.1 2005/10/10 15:41:59 bob Exp $
+ * $Id: IdlRoleImpl.java,v 1.2 2005/10/30 14:48:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/10/10 15:41:59 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/10/30 14:48:49 $
  * @module administration
  */
 final class IdlRoleImpl extends IdlRole {
@@ -56,7 +56,7 @@ final class IdlRoleImpl extends IdlRole {
 		try {
 			return new Role(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, Level.SEVERE);
+			Log.debugMessage(coe, Level.SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

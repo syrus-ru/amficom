@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.142 2005/10/25 19:53:11 bass Exp $
+ * $Id: PhysicalLink.java,v 1.143 2005/10/30 14:49:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.142 $, $Date: 2005/10/25 19:53:11 $
+ * @version $Revision: 1.143 $, $Date: 2005/10/30 14:49:02 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
@@ -299,7 +299,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		try {
 			pipeBlocks = StorableObjectPool.getStorableObjects(pipeBlockIds, true);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}		
 		this.binding = new PhysicalLinkBinding(pipeBlocks);
 
@@ -397,7 +397,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 			try {
 				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
 			} catch(ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 		return this.endNode;
@@ -476,7 +476,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 			try {
 				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
 			} catch(ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 		return this.startNode;
@@ -1026,7 +1026,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

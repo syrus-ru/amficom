@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.12 2005/10/21 12:04:14 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.13 2005/10/30 14:49:10 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/21 12:04:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 14:49:10 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  * @todo Implement refresh (i. e. - method {@link ObjectLoader#getRemoteVersions(Set)})
@@ -96,7 +96,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 			loadedObjects = this.corbaObjectLoader.loadStorableObjects(loadIds);
 		}
 		catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 
 		if (loadedObjects != null && !loadedObjects.isEmpty()) {
@@ -108,7 +108,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 				database.save(loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 		}
 
@@ -126,7 +126,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 			loadedObjects = this.corbaObjectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
 		}
 		catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 
 		if (loadedObjects != null && !loadedObjects.isEmpty()) {
@@ -138,7 +138,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 				database.save(loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 		}
 

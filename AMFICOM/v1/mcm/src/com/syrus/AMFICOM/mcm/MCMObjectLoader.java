@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.28 2005/10/21 12:04:18 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.29 2005/10/30 14:48:44 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/21 12:04:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/10/30 14:48:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -185,7 +185,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 					needLoad = !StorableObjectDatabase.isPresentInDatabase(dependency.getId());
 				}
 				catch (ApplicationException ae) {
-					Log.errorException(ae);
+					Log.errorMessage(ae);
 				}
 				if (needLoad) {
 					final Short entityKey = new Short(idDependency.getMajor());
@@ -211,7 +211,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 					database.save(entityLevelLoadObjects);
 				}
 				catch (ApplicationException ae) {
-					Log.errorException(ae);
+					Log.errorMessage(ae);
 				}
 			}
 		}

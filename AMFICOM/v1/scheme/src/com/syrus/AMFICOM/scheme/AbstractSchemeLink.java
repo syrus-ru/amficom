@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.44 2005/10/25 19:53:13 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.45 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
@@ -186,7 +186,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getAbstractLinkId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -210,7 +210,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 					? StorableObjectPool.<AbstractLinkType>getStorableObject(this.getAbstractLinkTypeId(), true)
 					: this.getAbstractLink().getType();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -250,7 +250,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSourceAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -272,7 +272,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getTargetAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

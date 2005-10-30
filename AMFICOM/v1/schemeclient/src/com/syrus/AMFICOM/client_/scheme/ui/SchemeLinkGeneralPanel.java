@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.17 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.18 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/10/30 14:49:21 $
  * @module schemeclient
  */
 
@@ -478,7 +478,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 				final Set<LinkType> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				this.cmbTypeCombo.addElements(linkTypes);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			boolean b = false;
 			try {
@@ -544,7 +544,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 					try {
 						link = SchemeObjectsFactory.createLink(this.schemeLink);
 					} catch (CreateObjectException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 				}
 				if (link != null) {

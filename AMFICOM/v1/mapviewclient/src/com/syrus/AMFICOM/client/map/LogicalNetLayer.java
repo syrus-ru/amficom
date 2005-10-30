@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.135 2005/10/26 14:17:18 krupenn Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.136 2005/10/30 14:48:55 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,8 +76,8 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.135 $, $Date: 2005/10/26 14:17:18 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.136 $, $Date: 2005/10/30 14:48:55 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -500,7 +500,7 @@ public final class LogicalNetLayer {
 			}
 		}
 		final long d = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.drawLines | " + String.valueOf(d - f) + " ms\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Log.debugMessage(String.valueOf(d - f) + " ms\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ String.valueOf(MapViewController.getTime1()) + " ms (isElementVisible)\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$
 				+ String.valueOf(MapViewController.getTime2()) + " ms (getStroke)\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$
 				+ String.valueOf(MapViewController.getTime3()) + " ms (getColor)\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$
@@ -534,7 +534,7 @@ public final class LogicalNetLayer {
 		 * marker = (MapMarker)e.next(); marker.paint(pg, visibleBounds); }
 		 */
 		final long d = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.drawNodes | " + String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -576,7 +576,7 @@ public final class LogicalNetLayer {
 			p.drawLine(startX, startY, endX, endY);
 		}
 		final long d = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.drawTempLines | " + String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -593,7 +593,7 @@ public final class LogicalNetLayer {
 			this.getMapViewController().getController(el).paint(el, g, visibleBounds);
 		}
 		final long d = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.drawSelection | " + String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -946,7 +946,7 @@ public final class LogicalNetLayer {
 				}
 			}
 		} catch(MapException e) {
-			Log.debugException(e, Level.WARNING);
+			Log.debugMessage(e, Level.WARNING);
 		}
 		return null;
 	}
@@ -1077,8 +1077,8 @@ public final class LogicalNetLayer {
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
-	 * @author $Author: krupenn $
-	 * @version $Revision: 1.135 $, $Date: 2005/10/26 14:17:18 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.136 $, $Date: 2005/10/30 14:48:55 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1206,8 +1206,7 @@ public final class LogicalNetLayer {
 //			this.visualElements.add(node);
 //		}
 		final long endTime = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | " //$NON-NLS-1$
-				+ "optimized map for " + (endTime - startTime) + "ms. Got " + this.visualElements.size() + " visual links.\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Log.debugMessage("optimized map for " + (endTime - startTime) + "ms. Got " + this.visualElements.size() + " visual links.\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ "		" + (t1 - startTime) + " ms (visualElements.clear())\n" //$NON-NLS-1$ //$NON-NLS-2$
 				+ "		" + (t2 - t1) + " ms (getNodeLinks)\n" //$NON-NLS-1$ //$NON-NLS-2$
 				+ "		" + (endTime - t2) + " ms (recursing) divided to:\n" //$NON-NLS-1$ //$NON-NLS-2$
@@ -1652,7 +1651,7 @@ public final class LogicalNetLayer {
 			}
 		}
 		final long t2 = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.drawVisualElements | " + String.valueOf(t2 - t1) + " ms\n" //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(String.valueOf(t2 - t1) + " ms\n" //$NON-NLS-1$
 				+ "			" + (MapViewController.getTime6() / 1000000L) + " ms (getCharacteristics)\n", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

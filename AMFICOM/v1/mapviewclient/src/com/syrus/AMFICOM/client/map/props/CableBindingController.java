@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableBindingController.java,v 1.29 2005/10/18 07:21:13 krupenn Exp $$
+ * $$Id: CableBindingController.java,v 1.30 2005/10/30 14:48:56 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/18 07:21:13 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/10/30 14:48:56 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -110,7 +110,7 @@ public final class CableBindingController implements Wrapper {
 					result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
 				}
 			} catch(Exception e) {
-				Log.debugException(e, Level.SEVERE);
+				Log.debugMessage(e, Level.SEVERE);
 			}
 		}
 		return result;
@@ -137,7 +137,7 @@ public final class CableBindingController implements Wrapper {
 						cci.setEndSpare(Double.parseDouble((String) value));
 				}
 			} catch(Exception e) {
-				Log.debugException(e, Level.SEVERE);
+				Log.debugMessage(e, Level.SEVERE);
 			}
 		}
 	}

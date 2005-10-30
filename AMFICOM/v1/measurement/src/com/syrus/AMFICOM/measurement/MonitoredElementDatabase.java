@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.6 2005/10/22 14:08:33 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.7 2005/10/30 14:49:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/22 14:08:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 14:49:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -265,7 +265,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

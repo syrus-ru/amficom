@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.19 2005/10/21 16:46:20 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.20 2005/10/30 14:49:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/10/21 16:46:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/10/30 14:49:21 $
  * @module schemeclient
  */
 
@@ -126,9 +126,9 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
 					newProto.getSchemeCell().setData((List<Object>)invisibleGraph.getArchiveableState());
 				} catch (CloneNotSupportedException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				} catch (ApplicationException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 			} else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
 				try {
@@ -142,7 +142,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					SchemeImageResource imageResource = proto.getSchemeCell();
 					SchemeActions.openSchemeImageResource(graph, imageResource, true, see.getInsertionPoint(), false);
 				} catch (ApplicationException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 				
 				
@@ -172,7 +172,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 				return b || p.getGraph().isGraphChanged();
 			}
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		return super.hasUnsavedChanges(p);
 	}

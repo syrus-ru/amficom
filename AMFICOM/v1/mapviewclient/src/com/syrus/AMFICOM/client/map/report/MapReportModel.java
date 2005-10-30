@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.15 2005/10/13 13:51:16 peskovsky Exp $
+ * $Id: MapReportModel.java,v 1.16 2005/10/30 14:48:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -109,8 +109,8 @@ public class MapReportModel extends ReportModel {
 							scale.doubleValue() * mapFrameSize.getWidth() / element.getWidth(),
 							new Dimension(element.getWidth(),element.getHeight()));
 				} catch (MapException e) {
-					Log.errorMessage("MapReportModel.createReport | " + e.getMessage());
-					Log.errorException(e);			
+					Log.errorMessage(e.getMessage());
+					Log.errorMessage(e);			
 					throw new CreateReportException(
 							reportName,
 							modelClassName,					
@@ -162,8 +162,8 @@ public class MapReportModel extends ReportModel {
 				}
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage("MapReportModel.createReport | " + e.getMessage());
-			Log.errorException(e);			
+			Log.errorMessage(e.getMessage());
+			Log.errorMessage(e);			
 			throw new CreateReportException(
 					reportName,
 					modelClassName,					

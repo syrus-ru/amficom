@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.54 2005/09/22 15:16:33 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.55 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.54 $, $Date: 2005/09/22 15:16:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/10/30 14:49:07 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -159,21 +159,21 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Level.SEVERE);
+			Log.debugMessage(se, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
@@ -199,7 +199,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		} catch (final AssertionError ae) {
 			linkedCode = ObjectEntities.UNKNOWN_CODE;
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
@@ -241,21 +241,21 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Level.SEVERE);
+			Log.debugMessage(se, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {

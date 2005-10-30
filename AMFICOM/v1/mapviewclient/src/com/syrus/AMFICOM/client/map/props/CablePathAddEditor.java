@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.31 2005/10/26 11:07:01 bass Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.32 2005/10/30 14:48:56 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/26 11:07:01 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/30 14:48:56 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -317,7 +317,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					try {
 						clearBinding();
 					} catch(ApplicationException e1) {
-						Log.debugException(e1, Level.SEVERE);
+						Log.debugMessage(e1, Level.SEVERE);
 					}
 				}
 			});
@@ -653,7 +653,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				this.model.setValues(this.cablePath.getLinks());
 				setBindingValues();
 			} catch(Exception e) {
-				Log.debugException(e, Level.SEVERE);
+				Log.debugMessage(e, Level.SEVERE);
 			}
 			
 			setBindingPanels();

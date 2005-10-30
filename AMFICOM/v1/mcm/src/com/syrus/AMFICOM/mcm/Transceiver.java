@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.73 2005/10/22 15:23:39 arseniy Exp $
+ * $Id: Transceiver.java,v 1.74 2005/10/30 14:48:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/10/22 15:23:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/10/30 14:48:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -68,7 +68,7 @@ final class Transceiver extends SleepButWorkThread {
 		try {
 			this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
 		} catch (CommunicationException ce) {
-			Log.errorException(ce);
+			Log.errorMessage(ce);
 		}
 		this.running = true;
 	}
@@ -110,7 +110,7 @@ final class Transceiver extends SleepButWorkThread {
 						final Measurement measurement = StorableObjectPool.getStorableObject(measurementId, true);
 						this.scheduledMeasurements.remove(measurement);
 					} catch (ApplicationException ae) {
-						Log.errorException(ae);
+						Log.errorMessage(ae);
 					}
 					it.remove();
 				}
@@ -147,14 +147,14 @@ final class Transceiver extends SleepButWorkThread {
 							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
 							super.clearFalls();
 						} catch (CommunicationException ce) {
-							Log.errorException(ce);
+							Log.errorMessage(ce);
 							this.kisConnection.drop();
 							super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
 							this.measurementToRemove = measurement;
 							super.sleepCauseOfFall();
 							continue;
 						} catch (ApplicationException ae) {
-							Log.errorException(ae);
+							Log.errorMessage(ae);
 						}
 					}// if (! this.scheduledMeasurements.isEmpty())
 
@@ -163,7 +163,7 @@ final class Transceiver extends SleepButWorkThread {
 							this.kisReport = this.kisConnection.receiveKISReport(super.initialTimeToSleep);
 							super.clearFalls();
 						} catch (CommunicationException ce) {
-							Log.errorException(ce);
+							Log.errorMessage(ce);
 							this.kisConnection.drop();
 							super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
 							super.sleepCauseOfFall();
@@ -175,7 +175,7 @@ final class Transceiver extends SleepButWorkThread {
 						try {
 							measurement = StorableObjectPool.getStorableObject(measurementId, true);
 						} catch (ApplicationException ae) {
-							Log.errorException(ae);
+							Log.errorMessage(ae);
 						}
 						if (measurement != null) {
 
@@ -188,12 +188,12 @@ final class Transceiver extends SleepButWorkThread {
 								saveObjects.add(result);
 								StorableObjectPool.flush(saveObjects, LoginManager.getUserId(), false);
 							} catch (ApplicationException ae) {
-								Log.errorException(ae);
+								Log.errorMessage(ae);
 								Log.debugMessage("Cannot create result -- trying to wait", Log.DEBUGLEVEL07);
 								try {
 									MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 								} catch (CommunicationException ce) {
-									Log.errorException(ce);
+									Log.errorMessage(ce);
 								}
 								result = null;
 								super.fallCode = FALL_CODE_CREATE_RESULT;
@@ -230,7 +230,7 @@ final class Transceiver extends SleepButWorkThread {
 						this.kisConnection.establish(kisConnectionTimeout, true);
 						super.clearFalls();
 					} catch (CommunicationException ce) {
-						Log.errorException(ce);
+						Log.errorMessage(ce);
 						super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 						super.sleepCauseOfFall();
 					}
@@ -240,7 +240,7 @@ final class Transceiver extends SleepButWorkThread {
 					this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
 					super.clearFalls();
 				} catch (CommunicationException ce) {
-					Log.errorException(ce);
+					Log.errorMessage(ce);
 					super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 					super.sleepCauseOfFall();
 				}
@@ -282,7 +282,7 @@ final class Transceiver extends SleepButWorkThread {
 			try {
 				StorableObjectPool.flush(this.measurementToRemove, LoginManager.getUserId(), false);
 			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 
 			this.measurementToRemove = null;
@@ -298,7 +298,7 @@ final class Transceiver extends SleepButWorkThread {
 			try {
 				StorableObjectPool.flush(this.measurementToRemove, LoginManager.getUserId(), true);
 			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				Log.errorMessage(ae);
 			}
 			this.measurementToRemove = null;
 		} else {

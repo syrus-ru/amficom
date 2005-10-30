@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.88 2005/10/25 19:53:10 bass Exp $
+ * $Id: TopologicalNode.java,v 1.89 2005/10/30 14:49:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/10/25 19:53:10 $
+ * @version $Revision: 1.89 $, $Date: 2005/10/30 14:49:01 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode<TopologicalNode>
@@ -357,7 +357,7 @@ public final class TopologicalNode extends AbstractNode<TopologicalNode>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

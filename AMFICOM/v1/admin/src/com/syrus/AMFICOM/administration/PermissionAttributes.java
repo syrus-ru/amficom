@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.25 2005/10/27 10:42:27 bob Exp $
+* $Id: PermissionAttributes.java,v 1.26 2005/10/30 14:48:49 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/27 10:42:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2005/10/30 14:48:49 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -841,8 +841,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		if (this.module != permissionCode.getModule()) {
 			throw new IllegalArgumentException("This Permission doen't support " + permissionCode.name());
 		}
-		assert Log.debugMessage("Permissions.setPermissionEnable | " 
-				+ (enable ? "en" : "dis") + "able " 
+		assert Log.debugMessage((enable ? "en" : "dis") + "able " 
 				+ permissionCode.getOrderInGroup() 
 				+ " bit in "
 				+ this.module + " group" ,

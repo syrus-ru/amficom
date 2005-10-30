@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.10 2005/10/24 14:34:25 arseniy Exp $
+* $Id: LoginRestoreCommand.java,v 1.11 2005/10/30 14:48:51 bass Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/24 14:34:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/10/30 14:48:51 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -83,7 +83,7 @@ public final class LoginRestoreCommand extends OpenSessionCommand implements Log
 			systemUser = StorableObjectPool.getStorableObject(LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
 			// Never
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 		if (systemUser != null) {
 			super.login = systemUser.getLogin();

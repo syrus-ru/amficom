@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.21 2005/10/27 09:21:32 arseniy Exp $
+ * $Id: EventServerImplementation.java,v 1.22 2005/10/30 14:49:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingExc
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/27 09:21:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 14:49:11 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -69,7 +69,7 @@ final class EventServerImplementation extends EventServerPOA {
 				userEventNotifier.addEvent(event);
 			}
 		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
+			Log.errorMessage(coe);
 			throw new AMFICOMRemoteException(
 					IdlErrorCode.ERROR_ILLEGAL_DATA,
 					IdlCompletionStatus.COMPLETED_NO,
@@ -83,7 +83,7 @@ final class EventServerImplementation extends EventServerPOA {
 	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
 	public void receiveEvents(final IdlEvent[] idlEvents) throws IdlEventProcessingException {
-		Log.debugMessage("EventServerImplementation.receiveEvents() | Received "
+		Log.debugMessage("Received "
 				+ idlEvents.length + " event(s)",
 				INFO);
 		for (final IdlEvent idlEvent : idlEvents) {
@@ -91,9 +91,9 @@ final class EventServerImplementation extends EventServerPOA {
 			final Event<? extends IdlEvent> event = idlEvent.getNativeEvent();
 			try {
 				EventProcessorRegistry.processEvent(event);
-				Log.debugMessage("EventServerImplementation.receiveEvents() | Event: " + event + " delivered successfully", INFO);
+				Log.debugMessage("Event: " + event + " delivered successfully", INFO);
 			} catch (EventProcessingException e) {
-				Log.debugException(e, Log.DEBUGLEVEL07);
+				Log.debugMessage(e, Log.DEBUGLEVEL07);
 			}
 		}
 	}

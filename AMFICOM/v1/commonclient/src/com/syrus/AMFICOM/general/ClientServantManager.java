@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.15 2005/10/19 08:08:09 bass Exp $
+ * $Id: ClientServantManager.java,v 1.16 2005/10/30 14:48:51 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/19 08:08:09 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/30 14:48:51 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -83,7 +83,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 	@Override
 	protected final void onLoseConnection(final String servantName) {
 		this.connectionLostMap.put(servantName, Boolean.valueOf(true));
-		Log.debugMessage("AbstractClientServantManager.onLoseConnection() | Connection with '" + servantName + "' lost",
+		Log.debugMessage("Connection with '" + servantName + "' lost",
 			Log.DEBUGLEVEL08);
 		final String msg = I18N.getString("Error.ConnectionWith.ConnectionWith") + " '" + servantName + "' " + I18N.getString("Error.ConnectionWith.Lost");
 		final Boolean lost = this.connectionLostMap.get(servantName);
@@ -98,7 +98,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 
 	@Override
 	protected final void onRestoreConnection(final String servantName) {
-		Log.debugMessage("AbstractClientServantManager.onRestoreConnection() | Connection with '" + servantName + "' restored",
+		Log.debugMessage("Connection with '" + servantName + "' restored",
 			Log.DEBUGLEVEL08);
 		final String msg = I18N.getString("Common.ClientServantManager.ConnectionWith.ConnectionWith") 
 			+ " '" + servantName 

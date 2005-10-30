@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.15 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: AddPropFrame.java,v 1.16 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/10/30 14:49:18 $
  * @module schemeclient
  */
 
@@ -178,7 +178,7 @@ public class AddPropFrame extends JDialog {
 				try {
 					this.selectedType = SchemeObjectsFactory.createCharacteristicType(this.nameField.getText(), this.sort);
 				} catch (CreateObjectException ex) {
-					Log.errorException(ex);
+					Log.errorMessage(ex);
 					return;
 				}
 			} else {

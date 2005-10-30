@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkCommandAtomic.java,v 1.33 2005/10/21 16:51:35 krupenn Exp $$
+ * $$Id: CreateMarkCommandAtomic.java,v 1.34 2005/10/30 14:48:55 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.33 $, $Date: 2005/10/21 16:51:35 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.34 $, $Date: 2005/10/30 14:48:55 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -114,7 +114,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 						this.distance);
 				this.mark.setName(I18N.getString(MapEditorResourceKeys.ENTITY_MARK));
 			} catch (CreateObjectException e) {
-				Log.debugException(e, Level.SEVERE);
+				Log.debugMessage(e, Level.SEVERE);
 			}
 			this.map.addNode(this.mark);
 			MarkController mc = (MarkController)
@@ -127,7 +127,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 		} catch(Exception e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 	

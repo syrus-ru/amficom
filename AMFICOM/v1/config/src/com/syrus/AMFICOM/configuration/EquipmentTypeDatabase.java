@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeDatabase.java,v 1.59 2005/09/29 08:18:07 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.60 2005/10/30 14:48:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/09/29 08:18:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/10/30 14:48:45 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -49,11 +49,11 @@ public final class EquipmentTypeDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage("EquipmentTypeDatabase.insertAll | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final EquipmentType equipmentType : EquipmentType.values()) {
 				preparedStatement.setInt(1, equipmentType.getCode());
 				preparedStatement.setString(2, equipmentType.getCodename());
-				Log.debugMessage("EquipmentTypeDatabase.insertAll | Inserting equipment type '" + equipmentType.getCodename() + "'",
+				Log.debugMessage("Inserting equipment type '" + equipmentType.getCodename() + "'",
 						Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
@@ -74,7 +74,7 @@ public final class EquipmentTypeDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

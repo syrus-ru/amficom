@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.112 2005/10/25 19:53:11 bass Exp $
+ * $Id: SiteNode.java,v 1.113 2005/10/30 14:49:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/10/25 19:53:11 $
+ * @version $Revision: 1.113 $, $Date: 2005/10/30 14:49:02 $
  * @module map
  */
 public class SiteNode extends AbstractNode<SiteNode>
@@ -301,7 +301,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 		try {
 			return StorableObjectPool.<SiteNode>getStorableObject(this.attachmentSiteNodeId, true);
 		} catch(ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return null;
 		}
 	}
@@ -524,7 +524,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -534,7 +534,7 @@ public class SiteNode extends AbstractNode<SiteNode>
 		try {
 			return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, true);
 		} catch(ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		return Collections.emptySet();
 	}

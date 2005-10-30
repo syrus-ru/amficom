@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateRack.java,v 1.4 2005/10/17 14:59:15 stas Exp $
+ * $Id: CreateRack.java,v 1.5 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -114,7 +114,7 @@ public class CreateRack extends AbstractAction {
 						rackProto = rackProtos.iterator().next();
 					}
 				} catch (ApplicationException e1) {
-					Log.errorException(e1);
+					Log.errorMessage(e1);
 				}
 				if (rackProto == null) {
 					rackProto = SchemeObjectsFactory.createProtoEquipment(LangModelGraph.getString("rack"), EquipmentType.RACK);
@@ -136,7 +136,7 @@ public class CreateRack extends AbstractAction {
 				}
 				imres.setData((List)invisibleGraph.getArchiveableState());
 			} catch (ApplicationException e1) {
-				Log.errorException(e1);
+				Log.errorMessage(e1);
 				return;
 			}
 		}
@@ -182,7 +182,7 @@ public class CreateRack extends AbstractAction {
 				element2.setParentSchemeElement(element, false);
 			}
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		return rack;
 	}

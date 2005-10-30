@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeElementImpl.java,v 1.7 2005/09/29 12:50:56 bass Exp $
+ * $Id: IdlSchemeElementImpl.java,v 1.8 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/09/29 12:50:56 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 final class IdlSchemeElementImpl extends IdlSchemeElement {
@@ -79,7 +79,7 @@ final class IdlSchemeElementImpl extends IdlSchemeElement {
 		try {
 			return new SchemeElement(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

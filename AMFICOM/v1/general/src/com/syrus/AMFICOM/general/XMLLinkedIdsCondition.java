@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsCondition.java,v 1.2 2005/10/10 15:40:31 bob Exp $
+* $Id: XMLLinkedIdsCondition.java,v 1.3 2005/10/30 14:49:07 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/10 15:40:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -83,21 +83,21 @@ extends XMLStorableObjectCondition<LinkedIdsCondition> {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 			, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 			, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Level.SEVERE);
+			Log.debugMessage(se, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 			, Level.SEVERE);
 		}

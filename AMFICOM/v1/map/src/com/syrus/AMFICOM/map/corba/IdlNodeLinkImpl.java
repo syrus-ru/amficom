@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlNodeLinkImpl.java,v 1.5 2005/08/26 09:43:17 max Exp $
+ * $Id: IdlNodeLinkImpl.java,v 1.6 2005/10/30 14:49:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/08/26 09:43:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 14:49:02 $
  * @module map
  */
 final class IdlNodeLinkImpl extends IdlNodeLink {
@@ -60,7 +60,7 @@ final class IdlNodeLinkImpl extends IdlNodeLink {
 		try {
 			return new NodeLink(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

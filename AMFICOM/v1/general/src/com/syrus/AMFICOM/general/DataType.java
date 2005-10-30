@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.10 2005/10/19 10:22:14 bob Exp $
+ * $Id: DataType.java,v 1.11 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/19 10:22:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -57,7 +57,7 @@ public enum DataType implements TransferableObject<IdlDataType>, Codeable {
 			case IdlDataType._DATA_TYPE_BOOLEAN:
 				return BOOLEAN;
 			default:
-				Log.errorMessage("DataType.valueOf | Illegal IDL code: " + code + ", returning RAW");
+				Log.errorMessage("Illegal IDL code: " + code + ", returning RAW");
 				return RAW;
 		}
 	}
@@ -83,7 +83,7 @@ public enum DataType implements TransferableObject<IdlDataType>, Codeable {
 		try {
 			return IdlDataType.from_int(this.getCode());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			Log.errorMessage("DataType.getTransferable | Illegal code: " + this.getCode() + ", returning RAW");
+			Log.errorMessage("Illegal code: " + this.getCode() + ", returning RAW");
 			return IdlDataType.DATA_TYPE_RAW;
 		}
 	}

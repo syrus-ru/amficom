@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlResultImpl.java,v 1.4 2005/08/25 20:13:57 arseniy Exp $
+ * $Id: IdlResultImpl.java,v 1.5 2005/10/30 14:49:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/25 20:13:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 14:49:06 $
  * @module measurement
  */
 final class IdlResultImpl extends IdlResult {
@@ -63,7 +63,7 @@ final class IdlResultImpl extends IdlResult {
 		try {
 			return new Result(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

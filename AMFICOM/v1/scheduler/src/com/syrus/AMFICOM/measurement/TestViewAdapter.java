@@ -1,5 +1,5 @@
 /*
- * $Id: TestViewAdapter.java,v 1.4 2005/10/20 08:52:34 bob Exp $
+ * $Id: TestViewAdapter.java,v 1.5 2005/10/30 14:48:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/20 08:52:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 14:48:48 $
+ * @author $Author: bass $
  * @module module
  */
 public class TestViewAdapter implements Wrapper<TestView> {
@@ -171,7 +171,7 @@ public class TestViewAdapter implements Wrapper<TestView> {
 				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 				return sdf.format(test.getStartTime());
 			} else if (key == KEY_STATUS) {
-//				assert Log.debugMessage("TestViewAdapter.getValue | " + test + " >> " + test.getStatus().value(),
+//				assert Log.debugMessage(test + " >> " + test.getStatus().value(),
 //					Log.DEBUGLEVEL09);
 				return test.getStatus();
 			} else if (key == KEY_D) {

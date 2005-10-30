@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.27 2005/10/08 13:49:03 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.28 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2005/10/08 13:49:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/10/30 14:49:18 $
  * @module schemeclient
  */
 
@@ -277,7 +277,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 							MeasurementPortTypePropertiesManager.getInstance(this.aContext),
 							ObjectSelectedEvent.MEASUREMENTPORT_TYPE));
 				} catch (CreateObjectException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 					return;
 				}
 			} else {
@@ -304,7 +304,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		try {
 			StorableObjectPool.flush(this.type.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type.getId(), SchemeEvent.UPDATE_OBJECT));
 	}

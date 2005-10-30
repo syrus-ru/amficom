@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.80 2005/10/25 19:53:05 bass Exp $
+ * $Id: Result.java,v 1.81 2005/10/30 14:49:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/10/25 19:53:05 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/30 14:49:05 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -101,7 +101,7 @@ public final class Result extends StorableObject<Result> {
 				actionId = new Identifier(rt.modelingId);
 				break;
 			default:
-				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id + "'");
+				Log.errorMessage("Illegal sort: " + this.sort + " of result '" + super.id + "'");
 		}
 		this.action = (Action) StorableObjectPool.getStorableObject(actionId, true);
 

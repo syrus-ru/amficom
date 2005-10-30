@@ -92,7 +92,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 				proto = groups[0].getProtoElement();
 			}
 		} catch (ApplicationException e1) {
-			Log.errorException(e1);
+			Log.errorMessage(e1);
 			return;
 		}
 
@@ -152,7 +152,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 					LangModelScheme.getString("Message.information"), //$NON-NLS-1$,
 					JOptionPane.INFORMATION_MESSAGE);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: LayerDescriptorParser.java,v 1.7 2005/09/21 15:14:28 arseniy Exp $
+ * $Id: LayerDescriptorParser.java,v 1.8 2005/10/30 14:48:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/09/21 15:14:28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/10/30 14:48:59 $
  * @module mshserver_v1
  */
 
@@ -37,7 +37,7 @@ final class LayerDescriptorParser {
 		try {
 			document = reader.read(mapMDF);
 		} catch (DocumentException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return layerFiles;
 		}
 
@@ -52,7 +52,7 @@ final class LayerDescriptorParser {
 			final String layerName = layerNameNode.getText();
 			String layerPath = layerPathNode.getText();
 			if (layerName == null || layerName.equals("") || layerPath == null || layerPath.equals("")) {
-				Log.errorMessage("LayerFilesParser.getLayerFiles() | Wrong xml content in file " + mapMDF);
+				Log.errorMessage("Wrong xml content in file " + mapMDF);
 				continue;
 			}
 			//TODO: somthing wrong, try to devise something better

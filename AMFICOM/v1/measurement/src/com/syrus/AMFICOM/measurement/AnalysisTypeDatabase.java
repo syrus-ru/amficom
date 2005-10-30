@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisTypeDatabase.java,v 1.107 2005/10/22 14:08:33 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.108 2005/10/30 14:49:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/10/22 14:08:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.108 $, $Date: 2005/10/30 14:49:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -73,7 +73,7 @@ public final class AnalysisTypeDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

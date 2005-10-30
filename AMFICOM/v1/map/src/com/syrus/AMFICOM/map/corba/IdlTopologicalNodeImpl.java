@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTopologicalNodeImpl.java,v 1.5 2005/08/26 07:56:26 max Exp $
+ * $Id: IdlTopologicalNodeImpl.java,v 1.6 2005/10/30 14:49:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/08/26 07:56:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 14:49:02 $
  * @module map
  */
 final class IdlTopologicalNodeImpl extends IdlTopologicalNode {
@@ -62,7 +62,7 @@ final class IdlTopologicalNodeImpl extends IdlTopologicalNode {
 		try {
 			return new TopologicalNode(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapChooserPanel.java,v 1.20 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: MapChooserPanel.java,v 1.21 2005/10/30 14:48:56 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 /**
  * панель выбора вида карты
  * 
- * @version $Revision: 1.20 $, $Date: 2005/10/11 08:56:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/10/30 14:48:56 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -105,7 +105,7 @@ public class MapChooserPanel extends JPanel
 			availableViews = this.connection.getAvailableViews();
 		} catch(MapDataException e) {
 			Log.debugMessage("Cannot get views: " + e.getMessage(), Level.SEVERE); //$NON-NLS-1$
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 			return;
 		}
 
@@ -152,7 +152,7 @@ public class MapChooserPanel extends JPanel
 		catch(MapConnectionException e)
 		{
 			Log.debugMessage("Cannot change view: " + e.getMessage(), Level.SEVERE); //$NON-NLS-1$
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 			this.connection.setView(previousView);
 			try {
 				this.connection.connect();

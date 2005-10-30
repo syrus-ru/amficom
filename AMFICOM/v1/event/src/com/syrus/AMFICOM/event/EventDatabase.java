@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.46 2005/10/19 10:23:42 bob Exp $
+ * $Id: EventDatabase.java,v 1.47 2005/10/30 14:49:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/10/19 10:23:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/10/30 14:49:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -139,7 +139,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("EventDatabase.retrieveEventParametersByOneQuery | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(stringBuffer.toString());
 
 			while (resultSet.next()) {
@@ -181,7 +181,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -258,7 +258,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, eventId);
 				DatabaseString.setString(preparedStatement, 4, eventParameter.getValue(), SIZE_PARAMETER_VALUE_COLUMN);
 
-				Log.debugMessage("EventDatabase.insertEventParameters | Inserting parameter " + parameterType.getDescription()
+				Log.debugMessage("Inserting parameter " + parameterType.getDescription()
 						+ " for event '" + eventId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
@@ -282,7 +282,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

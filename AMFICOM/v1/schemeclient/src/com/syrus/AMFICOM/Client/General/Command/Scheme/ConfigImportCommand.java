@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigImportCommand.java,v 1.2 2005/10/10 11:07:38 stas Exp $
+ * $Id: ConfigImportCommand.java,v 1.3 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,10 +73,10 @@ public class ConfigImportCommand extends ImportExportCommand {
 					LangModelScheme.getString("Message.error.parse_xml"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return;
 		} catch (IOException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return;
 		}		 
 

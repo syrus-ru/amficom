@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.44 2005/10/25 15:33:53 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.45 2005/10/30 14:48:48 bass Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/10/25 15:33:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2005/10/30 14:48:48 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -217,7 +217,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 	@Override
 	public void loggedOut() {
-		assert Log.debugMessage("ScheduleMainFrame.loggedOut | ", Log.DEBUGLEVEL09);
+		assert Log.debugMessage(Log.DEBUGLEVEL09);
 		this.logged(false);
 	}
 
@@ -314,7 +314,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
-//		Log.debugMessage("ScheduleMainFrame.setDefaultModel | ", Log.FINEST);
+//		Log.debugMessage(Log.FINEST);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PLAN, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TREE, false);

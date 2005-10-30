@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeReport.java,v 1.3 2005/10/26 10:12:32 bass Exp $
+ * $Id: SiteNodeReport.java,v 1.4 2005/10/30 14:48:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ public class SiteNodeReport {
 						vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			Log.errorMessage("SiteNodeReport.createReport | " + e.getMessage());
-			Log.errorException(e);			
+			Log.errorMessage(e.getMessage());
+			Log.errorMessage(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
 					tableStorableElement.getModelClassName(),

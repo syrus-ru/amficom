@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.25 2005/09/21 13:07:41 max Exp $
+ * $Id: FilterController.java,v 1.26 2005/10/30 14:48:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/21 13:07:41 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2005/10/30 14:48:52 $
+ * @author $Author: bass $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
@@ -93,7 +93,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				this.keyTempCondition.put(conditionKey, new DateCondition());
 				break;
 			default:
-				Log.errorMessage("FilterController.setFilter | Unsupported condition type");
+				Log.errorMessage("Unsupported condition type");
 			}
 		}
 		this.view.setKeyNames(keyNames);
@@ -194,7 +194,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 			this.view.drawDateCondition(dateCondition);
 			break;
 		default:
-			Log.errorMessage("FilterCondition.changeKey | Unsupported condition type");			
+			Log.errorMessage("Unsupported condition type");			
 		}
 	}
 
@@ -321,7 +321,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				try {
 					equalsInt = Integer.parseInt(equals);
 				} catch (NumberFormatException e) {
-					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
+					Log.debugMessage("Warning, wrong data format",Log.DEBUGLEVEL07);
 					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
@@ -334,14 +334,14 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				try {
 					fromInt = Integer.parseInt(numberCondition.getFrom());
 				} catch (NumberFormatException e) {
-					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
+					Log.debugMessage("Warning, wrong data format",Log.DEBUGLEVEL07);
 					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
 				try {
 					toInt = Integer.parseInt(numberCondition.getTo());
 				} catch (NumberFormatException e) {
-					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
+					Log.debugMessage("Warning, wrong data format",Log.DEBUGLEVEL07);
 					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
@@ -353,7 +353,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				try {
 					fromInt = Integer.parseInt(numberCondition.getFrom());
 				} catch (NumberFormatException e) {
-					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
+					Log.debugMessage("Warning, wrong data format",Log.DEBUGLEVEL07);
 					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
@@ -369,7 +369,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				try {
 					toInt = Integer.parseInt(numberCondition.getTo());
 				} catch (NumberFormatException e) {
-					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
+					Log.debugMessage("Warning, wrong data format",Log.DEBUGLEVEL07);
 					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
@@ -454,7 +454,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 			this.model.addCondition0(new TypicalCondition(start, end, sort2, entityCode, key), conditionKey);
 			break;
 		default:
-			Log.errorMessage("FilterController.addConditionToModel | Unsupported condition type");
+			Log.errorMessage("Unsupported condition type");
 		}
 		setActiveButton();
 		this.view.setSelectedCondition(this.model.getCreatedConditionKeyIndex(conditionKey));
@@ -519,7 +519,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 			this.view.setDateCondition(dateCondition);
 			break;
 		default:
-			Log.errorMessage("FilterController.saveTempConditions | Unsupported condition type");			
+			Log.errorMessage("Unsupported condition type");			
 		}		
 	}
 

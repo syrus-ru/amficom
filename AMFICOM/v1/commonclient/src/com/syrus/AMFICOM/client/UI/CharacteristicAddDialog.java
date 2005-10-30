@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.17 2005/10/21 15:47:34 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.18 2005/10/30 14:48:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.17 $, $Date: 2005/10/21 15:47:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/10/30 14:48:51 $
  * @module commonclient
  */
 
@@ -223,7 +223,7 @@ public class CharacteristicAddDialog {
 								this.sort);
 						StorableObjectPool.flush(this.selectedType, LoginManager.getUserId(), false); 
 					} catch (ApplicationException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 				}
 			}

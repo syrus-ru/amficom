@@ -496,7 +496,7 @@ public class PathBuilder {
 							LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 							JOptionPane.OK_OPTION);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			return null;
 		}

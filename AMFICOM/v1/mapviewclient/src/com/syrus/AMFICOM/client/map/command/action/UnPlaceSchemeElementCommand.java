@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnPlaceSchemeElementCommand.java,v 1.29 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: UnPlaceSchemeElementCommand.java,v 1.30 2005/10/30 14:48:55 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 /**
  * убрать привязку схемного элемента с карты
  * 
- * @version $Revision: 1.29 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/10/30 14:48:55 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -66,7 +66,7 @@ public class UnPlaceSchemeElementCommand extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 }

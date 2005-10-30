@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.15 2005/10/12 10:08:41 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.16 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/10/12 10:08:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -85,7 +85,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				this.colorType = characteristicTypes.iterator().next();
 			}
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 
@@ -113,7 +113,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				createModules(nModules);
 				createFibers(nModules, scts);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -160,7 +160,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 						color = new Color(Integer.parseInt(ch.getValue()));
 					}
 				} catch (ApplicationException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 				
 				addThreadCell(this.panel.getGraph(), sct, bounds,	color);
@@ -212,7 +212,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 							color = new Color(Integer.parseInt(ch.getValue()));
 						}
 					} catch (ApplicationException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 					
 					this.panel.getGraph().setSelectionCell(cell);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorNewLinkTypeCommand.java,v 1.16 2005/10/25 08:01:48 krupenn Exp $$
+ * $$Id: MapEditorNewLinkTypeCommand.java,v 1.17 2005/10/30 14:48:57 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/25 08:01:48 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/10/30 14:48:57 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -89,10 +89,10 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 				setResult(Command.RESULT_CANCEL);
 			}
 		} catch(CreateObjectException e) {
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 			setResult(Command.RESULT_NO);
 		} catch(ApplicationException e) {
-			Log.debugException(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 			setResult(Command.RESULT_NO);
 		}
 	}

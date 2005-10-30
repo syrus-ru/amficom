@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.34 2005/10/22 14:15:08 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.35 2005/10/30 14:49:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/10/22 14:15:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/10/30 14:49:11 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -97,7 +97,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		try {
 			systemUsers = StorableObjectPool.getStorableObjectsByCondition(this.tc, true, true);
 		} catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 		if (systemUsers.isEmpty()) {
@@ -112,7 +112,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		try {
 			localPassword = this.shadowDatabase.retrieve(userId);
 		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
+			Log.errorMessage(roe);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, roe.getMessage());
 		} catch (ObjectNotFoundException onfe) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND, IdlCompletionStatus.COMPLETED_YES, onfe.getMessage());
@@ -188,7 +188,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			Log.debugMessage("Setting password to user '" + systemUser.getLogin() + "'/'" + userId + "'", Log.DEBUGLEVEL08);
 		}
 		catch (ApplicationException ae) {
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
@@ -196,7 +196,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			this.shadowDatabase.updateOrInsert(userId, Encryptor.crypt(password));
 		}
 		catch (UpdateObjectException uoe) {
-			Log.errorException(uoe);
+			Log.errorMessage(uoe);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_UPDATE, IdlCompletionStatus.COMPLETED_NO, uoe.getMessage());
 		}
 	}

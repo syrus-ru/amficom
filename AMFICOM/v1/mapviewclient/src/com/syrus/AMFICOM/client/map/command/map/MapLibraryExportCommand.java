@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryExportCommand.java,v 1.16 2005/10/17 14:08:46 krupenn Exp $$
+ * $$Id: MapLibraryExportCommand.java,v 1.17 2005/10/30 14:48:57 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.16 $, $Date: 2005/10/17 14:08:46 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/10/30 14:48:57 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -162,7 +162,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 						+ f.getPath(), INFO);
 			}
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 		}
 	}
 

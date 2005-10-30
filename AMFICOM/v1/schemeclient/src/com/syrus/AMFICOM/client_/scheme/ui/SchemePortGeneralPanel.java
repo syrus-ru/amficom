@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.26 2005/10/03 07:44:39 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.27 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/10/03 07:44:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -502,7 +502,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					this.tfLocalAddressText.setText("");
 				}
 			} catch (ApplicationException e1) {
-				Log.errorException(e1);
+				Log.errorMessage(e1);
 			}
 		}
 	}
@@ -574,14 +574,14 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 				this.cmbTypeCombo.addElements(portTypes);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			final EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 			try {
 				final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 				this.cmbMpTypeCombo.addElements(measurementPortTypes);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
 		}
@@ -645,7 +645,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 							mp.setType(mpType);
 							this.schemePort.setMeasurementPort(mp);
 						} catch (ApplicationException e) {
-							Log.errorException(e);
+							Log.errorMessage(e);
 						}
 					} else {
 						Log.debugMessage("Parent KIS not created. Cannot create MeasurementPort", Level.FINEST); //$NON-NLS-1$
@@ -676,7 +676,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 				}
 			} else {
 				this.schemePort.setMeasurementPort(null);

@@ -1,5 +1,5 @@
 /*-
- * $Id: EventQueue.java,v 1.2 2005/10/19 07:51:21 bass Exp $
+ * $Id: EventQueue.java,v 1.3 2005/10/30 14:48:44 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/19 07:51:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/30 14:48:44 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -53,7 +53,7 @@ final class EventQueue extends SleepButWorkThread {
 	@SuppressWarnings("unused")
 	synchronized void addEvent(final ReflectogramMismatchEvent event)
 	throws EventQueueFullException {
-		Log.debugMessage("EventQueue.addEvent() | Event: " + event + " added to outbox", INFO);
+		Log.debugMessage("Event: " + event + " added to outbox", INFO);
 		this.eventEqueue.add(event);
 		this.notifyAll();
 	}
@@ -82,11 +82,11 @@ final class EventQueue extends SleepButWorkThread {
 				eventServer.receiveEvents(idlEvents);
 				this.eventEqueue.clear();
 			} catch (final CommunicationException ce) {
-				Log.errorException(ce);
+				Log.errorMessage(ce);
 				super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 				super.sleepCauseOfFall();
 			} catch (final IdlEventProcessingException epe) {
-				Log.errorMessage("EventQueue.run() | Cannot transmit events -- " + epe.message);
+				Log.errorMessage("Cannot transmit events -- " + epe.message);
 				super.fallCode = FALL_CODE_TRANSMIT_EVENTS;
 				super.sleepCauseOfFall();
 			}
@@ -100,13 +100,13 @@ final class EventQueue extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			case FALL_CODE_ESTABLISH_CONNECTION:
-				Log.errorMessage("EventQueue.processFall() | ERROR: Many errors during establishing connection. Чё делать - ума не приложу.");
+				Log.errorMessage("ERROR: Many errors during establishing connection. Чё делать - ума не приложу.");
 				break;
 			case FALL_CODE_TRANSMIT_EVENTS:
-				Log.errorMessage("EventQueue.processFall() | ERROR: Many errors during transmit event. Чё делать - ума не приложу.");
+				Log.errorMessage("ERROR: Many errors during transmit event. Чё делать - ума не приложу.");
 				break;
 			default:
-				Log.errorMessage("EventQueue.processFall() | ERROR: Unknown error code: " + super.fallCode);
+				Log.errorMessage("ERROR: Unknown error code: " + super.fallCode);
 		}
 	}
 

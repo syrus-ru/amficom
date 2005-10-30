@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.80 2005/10/25 19:53:13 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.81 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/10/25 19:53:13 $
+ * @version $Revision: 1.81 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -306,7 +306,7 @@ public final class CableChannelingItem
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -356,7 +356,7 @@ public final class CableChannelingItem
 		try {
 			return StorableObjectPool.getStorableObject(this.getEndSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -381,7 +381,7 @@ public final class CableChannelingItem
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -399,7 +399,7 @@ public final class CableChannelingItem
 		try {
 			return StorableObjectPool.getStorableObject(this.getPhysicalLinkId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -450,7 +450,7 @@ public final class CableChannelingItem
 		try {
 			return StorableObjectPool.getStorableObject(this.getStartSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

@@ -105,7 +105,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		while (keys.hasMoreElements()) {
 			String codename = (String) keys.nextElement();
 			final String className = (String) bundle.getObject(codename);
-			Log.debugMessage("TestParametersPanel.preparePanels | codename " 
+			Log.debugMessage("codename " 
 					+ codename 
 					+ ", className " 
 					+ className, 
@@ -398,7 +398,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	}
 	
 	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
-		assert Log.debugMessage("TestParametersPanel.setMeasurementSetups | " + measurementSetups,
+		assert Log.debugMessage(measurementSetups,
 			Log.DEBUGLEVEL10);
 		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();

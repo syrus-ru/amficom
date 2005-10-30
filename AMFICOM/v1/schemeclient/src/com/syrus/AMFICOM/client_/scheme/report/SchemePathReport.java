@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePathReport.java,v 1.2 2005/10/13 10:24:35 stas Exp $
+ * $Id: SchemePathReport.java,v 1.3 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ public class SchemePathReport {
 				new SchemePathTableModel(schemePath,vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			Log.errorMessage("SchemePathReport.createReport | " + e.getMessage());
-			Log.errorException(e);			
+			Log.errorMessage(e.getMessage());
+			Log.errorMessage(e);			
 			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),

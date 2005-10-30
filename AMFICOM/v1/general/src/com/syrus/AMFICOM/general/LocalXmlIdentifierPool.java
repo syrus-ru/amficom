@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.18 2005/10/03 15:29:42 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.19 2005/10/30 14:49:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/30 14:49:07 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -95,8 +95,8 @@ public final class LocalXmlIdentifierPool {
 		
 //		When working with a large amount of objects ( ~ 26k ) this code
 //		results in significant performance degradation blia (w/o any cunt).	
-//		assert Log.debugMessage("LocalXmlIdentifierPool.put | FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
-//		assert Log.debugMessage("LocalXmlIdentifierPool.put | REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
+//		assert Log.debugMessage("FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
+//		assert Log.debugMessage("REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
 
 	}
 
@@ -120,7 +120,7 @@ public final class LocalXmlIdentifierPool {
 					+ importType + "''");
 		}
 		
-		assert Log.debugMessage("LocalXmlIdentifierPool.get | id:" + id 
+		assert Log.debugMessage("id:" + id 
 			+ ", importType:" + importType
 			+ ", xmlId:" + xmlId, Log.DEBUGLEVEL09);
 		
@@ -147,7 +147,7 @@ public final class LocalXmlIdentifierPool {
 					+ importType + "''");
 		}
 		
-		assert Log.debugMessage("LocalXmlIdentifierPool.get | xmlId:" + xmlId 
+		assert Log.debugMessage("xmlId:" + xmlId 
 			+ ", importType:" + importType
 			+ ", id:" + id , Log.DEBUGLEVEL09);
 		return id;
@@ -320,7 +320,7 @@ public final class LocalXmlIdentifierPool {
 			try {
 				XmlIdentifierDatabase.retrievePrefetchedMap(importType);
 			} catch (final RetrieveObjectException roe) {
-				Log.errorException(roe);
+				Log.errorMessage(roe);
 				return;
 			}
 			PREFETCHED_IMPORT_TYPES.add(importType);
@@ -359,7 +359,7 @@ public final class LocalXmlIdentifierPool {
 		try {
 			XmlIdentifierDatabase.insertKeys(keysToCreate);
 		} catch (final CreateObjectException coe) {
-			Log.errorException(coe);
+			Log.errorMessage(coe);
 		}
 	}
 
@@ -384,7 +384,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Maxim Selivanov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
+	 * @version $Revision: 1.19 $, $Date: 2005/10/30 14:49:07 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -402,7 +402,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
+	 * @version $Revision: 1.19 $, $Date: 2005/10/30 14:49:07 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -475,7 +475,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/10/03 15:29:42 $
+	 * @version $Revision: 1.19 $, $Date: 2005/10/30 14:49:07 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {

@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.37 2005/10/22 14:08:22 arseniy Exp $
+ * $Id: ServerCore.java,v 1.38 2005/10/30 14:48:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/10/22 14:08:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/10/30 14:48:40 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -221,7 +221,7 @@ public abstract class ServerCore implements CommonServer {
 		try {
 			Log.debugMessage("Verify value: " + b, Level.CONFIG);
 		} catch (final Throwable t) {
-			Log.debugException(t, Level.SEVERE);
+			Log.debugMessage(t, Level.SEVERE);
 		}
 	}
 
@@ -253,12 +253,12 @@ public abstract class ServerCore implements CommonServer {
 	}
 
 	private final AMFICOMRemoteException processDefaultApplicationException(final ApplicationException ae, final IdlErrorCode errorCode) {
-		Log.debugException(ae, Level.SEVERE);
+		Log.debugMessage(ae, Level.SEVERE);
 		return new AMFICOMRemoteException(errorCode, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 	}
 
 	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable throwable) {
-		Log.debugException(throwable, Level.SEVERE);
+		Log.debugMessage(throwable, Level.SEVERE);
 		return new AMFICOMRemoteException(IdlErrorCode.ERROR_UNKNOWN, IdlCompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
 	}
 

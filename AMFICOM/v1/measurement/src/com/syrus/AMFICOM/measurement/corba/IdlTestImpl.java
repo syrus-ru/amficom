@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.9 2005/09/19 18:14:10 arseniy Exp $
+ * $Id: IdlTestImpl.java,v 1.10 2005/10/30 14:49:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/09/19 18:14:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 14:49:05 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
@@ -75,7 +75,7 @@ final class IdlTestImpl extends IdlTest {
 		try {
 			return new Test(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

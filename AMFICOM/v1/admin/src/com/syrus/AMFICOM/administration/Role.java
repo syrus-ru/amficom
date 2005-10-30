@@ -1,5 +1,5 @@
 /*
- * $Id: Role.java,v 1.5 2005/10/25 19:53:15 bass Exp $
+ * $Id: Role.java,v 1.6 2005/10/30 14:48:49 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/25 19:53:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 14:48:49 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -141,7 +141,7 @@ public final class Role extends StorableObject<Role>
 		}
 		catch (final ApplicationException ae) {
 			// Never
-			Log.errorException(ae);
+			Log.errorMessage(ae);
 		}
 		this.codename = rt.codename;
 		this.description = rt.description;

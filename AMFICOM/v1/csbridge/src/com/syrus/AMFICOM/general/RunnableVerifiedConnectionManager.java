@@ -1,5 +1,5 @@
 /*
- * $Id: RunnableVerifiedConnectionManager.java,v 1.8 2005/10/22 14:08:22 arseniy Exp $
+ * $Id: RunnableVerifiedConnectionManager.java,v 1.9 2005/10/30 14:48:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/22 14:08:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/10/30 14:48:40 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -56,7 +56,7 @@ public class RunnableVerifiedConnectionManager extends VerifiedConnectionManager
 				Thread.sleep(this.timeout);
 			}
 			catch (InterruptedException ie) {
-				Log.errorException(ie);
+				Log.errorMessage(ie);
 			}
 		}
 	}

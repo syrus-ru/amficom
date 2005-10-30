@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.21 2005/09/26 12:05:06 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.22 2005/10/30 14:49:13 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/09/26 12:05:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 14:49:13 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -60,12 +60,10 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 				minuitParams = new AnalysisParameters(temp, defaultAP);
 		} catch (IOException ex) {
 			// write a error to log, then ignore
-			Log.errorMessage("ClientAnalysisManager.ClientAnalysisManager | "
-					+ "IOException while reading minuitParams from INI file");
+			Log.errorMessage("IOException while reading minuitParams from INI file");
 		} catch (InvalidAnalysisParametersException e) {
 			// write a error to log, then ignore
-			Log.errorMessage("ClientAnalysisManager.ClientAnalysisManager | "
-					+ "InvalidAnalysisParametersException while reading minuitParams from INI file");
+			Log.errorMessage("InvalidAnalysisParametersException while reading minuitParams from INI file");
 		}
 		if (minuitParams == null)
 				minuitParams = (AnalysisParameters)defaultAP.clone();

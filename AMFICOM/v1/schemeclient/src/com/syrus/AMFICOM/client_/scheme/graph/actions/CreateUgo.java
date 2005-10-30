@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.13 2005/10/21 16:46:20 stas Exp $
+ * $Id: CreateUgo.java,v 1.14 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/10/21 16:46:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -123,7 +123,7 @@ public class CreateUgo {
 				lines = createGroup(lines, graph, step, se);
 			}
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 	
@@ -226,7 +226,7 @@ public class CreateUgo {
 		try {
 			dev = SchemeObjectsFactory.createSchemeDevice(Long.toString(System.currentTimeMillis()));
 		} catch (CreateObjectException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return;
 		}	
 
@@ -296,7 +296,7 @@ public class CreateUgo {
 		try {
 			dev = SchemeObjectsFactory.createSchemeDevice(Long.toString(System.currentTimeMillis()));
 		} catch (CreateObjectException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 			return;
 		}	
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.36 2005/09/05 16:56:32 arseniy Exp $
+ * $Id: ImageResourceDatabase.java,v 1.37 2005/10/30 14:48:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/09/05 16:56:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/10/30 14:48:46 $
  * @module resource
  */
 
@@ -254,7 +254,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 					}
 				}
 			} catch (SQLException sqle) {
-				Log.errorException(sqle);
+				Log.errorMessage(sqle);
 			}
 		}
 	}

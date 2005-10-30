@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.40 2005/08/30 16:35:09 bass Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.41 2005/10/30 14:48:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/30 14:48:45 $
  * @author $Author: bass $
  * @module config
  */
@@ -70,7 +70,7 @@ public final class CableLinkTypeDatabase extends StorableObjectDatabase<CableLin
 	}
 	
 	protected boolean checkEntity(final short conditionCode) {
-		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + CABLELINK_TYPE_CODE, Level.FINEST);
+		Log.debugMessage("conditionCode is " + conditionCode + ", self is " + CABLELINK_TYPE_CODE, Level.FINEST);
 		return CABLELINK_TYPE_CODE == conditionCode;		
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.22 2005/10/22 15:23:39 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.23 2005/10/30 14:48:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/22 15:23:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 14:48:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -87,7 +87,7 @@ final class TCPKISConnection implements KISConnection {
 						obj.wait(5 * 1000);
 					}
 				} catch (InterruptedException ex) {
-					Log.errorException(ex);
+					Log.errorMessage(ex);
 				}
 			}
 		}	//while

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdentifierLoader.java,v 1.3 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: IdentifierLoader.java,v 1.4 2005/10/30 14:48:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:45:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/10/30 14:48:59 $
+ * @author $Author: bass $
  * @module mscharserver
  */
 public class IdentifierLoader extends SleepButWorkThread {
@@ -50,7 +50,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 				int size = this.idPool.capacity() - this.idPool.getNumber();
 				generatedIdentifierRange = this.server.getGeneratedIdentifierRange(this.entityCode,
 													size);
-				Log.debugMessage("IdentifierLoader.run | fetched " + generatedIdentifierRange.length + " identifiers for "
+				Log.debugMessage("fetched " + generatedIdentifierRange.length + " identifiers for "
 						+ this.entityCode, Log.DEBUGLEVEL10);
 			} catch (AMFICOMRemoteException e) {
 				Log.errorMessage(e.getMessage());

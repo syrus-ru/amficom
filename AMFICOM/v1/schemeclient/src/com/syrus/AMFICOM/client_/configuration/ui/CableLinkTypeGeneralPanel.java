@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.18 2005/10/08 13:49:03 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.19 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/10/08 13:49:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/10/30 14:49:18 $
  * @module schemeclient
  */
 
@@ -522,7 +522,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 			final Set<LinkType> linkTypes = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 			this.cmbTTypeCombo.addElements(new LinkedList<LinkType>(linkTypes));
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 
 		if (this.linkType != null) {
@@ -573,7 +573,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType, CableLinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.CABLELINK_TYPE));
 				} 
 				catch (CreateObjectException e) {
-					Log.errorException(e);
+					Log.errorMessage(e);
 					return;
 				}
 			}	else {
@@ -639,7 +639,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				StorableObjectPool.flush(removed, LoginManager.getUserId(), false);
 			}
 		} catch (ApplicationException e1) {
-			Log.errorException(e1);
+			Log.errorMessage(e1);
 		}
 		
 		try {
@@ -649,7 +649,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 			}
 			StorableObjectPool.flush(this.linkType.getId(), userId, false);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.UPDATE_OBJECT));
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.84 2005/10/27 10:04:29 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.85 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/10/27 10:04:29 $
+ * @version $Revision: 1.85 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
@@ -222,7 +222,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -249,7 +249,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeDeviceId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -272,7 +272,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getPortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -295,7 +295,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 					? StorableObjectPool.<PortType>getStorableObject(this.getPortTypeId(), true)
 					: this.getPort().getType();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

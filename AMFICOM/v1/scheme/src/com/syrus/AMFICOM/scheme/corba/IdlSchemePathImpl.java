@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemePathImpl.java,v 1.5 2005/07/25 12:14:08 bass Exp $
+ * $Id: IdlSchemePathImpl.java,v 1.6 2005/10/30 14:48:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/25 12:14:08 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 14:48:42 $
  * @module scheme
  */
 final class IdlSchemePathImpl extends IdlSchemePath {
@@ -60,7 +60,7 @@ final class IdlSchemePathImpl extends IdlSchemePath {
 		try {
 			return new SchemePath(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

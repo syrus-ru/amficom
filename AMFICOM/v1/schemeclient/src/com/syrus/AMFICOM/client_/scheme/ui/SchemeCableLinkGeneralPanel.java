@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.23 2005/10/22 08:57:43 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.24 2005/10/30 14:49:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/10/22 08:57:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/10/30 14:49:20 $
  * @module schemeclient
  */
 
@@ -454,7 +454,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 				final Set<CableLinkType> cableLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				this.cmbTypeCombo.addElements(cableLinkTypes);
 			} catch (ApplicationException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			this.cbLinkBox.setVisible(this.schemeCableLink.getParentScheme() != null);
 		}
@@ -521,7 +521,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 					}
 				}
 			} catch (ApplicationException e1) {
-				Log.errorException(e1);
+				Log.errorMessage(e1);
 			}
 			this.schemeCableLink.setOpticalLength(((Double) this.tfOpticalText.getValue()).doubleValue());
 			this.schemeCableLink.setPhysicalLength(((Double) this.tfPhysicalText.getValue()).doubleValue());
@@ -532,7 +532,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 					try {
 						link = SchemeObjectsFactory.createCableLink(this.schemeCableLink);
 					} catch (CreateObjectException e) {
-						Log.errorException(e);
+						Log.errorMessage(e);
 					}
 				}
 				if (link != null) {

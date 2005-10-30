@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.46 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: AbstractLinkController.java,v 1.47 2005/10/30 14:48:56 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.46 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.47 $, $Date: 2005/10/30 14:48:56 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -176,7 +176,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				}
 			}
 		} catch (ApplicationException e) {
-			Log.debugException(e, Level.WARNING);
+			Log.debugMessage(e, Level.WARNING);
 		}
 		return null;
 	}

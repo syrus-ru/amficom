@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLContext.java,v 1.3 2005/09/25 11:29:16 arseniy Exp $
+* $Id: XMLContext.java,v 1.4 2005/10/30 14:49:07 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/25 11:29:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/10/30 14:49:07 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -32,9 +32,9 @@ public final class XMLContext {
 		final short entityCode = xml.getEntityCode();
 		final String entity = '\'' + ObjectEntities.codeToString(entityCode) + "' (" + entityCode + ')';
 		assert !ENTITY_CODE_XML_MAP.containsKey(entityCode) :
-				"XMLContext.registerXML() | XML Handler for type: "
+				"XML Handler for type: "
 				+ entity + " already registered";
-		Log.debugMessage("XMLContext.registerXML() | XML Handler for type: "
+		Log.debugMessage("XML Handler for type: "
 				+ entity + " registered",
 				Log.DEBUGLEVEL10);
 		ENTITY_CODE_XML_MAP.put(entityCode, xml);

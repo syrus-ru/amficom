@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigExportCommand.java,v 1.4 2005/10/21 16:46:20 stas Exp $
+ * $Id: ConfigExportCommand.java,v 1.5 2005/10/30 14:49:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,7 +107,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			File configFile = new File(fileName);
 			saveConfigXML(configFile, xmlLinkTypes, xmlCableLinkTypes, xmlPortTypes, xmlEquipmentTypes, xmlEquipments);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}		
 	}
 	
@@ -155,7 +155,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 				doc.save(f, xmlOptions);
 				Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
 			} catch(IOException e) {
-				Log.errorException(e);
+				Log.errorMessage(e);
 			}
 			Log.debugMessage("Done successfully", Level.WARNING);
 		} else {
