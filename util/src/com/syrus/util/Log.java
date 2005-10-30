@@ -1,5 +1,5 @@
-/*
- * $Id: Log.java,v 1.14 2005/10/21 15:09:07 bass Exp $
+/*-
+ * $Id: Log.java,v 1.15 2005/10/30 14:46:26 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/21 15:09:07 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 14:46:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -81,6 +81,54 @@ public class Log {
 		Log.logger = logger;
 	}
 
+	/*-********************************************************************
+	 * debugMessage(...) methods                                          *
+	 **********************************************************************/
+
+	public static boolean debugMessage(final Level debugLevel) {
+		return debugMessage("", debugLevel);
+	}
+
+	public static boolean debugMessage(final boolean b, final Level debugLevel) {
+		return debugMessage(Boolean.toString(b), debugLevel);
+	}
+
+	public static boolean debugMessage(final byte b, final Level debugLevel) {
+		return debugMessage(Byte.toString(b), debugLevel);
+	}
+
+	public static boolean debugMessage(final char c, final Level debugLevel) {
+		return debugMessage(Character.toString(c), debugLevel);
+	}
+
+	public static boolean debugMessage(final short s, final Level debugLevel) {
+		return debugMessage(Short.toString(s), debugLevel);
+	}
+
+	public static boolean debugMessage(final int i, final Level debugLevel) {
+		return debugMessage(Integer.toString(i), debugLevel);
+	}
+
+	public static boolean debugMessage(final long l, final Level debugLevel) {
+		return debugMessage(Long.toString(l), debugLevel);
+	}
+
+	public static boolean debugMessage(final float f, final Level debugLevel) {
+		return debugMessage(Float.toString(f), debugLevel);
+	}
+	
+	public static boolean debugMessage(final double d, final Level debugLevel) {
+		return debugMessage(Double.toString(d), debugLevel);
+	}
+
+	public static boolean debugMessage(final char c[], final Level debugLevel) {
+		return debugMessage(String.valueOf(c), debugLevel);
+	}
+
+	public static boolean debugMessage(final Object object, final Level debugLevel) {
+		return debugMessage(String.valueOf(object), debugLevel);
+	}
+
 	/**
 	 * @param message
 	 * @param debugLevel
@@ -94,7 +142,7 @@ public class Log {
 		return true;
 	}
 
-	public static boolean debugException(final Throwable t, final Level debugLevel) {
+	public static boolean debugMessage(final Throwable t, final Level debugLevel) {
 		if (logger == null) {
 			setDefaultLogger();
 		}
@@ -102,26 +150,81 @@ public class Log {
 		return true;
 	}
 
-	public static boolean errorMessage(final String mesg) {
+	/*-********************************************************************
+	 * errorMessage(...) methods                                          *
+	 **********************************************************************/
+
+	public static boolean errorMessage() {
+		return errorMessage("");
+	}
+
+	public static boolean errorMessage(final boolean b) {
+		return errorMessage(Boolean.toString(b));
+	}
+
+	public static boolean errorMessage(final byte b) {
+		return errorMessage(Byte.toString(b));
+	}
+
+	public static boolean errorMessage(final char c) {
+		return errorMessage(Character.toString(c));
+	}
+
+	public static boolean errorMessage(final short s) {
+		return errorMessage(Short.toString(s));
+	}
+
+	public static boolean errorMessage(final int i) {
+		return errorMessage(Integer.toString(i));
+	}
+
+	public static boolean errorMessage(final long l) {
+		return errorMessage(Long.toString(l));
+	}
+
+	public static boolean errorMessage(final float f) {
+		return errorMessage(Float.toString(f));
+	}
+	
+	public static boolean errorMessage(final double d) {
+		return errorMessage(Double.toString(d));
+	}
+
+	public static boolean errorMessage(final char c[]) {
+		return errorMessage(String.valueOf(c));
+	}
+
+	public static boolean errorMessage(final Object object) {
+		return errorMessage(String.valueOf(object));
+	}
+
+	public static boolean errorMessage(final String message) {
 		if (logger == null) {
 			setDefaultLogger();
 		}
-		logger.errorMessage(mesg);
+		logger.errorMessage(message);
 		return true;
 	}
 
-	public static boolean errorException(final Throwable throwable) {
+	public static boolean errorMessage(final Throwable t) {
 		if (logger == null) {
 			setDefaultLogger();
 		}
-		logger.errorException(throwable);
+		logger.errorException(t);
 		return true;
 	}
 
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.15 $, $Date: 2005/10/30 14:46:26 $
+	 * @module util
+	 */
 	private static class CustomLevel extends Level {
 		private static final long serialVersionUID = 8040407643584688402L;
 
-		private CustomLevel(final String name, int value) {
+		private CustomLevel(final String name, final int value) {
 			super(name, value);
 		}
 	}
