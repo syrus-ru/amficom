@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.23 2005/10/30 14:48:44 bass Exp $
+ * $Id: TCPKISConnection.java,v 1.24 2005/10/30 15:20:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/30 14:48:44 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/30 15:20:17 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -64,13 +64,13 @@ final class TCPKISConnection implements KISConnection {
 
 	public synchronized void establish(final long kisConnectionTimeout, final boolean dropIfAlreadyEstablished)
 			throws CommunicationException {
-		Log.debugMessage("Connecting to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort,
+		assert Log.debugMessage("Connecting to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort,
 				Log.DEBUGLEVEL07);
 		if (this.isEstablished()) {
 			if (dropIfAlreadyEstablished) {
 				this.drop();
 			} else {
-				Log.errorMessage("Connection with KIS '" + this.kisId + "' already established -- nothing to do!");
+				assert Log.errorMessage("Connection with KIS '" + this.kisId + "' already established -- nothing to do!");
 				return;
 			}
 		}
@@ -79,7 +79,7 @@ final class TCPKISConnection implements KISConnection {
 		while (System.currentTimeMillis() < deadtime && ! this.isEstablished()) {
 			this.kisTCPSocket = this.establishSocketConnection();
 			if (!this.isEstablished()) {
-				Log.debugMessage("Cannot connect to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort,
+				assert Log.debugMessage("Cannot connect to KIS '" + this.kisId + "' on host '" + this.kisHostName + "', port " + this.kisTCPPort,
 						Log.DEBUGLEVEL07);
 				final Object obj = new Object();
 				try {
@@ -87,13 +87,13 @@ final class TCPKISConnection implements KISConnection {
 						obj.wait(5 * 1000);
 					}
 				} catch (InterruptedException ex) {
-					Log.errorMessage(ex);
+					assert Log.errorMessage(ex);
 				}
 			}
 		}	//while
 
 		if (this.isEstablished()) {
-			Log.debugMessage("Connected to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
+			assert Log.debugMessage("Connected to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		} else {
 			throw new CommunicationException("Cannot connect to KIS '" + this.kisId
 					+ "' on host '" + this.kisHostName
@@ -103,7 +103,7 @@ final class TCPKISConnection implements KISConnection {
 
 	public synchronized void drop() {
 		if (this.kisTCPSocket != KIS_TCP_SOCKET_DISCONNECTED) {
-			Log.debugMessage("Closing socket: " + this.kisTCPSocket, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Closing socket: " + this.kisTCPSocket, Log.DEBUGLEVEL09);
 			this.dropSocketConnection();
 			this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 		}
@@ -111,7 +111,7 @@ final class TCPKISConnection implements KISConnection {
 
 	public synchronized void transmitMeasurement(final Measurement measurement, final long timewait) throws CommunicationException {
 		final Identifier measurementId  = measurement.getId();
-		Log.debugMessage("Transmitting measurement '" + measurementId
+		assert Log.debugMessage("Transmitting measurement '" + measurementId
 				+ "' to KIS '" + this.kisId + "' on " + this.kisHostName + ":" + this.kisTCPPort, Log.DEBUGLEVEL07);
 		if (this.transmitMeasurementBySocket(measurementId.toString(),
 				measurement.getType().getCodename(),
@@ -119,7 +119,7 @@ final class TCPKISConnection implements KISConnection {
 				measurement.getSetup().getParameterTypeCodenames(),
 				measurement.getSetup().getParameterValues(),
 				timewait)) {
-			Log.debugMessage("Transmitted measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
+			assert Log.debugMessage("Transmitted measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		} else {
 			throw new CommunicationException("Cannot transmit measurement '" + measurementId + "' to KIS '" + this.kisId + "'");
 		}
@@ -129,7 +129,7 @@ final class TCPKISConnection implements KISConnection {
 		this.kisReport = null;
 		if (this.receiveKISReportFromSocket(timewait)) {
 			if (this.kisReport != null) {
-				Log.debugMessage("Received report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
+				assert Log.debugMessage("Received report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
 			}
 			return this.kisReport;
 		}

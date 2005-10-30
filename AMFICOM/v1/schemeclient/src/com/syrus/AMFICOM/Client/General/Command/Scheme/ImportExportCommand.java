@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.13 2005/10/30 14:49:18 bass Exp $
+ * $Id: ImportExportCommand.java,v 1.14 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -221,7 +221,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 										clonedIds.put(id, newId);
 									} catch (ObjectNotFoundException e) {
-										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+										assert Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 									}
 								}
 							}
@@ -247,7 +247,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 										clonedIds.put(id, newId);
 									} catch (ObjectNotFoundException e) {
-										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+										assert Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 									}
 								}
 							}
@@ -413,7 +413,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 										clonedIds.put(id, newId);
 									} catch (ObjectNotFoundException e) {
-										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+										assert Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 									}
 								}
 							}
@@ -439,7 +439,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 										clonedIds.put(id, newId);
 									} catch (ObjectNotFoundException e) {
-										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+										assert Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 									}
 								}
 							}
@@ -558,7 +558,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				stubProtoEquipment1 = protoEquipments.iterator().next();
 			}
 		} catch (ApplicationException e1) {
-			Log.errorMessage(e1);
+			assert Log.errorMessage(e1);
 		}
 		final ProtoEquipment stubProtoEquipment = stubProtoEquipment1;
 		
@@ -651,7 +651,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 										clonedIds.put(id, newId);
 									} catch (ObjectNotFoundException e) {
-										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+										assert Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 									}
 								}
 							}
@@ -677,7 +677,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
 										clonedIds.put(id, newId);
 									} catch (ObjectNotFoundException e) {
-										Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
+										assert Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 									}
 								}
 							}
@@ -806,7 +806,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				});				
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 	
@@ -877,17 +877,17 @@ public abstract class ImportExportCommand extends AbstractCommand {
 		isXmlValid = xml.validate(new XmlOptions().setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.errorMessage("Invalid XML: ");
+			assert Log.errorMessage("Invalid XML: ");
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				Log.debugMessage(xml.toString(), Level.WARNING);
-				Log.errorMessage(error.getMessage());
-				Log.errorMessage(String.valueOf(error.getObjectLocation()));
-				Log.errorMessage("Column " + error.getColumn());
-				Log.errorMessage("Line " + error.getLine());
-				Log.errorMessage("Offset " + error.getOffset());
-				Log.errorMessage("Object at cursor " + error.getCursorLocation().getObject());
-				Log.errorMessage("Source name " + error.getSourceName());
+				assert Log.debugMessage(xml.toString(), Level.WARNING);
+				assert Log.errorMessage(error.getMessage());
+				assert Log.errorMessage(String.valueOf(error.getObjectLocation()));
+				assert Log.errorMessage("Column " + error.getColumn());
+				assert Log.errorMessage("Line " + error.getLine());
+				assert Log.errorMessage("Offset " + error.getOffset());
+				assert Log.errorMessage("Object at cursor " + error.getCursorLocation().getObject());
+				assert Log.errorMessage("Source name " + error.getSourceName());
 			}
 		}
 		return isXmlValid;

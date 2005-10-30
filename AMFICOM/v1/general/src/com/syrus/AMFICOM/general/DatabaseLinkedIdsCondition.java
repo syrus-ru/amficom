@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.13 2005/10/30 14:49:07 bass Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.14 2005/10/30 15:20:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  *	}
  * </pre>
  *
- * @version $Revision: 1.13 $, $Date: 2005/10/30 14:49:07 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:42 $
  * @author $Author: bass $
  * @module general
  */
@@ -50,19 +50,19 @@ public final class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsC
 			ctor.setAccessible(true);
 			this.delegate = (AbstractDatabaseLinkedIdsCondition) ctor.newInstance(new Object[] { condition});
 		} catch (ClassNotFoundException cnfe) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
 			, Level.WARNING);
 		} catch (ClassCastException cce) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
 					+ LinkedIdsCondition.class.getName(), Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
 			, Level.WARNING);
 		} catch (InstantiationException ie) {
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
 			, Level.WARNING);
 		} catch (InvocationTargetException ite) {
@@ -74,29 +74,29 @@ public final class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsC
 				else
 					assert false: message;
 			} else		
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 					+ "constructor throws an exception in class "
 					+ className, Level.WARNING);
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugMessage(iae, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
+			assert Log.debugMessage(iae, Level.SEVERE);
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 			, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugMessage(iae, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
+			assert Log.debugMessage(iae, Level.SEVERE);
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 			, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugMessage(se, Level.SEVERE);
-			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
+			assert Log.debugMessage(se, Level.SEVERE);
+			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 			, Level.SEVERE);
 		}
 	}	

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.84 2005/10/30 14:48:49 bass Exp $
+ * $Id: MeasurementServer.java,v 1.85 2005/10/30 15:20:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/10/30 14:48:49 $
+ * @version $Revision: 1.85 $, $Date: 2005/10/30 15:20:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -207,7 +207,7 @@ final class MeasurementServer extends SleepButWorkThread {
 				sessionEnvironment.login(login, PASSWORD, domainId);
 			}
 			catch (final LoginException le) {
-				Log.errorMessage(le);
+				assert Log.errorMessage(le);
 			}
 
 			/*	Create collection of MCM identifiers for aborting tests*/
@@ -219,7 +219,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			corbaServer.printNamingContext();
 		}
 		catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 			System.exit(0);
 		}
 	}
@@ -232,7 +232,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		} catch (Exception e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			System.exit(0);
 		}
 	}
@@ -263,7 +263,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			try {
 				fillMCMTestMaps();
 			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 
 			synchronized (mcmTestQueueMap) {
@@ -275,7 +275,7 @@ final class MeasurementServer extends SleepButWorkThread {
 						try {
 							mcmRef = servantManager.getVerifiedMCMReference(mcmId);
 						} catch (ApplicationException ae) {
-							Log.errorMessage(ae);
+							assert Log.errorMessage(ae);
 							super.fallCode = FALL_CODE_RECEIVE_TESTS;
 							mcmIdsToAbortTests.add(mcmId);
 							super.sleepCauseOfFall();
@@ -288,7 +288,7 @@ final class MeasurementServer extends SleepButWorkThread {
 							//- Send new tests to MCM, if any
 							if (!testQueue.isEmpty()) {
 								final IdlTest[] idlTests = Test.createTransferables(testQueue, servantManager.getCORBAServer().getOrb());
-								Log.debugMessage("Sending to MCM '" + mcmId + "' " + idlTests.length
+								assert Log.debugMessage("Sending to MCM '" + mcmId + "' " + idlTests.length
 										+ " test(s): " + Identifier.createIdentifiers(testQueue), Log.DEBUGLEVEL08);
 								mcmRef.receiveTests(idlTests, sessionKey);
 								testQueue.clear();
@@ -297,7 +297,7 @@ final class MeasurementServer extends SleepButWorkThread {
 							//- Send ids of stopping tests to MCM, if any
 							if (stopTestIds != null) {
 								final IdlIdentifier[] stopTestIdlIds = Identifier.createTransferables(stopTestIds);
-								Log.debugMessage("Stopping on MCM '" + mcmId + "' " + stopTestIdlIds.length + " test(s): " + stopTestIds,
+								assert Log.debugMessage("Stopping on MCM '" + mcmId + "' " + stopTestIdlIds.length + " test(s): " + stopTestIds,
 										Log.DEBUGLEVEL08);
 								mcmRef.stopTests(stopTestIdlIds, sessionKey);
 								mcmStoppingTestIdsMap.remove(mcmId);
@@ -309,15 +309,15 @@ final class MeasurementServer extends SleepButWorkThread {
 								try {
 									LoginManager.restoreLogin();
 								} catch (ApplicationException ae) {
-									Log.errorMessage(ae);
+									assert Log.errorMessage(ae);
 								}
 							}
-							Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
+							assert Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
 							super.fallCode = FALL_CODE_RECEIVE_TESTS;
 							mcmIdsToAbortTests.add(mcmId);
 							super.sleepCauseOfFall();
 						} catch (Throwable throwable) {
-							Log.errorMessage(throwable);
+							assert Log.errorMessage(throwable);
 						}
 
 					}	//if (!testQueue.isEmpty())
@@ -328,7 +328,7 @@ final class MeasurementServer extends SleepButWorkThread {
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
-				Log.errorMessage(ie);
+				assert Log.errorMessage(ie);
 			}
 		}
 	}
@@ -357,7 +357,7 @@ final class MeasurementServer extends SleepButWorkThread {
 					addToMCMStoppingTestIdsMap(test, mcmId);
 					break;
 				default:
-					Log.errorMessage("Illegal status: " + status.value()
+					assert Log.errorMessage("Illegal status: " + status.value()
 							+ " of test '" + test.getId() + "'");
 			}
 		}
@@ -367,13 +367,13 @@ final class MeasurementServer extends SleepButWorkThread {
 		final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
 		if (testQueue != null) {
 			if (!testQueue.contains(test)) {
-				Log.debugMessage("Adding test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
+				assert Log.debugMessage("Adding test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
 				testQueue.add(test);
 			} else {
-				Log.errorMessage("Test '" + test.getId() + "' already added to queue");
+				assert Log.errorMessage("Test '" + test.getId() + "' already added to queue");
 			}
 		} else {
-			Log.errorMessage("Test queue for MCM '" + mcmId + "' not found");
+			assert Log.errorMessage("Test queue for MCM '" + mcmId + "' not found");
 		}
 	}
 
@@ -398,7 +398,7 @@ final class MeasurementServer extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(testQueue, LoginManager.getUserId(), true);
 		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 		}
 		
 	}
@@ -412,7 +412,7 @@ final class MeasurementServer extends SleepButWorkThread {
 				abortTests();
 				break;
 			default:
-				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+				assert Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
 	}
 
@@ -433,7 +433,7 @@ final class MeasurementServer extends SleepButWorkThread {
 
 			StorableObjectPool.truncate(ObjectEntities.TEST_CODE);
 		} else {
-			Log.errorMessage("abortTests | Collection is NULL or empty");
+			assert Log.errorMessage("abortTests | Collection is NULL or empty");
 		}
 	}
 

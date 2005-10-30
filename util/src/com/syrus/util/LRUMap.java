@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.43 2005/10/30 14:48:47 bass Exp $
+ * $Id: LRUMap.java,v 1.44 2005/10/30 15:20:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/10/30 14:48:47 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/30 15:20:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -270,7 +270,7 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 				this.lastRet = -1;
 				this.expectedModCount = LRUMap.this.modCount;
 			} catch (IndexOutOfBoundsException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 				throw new ConcurrentModificationException();
 			}
 		}

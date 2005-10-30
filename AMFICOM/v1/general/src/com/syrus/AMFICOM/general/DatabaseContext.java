@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContext.java,v 1.11 2005/10/22 14:08:26 arseniy Exp $
+ * $Id: DatabaseContext.java,v 1.12 2005/10/30 15:20:43 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.util.Log;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/22 14:08:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/10/30 15:20:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -33,7 +33,7 @@ public final class DatabaseContext {
 		final String entity = '\'' + ObjectEntities.codeToString(entityCode) + "' (" + entityCode + ')';
 		assert !ENTITY_CODE_DATABASE_MAP.containsKey(entityCode) :
 				"DatabaseContext.registerDatabase() | Database for type: " + entity + " already registered";
-		Log.debugMessage("Database for type: " + entity + " registered", Level.FINEST);
+		assert Log.debugMessage("Database for type: " + entity + " registered", Level.FINEST);
 		ENTITY_CODE_DATABASE_MAP.put(entityCode, database);
 	}
 

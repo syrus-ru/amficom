@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelAdministation.java,v 1.1 2005/09/06 16:22:08 bob Exp $
+ * $Id: LangModelAdministation.java,v 1.2 2005/10/30 15:20:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.ResourceBundle;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/06 16:22:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/10/30 15:20:23 $
+ * @author $Author: bass $
  * @module general
  */
 final class LangModelAdministation {
@@ -31,7 +31,7 @@ final class LangModelAdministation {
 			return RESOURCE_BUNDLE.getString(key);
 		}
 		catch (final MissingResourceException mre) {
-			Log.errorMessage("Key '" + key + "' not found in resource bundle '" + BUNDLE_NAME + "'");
+			assert Log.errorMessage("Key '" + key + "' not found in resource bundle '" + BUNDLE_NAME + "'");
 			return "!" + key + "!";
 		}
 	}

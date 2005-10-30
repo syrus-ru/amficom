@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.57 2005/10/30 14:49:08 bass Exp $
+ * $Id: CharacteristicType.java,v 1.58 2005/10/30 15:20:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/10/30 14:49:08 $
+ * @version $Revision: 1.58 $, $Date: 2005/10/30 15:20:43 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -106,7 +106,7 @@ public final class CharacteristicType
 			super.fromTransferable(ctt, ctt.codename, ctt.description);
 		} catch (ApplicationException ae) {
 			// Never
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 		}
 		this.name = ctt.name;
 		this.dataType = DataType.fromTransferable(ctt.dataType);
@@ -206,7 +206,7 @@ public final class CharacteristicType
 				} else {
 					characteristicType = StorableObjectPool.getStorableObject(expectedId, true);
 					if (characteristicType == null) {
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -220,7 +220,7 @@ public final class CharacteristicType
 					} else {
 						final String oldCodename = characteristicType.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("WARNING: "
+							assert Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -241,7 +241,7 @@ public final class CharacteristicType
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -259,7 +259,7 @@ public final class CharacteristicType
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

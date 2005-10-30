@@ -1,5 +1,5 @@
 /*
- * $Id: MapImagePanel.java,v 1.18 2005/10/30 14:49:00 bass Exp $
+ * $Id: MapImagePanel.java,v 1.19 2005/10/30 15:20:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/30 14:49:00 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/30 15:20:35 $
  * @author $Author: bass $
  * @module mapinfo
  */
@@ -73,8 +73,8 @@ public class MapImagePanel extends JPanel {
 
 			this.viewer.setMapImageSize(this.getSize());
 		} catch (MapException e) {
-			Log.errorMessage(e.getMessage());
-			Log.errorMessage(e);
+			assert Log.errorMessage(e.getMessage());
+			assert Log.errorMessage(e);
 		}
 	}
 
@@ -98,7 +98,7 @@ public class MapImagePanel extends JPanel {
 		
 		final long t2 = System.currentTimeMillis();
 
-		Log.debugMessage("total " + (t2 - t1) + " ms.", Level.FINE); 
+		assert Log.debugMessage("total " + (t2 - t1) + " ms.", Level.FINE); 
 	}
 
 	public void paintComponent(final Graphics g, int shiftX, int shiftY) {
@@ -130,7 +130,7 @@ public class MapImagePanel extends JPanel {
 
 		final long t3 = System.currentTimeMillis();
 
-		Log.debugMessage("with Shift | total " + (t3 - t1) + " (ms)\n" + "		"
+		assert Log.debugMessage("with Shift | total " + (t3 - t1) + " (ms)\n" + "		"
 				+ (t2 - t1) + " ms (painting background)\n" + "		"
 				+ (t3 - t2) + " ms (result image paint)\n", Level.FINE);
 	}
@@ -154,7 +154,7 @@ public class MapImagePanel extends JPanel {
 		this.viewer.getLogicalNetLayer().paint(riGraphics, this.viewer.getVisibleBounds());
 
 		final long t3 = System.currentTimeMillis();
-		Log.debugMessage("total " + (t3 - t1) + "\n		"
+		assert Log.debugMessage("total " + (t3 - t1) + "\n		"
 				+ (t2 - t1) + " ms (painted mapImage to resultImage) " + "\n		"
 				+ (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Level.FINE);
 	}

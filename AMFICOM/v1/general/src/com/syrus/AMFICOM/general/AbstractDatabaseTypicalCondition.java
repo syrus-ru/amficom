@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.20 2005/10/30 14:49:08 bass Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.21 2005/10/30 15:20:43 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/30 14:49:08 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:43 $
  * @author $Author: bass $
  * @module general
  */
@@ -73,7 +73,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						+ SQL_WHERE + this.getLinkedColumnName() + EQUALS + EnumUtil.getCode(e)
 						+ CLOSE_BRACKET;
 			default:
-				Log.errorMessage("Illegal type of condition: " + this.condition.getType().value());
+				assert Log.errorMessage("Illegal type of condition: " + this.condition.getType().value());
 				return DatabaseStorableObjectCondition.FALSE_CONDITION;
 		}
 	}
@@ -120,7 +120,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 						break;
@@ -138,7 +138,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 						break;
@@ -156,7 +156,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 						break;
@@ -174,7 +174,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 						break;
@@ -192,7 +192,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 						break;
@@ -210,7 +210,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 						break;
@@ -229,7 +229,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 								buffer.append(Long.MIN_VALUE);
 						}
@@ -247,14 +247,14 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getSecondLong());
 								break;
 							default:
-								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
+								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 								buffer.append(Long.MAX_VALUE);
 						}
 						buffer.append(CLOSE_BRACKET);
 						break;
 					default:
-						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
+						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
 								+ this.condition.getOperation().value());
 						break;
 				}
@@ -301,7 +301,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						/* TODO isn't implement */
 						break;
 					default:
-						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
+						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
 								+ this.condition.getOperation().value());
 						break;
 				}
@@ -344,7 +344,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
 						break;						
 					default:
-						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
+						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
 								+ this.condition.getOperation().value());
 						break;
 				}
@@ -362,7 +362,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						buffer.append(value ? '1' : '0');
 						break;
 					default:
-						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
+						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE
 								+ this.condition.getOperation().value());
 						break;
 				}

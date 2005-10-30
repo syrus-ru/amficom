@@ -1,5 +1,5 @@
 /*-
- * $$Id: ViewMapLayersCommand.java,v 1.7 2005/10/11 08:56:11 krupenn Exp $$
+ * $$Id: ViewMapLayersCommand.java,v 1.8 2005/10/30 15:20:33 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.7 $, $Date: 2005/10/11 08:56:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/10/30 15:20:33 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -59,7 +59,7 @@ public class ViewMapLayersCommand extends AbstractCommand {
 
 		
 		if(this.mapFrame == null) {
-			Log.debugMessage("map frame is null! Cannot change map view.", Level.SEVERE); //$NON-NLS-1$
+			assert Log.debugMessage("map frame is null! Cannot change map view.", Level.SEVERE); //$NON-NLS-1$
 			setResult(Command.RESULT_NO);
 			return;
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.64 2005/10/30 14:49:05 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.65 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.65 $, $Date: 2005/10/30 15:20:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -67,7 +67,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 			}
 		} catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 		}
 		return condition;
 	}
@@ -192,7 +192,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							final KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 							condition = super.conditionTest(kis1.getMCMId());
 						} catch (ApplicationException ae) {
-							Log.errorMessage(ae);
+							assert Log.errorMessage(ae);
 						}
 						break;
 					case DOMAIN_CODE:
@@ -200,7 +200,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							final KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 							condition = this.checkDomain(kis1);
 						} catch (ApplicationException ae) {
-							Log.errorMessage(ae);
+							assert Log.errorMessage(ae);
 						}
 						break;
 					default:
@@ -290,7 +290,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			try {
 				test = StorableObjectPool.getStorableObject(testId, false);
 			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 			if (test == null) {
 				return true;
@@ -305,7 +305,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					try {
 						measurement = StorableObjectPool.getStorableObject((Identifier) measurementIdentifiable, false);
 					} catch (ApplicationException ae) {
-						Log.errorMessage(ae);
+						assert Log.errorMessage(ae);
 					}
 				} else {
 					measurement = null;

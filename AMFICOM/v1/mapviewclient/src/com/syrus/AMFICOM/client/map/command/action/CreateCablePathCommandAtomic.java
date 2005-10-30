@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateCablePathCommandAtomic.java,v 1.23 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: CreateCablePathCommandAtomic.java,v 1.24 2005/10/30 15:20:31 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
  * создание пути рпокладки кабеля, внесение его в пул и на карту - атомарное
  * действие
  * 
- * @version $Revision: 1.23 $, $Date: 2005/09/30 16:08:36 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/10/30 15:20:31 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -54,7 +54,7 @@ public class CreateCablePathCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		Log.debugMessage(
+		assert Log.debugMessage(
 			getClass().getName() + "::execute() | "  //$NON-NLS-1$
 				+ "create CablePath for SchemeCableLink "  //$NON-NLS-1$
 				+ this.schemeCableLink.getName() 

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCharacteristicImpl.java,v 1.4 2005/10/30 14:49:08 bass Exp $
+ * $Id: IdlCharacteristicImpl.java,v 1.5 2005/10/30 15:20:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/30 14:49:08 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:43 $
  * @module general
  */
 final class IdlCharacteristicImpl extends IdlCharacteristic {
@@ -64,7 +64,7 @@ final class IdlCharacteristicImpl extends IdlCharacteristic {
 		try {
 			return new Characteristic(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, Level.SEVERE);
+			assert Log.debugMessage(coe, Level.SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

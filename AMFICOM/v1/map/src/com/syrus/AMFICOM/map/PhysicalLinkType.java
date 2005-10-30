@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.106 2005/10/30 14:49:01 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.107 2005/10/30 15:20:36 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/10/30 14:49:01 $
+ * @version $Revision: 1.107 $, $Date: 2005/10/30 15:20:36 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType> 
@@ -435,7 +435,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 				} else {
 					physicalLinkType = StorableObjectPool.getStorableObject(expectedId, true);
 					if (physicalLinkType == null) {
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -451,7 +451,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 					} else {
 						final String oldCodename = physicalLinkType.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("WARNING: "
+							assert Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -472,7 +472,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -490,7 +490,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -517,7 +517,7 @@ public final class PhysicalLinkType extends StorableObjectType<PhysicalLinkType>
 		try {
 			return StorableObjectPool.getStorableObject(this.getMapLibraryId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

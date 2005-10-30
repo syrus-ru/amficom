@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTestProcessor.java,v 1.52 2005/10/22 15:23:39 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.53 2005/10/30 15:20:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/10/22 15:23:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/10/30 15:20:17 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -39,7 +39,7 @@ final class PeriodicalTestProcessor extends TestProcessor {
 		try {
 			this.temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 		} catch (ApplicationException ae) {
-			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
+			assert Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
 			this.abort(ABORT_REASON_TEMPORAL_PATTERN);
 		}
 		this.timeStampsList = new TreeSet<Date>();
@@ -58,9 +58,9 @@ final class PeriodicalTestProcessor extends TestProcessor {
 				final SortedSet<Date> timeStamps = this.temporalPattern.getTimes(fromDateLong, toDateLong);
 				if (!includeFromDate) {
 					if (timeStamps.remove(startDate)) {
-						Log.debugMessage("Removed from set of time stamps date: " + startDate, Log.DEBUGLEVEL10);
+						assert Log.debugMessage("Removed from set of time stamps date: " + startDate, Log.DEBUGLEVEL10);
 					} else {
-						Log.debugMessage("Date: " + startDate + " not found in set of time stamps", Log.DEBUGLEVEL10);
+						assert Log.debugMessage("Date: " + startDate + " not found in set of time stamps", Log.DEBUGLEVEL10);
 					}
 				}
 
@@ -78,7 +78,7 @@ final class PeriodicalTestProcessor extends TestProcessor {
 					stringBuffer.append(date);
 					stringBuffer.append("\n");
 				}
-				Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL09);
+				assert Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL09);
 				//--------
 
 				if (!timeStamps.isEmpty()) {

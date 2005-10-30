@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.32 2005/10/30 14:48:42 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.33 2005/10/30 15:20:15 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.33 $, $Date: 2005/10/30 15:20:15 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu
@@ -193,7 +193,7 @@ public final class SchemeOptimizeInfoRtu
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeOptimizeInfoId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -303,7 +303,7 @@ public final class SchemeOptimizeInfoRtu
 		this.getParentSchemeOptimizeInfo().getSchemeOptimizeInfoRtuContainerWrappee().removeFromCache(this, usePool);
 
 		if (parentSchemeOptimizeInfo == null) {
-			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentSchemeOptimizeInfo.getSchemeOptimizeInfoRtuContainerWrappee().addToCache(this, usePool);

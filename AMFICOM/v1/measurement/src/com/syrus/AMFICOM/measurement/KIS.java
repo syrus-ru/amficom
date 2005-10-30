@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.8 2005/10/30 14:49:05 bass Exp $
+ * $Id: KIS.java,v 1.9 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/30 15:20:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -273,7 +273,7 @@ public final class KIS extends DomainMember<KIS> implements Namable {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id,
 					ObjectEntities.MEASUREMENTPORT_CODE), true, breakOnLoadError);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, Level.SEVERE);
+			assert Log.debugMessage(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
 	}

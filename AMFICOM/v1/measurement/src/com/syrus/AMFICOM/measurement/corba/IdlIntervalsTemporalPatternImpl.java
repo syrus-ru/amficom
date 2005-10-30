@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlIntervalsTemporalPatternImpl.java,v 1.4 2005/10/30 14:49:06 bass Exp $
+ * $Id: IdlIntervalsTemporalPatternImpl.java,v 1.5 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/30 14:49:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:39 $
  * @module measurement
  */
 final class IdlIntervalsTemporalPatternImpl extends IdlIntervalsTemporalPattern {
@@ -58,7 +58,7 @@ final class IdlIntervalsTemporalPatternImpl extends IdlIntervalsTemporalPattern 
 		try {
 			return new IntervalsTemporalPattern(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, SEVERE);
+			assert Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

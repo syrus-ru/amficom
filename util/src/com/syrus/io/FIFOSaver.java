@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.14 2005/10/30 14:48:47 bass Exp $
+ * $Id: FIFOSaver.java,v 1.15 2005/10/30 15:20:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/30 14:48:47 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:21 $
  * @author $Author: bass $
  * @module util
  */
@@ -54,7 +54,7 @@ public final class FIFOSaver {
 			final File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
 			tempFile = new File(saveFile.getPath() + ".swp");
 			final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
-			Log.debugMessage("Trying to save Fifo with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
+			assert Log.debugMessage("Trying to save Fifo with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
 			out.writeObject(objectEntityName);
 			out.writeObject(fifo.getObjects());
 			out.writeObject(new Integer(fifo.getNumber()));
@@ -62,9 +62,9 @@ public final class FIFOSaver {
 			saveFile.delete();
 			tempFile.renameTo(saveFile);
 		} catch (FileNotFoundException fnfe) {
-			Log.errorMessage("Error: " + fnfe.getMessage());        	
+			assert Log.errorMessage("Error: " + fnfe.getMessage());        	
 		} catch (IOException ioe) {
-			Log.errorMessage("Error: " + ioe.getMessage());
+			assert Log.errorMessage("Error: " + ioe.getMessage());
 		} finally {
 			if(tempFile != null) {
 				tempFile.delete();
@@ -79,12 +79,12 @@ public final class FIFOSaver {
 	 */
 	private static Fifo load(final String objectEntityName) {
 		try {
-			Log.debugMessage("Trying to load Fifo with " + objectEntityName , Log.DEBUGLEVEL10);
+			assert Log.debugMessage("Trying to load Fifo with " + objectEntityName , Log.DEBUGLEVEL10);
 			final File savedFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
 			final ObjectInputStream in = new ObjectInputStream(new FileInputStream(savedFile));
 			final String keyObjectEntityName = (String) in.readObject();
 			if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
-				Log.errorMessage("Wrong input file "+ savedFile.getAbsolutePath() + ". Loading failed");
+				assert Log.errorMessage("Wrong input file "+ savedFile.getAbsolutePath() + ". Loading failed");
 				return null;
 			}
 			final Object[] objects = (Object[]) in.readObject();
@@ -94,13 +94,13 @@ public final class FIFOSaver {
 			fifo.setNumber(number.intValue());
 			return fifo;
 		} catch (FileNotFoundException fnfe) {
-			Log.debugMessage("Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
+			assert Log.debugMessage("Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
 			return null;
 		} catch (ClassNotFoundException cnfe) {
-			Log.errorMessage("Error: " + cnfe.getMessage());
+			assert Log.errorMessage("Error: " + cnfe.getMessage());
 			return null;
 		} catch (IOException ioe) {
-			Log.errorMessage("Error: " + ioe.getMessage());
+			assert Log.errorMessage("Error: " + ioe.getMessage());
 			return null;
 		}
 	}
@@ -154,7 +154,7 @@ public final class FIFOSaver {
 			os.flush();
 			os.close();
 		} catch (IOException ioe) {
-			Log.errorMessage(ioe);
+			assert Log.errorMessage(ioe);
 		}
 	}
 }

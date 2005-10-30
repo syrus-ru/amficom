@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.27 2005/10/30 14:48:51 bass Exp $
+ * $Id: AbstractApplication.java,v 1.28 2005/10/30 15:20:24 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/30 15:20:24 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -137,7 +137,7 @@ public abstract class AbstractApplication {
 			try {
 				UIManager.setLookAndFeel(this.getLookAndFeel());
 			} catch (UnsupportedLookAndFeelException ulfe) {
-				Log.errorMessage(ulfe);
+				assert Log.errorMessage(ulfe);
 			}
 			themeInitialized = true;
 		}

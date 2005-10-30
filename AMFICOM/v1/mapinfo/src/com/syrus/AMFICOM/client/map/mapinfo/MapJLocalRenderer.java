@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.9 2005/10/30 14:49:00 bass Exp $
+ * $Id: MapJLocalRenderer.java,v 1.10 2005/10/30 15:20:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/10/30 14:49:00 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:35 $
  * @module mapinfo
  */
 public class MapJLocalRenderer {
@@ -52,7 +52,7 @@ public class MapJLocalRenderer {
 	private boolean stopRendering = false;
 
 	public MapJLocalRenderer(final String fileToLoad) throws IOException {
-		Log.debugMessage("RunningThread - Constructor - Initializing MapJ.", Level.FINEST);
+		assert Log.debugMessage("RunningThread - Constructor - Initializing MapJ.", Level.FINEST);
 		this.initializeMapJ();
 		this.setMapDefinition(fileToLoad);		
 	}
@@ -61,7 +61,7 @@ public class MapJLocalRenderer {
 	 * Создаёт объект MapJ и загружает картографические данные.
 	 */
 	public void initializeMapJ(){
-		Log.debugMessage("RunningThread - Initializing MapJ instance...", Level.FINEST);
+		assert Log.debugMessage("RunningThread - Initializing MapJ instance...", Level.FINEST);
 		//instantiate a MapJ and set the bounds
 		this.mapJObject = new MapJ(); // this MapJ object
 		this.mapJObject.setDistanceUnits(LinearUnit.meter);
@@ -72,11 +72,11 @@ public class MapJLocalRenderer {
 			return;
 		
 		try {
-			Log.debugMessage("RunningThread - Loading geoset...", Level.FINEST);
+			assert Log.debugMessage("RunningThread - Loading geoset...", Level.FINEST);
 			this.mapJObject.loadMapDefinition(fileToLoad);
-			Log.debugMessage("RunningThread - Map definition " + fileToLoad + " has been loaded.", Level.FINEST);
+			assert Log.debugMessage("RunningThread - Map definition " + fileToLoad + " has been loaded.", Level.FINEST);
 		} catch (IOException e) {
-			Log.debugMessage("RunningThread - ERROR!!! - Can't load geoset: " + fileToLoad, Level.SEVERE);
+			assert Log.debugMessage("RunningThread - ERROR!!! - Can't load geoset: " + fileToLoad, Level.SEVERE);
 			throw e;
 		}
 	}
@@ -89,10 +89,10 @@ public class MapJLocalRenderer {
 		// Setting size, zoom and center point
 		if ((this.imageBuffer == null) || (this.imageBuffer.getWidth() != miWidth) || (this.imageBuffer.getHeight() != miHeight)) {
 			this.imageBuffer = new BufferedImage(miWidth, miHeight, BufferedImage.TYPE_USHORT_565_RGB);
-			Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Level.FINEST);
+			assert Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Level.FINEST);
 			
 			this.renderer = new LocalRenderer(this.imageBuffer);
-			Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Level.FINEST);
+			assert Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Level.FINEST);
 		}
 
 		this.setSize(miWidth, miHeight);
@@ -120,7 +120,7 @@ public class MapJLocalRenderer {
 
 		final long time3 = System.currentTimeMillis();
 
-		Log.debugMessage("total " + (time3 - time1) + "\n		"
+		assert Log.debugMessage("total " + (time3 - time1) + "\n		"
 				+ (time2 - time1) + " (rendered image)\n"
 				+ "\n		" + (time3 - time2) + " created new BufferedImage.", Level.FINE);
 
@@ -129,11 +129,11 @@ public class MapJLocalRenderer {
 
 	public void cancelRendering() throws Exception {
 		this.stopRendering = true;
-		Log.debugMessage("MapJRenderer - cancelRendering - Stopping the rendering of map.", Level.FINEST);
+		assert Log.debugMessage("MapJRenderer - cancelRendering - Stopping the rendering of map.", Level.FINEST);
 		if (this.renderer != null) {
 			this.renderer.interrupt();
 		}
-		Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.", Level.FINEST);
+		assert Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.", Level.FINEST);
 	}
 
 	// ---------------------------------------Функции, работающие с MapJ
@@ -145,7 +145,7 @@ public class MapJLocalRenderer {
 	 */
 	public void setSize(final int width, final int height) {
 		synchronized (this.mapJObject) {
-			Log.debugMessage("RunningThread - Setting size", Level.FINEST);
+			assert Log.debugMessage("RunningThread - Setting size", Level.FINEST);
 			this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
 		}
 	}
@@ -158,11 +158,11 @@ public class MapJLocalRenderer {
 	 */
 	public void setCenter(final DoublePoint center) {
 		synchronized (this.mapJObject) {
-			Log.debugMessage("RunningThread - Setting center", Level.FINEST);
+			assert Log.debugMessage("RunningThread - Setting center", Level.FINEST);
 			try {
 				this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
 			} catch (Exception e) {
-				Log.debugMessage("RunningThread - ERROR!!! - Failed setting center.", Level.SEVERE);
+				assert Log.debugMessage("RunningThread - ERROR!!! - Failed setting center.", Level.SEVERE);
 			}
 		}
 	}
@@ -175,13 +175,13 @@ public class MapJLocalRenderer {
 	 */
 	public void setScale(final double scale) {
 		synchronized (this.mapJObject) {
-			Log.debugMessage("RunningThread - Setting scale", Level.FINEST);
+			assert Log.debugMessage("RunningThread - Setting scale", Level.FINEST);
 			try {
 				if (scale != 0.0D) {
 					this.mapJObject.setZoom(scale);
 				}
 			} catch (Exception e) {
-				Log.debugMessage("RunningThread - ERROR!!! - Failed setting scale.", Level.SEVERE);
+				assert Log.debugMessage("RunningThread - ERROR!!! - Failed setting scale.", Level.SEVERE);
 			}
 		}
 	}
@@ -199,12 +199,12 @@ public class MapJLocalRenderer {
 			try {
 				final FeatureLayer layer = (FeatureLayer) this.mapJObject.getLayers().get(layerIndex, LayerType.FEATURE);
 
-				Log.debugMessage("RunningThread - Setting visibility for layer " + layer.getName(), Level.FINEST);
+				assert Log.debugMessage("RunningThread - Setting visibility for layer " + layer.getName(), Level.FINEST);
 
 				layer.setEnabled(layerVisible);
 				layer.setAutoLabel(layerLabelsVisible);
 			} catch (Exception exc) {
-				Log.debugMessage("RunningThread - ERROR!!! - Failed setting layer visibility.", Level.SEVERE);
+				assert Log.debugMessage("RunningThread - ERROR!!! - Failed setting layer visibility.", Level.SEVERE);
 			}
 		}
 	}

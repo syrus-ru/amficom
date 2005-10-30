@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.111 2005/10/30 14:49:05 bass Exp $
+ * $Id: ResultDatabase.java,v 1.112 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.112 $, $Date: 2005/10/30 15:20:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -107,7 +107,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				buffer.append(COMMA);
 				break;
 			default:
-				Log.errorMessage("Illegal sort: " + resultSort + " of result '" + storableObject.getId().getIdentifierString() + "'");
+				assert Log.errorMessage("Illegal sort: " + resultSort + " of result '" + storableObject.getId().getIdentifierString() + "'");
 		}
 		buffer.append(Integer.toString(resultSort));
 		return buffer.toString();
@@ -135,7 +135,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
 				break;
 			default:
-				Log.errorMessage("Illegal sort: " + resultSort + " of result '" + storableObject.getId().getIdentifierString() + "'");
+				assert Log.errorMessage("Illegal sort: " + resultSort + " of result '" + storableObject.getId().getIdentifierString() + "'");
 		}
 		preparedStatement.setInt(++startParameterNumber, storableObject.getSort().value());
 		return startParameterNumber;
@@ -180,7 +180,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				}
 				break;
 			default:
-				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result.getId().getIdentifierString());
+				assert Log.errorMessage("Unkown sort: " + resultSort + " of result " + result.getId().getIdentifierString());
 		}
 		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -219,7 +219,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
@@ -258,7 +258,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 
@@ -313,7 +313,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				preparedStatement.setInt(2, parameterType.getCode());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, resultId);
 
-				Log.debugMessage("Inserting parameter " + parameterType.getDescription() + " for result " + resultId, Log.DEBUGLEVEL09);
+				assert Log.debugMessage("Inserting parameter " + parameterType.getDescription() + " for result " + resultId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(parameter.getValue(),
 						connection,
@@ -340,7 +340,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -373,12 +373,12 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				return resultSet.getInt("count");
 			}
-			Log.errorMessage("ERROR: cannot select number of results for test '" + testIdStr
+			assert Log.errorMessage("ERROR: cannot select number of results for test '" + testIdStr
 					+ "' of result sort " + resultSort.value() + "; returning 0");
 			return 0;
 		} catch (SQLException sqle) {
@@ -406,7 +406,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}

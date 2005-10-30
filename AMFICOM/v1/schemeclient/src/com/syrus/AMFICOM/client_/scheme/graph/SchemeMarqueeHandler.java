@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.37 2005/10/30 14:49:21 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.38 2005/10/30 15:20:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/10/30 14:49:21 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/30 15:20:56 $
  * @module schemeclient
  */
 
@@ -260,7 +260,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							Notifier.notify(graph, graph.aContext,
 									((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getScheme());
 						} catch (ApplicationException e) {
-							Log.errorMessage(e);
+							assert Log.errorMessage(e);
 						}
 					}
 					
@@ -396,11 +396,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			else if (p.x > dev_bounds.x + dev_bounds.width)
 				return IdlDirectionType._OUT;
 			else {
-				Log.errorMessage("can't create PortCell in horizontal bounds of DeviceCell"); //$NON-NLS-1$
+				assert Log.errorMessage("can't create PortCell in horizontal bounds of DeviceCell"); //$NON-NLS-1$
 				return null;
 			}
 		}
-		Log.errorMessage("can't create PortCell out of vertical bounds of DeviceCell"); //$NON-NLS-1$
+		assert Log.errorMessage("can't create PortCell out of vertical bounds of DeviceCell"); //$NON-NLS-1$
 		return null;
 	}
 	
@@ -416,11 +416,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						LangModelGraph.getString("error_grouped_device"),  //$NON-NLS-1$
 						LangModelGraph.getString("error"), //$NON-NLS-1$
 						JOptionPane.ERROR_MESSAGE);
-				Log.errorMessage("can't create PortCell as DeviceCell has parent group"); //$NON-NLS-1$
+				assert Log.errorMessage("can't create PortCell as DeviceCell has parent group"); //$NON-NLS-1$
 				return;
 			}
 			if (deviceCell.getSchemeDeviceId() == null) {
-				Log.errorMessage("can't create PortCell as DeviceCell has null SchemeDevice"); //$NON-NLS-1$
+				assert Log.errorMessage("can't create PortCell as DeviceCell has null SchemeDevice"); //$NON-NLS-1$
 				return;
 			}
 			
@@ -440,7 +440,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			try {
 				types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			} catch (ApplicationException e1) {
-				Log.errorMessage(e1);
+				assert Log.errorMessage(e1);
 			}
 			if (types.isEmpty()) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -472,7 +472,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							graph.snap(graph.fromScreen(p)), name, directionType, color, schemePort.getId());
 				}
 			} catch (ApplicationException e1) {
-				Log.errorMessage(e1);
+				assert Log.errorMessage(e1);
 			}
 		}
 	}
@@ -523,7 +523,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						DeviceCell cell = SchemeActions.createDevice(graph, "", this.bounds, device.getId());  //$NON-NLS-1$
 						cell.setSchemeDeviceId(device.getId());
 					} catch (ApplicationException e1) {
-						Log.errorMessage(e1);
+						assert Log.errorMessage(e1);
 					}
 				} else if (this.r.isSelected()) {
 					graph.addVertex("", this.bounds, false, Color.black); //$NON-NLS-1$
@@ -539,7 +539,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						try {
 							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 						} catch (ApplicationException e1) {
-							Log.errorMessage(e1);
+							assert Log.errorMessage(e1);
 						}
 						if (types.isEmpty()) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -556,7 +556,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							try {
 								scheme = ((SchemePanel)panel).getSchemeResource().getScheme();
 							} catch (ApplicationException e2) {
-								Log.errorMessage(e2);
+								assert Log.errorMessage(e2);
 							}
 						}
 						if (scheme != null) {
@@ -571,7 +571,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 									link.setName((String)cell.getUserObject());
 									Notifier.notify(graph, this.pane.aContext, link);
 								} catch (CreateObjectException e1) {
-									Log.errorMessage(e1.getMessage());
+									assert Log.errorMessage(e1.getMessage());
 									link.setParentScheme(null, false);
 									JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 											LangModelGraph.getString("Error.create_cablelink"), //$NON-NLS-1$
@@ -579,7 +579,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 											JOptionPane.ERROR_MESSAGE);
 								}
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						}
 					}
@@ -592,7 +592,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						try {
 							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 						} catch (ApplicationException e1) {
-							Log.errorMessage(e1);
+							assert Log.errorMessage(e1);
 						}
 						if (types.isEmpty()) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
@@ -638,7 +638,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 								}
 								Notifier.notify(graph, this.pane.aContext, link);
 							} catch (CreateObjectException e1) {
-								Log.errorMessage(e1.getMessage());
+								assert Log.errorMessage(e1.getMessage());
 								link.setParentSchemeProtoElement(null, false);
 								JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 										LangModelGraph.getString("Error.create_link"), //$NON-NLS-1$
@@ -646,7 +646,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 										JOptionPane.ERROR_MESSAGE);
 							}
 						} catch (ApplicationException e1) {
-							Log.errorMessage(e1);
+							assert Log.errorMessage(e1);
 							return;
 						}
 					}

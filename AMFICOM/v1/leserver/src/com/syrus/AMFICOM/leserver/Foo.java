@@ -1,5 +1,5 @@
 /*-
- * $Id: Foo.java,v 1.1 2005/10/30 14:49:11 bass Exp $
+ * $Id: Foo.java,v 1.2 2005/10/30 15:20:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/30 15:20:46 $
  * @module leserver
  */
 final class Foo {
@@ -76,9 +76,9 @@ final class Foo {
 		
 		for (final Object object : getObjects(namingCtx)) {
 			if (object._is_a(MessageReceiverExtHelper.id())) {
-				Log.debugMessage("Object: " + object + "is a valid MessageReceiverExt; continuing", FINEST);
+				assert Log.debugMessage("Object: " + object + "is a valid MessageReceiverExt; continuing", FINEST);
 				final MessageReceiverExt messageReceiverExt = MessageReceiverExtHelper.narrow(object);
-				Log.debugMessage("Message will be delivered to: "
+				assert Log.debugMessage("Message will be delivered to: "
 						+ Identifier.valueOf(messageReceiverExt.getSystemUserId()),
 						FINEST);
 				
@@ -92,7 +92,7 @@ final class Foo {
 					assert false;
 				}
 			} else {
-				Log.debugMessage("Object: " + object + "is not a MessageReceiverExt; skipping", FINEST);
+				assert Log.debugMessage("Object: " + object + "is not a MessageReceiverExt; skipping", FINEST);
 			}
 		}
 
@@ -115,23 +115,23 @@ final class Foo {
 			final Object object = namingCtx.resolve(path);
 			try {
 				if (object._non_existent()) {
-					Log.debugMessage("Object: "
+					assert Log.debugMessage("Object: "
 							+ string + " is non-existent; skipping",
 							FINEST);
 					continue;
 				}
 			} catch (final COMM_FAILURE cf) {
-				Log.debugMessage("Object: "
+				assert Log.debugMessage("Object: "
 						+ string + " is non-existent; skipping",
 						FINEST);
 				continue;
 			}
 
 			if (binding.binding_type == BindingType.ncontext) {
-				Log.debugMessage("Traversing into context: " + string, FINEST);
+				assert Log.debugMessage("Traversing into context: " + string, FINEST);
 				objects.addAll(getObjects(NamingContextExtHelper.narrow(object)));
 			} else {
-				Log.debugMessage("Object found: " + string, FINEST);
+				assert Log.debugMessage("Object found: " + string, FINEST);
 				objects.add(object);
 			}
 		}

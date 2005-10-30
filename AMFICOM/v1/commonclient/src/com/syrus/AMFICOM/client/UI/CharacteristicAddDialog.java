@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.18 2005/10/30 14:48:51 bass Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.19 2005/10/30 15:20:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/30 15:20:24 $
  * @module commonclient
  */
 
@@ -223,7 +223,7 @@ public class CharacteristicAddDialog {
 								this.sort);
 						StorableObjectPool.flush(this.selectedType, LoginManager.getUserId(), false); 
 					} catch (ApplicationException e) {
-						Log.errorMessage(e);
+						assert Log.errorMessage(e);
 					}
 				}
 			}

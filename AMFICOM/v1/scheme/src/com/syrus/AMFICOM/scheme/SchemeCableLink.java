@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.112 2005/10/30 14:48:42 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.113 2005/10/30 15:20:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.113 $, $Date: 2005/10/30 15:20:16 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
@@ -283,7 +283,7 @@ public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -633,7 +633,7 @@ public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
 		this.getParentScheme().getSchemeCableLinkContainerWrappee().removeFromCache(this, usePool);
 
 		if (parentScheme == null) {
-			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentScheme.getSchemeCableLinkContainerWrappee().addToCache(this, usePool);
@@ -806,7 +806,7 @@ public final class SchemeCableLink extends AbstractSchemeLink<SchemeCableLink>
 			return cableChannelingItem.getParentSchemeCableLinkId().equals(this)
 					&& (true || this.getPathMembers().headSet(cableChannelingItem).size() == cableChannelingItem.sequentialNumber);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return true;
 		}
 	}

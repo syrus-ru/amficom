@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.143 2005/10/30 14:49:02 bass Exp $
+ * $Id: PhysicalLink.java,v 1.144 2005/10/30 15:20:37 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.143 $, $Date: 2005/10/30 14:49:02 $
+ * @version $Revision: 1.144 $, $Date: 2005/10/30 15:20:37 $
  * @module map
  */
 public class PhysicalLink extends StorableObject<PhysicalLink>
@@ -299,7 +299,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		try {
 			pipeBlocks = StorableObjectPool.getStorableObjects(pipeBlockIds, true);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}		
 		this.binding = new PhysicalLinkBinding(pipeBlocks);
 
@@ -397,7 +397,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 			try {
 				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
 			} catch(ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 		return this.endNode;
@@ -457,7 +457,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 	public List<NodeLink> getNodeLinks() {
 		this.initialize();
 		if(this.nodeLinks.isEmpty()) {
-			Log.debugMessage("no nodelinks for link '" + this.getName() + "' id " + this.id + " between \'" + this.getStartNode().getName() + "\' and " + this.getEndNode().getName() + "\'", Level.FINE);
+			assert Log.debugMessage("no nodelinks for link '" + this.getName() + "' id " + this.id + " between \'" + this.getStartNode().getName() + "\' and " + this.getEndNode().getName() + "\'", Level.FINE);
 		}
 		return Collections.unmodifiableList(this.nodeLinks);
 	}
@@ -476,7 +476,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 			try {
 				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
 			} catch(ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 		return this.startNode;
@@ -569,7 +569,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 	public void removeNodeLink(final NodeLink nodeLink) {
 		this.initialize();
 		this.nodeLinks.remove(nodeLink);
-		Log.debugMessage("For physical link " + this.id.toString() + " remove nodeLink = " + nodeLink.getId().toString(), FINEST);
+		assert Log.debugMessage("For physical link " + this.id.toString() + " remove nodeLink = " + nodeLink.getId().toString(), FINEST);
 		this.nodeLinksSorted = false;
 		// there is no need to modify object. NodeLink is transient.
 	}
@@ -585,7 +585,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		this.initialize();
 		if (!this.nodeLinks.contains(nodeLink)) {
 			this.nodeLinks.add(nodeLink);
-			Log.debugMessage("For physical link " + this.id.toString() + " add nodeLink = " + nodeLink.getId().toString(), FINEST);
+			assert Log.debugMessage("For physical link " + this.id.toString() + " add nodeLink = " + nodeLink.getId().toString(), FINEST);
 			this.nodeLinksSorted = false;
 			// there is no need to modify object. NodeLink is transient.
 		}
@@ -1026,7 +1026,7 @@ public class PhysicalLink extends StorableObject<PhysicalLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

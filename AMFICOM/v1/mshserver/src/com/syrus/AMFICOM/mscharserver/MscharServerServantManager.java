@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerServantManager.java,v 1.8 2005/10/30 14:48:59 bass Exp $
+ * $Id: MscharServerServantManager.java,v 1.9 2005/10/30 15:20:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/30 14:48:59 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/30 15:20:34 $
  * @module mscharserver
  */
 final class MscharServerServantManager extends RunnableVerifiedConnectionManager
@@ -78,7 +78,7 @@ final class MscharServerServantManager extends RunnableVerifiedConnectionManager
 	 */
 	@Override
 	protected void onLoseConnection(final String servantName) {
-		Log.debugMessage("Connection with '" + servantName + "' lost", Level.WARNING);
+		assert Log.debugMessage("Connection with '" + servantName + "' lost", Level.WARNING);
 	}
 
 	/**
@@ -88,7 +88,7 @@ final class MscharServerServantManager extends RunnableVerifiedConnectionManager
 	 */
 	@Override
 	protected void onRestoreConnection(final String servantName) {
-		Log.debugMessage("Connection with '" + servantName + "' restored",
+		assert Log.debugMessage("Connection with '" + servantName + "' restored",
 				Level.INFO);
 
 	}

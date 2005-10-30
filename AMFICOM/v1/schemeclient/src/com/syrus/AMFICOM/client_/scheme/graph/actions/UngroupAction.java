@@ -1,5 +1,5 @@
 /*
- * $Id: UngroupAction.java,v 1.8 2005/10/30 14:49:20 bass Exp $
+ * $Id: UngroupAction.java,v 1.9 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/30 15:20:54 $
  * @module schemeclient
  */
 
@@ -155,7 +155,7 @@ public class UngroupAction extends AbstractAction {
 				}
 				StorableObjectPool.delete(toDelete);
 			} catch (ApplicationException e1) {
-				Log.errorMessage(e1);
+				assert Log.errorMessage(e1);
 			}
 
 			graph.getModel().remove(groups.toArray());

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.138 2005/10/30 14:48:48 bass Exp $
+ * $Id: SchedulerModel.java,v 1.139 2005/10/30 15:20:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.138 $, $Date: 2005/10/30 14:48:48 $
+ * @version $Revision: 1.139 $, $Date: 2005/10/30 15:20:23 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -554,7 +554,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				}
 				this.refreshTest(source);
 			} else {
-				Log.debugMessage("selectedTest is " + selectedTest, Level.FINEST);
+				assert Log.debugMessage("selectedTest is " + selectedTest, Level.FINEST);
 			}
 		}
 	}
@@ -951,7 +951,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	private void addGroupTests(final long interval) throws ApplicationException {
-		Log.debugMessage(Log.DEBUGLEVEL10);
+		assert Log.debugMessage(Log.DEBUGLEVEL10);
 		this.flag = FLAG_CREATE;
 		this.startGetData(false);
 		if (this.flag != FLAG_APPLY && this.flag != FLAG_CREATE) {
@@ -1211,7 +1211,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 		}
-		Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1238,7 +1238,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			measurementSetup, 
 			Identifier.VOID_IDENTIFIER);
 		
-		Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1328,7 +1328,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			times, 
 			measurementSetup, 
 			test.getId());
-		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + measurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("SchedulerModel.isValid (" + test + ", " + measurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1350,7 +1350,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			times, 
 			measurementSetup, 
 			test.getId());
-		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1374,7 +1374,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			times, 
 			measurementSetup, 
 			test.getId());
-		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + startDate + ", " + endDate + ")  | return " + result, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("SchedulerModel.isValid (" + test + ", " + startDate + ", " + endDate + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1502,7 +1502,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				break;
 			default:
 				// too unlike
-				Log.errorMessage(new Exception("SchedulerModel.getColor"));
+				assert Log.errorMessage(new Exception("SchedulerModel.getColor"));
 				color = COLOR_UNRECOGNIZED;
 				break;
 		}
@@ -1527,7 +1527,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			return I18N.getString("Scheduler.Text.Test.Status.Aborted");
 		}
 		// too unlike
-		Log.errorMessage(new Exception("SchedulerModel.getStatusName"));
+		assert Log.errorMessage(new Exception("SchedulerModel.getStatusName"));
 		return null;
 	}
 }

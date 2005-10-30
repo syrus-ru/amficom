@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.26 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.27 2005/10/30 15:20:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/30 15:20:55 $
  * @module schemeclient
  */
 
@@ -748,7 +748,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.cmbTypeCombo.addElements(protoEquipments);
 		} catch (ApplicationException e1) {
-			Log.errorMessage(e1);
+			assert Log.errorMessage(e1);
 		}
 	}
 
@@ -817,9 +817,9 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					protoEq = this.schemeElement.getProtoEquipment();
 				} catch (IllegalStateException e) {
-					Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
+					assert Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 				
 				try {
@@ -845,7 +845,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 					this.cmbKisCombo.addElements(kiss);
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 		} 
@@ -917,7 +917,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.schemeElement.setSymbol((BitmapImageResource) StorableObjectPool.getStorableObject(this.imageId, true));
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 			final ProtoEquipment protoEq = (ProtoEquipment)this.cmbTypeCombo.getSelectedItem();
@@ -932,7 +932,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					try {
 						eq = SchemeObjectsFactory.createEquipment(this.schemeElement);
 					} catch (CreateObjectException e) {
-						Log.errorMessage(e);
+						assert Log.errorMessage(e);
 					}
 				}
 				if (eq != null) {

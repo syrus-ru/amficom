@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateUnboundLinkCommandBundle.java,v 1.19 2005/10/30 14:48:56 bass Exp $$
+ * $$Id: CreateUnboundLinkCommandBundle.java,v 1.20 2005/10/30 15:20:31 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
  * создание непривязанной линии, состоящей из одного фрагмента, внесение ее в
  * пул и на карту
  * 
- * @version $Revision: 1.19 $, $Date: 2005/10/30 14:48:56 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:31 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -43,7 +43,7 @@ public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle {
 
 	@Override
 	public void execute() {
-		Log.debugMessage(
+		assert Log.debugMessage(
 			getClass().getName() + "::execute() | " //$NON-NLS-1$
 				+ "create UnboundLink with start at node "  //$NON-NLS-1$
 				+ this.startNode.getName() + " (" + this.startNode.getId()  //$NON-NLS-1$
@@ -59,7 +59,7 @@ public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 

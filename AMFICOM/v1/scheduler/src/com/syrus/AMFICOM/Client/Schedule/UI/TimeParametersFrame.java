@@ -542,7 +542,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																while (true) {
 																	if (waiting
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
-//																		Log.debugMessage(".run | 1 ", Log.FINEST);
+//																		assert Log.debugMessage(".run | 1 ", Log.FINEST);
 																		final Test selectedTest;
 																		try {
 																			selectedTest = TimeParametersPanel.this.schedulerModel
@@ -554,13 +554,13 @@ public class TimeParametersFrame extends JInternalFrame {
 																		}
 																		if (selectedTest != null
 																				&& selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-//																			Log.debugMessage(".run | 2 ", Log.FINEST);
+//																			assert Log.debugMessage(".run | 2 ", Log.FINEST);
 																			Date startDate = TimeParametersPanel.this
 																					.getStartDate();
 																			Date endDate = TimeParametersPanel.this
 																					.getEndDate();
 																			if (startDate.getTime() < endDate.getTime()) {
-//																				Log.debugMessage(".run | 3 ", Log.FINEST);
+//																				assert Log.debugMessage(".run | 3 ", Log.FINEST);
 																				final String valid2;
 																				try {
 																					if ((valid2 = TimeParametersPanel.this.schedulerModel.isValid(selectedTest, startDate, endDate)) != null) {
@@ -574,7 +574,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																					continue;
 																				}
 																				{
-//																					Log.debugMessage(".run | 4 ", Log.FINEST);
+//																					assert Log.debugMessage(".run | 4 ", Log.FINEST);
 																					selectedTest.setEndTime(endDate);
 																				}
 //																				else {
@@ -588,12 +588,12 @@ public class TimeParametersFrame extends JInternalFrame {
 //
 //																				}
 																			} else {
-//																				Log.debugMessage(".run | 5 ", Log.FINEST);
+//																				assert Log.debugMessage(".run | 5 ", Log.FINEST);
 																				waiting = false;
 																			}
 
 																			if (waiting) {
-//																				Log.debugMessage(".run | 6 ", Log.FINEST);
+//																				assert Log.debugMessage(".run | 6 ", Log.FINEST);
 																				TimeParametersPanel.this.dispatcher
 																						.firePropertyChange(new PropertyChangeEvent(
 																														TimeParametersPanel.this,
@@ -603,7 +603,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																														null));
 																			}
 																		}
-//																		Log.debugMessage(".run | 7 ", Log.FINEST);
+//																		assert Log.debugMessage(".run | 7 ", Log.FINEST);
 																		waiting = false;
 																	}
 

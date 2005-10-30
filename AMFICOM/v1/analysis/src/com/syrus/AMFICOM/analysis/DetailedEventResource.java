@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.17 2005/10/30 14:49:13 bass Exp $
+ * $Id: DetailedEventResource.java,v 1.18 2005/10/30 15:20:49 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/10/30 14:49:13 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/30 15:20:49 $
  * @module analysis
  */
 
@@ -224,12 +224,12 @@ public class DetailedEventResource {
 			setLocationDifference(DASH);
 		}
 
-//		Log.debugMessage("perEventId=" + perEventId
+//		assert Log.debugMessage("perEventId=" + perEventId
 //				+ " of nEvents=" + (perEvent != null ? "" + perEvent.getNEvents() : "<null>"),
 //				Level.FINEST);
 		if (dataEvent != null && perEvent != null
 				&& dataEvent != null && dataEvent instanceof HavingLoss) {
-//			Log.debugMessage("hasQK=" + perEvent.hasQK(perEventId),
+//			assert Log.debugMessage("hasQK=" + perEvent.hasQK(perEventId),
 //					Level.FINEST);
 			if (perEvent.hasQK(perEventId)) {
 				setQi(String.valueOf(MathRef.round_2(perEvent.getQ(perEventId))));

@@ -1,5 +1,5 @@
 /*-
- * $$Id: AlarmIndicationTimer.java,v 1.6 2005/10/30 14:48:55 bass Exp $$
+ * $$Id: AlarmIndicationTimer.java,v 1.7 2005/10/30 15:20:30 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.mapview.MapTypedElementsContainer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/30 14:48:55 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:30 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -57,7 +57,7 @@ public class AlarmIndicationTimer {
 							new MapEvent(this, MapEvent.NEED_REPAINT));
 				}
 			} catch(MapException ex) {
-				Log.debugMessage(ex, Level.SEVERE);
+				assert Log.debugMessage(ex, Level.SEVERE);
 				ex.printStackTrace();
 			}
 		}

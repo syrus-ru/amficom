@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeNewCommand.java,v 1.2 2005/10/30 14:48:52 bass Exp $
+ * $Id: SchemeNewCommand.java,v 1.3 2005/10/30 15:20:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ public class SchemeNewCommand extends AbstractCommand {
 			this.result = RESULT_OK;
 		} 
 		catch (CreateObjectException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 }

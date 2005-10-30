@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.41 2005/10/30 14:48:51 bass Exp $
+ * $Id: OpenSessionCommand.java,v 1.42 2005/10/30 15:20:24 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/30 15:20:24 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -161,7 +161,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		}
 		
 		do {
-			Log.debugMessage("Attempt to login; logged: " + this.logged, Log.DEBUGLEVEL04);
+			assert Log.debugMessage("Attempt to login; logged: " + this.logged, Log.DEBUGLEVEL04);
 		} while (!this.logging());
 	}
 
@@ -205,7 +205,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		try {
 			clientSessionEnvironment.login(this.login, this.password, this.domainId);
 		} catch (LoginException le) {
-			Log.errorMessage(le);
+			assert Log.errorMessage(le);
 			if (le.isAlreadyLoggedIn()) {
 				this.logged = true;
 				return true;
@@ -219,7 +219,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.logged = false;
 			return false;
 		} catch (CommunicationException ce) {
-			Log.errorMessage(ce);
+			assert Log.errorMessage(ce);
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					I18N.getString("Error.ServerConnection"),
 					I18N.getString("Error.OpenSession"),

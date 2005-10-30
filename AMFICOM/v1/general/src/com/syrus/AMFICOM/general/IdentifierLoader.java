@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.14 2005/09/21 13:49:29 arseniy Exp $
+ * $Id: IdentifierLoader.java,v 1.15 2005/10/30 15:20:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/21 13:49:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -52,7 +52,7 @@ final class IdentifierLoader extends SleepButWorkThread {
 				}
 				numberToLoad -= identifiersT.length;
 			} catch (AMFICOMRemoteException are) {
-				Log.errorMessage(are.message);
+				assert Log.errorMessage(are.message);
 				super.sleepCauseOfFall();
 			}
 		}
@@ -60,7 +60,7 @@ final class IdentifierLoader extends SleepButWorkThread {
 
 	@Override
 	protected void processFall() {
-		Log.errorMessage("Aboting load of identifiers for entity '"
+		assert Log.errorMessage("Aboting load of identifiers for entity '"
 				+ ObjectEntities.codeToString(this.entityCode) + "'/" + this.entityCode);
 		this.running = false;
 	}

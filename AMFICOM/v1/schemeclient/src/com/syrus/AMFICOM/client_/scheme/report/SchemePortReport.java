@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePortReport.java,v 1.3 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemePortReport.java,v 1.4 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ public class SchemePortReport {
 				new AbstractPortTableModel(abstractPort,vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			Log.errorMessage(e.getMessage());
-			Log.errorMessage(e);			
+			assert Log.errorMessage(e.getMessage());
+			assert Log.errorMessage(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
 					tableStorableElement.getModelClassName(),

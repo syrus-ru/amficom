@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.28 2005/10/30 14:48:49 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.29 2005/10/30 15:20:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/30 14:48:49 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/30 15:20:23 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -51,7 +51,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			}
 		}
 		catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 		}
 		return condition;
 	}

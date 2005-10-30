@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.8 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemeCellPanel.java,v 1.9 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/30 15:20:54 $
  * @module schemeclient
  */
 
@@ -116,7 +116,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 			try {
 				image = SchemeObjectsFactory.createSchemeImageResource();
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 				return;
 			}
 			this.schemeCellContainer.setUgoCell(image);

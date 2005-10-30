@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapTreeModel.java,v 1.25 2005/10/30 14:48:57 bass Exp $$
+ * $$Id: MapTreeModel.java,v 1.26 2005/10/30 15:20:32 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/30 14:48:57 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/30 15:20:32 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -403,7 +403,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 				siteNodes = visibleSiteNodes;
 			}
 		} catch (Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 
 		java.util.Collection types = this.getSiteNodeTypes(siteNodes);
@@ -488,7 +488,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 				siteNodesSet = visibleSiteNodes;
 			}
 		} catch (Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 
 		List siteNodes = getSiteNodeTypeNodes(siteNodesSet, type);
@@ -561,7 +561,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 				siteNodes = visibleSiteNodes;
 			}
 		} catch (Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 
 		java.util.Map nodePresense = new HashMap();
@@ -627,7 +627,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 				nodesSet = visibleTopologicalNodes;
 			}
 		} catch (Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 
 		List nodes = new ArrayList(nodesSet);
@@ -696,7 +696,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 				linksSet = visibleLinks;
 			}
 		} catch (Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 		List links = new ArrayList(linksSet);
 		
@@ -764,7 +764,7 @@ public class MapTreeModel extends AbstractChildrenFactory {
 				collectorsSet = visibleCollectors;
 			}
 		} catch (Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 		List collectors = new ArrayList(collectorsSet);
 		Collections.sort(collectors, MapTreeModel.mapElementComparator);

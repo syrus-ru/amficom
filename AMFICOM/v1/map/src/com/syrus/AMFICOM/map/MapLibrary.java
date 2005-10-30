@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.36 2005/10/30 14:49:02 bass Exp $
+ * $Id: MapLibrary.java,v 1.37 2005/10/30 15:20:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/10/30 14:49:02 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/30 15:20:37 $
  * @author $Author: bass $
  * @module map
  */
@@ -267,7 +267,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 					siteNodeTypeCondition,
 					true);
 		} catch(ApplicationException e) {
-			Log.debugMessage(e, SEVERE);
+			assert Log.debugMessage(e, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -281,7 +281,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 					physicalLinkTypeCondition,
 					true);
 		} catch(ApplicationException e) {
-			Log.debugMessage(e, SEVERE);
+			assert Log.debugMessage(e, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -300,7 +300,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentMapLibraryId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -431,7 +431,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 				} else {
 					mapLibrary = StorableObjectPool.getStorableObject(expectedId, true);
 					if (mapLibrary == null) {
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -445,7 +445,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 					} else {
 						final String oldCodename = mapLibrary.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("WARNING: "
+							assert Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -466,7 +466,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -484,7 +484,7 @@ public final class MapLibrary extends StorableObject<MapLibrary>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

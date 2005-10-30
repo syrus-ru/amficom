@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.12 2005/10/30 14:49:07 bass Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.13 2005/10/30 15:20:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/30 14:49:07 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:42 $
  * @author $Author: bass $
  * @module general
  */
@@ -42,17 +42,17 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
 		} catch (ClassNotFoundException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (SecurityException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (NoSuchMethodException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (IllegalArgumentException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (InstantiationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (IllegalAccessException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
@@ -62,7 +62,7 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 				else
 					assert false : message;
 			} else {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 		return databaseStorableObjectCondition;
@@ -74,7 +74,7 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 		for (final StorableObjectCondition condition : this.delegate.getConditions()) {
 			final DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
 			if (databaseStorableObjectCondition == null) {
-				Log.errorMessage("ERROR: Cannot reflect database condition -- returning default");
+				assert Log.errorMessage("ERROR: Cannot reflect database condition -- returning default");
 				return FALSE_CONDITION;
 			}
 
@@ -99,7 +99,7 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 						buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 						break;
 					default:
-						Log.errorMessage("Unsupported condition sort");
+						assert Log.errorMessage("Unsupported condition sort");
 
 				}
 			}

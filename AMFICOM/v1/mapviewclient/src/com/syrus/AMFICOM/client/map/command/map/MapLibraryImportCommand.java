@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapLibraryImportCommand.java,v 1.16 2005/10/03 10:35:01 krupenn Exp $$
+ * $$Id: MapLibraryImportCommand.java,v 1.17 2005/10/30 15:20:33 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.16 $, $Date: 2005/10/03 10:35:01 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:33 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -126,7 +126,7 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 		try {
 			MapLibrary mapLibrary = null;
-			Log.debugMessage("Import map library", INFO); //$NON-NLS-1$
+			assert Log.debugMessage("Import map library", INFO); //$NON-NLS-1$
 
 			String fileName = ImportCommand
 					.openFileForReading(MapPropertiesManager.getLastDirectory());
@@ -237,11 +237,11 @@ public class MapLibraryImportCommand extends ImportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
+			assert Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				Log.debugMessage(error.getMessage(), WARNING);
-				Log.debugMessage(error.getObjectLocation().toString(), WARNING);
+				assert Log.debugMessage(error.getMessage(), WARNING);
+				assert Log.debugMessage(error.getObjectLocation().toString(), WARNING);
 			}
 		}
 		return isXmlValid;

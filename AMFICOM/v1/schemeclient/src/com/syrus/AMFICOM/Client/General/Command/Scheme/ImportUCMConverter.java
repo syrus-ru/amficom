@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.10 2005/10/10 11:07:38 stas Exp $
+ * $Id: ImportUCMConverter.java,v 1.11 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,7 +97,7 @@ public class ImportUCMConverter {
 		Set<CableLinkType> cableLinkTypes1 = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 
 		if (cableLinkTypes1.size() == 0) {
-			Log.debugMessage("no CableLinkTypes found", Level.WARNING);
+			assert Log.debugMessage("no CableLinkTypes found", Level.WARNING);
 			return;
 		}
 		
@@ -124,7 +124,7 @@ public class ImportUCMConverter {
 		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks(false)) {
 			CableLinkType cableLinkType = schemeCableLink.getAbstractLinkType();
 			if (cableLinkType == null) {
-				Log.debugMessage("No real CableLinkType for " + schemeCableLink.getName(), Level.FINEST);
+				assert Log.debugMessage("No real CableLinkType for " + schemeCableLink.getName(), Level.FINEST);
 				CableLinkType suitableType;
 				Integer fibers = Integer.valueOf(schemeCableLink.getSchemeCableThreads(false).size());
 				suitableType = cableLinkTypes.get(fibers);
@@ -206,7 +206,7 @@ public class ImportUCMConverter {
 						if (cable != null) {
 							fibers = cable.getSchemeCableThreads(false).size();
 						} else {
-							Log.debugMessage("No connected cable found", Level.FINE);
+							assert Log.debugMessage("No connected cable found", Level.FINE);
 						}
 						boolean isInput = cablePort.getDirectionType() == IdlDirectionType._IN;
 						SchemeProtoElement suitableVrm = getSuitableProto(isInput ? this.inVrms : this.outVrms, Integer.valueOf(fibers));
@@ -261,7 +261,7 @@ public class ImportUCMConverter {
 							if (cable != null) {
 								maxFibers = Math.max(maxFibers, cable.getSchemeCableThreads(false).size());
 							} else {
-								Log.debugMessage("No connected cable found", Level.FINE);
+								assert Log.debugMessage("No connected cable found", Level.FINE);
 							}
 						}
 						SchemeProtoElement suitableMuff = getSuitableProto(this.straightMuffs, Integer.valueOf(maxFibers));
@@ -316,7 +316,7 @@ public class ImportUCMConverter {
 							if (cable != null) {
 								fibers = cable.getSchemeCableThreads(false).size();
 							} else {
-								Log.debugMessage("No connected cable found", Level.FINE);
+								assert Log.debugMessage("No connected cable found", Level.FINE);
 							}
 							boolean isInput = cablePort.getDirectionType() == IdlDirectionType._IN;
 							SchemeProtoElement suitableVrm = getSuitableProto(isInput ? this.inVrms : this.outVrms, Integer.valueOf(fibers));
@@ -391,12 +391,12 @@ public class ImportUCMConverter {
 	private void substituteSchemeElement(Map<Identifier, Identifier>clonedIds, SchemeElement seToRemove, SchemeElement seToAdd) throws ApplicationException {
 		for (SchemeDevice dev : seToAdd.getSchemeDevices(false)) {
 			if (!dev.getSchemeCablePorts(false).isEmpty()) {
-				Log.errorMessage("Try to delete device with non empty cable ports");
+				assert Log.errorMessage("Try to delete device with non empty cable ports");
 			}
 			if (!dev.getSchemePorts(false).isEmpty()) {
-				Log.errorMessage("Try to delete device with non empty ports");
+				assert Log.errorMessage("Try to delete device with non empty ports");
 			}
-			Log.debugMessage("Remove device " + dev.getId(), Level.FINE);
+			assert Log.debugMessage("Remove device " + dev.getId(), Level.FINE);
 			StorableObjectPool.delete(dev.getId());
 			this.objectsToDelete.add(dev);
 		}
@@ -479,16 +479,16 @@ public class ImportUCMConverter {
 			SchemeCablePort portToAdd = existingPortsMapping.get(portToRemove);
 			
 			SchemeDevice parent = portToRemove.getParentSchemeDevice();
-			Log.debugMessage((counter++) + ":Add port " + portToAdd.getId() + " (parentId = '" + parent.getId() + "')", Level.FINE);
+			assert Log.debugMessage((counter++) + ":Add port " + portToAdd.getId() + " (parentId = '" + parent.getId() + "')", Level.FINE);
 			portToAdd.setParentSchemeDevice(parent, false);
 			portToAdd.setPortType(portToRemove.getPortType());
 			clonedIds.put(seCablePortReversedMap.get(portToRemove), portToAdd.getId());
-			Log.debugMessage("Remove port " + portToRemove.getId() + " (parentId = '" + parent.getId() + "')", Level.FINE);
+			assert Log.debugMessage("Remove port " + portToRemove.getId() + " (parentId = '" + parent.getId() + "')", Level.FINE);
 			StorableObjectPool.delete(portToRemove.getId());
 			this.objectsToDelete.add(portToRemove);
-			Log.debugMessage("\tparent schemeElement " + parent.getParentSchemeElement().getId(), Level.FINE);
+			assert Log.debugMessage("\tparent schemeElement " + parent.getParentSchemeElement().getId(), Level.FINE);
 			for (SchemeCablePort child : parent.getSchemeCablePorts(false)) {
-				Log.debugMessage("\tchild cablePort " + child.getId(), Level.FINE);
+				assert Log.debugMessage("\tchild cablePort " + child.getId(), Level.FINE);
 			}
 		}
 	}
@@ -513,7 +513,7 @@ public class ImportUCMConverter {
 			portToAdd.setPortType(portToRemove.getPortType());
 			portToAdd.setName(portToRemove.getName());
 			clonedIds.put(id, portToAdd.getId());
-			Log.debugMessage("Remove port " + portToRemove.getId(), Level.FINE);
+			assert Log.debugMessage("Remove port " + portToRemove.getId(), Level.FINE);
 			StorableObjectPool.delete(portToRemove.getId());
 			StorableObjectPool.flush(portToRemove.getId(), this.userId, false);
 		}
@@ -540,7 +540,7 @@ public class ImportUCMConverter {
 		LinkedIdsCondition condition2 = new LinkedIdsCondition(muffTypeIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 		Set<SchemeProtoElement> muffs = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 		if (muffs.size() == 0) {
-			Log.debugMessage("No muffs found", Level.WARNING);
+			assert Log.debugMessage("No muffs found", Level.WARNING);
 			throw new CreateObjectException("No muffs found");
 		}
 
@@ -555,7 +555,7 @@ public class ImportUCMConverter {
 			}
 		}
 		if (this.straightMuffs.size() == 0) {
-			Log.debugMessage("No straight muffs found", Level.WARNING);
+			assert Log.debugMessage("No straight muffs found", Level.WARNING);
 			throw new CreateObjectException("No straight muffs found");
 		}
 	}
@@ -574,7 +574,7 @@ public class ImportUCMConverter {
 		LinkedIdsCondition condition2 = new LinkedIdsCondition(vrmTypeIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 		Set<SchemeProtoElement> vrms = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 		if (vrms.size() == 0) {
-			Log.debugMessage("No vrms found", Level.WARNING);
+			assert Log.debugMessage("No vrms found", Level.WARNING);
 			return;
 		}
 

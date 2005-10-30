@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.109 2005/10/30 14:48:42 bass Exp $
+ * $Id: SchemePath.java,v 1.110 2005/10/30 15:20:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.109 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.110 $, $Date: 2005/10/30 15:20:15 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject<SchemePath>
@@ -251,7 +251,7 @@ public final class SchemePath extends StorableObject<SchemePath>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeMonitoringSolutionId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -302,7 +302,7 @@ public final class SchemePath extends StorableObject<SchemePath>
 		try {
 			return StorableObjectPool.getStorableObject(this.getTransmissionPathId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -411,7 +411,7 @@ public final class SchemePath extends StorableObject<SchemePath>
 		this.getParentSchemeMonitoringSolution().getSchemePathContainerWrappee().removeFromCache(this, usePool);
 
 		if (parentSchemeMonitoringSolution == null) {
-			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentSchemeMonitoringSolution.getSchemePathContainerWrappee().addToCache(this, usePool);
@@ -696,7 +696,7 @@ public final class SchemePath extends StorableObject<SchemePath>
 			return pathElement.getParentSchemePathId().equals(this)
 					&& (true || this.getPathMembers().headSet(pathElement).size() == pathElement.sequentialNumber);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return true;
 		}
 	}

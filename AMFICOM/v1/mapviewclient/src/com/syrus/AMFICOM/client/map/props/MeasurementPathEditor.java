@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathEditor.java,v 1.16 2005/10/30 14:48:56 bass Exp $$
+ * $$Id: MeasurementPathEditor.java,v 1.17 2005/10/30 15:20:32 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/30 14:48:56 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:32 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -346,7 +346,7 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 						.valueOf(this.measurementPath.getLengthLo()));
 				this.descTextArea.setEnabled(true);
 			} catch(Exception e) {
-				Log.debugMessage(e, Level.SEVERE);
+				assert Log.debugMessage(e, Level.SEVERE);
 			}
 			this.descTextArea.setText(this.measurementPath.getDescription());
 			this.startComboBox.addItem(this.measurementPath.getStartNode());

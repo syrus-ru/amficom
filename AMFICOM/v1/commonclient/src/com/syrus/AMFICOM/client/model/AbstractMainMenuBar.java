@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.11 2005/10/21 10:11:26 bob Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.12 2005/10/30 15:20:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/21 10:11:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/10/30 15:20:24 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -47,7 +47,7 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 				final AbstractButton jb = (AbstractButton) e.getSource();
 				final String s = jb.getName();
 				final Command command = applicationModel.getCommand(s);
-				Log.debugMessage("AbstractMainMenuBar$ActionListener.actionPerformed | " + command.getClass().getName(), Level.FINEST);
+				assert Log.debugMessage("AbstractMainMenuBar$ActionListener.actionPerformed | " + command.getClass().getName(), Level.FINEST);
 				command.execute();
 			}
 		};

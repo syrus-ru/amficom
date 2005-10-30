@@ -51,7 +51,7 @@ public class PathElementsFrame extends AnalysisFrame {
 			}
 			setTitle(me.getName());
 		} catch (ApplicationException ex) {
-			Log.errorMessage(ex);
+			assert Log.errorMessage(ex);
 			setTitle(LangModelAnalyse.getString("analysisTitle"));
 		} catch (Exception ex) {
 			setTitle(LangModelAnalyse.getString("analysisTitle"));

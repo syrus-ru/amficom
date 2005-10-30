@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.35 2005/10/30 14:49:07 bass Exp $
+ * $Id: IdentifierPool.java,v 1.36 2005/10/30 15:20:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/10/30 14:49:07 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/30 15:20:42 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -113,7 +113,7 @@ public class IdentifierPool {
 				try {
 					identifierLoader.join(MAX_TIME_WAIT);
 				} catch (InterruptedException ie) {
-					Log.errorMessage(ie);
+					assert Log.errorMessage(ie);
 				}
 			}
 		};

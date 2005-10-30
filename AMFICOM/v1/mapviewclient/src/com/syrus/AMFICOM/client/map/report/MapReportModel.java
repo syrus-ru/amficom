@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.16 2005/10/30 14:48:56 bass Exp $
+ * $Id: MapReportModel.java,v 1.17 2005/10/30 15:20:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -94,7 +94,7 @@ public class MapReportModel extends ReportModel {
 					||	center == null
 					||	scale == null
 					||	mapFrameSize == null) {
-					Log.errorMessage("MapReportModel.createReport - got null data from Command.");
+					assert Log.errorMessage("MapReportModel.createReport - got null data from Command.");
 					throw new CreateReportException(
 							reportName,
 							modelClassName,					
@@ -109,8 +109,8 @@ public class MapReportModel extends ReportModel {
 							scale.doubleValue() * mapFrameSize.getWidth() / element.getWidth(),
 							new Dimension(element.getWidth(),element.getHeight()));
 				} catch (MapException e) {
-					Log.errorMessage(e.getMessage());
-					Log.errorMessage(e);			
+					assert Log.errorMessage(e.getMessage());
+					assert Log.errorMessage(e);			
 					throw new CreateReportException(
 							reportName,
 							modelClassName,					
@@ -162,8 +162,8 @@ public class MapReportModel extends ReportModel {
 				}
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e.getMessage());
-			Log.errorMessage(e);			
+			assert Log.errorMessage(e.getMessage());
+			assert Log.errorMessage(e);			
 			throw new CreateReportException(
 					reportName,
 					modelClassName,					

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.10 2005/10/30 14:49:18 bass Exp $
+ * $Id: SchemeExportCommand.java,v 1.11 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 		try {
 			scheme = this.pane.getCurrentPanel().getSchemeResource().getScheme();
 		} catch (ApplicationException e1) {
-			Log.errorMessage(e1);
+			assert Log.errorMessage(e1);
 		}
 		if (scheme != null) {
 
@@ -55,7 +55,7 @@ public class SchemeExportCommand extends ImportExportCommand {
 				final File schemeFile = new File(fileName);
 				saveSchemeXML(schemeFile, xmlScheme);
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}		
 		}
 	}
@@ -75,16 +75,16 @@ public class SchemeExportCommand extends ImportExportCommand {
 		try {
 			// Writing the XML Instance to a file.
 			doc.save(f, xmlOptions);
-			Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
+			assert Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		Log.debugMessage("Check if XML valid...", Level.FINER);
+		assert Log.debugMessage("Check if XML valid...", Level.FINER);
 		boolean isXmlValid = validateXml(doc);
 		if(isXmlValid) {
-			Log.debugMessage("Done successfully", Level.WARNING);
+			assert Log.debugMessage("Done successfully", Level.WARNING);
 		} else {
-			Log.debugMessage("Done with errors (see logs/error for more)", Level.WARNING);
+			assert Log.debugMessage("Done with errors (see logs/error for more)", Level.WARNING);
 		}
 	}
 }

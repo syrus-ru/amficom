@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.48 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemeActions.java,v 1.49 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -97,7 +97,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/30 15:20:54 $
  * @module schemeclient
  */
 
@@ -149,7 +149,7 @@ public class SchemeActions {
 			}
 		}
 		}catch (Exception e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 	
@@ -293,7 +293,7 @@ public class SchemeActions {
 					return true;
 			}
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 		}
 		return false;
 	}
@@ -358,7 +358,7 @@ public class SchemeActions {
 
 			return new DefaultCableLink[] { cell1, cell2 };
 		} catch (CreateObjectException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return null;
 		}
 	}
@@ -369,7 +369,7 @@ public class SchemeActions {
 			Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
 			SchemeImageResource res = scheme.getUgoCell();
 			if (res == null) {
-				Log.debugMessage("Can not insert scheme without ugo cell", Level.WARNING);
+				assert Log.debugMessage("Can not insert scheme without ugo cell", Level.WARNING);
 				return;
 			}
 			
@@ -383,7 +383,7 @@ public class SchemeActions {
 			}
 			seRes.setData((List<Object>)graph.getArchiveableState(clonedObjects.values().toArray()));
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 	
@@ -395,7 +395,7 @@ public class SchemeActions {
 				ugoRes = SchemeObjectsFactory.createSchemeImageResource();
 				schemeElement.setUgoCell(ugoRes);
 			} catch (CreateObjectException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 				return;
 			}
 
@@ -466,7 +466,7 @@ public class SchemeActions {
 					double y0 = equipment.getLatitude();
 					p = new Point((int)(grid * 10 + (x0 - xmin) * kx), (grid * 5 + height - (int)((y0 - ymin) * ky))); 
 				} else {
-					Log.errorMessage("No equipment for " + schemeElement.getName() + " (" + schemeElement.getId() + ")");
+					assert Log.errorMessage("No equipment for " + schemeElement.getName() + " (" + schemeElement.getId() + ")");
 					p = new Point((int)(width * Math.random()), (int)(height * Math.random()));
 				}
 				if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
@@ -490,11 +490,11 @@ public class SchemeActions {
 						PortView sourceView = (PortView)schemeGraph.getGraphLayoutCache().getMapping(source, false);
 						p = sourceView.getBounds().getLocation();
 					} catch (CreateObjectException e) {
-						Log.errorMessage(e);
+						assert Log.errorMessage(e);
 						return;
 					}
 				} else {
-					Log.errorMessage("No source found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
+					assert Log.errorMessage("No source found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
 				}
 			} 
 			if (p == null && targetPort != null) {
@@ -505,15 +505,15 @@ public class SchemeActions {
 						PortView sourceView = (PortView)schemeGraph.getGraphLayoutCache().getMapping(source, false);
 						p = sourceView.getBounds().getLocation();
 					} catch (CreateObjectException e) {
-						Log.errorMessage(e.getMessage());
+						assert Log.errorMessage(e.getMessage());
 						return;
 					}
 				} else {
-					Log.errorMessage("No target found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
+					assert Log.errorMessage("No target found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
 				}
 			} 
 			if (p == null) {
-				Log.errorMessage("Both source and target not found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
+				assert Log.errorMessage("Both source and target not found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
 				p = new Point(10 * grid, 10 * grid); 
 			}
 			
@@ -809,7 +809,7 @@ public class SchemeActions {
 					return pe;
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 		return null;
@@ -932,7 +932,7 @@ public class SchemeActions {
 
 		SchemePort sp = port.getSchemePort();
 		if (sp == null) {
-			Log.debugMessage("SchemePort is null for " + port.getId() + " during import it's normal otherwise not", Level.INFO);
+			assert Log.debugMessage("SchemePort is null for " + port.getId() + " during import it's normal otherwise not", Level.INFO);
 			return false;
 		}
 		
@@ -943,7 +943,7 @@ public class SchemeActions {
 		SchemeLink sl = link.getSchemeLink();
 
 		if (connectedLink != null) {
-			Log.debugMessage("Port already has connected link", WARNING);
+			assert Log.debugMessage("Port already has connected link", WARNING);
 			return false;
 		}
 
@@ -963,7 +963,7 @@ public class SchemeActions {
 		
 		SchemeLink sl = link.getSchemeLink();
 		if (sl == null) {
-			Log.debugMessage("GraphActions.disconnectSchemeLink() link not found " + link.getSchemeLinkId(), Level.WARNING); //$NON-NLS-1$
+			assert Log.debugMessage("GraphActions.disconnectSchemeLink() link not found " + link.getSchemeLinkId(), Level.WARNING); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -991,7 +991,7 @@ public class SchemeActions {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 
@@ -1002,11 +1002,11 @@ public class SchemeActions {
 		} 
 		else {
 			sp = sl.getTargetAbstractSchemePort();
-			Log.debugMessage("Link " + sl + " connected to port " + sp + "; disconnecting...", Level.FINER);
+			assert Log.debugMessage("Link " + sl + " connected to port " + sp + "; disconnecting...", Level.FINER);
 			sl.setTargetAbstractSchemePort(null);
 			if (sp != null) {
 				SchemeLink sl2 = sp.getAbstractSchemeLink();
-				Log.debugMessage("Now port " + sp + " has connected link " + sl2, Level.FINER);
+				assert Log.debugMessage("Now port " + sp + " has connected link " + sl2, Level.FINER);
 			}
 		}
 		if (sp != null) {
@@ -1020,7 +1020,7 @@ public class SchemeActions {
 		
 		SchemeCablePort sp = port.getSchemeCablePort();
 		if (sp == null) {
-			Log.debugMessage("SchemePort is null for " + port.getId() + " during import it's normal otherwise not", Level.INFO);
+			assert Log.debugMessage("SchemePort is null for " + port.getId() + " during import it's normal otherwise not", Level.INFO);
 			return false;
 		}
 		
@@ -1031,7 +1031,7 @@ public class SchemeActions {
 		SchemeCableLink sl = link.getSchemeCableLink();
 		
 		if (connectedLink != null) {
-			Log.debugMessage("CablePort already has connected cable", WARNING);
+			assert Log.debugMessage("CablePort already has connected cable", WARNING);
 			return false;
 		}
 
@@ -1045,14 +1045,14 @@ public class SchemeActions {
 			performAutoCommutation(sp, sl, is_source);
 			GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 		
 		return true;
 	}
 	
 	public static void performAutoCommutation(SchemeCablePort scp, SchemeCableLink scl, boolean is_source) throws ApplicationException {
-		Log.debugMessage("create autocommutation", Level.FINER);
+		assert Log.debugMessage("create autocommutation", Level.FINER);
 		IdlDirectionType direction = scp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
 		
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(scp.getParentSchemeDevice(), direction));
@@ -1114,7 +1114,7 @@ public class SchemeActions {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 		} catch (final ApplicationException ae) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: EnumUtil.java,v 1.6 2005/10/30 14:48:47 bass Exp $
+ * $Id: EnumUtil.java,v 1.7 2005/10/30 15:20:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/30 14:48:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -45,7 +45,7 @@ public final class EnumUtil {
 		try {
 			return (E) valueOfMethod.invoke(null, new Integer(intValue));
 		} catch (Exception e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
 			

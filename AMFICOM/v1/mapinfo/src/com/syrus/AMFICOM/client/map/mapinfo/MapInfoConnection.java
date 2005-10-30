@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoConnection.java,v 1.13 2005/08/26 16:05:03 krupenn Exp $
+ * $Id: MapInfoConnection.java,v 1.14 2005/10/30 15:20:35 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/26 16:05:03 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:35 $
+ * @author $Author: bass $
  * @module mapinfo
  */
 public abstract class MapInfoConnection extends MapConnection {
@@ -47,7 +47,7 @@ public abstract class MapInfoConnection extends MapConnection {
 
 	@Override
 	public boolean connect() throws MapConnectionException {
-		Log.debugMessage(getClass().getName() + "::" + "connect()" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(getClass().getName() + "::" + "connect()" + " | " + "method call", Level.FINEST);
 
 		// Инициализируем объект MapJ для локальных преобразований координат
 		this.localMapJ = new MapJ(); // this MapJ object
@@ -55,11 +55,11 @@ public abstract class MapInfoConnection extends MapConnection {
 		// Query for image locations and load the geoset
 		final String mapDefinitionFile = this.getPath();
 		try {
-			Log.debugMessage("MapImagePanel - Loading geoset...", Level.INFO);
+			assert Log.debugMessage("MapImagePanel - Loading geoset...", Level.INFO);
 			this.localMapJ.loadMapDefinition(mapDefinitionFile);
-			Log.debugMessage("MapImagePanel - Geoset " + mapDefinitionFile + " has been loaded.", Level.INFO);
+			assert Log.debugMessage("MapImagePanel - Geoset " + mapDefinitionFile + " has been loaded.", Level.INFO);
 		} catch (IOException e) {
-			Log.debugMessage("MapImagePanel - Can't load geoset: " + mapDefinitionFile, Level.SEVERE);
+			assert Log.debugMessage("MapImagePanel - Can't load geoset: " + mapDefinitionFile, Level.SEVERE);
 			throw new MapConnectionException(e);
 		}
 
@@ -73,21 +73,21 @@ public abstract class MapInfoConnection extends MapConnection {
 
 	@Override
 	public boolean release() throws MapConnectionException {
-		Log.debugMessage(getClass().getName() + "::" + "release()" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(getClass().getName() + "::" + "release()" + " | " + "method call", Level.FINEST);
 
 		return true;
 	}
 
 	@Override
 	public void setPath(final String path) {
-		Log.debugMessage(getClass().getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(getClass().getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Level.FINEST);
 
 		this.dataBasePath = path;
 	}
 
 	@Override
 	public void setView(final String name){
-		Log.debugMessage(getClass().getName() + "::" + "setView(" + name + ")" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(getClass().getName() + "::" + "setView(" + name + ")" + " | " + "method call", Level.FINEST);
 
 		this.dataBaseView = name;
 	}
@@ -99,7 +99,7 @@ public abstract class MapInfoConnection extends MapConnection {
 
 	@Override
 	public void setURL(final String mapperURL) {
-		Log.debugMessage(getClass().getName() + "::" + "setURL(" + mapperURL + ")" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(getClass().getName() + "::" + "setURL(" + mapperURL + ")" + " | " + "method call", Level.FINEST);
 
 		this.mapperServletURL = mapperURL;
 	}

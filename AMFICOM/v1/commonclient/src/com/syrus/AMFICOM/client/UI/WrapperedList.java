@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedList.java,v 1.14 2005/10/30 14:48:51 bass Exp $
+* $Id: WrapperedList.java,v 1.15 2005/10/30 15:20:24 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:24 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -64,9 +64,9 @@ public final class WrapperedList<T> extends JList {
 		final Object anObjectValue = this.model.compareKey != null ? 
 				this.model.wrapper.getValue((T) anObject, this.model.compareKey) : 
 				anObject;
-//		 Log.debugMessage("anObject " + anObject, Log.DEBUGLEVEL10);
-//		 Log.debugMessage("this.model.compareKey:" + this.model.compareKey, Log.DEBUGLEVEL10);
-//		 Log.debugMessage("anObjectValue " + anObjectValue, Log.DEBUGLEVEL10);
+//		 assert Log.debugMessage("anObject " + anObject, Log.DEBUGLEVEL10);
+//		 assert Log.debugMessage("this.model.compareKey:" + this.model.compareKey, Log.DEBUGLEVEL10);
+//		 assert Log.debugMessage("anObjectValue " + anObjectValue, Log.DEBUGLEVEL10);
 		if (anObjectValue == null) {
 			// System.err.println("WrapperedList.setSelectedValue() | -1");
 			final int selectedIndex = super.getSelectedIndex();
@@ -77,8 +77,7 @@ public final class WrapperedList<T> extends JList {
 			Object elementValue = this.model.compareKey != null ? 
 					this.model.wrapper.getValue((T) selectedValue, this.model.compareKey) :
 					selectedValue;
-			// Log.debugMessage("elementValue " +
-			// elementValue, Level.FINEST);
+//			assert Log.debugMessage("elementValue " + elementValue, Level.FINEST);
 			if (!anObjectValue.equals(elementValue)) {
 				int count = this.model.getSize();
 				assert Log.debugMessage("count " + count, Log.DEBUGLEVEL10);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateUnboundNodeCommandAtomic.java,v 1.30 2005/10/30 14:48:56 bass Exp $$
+ * $$Id: CreateUnboundNodeCommandAtomic.java,v 1.31 2005/10/30 15:20:31 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * Разместить сетевой элемент на карте. используется при переносе (drag/drop), в
  * точке point (в экранных координатах)
  * 
- * @version $Revision: 1.30 $, $Date: 2005/10/30 14:48:56 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/30 15:20:31 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -61,7 +61,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		Log.debugMessage(
+		assert Log.debugMessage(
 			getClass().getName() + "::execute() | " //$NON-NLS-1$
 				+ "create unbound node for scheme element " //$NON-NLS-1$
 				+ this.schemeElement.getName() 
@@ -93,11 +93,11 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 		} catch(CreateObjectException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		} catch(ApplicationException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 

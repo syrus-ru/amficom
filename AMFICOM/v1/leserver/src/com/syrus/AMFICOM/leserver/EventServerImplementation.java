@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.22 2005/10/30 14:49:11 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.23 2005/10/30 15:20:46 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingExc
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:46 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -69,7 +69,7 @@ final class EventServerImplementation extends EventServerPOA {
 				userEventNotifier.addEvent(event);
 			}
 		} catch (final CreateObjectException coe) {
-			Log.errorMessage(coe);
+			assert Log.errorMessage(coe);
 			throw new AMFICOMRemoteException(
 					IdlErrorCode.ERROR_ILLEGAL_DATA,
 					IdlCompletionStatus.COMPLETED_NO,
@@ -83,7 +83,7 @@ final class EventServerImplementation extends EventServerPOA {
 	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
 	public void receiveEvents(final IdlEvent[] idlEvents) throws IdlEventProcessingException {
-		Log.debugMessage("Received "
+		assert Log.debugMessage("Received "
 				+ idlEvents.length + " event(s)",
 				INFO);
 		for (final IdlEvent idlEvent : idlEvents) {
@@ -91,14 +91,14 @@ final class EventServerImplementation extends EventServerPOA {
 			final Event<? extends IdlEvent> event = idlEvent.getNativeEvent();
 			try {
 				EventProcessorRegistry.processEvent(event);
-				Log.debugMessage("Event: " + event + " delivered successfully", INFO);
+				assert Log.debugMessage("Event: " + event + " delivered successfully", INFO);
 			} catch (EventProcessingException e) {
-				Log.debugMessage(e, Log.DEBUGLEVEL07);
+				assert Log.debugMessage(e, Log.DEBUGLEVEL07);
 			}
 		}
 	}
 
 	public void verify(byte i) {
-		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
 }

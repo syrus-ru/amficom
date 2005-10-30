@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.12 2005/10/30 14:48:40 bass Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.13 2005/10/30 15:20:13 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/30 14:48:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:13 $
  * @author $Author: bass $
  * @author Voffka
  * @module csbridge
@@ -48,7 +48,7 @@ public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, 
 				Identifier id = null;
 				if (!ids.isEmpty()) {
 					id = ids.last();
-					Log.debugMessage("last id is " + id.getIdentifierString(),
+					assert Log.debugMessage("last id is " + id.getIdentifierString(),
 							Log.DEBUGLEVEL10);
 				}
 

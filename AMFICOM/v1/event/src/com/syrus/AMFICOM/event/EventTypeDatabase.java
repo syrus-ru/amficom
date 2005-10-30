@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.44 2005/10/30 14:49:12 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.45 2005/10/30 15:20:47 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/10/30 14:49:12 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/30 15:20:47 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -161,7 +161,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.retrieveDBUserAlertKindsMap | Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage(this.getEntityName() + "Database.retrieveDBUserAlertKindsMap | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier userId = DatabaseIdentifier.getIdentifier(resultSet, EventTypeWrapper.LINK_COLUMN_USER_ID);
@@ -208,7 +208,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -390,7 +390,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 						DatabaseIdentifier.setIdentifier(preparedStatement, 1, userId);
 						preparedStatement.setInt(2, alertKind.value());
 						DatabaseIdentifier.setIdentifier(preparedStatement, 3, eventTypeId);
-						Log.debugMessage(this.getEntityName() + "Database.insertUserAlertKinds | Inserting alerting kind "
+						assert Log.debugMessage(this.getEntityName() + "Database.insertUserAlertKinds | Inserting alerting kind "
 								+ alertKind.value() + " for user '" + userId + "' and event type '" + eventTypeId
 								+ "'", Log.DEBUGLEVEL09);
 						preparedStatement.executeUpdate();
@@ -416,7 +416,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 
@@ -449,12 +449,12 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.deleteUserAlertKinds | Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage(this.getEntityName() + "Database.deleteUserAlertKinds | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		}
 		catch (SQLException sqle1) {
-			Log.errorMessage(sqle1);
+			assert Log.errorMessage(sqle1);
 		}
 		finally {
 			try {
@@ -470,7 +470,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -492,14 +492,14 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 
-			Log.debugMessage("Trying: " + sql1, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql1, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql1.toString());
 
-			Log.debugMessage("Trying: " + sql2, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql2, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql2.toString());
 		}
 		catch (SQLException sqle1) {
-			Log.errorMessage(sqle1);
+			assert Log.errorMessage(sqle1);
 		}
 		finally {
 			try {
@@ -515,7 +515,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}

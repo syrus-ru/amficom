@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkEditor.java,v 1.33 2005/10/26 17:39:46 krupenn Exp $$
+ * $$Id: PhysicalLinkEditor.java,v 1.34 2005/10/30 15:20:32 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/26 17:39:46 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.34 $, $Date: 2005/10/30 15:20:32 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -586,7 +586,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 				long d = System.currentTimeMillis();
 				Collection types = LinkTypeController.getTopologicalLinkTypes(this.netMapViewer.getLogicalNetLayer().getMapView().getMap());
 				long f = System.currentTimeMillis();
-				Log.debugMessage("SiteNodeEditor::LinkTypeController.getTopologicalLinkTypes() -------- " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+				assert Log.debugMessage("SiteNodeEditor::LinkTypeController.getTopologicalLinkTypes() -------- " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				this.typeComboBox.setEnabled(true);
 				this.typeComboBox.addElements(types);

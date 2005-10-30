@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.22 2005/10/30 14:49:11 bass Exp $
+ * $Id: LoginProcessor.java,v 1.23 2005/10/30 15:20:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:46 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -81,7 +81,7 @@ final class LoginProcessor extends SleepButWorkThread {
 			}
 		}
 		catch (RetrieveObjectException roe) {
-			Log.errorMessage(roe);
+			assert Log.errorMessage(roe);
 		}
 	}
 
@@ -95,7 +95,7 @@ final class LoginProcessor extends SleepButWorkThread {
 					final UserLogin userLogin = loginMap.get(sessionKey);
 					final Date lastActivityDate = userLogin.getLastActivityDate();
 					if (System.currentTimeMillis() - lastActivityDate.getTime() >= this.maxUserUnactivityPeriod) {
-						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than "
+						assert Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than "
 								+ (this.maxUserUnactivityPeriod / (60 * 1000)) + " minutes. Deleting login", Log.DEBUGLEVEL06);
 						userLoginDatabase.delete(userLogin);
 						it.remove();
@@ -109,7 +109,7 @@ final class LoginProcessor extends SleepButWorkThread {
 				sleep(super.initialTimeToSleep);
 			}
 			catch (InterruptedException ie) {
-				Log.errorMessage(ie);
+				assert Log.errorMessage(ie);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ final class LoginProcessor extends SleepButWorkThread {
 				corbaServer.deactivateServant(servantName, false);
 			}
 		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 		}
 	}
 
@@ -136,25 +136,25 @@ final class LoginProcessor extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			default:
-				Log.errorMessage("Unknown error code: " + super.fallCode);
+				assert Log.errorMessage("Unknown error code: " + super.fallCode);
 		}
 	}
 
 	static SessionKey addUserLogin(final Identifier userId, final Identifier domainId, final String userHostName) {
-		Log.debugMessage("Adding login for user '" + userId + "' to domain '" + domainId + "'", Log.DEBUGLEVEL08);
+		assert Log.debugMessage("Adding login for user '" + userId + "' to domain '" + domainId + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = UserLogin.createInstance(userId, domainId, userHostName);
 		loginMap.put(userLogin.getSessionKey(), userLogin);
 		try {
 			userLoginDatabase.insert(userLogin);
 		} catch (CreateObjectException coe) {
-			Log.errorMessage(coe);
+			assert Log.errorMessage(coe);
 		}
 		printUserLogins();
 		return userLogin.getSessionKey();
 	}
 
 	static boolean removeUserLogin(final SessionKey sessionKey) {
-		Log.debugMessage("Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
+		assert Log.debugMessage("Removing login for session key '" + sessionKey + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = loginMap.remove(sessionKey);
 		if (userLogin == null) {
 			return false;
@@ -175,13 +175,13 @@ final class LoginProcessor extends SleepButWorkThread {
 		try {
 			userLoginDatabase.update(userLogin);
 		} catch (final UpdateObjectException uoe) {
-			Log.errorMessage(uoe);
+			assert Log.errorMessage(uoe);
 		}
 		printUserLogins();
 	}
 
 	static UserLogin getUserLogin(final SessionKey sessionKey) {
-		Log.debugMessage("Getting login for session key '" + sessionKey + "'; found: " + loginMap.containsKey(sessionKey),
+		assert Log.debugMessage("Getting login for session key '" + sessionKey + "'; found: " + loginMap.containsKey(sessionKey),
 				Log.DEBUGLEVEL08);
 		return loginMap.get(sessionKey);
 	}
@@ -198,7 +198,7 @@ final class LoginProcessor extends SleepButWorkThread {
 				try {
 					systemUser = StorableObjectPool.getStorableObject(userId, true);
 				} catch (ApplicationException ae) {
-					Log.errorMessage(ae);
+					assert Log.errorMessage(ae);
 				}
 
 				stringBuffer.append("\n");
@@ -227,7 +227,7 @@ final class LoginProcessor extends SleepButWorkThread {
 			}
 		}
 		
-		Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL08);
+		assert Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL08);
 	}
 
 	protected void shutdown() {

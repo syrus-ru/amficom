@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.22 2005/10/30 14:49:00 bass Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.23 2005/10/30 15:20:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/10/30 14:49:00 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:35 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -66,7 +66,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 		if(!this.alreadyPerformed ) {
 			//Осуществляется ПЕРВЫЙ поиск по всем слоям с надписями - тот, который сильно тормозит из-за
 			//MapJшного кэширования таблиц.
-			Log.debugMessage("Starting first search.", Level.FINE);
+			assert Log.debugMessage("Starting first search.", Level.FINE);
 			long t1 = System.currentTimeMillis();
 			this.alreadyPerformed = true;
 			for (SpatialLayer spatialLayer : this.connection.getLayers()){
@@ -78,7 +78,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 					this.findSpatialObjects(miSpatialLayer,FIRST_SEARCH_STRING);
 			}
 			long t2 = System.currentTimeMillis();			
-			Log.debugMessage("First search completed ( "+ (t2 - t1) + " ms).", Level.FINE);
+			assert Log.debugMessage("First search completed ( "+ (t2 - t1) + " ms).", Level.FINE);
 		}
 	}
 
@@ -200,7 +200,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 			long t3 = System.currentTimeMillis();			
 			featureSet.dispose();
 			
-			Log.debugMessage((t2 - t1) + "ms - searching all\n"
+			assert Log.debugMessage((t2 - t1) + "ms - searching all\n"
 					+ (t3 - t2) + "ms - comparing all, particulary:\n"
 					+ sumGettingFeature + "ms - sumGettingFeature\n"
 					+ sumGettingStringAttributes + "ms - sumGettingStringAttributes\n"

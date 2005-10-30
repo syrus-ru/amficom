@@ -105,7 +105,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		while (keys.hasMoreElements()) {
 			String codename = (String) keys.nextElement();
 			final String className = (String) bundle.getObject(codename);
-			Log.debugMessage("codename " 
+			assert Log.debugMessage("codename " 
 					+ codename 
 					+ ", className " 
 					+ className, 

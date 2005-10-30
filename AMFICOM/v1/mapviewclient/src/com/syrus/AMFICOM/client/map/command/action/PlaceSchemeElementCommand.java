@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeElementCommand.java,v 1.40 2005/10/30 14:48:55 bass Exp $$
+ * $$Id: PlaceSchemeElementCommand.java,v 1.41 2005/10/30 15:20:31 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой или по
  * координатам
  * 
- * @version $Revision: 1.40 $, $Date: 2005/10/30 14:48:55 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/30 15:20:31 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -73,7 +73,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 
 	@Override
 	public void execute() {
-		Log.debugMessage(
+		assert Log.debugMessage(
 			getClass().getName() + "::execute() | " //$NON-NLS-1$
 				+ "place scheme element " //$NON-NLS-1$
 				+ this.schemeElement.getName()
@@ -120,15 +120,15 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			super.setUndoable(false);
 			long t6 = System.currentTimeMillis();
-			Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeElementCommand :: get map element at point " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeElementCommand :: create unbound node " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			Log.debugMessage("PlaceSchemeElementCommand :: notify " + (t6 - t5) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			assert Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			assert Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			assert Log.debugMessage("PlaceSchemeElementCommand :: get map element at point " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			assert Log.debugMessage("PlaceSchemeElementCommand :: create unbound node " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			assert Log.debugMessage("PlaceSchemeElementCommand :: notify " + (t6 - t5) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.18 2005/10/30 14:49:18 bass Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.19 2005/10/30 15:20:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/30 14:49:18 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/30 15:20:53 $
  * @module schemeclient
  */
 
@@ -264,7 +264,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 							PortTypePropertiesManager.getInstance(this.aContext, this.kind),
 							ObjectSelectedEvent.PORT_TYPE));
 				} catch (CreateObjectException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 					return;
 				}
 			} else {
@@ -288,7 +288,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		try {
 			StorableObjectPool.flush(this.portType.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType.getId(), SchemeEvent.UPDATE_OBJECT));
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractMapStrategy.java,v 1.12 2005/09/30 16:08:41 krupenn Exp $$
+ * $$Id: AbstractMapStrategy.java,v 1.13 2005/10/30 15:20:33 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
  * режимом работы пользователя с картой, режимом отображения, состоянием
  * или изменением состояния мыши и клавиатуры.
  * 
- * @version $Revision: 1.12 $, $Date: 2005/09/30 16:08:41 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:33 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -68,7 +68,7 @@ abstract class AbstractMapStrategy implements MapStrategy
 	public void doContextChanges(MouseEvent mouseEvent)
 		throws MapConnectionException, MapDataException
 	{
-		Log.debugMessage(getClass().getName() + "::" + "doContextChanges(" + mouseEvent + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(getClass().getName() + "::" + "doContextChanges(" + mouseEvent + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 		
 		MapState mapState = this.logicalNetLayer.getMapState();
 

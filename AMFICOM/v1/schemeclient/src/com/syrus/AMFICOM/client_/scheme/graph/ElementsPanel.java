@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.17 2005/10/30 14:49:22 bass Exp $
+ * $Id: ElementsPanel.java,v 1.18 2005/10/30 15:20:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/10/30 14:49:22 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/30 15:20:56 $
  * @module schemeclient
  */
 
@@ -100,7 +100,7 @@ public class ElementsPanel extends UgoPanel {
 				try {
 					SchemeActions.openSchemeImageResource(this.graph, this.schemeResource.getScheme().getSchemeCell(), false);
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 		}
@@ -138,7 +138,7 @@ public class ElementsPanel extends UgoPanel {
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
 				SchemeElement element = (SchemeElement)ev.getSelectedObject();

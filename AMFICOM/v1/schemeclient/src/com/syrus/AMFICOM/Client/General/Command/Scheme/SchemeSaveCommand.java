@@ -112,7 +112,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 					try {
 						se.setSchemeCell(SchemeObjectsFactory.createSchemeImageResource());
 					} catch (CreateObjectException e) {
-						Log.errorMessage(e);
+						assert Log.errorMessage(e);
 						return;
 					}
 				}
@@ -136,7 +136,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 			this.schemeTab.setGraphChanged(false);
 			return;
@@ -157,7 +157,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				long start = System.currentTimeMillis();
 				schemeIr.setData((List) graph.getArchiveableState());
 				scheme.setSchemeCell(schemeIr);
-				Log.debugMessage("Scheme cell created for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)", Level.FINER);
+				assert Log.debugMessage("Scheme cell created for : " + (System.currentTimeMillis() - start) + "ms (" + schemeIr.getImage().length + " bytes)", Level.FINER);
 				Identifier userId = LoginManager.getUserId();
 				
 				Set<Scheme> internalSchemes = new HashSet<Scheme>();
@@ -192,7 +192,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 						LangModelScheme.getString("Message.error.save_scheme") + ": " + e.getMessage(), //$NON-NLS-1$ //$NON-NLS-2$
 						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 	}

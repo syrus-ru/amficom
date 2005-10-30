@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.16 2005/10/30 14:49:18 bass Exp $
+ * $Id: AddPropFrame.java,v 1.17 2005/10/30 15:20:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/30 14:49:18 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:53 $
  * @module schemeclient
  */
 
@@ -178,7 +178,7 @@ public class AddPropFrame extends JDialog {
 				try {
 					this.selectedType = SchemeObjectsFactory.createCharacteristicType(this.nameField.getText(), this.sort);
 				} catch (CreateObjectException ex) {
-					Log.errorMessage(ex);
+					assert Log.errorMessage(ex);
 					return;
 				}
 			} else {

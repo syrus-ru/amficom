@@ -1,5 +1,5 @@
 /*
- * $Id: UserEventNotifier.java,v 1.9 2005/10/30 14:49:11 bass Exp $
+ * $Id: UserEventNotifier.java,v 1.10 2005/10/30 15:20:46 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:46 $
  * @author $Author: bass $
  * @module leserver
  */
@@ -65,11 +65,11 @@ final class UserEventNotifier extends SleepButWorkThread {
 							delivered = true;
 						}
 						catch (EventNotificationException ene) {
-							Log.errorMessage(ene);
+							assert Log.errorMessage(ene);
 						}
 					}
 					else {
-						Log.errorMessage("Unknown alert kind -- " + alertKind.value()
+						assert Log.errorMessage("Unknown alert kind -- " + alertKind.value()
 								+ " for event type '" + eventType.getId()
 								+ "' and user '" + this.userId + "'");
 					}
@@ -86,7 +86,7 @@ final class UserEventNotifier extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			default:
-				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+				assert Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
 	}
 

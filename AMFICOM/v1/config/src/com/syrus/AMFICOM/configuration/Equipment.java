@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.147 2005/10/30 14:48:45 bass Exp $
+ * $Id: Equipment.java,v 1.148 2005/10/30 15:20:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2005/10/30 14:48:45 $
+ * @version $Revision: 1.148 $, $Date: 2005/10/30 15:20:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -253,7 +253,7 @@ public final class Equipment extends DomainMember<Equipment>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -632,7 +632,7 @@ public final class Equipment extends DomainMember<Equipment>
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PORT_CODE),
 					true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, Level.SEVERE);
+			assert Log.debugMessage(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
 	}

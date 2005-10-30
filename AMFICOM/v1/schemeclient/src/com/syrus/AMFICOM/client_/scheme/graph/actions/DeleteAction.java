@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.30 2005/10/30 14:49:20 bass Exp $
+ * $Id: DeleteAction.java,v 1.31 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/30 15:20:54 $
  * @module schemeclient
  */
 
@@ -228,7 +228,7 @@ public class DeleteAction extends AbstractAction {
 				objectsToDelete.add(se.getId());
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 		
@@ -254,7 +254,7 @@ public class DeleteAction extends AbstractAction {
 					objectsToDelete.add(((SchemeElement)it.next()).getId());
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 	}
@@ -266,28 +266,28 @@ public class DeleteAction extends AbstractAction {
 				objectsToDelete.add(((SchemeLink)it.next()).getId());
 			}
 		} catch (ApplicationException e2) {
-			Log.errorMessage(e2);
+			assert Log.errorMessage(e2);
 		}
 		try {
 			for (Iterator it = element.getSchemePortsRecursively(false).iterator(); it.hasNext();) {
 				objectsToDelete.add(((SchemePort)it.next()).getId());
 			}
 		} catch (ApplicationException e1) {
-			Log.errorMessage(e1);
+			assert Log.errorMessage(e1);
 		}
 		try {
 			for (Iterator it = element.getSchemeCablePortsRecursively(false).iterator(); it.hasNext();) {
 				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 		try {
 			for (Iterator it = element.getSchemeDevices(false).iterator(); it.hasNext();) {
 				objectsToDelete.add(((SchemeDevice)it.next()).getId());
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 	
@@ -315,7 +315,7 @@ public class DeleteAction extends AbstractAction {
 				deleteScheme(scheme);
 			}
 		} catch (final Exception ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 		}
 	}
 	
@@ -344,7 +344,7 @@ public class DeleteAction extends AbstractAction {
 				objectsToDelete.add(thread.getId());
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.12 2005/10/30 14:49:21 bass Exp $
+ * $Id: BlockPortCell.java,v 1.13 2005/10/30 15:20:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/10/30 14:49:21 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:56 $
  * @module schemeclient
  */
 
@@ -73,7 +73,7 @@ public class BlockPortCell  extends DefaultGraphCell implements IdentifiableCell
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.schemePortId, true);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return null;
 		}
 	}

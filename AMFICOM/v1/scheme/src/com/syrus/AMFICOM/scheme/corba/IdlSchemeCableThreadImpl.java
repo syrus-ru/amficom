@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeCableThreadImpl.java,v 1.6 2005/10/30 14:48:42 bass Exp $
+ * $Id: IdlSchemeCableThreadImpl.java,v 1.7 2005/10/30 15:20:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:16 $
  * @module scheme
  */
 final class IdlSchemeCableThreadImpl extends IdlSchemeCableThread {
@@ -66,7 +66,7 @@ final class IdlSchemeCableThreadImpl extends IdlSchemeCableThread {
 		try {
 			return new SchemeCableThread(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, SEVERE);
+			assert Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

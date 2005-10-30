@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.35 2005/10/30 14:49:11 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.36 2005/10/30 15:20:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/30 15:20:46 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -77,7 +77,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			final IdlDomain[] domainsT = new IdlDomain[domains.size()];
 			int i = 0;
 			for (final Domain domain : domains) {
-				Log.debugMessage("Domain '" + domain.getId() + "', '" + domain.getName() + "'", Log.DEBUGLEVEL08);
+				assert Log.debugMessage("Domain '" + domain.getId() + "', '" + domain.getName() + "'", Log.DEBUGLEVEL08);
 				domainsT[i] = domain.getTransferable(orb);
 			}
 			return domainsT;
@@ -97,7 +97,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		try {
 			systemUsers = StorableObjectPool.getStorableObjectsByCondition(this.tc, true, true);
 		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 		if (systemUsers.isEmpty()) {
@@ -112,7 +112,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 		try {
 			localPassword = this.shadowDatabase.retrieve(userId);
 		} catch (RetrieveObjectException roe) {
-			Log.errorMessage(roe);
+			assert Log.errorMessage(roe);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, roe.getMessage());
 		} catch (ObjectNotFoundException onfe) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_LOGIN_NOT_FOUND, IdlCompletionStatus.COMPLETED_YES, onfe.getMessage());
@@ -185,10 +185,10 @@ final class LoginServerImplementation extends LoginServerPOA {
 		final Identifier userId = new Identifier(userIdT);
 		try {
 			final SystemUser systemUser = (SystemUser) StorableObjectPool.getStorableObject(userId, true);
-			Log.debugMessage("Setting password to user '" + systemUser.getLogin() + "'/'" + userId + "'", Log.DEBUGLEVEL08);
+			assert Log.debugMessage("Setting password to user '" + systemUser.getLogin() + "'/'" + userId + "'", Log.DEBUGLEVEL08);
 		}
 		catch (ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
@@ -196,7 +196,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 			this.shadowDatabase.updateOrInsert(userId, Encryptor.crypt(password));
 		}
 		catch (UpdateObjectException uoe) {
-			Log.errorMessage(uoe);
+			assert Log.errorMessage(uoe);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_UPDATE, IdlCompletionStatus.COMPLETED_NO, uoe.getMessage());
 		}
 	}
@@ -205,7 +205,7 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * @see com.syrus.AMFICOM.general.corba.Verifiable#verify(byte)
 	 */
 	public void verify(final byte i) {
-		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
+		assert Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
 
 }

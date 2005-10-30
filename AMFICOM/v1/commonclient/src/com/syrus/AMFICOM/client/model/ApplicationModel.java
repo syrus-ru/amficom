@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.12 2005/10/30 14:48:51 bass Exp $
+ * $Id: ApplicationModel.java,v 1.13 2005/10/30 15:20:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * производить с системой
  * 
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:24 $
  * @module commonclient
  */
 public class ApplicationModel {
@@ -91,7 +91,7 @@ public class ApplicationModel {
 					final boolean accessible,
 					final boolean selected) {
 		if (command == null) {
-			Log.debugMessage("name: " + name + " , command is null ", Level.WARNING);
+			assert Log.debugMessage("name: " + name + " , command is null ", Level.WARNING);
 			this.add(name, VoidCommand.VOID_COMMAND, installed, visible, usable, accessible, selected);
 		} else {
 			this.appications.put(name, new ApplicationEntry(name, command, installed, visible, usable, accessible, selected));
@@ -289,7 +289,7 @@ public class ApplicationModel {
 			}
 			return entry.command;
 		} catch (NoSuchMethodException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return VoidCommand.VOID_COMMAND;
 		}
 	}
@@ -346,7 +346,7 @@ public class ApplicationModel {
 	 * параметров нет, так как элемент определяется идентификатором
 	 * 
 	 * @author $Author: bass $
-	 * @version $Revision: 1.12 $, $Date: 2005/10/30 14:48:51 $
+	 * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:24 $
 	 * @module commonclient
 	 */
 	class ApplicationEntry {

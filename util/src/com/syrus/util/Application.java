@@ -1,5 +1,5 @@
 /*
- * $Id: Application.java,v 1.9 2005/10/21 15:09:07 bass Exp $
+ * $Id: Application.java,v 1.10 2005/10/30 15:20:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/21 15:09:07 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -46,7 +46,7 @@ public final class Application {
 				internetAddress = "INETADDR_UNKNOWN";
 			}
 		Log.setLogger(new ApplicationLogger(applicationName, internetAddress));
-		Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01);
+		assert Log.debugMessage(applicationName + " -- started", Log.DEBUGLEVEL01);
 	}
 
 	public static String getApplicationName () {

@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.13 2005/10/30 14:49:11 bass Exp $
+ * $Id: UserLoginDatabase.java,v 1.14 2005/10/30 15:20:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:46 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -101,7 +101,7 @@ public final class UserLoginDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final UserLogin userLogin = new UserLogin(new SessionKey(DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SESSION_KEY))),
@@ -136,7 +136,7 @@ public final class UserLoginDatabase {
 					}
 				}
 			} catch (SQLException sqle) {
-				Log.errorMessage(sqle);
+				assert Log.errorMessage(sqle);
 			}
 		}
 
@@ -166,7 +166,7 @@ public final class UserLoginDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle) {
@@ -186,7 +186,7 @@ public final class UserLoginDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -205,7 +205,7 @@ public final class UserLoginDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle) {
@@ -225,7 +225,7 @@ public final class UserLoginDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -239,11 +239,11 @@ public final class UserLoginDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle) {
-			Log.errorMessage(sqle);
+			assert Log.errorMessage(sqle);
 		} finally {
 			try {
 				if (statement != null) {
@@ -251,7 +251,7 @@ public final class UserLoginDatabase {
 					statement = null;
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			} finally {
 				if (connection != null) {
 					DatabaseConnection.releaseConnection(connection);

@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.121 2005/10/30 14:49:13 bass Exp $
+ * $Id: Heap.java,v 1.122 2005/10/30 15:20:48 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -100,7 +100,7 @@ import com.syrus.util.Log;
  * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
  * 
  * @author $Author: bass $
- * @version $Revision: 1.121 $, $Date: 2005/10/30 14:49:13 $
+ * @version $Revision: 1.122 $, $Date: 2005/10/30 15:20:48 $
  * @module analysis
  */
 public class Heap
@@ -309,16 +309,16 @@ public class Heap
 				}
 			}
 			if (tracePrimary == null) {
-				Log.debugMessage("Failed to choose most typical trace as primary",
+				assert Log.debugMessage("Failed to choose most typical trace as primary",
 						Log.DEBUGLEVEL03);
 				System.err.println("Failed to choose most typical trace as primary"); // FIXME: debug-time message
 			} else {
-			Log.debugMessage("chosed most typical trace as primary",
+				assert Log.debugMessage("chosed most typical trace as primary",
 					Log.DEBUGLEVEL07);
 			}
 		} catch (IncompatibleTracesException e) {
 			// ignore for now: tracePrimary == null check will do processing
-			Log.debugMessage("incompatible traces, using first one",
+			assert Log.debugMessage("incompatible traces, using first one",
 					Log.DEBUGLEVEL07);
 		}
 		if (tracePrimary == null) {
@@ -580,20 +580,20 @@ public class Heap
 	// notifyBsHashAdd -> bsHashAdded() and
 	// notifyPrimaryTraceOpened -> primaryTraceCUpdated()
 	private static void notifyBsHashAdd(String key) {
-		Log.debugMessage("key " + key, Level.FINEST);
+		assert Log.debugMessage("key " + key, Level.FINEST);
 		for (BsHashChangeListener listener: bsHashChangedListeners)
 			listener.bsHashAdded(key);
 	}
 
 	//  primary trace всегда останется, пока есть другие
 	private static void notifyBsHashRemove(String key) {
-		Log.debugMessage("key " + key, Level.FINEST);
+		assert Log.debugMessage("key " + key, Level.FINEST);
 		for (BsHashChangeListener listener: bsHashChangedListeners)
 			listener.bsHashRemoved(key);
 	}
 
 	private static void notifyBsHashRemoveAll() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (BsHashChangeListener listener: bsHashChangedListeners)
 			listener.bsHashRemovedAll();
 	}
@@ -602,19 +602,19 @@ public class Heap
 	 * should also be suitable if primary trace completely replaced
 	 */
 	private static void notifyPrimaryTraceOpened() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (PrimaryTraceListener listener: primaryTraceListeners)
 			listener.primaryTraceCUpdated();
 	}
 
 	private static void notifyPrimaryTraceClosed() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (PrimaryTraceListener listener: primaryTraceListeners)
 			listener.primaryTraceRemoved();
 	}
 
 	public static void notifyAnalysisParametersUpdated() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		// do not notify traces
 		// notify subscribers
 		for (AnalysisParametersListener listener: analysisParametersListeners)
@@ -622,75 +622,75 @@ public class Heap
 	}
 
 	private static void notifyRefMismatchCUpdated() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (RefMismatchListener listener: refMismatchListeners)
 			listener.refMismatchCUpdated();
 	}
 
 	private static void notifyEtalonComparisonRemoved() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (EtalonComparisonListener listener: etalonComparisonListeners)
 			listener.etalonComparisonRemoved();
 	}
 
 	private static void notifyEtalonComparisonCUpdated() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (EtalonComparisonListener listener: etalonComparisonListeners)
 			listener.etalonComparisonCUpdated();
 	}
 
 	private static void notifyRefMismatchRemoved() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (RefMismatchListener listener: refMismatchListeners)
 			listener.refMismatchRemoved();
 	}
 
 	private static void notifyPrimaryMTAECUpdated() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (PrimaryMTAEListener listener: primaryMTAEListeners)
 			listener.primaryMTAECUpdated();
 	}
 
 	private static void notifyPrimaryMTAERemoved() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (PrimaryMTAEListener listener: primaryMTAEListeners)
 			listener.primaryMTAERemoved();
 	}
 
 	private static void notifyPrimaryRefAnalysisCUpdated() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (PrimaryRefAnalysisListener listener: primaryRefAnalysisListeners)
 			listener.primaryRefAnalysisCUpdated();
 	}
 
 	private static void notifyPrimaryRefAnalysisRemoved() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		for (PrimaryRefAnalysisListener listener: primaryRefAnalysisListeners)
 			listener.primaryRefAnalysisRemoved();
 	}
 
 	private static void notifyEtalonMTMCUpdated() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		removeEtalonComparison();
 		for (EtalonMTMListener listener: etalonMTMListeners)
 			listener.etalonMTMCUpdated();
 	}
 
 	private static void notifyEtalonMTMRemoved() {
-		Log.debugMessage(Level.FINEST);
+		assert Log.debugMessage(Level.FINEST);
 		removeEtalonComparison();
 		for (EtalonMTMListener listener: etalonMTMListeners)
 			listener.etalonMTMRemoved();
 	}
 
 	private static void notifyCurrentTraceChanged() {
-		Log.debugMessage("currentTrace = " + currentTrace, Level.FINEST);
+		assert Log.debugMessage("currentTrace = " + currentTrace, Level.FINEST);
 		for (CurrentTraceChangeListener listener: currentTraceChangeListeners)
 			listener.currentTraceChanged(currentTrace);
 	}
 
 	private static void notifyCurrentEventChanged() {
-		Log.debugMessage("nEvent = (" + getCurrentEvent1() + ", " + getCurrentEtalonEvent1() + ")", Level.FINEST);
+		assert Log.debugMessage("nEvent = (" + getCurrentEvent1() + ", " + getCurrentEtalonEvent1() + ")", Level.FINEST);
 		for (CurrentEventChangeListener listener: currentEventChangeListeners)
 			listener.currentEventChanged();
 	}
@@ -1115,7 +1115,7 @@ public class Heap
 	}
 
 	public static void setEtalonComparison(EtalonComparison ec) {
-		Log.debugMessage((ec == null ? null : "not null"),
+		assert Log.debugMessage((ec == null ? null : "not null"),
 				Level.FINEST);
 		Heap.etalonComparison = ec;
 		if (ec == null)

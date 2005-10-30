@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.133 2005/10/30 14:49:05 bass Exp $
+ * $Id: TestDatabase.java,v 1.134 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.133 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.134 $, $Date: 2005/10/30 15:20:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -238,7 +238,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, SortedMap<Date, String>> stopsMap = new HashMap<Identifier, SortedMap<Date, String>>();
@@ -278,7 +278,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -325,7 +325,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					preparedStatement.setTimestamp(2, new Timestamp(stopTime.getTime()));
 					DatabaseString.setString(preparedStatement, 3, reason, StorableObjectDatabase.SIZE_DESCRIPTION_COLUMN);
-					Log.debugMessage("Inserting stop  '" + reason + "' at " + stopTime + " for '" + id + "'", Log.DEBUGLEVEL09);
+					assert Log.debugMessage("Inserting stop  '" + reason + "' at " + stopTime + " for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 				connection.commit();
@@ -335,7 +335,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				try {
 					connection.rollback();
 				} catch (SQLException sqle1) {
-					Log.errorMessage(sqle1);
+					assert Log.errorMessage(sqle1);
 				}
 			}
 			final String mesg = "Cannot insert stop for '" + id + "' -- " + sqle.getMessage();
@@ -354,7 +354,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 					}
 				}
 			} catch (final SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}

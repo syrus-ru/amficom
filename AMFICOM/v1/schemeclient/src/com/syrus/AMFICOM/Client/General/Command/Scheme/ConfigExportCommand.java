@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigExportCommand.java,v 1.5 2005/10/30 14:49:18 bass Exp $
+ * $Id: ConfigExportCommand.java,v 1.6 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,7 +107,7 @@ public class ConfigExportCommand extends ImportExportCommand {
 			File configFile = new File(fileName);
 			saveConfigXML(configFile, xmlLinkTypes, xmlCableLinkTypes, xmlPortTypes, xmlEquipmentTypes, xmlEquipments);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}		
 	}
 	
@@ -147,19 +147,19 @@ public class ConfigExportCommand extends ImportExportCommand {
 		XmlEquipmentSeq xmlEquipmentSeq = doc.addNewEquipments();
 		xmlEquipmentSeq.setEquipmentArray(xmlEquipments.toArray(new XmlEquipment[xmlEquipments.size()]));
 
-		Log.debugMessage("Check if XML valid...", Level.FINER);
+		assert Log.debugMessage("Check if XML valid...", Level.FINER);
 		boolean isXmlValid = validateXml(doc);
 		if(isXmlValid) {
 			try {
 				// Writing the XML Instance to a file.
 				doc.save(f, xmlOptions);
-				Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
+				assert Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
 			} catch(IOException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
-			Log.debugMessage("Done successfully", Level.WARNING);
+			assert Log.debugMessage("Done successfully", Level.WARNING);
 		} else {
-			Log.debugMessage("Done with errors (see logs/error for more)", Level.WARNING);
+			assert Log.debugMessage("Done with errors (see logs/error for more)", Level.WARNING);
 		}		
 	}
 }

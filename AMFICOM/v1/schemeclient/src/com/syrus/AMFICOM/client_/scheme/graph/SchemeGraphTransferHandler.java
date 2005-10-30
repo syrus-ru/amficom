@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphTransferHandler.java,v 1.4 2005/10/30 14:49:22 bass Exp $
+ * $Id: SchemeGraphTransferHandler.java,v 1.5 2005/10/30 15:20:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 			clipboard.setContents(new GraphCellTransferable(alist), null);
@@ -87,14 +87,14 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 					List v = (List)data;
 					cells = (Object[]) v.get(0);
 				} else {
-					Log.debugMessage("Unsupported data for paste in SchemeGraph", Level.FINE); //$NON-NLS-1$ 
+					assert Log.debugMessage("Unsupported data for paste in SchemeGraph", Level.FINE); //$NON-NLS-1$ 
 					return false;
 				}
 			} catch (UnsupportedFlavorException e) {
-				Log.debugMessage("Unsupported object for paste in SchemeGraph", Level.WARNING); //$NON-NLS-1$
+				assert Log.debugMessage("Unsupported object for paste in SchemeGraph", Level.WARNING); //$NON-NLS-1$
 				return false;
 			} catch (IOException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 				return false;
 			}
 			
@@ -117,7 +117,7 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 							this.insertedCells = clones.values().toArray();
 						}
 					} catch (ApplicationException e) {
-						Log.errorMessage(e);
+						assert Log.errorMessage(e);
 					}
 				}
 			}
@@ -155,7 +155,7 @@ public class SchemeGraphTransferHandler extends TransferHandler {
 				schemeLink.setParentScheme(scheme, false);
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 

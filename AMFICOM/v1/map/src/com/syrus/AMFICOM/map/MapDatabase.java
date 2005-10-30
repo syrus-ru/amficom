@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.59 2005/10/30 14:49:02 bass Exp $
+ * $Id: MapDatabase.java,v 1.60 2005/10/30 15:20:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/10/30 14:49:02 $
+ * @version $Revision: 1.60 $, $Date: 2005/10/30 15:20:37 $
  * @author $Author: bass $
  * @module map
  */
@@ -308,7 +308,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		try {
 			dbMaps = this.retrieveByCondition(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true).toString());
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return;
 		}
 
@@ -324,7 +324,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				try {
 					linkedIds.addAll(LinkedEntities.getLinkedIds(map, linkedEntities));
 				} catch (ApplicationException ae) {
-					Log.errorMessage(ae);
+					assert Log.errorMessage(ae);
 				}
 			}
 			if(!linkedIds.isEmpty()) {

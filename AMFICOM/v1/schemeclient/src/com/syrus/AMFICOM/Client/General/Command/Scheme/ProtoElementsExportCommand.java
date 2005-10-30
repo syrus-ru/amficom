@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsExportCommand.java,v 1.3 2005/10/30 14:49:18 bass Exp $
+ * $Id: ProtoElementsExportCommand.java,v 1.4 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ public class ProtoElementsExportCommand extends ImportExportCommand {
 			final File protoFile = new File(fileName);
 			saveProtoGroupsXML(protoFile, xmlProtoGroups);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}		
 	}
 	
@@ -79,16 +79,16 @@ public class ProtoElementsExportCommand extends ImportExportCommand {
 		try {
 			// Writing the XML Instance to a file.
 			doc.save(f, xmlOptions);
-			Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
+			assert Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		Log.debugMessage("Check if XML valid...", Level.FINER);
+		assert Log.debugMessage("Check if XML valid...", Level.FINER);
 		boolean isXmlValid = validateXml(doc);
 		if(isXmlValid) {
-			Log.debugMessage("Done successfully", Level.WARNING);
+			assert Log.debugMessage("Done successfully", Level.WARNING);
 		} else {
-			Log.debugMessage("Done with errors (see logs/error for more)", Level.WARNING);
+			assert Log.debugMessage("Done with errors (see logs/error for more)", Level.WARNING);
 		}
 	}
 }

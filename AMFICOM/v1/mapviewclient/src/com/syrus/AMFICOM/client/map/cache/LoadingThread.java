@@ -1,5 +1,5 @@
 /*-
- * $$Id: LoadingThread.java,v 1.16 2005/10/03 10:35:00 krupenn Exp $$
+ * $$Id: LoadingThread.java,v 1.17 2005/10/30 15:20:33 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/10/03 10:35:00 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:33 $
+ * @author $Author: bass $
  * @author Peter Peskovsky
  * @module mapviewclient
  */
@@ -127,7 +127,7 @@ public class LoadingThread extends Thread {
             long t5 = 0;
             t1 = System.currentTimeMillis();
             try {
-            	Log.debugMessage(" LoadingThread | run | processing request (" //$NON-NLS-1$
+            	assert Log.debugMessage(" LoadingThread | run | processing request (" //$NON-NLS-1$
                         + this.requestCurrentlyProcessed + ")",Level.FINEST); //$NON-NLS-1$
 
                 this.setQueryLayerVisibilities(this.requestCurrentlyProcessed);
@@ -156,7 +156,7 @@ public class LoadingThread extends Thread {
 	                this.requestCurrentlyProcessed.setTimeCreated(t4);
                 }
                 t5 = System.currentTimeMillis();                
-                Log.debugMessage(" LoadingThread | run | image loaded for request (" //$NON-NLS-1$
+                assert Log.debugMessage(" LoadingThread | run | image loaded for request (" //$NON-NLS-1$
                 		+ this.requestCurrentlyProcessed + ")\n" //$NON-NLS-1$
                 		+ "total: " + (t5 - t1) + " ms\n" //$NON-NLS-1$ //$NON-NLS-2$
                         + "		" + (t2 - t1) + " ms (setting layer visibilities)\n" //$NON-NLS-1$ //$NON-NLS-2$
@@ -178,7 +178,7 @@ public class LoadingThread extends Thread {
      */
     private void setQueryLayerVisibilities(TopologicalImageQuery query)
     	throws MapDataException,MapConnectionException {
-		Log.debugMessage(" LoadingThread | setQueryLayerVisibilities | setting visibilities.",Level.FINEST); //$NON-NLS-1$
+		assert Log.debugMessage(" LoadingThread | setQueryLayerVisibilities | setting visibilities.",Level.FINEST); //$NON-NLS-1$
 		Iterator layersIt = this.mapImageLoader.getMapConnection().getLayers()
 				.iterator();
 		int index = 0;
@@ -198,7 +198,7 @@ public class LoadingThread extends Thread {
 		query.setLayerVisibilities(this.layerVisibilities);		
 		query.setLabelVisibilities(this.labelVisibilities);
 		
-		Log.debugMessage(" LoadingThread | setQueryLayerVisibilities | visibilities are set.",Level.FINEST); //$NON-NLS-1$
+		assert Log.debugMessage(" LoadingThread | setQueryLayerVisibilities | visibilities are set.",Level.FINEST); //$NON-NLS-1$
 	}
     
     
@@ -237,7 +237,7 @@ public class LoadingThread extends Thread {
      */
     public void addRequest(TopologicalImageQuery requestToAdd)
             throws MapConnectionException, MapDataException {
-        Log.debugMessage(" LoadingThread | addRequest | adding request (" //$NON-NLS-1$
+        assert Log.debugMessage(" LoadingThread | addRequest | adding request (" //$NON-NLS-1$
                 + requestToAdd + ")",Level.FINEST); //$NON-NLS-1$
 
         synchronized (this.state) {
@@ -283,14 +283,14 @@ public class LoadingThread extends Thread {
     public void changeRequestPriority(TopologicalImageQuery request,
             int newPriority) throws MapConnectionException, MapDataException {
         if (request.getPriority() == newPriority) {
-        	Log.debugMessage(" LoadingThread | changeRequestPriority | the request (" //$NON-NLS-1$
+        	assert Log.debugMessage(" LoadingThread | changeRequestPriority | the request (" //$NON-NLS-1$
                             + request
                             + ") already has the priority " //$NON-NLS-1$
                             + newPriority + ". Exiting.",Level.FINEST); //$NON-NLS-1$
             return;
         }
 
-        Log.debugMessage(" LoadingThread | changeRequestPriority | changing request's (" //$NON-NLS-1$
+        assert Log.debugMessage(" LoadingThread | changeRequestPriority | changing request's (" //$NON-NLS-1$
                         + request + ") priority for " + newPriority,Level.FINEST); //$NON-NLS-1$
 
         synchronized (this.state) {
@@ -334,7 +334,7 @@ public class LoadingThread extends Thread {
      * EXPRESS, на самый низкий
      */
     public void setTheLowestPriorityForAll() {
-    	Log.debugMessage(" LoadingThread | setTheLowestPriorityForAll | entering",Level.FINEST); //$NON-NLS-1$
+    	assert Log.debugMessage(" LoadingThread | setTheLowestPriorityForAll | entering",Level.FINEST); //$NON-NLS-1$
 
         synchronized (this.state) {    	
 	        Iterator it = this.requestQueue.iterator();
@@ -352,7 +352,7 @@ public class LoadingThread extends Thread {
                             .setPriority(TopologicalImageQuery.PRIORITY_BACKGROUND_LOW);
             }
         }
-        Log.debugMessage(" LoadingThread | setTheLowestPriorityForAll | done",Level.FINEST); //$NON-NLS-1$
+        assert Log.debugMessage(" LoadingThread | setTheLowestPriorityForAll | done",Level.FINEST); //$NON-NLS-1$
     }
 
     public void clearQueue() throws MapConnectionException, MapDataException {

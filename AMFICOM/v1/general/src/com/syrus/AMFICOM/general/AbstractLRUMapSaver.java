@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractLRUMapSaver.java,v 1.6 2005/10/22 14:08:26 arseniy Exp $
+* $Id: AbstractLRUMapSaver.java,v 1.7 2005/10/30 15:20:42 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/22 14:08:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:42 $
+ * @author $Author: bass $
  * @author Maxim Selivanov
  * @author Vladimir Dolzhenko
  * @module general
@@ -68,7 +68,7 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 			final File saveFile = new File(this.saveDir.getPath() + File.separator + objectEntityName + this.extension);
 			tempFile = new File(saveFile.getPath() + ".swp");
 			final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
-			Log.debugMessage("Trying to save LRUMap with " + objectEntityName + " to file " + saveFile.getAbsolutePath(),
+			assert Log.debugMessage("Trying to save LRUMap with " + objectEntityName + " to file " + saveFile.getAbsolutePath(),
 					Log.DEBUGLEVEL10);
 			final Object keys = this.saving(lruMap);
 			out.writeObject(objectEntityName);
@@ -80,9 +80,9 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 				lruMap.clear();
 			}
 		} catch (FileNotFoundException fnfe) {
-			Log.errorMessage("Error: " + fnfe.getMessage());
+			assert Log.errorMessage("Error: " + fnfe.getMessage());
 		} catch (IOException ioe) {
-			Log.errorMessage("Error: " + ioe.getMessage());
+			assert Log.errorMessage("Error: " + ioe.getMessage());
 		} finally {
 			if (tempFile != null) {
 				tempFile.delete();
@@ -99,21 +99,21 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 	 */
 	public final Set<StorableObject> load(final String objectEntityName) {
 		try {
-			Log.debugMessage("Trying to load LRUMap with " + objectEntityName, Log.DEBUGLEVEL10);
+			assert Log.debugMessage("Trying to load LRUMap with " + objectEntityName, Log.DEBUGLEVEL10);
 			final File saveFile = new File(this.saveDir.getPath() + File.separator + objectEntityName + this.extension);
 			final ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile));
 			final String keyObjectEntityName = (String) in.readObject();
 			if (keyObjectEntityName == null || !keyObjectEntityName.equals(objectEntityName)) {
-				Log.errorMessage("Wrong input file " + saveFile.getAbsolutePath() + ". Loading failed");
+				assert Log.errorMessage("Wrong input file " + saveFile.getAbsolutePath() + ". Loading failed");
 				return Collections.emptySet();
 			}
 			return this.loading(in);
 		} catch (FileNotFoundException fnfe) {
-			Log.debugMessage("Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
+			assert Log.debugMessage("Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
 		} catch (ClassNotFoundException cnfe) {
-			Log.errorMessage("Error: " + cnfe.getMessage());
+			assert Log.errorMessage("Error: " + cnfe.getMessage());
 		} catch (IOException ioe) {
-			Log.errorMessage("Error: " + ioe.getMessage());
+			assert Log.errorMessage("Error: " + ioe.getMessage());
 		}
 		return Collections.emptySet();
 	}

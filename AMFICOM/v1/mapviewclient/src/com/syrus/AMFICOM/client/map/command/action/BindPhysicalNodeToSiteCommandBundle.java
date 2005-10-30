@@ -1,5 +1,5 @@
 /*-
- * $$Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.38 2005/10/30 14:48:56 bass Exp $$
+ * $$Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.39 2005/10/30 15:20:31 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  *  непривязанному кабелю, к элементу узла. При этом линия, которой 
  *  принадлежит данный узел, делится на 2 части
  *  
- * @version $Revision: 1.38 $, $Date: 2005/10/30 14:48:56 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/30 15:20:31 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -60,7 +60,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle 
 
 	@Override
 	public void execute() {
-		Log.debugMessage(
+		assert Log.debugMessage(
 			getClass().getName() + "::execute() | "  //$NON-NLS-1$
 				+ "bind " + this.node.getId()  //$NON-NLS-1$
 				+ " to " + this.site.getName() + " (" + this.site.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -124,7 +124,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle 
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 }

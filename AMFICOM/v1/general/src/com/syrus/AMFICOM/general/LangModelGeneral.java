@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelGeneral.java,v 1.4 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: LangModelGeneral.java,v 1.5 2005/10/30 15:20:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.ResourceBundle;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:42 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -32,7 +32,7 @@ final class LangModelGeneral {
 			return RESOURCE_BUNDLE.getString(key);
 		}
 		catch (final MissingResourceException mre) {
-			Log.errorMessage("Key '" + key + "' not found in resource bundle '" + BUNDLE_NAME + "'");
+			assert Log.errorMessage("Key '" + key + "' not found in resource bundle '" + BUNDLE_NAME + "'");
 			return "!" + key + "!";
 		}
 	}

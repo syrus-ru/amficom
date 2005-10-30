@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewTreeEventHandler.java,v 1.16 2005/09/30 16:08:42 krupenn Exp $$
+ * $$Id: MapViewTreeEventHandler.java,v 1.17 2005/10/30 15:20:33 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/30 16:08:42 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:33 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -251,7 +251,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 
 		this.performProcessing = true;
 		long f = System.currentTimeMillis();
-//		Log.debugMessage("MapViewTreePanel::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d) + " ms ---------", Level.INFO);
+//		assert Log.debugMessage(pce.getPropertyName() + " -------- " + (f - d) + " ms ---------", Level.INFO);
 	}
 
 	/**

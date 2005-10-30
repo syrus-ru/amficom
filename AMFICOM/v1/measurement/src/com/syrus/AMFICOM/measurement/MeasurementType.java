@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.108 2005/10/30 14:49:05 bass Exp $
+ * $Id: MeasurementType.java,v 1.109 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.109 $, $Date: 2005/10/30 15:20:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -66,7 +66,7 @@ public enum MeasurementType implements ActionType<IdlMeasurementType> {
 			case IdlMeasurementType._UNKNOWN_MEASUREMENTTYPE:
 				return UNKNOWN;
 			default:
-				Log.errorMessage("Illegal IDL code: " + code + ", returning UNKNOWN");
+				assert Log.errorMessage("Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;
 		}
 	}
@@ -100,7 +100,7 @@ public enum MeasurementType implements ActionType<IdlMeasurementType> {
 		try {
 			return IdlMeasurementType.from_int(this.getCode());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			assert Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
 			return IdlMeasurementType.UNKNOWN_MEASUREMENTTYPE;
 		}
 	}

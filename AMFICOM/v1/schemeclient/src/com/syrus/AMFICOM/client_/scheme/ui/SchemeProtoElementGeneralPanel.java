@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.25 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.26 2005/10/30 15:20:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/30 15:20:55 $
  * @module schemeclient
  */
 
@@ -387,7 +387,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			this.typeCombo.addElements(protoEquipments);
 		} catch (ApplicationException e1) {
-			Log.errorMessage(e1);
+			assert Log.errorMessage(e1);
 		}
 	}
 
@@ -424,7 +424,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			this.parentCombo.addElements(sortedGroups);
 			// parentCombo.addItem(NON_GROUP_ITEM);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 
 		this.typeCombo.removeAllItems();
@@ -440,7 +440,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			try {
 				protoEq = this.schemeProtoElement.getProtoEquipment();
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 
 			try {
@@ -458,7 +458,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 					this.parentCombo.setEnabled(true);
 				}
 			} catch (ApplicationException e1) {
-				Log.errorMessage(e1);
+				assert Log.errorMessage(e1);
 			} catch (IllegalStateException e1) {
 				// ignore as it means parent == null
 				this.parentCombo.setEnabled(true);
@@ -500,7 +500,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				try {
 					this.schemeProtoElement.setSymbol((BitmapImageResource) StorableObjectPool.getStorableObject(this.imageId, true));
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 
@@ -513,7 +513,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				try {
 					this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup) parent, false);
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this,

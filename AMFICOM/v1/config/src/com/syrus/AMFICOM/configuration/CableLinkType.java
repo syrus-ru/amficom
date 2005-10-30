@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.83 2005/10/30 14:48:45 bass Exp $
+ * $Id: CableLinkType.java,v 1.84 2005/10/30 15:20:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/10/30 14:48:45 $
+ * @version $Revision: 1.84 $, $Date: 2005/10/30 15:20:19 $
  * @author $Author: bass $
  * @module config
  */
@@ -156,7 +156,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 				} else {
 					cableLinkType = StorableObjectPool.getStorableObject(expectedId, true);
 					if (cableLinkType == null) {
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -170,7 +170,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 					} else {
 						final String oldCodename = cableLinkType.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("WARNING: "
+							assert Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -191,7 +191,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -209,7 +209,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -457,7 +457,7 @@ public final class CableLinkType extends AbstractLinkType<CableLinkType> impleme
 			cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(lic, true, breakOnLoadError);
 			return cableThreadTypes;
 		} catch (final ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 			return Collections.emptySet();
 		}
 	}

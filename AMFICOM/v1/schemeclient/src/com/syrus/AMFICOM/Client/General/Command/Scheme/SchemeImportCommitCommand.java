@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.8 2005/10/30 14:49:18 bass Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.9 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 					LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 					JOptionPane.INFORMATION_MESSAGE);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 	}
 }

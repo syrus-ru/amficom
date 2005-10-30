@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.123 2005/10/30 14:48:42 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.124 2005/10/30 15:20:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.123 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.124 $, $Date: 2005/10/30 15:20:15 $
  * @module scheme
  */
 public final class SchemeProtoElement
@@ -379,7 +379,7 @@ public final class SchemeProtoElement
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -562,7 +562,7 @@ public final class SchemeProtoElement
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (parentSchemeProtoElementIdVoid) {
-			Log.debugMessage("Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.",
+			assert Log.debugMessage("Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.",
 					FINE);
 		}
 		return this.parentSchemeProtoElementId;
@@ -575,7 +575,7 @@ public final class SchemeProtoElement
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -591,7 +591,7 @@ public final class SchemeProtoElement
 		final boolean parentSchemeProtoGroupIdVoid = this.parentSchemeProtoGroupId.isVoid();
 		assert parentSchemeProtoGroupIdVoid || this.parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
 		if (parentSchemeProtoGroupIdVoid) {
-			Log.debugMessage("Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null",
+			assert Log.debugMessage("Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null",
 					FINE);
 		}
 		return this.parentSchemeProtoGroupId;
@@ -604,7 +604,7 @@ public final class SchemeProtoElement
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -624,7 +624,7 @@ public final class SchemeProtoElement
 		try {
 			return this.getSchemeCell0();
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -653,7 +653,7 @@ public final class SchemeProtoElement
 		try {
 			return this.getSymbol0();
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -811,7 +811,7 @@ public final class SchemeProtoElement
 		try {
 			return this.getUgoCell0();
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -998,7 +998,7 @@ public final class SchemeProtoElement
 
 		final Identifier newParentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 		if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
-			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -1010,7 +1010,7 @@ public final class SchemeProtoElement
 			this.getParentSchemeProtoElement().getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeProtoElementNull) {
-				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			}
 		} else {
@@ -1084,7 +1084,7 @@ public final class SchemeProtoElement
 
 		final Identifier newParentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId)) {
-			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -1096,7 +1096,7 @@ public final class SchemeProtoElement
 			this.getParentSchemeProtoGroup().getSchemeProtoElementContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeProtoGroupNull) {
-				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			}
 		} else {

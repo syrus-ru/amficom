@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLCompoundCondition.java,v 1.4 2005/10/30 14:49:07 bass Exp $
+* $Id: XMLCompoundCondition.java,v 1.5 2005/10/30 15:20:43 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/30 14:49:07 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:43 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
@@ -101,23 +101,23 @@ public class XMLCompoundCondition extends XMLStorableObjectCondition<CompoundCon
 				(XMLStorableObjectCondition) constructor.newInstance(
 					new Object[] {soCondition, this.driver});
 		} catch (ClassNotFoundException e) {
-			Log.debugMessage(COMPOUND_CONDITION_INIT + "Class " + className
+			assert Log.debugMessage(COMPOUND_CONDITION_INIT + "Class " + className
 				+ " not found on the classpath"
 			, Level.WARNING);
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (SecurityException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (NoSuchMethodException e) {
-			Log.errorMessage(e);
-			Log.debugMessage(COMPOUND_CONDITION_INIT + "class "
+			assert Log.errorMessage(e);
+			assert Log.debugMessage(COMPOUND_CONDITION_INIT + "class "
 				+ className + " doesn't have the constructor expected"
 			, Level.WARNING);
 		} catch (IllegalArgumentException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (InstantiationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (IllegalAccessException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
@@ -127,7 +127,7 @@ public class XMLCompoundCondition extends XMLStorableObjectCondition<CompoundCon
 				else
 					assert false : message;
 			} else {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 		return xmlStorableObjectCondition;

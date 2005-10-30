@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.38 2005/10/30 14:48:40 bass Exp $
+ * $Id: ServerCore.java,v 1.39 2005/10/30 15:20:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/10/30 14:48:40 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/30 15:20:13 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -63,7 +63,7 @@ public abstract class ServerCore implements CommonServer {
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
-			Log.debugMessage("Requested '"
+			assert Log.debugMessage("Requested '"
 					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)) + "'s for ids: "
 					+ ids, Level.FINEST);
 
@@ -97,7 +97,7 @@ public abstract class ServerCore implements CommonServer {
 
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 
-			Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids, Level.FINEST);
+			assert Log.debugMessage("Requested '" + ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids, Level.FINEST);
 
 			/**
 			 * NOTE: If it is impossible to load objects by Loader - return only those
@@ -135,7 +135,7 @@ public abstract class ServerCore implements CommonServer {
 			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 
-			Log.debugMessage("Versions for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+			assert Log.debugMessage("Versions for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
 			final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
 			final IdVersion[] idVersions = new IdVersion[versionsMap.size()];
@@ -172,7 +172,7 @@ public abstract class ServerCore implements CommonServer {
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
-			Log.debugMessage("Received '"
+			assert Log.debugMessage("Received '"
 					+ ObjectEntities.codeToString(entityCode) + "'s: "
 					+ Identifier.createIdentifiers(storableObjects), Level.FINEST);
 
@@ -202,7 +202,7 @@ public abstract class ServerCore implements CommonServer {
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
-			Log.debugMessage("Deleting '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+			assert Log.debugMessage("Deleting '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
 			StorableObjectPool.delete(ids);
 			StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
@@ -219,9 +219,9 @@ public abstract class ServerCore implements CommonServer {
 
 	public final void verify(final byte b) {
 		try {
-			Log.debugMessage("Verify value: " + b, Level.CONFIG);
+			assert Log.debugMessage("Verify value: " + b, Level.CONFIG);
 		} catch (final Throwable t) {
-			Log.debugMessage(t, Level.SEVERE);
+			assert Log.debugMessage(t, Level.SEVERE);
 		}
 	}
 
@@ -253,12 +253,12 @@ public abstract class ServerCore implements CommonServer {
 	}
 
 	private final AMFICOMRemoteException processDefaultApplicationException(final ApplicationException ae, final IdlErrorCode errorCode) {
-		Log.debugMessage(ae, Level.SEVERE);
+		assert Log.debugMessage(ae, Level.SEVERE);
 		return new AMFICOMRemoteException(errorCode, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 	}
 
 	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable throwable) {
-		Log.debugMessage(throwable, Level.SEVERE);
+		assert Log.debugMessage(throwable, Level.SEVERE);
 		return new AMFICOMRemoteException(IdlErrorCode.ERROR_UNKNOWN, IdlCompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
 	}
 

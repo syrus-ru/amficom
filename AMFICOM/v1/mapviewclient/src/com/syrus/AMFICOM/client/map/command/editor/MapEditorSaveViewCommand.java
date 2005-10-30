@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorSaveViewCommand.java,v 1.14 2005/09/30 16:08:37 krupenn Exp $$
+ * $$Id: MapEditorSaveViewCommand.java,v 1.15 2005/10/30 15:20:33 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
  * схемы в модуле "Редактор топологических схем". Использует команду
  * MapSaveCommand
  * 
- * @version $Revision: 1.14 $, $Date: 2005/09/30 16:08:37 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:33 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  * @see MapViewSaveCommand
@@ -50,7 +50,7 @@ public class MapEditorSaveViewCommand extends AbstractCommand {
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 		if(mapFrame == null) {
-			Log.debugMessage("map frame is null! Cannot create new map.", Level.SEVERE); //$NON-NLS-1$
+			assert Log.debugMessage("map frame is null! Cannot create new map.", Level.SEVERE); //$NON-NLS-1$
 			setResult(Command.RESULT_NO);
 			return;
 		}

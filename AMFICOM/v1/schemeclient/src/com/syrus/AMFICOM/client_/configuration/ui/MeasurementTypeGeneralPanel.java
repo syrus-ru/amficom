@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.26 2005/10/30 14:49:18 bass Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.27 2005/10/30 15:20:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/10/30 14:49:18 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/30 15:20:53 $
  * @module schemeclient
  */
 
@@ -396,7 +396,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 					root.addChild(new CheckableNode(t, false));
 			}
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 		return root;
 	}	

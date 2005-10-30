@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerSessionEnvironment.java,v 1.10 2005/10/30 14:49:11 bass Exp $
+ * $Id: LEServerSessionEnvironment.java,v 1.11 2005/10/30 15:20:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/30 15:20:46 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -41,7 +41,7 @@ final class LEServerSessionEnvironment {
 		try {
 			StorableObjectPool.deserialize(this.leServerPoolContext.getLRUSaver());
 		} catch (ApplicationException ae) {
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 			StorableObjectPool.clean();
 		}
 	}

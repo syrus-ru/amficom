@@ -140,7 +140,7 @@ public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeLi
 		if (traces.contains(id)) {
 			return;
 		}
-		Log.debugMessage("id is '" + id + '\'', Level.FINEST);
+		assert Log.debugMessage("id is '" + id + '\'', Level.FINEST);
 
 		final TraceResource tr = new TraceResource(id);
 		tr.addPropertyChangeListener(this);

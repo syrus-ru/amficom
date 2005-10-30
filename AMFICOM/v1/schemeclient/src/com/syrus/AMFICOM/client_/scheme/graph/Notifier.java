@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.21 2005/10/30 14:49:21 bass Exp $
+ * $Id: Notifier.java,v 1.22 2005/10/30 15:20:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/30 14:49:21 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 15:20:56 $
  * @module schemeclient
  */
 
@@ -80,7 +80,7 @@ public class Notifier {
 
 	public static void notify(SchemeGraph graph, ApplicationContext aContext, Object object) {
 		if (graph.getMode().equals(Constants.RACK_MODE)) {
-			Log.debugMessage("do not notify in rack mode", Level.FINEST);
+			assert Log.debugMessage("do not notify in rack mode", Level.FINEST);
 			return;
 		}
 		
@@ -134,7 +134,7 @@ public class Notifier {
 					SchemePathPropertiesManager.getInstance(),
 					SCHEME_PATH));
 		else
-			Log.debugMessage("unsupported object selection: " + object, Log.WARNING);	
+			assert Log.debugMessage("unsupported object selection: " + object, Log.WARNING);	
 					*/
 	}
 	
@@ -142,7 +142,7 @@ public class Notifier {
 		try {
 		Dispatcher dispatcher = aContext.getDispatcher();
 		if (cells.length == 0) {
-			Log.debugMessage(Notifier.class.getSimpleName() + " | all deselected", Level.FINEST); //$NON-NLS-1$
+			assert Log.debugMessage(Notifier.class.getSimpleName() + " | all deselected", Level.FINEST); //$NON-NLS-1$
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, Collections.<Identifiable>emptySet(), null, ALL_DESELECTED));
 			return;
 		} else if (cells.length == 1) {
@@ -230,13 +230,13 @@ public class Notifier {
 				if (object instanceof IdentifiableCell) {
 					message += " (identifier " + ((IdentifiableCell)object).getId() + ")";
 				}
-				Log.debugMessage(message, Level.FINEST);
+				assert Log.debugMessage(message, Level.FINEST);
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, OTHER_OBJECT));
 			} else {
 				if (graph.getMode().equals(Constants.RACK_MODE)) {
 					selectedType += ObjectSelectedEvent.INRACK;
 				}
-				Log.debugMessage(Notifier.class.getSimpleName() + " | selected object with id " + selectedObject.getId() , Level.FINEST); //$NON-NLS-1$
+				assert Log.debugMessage(Notifier.class.getSimpleName() + " | selected object with id " + selectedObject.getId() , Level.FINEST); //$NON-NLS-1$
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObject, manager, selectedType));
 			}
 		} else if (cells.length > 1) {
@@ -287,7 +287,7 @@ public class Notifier {
 			}
 		}
 		} catch (Exception e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			graph.clearSelection();
 		}
 	}

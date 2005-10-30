@@ -108,9 +108,9 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 	public void repaint(final boolean fullRepaint) throws MapConnectionException, MapDataException {
 		final long t1 = System.currentTimeMillis();
 		if (fullRepaint) {
-			Log.debugMessage(" MIFLNL - repaint - Entered full repaint", Level.FINEST);
+			assert Log.debugMessage(" MIFLNL - repaint - Entered full repaint", Level.FINEST);
 			this.visualComponent.setMapImage(this.renderer.getImage());
-			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint", Level.FINEST);
+			assert Log.debugMessage(" MIFLNL - repaint - Exiting full repaint", Level.FINEST);
 			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_REPAINTED));
 		}
 
@@ -120,7 +120,7 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 		this.visualComponent.repaint();
 		final long t4 = System.currentTimeMillis();
 
-		Log.debugMessage("finished in " + (t3 - t1) + " ms \n"
+		assert Log.debugMessage("finished in " + (t3 - t1) + " ms \n"
 				+ "		" + (t2 - t1) + " ms (image loaded)\n"
 				+ "		" + (t3 - t2) + " ms (LogicalNetLayer image painted to the buffer)\n"				
 				+ "		" + (t4 - t3) + " ms (visual component repainted).", Level.FINE);

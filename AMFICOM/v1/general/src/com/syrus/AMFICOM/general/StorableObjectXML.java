@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.44 2005/10/30 14:49:07 bass Exp $
+ * $Id: StorableObjectXML.java,v 1.45 2005/10/30 15:20:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.44 $, $Date: 2005/10/30 14:49:07 $
+ * @version $Revision: 1.45 $, $Date: 2005/10/30 15:20:43 $
  * @author $Author: bass $
  * @module general
  */
@@ -59,10 +59,10 @@ public class StorableObjectXML {
 			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		Set<T> set = null;
 		final Set<Identifier> identifiers = this.reflectXMLCondition(condition).getIdsByCondition();
-		Log.debugMessage("identifiers:" + Identifier.createStrings(identifiers),
+		assert Log.debugMessage("identifiers:" + Identifier.createStrings(identifiers),
 				Log.DEBUGLEVEL10);
 		identifiers.removeAll(ids);
-		Log.debugMessage("cleaned identifiers:" + Identifier.createStrings(identifiers),
+		assert Log.debugMessage("cleaned identifiers:" + Identifier.createStrings(identifiers),
 				Log.DEBUGLEVEL10);
 		for (final Identifier id : identifiers) {
 			try {
@@ -138,17 +138,17 @@ public class StorableObjectXML {
 			constructor.setAccessible(true);
 			xmlStorableObjectCondition = (XMLStorableObjectCondition) constructor.newInstance(new Object[] { condition, this.driver });
 		} catch (ClassNotFoundException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (SecurityException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (NoSuchMethodException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (IllegalArgumentException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (InstantiationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (IllegalAccessException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
@@ -160,7 +160,7 @@ public class StorableObjectXML {
 					assert false : message;
 				}
 			} else {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 		return xmlStorableObjectCondition;

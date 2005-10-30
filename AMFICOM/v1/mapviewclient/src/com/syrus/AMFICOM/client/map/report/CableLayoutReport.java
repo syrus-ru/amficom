@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 /**
  * Отчёт "Прокладка кабеля"
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/10/30 14:48:56 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/30 15:20:31 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -51,8 +51,8 @@ public class CableLayoutReport {
 						vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			Log.errorMessage(e.getMessage());
-			Log.errorMessage(e);			
+			assert Log.errorMessage(e.getMessage());
+			assert Log.errorMessage(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
 					tableStorableElement.getModelClassName(),

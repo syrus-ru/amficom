@@ -1,5 +1,5 @@
 /*
- * $Id: LangModelMeasurement.java,v 1.1 2005/08/19 16:21:11 arseniy Exp $
+ * $Id: LangModelMeasurement.java,v 1.2 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import java.util.ResourceBundle;
 import com.syrus.util.Log;
 
 /**
- * @version $ $, $Date: 2005/08/19 16:21:11 $
- * @author $Author: arseniy $
+ * @version $ $, $Date: 2005/10/30 15:20:39 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -34,7 +34,7 @@ final class LangModelMeasurement {
 			return RESOURCE_BUNDLE.getString(validKey);
 		}
 		catch (MissingResourceException mre) {
-			Log.errorMessage("Key '" + validKey + "' not found in resource bundle '" + RESOURCE_BUNDLE + "'");
+			assert Log.errorMessage("Key '" + validKey + "' not found in resource bundle '" + RESOURCE_BUNDLE + "'");
 			return "!" + validKey + "!";
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.34 2005/10/30 14:49:07 bass Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.35 2005/10/30 15:20:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.34 $, $Date: 2005/10/30 14:49:07 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/30 15:20:43 $
  * @author $Author: bass $
  * @module general
  */
@@ -112,7 +112,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 				map = Collections.emptyMap();
 		} catch (TransformerException te) {
 			final String msg = "StorableObjectXMLDriver.getObjectMap | Caught " + te.getMessage();
-			Log.errorMessage(msg);
+			assert Log.errorMessage(msg);
 			throw new RetrieveObjectException(msg, te);
 		}
 
@@ -121,7 +121,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 
 
 	private Object parse(final Node node) throws IllegalDataException {
-//		Log.debugMessage("node name:" + node.getNodeName(), Log.INFO);
+//		assert Log.debugMessage("node name:" + node.getNodeName(), Log.INFO);
 		Object object = null;
 		final NamedNodeMap attributes = node.getAttributes();
 		if (attributes == null)
@@ -152,7 +152,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 				object = this.getObject(node.getChildNodes(), className);
 			}
 		} else
-			Log.errorMessage("there is no attributes for : " + node.getNodeName());
+			assert Log.errorMessage("there is no attributes for : " + node.getNodeName());
 		return object;
 	}
 
@@ -172,7 +172,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 	private void addObject(final Node node, final String key, final Object object) {
 		final Element element = this.doc.createElement(key);
 		if (object == null) {
-			Log.errorMessage("key : " + key + " , value is 'null'");
+			assert Log.errorMessage("key : " + key + " , value is 'null'");
 			return;
 		}
 		
@@ -220,7 +220,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 		} catch (TransformerException e) {
 			final String msg = "StorableObjectXMLDriver.getIdentifiers | Caught " + e.getMessage()
 					+ " during retrieve identifiers for '" + ObjectEntities.codeToString(entityCode) + '\'';
-			Log.errorMessage(msg);
+			assert Log.errorMessage(msg);
 			throw new IllegalDataException(msg, e);
 		}
 	}
@@ -229,7 +229,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 		try {
 			final NodeList sizeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/" + identifier.getIdentifierString());
 			if (sizeList.getLength() > 1) {
-				Log.errorMessage("more that one entity with id "
+				assert Log.errorMessage("more that one entity with id "
 						+ identifier.getIdentifierString());
 				return;
 			}
@@ -239,7 +239,7 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 				this.root.removeChild(children);
 			}
 		} catch (TransformerException te) {
-			Log.errorMessage(te);
+			assert Log.errorMessage(te);
 		}
 	}
 
@@ -270,11 +270,11 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 			return this.doc;
 		} catch (SAXException e) {
 			// A parsing error occurred; the xml input is not valid
-			Log.errorMessage("Caught " + e.getMessage());
+			assert Log.errorMessage("Caught " + e.getMessage());
 		} catch (ParserConfigurationException e) {
-			Log.errorMessage("Caught " + e.getMessage());
+			assert Log.errorMessage("Caught " + e.getMessage());
 		} catch (IOException e) {
-			Log.errorMessage("Caught " + e.getMessage());
+			assert Log.errorMessage("Caught " + e.getMessage());
 		}
 		return null;
 	}
@@ -295,11 +295,11 @@ public class StorableObjectXMLDriver extends StorableObjectXMLData {
 			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {
-			Log.errorMessage("Caught " + e.getMessage());
+			assert Log.errorMessage("Caught " + e.getMessage());
 		} catch (TransformerException e) {
-			Log.errorMessage("Caught " + e.getMessage());
+			assert Log.errorMessage("Caught " + e.getMessage());
 		} catch (FileNotFoundException e) {
-			Log.errorMessage("Caught " + e.getMessage());
+			assert Log.errorMessage("Caught " + e.getMessage());
 		}
 	}
 

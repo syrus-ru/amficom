@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLTypicalCondition.java,v 1.2 2005/10/30 14:49:07 bass Exp $
+* $Id: XMLTypicalCondition.java,v 1.3 2005/10/30 15:20:42 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/30 14:49:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/30 15:20:42 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
@@ -70,7 +70,7 @@ public class XMLTypicalCondition extends XMLStorableObjectCondition<TypicalCondi
 			buffer.append("']");
 			break;
 		default:
-			Log.errorMessage("unknown operation code " + operationCode);
+			assert Log.errorMessage("unknown operation code " + operationCode);
 			break;
 		}
 		return super.getIdsByCondition(buffer.toString(), true);

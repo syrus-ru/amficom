@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.14 2005/10/30 14:49:21 bass Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.15 2005/10/30 15:20:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/10/30 14:49:21 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:55 $
  * @module schemeclient
  */
 
@@ -67,7 +67,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 					try {
 						protoEq = this.schemeElement.getProtoEquipment();
 					} catch (IllegalStateException e) {
-						Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
+						assert Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
 					}
 					if (protoEq != null) {
 						for (int i = 0; i < sorts.length; i++)
@@ -78,7 +78,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 				showNoSelection();
 			}
 		} 

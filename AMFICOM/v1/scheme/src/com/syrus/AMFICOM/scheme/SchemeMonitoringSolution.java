@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.83 2005/10/30 14:48:42 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.84 2005/10/30 15:20:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.84 $, $Date: 2005/10/30 15:20:16 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -320,7 +320,7 @@ public final class SchemeMonitoringSolution
 					? StorableObjectPool.<Scheme>getStorableObject(this.getParentSchemeId(), true)
 					: this.getParentSchemeOptimizeInfo().getParentScheme();
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -344,7 +344,7 @@ public final class SchemeMonitoringSolution
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeOptimizeInfoId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -497,7 +497,7 @@ public final class SchemeMonitoringSolution
 
 		final Identifier newParentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
 		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId)) {
-			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -628,14 +628,14 @@ public final class SchemeMonitoringSolution
 		} else {
 			final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
 			if (this.parentSchemeId.equals(newParentSchemeId)) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 
 			this.getParentScheme().getSchemeMonitoringSolutionContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentScheme == null) {
-				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			} else {
 				parentScheme.getSchemeMonitoringSolutionContainerWrappee().addToCache(this, usePool);

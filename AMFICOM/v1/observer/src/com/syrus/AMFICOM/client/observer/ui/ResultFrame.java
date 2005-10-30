@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.2 2005/10/30 14:48:52 bass Exp $
+ * $Id: ResultFrame.java,v 1.3 2005/10/30 15:20:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/10/30 14:48:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/30 15:20:25 $
  * @module surveyclient_v1
  */
 
@@ -187,7 +187,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 						}
 					}
 				} catch (ApplicationException e1) {
-					Log.errorMessage(e1);
+					assert Log.errorMessage(e1);
 				}
 				showResult(r);
 			}
@@ -217,7 +217,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 			
 			AnalysisResult ar = null;
@@ -227,7 +227,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 					try {
 						ar = (AnalysisResult) DataStreamableUtil.readDataStreamableFromBA(parameter.getValue(), AnalysisResult.getDSReader());
 					} catch (DataFormatException e2) {
-						Log.errorMessage(e2);
+						assert Log.errorMessage(e2);
 					}
 				}
 			}
@@ -239,9 +239,9 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 				else
 					Heap.openPrimaryTraceAndNotify(result);
 			} catch (SimpleApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			} catch (DataFormatException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 
 			// get Alarms
@@ -268,7 +268,7 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 							});
 						}
 					} catch (DataFormatException e) {
-						Log.errorMessage(e);
+						assert Log.errorMessage(e);
 					}
 				}
 			}
@@ -320,12 +320,12 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 	}
 	
 	void removeReflectogramTab(String key) {
-		Log.debugMessage(ResultFrame.class.getName() + ".removeReflectogramTab() perform", Level.FINEST); //$NON-NLS-1$
+		assert Log.debugMessage(ResultFrame.class.getName() + ".removeReflectogramTab() perform", Level.FINEST); //$NON-NLS-1$
 		this.tabs.remove(this.layeredPanel);
 	}
 	
 	void initReflectogramTab(String key, BellcoreStructure bs) {
-		Log.debugMessage(ResultFrame.class.getName() + ".initReflectogramTab() perform", Level.FINEST); //$NON-NLS-1$
+		assert Log.debugMessage(ResultFrame.class.getName() + ".initReflectogramTab() perform", Level.FINEST); //$NON-NLS-1$
 		
 		double[] data = bs.getTraceData();
 		double deltaX = bs.getResolution();

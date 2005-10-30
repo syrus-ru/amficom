@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.21 2005/10/30 14:49:05 bass Exp $
+ * $Id: ParameterSetDatabase.java,v 1.22 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 15:20:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -131,7 +131,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
@@ -171,7 +171,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 
@@ -222,7 +222,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 	private void insertSetParameters(final ParameterSet set) throws CreateObjectException {
 		final Identifier setId = set.getId();		
 		final Parameter[] setParameters = set.getParameters();
-		Log.debugMessage("setParameters count:" + setParameters.length, Log.DEBUGLEVEL09);
+		assert Log.debugMessage("setParameters count:" + setParameters.length, Log.DEBUGLEVEL09);
 		final String sql = SQL_INSERT_INTO + ObjectEntities.PARAMETER + OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID  + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
@@ -234,7 +234,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				+ QUESTION + COMMA
 				+ SQL_FUNCTION_EMPTY_BLOB
 				+ CLOSE_BRACKET;
-		Log.debugMessage("Trying:" + sql, Log.DEBUGLEVEL09);
+		assert Log.debugMessage("Trying:" + sql, Log.DEBUGLEVEL09);
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		ParameterType parameterType = null;
@@ -250,7 +250,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				preparedStatement.setInt(2, parameterType.getCode());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, setId);
 
-				Log.debugMessage("Inserting parameter " + parameterType.getDescription() + " for set '" + setId + "'", Log.DEBUGLEVEL09);
+				assert Log.debugMessage("Inserting parameter " + parameterType.getDescription() + " for set '" + setId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 				ByteArrayDatabase.saveAsBlob(parameter.getValue(),
 						connection,
@@ -277,7 +277,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 					}
 				}
 			} catch (SQLException sqle1) {
-				Log.errorMessage(sqle1);
+				assert Log.errorMessage(sqle1);
 			}
 		}
 	}

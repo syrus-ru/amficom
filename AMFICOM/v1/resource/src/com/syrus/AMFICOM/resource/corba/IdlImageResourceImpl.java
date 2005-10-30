@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlImageResourceImpl.java,v 1.5 2005/10/30 14:48:46 bass Exp $
+ * $Id: IdlImageResourceImpl.java,v 1.6 2005/10/30 15:20:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/30 14:48:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:20 $
  * @module resource
  */
 final class IdlImageResourceImpl extends IdlImageResource {
@@ -71,7 +71,7 @@ final class IdlImageResourceImpl extends IdlImageResource {
 					return null;
 			}
 		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, SEVERE);
+			assert Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAClientImpl.java,v 1.4 2005/10/30 14:48:51 bass Exp $
+ * $Id: CORBAClientImpl.java,v 1.5 2005/10/30 15:20:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -54,9 +54,9 @@ final class CORBAClientImpl implements CORBAClientOperations {
 
 	public void verify(final byte b) {
 		try {
-			Log.debugMessage("Verify value: " + b, Level.CONFIG);
+			assert Log.debugMessage("Verify value: " + b, Level.CONFIG);
 		} catch (final Throwable t) {
-			Log.debugMessage(t, Level.SEVERE);
+			assert Log.debugMessage(t, Level.SEVERE);
 		}
 	}
 

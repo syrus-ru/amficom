@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.27 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.28 2005/10/30 15:20:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/30 15:20:55 $
  * @module schemeclient
  */
 
@@ -502,7 +502,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					this.tfLocalAddressText.setText("");
 				}
 			} catch (ApplicationException e1) {
-				Log.errorMessage(e1);
+				assert Log.errorMessage(e1);
 			}
 		}
 	}
@@ -562,7 +562,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					this.taDescrArea.setText("");
 				}
 			} catch (IllegalStateException e1) {
-				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
+				assert Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				this.parent = null;
 			}
 			final TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_SIMPLE,
@@ -574,14 +574,14 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 				this.cmbTypeCombo.addElements(portTypes);
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 			final EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 			try {
 				final Set<MeasurementPortType> measurementPortTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 				this.cmbMpTypeCombo.addElements(measurementPortTypes);
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 			this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
 		}
@@ -645,10 +645,10 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 							mp.setType(mpType);
 							this.schemePort.setMeasurementPort(mp);
 						} catch (ApplicationException e) {
-							Log.errorMessage(e);
+							assert Log.errorMessage(e);
 						}
 					} else {
-						Log.debugMessage("Parent KIS not created. Cannot create MeasurementPort", Level.FINEST); //$NON-NLS-1$
+						assert Log.debugMessage("Parent KIS not created. Cannot create MeasurementPort", Level.FINEST); //$NON-NLS-1$
 					}
 				}
 				
@@ -676,7 +676,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			} else {
 				this.schemePort.setMeasurementPort(null);

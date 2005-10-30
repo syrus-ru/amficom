@@ -95,7 +95,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		
 		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | SCHEME_VIEWER_FRAME", Level.FINEST);
+				assert Log.debugMessage(".createValue | SCHEME_VIEWER_FRAME", Level.FINEST);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(ObserverMainFrame.this.aContext, ObserverMainFrame.this.schemePane);
 				editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
 				ObserverMainFrame.this.desktopPane.add(editorFrame);
@@ -105,7 +105,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		
 		this.frames.put(GeneralPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
+				assert Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
 				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_PROPERTIES));
 				ObserverMainFrame.this.desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, ObserverMainFrame.this.aContext);
@@ -116,7 +116,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 		this.frames.put(AdditionalPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
+				assert Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
 				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_ADDITIONAL_PROPERTIES));
 				ObserverMainFrame.this.desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, ObserverMainFrame.this.aContext);
@@ -127,7 +127,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 		this.frames.put(CharacteristicPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
+				assert Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
 				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame(I18N.getString(MapEditorResourceKeys.TITLE_CHARACTERISTICS));
 				ObserverMainFrame.this.desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, ObserverMainFrame.this.aContext);
@@ -138,7 +138,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		
 		this.frames.put(ResultFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue RESULT_FRAME", Level.FINEST);
+				assert Log.debugMessage(".createValue RESULT_FRAME", Level.FINEST);
 				ResultFrame resultFrame = new ResultFrame(ObserverMainFrame.this.aContext);
 				ObserverMainFrame.this.desktopPane.add(resultFrame);
 				return resultFrame;
@@ -147,7 +147,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		
 		this.frames.put(ALARM_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue ALARM_FRAME", Level.FINEST);
+				assert Log.debugMessage(".createValue ALARM_FRAME", Level.FINEST);
 				AlarmFrame alarmFrame = new AlarmFrame(ObserverMainFrame.this.aContext);
 				ObserverMainFrame.this.desktopPane.add(alarmFrame);
 				return alarmFrame;
@@ -156,7 +156,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		
 		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
+				assert Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
 				JInternalFrame treeFrame = new JInternalFrame();
 				treeFrame.setName(TREE_FRAME);
 				treeFrame.setIconifiable(true);
@@ -199,7 +199,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 				for (final Component component : ObserverMainFrame.this.desktopPane.getComponents()) {
 					String componentName = component.getName();
 					if (componentName == null) {
-						Log.debugMessage("Name is null for component: "
+						assert Log.debugMessage("Name is null for component: "
 								+ component,
 								Level.SEVERE);
 						continue;

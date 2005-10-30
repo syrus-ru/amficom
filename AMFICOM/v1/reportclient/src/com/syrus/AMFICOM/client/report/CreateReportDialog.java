@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.9 2005/10/30 14:48:46 bass Exp $
+ * $Id: CreateReportDialog.java,v 1.10 2005/10/30 15:20:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  * открытия шаблонов определённого типа.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/10/30 14:48:46 $
+ * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:20 $
  * @module reportclient
  */
 public class CreateReportDialog extends JDialog {
@@ -246,8 +246,8 @@ public class CreateReportDialog extends JDialog {
 		try {
 			encoder.encodeToHTML();
 		} catch (IOException e) {
-			Log.errorMessage(e.getMessage());
-			Log.errorMessage(e);
+			assert Log.errorMessage(e.getMessage());
+			assert Log.errorMessage(e);
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					I18N.getString("report.Exception.errorSavingHTML"),
@@ -281,8 +281,8 @@ public class CreateReportDialog extends JDialog {
 			reportRenderer.setData(this.reportData);
 		}
 		catch (Exception cre) {
-			Log.errorMessage(cre.getMessage());
-			Log.errorMessage(cre);
+			assert Log.errorMessage(cre.getMessage());
+			assert Log.errorMessage(cre);
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					cre.getMessage(),

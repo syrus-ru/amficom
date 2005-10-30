@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.175 2005/10/30 14:49:05 bass Exp $
+ * $Id: Test.java,v 1.176 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.175 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.176 $, $Date: 2005/10/30 15:20:39 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -538,7 +538,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupIds.iterator().next(),
 						true);
 			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 		}
 	}
@@ -555,7 +555,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 						true);
 				this.kisId = measurementPort.getKISId();
 			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 		}
 		return this.kisId;
@@ -567,7 +567,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 				final KIS kis = (KIS) StorableObjectPool.getStorableObject(this.getKISId(), true);
 				this.mcmId = kis.getMCMId();
 			} catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 		}
 		return this.mcmId;
@@ -645,16 +645,16 @@ public final class Test extends StorableObject<Test> implements Describable {
 					this.endTime = endTime;
 					this.temporalPatternId = temporalPatternId;
 					if (this.endTime == null) {
-						Log.errorMessage("ERROR: End time is NULL");
+						assert Log.errorMessage("ERROR: End time is NULL");
 						this.endTime = this.startTime;
 					}
 					if (this.temporalPatternId == null) {
-						Log.errorMessage("ERROR: Temporal pattern is NULL");
+						assert Log.errorMessage("ERROR: Temporal pattern is NULL");
 						this.temporalPatternId = VOID_IDENTIFIER;
 					}
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
+					assert Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
 			}
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		}
@@ -674,7 +674,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 					this.temporalPatternId = new Identifier(ptts.temporalPatternId);
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
+					assert Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 			}
 
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -698,7 +698,7 @@ public final class Test extends StorableObject<Test> implements Describable {
 							this.temporalPatternId.getTransferable()));
 					break;
 				default:
-					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
+					assert Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
 			}
 			return ttst;
 		}

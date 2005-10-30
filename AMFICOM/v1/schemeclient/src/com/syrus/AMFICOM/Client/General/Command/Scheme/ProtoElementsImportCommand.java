@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoElementsImportCommand.java,v 1.3 2005/10/30 14:49:18 bass Exp $
+ * $Id: ProtoElementsImportCommand.java,v 1.4 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ public class ProtoElementsImportCommand extends ImportExportCommand {
 		try {
 			loadProtosXML(fileName);
 		} catch (CreateObjectException e) {
-			Log.errorMessage(e.getMessage());
+			assert Log.errorMessage(e.getMessage());
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelScheme.getString("Message.error.scheme_import"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
@@ -56,10 +56,10 @@ public class ProtoElementsImportCommand extends ImportExportCommand {
 					LangModelScheme.getString("Message.error.parse_xml"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return;
 		} catch (IOException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return;
 		}		 
 

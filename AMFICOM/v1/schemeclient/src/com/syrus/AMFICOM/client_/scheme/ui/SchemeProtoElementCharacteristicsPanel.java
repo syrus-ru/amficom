@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.12 2005/10/30 14:49:21 bass Exp $
+ * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.13 2005/10/30 15:20:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/10/30 14:49:21 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:55 $
  * @module schemeclient
  */
 
@@ -55,7 +55,7 @@ public class SchemeProtoElementCharacteristicsPanel extends CharacteristicsPanel
 					super.addCharacteristics(protoEq.getCharacteristics(true), protoEq.getId());
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 				showNoSelection();
 			}
 		} 

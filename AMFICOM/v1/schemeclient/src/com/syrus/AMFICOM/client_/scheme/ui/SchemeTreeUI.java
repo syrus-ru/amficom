@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.28 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemeTreeUI.java,v 1.29 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/30 15:20:54 $
  * @module schemeclient
  */
 
@@ -130,10 +130,10 @@ public class SchemeTreeUI extends IconedTreeUI {
 											LangModelScheme.getString("Message.error.delete.scheme"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
-									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
+									assert Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemePath) {
 							try {
@@ -146,7 +146,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								StorableObjectPool.delete(ids);
 								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemeProtoElement) {
 							try {
@@ -159,7 +159,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								StorableObjectPool.delete(ids);
 								StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						} else if (object instanceof SchemeProtoGroup) {
 							SchemeProtoGroup group = (SchemeProtoGroup)object;
@@ -175,7 +175,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 									StorableObjectPool.flush(ids, LoginManager.getUserId(), false);
 								}
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						} else if (object instanceof ProtoEquipment) {
 							ProtoEquipment protoEq = (ProtoEquipment)object;
@@ -193,17 +193,17 @@ public class SchemeTreeUI extends IconedTreeUI {
 												LangModelScheme.getString("Message.error.delete.proto_equipment"),
 												LangModelScheme.getString("Message.error"),
 												JOptionPane.OK_OPTION);
-										Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
+										assert Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 									}
 								} else {
 									JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 											LangModelScheme.getString("Message.error.delete.proto_equipment"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
-									Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
+									assert Log.debugMessage("Can not delete ProtoEquipmet as there are PropoElements with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						} else if (object instanceof LinkType) {
 							LinkType type = (LinkType)object;
@@ -218,10 +218,10 @@ public class SchemeTreeUI extends IconedTreeUI {
 											LangModelScheme.getString("Message.error.delete.link_type"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
-									Log.debugMessage("Can not delete LinkType as there are SchemeLinks with such type", Level.WARNING);
+									assert Log.debugMessage("Can not delete LinkType as there are SchemeLinks with such type", Level.WARNING);
 								}
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						} else if (object instanceof CableLinkType) {
 							CableLinkType type = (CableLinkType)object;
@@ -244,7 +244,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 											LangModelScheme.getString("Message.error.delete.cable_link_type"),
 											LangModelScheme.getString("Message.error"),
 											JOptionPane.OK_OPTION);
-//									Log.debugMessage("Can not delete CableLinkType as there are SchemeCableLinks with such type", Level.WARNING);
+//									assert Log.debugMessage("Can not delete CableLinkType as there are SchemeCableLinks with such type", Level.WARNING);
 //								}
 //							} catch (ApplicationException e1) {
 //								Log.errorException(e1);
@@ -264,7 +264,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 											JOptionPane.OK_OPTION);
 								}
 							} catch (ApplicationException e1) {
-								Log.errorMessage(e1);
+								assert Log.errorMessage(e1);
 							}
 						}
 					}

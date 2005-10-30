@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipmentGeneralPanel.java,v 1.6 2005/10/30 14:49:18 bass Exp $
+ * $Id: ProtoEquipmentGeneralPanel.java,v 1.7 2005/10/30 15:20:53 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/10/30 14:49:18 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:53 $
  * @module schemeclient
  */
 
@@ -307,7 +307,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 							ProtoEquipmentPropertiesManager.getInstance(this.aContext),
 							ObjectSelectedEvent.PROTO_EQUIPMENT));
 				} catch (CreateObjectException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 					return;
 				}
 			} else {
@@ -326,7 +326,7 @@ public class ProtoEquipmentGeneralPanel extends DefaultStorableObjectEditor {
 		try {
 			StorableObjectPool.flush(this.protoEq.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.protoEq.getId(), SchemeEvent.UPDATE_OBJECT));
 	}

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapImageRendererFactory.java,v 1.7 2005/09/30 16:08:36 krupenn Exp $$
+ * $$Id: MapImageRendererFactory.java,v 1.8 2005/10/30 15:20:30 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/30 16:08:36 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/10/30 15:20:30 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -29,7 +29,7 @@ public final class MapImageRendererFactory {
 			MapCoordinatesConverter coordsConverter,
 			MapContext mapContext, 
 			MapImageLoader loader) throws MapDataException {
-		Log.debugMessage("method call MapImageRendererFactory.create()", Level.FINE); //$NON-NLS-1$
+		assert Log.debugMessage("method call MapImageRendererFactory.create()", Level.FINE); //$NON-NLS-1$
 
 		try {
 			Class clazz = Class.forName(className);

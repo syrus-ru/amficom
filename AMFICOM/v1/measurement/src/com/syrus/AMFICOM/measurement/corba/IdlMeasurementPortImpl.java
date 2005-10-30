@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementPortImpl.java,v 1.3 2005/10/30 14:49:05 bass Exp $
+ * $Id: IdlMeasurementPortImpl.java,v 1.4 2005/10/30 15:20:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/30 14:49:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/30 15:20:39 $
  * @module measurement
  */
 final class IdlMeasurementPortImpl extends IdlMeasurementPort {
@@ -62,7 +62,7 @@ final class IdlMeasurementPortImpl extends IdlMeasurementPort {
 		try {
 			return new MeasurementPort(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, SEVERE);
+			assert Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

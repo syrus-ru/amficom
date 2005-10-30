@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.48 2005/10/30 14:49:21 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.49 2005/10/30 15:20:55 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/10/30 14:49:21 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/30 15:20:55 $
  * @module schemeclient
  */
 
@@ -141,7 +141,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			} 
 			else if (s.equals(SchemeResourceKeys.SCHEME_ELEMENT)) {
@@ -162,7 +162,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			} 
 			else if (s.equals(SchemeResourceKeys.SCHEME_LINK) || s.equals(SchemeResourceKeys.SCHEME_CABLELINK)) {
@@ -181,7 +181,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						node.addChild(new PopulatableIconedNode(this, so, false));
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 			else if (s.equals(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION)) {
@@ -205,7 +205,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						node.addChild(child);
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 		} 
@@ -293,7 +293,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 			else if (node.getObject() instanceof SchemeElement) {
@@ -323,7 +323,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						try {
 							cablePorts = se.getSchemeCablePortsRecursively(false);
 						} catch (ApplicationException e) {
-							Log.errorMessage(e);
+							assert Log.errorMessage(e);
 						}
 						if (!cablePorts.isEmpty()) {
 							PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_CABLE_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLE_PORT));
@@ -338,7 +338,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						try {
 							ports = se.getSchemePortsRecursively(false);
 						} catch (ApplicationException e) {
-							Log.errorMessage(e);
+							assert Log.errorMessage(e);
 						}
 						if (!ports.isEmpty()) {
 							PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_PORT));
@@ -349,7 +349,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			} 
 			else if (node.getObject() instanceof SchemeMonitoringSolution) {
@@ -368,7 +368,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 						node.addChild(new PopulatableIconedNode(this, sp, false));
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 		}

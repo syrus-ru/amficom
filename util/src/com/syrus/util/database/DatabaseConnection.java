@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.22 2005/10/30 14:48:47 bass Exp $
+ * $Id: DatabaseConnection.java,v 1.23 2005/10/30 15:20:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/10/30 14:48:47 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:21 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -64,7 +64,7 @@ public class DatabaseConnection {
 			final long deadtime = System.currentTimeMillis() + dbConnTimeout;
 			boolean connected = false;
 			for (connected = false; System.currentTimeMillis() < deadtime && !connected;) {
-				Log.debugMessage("Attempting to connect to database: " + url + " as " + dbLoginName, Log.DEBUGLEVEL07);
+				assert Log.debugMessage("Attempting to connect to database: " + url + " as " + dbLoginName, Log.DEBUGLEVEL07);
 				try {
 					dataSource = new OracleDataSource();
 					
@@ -76,36 +76,36 @@ public class DatabaseConnection {
 
 					connected = true;
 				} catch (SQLException e) {
-					Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL07);
+					assert Log.debugMessage("Cannot connect to database: " + url + ", " + e.getMessage(), Log.DEBUGLEVEL07);
 					final Object obj = new Object();
 					try {
 						synchronized (obj) {
 							obj.wait(5 * 1000);
 						}
 					} catch (InterruptedException ex) {
-						Log.errorMessage(ex);
+						assert Log.errorMessage(ex);
 					}
 				}
 			}
 			if (!connected) {
 				throw new SQLException("Unable to connect to database: " + url);
 			}
-			Log.debugMessage("Connected!", Log.DEBUGLEVEL03);
+			assert Log.debugMessage("Connected!", Log.DEBUGLEVEL03);
 		}
 	}
 
 	public static void closeConnection() {
 		if (dataSource != null) {
-			Log.debugMessage("Disconnecting from database...", Log.DEBUGLEVEL07);
+			assert Log.debugMessage("Disconnecting from database...", Log.DEBUGLEVEL07);
 			try {
 				dataSource.close();
 				dataSource = null;
 				if (openConnections != 0) {
-					Log.debugMessage("\u0410\u0440\u0441\u0435\u043d\u0438\u0439.\u0442\u044b\u0413\u0434\u0435-\u0442\u043e\u041d\u0430\u0435\u0431\u0430\u043b\u0441\u044f() | There remains " + openConnections + " connection(s) open", SEVERE);
+					assert Log.debugMessage("\u0410\u0440\u0441\u0435\u043d\u0438\u0439.\u0442\u044b\u0413\u0434\u0435-\u0442\u043e\u041d\u0430\u0435\u0431\u0430\u043b\u0441\u044f() | There remains " + openConnections + " connection(s) open", SEVERE);
 				}
-				Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
+				assert Log.debugMessage("Disconnected from database", Log.DEBUGLEVEL07);
 			} catch (Exception e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 	}
@@ -115,9 +115,9 @@ public class DatabaseConnection {
 			try {
 				connection.close();
 				openConnections--;
-				Log.debugMessage("releaseConnection(Connection)", Log.DEBUGLEVEL10);
+				assert Log.debugMessage("releaseConnection(Connection)", Log.DEBUGLEVEL10);
 			} catch (Exception e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 		}
 	}

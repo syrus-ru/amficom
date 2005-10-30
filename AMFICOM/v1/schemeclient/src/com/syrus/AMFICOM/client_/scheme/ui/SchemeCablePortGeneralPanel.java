@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.18 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.19 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/30 15:20:54 $
  * @module schemeclient
  */
 
@@ -308,7 +308,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
 				port = this.schemePort.getPort();
 			} catch (IllegalStateException e1) {
-				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
+				assert Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				this.parent = null;
 			}
 			final TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_CABLE,
@@ -320,7 +320,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 				this.cmbTypeCombo.addElements(portTypes);
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 			}
 
 			this.tfNameText.setText(this.schemePort.getName());

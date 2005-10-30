@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCableChannelingItemImpl.java,v 1.5 2005/10/30 14:48:42 bass Exp $
+ * $Id: IdlCableChannelingItemImpl.java,v 1.6 2005/10/30 15:20:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:16 $
  * @module scheme
  */
 final class IdlCableChannelingItemImpl extends IdlCableChannelingItem {
@@ -72,7 +72,7 @@ final class IdlCableChannelingItemImpl extends IdlCableChannelingItem {
 		try {
 			return new CableChannelingItem(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugMessage(coe, SEVERE);
+			assert Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

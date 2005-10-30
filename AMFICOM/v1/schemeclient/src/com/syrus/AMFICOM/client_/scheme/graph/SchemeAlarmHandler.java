@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeAlarmHandler.java,v 1.5 2005/10/30 14:49:21 bass Exp $
+ * $Id: SchemeAlarmHandler.java,v 1.6 2005/10/30 15:20:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/30 14:49:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:56 $
  * @module schemeclient_v1
  */
 
@@ -96,7 +96,7 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 						}
 					}
 				} catch (ApplicationException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			} else if (event.getMarkerEventType() == MarkerEvent.MARKER_DELETED_EVENT) {
 				
@@ -179,7 +179,7 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 				try {
 					sleep(REPAINT_TIME);
 				} catch (InterruptedException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 				
 				GraphActions.setObjectsColor(this.graph, this.cells, Color.BLACK);
@@ -187,7 +187,7 @@ public final class SchemeAlarmHandler implements PropertyChangeListener {
 				try {
 					sleep(REPAINT_TIME);
 				} catch (InterruptedException e) {
-					Log.errorMessage(e);
+					assert Log.errorMessage(e);
 				}
 			}
 		}

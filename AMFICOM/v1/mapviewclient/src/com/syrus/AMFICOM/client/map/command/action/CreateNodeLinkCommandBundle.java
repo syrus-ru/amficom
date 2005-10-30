@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateNodeLinkCommandBundle.java,v 1.36 2005/10/30 14:48:56 bass Exp $$
+ * $$Id: CreateNodeLinkCommandBundle.java,v 1.37 2005/10/30 15:20:31 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
  * курсор в нужное место и отпускает. В момент отпускания выполняется 
  * данная команда
  * 
- * @version $Revision: 1.36 $, $Date: 2005/10/30 14:48:56 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/30 15:20:31 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -188,7 +188,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		try {
-			Log.debugMessage(
+			assert Log.debugMessage(
 				getClass().getName() + "::execute() | " //$NON-NLS-1$
 					+ "create node link from node " + this.startNode.getName() //$NON-NLS-1$
 					+ " (" + this.startNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
@@ -268,7 +268,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.105 2005/10/30 14:48:42 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.106 2005/10/30 15:20:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.106 $, $Date: 2005/10/30 15:20:15 $
  * @module scheme
  */
 public final class SchemeCableThread
@@ -278,7 +278,7 @@ public final class SchemeCableThread
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -353,7 +353,7 @@ public final class SchemeCableThread
 					? StorableObjectPool.<LinkType>getStorableObject(this.getLinkTypeId(), true)
 					: this.getLink().getType();
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -416,7 +416,7 @@ public final class SchemeCableThread
 		try {
 			return StorableObjectPool.getStorableObject(this.getLinkId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -443,7 +443,7 @@ public final class SchemeCableThread
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -492,7 +492,7 @@ public final class SchemeCableThread
 		try {
 			return StorableObjectPool.getStorableObject(this.getSourceSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -513,7 +513,7 @@ public final class SchemeCableThread
 		try {
 			return StorableObjectPool.getStorableObject(this.getTargetSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -656,7 +656,7 @@ public final class SchemeCableThread
 		if (this.linkId.isVoid()) {
 			final Identifier newCableThreadTypeId = linkType.getId();
 			if (this.linkTypeId.equals(newCableThreadTypeId)) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 			this.linkTypeId = newCableThreadTypeId;
@@ -686,7 +686,7 @@ public final class SchemeCableThread
 
 		final Identifier newLinkId = Identifier.possiblyVoid(link);
 		if (this.linkId.equals(newLinkId)) {
-			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -763,7 +763,7 @@ public final class SchemeCableThread
 		this.getParentSchemeCableLink().getSchemeCableThreadContainerWrappee().removeFromCache(this, usePool);
 
 		if (parentSchemeCableLink == null) {
-			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentSchemeCableLink.getSchemeCableThreadContainerWrappee().addToCache(this, usePool);

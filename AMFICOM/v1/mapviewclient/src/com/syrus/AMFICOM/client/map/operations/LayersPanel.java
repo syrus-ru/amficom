@@ -1,5 +1,5 @@
 /*-
- * $$Id: LayersPanel.java,v 1.22 2005/10/30 14:48:56 bass Exp $$
+ * $$Id: LayersPanel.java,v 1.23 2005/10/30 15:20:32 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.22 $, $Date: 2005/10/30 14:48:56 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:32 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -251,8 +251,8 @@ public class LayersPanel extends JPanel {
 				i++;
 			}
 		} catch (MapException e) {
-			Log.debugMessage("cannot get layers", Level.WARNING); //$NON-NLS-1$
-			Log.debugMessage(e, Level.WARNING);
+			assert Log.debugMessage("cannot get layers", Level.WARNING); //$NON-NLS-1$
+			assert Log.debugMessage(e, Level.WARNING);
 		}
 
 		setVisibility();

@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.13 2005/10/30 14:48:49 bass Exp $
+ * $Id: MServerObjectLoader.java,v 1.14 2005/10/30 15:20:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/30 14:48:49 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:26 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -96,18 +96,18 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 		final Set<T> loadedObjects = new HashSet<T>();
 
 		if (this.preferredMCMId != null) {
-			Log.debugMessage("Trying to load from MCM '" + this.preferredMCMId + "'",
+			assert Log.debugMessage("Trying to load from MCM '" + this.preferredMCMId + "'",
 					Log.DEBUGLEVEL08);
 			try {
 				this.loadStorableObjectsFromMCM(this.preferredMCMId, loadIds, loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 		}
 
 		if (!loadIds.isEmpty()) {
-			Log.debugMessage("Searching on all MCMs", Log.DEBUGLEVEL08);
+			assert Log.debugMessage("Searching on all MCMs", Log.DEBUGLEVEL08);
 			for (final Iterator<Identifier> it = MeasurementServer.getMCMIds().iterator(); it.hasNext() && !loadIds.isEmpty();) {
 				final Identifier mcmId = it.next();
 				if (this.preferredMCMId != null && mcmId.equals(this.preferredMCMId)) {
@@ -117,7 +117,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 					this.loadStorableObjectsFromMCM(mcmId, loadIds, loadedObjects);
 				}
 				catch (ApplicationException ae) {
-					Log.errorMessage(ae);
+					assert Log.errorMessage(ae);
 				}
 			}
 		}
@@ -131,7 +131,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 				database.save(loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 		}
 
@@ -149,7 +149,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 				this.loadStorableObjectsButIdsByConditionFromMCM(mcmId, loadButIds, condition, loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 		}
 
@@ -162,7 +162,7 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 				database.save(loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				Log.errorMessage(ae);
+				assert Log.errorMessage(ae);
 			}
 		}
 
@@ -172,14 +172,14 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 	private final <T extends StorableObject> void loadStorableObjectsFromMCM(final Identifier mcmId,
 			final Set<Identifier> loadIds,
 			final Set<T> loadedObjects) throws ApplicationException {
-		Log.debugMessage("Loading from MCM '" + mcmId + "' '"
+		assert Log.debugMessage("Loading from MCM '" + mcmId + "' '"
 				+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(loadIds)) + "'s for ids: " + loadIds,
 				Log.DEBUGLEVEL10);
 
 		final CORBAObjectLoader corbaObjectLoader = this.getCORBAObjectLoaderForMCMId(mcmId);
 		final Set<T> mcmLoadedObjects = corbaObjectLoader.loadStorableObjects(loadIds);
 
-		Log.debugMessage("Loaded: " + Identifier.createStrings(mcmLoadedObjects),
+		assert Log.debugMessage("Loaded: " + Identifier.createStrings(mcmLoadedObjects),
 				Log.DEBUGLEVEL10);
 
 		Identifier.subtractFromIdentifiers(loadIds, mcmLoadedObjects);
@@ -191,14 +191,14 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 			final StorableObjectCondition condition,
 			final Set<T> loadedObjects)
 			throws ApplicationException {
-		Log.debugMessage("Loading from MCM '" + mcmId + "' '"
+		assert Log.debugMessage("Loading from MCM '" + mcmId + "' '"
 				+ ObjectEntities.codeToString(condition.getEntityCode().shortValue()) + "'s but ids: " + loadButIds,
 				Log.DEBUGLEVEL10);
 
 		final CORBAObjectLoader corbaObjectLoader = this.getCORBAObjectLoaderForMCMId(mcmId);
 		final Set<T> mcmLoadedObjects = corbaObjectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
 
-		Log.debugMessage("Loaded: "
+		assert Log.debugMessage("Loaded: "
 				+ Identifier.createStrings(mcmLoadedObjects), Log.DEBUGLEVEL10);
 
 		Identifier.addToIdentifiers(loadButIds, mcmLoadedObjects);

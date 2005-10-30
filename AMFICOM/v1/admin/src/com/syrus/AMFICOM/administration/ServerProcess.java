@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.27 2005/10/30 14:48:49 bass Exp $
+ * $Id: ServerProcess.java,v 1.28 2005/10/30 15:20:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/30 14:48:49 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/30 15:20:23 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -89,7 +89,7 @@ public final class ServerProcess extends StorableObject<ServerProcess> {
 		}
 		catch (ApplicationException ae) {
 			// Never
-			Log.errorMessage(ae);
+			assert Log.errorMessage(ae);
 		}
 		this.codename = spt.codename;
 		this.serverId = new Identifier(spt.serverId);

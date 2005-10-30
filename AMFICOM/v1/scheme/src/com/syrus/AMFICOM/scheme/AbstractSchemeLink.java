@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.45 2005/10/30 14:48:42 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.46 2005/10/30 15:20:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/10/30 14:48:42 $
+ * @version $Revision: 1.46 $, $Date: 2005/10/30 15:20:15 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
@@ -186,7 +186,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getAbstractLinkId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -210,7 +210,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 					? StorableObjectPool.<AbstractLinkType>getStorableObject(this.getAbstractLinkTypeId(), true)
 					: this.getAbstractLink().getType();
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -250,7 +250,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSourceAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -272,7 +272,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getTargetAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -287,7 +287,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 
 		final Identifier newLinkId = Identifier.possiblyVoid(abstractLink);
 		if (this.abstractLinkId.equals(newLinkId)) {
-			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -322,7 +322,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 		if (this.abstractLinkId.isVoid()) {
 			final Identifier newAbstractLinkTypeId = abstractLinkType.getId();
 			if (this.abstractLinkTypeId.equals(newAbstractLinkTypeId)) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 			this.abstractLinkTypeId = newAbstractLinkTypeId;

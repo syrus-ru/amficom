@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.42 2005/10/30 14:49:01 bass Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.43 2005/10/30 15:20:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/10/30 14:49:01 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/30 15:20:37 $
  * @author $Author: bass $
  * @module map
  */
@@ -215,7 +215,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 		try {
 			dbPhysicalLinks = this.retrieveByCondition(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true).toString());
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return;
 		}
 		

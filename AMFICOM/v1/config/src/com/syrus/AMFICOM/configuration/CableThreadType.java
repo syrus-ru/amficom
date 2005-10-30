@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.76 2005/10/30 14:48:45 bass Exp $
+ * $Id: CableThreadType.java,v 1.77 2005/10/30 15:20:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.76 $, $Date: 2005/10/30 14:48:45 $
+ * @version $Revision: 1.77 $, $Date: 2005/10/30 15:20:19 $
  * @author $Author: bass $
  * @module config
  */
@@ -165,7 +165,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 				} else {
 					cableThreadType = StorableObjectPool.getStorableObject(expectedId, true);
 					if (cableThreadType == null) {
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + VOID_IDENTIFIER
@@ -179,7 +179,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 					} else {
 						final String oldCodename = cableThreadType.getCodename();
 						if (!oldCodename.equals(newCodename)) {
-							Log.debugMessage("WARNING: "
+							assert Log.debugMessage("WARNING: "
 									+ expectedId + " will change its codename from ``"
 									+ oldCodename + "'' to ``"
 									+ newCodename + "''",
@@ -200,7 +200,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 						/*
 						 * Arghhh, no match.
 						 */
-						Log.debugMessage("WARNING: expected counterpart ("
+						assert Log.debugMessage("WARNING: expected counterpart ("
 								+ expectedId
 								+ ") for XML identifier: " + xmlId.getStringValue()
 								+ " and actual one (" + actualId
@@ -218,7 +218,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -368,7 +368,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		try {
 			return StorableObjectPool.<LinkType>getStorableObject(this.linkTypeId, true);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return null;
 		}
 	}
@@ -377,7 +377,7 @@ public final class CableThreadType extends StorableObjectType<CableThreadType>
 		try {
 			return StorableObjectPool.<CableLinkType>getStorableObject(this.cableLinkTypeId, true);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			return null;
 		}
 	}

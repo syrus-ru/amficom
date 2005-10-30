@@ -1,5 +1,5 @@
 /*-
- * $Id: TopLevelElement.java,v 1.2 2005/10/30 14:49:21 bass Exp $
+ * $Id: TopLevelElement.java,v 1.3 2005/10/30 15:20:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ public class TopLevelElement extends DefaultGraphCell {
 		try {
 			return (Scheme)StorableObjectPool.getStorableObject(this.schemeId, true);
 		} catch (ApplicationException e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 		}
 		return null;
 	}

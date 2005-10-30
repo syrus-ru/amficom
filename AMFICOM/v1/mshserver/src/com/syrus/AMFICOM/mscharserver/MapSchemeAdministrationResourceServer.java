@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.21 2005/10/30 14:48:59 bass Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.22 2005/10/30 15:20:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/30 14:48:59 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 15:20:34 $
  * @author $Author: bass $
  * @module mscharserver
  */
@@ -112,7 +112,7 @@ final class MapSchemeAdministrationResourceServer {
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		} catch (Exception e) {
-			Log.errorMessage(e);
+			assert Log.errorMessage(e);
 			System.exit(-1);
 		}
 	}
@@ -158,7 +158,7 @@ final class MapSchemeAdministrationResourceServer {
 			try {
 				sessionEnvironment.login(login, PASSWORD, domainId);
 			} catch (final LoginException le) {
-				Log.errorMessage(le);
+				assert Log.errorMessage(le);
 			}
 
 			/*
@@ -168,13 +168,13 @@ final class MapSchemeAdministrationResourceServer {
 			corbaServer.activateServant(new MscharServerPOATie(new MscharServerImpl(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
 		} catch (final Exception e) {
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 			System.exit(0);
 		}
 	}
 
 	static synchronized void shutdown() {
-		Log.debugMessage("serializing StorableObjectPool" , Level.INFO);
+		assert Log.debugMessage("serializing StorableObjectPool" , Level.INFO);
 		DatabaseConnection.closeConnection();
 	}
 

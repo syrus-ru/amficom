@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.37 2005/10/30 14:48:46 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.38 2005/10/30 15:20:20 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/10/30 14:48:46 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/30 15:20:20 $
  * @module resource
  */
 
@@ -167,7 +167,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 			}
 			throw new RetrieveObjectException(this.getEntityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);
 		} catch (SQLException e) {
-			Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage());
+			assert Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage());
 			throw new RetrieveObjectException("ImageResourceDatabase.updateEntityFromResultSet ", e);
 		}
 	}
@@ -222,7 +222,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.getSort | Trying: " + sql, Log.DEBUGLEVEL09);
+			assert Log.debugMessage(this.getEntityName() + "Database.getSort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				return resultSet.getInt(COLUMN_SORT);
@@ -254,7 +254,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 					}
 				}
 			} catch (SQLException sqle) {
-				Log.errorMessage(sqle);
+				assert Log.errorMessage(sqle);
 			}
 		}
 	}

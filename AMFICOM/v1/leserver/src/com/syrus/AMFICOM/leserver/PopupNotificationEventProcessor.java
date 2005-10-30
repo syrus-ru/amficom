@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventProcessor.java,v 1.3 2005/10/30 14:49:11 bass Exp $
+ * $Id: PopupNotificationEventProcessor.java,v 1.4 2005/10/30 15:20:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/30 14:49:11 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/30 15:20:46 $
  * @module leserver
  */
 final class PopupNotificationEventProcessor implements EventProcessor {
@@ -69,7 +69,7 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 		final PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent) notificationEvent;
 
 		try {
-			Log.debugMessage("A new event has arrived", SEVERE);
+			assert Log.debugMessage("A new event has arrived", SEVERE);
 			final Identifier targetUserId = popupNotificationEvent.getTargetUserId();
 
 			final ORB orb = LEServerSessionEnvironment.getInstance()
@@ -80,25 +80,25 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 			for (final Object object : getObjects(namingCtx)) {
 				try {
 					if (!object._is_a(MessageReceiverExtHelper.id())) {
-						Log.debugMessage("Object: " + object
+						assert Log.debugMessage("Object: " + object
 								+ " is not a MessageReceiverExt; skipping",
 								FINEST);
 						continue;
 					}
 					
-					Log.debugMessage("Object: " + object
+					assert Log.debugMessage("Object: " + object
 							+ " is a valid MessageReceiverExt; continuing",
 							FINEST);
 					final MessageReceiverExt messageReceiverExt = MessageReceiverExtHelper.narrow(object);
 					final Identifier loggedUserId = Identifier.valueOf(messageReceiverExt.getSystemUserId());
 					if (!targetUserId.equals(loggedUserId)) {
-						Log.debugMessage("Message is for: " + targetUserId
+						assert Log.debugMessage("Message is for: " + targetUserId
 								+ "; while the user currently logged in is: "
 								+ loggedUserId + "; skipping",
 								FINEST);
 						continue;
 					}
-					Log.debugMessage("Message will be delivered to: "
+					assert Log.debugMessage("Message will be delivered to: "
 							+ targetUserId,
 							FINEST);
 					
@@ -113,13 +113,13 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 						assert false;
 					}
 				} catch (final SystemException se) {
-					Log.debugMessage(se, SEVERE);
+					assert Log.debugMessage(se, SEVERE);
 				}
 			}				
 
-			Log.debugMessage("Exiting...", SEVERE);
+			assert Log.debugMessage("Exiting...", SEVERE);
 		} catch (final Throwable t) {
-			Log.debugMessage(t, SEVERE);
+			assert Log.debugMessage(t, SEVERE);
 		}
 	}
 
@@ -138,23 +138,23 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 			final Object object = namingCtx.resolve(path);
 			try {
 				if (object._non_existent()) {
-					Log.debugMessage("Object: "
+					assert Log.debugMessage("Object: "
 							+ string + " is non-existent; skipping",
 							FINEST);
 					continue;
 				}
 			} catch (final COMM_FAILURE cf) {
-				Log.debugMessage("Object: "
+				assert Log.debugMessage("Object: "
 						+ string + " is non-existent; skipping",
 						FINEST);
 				continue;
 			}
 
 			if (binding.binding_type == BindingType.ncontext) {
-				Log.debugMessage("Traversing into context: " + string, FINEST);
+				assert Log.debugMessage("Traversing into context: " + string, FINEST);
 				objects.addAll(getObjects(NamingContextExtHelper.narrow(object)));
 			} else {
-				Log.debugMessage("Object found: " + string, FINEST);
+				assert Log.debugMessage("Object found: " + string, FINEST);
 				objects.add(object);
 			}
 		}

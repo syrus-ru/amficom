@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkCharacteristicsPanel.java,v 1.13 2005/10/30 14:49:20 bass Exp $
+ * $Id: SchemeLinkCharacteristicsPanel.java,v 1.14 2005/10/30 15:20:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/10/30 14:49:20 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:54 $
  * @module schemeclient
  */
 
@@ -66,7 +66,7 @@ public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.errorMessage(e);
+				assert Log.errorMessage(e);
 				showNoSelection();
 			}
 		} 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: GenerateCablePathCablingCommandBundle.java,v 1.43 2005/10/30 14:48:55 bass Exp $$
+ * $$Id: GenerateCablePathCablingCommandBundle.java,v 1.44 2005/10/30 15:20:31 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * существующая привязка сохраняется. По непривязанным элементам генерируются
  * сетевые узла и схемные элементы привязываются к ним.
  * 
- * @version $Revision: 1.43 $, $Date: 2005/10/30 14:48:55 $
+ * @version $Revision: 1.44 $, $Date: 2005/10/30 15:20:31 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -65,7 +65,7 @@ public class GenerateCablePathCablingCommandBundle extends
 
 	@Override
 	public void execute() {
-		Log.debugMessage(
+		assert Log.debugMessage(
 				getClass().getName() + "::execute() | "  //$NON-NLS-1$
 					+ "generate cabling for cable path " //$NON-NLS-1$
 					+ this.cablePath.getName() 
@@ -134,7 +134,7 @@ public class GenerateCablePathCablingCommandBundle extends
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			Log.debugMessage(e, Level.SEVERE);
+			assert Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 

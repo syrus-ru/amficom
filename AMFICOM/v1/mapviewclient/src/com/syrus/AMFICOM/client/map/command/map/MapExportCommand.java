@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapExportCommand.java,v 1.33 2005/10/30 14:48:57 bass Exp $$
+ * $$Id: MapExportCommand.java,v 1.34 2005/10/30 15:20:33 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @version $Revision: 1.33 $, $Date: 2005/10/30 14:48:57 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/30 15:20:33 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -74,7 +74,7 @@ public class MapExportCommand extends ExportCommand {
 			return;
 		}
 
-		Log.debugMessage("Exporting map", INFO); //$NON-NLS-1$
+		assert Log.debugMessage("Exporting map", INFO); //$NON-NLS-1$
 
 		Map map = this.mapFrame.getMap();
 
@@ -130,10 +130,10 @@ public class MapExportCommand extends ExportCommand {
 							JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
-				Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO); //$NON-NLS-1$
+				assert Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO); //$NON-NLS-1$
 			}
 		} catch (final ApplicationException ae) {
-			Log.debugMessage(ae, SEVERE);
+			assert Log.debugMessage(ae, SEVERE);
 		}
 	}
 
@@ -148,11 +148,11 @@ public class MapExportCommand extends ExportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
+			assert Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				Log.debugMessage(error.getMessage(), WARNING);
-				Log.debugMessage(error.getObjectLocation().toString(), WARNING);
+				assert Log.debugMessage(error.getMessage(), WARNING);
+				assert Log.debugMessage(error.getObjectLocation().toString(), WARNING);
 			}
 		}
 		return isXmlValid;
