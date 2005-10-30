@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.8 2005/10/30 19:26:39 bass Exp $
+ * $Id: AbstractLogger.java,v 1.9 2005/10/30 20:16:45 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/30 19:26:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/30 20:16:45 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -251,10 +251,10 @@ abstract class AbstractLogger implements Logger {
 		final StackTraceElement stackTrace[];
 		final int depth;
 		if (this.stackTraceDataSource == STACK_TRACE_DATA_SOURCE_THREAD) {
-			depth = 7;
+			depth = 8;
 			stackTrace = Thread.currentThread().getStackTrace();
 		} else {
-			depth = 5;
+			depth = 6;
 			stackTrace = (new Throwable()).getStackTrace();
 		}
 		return (stackTrace.length > depth) ? stackTrace[depth] : null;
