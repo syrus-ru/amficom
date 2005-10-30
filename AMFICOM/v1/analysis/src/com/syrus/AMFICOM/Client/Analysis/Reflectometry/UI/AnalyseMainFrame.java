@@ -489,14 +489,12 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	public void loggedIn() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.setEnabled("menuFileOpen",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
-		aModel.setEnabled("menuFileOpenAs",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
-		aModel.setEnabled("menuFileOpenAsBellcore",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
-		aModel.setEnabled("menuFileOpenAsWavetek",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
+		final boolean readFilePermitted =
+				PermissionManager.isPermitted(Operation.READ_TRACE_FILE);
+		aModel.setEnabled("menuFileOpen", readFilePermitted);
+		aModel.setEnabled("menuFileOpenAs", readFilePermitted);
+		aModel.setEnabled("menuFileOpenAsBellcore", readFilePermitted);
+		aModel.setEnabled("menuFileOpenAsWavetek", readFilePermitted);
 		aModel.setEnabled("menuTraceDownload",
 				PermissionManager.isPermitted(Operation.LOAD_TRACE));
 		aModel.setEnabled("menuHelpAbout", true);
@@ -662,14 +660,12 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		if (true) // XXX: if(isCreated)
 		{
-			aModel.setEnabled("menuFileSave",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
-			aModel.setEnabled("menuFileSaveAll",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
-			aModel.setEnabled("menuFileSaveAs",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
-			aModel.setEnabled("menuFileSaveAsText",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
+			final boolean saveFilePermitted =
+					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE);
+			aModel.setEnabled("menuFileSave", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAll", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAs", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAsText", saveFilePermitted);
 			aModel.setEnabled("menuFileClose", true);
 			aModel.setEnabled("menuFileAddCompare",
 					PermissionManager.isPermitted(Operation.READ_TRACE_FILE));

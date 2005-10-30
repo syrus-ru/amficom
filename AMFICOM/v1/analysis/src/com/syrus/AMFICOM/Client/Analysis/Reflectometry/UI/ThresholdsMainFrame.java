@@ -291,14 +291,12 @@ implements BsHashChangeListener, EtalonMTMListener,
 	@Override
 	public void loggedIn() {
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuFileOpen",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
-		aModel.setEnabled("menuFileOpenAs",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
-		aModel.setEnabled("menuFileOpenAsBellcore",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
-		aModel.setEnabled("menuFileOpenAsWavetek",
-				PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
+		final boolean readFilePermitted =
+			PermissionManager.isPermitted(Operation.READ_TRACE_FILE);
+		aModel.setEnabled("menuFileOpen", readFilePermitted);
+		aModel.setEnabled("menuFileOpenAs", readFilePermitted);
+		aModel.setEnabled("menuFileOpenAsBellcore", readFilePermitted);
+		aModel.setEnabled("menuFileOpenAsWavetek", readFilePermitted);
 		aModel.setEnabled("menuTraceDownload",
 				PermissionManager.isPermitted(Operation.LOAD_TRACE));
 		aModel.setEnabled("menuHelpAbout", true);
@@ -355,14 +353,12 @@ implements BsHashChangeListener, EtalonMTMListener,
 		String id = key;
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
-			aModel.setEnabled("menuFileSave",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
-			aModel.setEnabled("menuFileSaveAll",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
-			aModel.setEnabled("menuFileSaveAs",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
-			aModel.setEnabled("menuFileSaveAsText",
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE));
+			final boolean saveFilePermitted =
+					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE);
+			aModel.setEnabled("menuFileSave", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAll", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAs", saveFilePermitted);
+			aModel.setEnabled("menuFileSaveAsText", saveFilePermitted);
 			aModel.setEnabled("menuFileClose", true);
 			aModel.setEnabled("menuFileAddCompare",
 					PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
@@ -376,12 +372,11 @@ implements BsHashChangeListener, EtalonMTMListener,
 			aModel.setEnabled("menuTraceAddCompare",
 					PermissionManager.isPermitted(Operation.LOAD_TRACE));
 
-			aModel.setEnabled("menuCreateTestSetup",
-					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));
-			aModel.setEnabled("menuSaveTestSetup",
-					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));
-			aModel.setEnabled("menuSaveTestSetupAs",
-					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));
+			final boolean saveMSPermitted =
+					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP);
+			aModel.setEnabled("menuCreateTestSetup", saveMSPermitted);
+			aModel.setEnabled("menuSaveTestSetup", saveMSPermitted);
+			aModel.setEnabled("menuSaveTestSetupAs", saveMSPermitted);
 //			aModel.setEnabled("menuLoadTestSetup", true);
 //			aModel.setEnabled("menuAnalyseSaveCriteria", true);
 //			aModel.setEnabled("menuSaveEtalon", true);

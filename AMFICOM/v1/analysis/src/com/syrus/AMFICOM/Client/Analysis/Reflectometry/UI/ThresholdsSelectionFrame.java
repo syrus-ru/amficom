@@ -476,14 +476,12 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	public void etalonMTMCUpdated()
 	{
 		updateThresholds();
-		analysisDefaultsButton.setEnabled(
-				PermissionManager.isPermitted(Operation.EDIT_ETALON));
-		analysisInitialButton.setEnabled(
-				PermissionManager.isPermitted(Operation.EDIT_ETALON));
-		increaseThreshButton.setEnabled(
-				PermissionManager.isPermitted(Operation.EDIT_ETALON));
-		decreaseThreshButton.setEnabled(
-				PermissionManager.isPermitted(Operation.EDIT_ETALON));
+		final boolean editEtalonPermitted =
+				PermissionManager.isPermitted(Operation.EDIT_ETALON);
+		analysisDefaultsButton.setEnabled(editEtalonPermitted);
+		analysisInitialButton.setEnabled(editEtalonPermitted);
+		increaseThreshButton.setEnabled(editEtalonPermitted);
+		decreaseThreshButton.setEnabled(editEtalonPermitted);
 		previuosEventButton.setEnabled(true);
 		nextEventButton.setEnabled(true);
 	}
