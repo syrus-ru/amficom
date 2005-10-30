@@ -1,5 +1,5 @@
 /*-
- * $$Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.38 2005/10/30 15:20:31 bass Exp $$
+ * $$Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.39 2005/10/30 16:31:18 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
  * 
- * @version $Revision: 1.38 $, $Date: 2005/10/30 15:20:31 $
+ * @version $Revision: 1.39 $, $Date: 2005/10/30 16:31:18 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -64,9 +64,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage(
-			getClass().getName() + "::execute() | " //$NON-NLS-1$
-			+ "generate cabling for unbound link " //$NON-NLS-1$
+		assert Log.debugMessage("generate cabling for unbound link " //$NON-NLS-1$
 			+ " (" + this.unbound.getId() + ") " //$NON-NLS-1$ //$NON-NLS-2$
 			+ "in cable path " //$NON-NLS-1$
 			+ this.cablePath.getName() 

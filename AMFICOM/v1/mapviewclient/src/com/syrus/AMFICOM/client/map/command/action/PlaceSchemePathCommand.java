@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemePathCommand.java,v 1.48 2005/10/30 15:20:31 bass Exp $$
+ * $$Id: PlaceSchemePathCommand.java,v 1.49 2005/10/30 16:31:18 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * Разместить элемент типа mpe на карте. используется при переносе (drag/drop),
  * в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.48 $, $Date: 2005/10/30 15:20:31 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/30 16:31:18 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -43,9 +43,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage(
-			getClass().getName() + "::execute() | " //$NON-NLS-1$
-				+ "place scheme path " //$NON-NLS-1$
+		assert Log.debugMessage("place scheme path " //$NON-NLS-1$
 				+ this.schemePath.getName()
 				+ " (" + this.schemePath.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);

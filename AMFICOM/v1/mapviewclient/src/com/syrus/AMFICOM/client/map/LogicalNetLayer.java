@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.137 2005/10/30 15:20:30 bass Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.138 2005/10/30 16:31:18 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.137 $, $Date: 2005/10/30 15:20:30 $
+ * @version $Revision: 1.138 $, $Date: 2005/10/30 16:31:18 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -185,7 +185,7 @@ public final class LogicalNetLayer {
 	 * @throws MapDataException 
 	 */
 	public void updateZoom() throws MapDataException, MapConnectionException {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "updateZoom()" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		assert Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
 
 		if (this.getMapView() == null) {
 			return;
@@ -227,7 +227,7 @@ public final class LogicalNetLayer {
 	 *        вид
 	 */
 	public void setMapView(final MapView mapView) throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "setMapView(" + mapView + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(mapView + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (this.getContext() != null && this.getContext().getDispatcher() != null) {
 			if (mapView != null && mapView.getMap() != null) {
@@ -285,7 +285,7 @@ public final class LogicalNetLayer {
 	 * @throws MapDataException
 	 */
 	public void setDefaultScale(final double defaultScale) throws MapDataException, MapConnectionException {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "setDefaultScale(" + defaultScale + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(defaultScale + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.defaultScale = defaultScale;
 		this.updateZoom();
@@ -316,7 +316,7 @@ public final class LogicalNetLayer {
 	 *        новое состояние
 	 */
 	public void setMapState(final MapState state) {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "setMapState(" + state + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(state + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.mapState = state;
 	}
@@ -664,7 +664,7 @@ public final class LogicalNetLayer {
 	 *        текущий выбранный элемент
 	 */
 	public void setCurrentMapElement(final MapElement curMapElement) {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "setCurrentMapElement(" + curMapElement + ")" + " | " + "method call", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(curMapElement + " | " + "method call", //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 		this.currentMapElement = curMapElement;
@@ -703,7 +703,7 @@ public final class LogicalNetLayer {
 			final Point point, 
 			final Rectangle2D.Double visibleBounds)
 			throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "getMapElementAtPoint(" + point + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		final int showMode = this.getMapState().getShowMode();
 		MapElement curME = VoidElement.getInstance(this.mapView);
@@ -799,7 +799,7 @@ public final class LogicalNetLayer {
 			final Point point, 
 			final Rectangle2D.Double visibleBounds)
 			throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "getMapElementAtPoint(" + point + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		final int showMode = this.getMapState().getShowMode();
 		MapElement curME = VoidElement.getInstance(this.mapView);
@@ -882,7 +882,7 @@ public final class LogicalNetLayer {
 	 * Отменить выбор всем элементам.
 	 */
 	public void deselectAll() {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "deselectAll()" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		assert Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
 
 		final Collection<MapElement> selectedElements = new LinkedList<MapElement>();
 		selectedElements.addAll(this.mapView.getMap().getSelectedElements());
@@ -896,7 +896,7 @@ public final class LogicalNetLayer {
 	 * Выбрать все элеметны.
 	 */
 //	public void selectAll() {
-//		assert Log.debugMessage(this.getClass().getName() + "::" + "selectAll()" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+//		assert Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
 //
 //		Map map = this.mapView.getMap();
 //		for (final MapElement curElement : this.mapView.getAllElements()) {
@@ -933,7 +933,7 @@ public final class LogicalNetLayer {
 	 *         точке нет
 	 */
 	public NodeLink getEditedNodeLink(final Point point, Rectangle2D.Double visibleBounds) {
-		assert Log.debugMessage(this.getClass().getName() + "::" + "getEditedNodeLink(" + point + ")" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		assert Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		NodeLinkController nlc = null;
 		try {
@@ -1078,7 +1078,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: bass $
-	 * @version $Revision: 1.137 $, $Date: 2005/10/30 15:20:30 $
+	 * @version $Revision: 1.138 $, $Date: 2005/10/30 16:31:18 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {

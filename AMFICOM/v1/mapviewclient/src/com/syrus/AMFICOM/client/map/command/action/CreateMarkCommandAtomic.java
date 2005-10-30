@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkCommandAtomic.java,v 1.35 2005/10/30 15:20:30 bass Exp $$
+ * $$Id: CreateMarkCommandAtomic.java,v 1.36 2005/10/30 16:31:17 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.35 $, $Date: 2005/10/30 15:20:30 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/30 16:31:17 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -73,9 +73,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		try {
-			assert Log.debugMessage(
-				getClass().getName() + "::execute() | "  //$NON-NLS-1$
-					+ "create mark at link " + this.link.getName()  //$NON-NLS-1$
+			assert Log.debugMessage("create mark at link " + this.link.getName()  //$NON-NLS-1$
 					+ " (" + this.link.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesEventHandler.java,v 1.10 2005/10/30 15:20:32 bass Exp $$
+ * $$Id: MapPropertiesEventHandler.java,v 1.11 2005/10/30 16:31:18 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:32 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/30 16:31:18 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -168,7 +168,7 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 			}
 		}
 		long f = System.currentTimeMillis();
-//		assert Log.debugMessage(this.getClass().getName() + "::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d0) + " ms --------- " + mesg2, Level.INFO);
+//		assert Log.debugMessage(pce.getPropertyName() + " -------- " + (f - d0) + " ms --------- " + mesg2, Level.INFO);
 	}
 
 	public void stateChanged(ChangeEvent e) {

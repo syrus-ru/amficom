@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.34 2005/10/30 15:20:31 bass Exp $$
+ * $$Id: CreatePhysicalNodeCommandAtomic.java,v 1.35 2005/10/30 16:31:17 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * создание топологического узла, внесение его в пул и на карту - атомарное
  * действие
  * 
- * @version $Revision: 1.34 $, $Date: 2005/10/30 15:20:31 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/30 16:31:17 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -55,9 +55,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage(
-			getClass().getName() + "::execute() | " //$NON-NLS-1$
-				+ "create topological node on link " //$NON-NLS-1$
+		assert Log.debugMessage("create topological node on link " //$NON-NLS-1$
 				+ this.physicalLink.getName() 
 				+ " (" + this.physicalLink.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);

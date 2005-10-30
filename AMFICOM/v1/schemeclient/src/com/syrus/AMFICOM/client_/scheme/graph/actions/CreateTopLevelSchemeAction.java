@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.25 2005/10/30 15:20:54 bass Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.26 2005/10/30 16:31:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/30 16:31:19 $
  * @module schemeclient
  */
 
@@ -143,7 +143,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 			assert Log.errorMessage(e1);
 		}
 		if (cellContainer == null) {
-			assert Log.debugMessage(this.getClass().getName() + ": can't create top level for 'null' SchemeCellContainer", Level.FINER);
+			assert Log.debugMessage("can't create top level for 'null' SchemeCellContainer", Level.FINER);
 			return;
 		}
 		

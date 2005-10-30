@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveCollectorCommandAtomic.java,v 1.17 2005/10/30 15:20:31 bass Exp $$
+ * $$Id: RemoveCollectorCommandAtomic.java,v 1.18 2005/10/30 16:31:18 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * удаление коллектора из карты - атомарное действие
  * 
- * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:31 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/30 16:31:18 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -38,9 +38,7 @@ public class RemoveCollectorCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage(
-				getClass().getName() + "::execute() | " //$NON-NLS-1$
-					+ "remove collector " //$NON-NLS-1$
+		assert Log.debugMessage("remove collector " //$NON-NLS-1$
 					+ this.collector.getName()
 					+ " (" + this.collector.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);

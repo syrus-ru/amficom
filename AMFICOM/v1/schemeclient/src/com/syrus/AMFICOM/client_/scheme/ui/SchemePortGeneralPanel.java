@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.28 2005/10/30 15:20:55 bass Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.29 2005/10/30 16:31:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/10/30 15:20:55 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/30 16:31:19 $
  * @module schemeclient
  */
 
@@ -562,7 +562,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					this.taDescrArea.setText("");
 				}
 			} catch (IllegalStateException e1) {
-				assert Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
+				assert Log.debugMessage("SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				this.parent = null;
 			}
 			final TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_SIMPLE,

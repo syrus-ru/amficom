@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoConnection.java,v 1.14 2005/10/30 15:20:35 bass Exp $
+ * $Id: MapInfoConnection.java,v 1.15 2005/10/30 16:31:19 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:35 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/30 16:31:19 $
  * @author $Author: bass $
  * @module mapinfo
  */
@@ -47,7 +47,7 @@ public abstract class MapInfoConnection extends MapConnection {
 
 	@Override
 	public boolean connect() throws MapConnectionException {
-		assert Log.debugMessage(getClass().getName() + "::" + "connect()" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage("method call", Level.FINEST);
 
 		// Инициализируем объект MapJ для локальных преобразований координат
 		this.localMapJ = new MapJ(); // this MapJ object
@@ -73,21 +73,21 @@ public abstract class MapInfoConnection extends MapConnection {
 
 	@Override
 	public boolean release() throws MapConnectionException {
-		assert Log.debugMessage(getClass().getName() + "::" + "release()" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage("method call", Level.FINEST);
 
 		return true;
 	}
 
 	@Override
 	public void setPath(final String path) {
-		assert Log.debugMessage(getClass().getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(path + " | " + "method call", Level.FINEST);
 
 		this.dataBasePath = path;
 	}
 
 	@Override
 	public void setView(final String name){
-		assert Log.debugMessage(getClass().getName() + "::" + "setView(" + name + ")" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(name + " | " + "method call", Level.FINEST);
 
 		this.dataBaseView = name;
 	}
@@ -99,7 +99,7 @@ public abstract class MapInfoConnection extends MapConnection {
 
 	@Override
 	public void setURL(final String mapperURL) {
-		assert Log.debugMessage(getClass().getName() + "::" + "setURL(" + mapperURL + ")" + " | " + "method call", Level.FINEST);
+		assert Log.debugMessage(mapperURL + " | " + "method call", Level.FINEST);
 
 		this.mapperServletURL = mapperURL;
 	}

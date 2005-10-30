@@ -1,5 +1,5 @@
 /*-
- * $$Id: RemoveCablePathCommandAtomic.java,v 1.21 2005/10/30 15:20:31 bass Exp $$
+ * $$Id: RemoveCablePathCommandAtomic.java,v 1.22 2005/10/30 16:31:17 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 /**
  * удаление кабельного пути из карты - атомарное действие
  * 
- * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:31 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/30 16:31:17 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -36,9 +36,7 @@ public class RemoveCablePathCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage(
-			getClass().getName() + "::execute() | " //$NON-NLS-1$
-				+ "remove cable path " //$NON-NLS-1$
+		assert Log.debugMessage("remove cable path " //$NON-NLS-1$
 				+ this.cablePath.getName()
 				+ " (" + this.cablePath.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);

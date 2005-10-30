@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.27 2005/10/30 15:20:31 bass Exp $$
+ * $$Id: CreatePhysicalLinkCommandAtomic.java,v 1.28 2005/10/30 16:31:18 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие
  *  
- * @version $Revision: 1.27 $, $Date: 2005/10/30 15:20:31 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/30 16:31:18 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -53,9 +53,7 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage(
-			getClass().getName() + "::execute() | " //$NON-NLS-1$
-				+ "create PhysicalLink with start at node "  //$NON-NLS-1$
+		assert Log.debugMessage("create PhysicalLink with start at node "  //$NON-NLS-1$
 				+ this.startNode.getName() + " (" + this.startNode.getId()  //$NON-NLS-1$
 				+ ") and end at node " + this.endNode.getName()  //$NON-NLS-1$
 				+ " (" + this.endNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$

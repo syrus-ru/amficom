@@ -1,5 +1,5 @@
 /*-
- * $$Id: PlaceSchemeElementCommand.java,v 1.41 2005/10/30 15:20:31 bass Exp $$
+ * $$Id: PlaceSchemeElementCommand.java,v 1.42 2005/10/30 16:31:18 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой или по
  * координатам
  * 
- * @version $Revision: 1.41 $, $Date: 2005/10/30 15:20:31 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/30 16:31:18 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -73,9 +73,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage(
-			getClass().getName() + "::execute() | " //$NON-NLS-1$
-				+ "place scheme element " //$NON-NLS-1$
+		assert Log.debugMessage("place scheme element " //$NON-NLS-1$
 				+ this.schemeElement.getName()
 				+ " (" + this.schemeElement.getId() + ")", //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);

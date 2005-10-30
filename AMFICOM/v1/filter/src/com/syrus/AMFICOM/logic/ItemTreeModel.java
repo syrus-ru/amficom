@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.22 2005/10/30 14:48:52 bass Exp $
+ * $Id: ItemTreeModel.java,v 1.23 2005/10/30 16:31:16 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import javax.swing.tree.TreePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/30 14:48:52 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/30 16:31:16 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -471,8 +471,7 @@ public final class ItemTreeModel implements TreeModel, ItemListener {
 	public void setParentPerformed(final Item item, 
 	                               final Item oldParent, 
 	                               final Item newParent) {
-		assert Log.debugMessage(this.getClass().getName() 
-				+ ".setParentPerformed | item:" 
+		assert Log.debugMessage("item:" 
 				+ item + ", oldParent:" 
 				+ oldParent + ", newParent:" 
 				+ newParent,
