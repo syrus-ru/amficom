@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.129 2005/10/30 18:51:24 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.130 2005/10/31 11:29:19 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.129 $, $Date: 2005/10/30 18:51:24 $
+ * @version $Revision: 1.130 $, $Date: 2005/10/31 11:29:19 $
  * @module
  */
 
@@ -834,8 +834,13 @@ public class CoreAnalysisManager
 		// XXX - надо ли было предварительно смещать р/г по вертикали?
 		int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
 		// (2) на участке (x >= traceLength) - не ушли ли в шум до начала EOT ?
-		if (breakPos < 0 && ar.getTraceLength() < etMinLength)
-			breakPos = ar.getTraceLength();
+
+		// FIXME: пока что сравнивать придется с длиной mt, а не длиной исходной кривой,
+		//    чтобы дистанция обрыва определялась верно хотя бы на коннекторах
+//		if (breakPos < 0 && ar.getTraceLength() < etMinLength)
+//		breakPos = ar.getTraceLength();
+		if (breakPos < 0 && mt.getLength() < etMinLength)
+		breakPos = mt.getLength();
 
 		// [fixed] проблема - breakPos случится при первом же уходе ниже minTraceLevel,
 		// что очень вероятно на последних километрах абс. нормальной р/г
