@@ -366,7 +366,6 @@ void QP1640OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStru
 								QPOTDRWaveformHeader* waveFormHeader,
 								QPOTDRWaveformData*  waveFormData) const {
 	int offset = waveFormHeader->FPOffset >> 16;
-	int i;
 
 	bellcoreStructure->add_field_gen_params("Cable ID",
 						"Fiber ID",
@@ -377,12 +376,12 @@ void QP1640OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStru
 						"Cable code",
 						"DF",
 						"Operator",
-						"QuestProbe OTAU");
+						"QuestProbe OTDR");
 
 
 	char sr[5];
 	memset(sr, 0, 5);
-	sprintf(sr, "%d", this->otdrPluginInfo->revisionId);
+	sprintf(sr, "%hu", this->otdrPluginInfo->revisionId);
 	bellcoreStructure->add_field_sup_params(this->otdrPluginInfo->manufacturerName,
 						this->otdrPluginInfo->modelName, //"Nettest QuestProbe"
 						this->otdrPluginInfo->serialNumber,
@@ -424,7 +423,7 @@ void QP1640OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStru
 	bellcoreStructure->add_field_fxd_params(dts,
 						"mt",
 						(short) (this->waveLengthM * 10),
-						0,//offset
+						offset,//0
 						tpw,
 						pwu,
 						ds,
@@ -448,7 +447,7 @@ void QP1640OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStru
 	sf[0] = 1000;
 	unsigned short** dsf = new unsigned short*[tsf];
 	dsf[0] = new unsigned short[np];
-	for (i = 0; i < np; i++) {
+	for (int i = 0; i < np; i++) {
 		dsf[0][i] = 65535 - waveFormData[i + offset];
 	}
 	bellcoreStructure->add_field_data_pts(tndp,
