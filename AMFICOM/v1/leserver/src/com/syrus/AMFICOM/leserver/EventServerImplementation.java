@@ -1,5 +1,5 @@
 /*-
- * $Id: EventServerImplementation.java,v 1.24 2005/10/31 10:49:45 arseniy Exp $
+ * $Id: EventServerImplementation.java,v 1.25 2005/10/31 11:06:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.leserver;
 
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingExc
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/31 10:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/10/31 11:06:34 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -83,22 +85,24 @@ final class EventServerImplementation extends EventServerPOA {
 	 * @see com.syrus.AMFICOM.leserver.corba.EventServerOperations#receiveEvents(IdlEvent[])
 	 */
 	public void receiveEvents(final IdlEvent[] idlEvents) throws IdlEventProcessingException {
-		Log.debugMessage("Received "
-				+ idlEvents.length + " event(s)",
+		Log.debugMessage("Received " + idlEvents.length + " event(s)",
 				INFO);
 		for (final IdlEvent idlEvent : idlEvents) {
 			@SuppressWarnings(value = {"unchecked"})
 			final Event<? extends IdlEvent> event = idlEvent.getNativeEvent();
 			try {
 				EventProcessorRegistry.processEvent(event);
-				Log.debugMessage("Event: " + event + " delivered successfully", INFO);
-			} catch (EventProcessingException e) {
-				Log.debugMessage(e, Log.DEBUGLEVEL07);
+				Log.debugMessage("Event: " + event + " delivered successfully",
+						INFO);
+			} catch (final EventProcessingException epe) {
+				Log.debugMessage(epe, WARNING);
+			} catch (final Throwable t) {
+				Log.debugMessage(t, SEVERE);
 			}
 		}
 	}
 
-	public void verify(byte i) {
+	public void verify(final byte i) {
 		Log.debugMessage("Verify value: " + i, Log.DEBUGLEVEL10);
 	}
 }
