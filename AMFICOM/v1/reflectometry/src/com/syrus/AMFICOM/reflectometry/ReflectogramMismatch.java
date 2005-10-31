@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.11 2005/10/18 05:51:46 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.12 2005/10/31 07:17:31 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.TransferableObject;
  * если был бы доступен только один якорь.
  * 
  * @author Old Wise Saa
- * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/10/18 05:51:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/10/31 07:17:31 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -80,16 +80,31 @@ public interface ReflectogramMismatch {
 	 * событие: будет ли создан аларм, или же будет предупреждение.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: saa $
-	 * @version $Revision: 1.11 $, $Date: 2005/10/18 05:51:46 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.12 $, $Date: 2005/10/31 07:17:31 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
-		SEVERITY_NONE, // just a convenience level, not a real alarm
-		SEVERITY_SOFT, // soft alarm ('warning')
-		SEVERITY_HARD;  // hard alarm ('alarm')
+		/**
+		 * just a convenience level, not a real alarm
+		 */
+		SEVERITY_NONE("ReflectogramMismatch.Severity.None"), 
+		/**
+		 * soft alarm ('warning')
+		 */
+		SEVERITY_SOFT("ReflectogramMismatch.Severity.Soft"), 
+		/**
+		 * hard alarm ('alarm')
+		 */
+		SEVERITY_HARD("ReflectogramMismatch.Severity.Hard"); 
 
 		private static Severity[] values = values();
+
+		private final String key;
+
+		private Severity(final String key) {
+			this.key = key;
+		}
 
 		/**
 		 * @param orb
@@ -97,6 +112,14 @@ public interface ReflectogramMismatch {
 		 */
 		public IdlSeverity getTransferable(final ORB orb) {
 			return IdlSeverity.from_int(this.ordinal());
+		}
+
+		public String locallizedName() {
+			return I18N.getString(this.key);
+		}
+
+		public String localizedDescription() {
+			return I18N.getString("ReflectogramMismatch.Severity") + ":\t" + this.locallizedName();
 		}
 
 		/**
@@ -119,8 +142,8 @@ public interface ReflectogramMismatch {
 	/**
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: saa $
-	 * @version $Revision: 1.11 $, $Date: 2005/10/18 05:51:46 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.12 $, $Date: 2005/10/31 07:17:31 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {

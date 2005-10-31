@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.5 2005/10/31 06:30:02 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.6 2005/10/31 07:17:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/31 06:30:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/31 07:17:31 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -75,7 +75,7 @@ public final class DefaultPopupNotificationEvent extends
 			final Identifier targetUserId) {
 		this.targetUserId = targetUserId;
 		this.message = "Alarm Type:\t" + lineMismatchEvent.getAlarmType() + '\n'
-				+ "Severity:\t" + lineMismatchEvent.getSeverity() + '\n'
+				+ lineMismatchEvent.getSeverity().localizedDescription() + '\n'
 				+ (lineMismatchEvent.hasMismatch()
 						? "Minimum Mismatch Level:\t" + lineMismatchEvent.getMinMismatch() + '\n'
 						+ "Maximum Mismatch Level:\t" + lineMismatchEvent.getMaxMismatch() + '\n'
