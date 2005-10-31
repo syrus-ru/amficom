@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.140 2005/10/31 12:29:59 bass Exp $
+ * $Id: SchedulerModel.java,v 1.141 2005/10/31 12:43:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.140 $, $Date: 2005/10/31 12:29:59 $
+ * @version $Revision: 1.141 $, $Date: 2005/10/31 12:43:17 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -231,8 +231,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 	
 	public Set<Identifier> getMainTestIds() {
-		assert Log
-				.debugMessage("SchedulerModel.getMainTestIds | " + this.mainTestIds, Log.DEBUGLEVEL09);
+		Log.debugMessage(this.mainTestIds, Log.DEBUGLEVEL09);
 		return this.mainTestIds;
 	}
 
