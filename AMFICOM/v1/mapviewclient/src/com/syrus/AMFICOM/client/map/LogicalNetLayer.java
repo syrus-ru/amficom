@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.138 2005/10/30 16:31:18 bass Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.139 2005/10/31 07:07:59 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,8 +76,8 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.138 $, $Date: 2005/10/30 16:31:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.139 $, $Date: 2005/10/31 07:07:59 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -746,34 +746,24 @@ public final class LogicalNetLayer {
 					case MapState.SHOW_MEASUREMENT_PATH: {
 						PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 						curME = physicalLink;
-						for(Object boundObject : physicalLink.getBinding().getBindObjects()) {
-							CablePath cablePath = (CablePath) boundObject;
-							curME = cablePath;
-							boolean doBreak = false;
-							LinkedIdsCondition condition = new LinkedIdsCondition(
-									cablePath.getSchemeCableLink().getId(),
-									ObjectEntities.PATHELEMENT_CODE);
-							try {
-								Set<PathElement> pathElements = StorableObjectPool
-										.<PathElement> getStorableObjectsByCondition(
-												condition,
-												true);
-								for(PathElement pathElement : pathElements) {
-									SchemePath schemePath = pathElement
-											.getParentPathOwner();
-									MeasurementPath measurementPath = this.mapView
-											.findMeasurementPath(schemePath);
-									if(measurementPath != null) {
-										curME = measurementPath;
-										doBreak = true;
-										break;
-									}
-								}
-							} catch(ApplicationException e) {
-								e.printStackTrace();
+						if(physicalLink instanceof UnboundLink) {
+							CablePath cablePath = ((UnboundLink)physicalLink).getCablePath();
+							MeasurementPath measurementPath = checkForMeasurementPath(cablePath);
+							if(measurementPath != null) {
+								curME = measurementPath;
 							}
-							if(doBreak) {
-								return curME;
+							else {
+								curME = cablePath;
+							}
+						}
+						else {
+							for(Object boundObject : physicalLink.getBinding().getBindObjects()) {
+								CablePath cablePath = (CablePath) boundObject;
+								curME = cablePath;
+								MeasurementPath measurementPath = checkForMeasurementPath(cablePath);
+								if(measurementPath != null) {
+									return measurementPath;
+								}
 							}
 						}
 						break;
@@ -788,6 +778,29 @@ public final class LogicalNetLayer {
 		return curME;
 	}
 
+	MeasurementPath checkForMeasurementPath(CablePath cablePath) {
+		LinkedIdsCondition condition = new LinkedIdsCondition(
+				cablePath.getSchemeCableLink().getId(),
+				ObjectEntities.PATHELEMENT_CODE);
+		try {
+			Set<PathElement> pathElements = StorableObjectPool
+					.<PathElement> getStorableObjectsByCondition(
+							condition,
+							true);
+			for(PathElement pathElement : pathElements) {
+				SchemePath schemePath = pathElement.getParentPathOwner();
+				MeasurementPath measurementPath = 
+					this.mapView.findMeasurementPath(schemePath);
+				if(measurementPath != null) {
+					return measurementPath;
+				}
+			}
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/**
 	 * Получить текущий элемент по экранной коордитате на карте.
 	 * 
@@ -1077,8 +1090,8 @@ public final class LogicalNetLayer {
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
-	 * @author $Author: bass $
-	 * @version $Revision: 1.138 $, $Date: 2005/10/30 16:31:18 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.139 $, $Date: 2005/10/31 07:07:59 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
