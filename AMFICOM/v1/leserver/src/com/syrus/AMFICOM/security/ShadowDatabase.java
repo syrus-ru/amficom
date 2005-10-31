@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.12 2005/10/30 15:20:46 bass Exp $
+ * $Id: ShadowDatabase.java,v 1.13 2005/10/31 10:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/30 15:20:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/10/31 10:49:45 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -61,7 +61,7 @@ public final class ShadowDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			if (resultSet.next()) {
 				return DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_PASSWORD));
@@ -91,7 +91,7 @@ public final class ShadowDatabase {
 					}
 				}
 			} catch (SQLException sqle) {
-				assert Log.errorMessage(sqle);
+				Log.errorMessage(sqle);
 			}
 		}
 	}
@@ -116,7 +116,7 @@ public final class ShadowDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		}
@@ -138,7 +138,7 @@ public final class ShadowDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

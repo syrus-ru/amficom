@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.5 2005/10/30 15:20:46 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.6 2005/10/31 10:49:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:46 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/10/31 10:49:45 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -71,7 +71,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 	 */
 	public void processEvent(final Event event) throws EventProcessingException {
 		final LineMismatchEvent lineMismatchEvent = (LineMismatchEvent) event;
-		assert Log.debugMessage("LineMismatchEvent: "
+		Log.debugMessage("LineMismatchEvent: "
 				+ lineMismatchEvent + " started being processed",
 				SEVERE);
 

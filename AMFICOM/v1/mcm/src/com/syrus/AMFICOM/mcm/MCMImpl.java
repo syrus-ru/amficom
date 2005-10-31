@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.7 2005/10/30 15:20:17 bass Exp $
+ * $Id: MCMImpl.java,v 1.8 2005/10/31 10:47:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -52,13 +52,13 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 		super.validateAccess(sessionKeyT, userId, domainId);
 
-		assert Log.debugMessage("Received " + testsT.length + " test(s)", Log.DEBUGLEVEL07);
+		Log.debugMessage("Received " + testsT.length + " test(s)", Log.DEBUGLEVEL07);
 		final List<Test> tests = new LinkedList<Test>();
 		for (int i = 0; i < testsT.length; i++) {
 			try {
 				tests.add(new Test(testsT[i]));
 			} catch (CreateObjectException coe) {
-				assert Log.errorMessage(coe);
+				Log.errorMessage(coe);
 				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_SAVE, IdlCompletionStatus.COMPLETED_NO, coe.getMessage());
 			}
 		}
@@ -77,11 +77,11 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 			super.validateAccess(sessionKeyT, userId, domainId);
 
 			final Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
-			assert Log.debugMessage("Request to stop " + testIdsT.length + " test(s): " + ids, Log.DEBUGLEVEL07);
+			Log.debugMessage("Request to stop " + testIdsT.length + " test(s): " + ids, Log.DEBUGLEVEL07);
 			MeasurementControlModule.stopTests(ids);
 		} catch (AMFICOMRemoteException are) {
 			throw are;
 		} catch (Throwable throwable) {
-			assert Log.errorMessage(throwable);
+			Log.errorMessage(throwable);
 		}
 	}}

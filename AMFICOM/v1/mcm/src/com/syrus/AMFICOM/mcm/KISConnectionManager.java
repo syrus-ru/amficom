@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionManager.java,v 1.12 2005/10/30 15:20:17 bass Exp $
+ * $Id: KISConnectionManager.java,v 1.13 2005/10/31 10:47:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/30 15:20:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -46,7 +46,7 @@ final class KISConnectionManager/* extends SleepButWorkThread*/ {
 			return kisConnection;
 		}
 
-		assert Log.debugMessage("Connection for KIS '" + kisId
+		Log.debugMessage("Connection for KIS '" + kisId
 				+ "' not found in map; establishing new one", Log.DEBUGLEVEL07);
 		kisConnection = this.establishNewConnection(kis);
 		this.kisConnections.put(kisId, kisConnection);
@@ -66,7 +66,7 @@ final class KISConnectionManager/* extends SleepButWorkThread*/ {
 //		case FALL_CODE_NO_ERROR:
 //			break;
 //		default:
-//			assert Log.errorMessage("Unknown error code: " + super.fallCode);
+//			Log.errorMessage("Unknown error code: " + super.fallCode);
 //		}
 //	}
 }

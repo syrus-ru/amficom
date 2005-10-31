@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.83 2005/10/30 15:20:17 bass Exp $
+ * $Id: TestProcessor.java,v 1.84 2005/10/31 10:47:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/10/30 15:20:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.84 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -93,13 +93,13 @@ abstract class TestProcessor extends SleepButWorkThread {
 			if (measurementSetups != null && !measurementSetups.isEmpty()) {
 				this.measurementSetup = measurementSetups.iterator().next();
 			} else {
-				assert Log.errorMessage("Measurement setups for test '" + this.test.getId() + "' not found");
+				Log.errorMessage("Measurement setups for test '" + this.test.getId() + "' not found");
 				this.shutdown();
 				return;
 			}
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage("Cannot load measurement setups for test '" + this.test.getId() + "'");
-			assert Log.errorMessage(ae);
+			Log.errorMessage("Cannot load measurement setups for test '" + this.test.getId() + "'");
+			Log.errorMessage(ae);
 			this.shutdown();
 			return;
 		}
@@ -107,7 +107,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		final Identifier kisId = test.getKISId();
 		this.transceiver = MeasurementControlModule.transceivers.get(kisId);
 		if (this.transceiver == null) {
-			assert Log.errorMessage("Cannot find transceiver for kis '" + kisId + "'");
+			Log.errorMessage("Cannot find transceiver for kis '" + kisId + "'");
 			this.shutdown();
 			return;
 		}
@@ -119,7 +119,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			try {
 				StorableObjectPool.flush(test, LoginManager.getUserId(), false);
 			} catch (ApplicationException ae) {
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 			}
 		}
 	}
@@ -129,14 +129,14 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		final int testStatus = this.test.getStatus().value();
 		if (testStatus != TestStatus._TEST_STATUS_SCHEDULED && testStatus != TestStatus._TEST_STATUS_PROCESSING) {
-			assert Log.errorMessage("ERROR: Test '" + testId + "' has status " + testStatus
+			Log.errorMessage("ERROR: Test '" + testId + "' has status " + testStatus
 					+ " -- not SCHEDULED or PROCESSING; shutting down");
 			this.shutdown();
 			return;
 		}
 
 		final int numberOfMeasurements = this.test.getNumberOfMeasurements();
-		assert Log.debugMessage("Test '" + testId + "' -- number of measurements: " + numberOfMeasurements, Log.DEBUGLEVEL06);
+		Log.debugMessage("Test '" + testId + "' -- number of measurements: " + numberOfMeasurements, Log.DEBUGLEVEL06);
 		if (numberOfMeasurements == 0) {
 			this.numberOfMResults = 0;
 			this.lastMeasurementStartTime = null;
@@ -152,24 +152,24 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			lastMeasurement = measurementDatabase.retrieveLast(this.test.getId());
 		} catch (RetrieveObjectException roe) {
-			assert Log.errorMessage(roe);
+			Log.errorMessage(roe);
 			this.abort(ABORT_REASON_DATABASE_ERROR);
 		} catch (ObjectNotFoundException onfe) {
-			assert Log.debugMessage("Last measurement for test '" + testId + "' not found; assume test has none measurements",
+			Log.debugMessage("Last measurement for test '" + testId + "' not found; assume test has none measurements",
 					Log.DEBUGLEVEL06);
 			this.numberOfMResults = 0;
 			this.lastMeasurementStartTime = null;
 			return;
 		}
-		assert Log.debugMessage("Test '" + testId + "' -- last measurement: " + lastMeasurement.getId(), Log.DEBUGLEVEL06);
+		Log.debugMessage("Test '" + testId + "' -- last measurement: " + lastMeasurement.getId(), Log.DEBUGLEVEL06);
 
 		try {
 			this.numberOfMResults = resultDatabase.retrieveNumberOf(testId, ResultSort.RESULT_SORT_MEASUREMENT);
 		} catch (RetrieveObjectException roe) {
-			assert Log.errorMessage(roe);
+			Log.errorMessage(roe);
 			this.abort(ABORT_REASON_DATABASE_ERROR);
 		}
-		assert Log.debugMessage("Test '" + testId + "' -- number of measurement results: " + this.numberOfMResults, Log.DEBUGLEVEL06);
+		Log.debugMessage("Test '" + testId + "' -- number of measurement results: " + this.numberOfMResults, Log.DEBUGLEVEL06);
 
 		this.lastMeasurementStartTime = lastMeasurement.getStartTime();
 		final int lastMeasurementStatus = lastMeasurement.getStatus().value();
@@ -189,24 +189,24 @@ abstract class TestProcessor extends SleepButWorkThread {
 						this.addMeasurementResult(results.iterator().next());
 						this.numberOfMResults = numberOfMResultsSave;
 					} else {
-						assert Log.errorMessage("ERROR: Cannot find result for acquired measurement '" + lastMeasurement.getId()
+						Log.errorMessage("ERROR: Cannot find result for acquired measurement '" + lastMeasurement.getId()
 								+ "'; setting measurement as ABORTED");
 						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 					}
 				} catch (ApplicationException ae) {
-					assert Log.errorMessage("ERROR: Cannot load results for acquired measurement '" + lastMeasurement.getId()
+					Log.errorMessage("ERROR: Cannot load results for acquired measurement '" + lastMeasurement.getId()
 							+ "'; setting measurement as ABORTED");
 					lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 				}
 				break;
 			default:
-				assert Log.debugMessage("Test '" + testId + "' -- status of last measurement: " + lastMeasurementStatus, Log.DEBUGLEVEL06);
+				Log.debugMessage("Test '" + testId + "' -- status of last measurement: " + lastMeasurementStatus, Log.DEBUGLEVEL06);
 		}
 
 		try {
 			StorableObjectPool.flush(lastMeasurement, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -218,7 +218,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				this.numberOfMResults++;
 			}
 		} else {
-			assert Log.errorMessage("ERROR: Result '" + measurementResult.getId()
+			Log.errorMessage("ERROR: Result '" + measurementResult.getId()
 					+ "' has sort " + resultSort.value() + " -- not MEASUREMENT; adding failed");
 		}
 	}
@@ -239,9 +239,9 @@ abstract class TestProcessor extends SleepButWorkThread {
 					}
 					if (this.nextMeasurementStartTime == null) {
 						this.lastMeasurementAcquisition = true;
-						assert Log.debugMessage("Test '" + this.test.getId() + "' | Last measurement acquisition", Log.DEBUGLEVEL06);
+						Log.debugMessage("Test '" + this.test.getId() + "' | Last measurement acquisition", Log.DEBUGLEVEL06);
 					} else {
-						assert Log.debugMessage("Test '" + this.test.getId() + "' | Next measurement at: " + this.nextMeasurementStartTime,
+						Log.debugMessage("Test '" + this.test.getId() + "' | Next measurement at: " + this.nextMeasurementStartTime,
 								Log.DEBUGLEVEL06);
 					}
 				} else {
@@ -251,7 +251,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 							this.nextMeasurementStartTime = null;
 							super.clearFalls();
 						} catch (CreateObjectException coe) {
-							assert Log.errorMessage(coe);
+							Log.errorMessage(coe);
 							if (coe.getCause() instanceof IllegalObjectEntityException) {
 								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
 							} else {
@@ -269,7 +269,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
-				assert Log.errorMessage(ie);
+				Log.errorMessage(ie);
 			}
 		}
 	}
@@ -281,7 +281,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(measurement, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -296,13 +296,13 @@ abstract class TestProcessor extends SleepButWorkThread {
 					final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
 					for (int i = 0; i < aeResults.length; i++) {
 						if (aeResults[i] != null) {
-							assert Log.debugMessage("Analysis result: '" + aeResults[i].getId() + "' of measurement '" + measurement.getId() + "'",
+							Log.debugMessage("Analysis result: '" + aeResults[i].getId() + "' of measurement '" + measurement.getId() + "'",
 									Log.DEBUGLEVEL07);
 							objectsToFlush.add(aeResults[i]);
 						}
 					}
 				} catch (AnalysisException ae) {
-					assert Log.errorMessage(ae);
+					Log.errorMessage(ae);
 				}
 
 				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
@@ -315,7 +315,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(objectsToFlush, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -345,7 +345,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			mesg.append("\t nextMeasurementStartTime: ");
 			mesg.append(this.nextMeasurementStartTime);
 		}
-		assert Log.debugMessage(mesg.toString(), Log.DEBUGLEVEL07);
+		Log.debugMessage(mesg.toString(), Log.DEBUGLEVEL07);
 
 		if (this.lastMeasurementAcquisition
 				&& (this.numberOfMResults >= numberOfMeasurements
@@ -366,7 +366,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				this.continueWithNextMeasurement();
 				break;
 			default:
-				assert Log.errorMessage("Unknown error code: " + super.fallCode);
+				Log.errorMessage("Unknown error code: " + super.fallCode);
 		}
 	}
 
@@ -379,12 +379,12 @@ abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	void complete() {
-		assert Log.debugMessage("Test '" + this.test.getId() + "' is completed", Log.DEBUGLEVEL07);
+		Log.debugMessage("Test '" + this.test.getId() + "' is completed", Log.DEBUGLEVEL07);
 		this.test.setStatus(TestStatus.TEST_STATUS_COMPLETED);
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 		this.shutdown();
 	}
@@ -395,7 +395,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 		this.stopTest();
 	}
@@ -426,7 +426,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 			}
 			StorableObjectPool.flush(measurements, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 
 		this.shutdown();

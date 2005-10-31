@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMServantManager.java,v 1.18 2005/10/30 15:20:17 bass Exp $
+ * $Id: MCMServantManager.java,v 1.19 2005/10/31 10:47:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/30 15:20:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -75,13 +75,13 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 
 	@Override
 	protected void onLoseConnection(final String servantName) {
-		assert Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection lost"
 	}
 
 	@Override
 	protected void onRestoreConnection(final String servantName) {
-		assert Log.debugMessage("Connection with '" + servantName + "' restored",
+		Log.debugMessage("Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection restored"
 	}

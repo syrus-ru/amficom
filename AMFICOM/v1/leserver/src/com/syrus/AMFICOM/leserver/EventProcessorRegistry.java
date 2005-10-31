@@ -1,5 +1,5 @@
 /*-
- * $Id: EventProcessorRegistry.java,v 1.3 2005/10/30 15:20:46 bass Exp $
+ * $Id: EventProcessorRegistry.java,v 1.4 2005/10/31 10:49:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/30 15:20:46 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/10/31 10:49:45 $
  * @module leserver
  */
 final class EventProcessorRegistry {
@@ -74,7 +74,7 @@ final class EventProcessorRegistry {
 		if (eventProcessors == null || eventProcessors.isEmpty()) {
 			if (!QUIET_EVENT_TYPES.contains(eventType)) {
 				QUIET_EVENT_TYPES.add(eventType);
-				assert Log.debugMessage("no processor(s) found for event type: "
+				Log.debugMessage("no processor(s) found for event type: "
 						+ eventType + " (this message will only be issued once)",
 						INFO);
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.140 2005/10/30 15:20:17 bass Exp $
+ * $Id: MeasurementControlModule.java,v 1.141 2005/10/31 10:47:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.140 $, $Date: 2005/10/30 15:20:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.141 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -174,7 +174,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				MCMSetup.setup();
 				System.exit(0);
 			} else {
-				assert Log.errorMessage("Illegal options -- " + args);
+				Log.errorMessage("Illegal options -- " + args);
 				System.exit(0);
 			}
 		}
@@ -226,7 +226,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			try {
 				sessionEnvironment.login(login, PASSWORD, domainId);
 			} catch (final LoginException le) {
-				assert Log.errorMessage(le);
+				Log.errorMessage(le);
 			}
 
 			/*	Create map of test processors*/
@@ -250,7 +250,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			corbaServer.activateServant(new MCMPOATie(new MCMImpl(), corbaServer.getPoa()), mcmId.toString());
 			corbaServer.printNamingContext();
 		} catch (final ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 			System.exit(0);
 		}
 	}
@@ -263,7 +263,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		} catch (Exception e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			System.exit(0);
 		}
 	}
@@ -283,11 +283,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				final Identifier kisId = kis.getId();
 				final Transceiver transceiver = new Transceiver(kis);
 				transceiver.start();
-				assert Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
+				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
 				transceivers.put(kisId, transceiver);
 			}
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -306,12 +306,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		final Set<Identifier> scheduledTestIds = new HashSet<Identifier>();
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
-			assert Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
+			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
 			sortTestsByStartTime(tests);
 			testList.addAll(tests);
 			scheduledTestIds.addAll(Identifier.createIdentifiers(tests));
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 
 		tc = new TypicalCondition(TestStatus._TEST_STATUS_PROCESSING,
@@ -322,12 +322,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(scheduledTestIds, cc, true, false);
-			assert Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
+			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
 			for (final Test test : tests) {
 				startTestProcessor(test);
 			}
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -339,10 +339,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 					final Test test = testList.remove(0);
 					final Identifier testId = test.getId();
 					if (!testProcessors.containsKey(testId)) {
-						assert Log.debugMessage("Starting test processor for test '" + testId + "'", Log.DEBUGLEVEL07);
+						Log.debugMessage("Starting test processor for test '" + testId + "'", Log.DEBUGLEVEL07);
 						startTestProcessor(test);
 					} else {
-						assert Log.errorMessage("Test processor for test '" + testId + "' already started");
+						Log.errorMessage("Test processor for test '" + testId + "' already started");
 					}
 				}
 			}
@@ -350,7 +350,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
-				assert Log.errorMessage(ie);
+				Log.errorMessage(ie);
 			}
 
 		}//while
@@ -376,7 +376,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				(new PeriodicalTestProcessor(test)).start();
 				break;
 			default:
-				assert Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
+				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
 		}
 	}
 
@@ -423,7 +423,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			try {
 				StorableObjectPool.flush(new HashSet<Test>(newTests), LoginManager.getUserId(), false);
 			} catch (ApplicationException ae) {
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 			}
 
 		}	//synchronized (testList)
@@ -441,7 +441,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				StorableObjectPool.getStorableObject(groupTestId, true);
 			}
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -454,27 +454,27 @@ final class MeasurementControlModule extends SleepButWorkThread {
 					stopTest(test);
 					test.setStatus(TestStatus.TEST_STATUS_STOPPED);
 				} else {
-					assert Log.errorMessage("Test '" + id + "' not found");
+					Log.errorMessage("Test '" + id + "' not found");
 				}
 			} catch (ApplicationException ae) {
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 			}
 		}
 
 		try {
 			StorableObjectPool.flush(testIds, LoginManager.getUserId(), true);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
 	private static void stopTest(final Test test) {
 		final Identifier id = test.getId();
 		if (testList.contains(test)) {
-			assert Log.debugMessage("Test '" + id + "' found in testList -- removing and stopping ", Log.DEBUGLEVEL07);
+			Log.debugMessage("Test '" + id + "' found in testList -- removing and stopping ", Log.DEBUGLEVEL07);
 			testList.remove(test);
 		} else if (testProcessors.containsKey(id)) {
-			assert Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
+			Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
 			final TestProcessor testProcessor = testProcessors.get(id);
 			testProcessor.stopTest();
 		}
@@ -486,7 +486,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			default:
-				assert Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
 	}
 

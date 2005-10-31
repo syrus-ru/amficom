@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.31 2005/10/30 15:20:46 bass Exp $
+ * $Id: LoginEventServer.java,v 1.32 2005/10/31 10:49:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/30 15:20:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/10/31 10:49:45 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -127,7 +127,7 @@ final class LoginEventServer {
 			corbaServer.printNamingContext();
 		}
 		catch (final ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 			System.exit(0);
 		}
 	}
@@ -141,7 +141,7 @@ final class LoginEventServer {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
 		catch (Exception e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			System.exit(0);
 		}
 	}

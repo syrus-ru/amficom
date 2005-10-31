@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.50 2005/10/30 15:20:17 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.51 2005/10/31 10:47:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/10/30 15:20:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -157,7 +157,7 @@ final class AnalysisEvaluationProcessor {
 				}
 
 				if (++dadaraAlarmsOccurenceCount != 1) {
-					assert Log.debugMessage("WARNING: dadaraAlarmsOccurenceCount = "
+					Log.debugMessage("WARNING: dadaraAlarmsOccurenceCount = "
 							+ dadaraAlarmsOccurenceCount
 							+ "; should be 1", WARNING);
 				}
@@ -173,13 +173,13 @@ final class AnalysisEvaluationProcessor {
 
 			return analysis.createResult(LoginManager.getUserId(), arParameters);
 		} catch (final EventQueueFullException eqfe) {
-			assert Log.debugMessage(eqfe, SEVERE);
+			Log.debugMessage(eqfe, SEVERE);
 			throw new AnalysisException(eqfe);
 		} catch (final DataFormatException dfe) {
-			assert Log.debugMessage(dfe, SEVERE);
+			Log.debugMessage(dfe, SEVERE);
 			throw new AnalysisException(dfe);
 		} catch (final CreateObjectException coe) {
-			assert Log.debugMessage(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new AnalysisException(coe);
 		}
 	}

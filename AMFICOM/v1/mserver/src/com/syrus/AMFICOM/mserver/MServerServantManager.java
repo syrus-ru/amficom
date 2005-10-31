@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.17 2005/10/30 15:20:26 bass Exp $
+ * $Id: MServerServantManager.java,v 1.18 2005/10/31 10:48:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/10/31 10:48:40 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -77,13 +77,13 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 
 	@Override
 	protected void onLoseConnection(final String servantName) {
-		assert Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection with servantName lost"
 	}
 
 	@Override
 	protected void onRestoreConnection(final String servantName) {
-		assert Log.debugMessage("Connection with '" + servantName + "' restored",
+		Log.debugMessage("Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection with servantName restored"
 	}

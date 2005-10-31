@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTestProcessor.java,v 1.53 2005/10/30 15:20:17 bass Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.54 2005/10/31 10:47:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/10/30 15:20:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/10/31 10:47:23 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -29,7 +29,7 @@ final class PeriodicalTestProcessor extends TestProcessor {
 	private static final String ABORT_REASON_TEMPORAL_PATTERN = "Failed to load temporal pattern";
 
 	private Date endTime;
-	private AbstractTemporalPattern temporalPattern;
+	private AbstractTemporalPattern<? extends AbstractTemporalPattern> temporalPattern;
 	private SortedSet<Date> timeStampsList;
 
 	public PeriodicalTestProcessor(Test test) {
@@ -39,7 +39,7 @@ final class PeriodicalTestProcessor extends TestProcessor {
 		try {
 			this.temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
+			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
 			this.abort(ABORT_REASON_TEMPORAL_PATTERN);
 		}
 		this.timeStampsList = new TreeSet<Date>();
@@ -58,9 +58,9 @@ final class PeriodicalTestProcessor extends TestProcessor {
 				final SortedSet<Date> timeStamps = this.temporalPattern.getTimes(fromDateLong, toDateLong);
 				if (!includeFromDate) {
 					if (timeStamps.remove(startDate)) {
-						assert Log.debugMessage("Removed from set of time stamps date: " + startDate, Log.DEBUGLEVEL10);
+						Log.debugMessage("Removed from set of time stamps date: " + startDate, Log.DEBUGLEVEL10);
 					} else {
-						assert Log.debugMessage("Date: " + startDate + " not found in set of time stamps", Log.DEBUGLEVEL10);
+						Log.debugMessage("Date: " + startDate + " not found in set of time stamps", Log.DEBUGLEVEL10);
 					}
 				}
 
@@ -78,7 +78,7 @@ final class PeriodicalTestProcessor extends TestProcessor {
 					stringBuffer.append(date);
 					stringBuffer.append("\n");
 				}
-				assert Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL09);
+				Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL09);
 				//--------
 
 				if (!timeStamps.isEmpty()) {

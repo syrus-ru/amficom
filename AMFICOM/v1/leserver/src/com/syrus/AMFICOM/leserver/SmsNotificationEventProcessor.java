@@ -1,5 +1,5 @@
 /*-
- * $Id: SmsNotificationEventProcessor.java,v 1.3 2005/10/30 15:20:46 bass Exp $
+ * $Id: SmsNotificationEventProcessor.java,v 1.4 2005/10/31 10:49:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/30 15:20:46 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/10/31 10:49:45 $
  * @module leserver
  */
 final class SmsNotificationEventProcessor implements EventProcessor {
@@ -41,7 +41,7 @@ final class SmsNotificationEventProcessor implements EventProcessor {
 
 		if (notificationEvent instanceof SmsNotificationEvent) {
 			final SmsNotificationEvent smsNotificationEvent = (SmsNotificationEvent) notificationEvent;
-			assert Log.debugMessage("Event: "
+			Log.debugMessage("Event: "
 					+ smsNotificationEvent
 					+ " delivered successfully",
 					CONFIG);
