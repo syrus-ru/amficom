@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.139 2005/10/30 15:20:23 bass Exp $
+ * $Id: SchedulerModel.java,v 1.140 2005/10/31 12:29:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.139 $, $Date: 2005/10/30 15:20:23 $
+ * @version $Revision: 1.140 $, $Date: 2005/10/31 12:29:59 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -472,16 +472,16 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				TestView.addTest(test, startDate, endDate);
 				this.addTest(test);
 			}
-			assert Log.debugMessage(this.testIds 
+			Log.debugMessage(this.testIds 
 						+ ", " 
 						+ this.testIds.size(),
 				Log.DEBUGLEVEL03);
 			
-			assert Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),
+			Log.debugMessage("StorableObjectPool.refresh:" + (time1-time0),
 				Log.DEBUGLEVEL03);
-			assert Log.debugMessage("StorableObjectPool.getStorableObjectsByCondition:" + (time2-time1),
+			Log.debugMessage("StorableObjectPool.getStorableObjectsByCondition:" + (time2-time1),
 				Log.DEBUGLEVEL03);
-			assert Log.debugMessage("TestView.refreshCache:" + (time3-time2),
+			Log.debugMessage("TestView.refreshCache:" + (time3-time2),
 				Log.DEBUGLEVEL03);
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Scheduler.Error.CannotRefreshTests"));
@@ -493,7 +493,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		final long time0 = System.currentTimeMillis();
 		this.refreshTests();
 		final long time1 = System.currentTimeMillis();
-		assert Log.debugMessage("refreshTests:" + (time1-time0),
+		Log.debugMessage("refreshTests:" + (time1-time0),
 			Log.DEBUGLEVEL03);
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
@@ -530,7 +530,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	                            final Test selectedTest) 
 	throws ApplicationException {
 		
-		assert Log.debugMessage(selectedTest,
+		Log.debugMessage(selectedTest,
 			Log.DEBUGLEVEL09);
 		
 		synchronized (this) {
@@ -554,7 +554,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				}
 				this.refreshTest(source);
 			} else {
-				assert Log.debugMessage("selectedTest is " + selectedTest, Level.FINEST);
+				Log.debugMessage("selectedTest is " + selectedTest, Level.FINEST);
 			}
 		}
 	}
@@ -577,7 +577,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void setSelectedMeasurementType(final MeasurementType measurementType) {
-		assert Log.debugMessage(this.measurementType + " > " + measurementType,
+		Log.debugMessage(this.measurementType + " > " + measurementType,
 			Log.DEBUGLEVEL10);
 		if (this.measurementType == null || measurementType == null
 				|| !this.measurementType.equals(measurementType)) {
@@ -587,7 +587,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement) {
-		assert Log.debugMessage(this.monitoredElement + " > " + monitoredElement,
+		Log.debugMessage(this.monitoredElement + " > " + monitoredElement,
 			Log.DEBUGLEVEL10);
 		if (this.monitoredElement == null || monitoredElement == null
 				|| !this.monitoredElement.equals(monitoredElement)) {
@@ -597,7 +597,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement, final MeasurementType measurementType) {
-		assert Log.debugMessage(this.monitoredElement + " > " + monitoredElement
+		Log.debugMessage(this.monitoredElement + " > " + monitoredElement
 			+ "\n\t\t " + this.measurementType + " > " + measurementType,
 			Log.DEBUGLEVEL10);
 		boolean changed = false;
@@ -880,7 +880,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (firstStartDate != null) {
 				this.moveSelectedTests(startDate.getTime() - firstStartDate.getTime());
 			} else {
-				assert Log.debugMessage("firstStartDate == null ",
+				Log.debugMessage("firstStartDate == null ",
 					Log.DEBUGLEVEL09);
 			}
 			
@@ -951,7 +951,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	private void addGroupTests(final long interval) throws ApplicationException {
-		assert Log.debugMessage(Log.DEBUGLEVEL10);
+		Log.debugMessage(Log.DEBUGLEVEL10);
 		this.flag = FLAG_CREATE;
 		this.startGetData(false);
 		if (this.flag != FLAG_APPLY && this.flag != FLAG_CREATE) {
@@ -1011,7 +1011,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			
 		}
 		
-		assert Log.debugMessage(this.selectedTestIds, Log.DEBUGLEVEL09);
+		Log.debugMessage(this.selectedTestIds, Log.DEBUGLEVEL09);
 		
 		if (this.selectedTestIds == null || this.selectedTestIds.isEmpty()) {
 			if (testGroupId == null) {
@@ -1038,8 +1038,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			final long firstTime = firstTest.getStartTime().getTime();
 			final long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + interval - firstTime;
 
-			assert Log.debugMessage("firstTime is " + new Date(firstTime), Level.FINEST);
-			assert Log.debugMessage("offset is " + offset, Level.FINEST);
+			Log.debugMessage("firstTime is " + new Date(firstTime), Level.FINEST);
+			Log.debugMessage("offset is " + offset, Level.FINEST);
 
 			this.selectedTestIds.clear();
 			
@@ -1090,7 +1090,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					this.addTest(test);
 					TestView.addTest(test, test.getStartTime(), test.getEndTime());
 					this.selectedTestIds.add(testId);
-					assert Log.debugMessage("add test " + test.getId()
+					Log.debugMessage("add test " + test.getId()
 							+ " at " + startDate + "," + endDate, Level.FINEST);
 				} catch (final CreateObjectException e) {
 					throw new ApplicationException(I18N.getString("Scheduler.Error.CannotAddTest"));
@@ -1184,7 +1184,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				final boolean before = times.last().before(firstDate);
 				final boolean after = times.first().after(lastDate);
 				if (before || after) {
-					assert Log.debugMessage("rough estimation of intersection that inspected time is "
+					Log.debugMessage("rough estimation of intersection that inspected time is "
 						+ (after ? "after" : "before") 
 						+ " test " + test.getId(),
 						Log.DEBUGLEVEL09);
@@ -1211,7 +1211,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		} catch (final ApplicationException e) {
 			throw new ApplicationException(I18N.getString("Error.CannotAcquireObject"));
 		}
-		assert Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
+		Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1238,7 +1238,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			measurementSetup, 
 			Identifier.VOID_IDENTIFIER);
 		
-		assert Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
+		Log.debugMessage("return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1284,7 +1284,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		
 		final SortedSet<Date> testTimes = this.getTestTimes(test.getTemporalPatternId(), startTime, endTime, 0L);
 		
-		assert Log.debugMessage("testTimes:" + testTimes, Log.DEBUGLEVEL10);
+		Log.debugMessage("testTimes:" + testTimes, Log.DEBUGLEVEL10);
 		
 		
 		
@@ -1293,10 +1293,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				status == TestStatus.TEST_STATUS_STOPPING) {			
 			final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
 			final Date stopDate = stoppingMap.lastKey();
-			assert Log.debugMessage("stopDate:" + stopDate,
+			Log.debugMessage("stopDate:" + stopDate,
 				Log.DEBUGLEVEL10);
 			final SortedSet<Date> tailSet2 = testTimes.tailSet(stopDate);
-			assert Log.debugMessage("clear tailSet from " + stopDate + " : " + tailSet2,
+			Log.debugMessage("clear tailSet from " + stopDate + " : " + tailSet2,
 				Log.DEBUGLEVEL10);
 			tailSet2.clear();			
 		}
@@ -1328,7 +1328,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			times, 
 			measurementSetup, 
 			test.getId());
-		assert Log.debugMessage("SchedulerModel.isValid (" + test + ", " + measurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
+		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + measurementSetup + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1350,7 +1350,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			times, 
 			measurementSetup, 
 			test.getId());
-		assert Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
+		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + offset + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1374,7 +1374,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			times, 
 			measurementSetup, 
 			test.getId());
-		assert Log.debugMessage("SchedulerModel.isValid (" + test + ", " + startDate + ", " + endDate + ")  | return " + result, Log.DEBUGLEVEL10);
+		Log.debugMessage("SchedulerModel.isValid (" + test + ", " + startDate + ", " + endDate + ")  | return " + result, Log.DEBUGLEVEL10);
 		return result;
 	}
 	
@@ -1413,7 +1413,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	throws ApplicationException {
 		final SortedSet<Date> testTimes = this.getTestTimes(test, 0);
 		
-		assert Log.debugMessage(testTimes, Log.DEBUGLEVEL10);
+		Log.debugMessage(testTimes, Log.DEBUGLEVEL10);
 		
 		final SortedSet<Date> tailSet = testTimes.tailSet(startDate0);
 		
@@ -1432,7 +1432,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			}
 		}
 
-		assert Log.debugMessage(test 
+		Log.debugMessage(test 
 				+ (intersect ? " intersects " : " doen't intersect ") 
 				+ '[' 
 				+ startDate0 
@@ -1442,7 +1442,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			Log.DEBUGLEVEL10);
 		if (intersect) {
 			final String extendedTestDescription = this.getExtendedTestDescription(test);
-			assert Log.debugMessage(extendedTestDescription,
+			Log.debugMessage(extendedTestDescription,
 				Log.DEBUGLEVEL10);
 			return I18N.getString("Scheduler.Text.Scheduler.Model.TestIntersection") + "\n" + extendedTestDescription;
 		}
@@ -1502,7 +1502,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				break;
 			default:
 				// too unlike
-				assert Log.errorMessage(new Exception("SchedulerModel.getColor"));
+				Log.errorMessage(new Exception("SchedulerModel.getColor"));
 				color = COLOR_UNRECOGNIZED;
 				break;
 		}
@@ -1527,7 +1527,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			return I18N.getString("Scheduler.Text.Test.Status.Aborted");
 		}
 		// too unlike
-		assert Log.errorMessage(new Exception("SchedulerModel.getStatusName"));
+		Log.errorMessage(new Exception("SchedulerModel.getStatusName"));
 		return null;
 	}
 }

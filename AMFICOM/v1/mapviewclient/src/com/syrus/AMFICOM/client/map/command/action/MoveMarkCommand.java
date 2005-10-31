@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveMarkCommand.java,v 1.24 2005/10/30 16:31:18 bass Exp $$
+ * $$Id: MoveMarkCommand.java,v 1.25 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * Команда перемещения метки. вызывает только функцию "обновить состояние
  * местоположения"
  * 
- * @version $Revision: 1.24 $, $Date: 2005/10/30 16:31:18 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/31 12:30:07 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -57,7 +57,7 @@ public class MoveMarkCommand extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage("move mark " //$NON-NLS-1$
+		Log.debugMessage("move mark " //$NON-NLS-1$
 				+ this.mark.getName() 
 				+ " (" + this.mark.getId() + ")" //$NON-NLS-1$ //$NON-NLS-2$
 				+ " to distance " + this.distance,  //$NON-NLS-1$
@@ -72,7 +72,7 @@ public class MoveMarkCommand extends MapActionCommand {
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			assert Log.debugMessage(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 
@@ -82,7 +82,7 @@ public class MoveMarkCommand extends MapActionCommand {
 			this.markController.moveToFromStartLt(this.mark, this.distance);
 		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			assert Log.debugMessage(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class MoveMarkCommand extends MapActionCommand {
 					this.initialDistance);
 		} catch(MapException e) {
 			// TODO Auto-generated catch block
-			assert Log.debugMessage(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 }

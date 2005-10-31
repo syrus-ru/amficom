@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.27 2005/10/30 15:20:56 bass Exp $
+ * $Id: SchemeGraphUI.java,v 1.28 2005/10/31 12:30:29 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/10/30 15:20:56 $
+ * @version $Revision: 1.28 $, $Date: 2005/10/31 12:30:29 $
  * @module schemeclient
  */
 
@@ -362,7 +362,7 @@ public class SchemeGraphUI extends GPGraphUI {
 			if (this.firstDrag && schemeGraph.isDoubleBuffered() && this.cachedBounds == null) {
 				long st = System.currentTimeMillis();
 				initOffscreen();
-				assert Log.debugMessage("Init offline graphUI took " + (System.currentTimeMillis() - st) + "ms", Level.FINEST);
+				Log.debugMessage("Init offline graphUI took " + (System.currentTimeMillis() - st) + "ms", Level.FINEST);
 				this.firstDrag = false;
 			}
 

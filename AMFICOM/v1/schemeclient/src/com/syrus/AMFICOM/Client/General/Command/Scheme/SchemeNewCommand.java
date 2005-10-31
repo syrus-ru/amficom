@@ -34,7 +34,7 @@ public class SchemeNewCommand extends AbstractCommand {
 			this.result = RESULT_OK;
 		} 
 		catch (CreateObjectException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 	}
 }

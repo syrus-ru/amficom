@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectConditionBuilder.java,v 1.8 2005/10/30 15:20:42 bass Exp $
+ * $Id: StorableObjectConditionBuilder.java,v 1.9 2005/10/31 12:30:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlStor
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/30 15:20:42 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:18 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -44,7 +44,7 @@ public final class StorableObjectConditionBuilder {
 			default:
 				String msg = "StorableObjectConditionBuilder.restoreCondition | condition class "
 						+ transferable.getClass().getName() + " is not suppoted";
-				assert Log.errorMessage(msg);
+				Log.errorMessage(msg);
 				throw new IllegalDataException(msg);
 		}
 		return condition;

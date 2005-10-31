@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.87 2005/10/30 15:20:16 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.88 2005/10/31 12:29:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/10/30 15:20:16 $
+ * @version $Revision: 1.88 $, $Date: 2005/10/31 12:29:54 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
@@ -238,7 +238,7 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -309,7 +309,7 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -329,7 +329,7 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -508,7 +508,7 @@ public final class SchemeProtoGroup extends StorableObject<SchemeProtoGroup>
 
 		final Identifier newParentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId)) {
-			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 

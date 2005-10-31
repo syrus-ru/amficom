@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.119 2005/10/30 15:20:15 bass Exp $
+ * $Id: Scheme.java,v 1.120 2005/10/31 12:29:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.119 $, $Date: 2005/10/30 15:20:15 $
+ * @version $Revision: 1.120 $, $Date: 2005/10/31 12:29:54 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -342,7 +342,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -591,7 +591,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		try {
 			return StorableObjectPool.getStorableObject(this.getMapId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -632,7 +632,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		try {
 			return this.getSchemeCell0();
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -665,7 +665,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -827,7 +827,7 @@ public final class Scheme extends AbstractCloneableDomainMember<Scheme>
 		try {
 			return this.getUgoCell0();
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}

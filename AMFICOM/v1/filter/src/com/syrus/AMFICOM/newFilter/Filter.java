@@ -1,5 +1,5 @@
 /*-
- * $Id: Filter.java,v 1.20 2005/10/30 15:20:27 bass Exp $
+ * $Id: Filter.java,v 1.21 2005/10/31 12:30:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:27 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:03 $
  * @author $Author: bass $
  * @module filter
  */
@@ -44,7 +44,7 @@ public class Filter {
 	
 	public void addCondition(final StorableObjectCondition condition, final ConditionKey key) {
 		if (!this.keys.contains(key)) {
-			assert Log.errorMessage("Illegal data: Filter.addCondition | Wrong key (you must select it from appropriate condition wrapper)");
+			Log.errorMessage("Illegal data: Filter.addCondition | Wrong key (you must select it from appropriate condition wrapper)");
 		}
 		addCondition0(condition, key);
 	}

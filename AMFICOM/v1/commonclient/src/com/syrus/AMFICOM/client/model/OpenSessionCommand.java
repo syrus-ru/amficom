@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.42 2005/10/30 15:20:24 bass Exp $
+ * $Id: OpenSessionCommand.java,v 1.43 2005/10/31 12:30:02 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.43 $, $Date: 2005/10/31 12:30:02 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -161,7 +161,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		}
 		
 		do {
-			assert Log.debugMessage("Attempt to login; logged: " + this.logged, Log.DEBUGLEVEL04);
+			Log.debugMessage("Attempt to login; logged: " + this.logged, Log.DEBUGLEVEL04);
 		} while (!this.logging());
 	}
 
@@ -205,7 +205,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		try {
 			clientSessionEnvironment.login(this.login, this.password, this.domainId);
 		} catch (LoginException le) {
-			assert Log.errorMessage(le);
+			Log.errorMessage(le);
 			if (le.isAlreadyLoggedIn()) {
 				this.logged = true;
 				return true;
@@ -219,7 +219,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.logged = false;
 			return false;
 		} catch (CommunicationException ce) {
-			assert Log.errorMessage(ce);
+			Log.errorMessage(ce);
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					I18N.getString("Error.ServerConnection"),
 					I18N.getString("Error.OpenSession"),
@@ -389,7 +389,7 @@ public class OpenSessionCommand extends AbstractCommand {
 			this.login = this.loginTextField.getText();
 			this.password = new String(this.passwordTextField.getPassword());
 			final Domain selectedDomain = (Domain) this.domainComboBox.getSelectedItem();
-			assert Log.debugMessage(selectedDomain, Log.DEBUGLEVEL09);
+			Log.debugMessage(selectedDomain, Log.DEBUGLEVEL09);
 			if (selectedDomain != null) {
 				this.domainId = selectedDomain.getId();
 			} else {

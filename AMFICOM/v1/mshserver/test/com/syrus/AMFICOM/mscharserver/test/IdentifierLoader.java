@@ -1,5 +1,5 @@
 /*-
- * $Id: IdentifierLoader.java,v 1.5 2005/10/30 15:20:34 bass Exp $
+ * $Id: IdentifierLoader.java,v 1.6 2005/10/31 12:30:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:34 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/31 12:30:11 $
  * @author $Author: bass $
  * @module mscharserver
  */
@@ -36,7 +36,7 @@ public class IdentifierLoader extends SleepButWorkThread {
 	}
 
 	protected void processFall() {
-		assert Log.errorMessage("coundn't fetch ids");
+		Log.errorMessage("coundn't fetch ids");
 	}
 
 	protected void clearFalls() {
@@ -50,10 +50,10 @@ public class IdentifierLoader extends SleepButWorkThread {
 				int size = this.idPool.capacity() - this.idPool.getNumber();
 				generatedIdentifierRange = this.server.getGeneratedIdentifierRange(this.entityCode,
 													size);
-				assert Log.debugMessage("fetched " + generatedIdentifierRange.length + " identifiers for "
+				Log.debugMessage("fetched " + generatedIdentifierRange.length + " identifiers for "
 						+ this.entityCode, Log.DEBUGLEVEL10);
 			} catch (AMFICOMRemoteException e) {
-				assert Log.errorMessage(e.getMessage());
+				Log.errorMessage(e.getMessage());
 				sleepCauseOfFall();
 			}
 		}

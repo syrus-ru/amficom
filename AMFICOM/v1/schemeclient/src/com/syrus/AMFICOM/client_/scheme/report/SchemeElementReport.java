@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementReport.java,v 1.4 2005/10/30 15:20:54 bass Exp $
+ * $Id: SchemeElementReport.java,v 1.5 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ public class SchemeElementReport {
 				new SchemeElementTableModel(schemeElement,vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e.getMessage());
-			assert Log.errorMessage(e);			
+			Log.errorMessage(e.getMessage());
+			Log.errorMessage(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
 					tableStorableElement.getModelClassName(),

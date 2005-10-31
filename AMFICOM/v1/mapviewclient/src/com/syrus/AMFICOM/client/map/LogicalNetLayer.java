@@ -1,5 +1,5 @@
 /*-
- * $$Id: LogicalNetLayer.java,v 1.139 2005/10/31 07:07:59 krupenn Exp $$
+ * $$Id: LogicalNetLayer.java,v 1.140 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,8 +76,8 @@ import com.syrus.util.Log;
 /**
  * Управляет отображением логической структуры сети.
  * 
- * @version $Revision: 1.139 $, $Date: 2005/10/31 07:07:59 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.140 $, $Date: 2005/10/31 12:30:07 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -185,7 +185,7 @@ public final class LogicalNetLayer {
 	 * @throws MapDataException 
 	 */
 	public void updateZoom() throws MapDataException, MapConnectionException {
-		assert Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
 
 		if (this.getMapView() == null) {
 			return;
@@ -227,7 +227,7 @@ public final class LogicalNetLayer {
 	 *        вид
 	 */
 	public void setMapView(final MapView mapView) throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(mapView + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(mapView + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		if (this.getContext() != null && this.getContext().getDispatcher() != null) {
 			if (mapView != null && mapView.getMap() != null) {
@@ -247,7 +247,7 @@ public final class LogicalNetLayer {
 		this.linksForNodes.clear();
 
 		if (mapView == null) {
-			assert Log.debugMessage("mapView null!", Level.SEVERE); //$NON-NLS-1$
+			Log.debugMessage("mapView null!", Level.SEVERE); //$NON-NLS-1$
 		}
 
 		this.getMapViewController().setMapView(this.mapView);
@@ -285,7 +285,7 @@ public final class LogicalNetLayer {
 	 * @throws MapDataException
 	 */
 	public void setDefaultScale(final double defaultScale) throws MapDataException, MapConnectionException {
-		assert Log.debugMessage(defaultScale + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(defaultScale + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.defaultScale = defaultScale;
 		this.updateZoom();
@@ -316,7 +316,7 @@ public final class LogicalNetLayer {
 	 *        новое состояние
 	 */
 	public void setMapState(final MapState state) {
-		assert Log.debugMessage(state + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(state + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		this.mapState = state;
 	}
@@ -405,7 +405,7 @@ public final class LogicalNetLayer {
 		final Font font = p.getFont();
 		final Color background = p.getBackground();
 
-		assert Log.debugMessage("\n\n------------------ LogicalNetLayer.paint() called ----------------------", Level.FINE); //$NON-NLS-1$
+		Log.debugMessage("\n\n------------------ LogicalNetLayer.paint() called ----------------------", Level.FINE); //$NON-NLS-1$
 		final long f = System.currentTimeMillis();
 		if (MapPropertiesManager.isOptimizeLinks()) {
 			drawVisualElements(p, visibleBounds);
@@ -421,7 +421,7 @@ public final class LogicalNetLayer {
 		drawSelection(p, visibleBounds);
 		drawTempLines(p, visibleBounds);
 		final long d = System.currentTimeMillis();
-		assert Log.debugMessage("\n--------------------- LogicalNetLayer.paint() finished in " //$NON-NLS-1$
+		Log.debugMessage("\n--------------------- LogicalNetLayer.paint() finished in " //$NON-NLS-1$
 				+ String.valueOf(d - f)
 				+ " ms -----------------\n", Level.FINE); //$NON-NLS-1$
 
@@ -500,7 +500,7 @@ public final class LogicalNetLayer {
 			}
 		}
 		final long d = System.currentTimeMillis();
-		assert Log.debugMessage(String.valueOf(d - f) + " ms\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Log.debugMessage(String.valueOf(d - f) + " ms\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ String.valueOf(MapViewController.getTime1()) + " ms (isElementVisible)\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$
 				+ String.valueOf(MapViewController.getTime2()) + " ms (getStroke)\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$
 				+ String.valueOf(MapViewController.getTime3()) + " ms (getColor)\n" + "		" //$NON-NLS-1$ //$NON-NLS-2$
@@ -534,7 +534,7 @@ public final class LogicalNetLayer {
 		 * marker = (MapMarker)e.next(); marker.paint(pg, visibleBounds); }
 		 */
 		final long d = System.currentTimeMillis();
-		assert Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -576,7 +576,7 @@ public final class LogicalNetLayer {
 			p.drawLine(startX, startY, endX, endY);
 		}
 		final long d = System.currentTimeMillis();
-		assert Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -593,7 +593,7 @@ public final class LogicalNetLayer {
 			this.getMapViewController().getController(el).paint(el, g, visibleBounds);
 		}
 		final long d = System.currentTimeMillis();
-		assert Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(String.valueOf(d - f) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -664,7 +664,7 @@ public final class LogicalNetLayer {
 	 *        текущий выбранный элемент
 	 */
 	public void setCurrentMapElement(final MapElement curMapElement) {
-		assert Log.debugMessage(curMapElement + " | " + "method call", //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(curMapElement + " | " + "method call", //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 		this.currentMapElement = curMapElement;
@@ -703,7 +703,7 @@ public final class LogicalNetLayer {
 			final Point point, 
 			final Rectangle2D.Double visibleBounds)
 			throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		final int showMode = this.getMapState().getShowMode();
 		MapElement curME = VoidElement.getInstance(this.mapView);
@@ -812,7 +812,7 @@ public final class LogicalNetLayer {
 			final Point point, 
 			final Rectangle2D.Double visibleBounds)
 			throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		final int showMode = this.getMapState().getShowMode();
 		MapElement curME = VoidElement.getInstance(this.mapView);
@@ -895,7 +895,7 @@ public final class LogicalNetLayer {
 	 * Отменить выбор всем элементам.
 	 */
 	public void deselectAll() {
-		assert Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
 
 		final Collection<MapElement> selectedElements = new LinkedList<MapElement>();
 		selectedElements.addAll(this.mapView.getMap().getSelectedElements());
@@ -909,7 +909,7 @@ public final class LogicalNetLayer {
 	 * Выбрать все элеметны.
 	 */
 //	public void selectAll() {
-//		assert Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
+//		Log.debugMessage("method call", Level.FINEST); //$NON-NLS-1$
 //
 //		Map map = this.mapView.getMap();
 //		for (final MapElement curElement : this.mapView.getAllElements()) {
@@ -946,7 +946,7 @@ public final class LogicalNetLayer {
 	 *         точке нет
 	 */
 	public NodeLink getEditedNodeLink(final Point point, Rectangle2D.Double visibleBounds) {
-		assert Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage(point + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$
 
 		NodeLinkController nlc = null;
 		try {
@@ -959,7 +959,7 @@ public final class LogicalNetLayer {
 				}
 			}
 		} catch(MapException e) {
-			assert Log.debugMessage(e, Level.WARNING);
+			Log.debugMessage(e, Level.WARNING);
 		}
 		return null;
 	}
@@ -1090,8 +1090,8 @@ public final class LogicalNetLayer {
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
-	 * @author $Author: krupenn $
-	 * @version $Revision: 1.139 $, $Date: 2005/10/31 07:07:59 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.140 $, $Date: 2005/10/31 12:30:07 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1219,7 +1219,7 @@ public final class LogicalNetLayer {
 //			this.visualElements.add(node);
 //		}
 		final long endTime = System.currentTimeMillis();
-		assert Log.debugMessage("optimized map for " + (endTime - startTime) + "ms. Got " + this.visualElements.size() + " visual links.\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		Log.debugMessage("optimized map for " + (endTime - startTime) + "ms. Got " + this.visualElements.size() + " visual links.\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 				+ "		" + (t1 - startTime) + " ms (visualElements.clear())\n" //$NON-NLS-1$ //$NON-NLS-2$
 				+ "		" + (t2 - t1) + " ms (getNodeLinks)\n" //$NON-NLS-1$ //$NON-NLS-2$
 				+ "		" + (endTime - t2) + " ms (recursing) divided to:\n" //$NON-NLS-1$ //$NON-NLS-2$
@@ -1664,7 +1664,7 @@ public final class LogicalNetLayer {
 			}
 		}
 		final long t2 = System.currentTimeMillis();
-		assert Log.debugMessage(String.valueOf(t2 - t1) + " ms\n" //$NON-NLS-1$
+		Log.debugMessage(String.valueOf(t2 - t1) + " ms\n" //$NON-NLS-1$
 				+ "			" + (MapViewController.getTime6() / 1000000L) + " ms (getCharacteristics)\n", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 

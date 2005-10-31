@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.71 2005/10/30 15:20:42 bass Exp $
+ * $Id: ParameterType.java,v 1.72 2005/10/31 12:30:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/10/30 15:20:42 $
+ * @version $Revision: 1.72 $, $Date: 2005/10/31 12:30:18 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -105,7 +105,7 @@ public enum ParameterType implements TransferableObject<IdlParameterType>,
 		try {
 			return IdlParameterType.from_int(this.getCode());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			assert Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
 			return IdlParameterType.UNKNOWN_PARAMETERTYPE;
 		}
 	}

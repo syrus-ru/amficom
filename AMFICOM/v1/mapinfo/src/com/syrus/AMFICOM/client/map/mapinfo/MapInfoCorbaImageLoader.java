@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.12 2005/10/30 15:20:35 bass Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.13 2005/10/31 12:30:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/30 15:20:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/31 12:30:11 $
  * @author $Author: bass $
  * @module mapinfo
  */
@@ -72,7 +72,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		try {
 			this.connection.getMscharServer().stopRenderTopologicalImage(LoginManager.getSessionKey().getTransferable());
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage("loading has been cancelled" + e.getMessage());
+			Log.errorMessage("loading has been cancelled" + e.getMessage());
 		}
 	}
 
@@ -93,18 +93,18 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 			rit = mscharServer.transmitTopologicalImage(transf, keyt);
 			t3 = System.currentTimeMillis();
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage(e.getMessage());
+			Log.errorMessage(e.getMessage());
 			return null;
 		}
 		final byte[] image = rit.image;
 		if (image.length == 1) {
-			assert Log.debugMessage("loading has been cancelled", Level.FINEST);
+			Log.debugMessage("loading has been cancelled", Level.FINEST);
 			return null;
 		}
 
 		final BufferedImage bufferedImage = ImageToByte.byteToImqge(image);
 		t4 = System.currentTimeMillis();
-		assert Log.debugMessage((t1 - t0) + " (creating transf and session key)"
+		Log.debugMessage((t1 - t0) + " (creating transf and session key)"
 				+ (t2 - t1) + " (getting session ref)"
 				+ (t3 - t2) + "rendering"
 				+ (t4 - t3) + "creating image", Level.FINE);
@@ -136,10 +136,10 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 //			objectsFound = mscharServer.findFeature(searchText, keyt);
 //			t2 = System.currentTimeMillis();
 //		} catch (AMFICOMRemoteException e) {
-//			assert Log.errorMessage(e.getMessage());
+//			Log.errorMessage(e.getMessage());
 //			return null;
 //		}
-//		assert Log.debugMessage("searched for " + (t2 - t1) + " ms.", Level.INFO);
+//		Log.debugMessage("searched for " + (t2 - t1) + " ms.", Level.INFO);
 //
 //		if ((objectsFound.length == 1) && (objectsFound[0].name.equals(""))) {
 //			return resultList;
@@ -161,7 +161,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		try {
 			idlMapDescriptors = serv.getMapDescriptors(idlSessionKey);
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage(e.getMessage());
+			Log.errorMessage(e.getMessage());
 			return Collections.emptyList();
 		}
 		if(idlMapDescriptors.length == 1) {
@@ -186,7 +186,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		try {
 			idlLayerDescriptors = serv.getLayerDescriptors(mapDescriptor.getTransferable(),idlSessionKey);
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage(e.getMessage());
+			Log.errorMessage(e.getMessage());
 			return Collections.emptyList();
 		}
 		if(idlLayerDescriptors.length == 1) {
@@ -208,12 +208,12 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		String cacheDir = ApplicationProperties.getString(CACHE_DIR, "cache");
 		File cacheDirFile = new File(cacheDir);
 		if(!cacheDirFile.isDirectory()) {
-			assert Log.debugMessage("Cache dir + " + "\"" + cacheDirFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			Log.debugMessage("Cache dir + " + "\"" + cacheDirFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
 			cacheDirFile.mkdirs();
 		}
 		File localMapDir = new File(cacheDirFile, mapDescriptor.getMapName());
 		if(!localMapDir.exists()) {
-			assert Log.debugMessage("Cache dir + " + "\"" + localMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			Log.debugMessage("Cache dir + " + "\"" + localMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
 			cacheDirFile.mkdir();
 		}
 		File localMDF = new File(localMapDir, mapDescriptor.getFileName());
@@ -233,7 +233,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		long offset = 0;
 		File tempFile = new File(localFile.getPath() + ".swp");
 		if(tempFile.exists()) {
-			assert Log.debugMessage("Warning: swp file\" " + tempFile.getAbsolutePath() +  " \" exsists. Removing it...", Log.DEBUGLEVEL05);
+			Log.debugMessage("Warning: swp file\" " + tempFile.getAbsolutePath() +  " \" exsists. Removing it...", Log.DEBUGLEVEL05);
 			tempFile.delete();
 		}
 		try {
@@ -260,10 +260,10 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 			localFile.setLastModified(mapFileDescriptor.getLastModified());
 			return localFile;
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage("AMFICOMRemoteException " + e.getMessage());
+			Log.errorMessage("AMFICOMRemoteException " + e.getMessage());
 			return null;
 		} catch (IOException e) {
-			assert Log.errorMessage("IOException" + e.getMessage());
+			Log.errorMessage("IOException" + e.getMessage());
 			return null;
 		}		
 	}
@@ -286,7 +286,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		try {
 			document = reader.read(localMdf);
 		} catch (DocumentException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			return;
 		}
 		 
@@ -299,7 +299,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 			}
 			String layerPath = layerPathNode.getText();
 			if (layerPath == null || layerPath.equals("")) {
-				assert Log.errorMessage("Wrong xml content in file " + localMdf.getAbsolutePath());
+				Log.errorMessage("Wrong xml content in file " + localMdf.getAbsolutePath());
 				continue;
 			}
 			layerPathNode.setText("tab:" + newDir);
@@ -310,7 +310,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 	        writer.write(document);
 	        writer.close();
 		} catch (IOException e) {
-			assert Log.errorMessage("IOException " + e.getMessage());
+			Log.errorMessage("IOException " + e.getMessage());
 		}
 	}
 

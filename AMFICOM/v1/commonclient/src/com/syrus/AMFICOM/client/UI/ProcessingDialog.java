@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.16 2005/10/30 14:48:51 bass Exp $
+* $Id: ProcessingDialog.java,v 1.17 2005/10/31 12:30:01 bass Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.WorkQueue;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.16 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:01 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -54,10 +54,10 @@ public final class ProcessingDialog {
 		@Override
 		protected void processingItem(final Runnable workItem) 
 		throws InterruptedException {
-			assert Log.debugMessage("in " + workItem,
+			Log.debugMessage("in " + workItem,
 				LOGLEVEL);
 			workItem.run();
-			assert Log.debugMessage("out " + workItem,
+			Log.debugMessage("out " + workItem,
 				LOGLEVEL);
 		}
 	}
@@ -74,7 +74,7 @@ public final class ProcessingDialog {
 		protected void processingItem(final Runnable workItem) 
 		throws InterruptedException {
 			final String title = runnableTaskNames.remove(workItem);
-			assert Log.debugMessage("thread " 
+			Log.debugMessage("thread " 
 					+ title 
 					+ " in " 
 					+ workItem,
@@ -111,7 +111,7 @@ public final class ProcessingDialog {
 					});
 					
 					modalDialog.removeComponentListener(this);
-					assert Log.debugMessage("thread " 
+					Log.debugMessage("thread " 
 							+ title 
 							+ " out " 
 							+ workItem,

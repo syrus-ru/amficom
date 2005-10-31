@@ -1,5 +1,5 @@
 /*-
- * $Id: I18N.java,v 1.1 2005/10/31 07:17:31 bass Exp $
+ * $Id: I18N.java,v 1.2 2005/10/31 12:30:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/31 07:17:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/10/31 12:30:20 $
  * @module reflectometry
  */
 final class I18N {
@@ -31,7 +31,7 @@ final class I18N {
 		try {
 			return RESOURCE_BUNDLE.getString(key);
 		} catch (final MissingResourceException mre) {
-			assert Log.errorMessage("Key: '" + key + "' is not found in resource bundle '" + BUNDLE_NAME + '\'');
+			Log.errorMessage("Key: '" + key + "' is not found in resource bundle '" + BUNDLE_NAME + '\'');
 			return '!' + key + '!';
 		}
 	}

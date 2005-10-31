@@ -1,5 +1,5 @@
 /*-
- * $Id: Plugger.java,v 1.6 2005/10/30 15:20:23 bass Exp $
+ * $Id: Plugger.java,v 1.7 2005/10/31 12:30:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:23 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:00 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
@@ -82,26 +82,26 @@ public class Plugger {
 			Constructor constructor = clazz.getConstructor(classes);
 			object = constructor.newInstance(arguments);
 		} catch (ClassNotFoundException e) {
-			assert Log.debugMessage("Class " + className + " not found -- " + e.getMessage(), Level.WARNING);
-			assert Log.errorMessage(e);
+			Log.debugMessage("Class " + className + " not found -- " + e.getMessage(), Level.WARNING);
+			Log.errorMessage(e);
 		} catch (SecurityException e) {
-			assert Log.debugMessage("Security exception-- " + e.getMessage(), Level.WARNING);
-			assert Log.errorMessage(e);
+			Log.debugMessage("Security exception-- " + e.getMessage(), Level.WARNING);
+			Log.errorMessage(e);
 		} catch (NoSuchMethodException e) {
-			assert Log.debugMessage("No such constuctor -- " + e.getMessage(), Level.WARNING);
-			assert Log.errorMessage(e);
+			Log.debugMessage("No such constuctor -- " + e.getMessage(), Level.WARNING);
+			Log.errorMessage(e);
 		} catch (IllegalArgumentException e) {
-			assert Log.debugMessage("Illegal argument -- " + e.getMessage(), Level.WARNING);
-			assert Log.errorMessage(e);
+			Log.debugMessage("Illegal argument -- " + e.getMessage(), Level.WARNING);
+			Log.errorMessage(e);
 		} catch (InstantiationException e) {
-			assert Log.debugMessage(e.getMessage(), Level.WARNING);
-			assert Log.errorMessage(e);
+			Log.debugMessage(e.getMessage(), Level.WARNING);
+			Log.errorMessage(e);
 		} catch (IllegalAccessException e) {
-			assert Log.debugMessage(e.getMessage(), Level.WARNING);
-			assert Log.errorMessage(e);
+			Log.debugMessage(e.getMessage(), Level.WARNING);
+			Log.errorMessage(e);
 		} catch (InvocationTargetException e) {
-			assert Log.debugMessage(e.getMessage(), Level.WARNING);
-			assert Log.errorMessage(e);
+			Log.debugMessage(e.getMessage(), Level.WARNING);
+			Log.errorMessage(e);
 		}
 
 		return object;
@@ -118,17 +118,17 @@ public class Plugger {
 				this.doc = factory.newDocumentBuilder().parse(this.file);
 				this.plugin = this.doc.getElementsByTagName("plugin").item(0);
 			} else {
-				assert Log.debugMessage(this.file.getAbsolutePath() + " not found.", Level.FINEST);
+				Log.debugMessage(this.file.getAbsolutePath() + " not found.", Level.FINEST);
 				return null;
 			}
 			return this.doc;
 		} catch (SAXException e) {
 			// A parsing error occurred; the xml input is not valid
-			assert Log.errorMessage("Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		} catch (ParserConfigurationException e) {
-			assert Log.errorMessage("Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		} catch (IOException e) {
-			assert Log.errorMessage("Caught " + e.getMessage());
+			Log.errorMessage("Caught " + e.getMessage());
 		}
 		return null;
 	}

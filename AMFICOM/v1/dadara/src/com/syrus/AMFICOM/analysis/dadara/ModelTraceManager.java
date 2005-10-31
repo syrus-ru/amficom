@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.104 2005/10/18 09:33:35 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.105 2005/10/31 12:30:19 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  * порогов к событиями (пока нет) и модельной кривой (есть),
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
- * @author $Author: saa $
- * @version $Revision: 1.104 $, $Date: 2005/10/18 09:33:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.105 $, $Date: 2005/10/31 12:30:19 $
  * @module
  */
 public class ModelTraceManager
@@ -186,7 +186,7 @@ implements DataStreamable, Cloneable
 				thresholds.add(new ThreshDY(i, ThreshDY.Type.dL, evCenter, evCenter));
 				thresholds.add(new ThreshDX(i, evCenter, evEnd + DELTA, false, false));
 				thresholds.add(last = new ThreshDY(i, ThreshDY.Type.dA, evEnd, evEnd));
-//				assert Log.debugMessage("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd,
+//				Log.debugMessage("REFLECTIVE: event #" + i + " begin=" + evBegin + " center=" + evCenter + " end=" + evEnd,
 //						FINEST);
 				break;
 			}
@@ -511,7 +511,7 @@ implements DataStreamable, Cloneable
 		if (this.thSingleMTRCacheEventId == nEvent
 				&& this.thSingleMTRCache != null)
 		{
-			assert Log.debugMessage("getEventThresholdMTR: nEvent " + nEvent + " cache hit",
+			Log.debugMessage("getEventThresholdMTR: nEvent " + nEvent + " cache hit",
 					FINEST);
 			return this.thSingleMTRCache;
 		}
@@ -541,7 +541,7 @@ implements DataStreamable, Cloneable
 		}
 
 		// make a copy of resulting array for client
-		assert Log.debugMessage("getEventThresholdMTR: nEvent " + nEvent + " cache miss",
+		Log.debugMessage("getEventThresholdMTR: nEvent " + nEvent + " cache miss",
 				FINEST);
 		return this.thSingleMTRCache.clone();
 	}
@@ -982,7 +982,7 @@ implements DataStreamable, Cloneable
 		if (this.thSRECacheEventId == nEvent && this.thSRECache != null
 				&& this.thSRECache[key] != null)
 		{
-			assert Log.debugMessage("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit",
+			Log.debugMessage("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit",
 					FINEST);
 			return this.thSRECache[key];
 		}
@@ -997,7 +997,7 @@ implements DataStreamable, Cloneable
 			this.thSRECache = new SimpleReflectogramEvent[] {null, null, null, null};
 		this.thSRECacheEventId = nEvent;
 		this.thSRECache[key] = sre;
-		assert Log.debugMessage("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss",
+		Log.debugMessage("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss",
 				FINEST);
 		return sre;
 	}
@@ -1047,7 +1047,7 @@ implements DataStreamable, Cloneable
 			if (this.tDX[i].xMin + dxMin <= x && this.tDX[i].xMax + dxMax >= x) {
 				// eventId0 и eventId1 для DX-порогов равны, берем eventId0 (?)
 				int nEv = this.tDX[i].eventId0;
-				assert Log.debugMessage("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv,
+				Log.debugMessage("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv,
 						FINEST);
 				int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
 				int curPref = getEventAlarmPref(eventType);
@@ -1062,7 +1062,7 @@ implements DataStreamable, Cloneable
 		for (int nEv = 0; nEv < nEvents; nEv++) {
 			SimpleReflectogramEvent ev = getMTAE().getSimpleEvent(nEv);
 			if (ev.getBegin() <= x && ev.getEnd() >= x) {
-				assert Log.debugMessage("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv,
+				Log.debugMessage("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv,
 						FINEST);
 				int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
 				int curPref = getEventAlarmPref(eventType);

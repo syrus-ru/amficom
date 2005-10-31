@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.130 2005/10/31 11:29:19 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.131 2005/10/31 12:30:20 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.130 $, $Date: 2005/10/31 11:29:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.131 $, $Date: 2005/10/31 12:30:20 $
  * @module
  */
 
@@ -188,7 +188,7 @@ public class CoreAnalysisManager
 		try {
 			System.loadLibrary("dadara");
 		} catch (final UnsatisfiedLinkError ule) {
-			assert Log.errorMessage(ule);
+			Log.errorMessage(ule);
 		}
 	}
 
@@ -329,7 +329,7 @@ public class CoreAnalysisManager
 		} else {
 			res.setNoise(null);
 		}
-		assert Log.debugMessage("raw.length=" + trace.getRawTrace().length
+		Log.debugMessage("raw.length=" + trace.getRawTrace().length
 				+ " filtered.traceLength=" + trace.getFilteredTrace().length
 				+ " res.traceLength=" + res.traceLength, FINER);
 		return res;
@@ -387,7 +387,7 @@ public class CoreAnalysisManager
 				ap.getScaleFactor());
 
 		for (int i = 0; i < rse.length; i++) {
-			assert Log.debugMessage("rse[" + i + "]:" + " " + rse[i], FINEST);
+			Log.debugMessage("rse[" + i + "]:" + " " + rse[i], FINEST);
 		}
 
 		// теперь уточняем длину рефлектограммы по концу последнего события
@@ -397,7 +397,7 @@ public class CoreAnalysisManager
 			? rse[rse.length - 1].getEnd() + 1
 			: 0;
 
-		assert Log.debugMessage("y.length=" + tpa.y.length
+		Log.debugMessage("y.length=" + tpa.y.length
 				+ " tpa.traceLength=" + tpa.traceLength
 				+ " rse.traceLength=" + traceLength, FINER);
 		long t2 = System.nanoTime();
@@ -418,7 +418,7 @@ public class CoreAnalysisManager
 
 		long t4 = System.nanoTime();
 
-		assert Log.debugMessage("makeAnalysis: "
+		Log.debugMessage("makeAnalysis: "
 				+ "getDataAndLengthAndNoise: " + (t1-t0)/1e6
 				+ "; IA: " + (t2-t1)/1e6 + "; fit: " + (t3-t2)/1e6
 				+ "; makeMTAE: " + (t4-t3)/1e6,

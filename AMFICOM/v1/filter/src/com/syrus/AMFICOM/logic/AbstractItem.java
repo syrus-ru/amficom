@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.22 2005/10/30 14:48:52 bass Exp $
+ * $Id: AbstractItem.java,v 1.23 2005/10/31 12:30:03 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/30 14:48:52 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/31 12:30:03 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -78,7 +78,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 
 	public void addChild(Item childItem) {
-		assert Log.debugMessage("this.name: " + this.toString() + " \n\t name: "
+		Log.debugMessage("this.name: " + this.toString() + " \n\t name: "
 				+ childItem.toString(), Log.DEBUGLEVEL10);
 
 		if (!this.canHaveChildren())
@@ -112,7 +112,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 
 	public void setParent(Item parent) {
-		assert Log.debugMessage("name:" + this.toString() + "\n\tparent:"
+		Log.debugMessage("name:" + this.toString() + "\n\tparent:"
 				+ (parent == null ? "'null'" : parent.toString()), Log.DEBUGLEVEL10);
 
 		Item oldParent = this.parent;
@@ -147,7 +147,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 			 */
 			final ItemListener itemListener = this.itemListeners.get(i);
 			itemListener.setParentPerformed(item, oldParent, newParent);
-			assert Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
+			Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
 					+ "].setParentPerformed | item:" + item.toString() + ", oldParent:"
 					+ (oldParent == null ? "'null'" : oldParent.toString()) + ", newParent:"
 					+ (newParent == null ? "'null'" : newParent.toString()), Log.DEBUGLEVEL10);

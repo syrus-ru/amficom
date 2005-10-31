@@ -1,5 +1,5 @@
 /*-
- * $Id: CreateSchemeReportCommand.java,v 1.11 2005/10/30 15:20:54 bass Exp $
+ * $Id: CreateSchemeReportCommand.java,v 1.12 2005/10/31 12:30:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ public class CreateSchemeReportCommand extends AbstractCommand {
 				reportData.put(SchemeReportModel.ON_SCREEN_SCHEME_CELL_CONTAINER, schemeProtoElement);
 			}
 		} catch (ApplicationException e1) {
-			assert Log.errorMessage(e1);
+			Log.errorMessage(e1);
 		}
 		
 		SchemeGraph graph = this.pane.getGraph();

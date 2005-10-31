@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigImportCommand.java,v 1.4 2005/10/30 15:20:54 bass Exp $
+ * $Id: ConfigImportCommand.java,v 1.5 2005/10/31 12:30:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ public class ConfigImportCommand extends ImportExportCommand {
 		try {
 			loadConfigXML(fileName);
 		} catch (CreateObjectException e) {
-			assert Log.errorMessage(e.getMessage());
+			Log.errorMessage(e.getMessage());
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelScheme.getString("Message.error.scheme_import"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
@@ -73,10 +73,10 @@ public class ConfigImportCommand extends ImportExportCommand {
 					LangModelScheme.getString("Message.error.parse_xml"),  //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			return;
 		} catch (IOException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			return;
 		}		 
 

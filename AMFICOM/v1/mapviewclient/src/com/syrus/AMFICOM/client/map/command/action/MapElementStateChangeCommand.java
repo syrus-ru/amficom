@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapElementStateChangeCommand.java,v 1.17 2005/10/30 16:31:18 bass Exp $$
+ * $$Id: MapElementStateChangeCommand.java,v 1.18 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 /**
  * атомарная команда изменения состояния элемента карты
  * 
- * @version $Revision: 1.17 $, $Date: 2005/10/30 16:31:18 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:07 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -44,7 +44,7 @@ public final class MapElementStateChangeCommand extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage("state change for element "  //$NON-NLS-1$
+		Log.debugMessage("state change for element "  //$NON-NLS-1$
 				+ this.me.getName() + " (" + this.me.getId() + ") from\n" //$NON-NLS-1$ //$NON-NLS-2$
 				+ this.initialState.toString() + " \nto\n" //$NON-NLS-1$
 				+ this.finalState.toString(), 

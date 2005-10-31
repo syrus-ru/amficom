@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParametersImpl.java,v 1.3 2005/10/30 15:20:40 bass Exp $
+ * $Id: ReflectometryMeasurementParametersImpl.java,v 1.4 2005/10/31 12:30:15 bass Exp $
  * 
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
  * </p>
  * @author saa
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/30 15:20:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/31 12:30:15 $
  * @module
  */
 public final class ReflectometryMeasurementParametersImpl
@@ -101,7 +101,7 @@ implements ReflectometryMeasurementParameters {
 					this.highResolution = false;
 				}
 			} catch (NumberFormatException ex) {
-				assert Log.errorMessage(ex);
+				Log.errorMessage(ex);
 				throw new DataFormatException(ex.toString());
 			}
 		}

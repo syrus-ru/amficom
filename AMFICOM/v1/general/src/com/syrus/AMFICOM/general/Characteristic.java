@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.78 2005/10/30 15:20:42 bass Exp $
+ * $Id: Characteristic.java,v 1.79 2005/10/31 12:30:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/10/30 15:20:42 $
+ * @version $Revision: 1.79 $, $Date: 2005/10/31 12:30:18 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -217,7 +217,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

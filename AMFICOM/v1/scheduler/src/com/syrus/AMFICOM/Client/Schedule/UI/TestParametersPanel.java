@@ -105,7 +105,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		while (keys.hasMoreElements()) {
 			String codename = (String) keys.nextElement();
 			final String className = (String) bundle.getObject(codename);
-			assert Log.debugMessage("codename " 
+			Log.debugMessage("codename " 
 					+ codename 
 					+ ", className " 
 					+ className, 
@@ -173,7 +173,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				MeasurementSetup selectedMeasurementSetup = (MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
 //				if (!TestParametersPanel.this.measurementSetupId.isVoid()) {
 //					try {
-//						assert Log.debugMessage(".actionPerformed | " + TestParametersPanel.this.measurementSetupId, Log.DEBUGLEVEL10);
+//						Log.debugMessage(".actionPerformed | " + TestParametersPanel.this.measurementSetupId, Log.DEBUGLEVEL10);
 //						selectedValue = StorableObjectPool.getStorableObject(TestParametersPanel.this.measurementSetupId, true);
 //					} catch (final ApplicationException e1) {
 //						AbstractMainFrame.showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
@@ -398,7 +398,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	}
 	
 	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
-		assert Log.debugMessage(measurementSetups,
+		Log.debugMessage(measurementSetups,
 			Log.DEBUGLEVEL10);
 		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapViewController.java,v 1.62 2005/10/30 15:20:32 bass Exp $$
+ * $$Id: MapViewController.java,v 1.63 2005/10/31 12:30:09 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * 
- * @version $Revision: 1.62 $, $Date: 2005/10/30 15:20:32 $
+ * @version $Revision: 1.63 $, $Date: 2005/10/31 12:30:09 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -422,10 +422,10 @@ public final class MapViewController {
 			}
 		}
 		long t5 = System.currentTimeMillis();
-		assert Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		assert Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		assert Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		assert Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/**
@@ -445,9 +445,9 @@ public final class MapViewController {
 			long t3 = System.currentTimeMillis();
 			scanPaths(scheme);
 			long t4 = System.currentTimeMillis();
-			assert Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			assert Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			assert Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -480,10 +480,10 @@ public final class MapViewController {
 		}
 		}
 		long t5 = System.currentTimeMillis();
-		assert Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		assert Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		assert Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-		assert Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -500,8 +500,8 @@ public final class MapViewController {
 				this.scanPath(schemePath);
 			}
 			long t3 = System.currentTimeMillis();
-			assert Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
-			assert Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

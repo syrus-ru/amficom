@@ -43,13 +43,13 @@ public class PathBuilder {
 	
 	private static boolean exploreSchemeElement(SchemePath path, SchemeElement scheme_element) throws ApplicationException {
 		if (path.getPathMembers().isEmpty()) {
-			assert Log.debugMessage("Can not explore path with no starting element", Level.FINER);
+			Log.debugMessage("Can not explore path with no starting element", Level.FINER);
 			return false;
 		}
 		
 		while(true) {
 			if (!exploreNext(path)) {
-				assert Log.debugMessage("Can not explore next element", Level.FINER);
+				Log.debugMessage("Can not explore next element", Level.FINER);
 				return false;
 			}
 			
@@ -80,13 +80,13 @@ public class PathBuilder {
 
 	private static boolean exploreScheme(SchemePath path, Scheme scheme) throws ApplicationException {
 		if (path.getPathMembers().isEmpty()) {
-			assert Log.debugMessage("Can not explore path with no starting element", Level.FINER);
+			Log.debugMessage("Can not explore path with no starting element", Level.FINER);
 			return false;
 		}
 		
 		while(true) {
 			if (!exploreNext(path)) {
-				assert Log.debugMessage("Can not explore next element", Level.FINER);
+				Log.debugMessage("Can not explore next element", Level.FINER);
 				return false;
 			}
 			
@@ -156,7 +156,7 @@ public class PathBuilder {
 			}
 
 			if (!exploreNext(path)) {
-				assert Log.debugMessage("Can not explore next element", Level.FINER);
+				Log.debugMessage("Can not explore next element", Level.FINER);
 				return false;
 			}
 		}
@@ -244,7 +244,7 @@ public class PathBuilder {
 					}
 				}
 				if (seToAdd == null) {
-					assert Log.debugMessage("Can not find SE to add", Level.FINER);
+					Log.debugMessage("Can not find SE to add", Level.FINER);
 					return false;
 				}
 				PathElement newPE = createPEbySE(path, seToAdd);
@@ -300,7 +300,7 @@ public class PathBuilder {
 			
 			//		нет общих портов
 			if (newStartPort == null) {
-				assert Log.debugMessage("No mutual ports found", Level.FINER);
+				Log.debugMessage("No mutual ports found", Level.FINER);
 				return null;
 			}
 
@@ -356,7 +356,7 @@ public class PathBuilder {
 				newPE = PathElement.createInstance(LoginManager.getUserId(), path, newStartPort, newEndPort);
 			} 
 			catch (CreateObjectException e) {
-				assert Log.errorMessage("Can't create PathElement object " + e.getMessage());
+				Log.errorMessage("Can't create PathElement object " + e.getMessage());
 				return null;
 			}
 		} else {//first element
@@ -389,7 +389,7 @@ public class PathBuilder {
 					newPE = PathElement.createInstance(LoginManager.getUserId(), path, null, port);
 				} 
 				catch (CreateObjectException e) {
-					assert Log.errorMessage("Can't create PathElement object " + e.getMessage());
+					Log.errorMessage("Can't create PathElement object " + e.getMessage());
 					return null;
 				}
 			}
@@ -431,7 +431,7 @@ public class PathBuilder {
 		try {
 			return PathElement.createInstance(LoginManager.getUserId(), path, link);
 		} catch (CreateObjectException e) {
-			assert Log.errorMessage("Can't create PathElement object " + e.getMessage());
+			Log.errorMessage("Can't create PathElement object " + e.getMessage());
 			return null;
 		}
 	}
@@ -474,7 +474,7 @@ public class PathBuilder {
 							return null;
 						}
 						if (!thread.getParentSchemeCableLink().equals(link)) {
-							assert Log.debugMessage("Incorrect commutation at " + se.getName() + " - corresponds cable " + thread.getParentSchemeCableLink().getName(), Level.FINER);
+							Log.debugMessage("Incorrect commutation at " + se.getName() + " - corresponds cable " + thread.getParentSchemeCableLink().getName(), Level.FINER);
 							return null;
 						}
 						return addCableLink(path, thread);
@@ -496,7 +496,7 @@ public class PathBuilder {
 							LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 							JOptionPane.OK_OPTION);
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 			return null;
 		}
@@ -505,7 +505,7 @@ public class PathBuilder {
 			return PathElement.createInstance(LoginManager.getUserId(), path, thread);
 		} 
 		catch (CreateObjectException e) {
-			assert Log.errorMessage("Can't create PathElement object " + e.getMessage());
+			Log.errorMessage("Can't create PathElement object " + e.getMessage());
 			return null;
 		}
 	}

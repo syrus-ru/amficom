@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.23 2005/10/30 15:20:24 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.24 2005/10/31 12:30:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:01 $
  * @module commonclient
  */
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
@@ -361,7 +361,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	Collection<Characteristic> getCharacteristics() {
 		final CharacterizableObject obj = this.typeSortsCharacterizedIds.get(this.selectedTypeSort);
 		if (obj == null) {
-			assert Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort " + this.selectedTypeSort, Level.FINER); //$NON-NLS-1$
+			Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort " + this.selectedTypeSort, Level.FINER); //$NON-NLS-1$
 			return null;
 		}
 		final Identifier characterizedId = obj.characterizableId;
@@ -404,7 +404,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 					}
 					final CharacterizableObject object = CharacteristicsPanel.this.typeSortsCharacterizedIds.get(CharacteristicsPanel.this.selectedTypeSort);
 					if (object == null) {
-						assert Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort "  //$NON-NLS-1$
+						Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort "  //$NON-NLS-1$
 										+ CharacteristicsPanel.this.selectedTypeSort, Level.FINER);
 						return;
 					}
@@ -462,7 +462,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 					}
 					final CharacterizableObject obj = CharacteristicsPanel.this.typeSortsCharacterizedIds.get(CharacteristicsPanel.this.selectedTypeSort);
 					if (obj == null) {
-						assert Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort " //$NON-NLS-1$
+						Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort " //$NON-NLS-1$
 										+ CharacteristicsPanel.this.selectedTypeSort, Level.FINER);
 						return;
 					}

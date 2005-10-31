@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.50 2005/10/30 15:20:54 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.51 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.51 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -107,7 +107,7 @@ public class SchemeObjectsFactory {
 				stubProtoGroup = SchemeProtoGroup.createInstance(userId, stubName);
 				stubProtoElement = SchemeProtoElement.createInstance(userId, stubName, stubProtoGroup);
 			} catch (CreateObjectException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -342,7 +342,7 @@ public class SchemeObjectsFactory {
 		}
 		if (protoEq == null) {
 			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
-			assert Log.debugMessage(error, Level.WARNING); 
+			Log.debugMessage(error, Level.WARNING); 
 			throw new CreateObjectException(error);
 		}
 		
@@ -393,7 +393,7 @@ public class SchemeObjectsFactory {
 		}
 		if (protoEq == null) {
 			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
-			assert Log.debugMessage(error, Level.WARNING); 
+			Log.debugMessage(error, Level.WARNING); 
 			throw new CreateObjectException(error);
 		}
 		
@@ -574,7 +574,7 @@ public class SchemeObjectsFactory {
 				Identifier id = dev.getElementId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					assert Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				if (newId.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE)
@@ -588,10 +588,10 @@ public class SchemeObjectsFactory {
 						if (parent != null) {
 							dev.setSchemeElementId(parent.getId());
 						} else {
-							assert Log.debugMessage("can not insert scheme without parent se for newid " + newId + " no clone performed", Level.FINE);
+							Log.debugMessage("can not insert scheme without parent se for newid " + newId + " no clone performed", Level.FINE);
 						}
 					} catch (ApplicationException e) {
-						assert Log.errorMessage(e);
+						Log.errorMessage(e);
 					}
 				}
 				else
@@ -601,7 +601,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeDeviceId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					assert Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeDeviceId(newId);
@@ -610,7 +610,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemePortId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					assert Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemePortId(newId);
@@ -619,7 +619,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeCablePortId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					assert Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeCablePortId(newId);
@@ -628,7 +628,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeCableLinkId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					assert Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeCableLinkId(newId);
@@ -637,7 +637,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getSchemeLinkId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					assert Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setSchemeLinkId(newId);
@@ -646,7 +646,7 @@ public class SchemeObjectsFactory {
 				Identifier id = cell.getAbstractSchemePortId();
 				Identifier newId = clonedIds.get(id);
 				if (newId == null) {
-					assert Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINE);
 					newId = id;
 				}
 				cell.setAbstractSchemePortId(newId);

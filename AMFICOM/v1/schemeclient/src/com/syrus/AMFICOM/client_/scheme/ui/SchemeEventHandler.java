@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.10 2005/10/30 15:20:55 bass Exp $
+ * $Id: SchemeEventHandler.java,v 1.11 2005/10/31 12:30:29 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:55 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/31 12:30:29 $
  * @module schemeclient
  */
 
@@ -99,7 +99,7 @@ public class SchemeEventHandler extends AbstractEventHandler {
 						}
 					}
 				} catch (ApplicationException e1) {
-					assert Log.errorMessage(e1);
+					Log.errorMessage(e1);
 				}
 			} else {
 				StorableObjectEditor editor = this.frame.getCurrentEditor();

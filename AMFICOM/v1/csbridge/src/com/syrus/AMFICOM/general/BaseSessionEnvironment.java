@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.30 2005/10/30 15:20:13 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.31 2005/10/31 12:29:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.31 $, $Date: 2005/10/31 12:29:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -32,7 +32,7 @@ public abstract class BaseSessionEnvironment {
 				BaseSessionEnvironment.this.logout0();
 			}
 			catch (final ApplicationException ae) {
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 			}
 		}
 

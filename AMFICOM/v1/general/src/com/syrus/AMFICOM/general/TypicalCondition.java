@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalCondition.java,v 1.60 2005/10/30 15:20:42 bass Exp $
+ * $Id: TypicalCondition.java,v 1.61 2005/10/31 12:30:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/10/30 15:20:42 $
+ * @version $Revision: 1.61 $, $Date: 2005/10/31 12:30:17 $
  * @author $Author: bass $
  * @module general
  */
@@ -556,7 +556,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				transferable.otherValue = this.value.getClass().getName();
 				break;
 			default:
-				assert Log.errorMessage(ERROR_UNKNOWN_TYPE_CODE + this.type);
+				Log.errorMessage(ERROR_UNKNOWN_TYPE_CODE + this.type);
 				break;
 		}
 		transferable.key = this.key;
@@ -606,7 +606,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						}
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+						Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 				}
 
 				switch (this.operation) {
@@ -622,7 +622,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l == this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case _OPERATION_NOT_EQUALS:
@@ -637,7 +637,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l != this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case _OPERATION_GREAT:
@@ -652,7 +652,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l > this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case _OPERATION_LESS:
@@ -667,7 +667,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l < this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case _OPERATION_GREAT_EQUALS:
@@ -682,7 +682,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l >= this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case _OPERATION_LESS_EQUALS:
@@ -697,7 +697,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l <= this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case _OPERATION_IN_RANGE:
@@ -712,11 +712,11 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (this.firstLong < l && l < this.secondLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -745,7 +745,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = m.matches();
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -777,7 +777,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = (t < t1) || Math.abs(t - t1) < 1000L;
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -790,7 +790,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = ((Boolean) this.value).booleanValue() != ((Boolean) object).booleanValue();
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -807,7 +807,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = enumSet.contains(this.value);
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -921,7 +921,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 								break;
 						}
 						break;
@@ -940,7 +940,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 								break;
 						}
 						break;
@@ -959,7 +959,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 								break;
 						}
 						break;
@@ -978,7 +978,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 								break;
 						}
 						break;
@@ -997,7 +997,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 								break;
 						}
 						break;
@@ -1016,7 +1016,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.firstLong);
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 								break;
 						}
 						break;
@@ -1044,12 +1044,12 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(")");
 								break;
 							default:
-								assert Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
+								Log.errorMessage(ERROR_UNKNOWN_NUMBER_CODE + this.type);
 								break;
 						}
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1073,7 +1073,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append("is match case insencetive regexp ");
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				buffer.append(APOSTROPHE);
@@ -1114,7 +1114,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append(this.value);
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1129,7 +1129,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append(this.value);
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1148,12 +1148,12 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append(this.value);
 						break;
 					default:
-						assert Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
+						Log.errorMessage(ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
 			default:
-				assert Log.errorMessage(ERROR_UNKNOWN_TYPE_CODE + this.type);
+				Log.errorMessage(ERROR_UNKNOWN_TYPE_CODE + this.type);
 		}
 		return buffer.toString();
 	}

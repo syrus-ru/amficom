@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.21 2005/10/30 15:20:56 bass Exp $
+ * $Id: ElementsTabbedPane.java,v 1.22 2005/10/31 12:30:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:56 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:29 $
  * @module schemeclient
  */
 
@@ -126,9 +126,9 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
 					newProto.getSchemeCell().setData((List<Object>)invisibleGraph.getArchiveableState());
 				} catch (CloneNotSupportedException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			} else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
 				try {
@@ -142,7 +142,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					SchemeImageResource imageResource = proto.getSchemeCell();
 					SchemeActions.openSchemeImageResource(graph, imageResource, true, see.getInsertionPoint(), false);
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 				
 				
@@ -172,7 +172,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 				return b || p.getGraph().isGraphChanged();
 			}
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 		return super.hasUnsavedChanges(p);
 	}
@@ -241,7 +241,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					new DeleteAction(pane).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				assert Log.debugMessage("aligning cells to grid", Level.FINEST);
+				Log.debugMessage("aligning cells to grid", Level.FINEST);
 				GraphActions.alignToGrid(graph, graph.getSelectionCells());
 			}
 			// CTRL + ...

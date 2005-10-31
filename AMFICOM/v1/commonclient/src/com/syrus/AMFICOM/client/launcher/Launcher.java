@@ -1,5 +1,5 @@
 /*-
-* $Id: Launcher.java,v 1.8 2005/10/30 15:20:24 bass Exp $
+* $Id: Launcher.java,v 1.9 2005/10/31 12:30:01 bass Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * local implementation of Винтилйатар
- * @version $Revision: 1.8 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:01 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -62,7 +62,7 @@ public final class Launcher {
 				+ applicationClass.getName() 
 				+ ", caught a SecurityException, exit";
 			System.err.println(msg);
-			assert Log.debugMessage(msg, Log.DEBUGLEVEL01);
+			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
 		} catch (final NoSuchMethodException e) {
 			e.printStackTrace();
@@ -70,7 +70,7 @@ public final class Launcher {
 				+ applicationClass.getName() 
 				+ " doen't contains simple public constuctor, exit";
 			System.err.println(msg);
-			assert Log.debugMessage(msg, Log.DEBUGLEVEL01);
+			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
 		} catch (final IllegalArgumentException e) {
 			e.printStackTrace();
@@ -78,7 +78,7 @@ public final class Launcher {
 				+ applicationClass.getName() 
 				+ " doen't contains simple public constuctor, exit";
 			System.err.println(msg);
-			assert Log.debugMessage(msg, Log.DEBUGLEVEL01);
+			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
 		} catch (final InstantiationException e) {
 			e.printStackTrace();
@@ -86,7 +86,7 @@ public final class Launcher {
 				+ applicationClass.getName() 
 				+ ", caught a InstantiationException, exit";
 			System.err.println(msg);
-			assert Log.debugMessage(msg, Log.DEBUGLEVEL01);
+			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
 		} catch (final IllegalAccessException e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public final class Launcher {
 				+ applicationClass.getName() 
 				+ ", caught a IllegalAccessException, exit";
 			System.err.println(msg);
-			assert Log.debugMessage(msg, Log.DEBUGLEVEL01);
+			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
 		} catch (final InvocationTargetException e) {
 			// too unlikely 
@@ -134,8 +134,8 @@ public final class Launcher {
 			
 			System.err.println(msg);	
 			
-			assert Log.debugMessage(msg, Log.DEBUGLEVEL01);
-			assert Log.errorMessage(thrown);
+			Log.debugMessage(msg, Log.DEBUGLEVEL01);
+			Log.errorMessage(thrown);
 			
 			StackTraceElement[] stackTrace = thrown.getStackTrace();
 			DefaultMutableTreeNode root = new DefaultMutableTreeNode(thrown);

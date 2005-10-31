@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.20 2005/10/30 15:20:54 bass Exp $
+ * $Id: PopupFactory.java,v 1.21 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -139,7 +139,7 @@ public class PopupFactory {
 				}
 			}
 		} catch (final ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 	
@@ -234,7 +234,7 @@ public class PopupFactory {
 		try {
 			pes = SchemeResource.getSchemePath().getPathMembers();
 		} catch (ApplicationException e1) {
-			assert Log.errorMessage(e1);
+			Log.errorMessage(e1);
 			return;
 		}	
 		pmIds = new TreeSet<Identifier>();
@@ -257,7 +257,7 @@ public class PopupFactory {
 							pop.add(createPathStartMenuItem(id));
 						}
 					} catch (ApplicationException e) {
-						assert Log.errorMessage(e);
+						Log.errorMessage(e);
 					}
 				}
 			} else { // add "add" and "end"
@@ -285,7 +285,7 @@ public class PopupFactory {
 						pop.add(createPathAddMenuItem(aContext, id));
 					}
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			}
 		}
@@ -354,7 +354,7 @@ public class PopupFactory {
 								}
 							}
 						} catch (ApplicationException e1) {
-							assert Log.errorMessage(e1);
+							Log.errorMessage(e1);
 						}
 					}
 				});
@@ -362,7 +362,7 @@ public class PopupFactory {
 				menu.add(menu1);
 			}
 		} catch (ApplicationException e1) {
-			assert Log.errorMessage(e1);
+			Log.errorMessage(e1);
 		}		
 		return menu;
 	}
@@ -385,7 +385,7 @@ public class PopupFactory {
 						
 					}
 				} catch (ApplicationException e1) {
-					assert Log.errorMessage(e1);
+					Log.errorMessage(e1);
 				}
 			}
 		});
@@ -462,7 +462,7 @@ public class PopupFactory {
 						SchemeElement se = StorableObjectPool.getStorableObject(id, false);
 						PathBuilder.createPEbySE(path, se);
 					} catch (ApplicationException e) {
-						assert Log.errorMessage(e);
+						Log.errorMessage(e);
 					}
 				}
 			}
@@ -483,7 +483,7 @@ public class PopupFactory {
 						pe.setParentPathOwner(null, true);
 						aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, path.getId(), SchemeEvent.UPDATE_OBJECT));
 					} catch (ApplicationException e1) {
-						assert Log.errorMessage(e1);
+						Log.errorMessage(e1);
 					}
 				}
 			}
@@ -501,28 +501,28 @@ public class PopupFactory {
 					try {
 						SchemeLink link = StorableObjectPool.getStorableObject(id, false);
 						if (PathBuilder.createPEbySL(path, link) == null) {
-							assert Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING); //$NON-NLS-1$
+							Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING); //$NON-NLS-1$
 						}
 					} catch (ApplicationException e) {
-						assert Log.errorMessage(e);
+						Log.errorMessage(e);
 					}
 				} else if (id.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 					try {
 						SchemeCableLink link = StorableObjectPool.getStorableObject(id, false);
 						if (PathBuilder.createPEbySCL(path, link) == null) {
-							assert Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING); //$NON-NLS-1$
+							Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING); //$NON-NLS-1$
 						}
 					} catch (ApplicationException e) {
-						assert Log.errorMessage(e);
+						Log.errorMessage(e);
 					}
 				} else if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 					try {
 						SchemeElement se = StorableObjectPool.getStorableObject(id, false);
 						if (PathBuilder.createPEbySE(path, se) == null) {
-							assert Log.debugMessage("Can't add to path " + se.getName(), Level.WARNING); //$NON-NLS-1$
+							Log.debugMessage("Can't add to path " + se.getName(), Level.WARNING); //$NON-NLS-1$
 						}
 					} catch (ApplicationException e) {
-						assert Log.errorMessage(e);
+						Log.errorMessage(e);
 					}
 				}
 				aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, path.getId(), SchemeEvent.UPDATE_OBJECT));
@@ -551,7 +551,7 @@ public class PopupFactory {
 				try {
 					PathBuilder.explore(path, SchemeResource.getCashedPathEnd());
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 							e.getMessage(), 
 							LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
@@ -576,7 +576,7 @@ public class PopupFactory {
 								new SchemeEvent(this, se.getId(), SchemeEvent.CREATE_ALARMED_LINK));
 					}
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			}
 		});
@@ -608,7 +608,7 @@ public class PopupFactory {
 				return menu1;
 			}
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 		return null;
 	}

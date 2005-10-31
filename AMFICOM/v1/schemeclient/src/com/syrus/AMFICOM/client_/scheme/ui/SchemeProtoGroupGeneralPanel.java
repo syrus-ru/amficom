@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.14 2005/10/30 15:20:54 bass Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.15 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -252,7 +252,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 			this.parentCombo.addElements(sortedGroups);
 			this.parentCombo.addItem(null);
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 
 		if (this.schemeProtoGroup != null) {
@@ -282,7 +282,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 							SchemeProtoGroupPropertiesManager.getInstance(this.aContext),
 							ObjectSelectedEvent.SCHEME_PROTOGROUP));
 				} catch (CreateObjectException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 					return;
 				}
 			} else {
@@ -307,7 +307,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 			try {
 				this.schemeProtoGroup.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(this.imageId, true));
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		}
 
@@ -315,7 +315,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 			this.schemeProtoGroup.setParentSchemeProtoGroup((SchemeProtoGroup)this.parentCombo.getSelectedItem(), false);
 			StorableObjectPool.flush(this.schemeProtoGroup.getId(), LoginManager.getUserId(), false);
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 	}
 }

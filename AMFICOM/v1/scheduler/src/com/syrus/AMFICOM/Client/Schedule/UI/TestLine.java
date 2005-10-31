@@ -188,7 +188,7 @@ final class TestLine extends TimeLine {
 				
 				for (final TestTimeItem item : this.selectedItems) {
 					if (item.testTimeLine.testId.equals(testTimeItem.testTimeLine.testId)) {
-						assert Log.debugMessage("was:" + item.testTimeLine.testId
+						Log.debugMessage("was:" + item.testTimeLine.testId
 								+ ", now:" + testTimeItem.testTimeLine.testId,
 							Log.DEBUGLEVEL10);
 						selectTheSameTest = true;
@@ -198,7 +198,7 @@ final class TestLine extends TimeLine {
 				
 				this.selectedItems.add(testTimeItem);
 
-				assert Log.debugMessage("selectTheSameTest " + selectTheSameTest,
+				Log.debugMessage("selectTheSameTest " + selectTheSameTest,
 					Log.DEBUGLEVEL10);
 				
 				if (!selectTheSameTest) {
@@ -491,7 +491,7 @@ final class TestLine extends TimeLine {
 
 	private void acqureTest(final Test test) throws ApplicationException {
 		
-		assert Log.debugMessage(test, Log.DEBUGLEVEL09);
+		Log.debugMessage(test, Log.DEBUGLEVEL09);
 		
 		final Identifier testId = test.getId();
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdentifierGeneratorServerCore.java,v 1.4 2005/10/30 15:20:13 bass Exp $
+ * $Id: IdentifierGeneratorServerCore.java,v 1.5 2005/10/31 12:29:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/31 12:29:52 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -36,7 +36,7 @@ public abstract class IdentifierGeneratorServerCore extends ServerCore implement
 
 	public final IdlIdentifier getGeneratedIdentifier(final short entityCode) throws AMFICOMRemoteException {
 		try {
-			assert Log.debugMessage("Generating an identifier for '"
+			Log.debugMessage("Generating an identifier for '"
 					+ ObjectEntities.codeToString(entityCode) + "'", Level.CONFIG);
 			return IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
 		} catch (final IllegalObjectEntityException ioee) {
@@ -50,7 +50,7 @@ public abstract class IdentifierGeneratorServerCore extends ServerCore implement
 
 	public final IdlIdentifier[] getGeneratedIdentifierRange(final short entityCode, final int size) throws AMFICOMRemoteException {
 		try {
-			assert Log.debugMessage("Generating " + size
+			Log.debugMessage("Generating " + size
 					+ " identifiers for '" + ObjectEntities.codeToString(entityCode) + "'", Level.CONFIG);
 			return Identifier.createTransferables(IdentifierGenerator.generateIdentifierRange(entityCode, size));
 		} catch (final IllegalObjectEntityException ioee) {
@@ -68,7 +68,7 @@ public abstract class IdentifierGeneratorServerCore extends ServerCore implement
 
 	private final AMFICOMRemoteException processDefaultIllegalObjectEntityException(final IllegalObjectEntityException ioee,
 			final short entityCode) {
-		assert Log.debugMessage(ioee, Level.SEVERE);
+		Log.debugMessage(ioee, Level.SEVERE);
 		return new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 				IdlCompletionStatus.COMPLETED_NO,
 				"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
@@ -76,7 +76,7 @@ public abstract class IdentifierGeneratorServerCore extends ServerCore implement
 
 	private final AMFICOMRemoteException processDefaultIdentifierGenerationException(final IdentifierGenerationException ige,
 			final short entityCode) {
-		assert Log.debugMessage(ige, Level.SEVERE);
+		Log.debugMessage(ige, Level.SEVERE);
 		return new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE,
 				IdlCompletionStatus.COMPLETED_NO,
 				"Cannot create identifier for entity: '" + ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapNewCommand.java,v 1.31 2005/10/30 15:20:33 bass Exp $$
+ * $$Id: MapNewCommand.java,v 1.32 2005/10/31 12:30:09 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 /**
  * создание новой карты (Map). включает в себя создание нового вида
  * 
- * @version $Revision: 1.31 $, $Date: 2005/10/30 15:20:33 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/31 12:30:09 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -41,7 +41,7 @@ public class MapNewCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage("Creating new map", Level.INFO); //$NON-NLS-1$
+		Log.debugMessage("Creating new map", Level.INFO); //$NON-NLS-1$
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
 						this,

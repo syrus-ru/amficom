@@ -1,5 +1,5 @@
 /*-
- * $Id: CablePath.java,v 1.41 2005/10/30 15:20:44 bass Exp $
+ * $Id: CablePath.java,v 1.42 2005/10/31 12:30:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * 
  * @author $Author: bass $
  * @author Andrei Kroupennikov
- * @version $Revision: 1.41 $, $Date: 2005/10/30 15:20:44 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/31 12:30:20 $
  * @module mapview
  */
 public final class CablePath implements MapElement {
@@ -263,7 +263,7 @@ public final class CablePath implements MapElement {
 	
 			return point;
 		} catch (final ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 			return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.86 2005/10/30 15:20:15 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.87 2005/10/31 12:29:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/10/30 15:20:15 $
+ * @version $Revision: 1.87 $, $Date: 2005/10/31 12:29:54 $
  * @module scheme
  */
 public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
@@ -222,7 +222,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -249,7 +249,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeDeviceId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -272,7 +272,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		try {
 			return StorableObjectPool.getStorableObject(this.getPortId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -295,7 +295,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 					? StorableObjectPool.<PortType>getStorableObject(this.getPortTypeId(), true)
 					: this.getPort().getType();
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -456,7 +456,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 		assert portIdVoid || portId.getMajor() == PORT_CODE;
 
 		if (this.portId.equals(portId)) {
-			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -502,7 +502,7 @@ public abstract class AbstractSchemePort<T extends AbstractSchemePort<T>>
 
 		if (this.portId.isVoid()) {
 			if (this.portTypeId.equals(portTypeId)) {
-				assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 			this.portTypeId = portTypeId;

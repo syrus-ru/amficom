@@ -22,7 +22,7 @@ public class PathCancelCommand extends AbstractCommand {
 		try {
 			path.setParentSchemeMonitoringSolution(null, false);
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 		SchemeResource.setSchemePath(null, false);
 //		SchemeResource.setCashedPathStart(null);

@@ -1,5 +1,5 @@
 /*-
- * $$Id: SiteNodeEditor.java,v 1.25 2005/10/30 15:20:32 bass Exp $$
+ * $$Id: SiteNodeEditor.java,v 1.26 2005/10/31 12:30:09 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/30 15:20:32 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/31 12:30:09 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -433,7 +433,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 				long d = System.currentTimeMillis();
 				Collection types = NodeTypeController.getTopologicalNodeTypes(this.logicalNetLayer.getMapView().getMap());
 				long f = System.currentTimeMillis();
-				assert Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+				Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 
 				this.typeComboBox.setEnabled(true);
 				this.typeComboBox.addElements(types);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.15 2005/10/30 16:31:19 bass Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.16 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/10/30 16:31:19 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -128,7 +128,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			if (manager != null)
 				object = null; 
 		} else {
-			assert Log.debugMessage("Unsupported tree object type " + object, Level.FINER); //$NON-NLS-1$
+			Log.debugMessage("Unsupported tree object type " + object, Level.FINER); //$NON-NLS-1$
 			return;
 		}
 		if (this.treeUI.isLinkObjects()) {
@@ -170,7 +170,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 						this.treeUI.getTree().updateUI();
 					}
 				} catch (ApplicationException e1) {
-					assert Log.errorMessage(e1);
+					Log.errorMessage(e1);
 				}
 			}
 		}

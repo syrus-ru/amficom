@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.100 2005/10/30 15:20:37 bass Exp $
+ * $Id: Collector.java,v 1.101 2005/10/31 12:30:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/10/30 15:20:37 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/31 12:30:13 $
  * @module map
  */
 public final class Collector extends StorableObject<Collector>
@@ -193,7 +193,7 @@ public final class Collector extends StorableObject<Collector>
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.<PhysicalLink>getStorableObjects(this.physicalLinkIds, true));
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			return Collections.emptySet();
 		}
 	}
@@ -453,7 +453,7 @@ public final class Collector extends StorableObject<Collector>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

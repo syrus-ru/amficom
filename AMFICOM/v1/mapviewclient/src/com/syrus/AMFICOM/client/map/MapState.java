@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapState.java,v 1.16 2005/10/30 15:20:30 bass Exp $$
+ * $$Id: MapState.java,v 1.17 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
  * (mouseMode) - включенный режим (operationMode) - действие над элементами в
  * нулевом режиме (actionMode) -режим отображения линий (showMode)
  * 
- * @version $Revision: 1.16 $, $Date: 2005/10/30 15:20:30 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:07 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -148,7 +148,7 @@ public final class MapState {
 	 */
 	public void setMouseMode(int mode) {
 		this.mouseMode = mode;
-		assert Log.debugMessage("Set mouse mode " + mouseModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set mouse mode " + mouseModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	/**
@@ -167,7 +167,7 @@ public final class MapState {
 	 */
 	public void setActionMode(int mode) {
 		this.actionMode = mode;
-		assert Log.debugMessage("Set action mode " + actionModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set action mode " + actionModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	/**
@@ -186,7 +186,7 @@ public final class MapState {
 	 */
 	public void setOperationMode(int mode) {
 		this.operationMode = mode;
-		assert Log.debugMessage("Set operation mode " + operationModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set operation mode " + operationModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	/**
@@ -205,7 +205,7 @@ public final class MapState {
 	 */
 	public void setShowMode(int mode) {
 		this.showMode = mode;
-		assert Log.debugMessage("Set show mode " + showModeToString(), Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage("Set show mode " + showModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	public String actionModeToString() {

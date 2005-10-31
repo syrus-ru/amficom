@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.48 2005/10/30 15:20:47 bass Exp $
+ * $Id: EventDatabase.java,v 1.49 2005/10/31 12:30:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/10/30 15:20:47 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/31 12:30:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -139,7 +139,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + stringBuffer, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(stringBuffer.toString());
 
 			while (resultSet.next()) {
@@ -181,7 +181,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -258,7 +258,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, eventId);
 				DatabaseString.setString(preparedStatement, 4, eventParameter.getValue(), SIZE_PARAMETER_VALUE_COLUMN);
 
-				assert Log.debugMessage("Inserting parameter " + parameterType.getDescription()
+				Log.debugMessage("Inserting parameter " + parameterType.getDescription()
 						+ " for event '" + eventId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
@@ -282,7 +282,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

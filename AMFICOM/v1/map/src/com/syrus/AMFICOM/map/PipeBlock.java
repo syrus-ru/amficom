@@ -1,5 +1,5 @@
 /*-
- * $Id: PipeBlock.java,v 1.10 2005/10/30 15:20:37 bass Exp $
+ * $Id: PipeBlock.java,v 1.11 2005/10/31 12:30:13 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:37 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/31 12:30:13 $
  * @module map
  */
 public final class PipeBlock 
@@ -561,7 +561,7 @@ public final class PipeBlock
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

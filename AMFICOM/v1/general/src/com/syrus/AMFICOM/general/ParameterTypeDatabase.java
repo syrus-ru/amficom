@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeDatabase.java,v 1.41 2005/10/30 15:20:43 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.42 2005/10/31 12:30:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.42 $, $Date: 2005/10/31 12:30:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -75,7 +75,7 @@ public final class ParameterTypeDatabase {
 				measurementUnit = parameterType.getMeasurementUnit();
 				description = parameterType.getDescription();
 
-				assert Log.debugMessage("Inserting parameter type of code: " + code
+				Log.debugMessage("Inserting parameter type of code: " + code
 						+ ", codename: '" + codename
 						+ ", data type: '" + dataType.getCodename()
 						+ ", measurement unit: '" + measurementUnit.getCodename()
@@ -91,7 +91,7 @@ public final class ParameterTypeDatabase {
 				try {
 					preparedStatement.executeUpdate();
 				} catch (SQLException sqle) {
-					assert Log.errorMessage(sqle);
+					Log.errorMessage(sqle);
 					continue;
 				}
 				connection.commit();
@@ -118,7 +118,7 @@ public final class ParameterTypeDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

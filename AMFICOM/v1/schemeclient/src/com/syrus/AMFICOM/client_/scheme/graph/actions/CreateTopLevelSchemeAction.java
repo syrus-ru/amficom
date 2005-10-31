@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.26 2005/10/30 16:31:19 bass Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.27 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/10/30 16:31:19 $
+ * @version $Revision: 1.27 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -131,7 +131,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 //				else 
 //					res.setSchemeProtoElement(proto);
 			} catch (ApplicationException e1) {
-				assert Log.errorMessage(e1);
+				Log.errorMessage(e1);
 				return;
 			}
 		}
@@ -140,10 +140,10 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		try {
 			cellContainer = res.getCellContainer();
 		} catch (ApplicationException e1) {
-			assert Log.errorMessage(e1);
+			Log.errorMessage(e1);
 		}
 		if (cellContainer == null) {
-			assert Log.debugMessage("can't create top level for 'null' SchemeCellContainer", Level.FINER);
+			Log.debugMessage("can't create top level for 'null' SchemeCellContainer", Level.FINER);
 			return;
 		}
 		
@@ -165,7 +165,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 			label = ((SchemeProtoElement)cellContainer).getLabel();
 			break;
 		default:
-			assert Log.debugMessage(getClass().getSimpleName() + " | SchemeResource not initialized", Level.FINER);
+			Log.debugMessage(getClass().getSimpleName() + " | SchemeResource not initialized", Level.FINER);
 		return;
 		}
 		if (ir != null) {
@@ -187,7 +187,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 					CreateUgo.createProtoUgo((SchemeProtoElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 			SchemeElement se = (SchemeElement)cellContainer;
@@ -201,7 +201,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 				}
 				
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) {
 			//FIXME когда создается УГО для схемы SchemeDevice никуда не добавляется ибо SE не создается, поэтому после выхода он пропадает
@@ -214,7 +214,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 				sir = SchemeObjectsFactory.createSchemeImageResource();
 				cellContainer.setUgoCell(sir);
 			} catch (ApplicationException ex) {
-				assert Log.errorMessage(ex);
+				Log.errorMessage(ex);
 				return;
 			}
 		}

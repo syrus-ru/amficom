@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.7 2005/10/30 15:20:35 bass Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.8 2005/10/31 12:30:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -111,7 +111,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		try {
 			idlMapDescriptors = this.mscharServer.getMapDescriptors(idlSessionKey);
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage(e.getMessage());
+			Log.errorMessage(e.getMessage());
 			return Collections.emptyList();
 		}
 		if(idlMapDescriptors.length == 1) {
@@ -135,7 +135,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		try {
 			idlLayerDescriptors = this.mscharServer.getLayerDescriptors(mapDescriptor.getTransferable(),idlSessionKey);
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage(e.getMessage());
+			Log.errorMessage(e.getMessage());
 			return Collections.emptyList();
 		}
 		if(idlLayerDescriptors.length == 1) {
@@ -157,12 +157,12 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		String cacheDir = ApplicationProperties.getString(CACHE_DIR, "cache") + MAPS_LOADED_DIR;
 		File cacheDirFile = new File(cacheDir);
 		if(!cacheDirFile.isDirectory()) {
-			assert Log.debugMessage("Cache dir + " + "\"" + cacheDirFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			Log.debugMessage("Cache dir + " + "\"" + cacheDirFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
 			cacheDirFile.mkdirs();
 		}
 		File localMapDir = new File(cacheDirFile, mapDescriptor.getMapName());
 		if(!localMapDir.exists()) {
-			assert Log.debugMessage("Cache dir + " + "\"" + localMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			Log.debugMessage("Cache dir + " + "\"" + localMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
 			localMapDir.mkdir();
 		}
 		
@@ -183,13 +183,13 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 			String virtualDiskPath = MapPropertiesManager.getVirtualDiskPath() + MAPS_LOADED_DIR;
 			File virtualDiskFile = new File(virtualDiskPath);
 			if(!virtualDiskFile.isDirectory()) {
-				assert Log.debugMessage("Virtual disk dir + " + "\"" + virtualDiskFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+				Log.debugMessage("Virtual disk dir + " + "\"" + virtualDiskFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
 				virtualDiskFile.mkdirs();
 			}
 			//Запись пропатченного MDF файла на виртуальный диск			
 			File virtualDiskMapDir = new File(virtualDiskFile, mapDescriptor.getMapName());
 			if(!virtualDiskMapDir.exists()) {
-				assert Log.debugMessage("Virtual disk dir + " + "\"" + virtualDiskMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+				Log.debugMessage("Virtual disk dir + " + "\"" + virtualDiskMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
 				virtualDiskMapDir.mkdir();
 			}
 			
@@ -241,7 +241,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		long offset = 0;
 		File tempFile = new File(localFile.getPath() + ".swp");
 		if(tempFile.exists()) {
-			assert Log.debugMessage("Warning: swp file\" " + tempFile.getAbsolutePath() +  " \" exsists. Removing it...", Log.DEBUGLEVEL05);
+			Log.debugMessage("Warning: swp file\" " + tempFile.getAbsolutePath() +  " \" exsists. Removing it...", Log.DEBUGLEVEL05);
 			tempFile.delete();
 		}
 		try {
@@ -268,10 +268,10 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 			localFile.setLastModified(mapFileDescriptor.getLastModified());
 			return localFile;
 		} catch (AMFICOMRemoteException e) {
-			assert Log.errorMessage("AMFICOMRemoteException " + e.getMessage());
+			Log.errorMessage("AMFICOMRemoteException " + e.getMessage());
 			return null;
 		} catch (IOException e) {
-			assert Log.errorMessage("IOException" + e.getMessage());
+			Log.errorMessage("IOException" + e.getMessage());
 			return null;
 		}		
 	}
@@ -294,7 +294,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		try {
 			document = reader.read(localMdf);
 		} catch (DocumentException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			return;
 		}
 		 
@@ -307,7 +307,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 			}
 			String layerPath = layerPathNode.getText();
 			if (layerPath == null || layerPath.equals("")) {
-				assert Log.errorMessage("Wrong xml content in file " + localMdf.getAbsolutePath());
+				Log.errorMessage("Wrong xml content in file " + localMdf.getAbsolutePath());
 				continue;
 			}
 			layerPathNode.setText("tab:" + newDir);
@@ -318,7 +318,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 	        writer.write(document);
 	        writer.close();
 		} catch (IOException e) {
-			assert Log.errorMessage("IOException " + e.getMessage());
+			Log.errorMessage("IOException " + e.getMessage());
 		}
 	}
 }

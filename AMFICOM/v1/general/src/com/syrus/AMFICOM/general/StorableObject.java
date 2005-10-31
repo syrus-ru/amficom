@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.125 2005/10/30 15:20:43 bass Exp $
+ * $Id: StorableObject.java,v 1.126 2005/10/31 12:30:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.125 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.126 $, $Date: 2005/10/31 12:30:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -298,7 +298,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 */
 	protected final void rollbackUpdate() {
 		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == StorableObjectVersion.ILLEGAL_VERSION) {
-			assert Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
+			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
 					+ "' -- saved values are in illegal states!");
 			return;
 		}
@@ -422,7 +422,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 			try {
 				storableObjects.add((T) idlStorableObject.getNative());
 			} catch (IdlCreateObjectException coe) {
-				assert Log.errorMessage(coe);
+				Log.errorMessage(coe);
 			}
 		}
 		return storableObjects;
@@ -629,7 +629,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	private static final String DEFAULT_VALUE = "false";
 
 	static {
-		assert Log.debugMessage(KEY + '=' + System.getProperty(KEY, DEFAULT_VALUE), INFO);
+		Log.debugMessage(KEY + '=' + System.getProperty(KEY, DEFAULT_VALUE), INFO);
 	}
 
 	protected static boolean buildCacheOnModification() {
@@ -668,7 +668,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.125 $, $Date: 2005/10/30 15:20:43 $
+	 * @version $Revision: 1.126 $, $Date: 2005/10/31 12:30:19 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -793,7 +793,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.125 $, $Date: 2005/10/30 15:20:43 $
+	 * @version $Revision: 1.126 $, $Date: 2005/10/31 12:30:19 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

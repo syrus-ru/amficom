@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.14 2005/10/30 15:20:13 bass Exp $
+ * $Id: IdentifierGenerator.java,v 1.15 2005/10/31 12:29:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/31 12:29:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -77,7 +77,7 @@ public class IdentifierGenerator {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL08);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL08);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				minor = resultSet.getLong(1);
@@ -87,7 +87,7 @@ public class IdentifierGenerator {
 			}
 		}
 		catch (SQLException sqle) {
-			assert Log.errorMessage(sqle);
+			Log.errorMessage(sqle);
 			throw new IdentifierGenerationException("Cannot generate minor for entity: '" + entity + "' -- " + sqle.getMessage(), sqle);
 		}
 		finally {
@@ -111,7 +111,7 @@ public class IdentifierGenerator {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 

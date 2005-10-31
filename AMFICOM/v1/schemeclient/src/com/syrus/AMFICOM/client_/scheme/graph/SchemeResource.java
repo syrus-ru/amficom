@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.16 2005/10/30 15:20:56 bass Exp $
+ * $Id: SchemeResource.java,v 1.17 2005/10/31 12:30:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/30 15:20:56 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:29 $
  * @module schemeclient
  */
 
@@ -108,7 +108,7 @@ public class SchemeResource {
 		if (this.objectType == SCHEME_PROTO_ELEMENT) {
 			return getSchemeProtoElement();
 		}
-		assert Log.debugMessage("SchemeResource not initialyzed yet", Level.FINEST);
+		Log.debugMessage("SchemeResource not initialyzed yet", Level.FINEST);
 		return null;
 	}
 	
@@ -172,7 +172,7 @@ public class SchemeResource {
 				ir = SchemeObjectsFactory.createSchemeImageResource();
 				cellContainer.setUgoCell(ir);
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 				return;
 			}
 		}
@@ -207,7 +207,7 @@ public class SchemeResource {
 			try {
 				pes = path.getPathMembers();
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 				return new Object[0];
 			}	
 			pmIds = new TreeSet<Identifier>();

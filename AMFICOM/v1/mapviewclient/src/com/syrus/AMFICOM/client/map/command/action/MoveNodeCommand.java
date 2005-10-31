@@ -1,5 +1,5 @@
 /*-
- * $$Id: MoveNodeCommand.java,v 1.23 2005/10/30 16:31:18 bass Exp $$
+ * $$Id: MoveNodeCommand.java,v 1.24 2005/10/31 12:30:08 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * Перемещение узла.
  * 
- * @version $Revision: 1.23 $, $Date: 2005/10/30 16:31:18 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:08 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -78,7 +78,7 @@ public class MoveNodeCommand extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage("move node " //$NON-NLS-1$
+		Log.debugMessage("move node " //$NON-NLS-1$
 				+ this.node.getName() 
 				+ " (" + this.node.getId() + ")" //$NON-NLS-1$ //$NON-NLS-2$
 				+ " to new location ", //$NON-NLS-1$

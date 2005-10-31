@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorCloseViewCommand.java,v 1.28 2005/10/30 15:20:33 bass Exp $$
+ * $$Id: MapEditorCloseViewCommand.java,v 1.29 2005/10/31 12:30:09 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.28 $, $Date: 2005/10/30 15:20:33 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/31 12:30:09 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -83,7 +83,7 @@ public class MapEditorCloseViewCommand extends AbstractCommand {
 			setResult(Command.RESULT_OK);
 		} catch(MapException e) {
 			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, I18N.getString(MapEditorResourceKeys.ERROR_MAP_EXCEPTION_SERVER_CONNECTION)));
-			assert Log.debugMessage(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 

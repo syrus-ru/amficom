@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.25 2005/10/30 15:20:13 bass Exp $
+* $Id: CORBAServer.java,v 1.26 2005/10/31 12:29:53 bass Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/31 12:29:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -112,7 +112,7 @@ public class CORBAServer {
 		final Properties properties = System.getProperties();
 		final String host = ApplicationProperties.getString("ORBInitialHost", DEFAULT_ORB_INITIAL_HOST);
 		final int port = ApplicationProperties.getInt("ORBInitialPort", DEFAULT_ORB_INITIAL_PORT);
-		assert Log.debugMessage("host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
+		Log.debugMessage("host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
 		properties.setProperty("org.omg.CORBA.ORBInitialHost", host);
 		properties.setProperty("org.omg.CORBA.ORBInitialPort", Integer.toString(port));
 		final String[] args = null;
@@ -124,7 +124,7 @@ public class CORBAServer {
 		try {
 			rootPoa = POAHelper.narrow(this.orb.resolve_initial_references("RootPOA"));
 		} catch (org.omg.CORBA.ORBPackage.InvalidName in) {
-			assert Log.errorMessage(in);
+			Log.errorMessage(in);
 			return;
 		}
 		final Policy[] policies = new Policy[7];
@@ -153,10 +153,10 @@ public class CORBAServer {
 
 			final NameComponent[] contextName = rootNamingContext.to_name(rootContextNameStr);
 			try {
-				assert Log.debugMessage("Creating naming context: '" + rootContextNameStr + "'", Log.DEBUGLEVEL08);
+				Log.debugMessage("Creating naming context: '" + rootContextNameStr + "'", Log.DEBUGLEVEL08);
 				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.bind_new_context(contextName));
 			} catch (AlreadyBound ab) {
-				assert Log.debugMessage("Naming context: '" + rootContextNameStr + "' already bound; trying to resolve", Log.DEBUGLEVEL08);
+				Log.debugMessage("Naming context: '" + rootContextNameStr + "' already bound; trying to resolve", Log.DEBUGLEVEL08);
 				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.resolve_str(rootContextNameStr));
 			}
 		} catch (final UserException ue) {
@@ -208,7 +208,7 @@ public class CORBAServer {
 				final NameComponent[] nameComponents = this.namingContext.to_name(name);
 				this.namingContext.rebind(nameComponents, reference);
 				this.servantNames.add(name);
-				assert Log.debugMessage("Activated servant '" + name + "'", Log.DEBUGLEVEL05);
+				Log.debugMessage("Activated servant '" + name + "'", Log.DEBUGLEVEL05);
 			} catch (UserException ue) {
 				throw new CommunicationException("Cannot activate servant '" + name + "' -- " + ue.getMessage(), ue);
 			}
@@ -237,7 +237,7 @@ public class CORBAServer {
 					this.poa.deactivate_object(id);
 				}
 
-				assert Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
+				Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
 			} catch (UserException ue) {
 				throw new CommunicationException("Cannot deactivate servant '" + name + "' -- " + ue.getMessage(), ue);
 			}
@@ -248,9 +248,9 @@ public class CORBAServer {
 
 	public org.omg.CORBA.Object resolveReference(final String name) throws CommunicationException {
 		try {
-			assert Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
+			Log.debugMessage("Resolving name: " + name, Log.DEBUGLEVEL08);
 			final org.omg.CORBA.Object ref = this.namingContext.resolve_str(name);
-			assert Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
+			Log.debugMessage("Resolved reference: " + this.orb.object_to_string(ref), Log.DEBUGLEVEL10);
 			return ref;
 		} catch (UserException nf) {
 			throw new CommunicationException('\'' + name + "' " + I18N.getString("Error.Text.NotFound"), nf);
@@ -286,10 +286,10 @@ public class CORBAServer {
 				if (binding.binding_type.value() == BindingType._nobject) {
 					ret[i] = bindingName;
 				} else {
-					assert Log.errorMessage("Binding '" + bindingName + "' not of type object");
+					Log.errorMessage("Binding '" + bindingName + "' not of type object");
 				}
 			} catch (InvalidName in) {
-				assert Log.errorMessage(in);
+				Log.errorMessage(in);
 			}
 		}
 		return ret;
@@ -306,14 +306,14 @@ public class CORBAServer {
 					if (!this.hooks.contains(wrappedHook)) {
 						this.hooks.add(wrappedHook);
 					} else {
-						assert Log.errorMessage("Cannot add shutdown hook -- it is already added");
+						Log.errorMessage("Cannot add shutdown hook -- it is already added");
 					}
 				}
 			} else {
-				assert Log.errorMessage("Cannot add shutdown hook -- it is already running");
+				Log.errorMessage("Cannot add shutdown hook -- it is already running");
 			}
 		} else {
-			assert Log.errorMessage("CORBAServer | Cannot add shutdown hook -- shutting down");
+			Log.errorMessage("CORBAServer | Cannot add shutdown hook -- shutting down");
 		}
 	}
 
@@ -330,10 +330,10 @@ public class CORBAServer {
 				}
 				return ret;
 			}
-			assert Log.errorMessage("Cannot remove NULL shutdown hook");
+			Log.errorMessage("Cannot remove NULL shutdown hook");
 			return false;
 		}
-		assert Log.errorMessage("Cannot remove shutdown hook -- shutting down");
+		Log.errorMessage("Cannot remove shutdown hook -- shutting down");
 		return false;
 	}
 
@@ -356,7 +356,7 @@ public class CORBAServer {
 					this.unbindServant(it.next());
 					it.remove();
 				} catch (CommunicationException ce) {
-					assert Log.errorMessage(ce);
+					Log.errorMessage(ce);
 				}
 			}
 		}
@@ -364,7 +364,7 @@ public class CORBAServer {
 		try {
 			this.poa.the_POAManager().deactivate(false, false);
 		} catch (UserException ue) {
-			assert Log.errorMessage(ue);
+			Log.errorMessage(ue);
 		}
 		this.poa.destroy(false, false);
 		this.orb.shutdown(true);
@@ -375,10 +375,10 @@ public class CORBAServer {
 			final NameComponent[] nameComponents = this.namingContext.to_name(name);
 			this.namingContext.unbind(nameComponents);
 			//this.servantNames.remove(name);
-			assert Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
+			Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
 		}
 		catch (NotFound nf) {
-			assert Log.errorMessage("Cannot deactivate servant '" + name + "' -- no such servant");
+			Log.errorMessage("Cannot deactivate servant '" + name + "' -- no such servant");
 		}
 		catch (UserException ue) {
 			throw new CommunicationException("Cannot deactivate servant '" + name + "'", ue);
@@ -427,7 +427,7 @@ public class CORBAServer {
 				stringBuffer.append(name);
 				stringBuffer.append('\n');
 			} catch (org.omg.CosNaming.NamingContextPackage.InvalidName in) {
-				assert Log.errorMessage(in);
+				Log.errorMessage(in);
 			}
 		}
 

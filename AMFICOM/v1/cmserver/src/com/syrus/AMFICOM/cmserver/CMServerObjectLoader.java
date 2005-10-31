@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.14 2005/10/30 15:20:44 bass Exp $
+ * $Id: CMServerObjectLoader.java,v 1.15 2005/10/31 12:30:20 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:44 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/31 12:30:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -96,7 +96,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 			loadedObjects = this.corbaObjectLoader.loadStorableObjects(loadIds);
 		}
 		catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 
 		if (loadedObjects != null && !loadedObjects.isEmpty()) {
@@ -108,7 +108,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 				database.save(loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 			}
 		}
 
@@ -126,7 +126,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 			loadedObjects = this.corbaObjectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
 		}
 		catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 
 		if (loadedObjects != null && !loadedObjects.isEmpty()) {
@@ -138,7 +138,7 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 				database.save(loadedObjects);
 			}
 			catch (ApplicationException ae) {
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 			}
 		}
 

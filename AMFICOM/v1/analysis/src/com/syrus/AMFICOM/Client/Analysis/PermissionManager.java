@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.8 2005/10/30 18:23:33 saa Exp $
+ * $Id: PermissionManager.java,v 1.9 2005/10/31 12:30:22 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/10/30 18:23:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:22 $
  * @module analysis
  */
 public class PermissionManager {
@@ -48,7 +48,7 @@ public class PermissionManager {
 //			System.err.println("Permission checked for " + op);
 			return Checker.isPermitted(code);
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			// XXX: if an ApplicationException happens, treat as 'disallow'
 			return false;
 		}

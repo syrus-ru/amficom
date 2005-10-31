@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.14 2005/10/30 15:20:54 bass Exp $
+ * $Id: CreateBlockPortAction.java,v 1.15 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -79,7 +79,7 @@ public class CreateBlockPortAction extends AbstractAction {
 			for (Iterator<DefaultEdge> it = p.edges(); it.hasNext();) {
 				DefaultEdge edge = it.next();
 				if (edge instanceof BlockPortEdge) {
-					assert Log.debugMessage("BlockPortEdge already connected to port " + cell, Level.FINEST);
+					Log.debugMessage("BlockPortEdge already connected to port " + cell, Level.FINEST);
 					return;
 				}
 			}

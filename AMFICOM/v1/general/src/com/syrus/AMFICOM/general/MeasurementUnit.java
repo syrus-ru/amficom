@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.10 2005/10/30 15:20:43 bass Exp $
+ * $Id: MeasurementUnit.java,v 1.11 2005/10/31 12:30:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/31 12:30:18 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -62,7 +62,7 @@ public enum MeasurementUnit implements Codeable {
 			case IdlMeasurementUnit._UNKNOWN_MEASUREMENTUNIT:
 				return UNKNOWN;
 			default:
-				assert Log.errorMessage("Illegal IDL code: " + code + ", returning RAW");
+				Log.errorMessage("Illegal IDL code: " + code + ", returning RAW");
 				return UNKNOWN;
 		}
 	}
@@ -88,7 +88,7 @@ public enum MeasurementUnit implements Codeable {
 		try {
 			return IdlMeasurementUnit.from_int(this.getCode());
 		} catch (org.omg.CORBA.BAD_PARAM bp) {
-			assert Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			Log.errorMessage("Illegal code: " + this.getCode() + ", returning UNKNOWN");
 			return IdlMeasurementUnit.UNKNOWN_MEASUREMENTUNIT;
 		}
 	}

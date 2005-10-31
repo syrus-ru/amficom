@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelConfiguration.java,v 1.2 2005/10/30 15:20:19 bass Exp $
+ * $Id: LangModelConfiguration.java,v 1.3 2005/10/31 12:29:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/30 15:20:19 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/31 12:29:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -33,7 +33,7 @@ final class LangModelConfiguration {
 			return RESOURCE_BUNDLE.getString(validKey);
 		}
 		catch (MissingResourceException mre) {
-			assert Log.errorMessage("Key '" + validKey + "' not found in resource bundle '" + RESOURCE_BUNDLE + "'");
+			Log.errorMessage("Key '" + validKey + "' not found in resource bundle '" + RESOURCE_BUNDLE + "'");
 			return "!" + validKey + "!";
 		}
 	}

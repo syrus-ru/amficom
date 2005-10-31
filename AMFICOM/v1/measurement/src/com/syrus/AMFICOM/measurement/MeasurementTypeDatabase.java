@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementTypeDatabase.java,v 1.116 2005/10/30 15:20:39 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.117 2005/10/31 12:30:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/10/30 15:20:39 $
+ * @version $Revision: 1.117 $, $Date: 2005/10/31 12:30:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -49,11 +49,11 @@ public final class MeasurementTypeDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final MeasurementType measurementType : MeasurementType.values()) {
 				preparedStatement.setInt(1, measurementType.getCode());
 				preparedStatement.setString(2, measurementType.getCodename());
-				assert Log.debugMessage("Inserting measurement type '" + measurementType.getCodename() + "'", Log.DEBUGLEVEL09);
+				Log.debugMessage("Inserting measurement type '" + measurementType.getCodename() + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
@@ -73,7 +73,7 @@ public final class MeasurementTypeDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

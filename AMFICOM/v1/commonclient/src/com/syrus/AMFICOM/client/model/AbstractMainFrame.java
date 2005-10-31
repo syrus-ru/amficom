@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.31 2005/10/30 15:20:24 bass Exp $
+ * $Id: AbstractMainFrame.java,v 1.32 2005/10/31 12:30:02 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.32 $, $Date: 2005/10/31 12:30:02 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -181,7 +181,7 @@ implements PropertyChangeListener {
 				final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
 				this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
 			} catch (final ApplicationException ae) {
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 				showErrorMessage(I18N.getString("Error.CannotAcquireObject"));
 				return;
 			}
@@ -246,7 +246,7 @@ implements PropertyChangeListener {
 				return null;
 			}
 		} catch (final ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 			// and return problems
 		}
 		return permissionCodename.getDescription() 

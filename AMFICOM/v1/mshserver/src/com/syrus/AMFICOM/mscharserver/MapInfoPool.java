@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoPool.java,v 1.6 2005/10/30 15:20:34 bass Exp $
+ * $Id: MapInfoPool.java,v 1.7 2005/10/31 12:30:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:11 $
  * @author $Author: bass $
  * @module mscharserver
  */
@@ -57,11 +57,11 @@ final class MapInfoPool {
 	static void cancelRendering(final SessionKey key) throws IllegalDataException {
 		final MapJLocalRenderer mapJLocalRenderer = keyRendererHashMap.get(key);
 		if(mapJLocalRenderer == null) {
-			assert Log.errorMessage("Wrong sessionKey" + key);
+			Log.errorMessage("Wrong sessionKey" + key);
 			return;
 		}
 		try {
-			assert Log.errorMessage("Stoping render");
+			Log.errorMessage("Stoping render");
 			mapJLocalRenderer.cancelRendering();
 		} catch (Exception e) {
 			throw new IllegalDataException("MapInfoPool.cancelRendering | IllegalDataException " + e.getMessage());
@@ -71,12 +71,12 @@ final class MapInfoPool {
 	static List<MapFeature> findFeature(final String featureName, final SessionKey key) throws IllegalDataException {
 		final MapJLocalRenderer mapJLocalRenderer = keyRendererHashMap.get(key);
 		if(mapJLocalRenderer == null) {
-			assert Log.errorMessage("Wrong sessionKey" + key);
+			Log.errorMessage("Wrong sessionKey" + key);
 			return null;
 		}
 		List<MapFeature> mapFeatures;
 		try {
-			assert Log.errorMessage("Trying to find");
+			Log.errorMessage("Trying to find");
 			mapFeatures = mapJLocalRenderer.findFeature(featureName);
 			if(mapFeatures == null || mapFeatures.isEmpty()) {
 				mapFeatures = Collections.singletonList(nullMapFeatureStub);

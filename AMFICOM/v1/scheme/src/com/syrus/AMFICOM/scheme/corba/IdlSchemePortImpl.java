@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemePortImpl.java,v 1.7 2005/10/30 15:20:16 bass Exp $
+ * $Id: IdlSchemePortImpl.java,v 1.8 2005/10/31 12:29:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:16 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/31 12:29:55 $
  * @module scheme
  */
 final class IdlSchemePortImpl extends IdlSchemePort {
@@ -67,7 +67,7 @@ final class IdlSchemePortImpl extends IdlSchemePort {
 		try {
 			return new SchemePort(this);
 		} catch (final CreateObjectException coe) {
-			assert Log.debugMessage(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

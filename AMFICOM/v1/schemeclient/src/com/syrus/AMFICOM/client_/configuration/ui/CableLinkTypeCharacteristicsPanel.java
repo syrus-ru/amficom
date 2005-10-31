@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.15 2005/10/30 15:20:53 bass Exp $
+ * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.16 2005/10/31 12:30:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:53 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:25 $
  * @module schemeclient
  */
 
@@ -47,7 +47,7 @@ public class CableLinkTypeCharacteristicsPanel extends CharacteristicsPanel {
 				}
 				super.addCharacteristics(this.type.getCharacteristics(true), this.type.getId());
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 				super.showNoSelection();
 			}
 		} else {

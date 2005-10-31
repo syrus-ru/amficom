@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.97 2005/10/30 15:20:39 bass Exp $
+ * $Id: MeasurementDatabase.java,v 1.98 2005/10/31 12:30:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/10/30 15:20:39 $
+ * @version $Revision: 1.98 $, $Date: 2005/10/31 12:30:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -178,7 +178,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 			throw new ObjectNotFoundException("Cannot find measurements for test '" + testId + "'");
 		} catch (IllegalDataException ide) {
 			//-Never
-			assert Log.errorMessage(ide);
+			Log.errorMessage(ide);
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}

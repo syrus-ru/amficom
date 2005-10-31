@@ -66,7 +66,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/10/30 15:20:22 $
+ * @version $Revision: 1.91 $, $Date: 2005/10/31 12:29:59 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -387,9 +387,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					this.setId = parameterSet.getId();
 	
 	//				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
-//					assert Log.debugMessage(Log.FINEST);
+//					Log.debugMessage(Log.FINEST);
 				} catch (final IllegalArgumentException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 					AbstractMainFrame.showErrorMessage(this, e);
 				} catch (ApplicationException ae) {
 					AbstractMainFrame.showErrorMessage(this, ae);
@@ -489,7 +489,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 				byteArray = new ByteArray(Boolean.valueOf(value).booleanValue());
 				break;
 			default:
-				assert Log.errorMessage("Illegal data type '" + dataType.getCodename() + "'/" + dataType.getCode()
+				Log.errorMessage("Illegal data type '" + dataType.getCodename() + "'/" + dataType.getCode()
 						+ " for parameter type '" + parameterType.getCodename() + "'");
 		}
 		return byteArray;
@@ -582,7 +582,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|" //$NON-NLS-1$
 							+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")"); //$NON-NLS-1$
 	
-//					assert Log.debugMessage("characteristics.size() " + characteristics.size(), Level.FINEST);
+//					Log.debugMessage("characteristics.size() " + characteristics.size(), Level.FINEST);
 	
 					for (final Characteristic characteristic : characteristics) {
 						final StorableObjectType type = characteristic.getType();
@@ -652,8 +652,8 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									}
 								}
 	
-//								assert Log.debugMessage("waveLength: " + waveLength, Log.FINEST);
-//								assert Log.debugMessage("suffix: " + suffix, Log.FINEST);
+//								Log.debugMessage("waveLength: " + waveLength, Log.FINEST);
+//								Log.debugMessage("suffix: " + suffix, Log.FINEST);
 								if ((waveLength != null) && (suffix != null)) {
 									Map<BigDecimal, String> map = null;
 									if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX)) {
@@ -719,9 +719,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						}
 	
 						if (this.pulseWidthLowResMap != null) {
-//							assert Log.debugMessage("this.pulseWidthLowResMap != null ", Log.FINEST);
+//							Log.debugMessage("this.pulseWidthLowResMap != null ", Log.FINEST);
 							final String value = this.pulseWidthLowResMap.get(wavelength);
-//							assert Log.debugMessage("pulseWidthLowResMap value: " + value, Log.FINEST);
+//							Log.debugMessage("pulseWidthLowResMap value: " + value, Log.FINEST);
 							if (value != null) {
 								final String[] values = value.split("\\s+"); //$NON-NLS-1$
 								final BigDecimal[] bgValues = new BigDecimal[values.length];
@@ -801,7 +801,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(measurementSetup);
 			final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
 			measurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
-			assert Log.debugMessage(measurementSetup.getMeasurementDuration()/1000 + " sec",
+			Log.debugMessage(measurementSetup.getMeasurementDuration()/1000 + " sec",
 				Log.DEBUGLEVEL09);
 		} catch (final DataFormatException e) {
 			// TODO
@@ -820,7 +820,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		final boolean descriptionChanged = !description.equals(this.oldDescription);
 		if (parameterSet != null && (parameterSet.isChanged()
 				|| descriptionChanged)) {
-				assert Log.debugMessage(Log.DEBUGLEVEL10);
+				Log.debugMessage(Log.DEBUGLEVEL10);
 				this.oldDescription = description;
 				final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
 				if (!selectedTestIds.isEmpty()) { 
@@ -843,7 +843,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 											final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(baseMeasurementSetup);
 											final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
 											baseMeasurementSetup.setMeasurementDuration((long) (1000 * ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters)));
-											assert Log.debugMessage(baseMeasurementSetup.getMeasurementDuration()/1000 + " sec",
+											Log.debugMessage(baseMeasurementSetup.getMeasurementDuration()/1000 + " sec",
 												Log.DEBUGLEVEL10);
 										} catch (final DataFormatException e) {
 											// TODO
@@ -989,13 +989,13 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 		for (int i = 0; i < setParameters.length; i++) {
 			final ParameterType parameterType = setParameters[i].getType();
-//			assert Log.debugMessage("codename " + codename , Level.FINE);
+//			Log.debugMessage("codename " + codename , Level.FINE);
 			if (parameterType.equals(ParameterType.REF_TRACE_LENGTH)) {
 				this.selectCBValue(this.maxDistanceComboBox, new BigDecimal(setParameters[i].getStringValue()));
 			} else if (parameterType.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
 				try {
 					final boolean b = new ByteArray(setParameters[i].getValue()).toBoolean();
-//					assert Log.debugMessage("TRACE_FLAG_GAIN_SPLICE " + b, Log.FINEST);
+//					Log.debugMessage("TRACE_FLAG_GAIN_SPLICE " + b, Log.FINEST);
 					this.gsOptionBox.setSelected(b);
 
 				} catch (final IOException e) {
@@ -1005,7 +1005,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			} else if (parameterType.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
 				try {
 					final boolean b = new ByteArray(setParameters[i].getValue()).toBoolean();
-//					assert Log.debugMessage("TRACE_FLAG_LIVE_FIBER_DETECT " + b, Log.FINEST);
+//					Log.debugMessage("TRACE_FLAG_LIVE_FIBER_DETECT " + b, Log.FINEST);
 					this.lfdOptionBox.setSelected(b);
 
 				} catch (final IOException e) {
@@ -1018,7 +1018,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		for (int i = 0; i < setParameters.length; i++) {
 			final ParameterType parameterType = setParameters[i].getType();
 			final String stringValue = setParameters[i].getStringValue();
-			assert Log.debugMessage(stringValue, Log.DEBUGLEVEL10);
+			Log.debugMessage(stringValue, Log.DEBUGLEVEL10);
 			if (parameterType.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
 				this.refractTextField.setText(stringValue);
 			} else if (parameterType.equals(ParameterType.REF_WAVE_LENGTH)) {
@@ -1170,7 +1170,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			public void actionPerformed(ActionEvent e) {				
 				if (!ReflectometryTestPanel.this.skip) {
 					synchronized(ReflectometryTestPanel.this) {
-						assert Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL10);
+						Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL10);
 						ReflectometryTestPanel.this.refreshTestsSet();
 					}
 				}

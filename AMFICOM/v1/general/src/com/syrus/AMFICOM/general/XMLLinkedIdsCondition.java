@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsCondition.java,v 1.4 2005/10/30 15:20:42 bass Exp $
+* $Id: XMLLinkedIdsCondition.java,v 1.5 2005/10/31 12:30:18 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/10/30 15:20:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/10/31 12:30:18 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
@@ -52,19 +52,19 @@ extends XMLStorableObjectCondition<LinkedIdsCondition> {
 					new Object[] { condition, 
 							driver});
 		} catch (ClassNotFoundException cnfe) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
 			, Level.WARNING);
 		} catch (ClassCastException cce) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
 					+ LinkedIdsCondition.class.getName(), Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
 			, Level.WARNING);
 		} catch (InstantiationException ie) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
 			, Level.WARNING);
 		} catch (InvocationTargetException ite) {
@@ -76,29 +76,29 @@ extends XMLStorableObjectCondition<LinkedIdsCondition> {
 				else
 					assert false: message;
 			} else		
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 					+ "constructor throws an exception in class "
 					+ className, Level.WARNING);
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(iae, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 			, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(iae, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 			, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(se, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
+			Log.debugMessage(se, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 			, Level.SEVERE);
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.37 2005/10/30 15:20:39 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.38 2005/10/31 12:30:15 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/10/30 15:20:39 $
+ * @version $Revision: 1.38 $, $Date: 2005/10/31 12:30:15 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -177,16 +177,16 @@ public final class IntervalsTemporalPattern
 					temporalPattern = (AbstractTemporalPattern) StorableObjectPool.getStorableObject(abstractTemporalPatternId, true);
 				} catch (ApplicationException e) {
 					// nothing do, just ignore temporal pattern
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			}
 
-			// assert Log.debugMessage("milliseconds " + milliseconds, Log.FINEST);
+			// Log.debugMessage("milliseconds " + milliseconds, Log.FINEST);
 			long localStartTime = startDate.getTime() + milliseconds.longValue();
 
 			final Date localStartDate = new Date(localStartTime);
 
-			// assert Log.debugMessage("previousDate:" +
+			// Log.debugMessage("previousDate:" +
 			// previousDate + " ,\n\t localStartDate:" + localStartDate + ",
 			// \n\tpreviousTemporalPattern:"
 			// + (previousTemporalPattern == null ? "'null'" :
@@ -199,7 +199,7 @@ public final class IntervalsTemporalPattern
 			previousDuration = this.intervalsDuration != null ? (Long) this.intervalsDuration.get(milliseconds) : null;
 		}
 
-		// assert Log.debugMessage("previousDate:" +
+		// Log.debugMessage("previousDate:" +
 		// previousDate + " ,\n\t localStartDate:" + new Date(this.endTime) + ",
 		// \n\tpreviousTemporalPattern:"
 		// + (previousTemporalPattern == null ? "'null'" :
@@ -221,9 +221,9 @@ public final class IntervalsTemporalPattern
 					endDate2 = endDate;
 				} else {
 					long time = startDate.getTime() + duration.longValue();
-					// assert Log.debugMessage("duration occur " + duration + " , " + new Date(time) + " \n\ttime < endDate.getTime():" + (time < endDate.getTime()), Log.FINEST);
+					// Log.debugMessage("duration occur " + duration + " , " + new Date(time) + " \n\ttime < endDate.getTime():" + (time < endDate.getTime()), Log.FINEST);
 					endDate2 = time < endDate.getTime() ? new Date(time) : endDate;
-					// assert Log.debugMessage("duration occur, start date is " + startDate +", end date is " + endDate2, Log.FINEST);
+					// Log.debugMessage("duration occur, start date is " + startDate +", end date is " + endDate2, Log.FINEST);
 				}
 				super.times.addAll(temporalPattern.getTimes(startDate, endDate2));
 			}
@@ -299,9 +299,9 @@ public final class IntervalsTemporalPattern
 					Long duration2 = this.intervalsDuration.get(ms);
 					long l3 = offset.longValue();
 					long duration3 = duration2 != null ? duration2.longValue() : 0;
-					// assert Log.debugMessage("1: " + (l3 >= l ), Log.FINEST);
-					// assert Log.debugMessage("1.5: " + (l <= l3 + duration3), Log.FINEST);
-					// assert Log.debugMessage("2: " + (l < l3 && (l + dur > l3)), Log.FINEST);
+					// Log.debugMessage("1: " + (l3 >= l ), Log.FINEST);
+					// Log.debugMessage("1.5: " + (l <= l3 + duration3), Log.FINEST);
+					// Log.debugMessage("2: " + (l < l3 && (l + dur > l3)), Log.FINEST);
 					if ((duration3 == 0 && l == l3) || (duration3 != 0 && l3 >= l && l <= l3 + duration3) || (l < l3 && (l + dur > l3))) {
 						throw new IllegalDataException(LangModelMeasurement.getString("Cannot put over other items"));
 					}
@@ -328,7 +328,7 @@ public final class IntervalsTemporalPattern
 		for (final Iterator<Long> it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
 			final Long ms = it.next();
 			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
-			assert Log.debugMessage("ms:"
+			Log.debugMessage("ms:"
 					+ ms.longValue()
 					+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Level.FINEST);
 		}
@@ -337,7 +337,7 @@ public final class IntervalsTemporalPattern
 			for (final Iterator<Long> it = this.undoIntervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
 				final Long ms = it.next();
 				final Identifier abstractTemporalPatternId = this.undoIntervalsAbstractTemporalPatternMap.get(ms);
-				assert Log.debugMessage("UNDO ms:"
+				Log.debugMessage("UNDO ms:"
 						+ ms.longValue()
 						+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Level.FINEST);
 			}
@@ -598,7 +598,7 @@ public final class IntervalsTemporalPattern
 	}
 
 	private void saveState() {
-		// assert Log.debugMessage("1", Log.FINEST);
+		// Log.debugMessage("1", Log.FINEST);
 		if (this.intervalsAbstractTemporalPatternMap == null
 				&& this.intervalsDuration == null
 				&& this.undoIntervalsAbstractTemporalPatternMap == null
@@ -611,7 +611,7 @@ public final class IntervalsTemporalPattern
 			} else {
 				this.undoIntervalsAbstractTemporalPatternMap.clear();
 			}
-			// assert Log.debugMessage("2", Log.FINEST);
+			// Log.debugMessage("2", Log.FINEST);
 			this.undoIntervalsAbstractTemporalPatternMap.putAll(this.intervalsAbstractTemporalPatternMap);
 		}
 
@@ -621,7 +621,7 @@ public final class IntervalsTemporalPattern
 			} else {
 				this.undoIntervalsDuration.clear();
 			}
-			// assert Log.debugMessage("3", Log.FINEST);
+			// Log.debugMessage("3", Log.FINEST);
 			this.undoIntervalsDuration.putAll(this.intervalsDuration);
 		}
 
@@ -634,7 +634,7 @@ public final class IntervalsTemporalPattern
 		}
 
 		if (this.undoIntervalsAbstractTemporalPatternMap != null || this.undoIntervalsDuration != null) {
-			// assert Log.debugMessage(Log.FINEST);
+			// Log.debugMessage(Log.FINEST);
 			this.printStructure();
 
 			SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>(this.intervalsAbstractTemporalPatternMap);
@@ -768,7 +768,7 @@ public final class IntervalsTemporalPattern
 		for (Iterator<Long> it = offsets.iterator(); it.hasNext();) {
 			final Long offset = it.next();
 			final long ms = offset.longValue();
-			// assert Log.debugMessage("ms " + ms, Log.FINEST);
+			// Log.debugMessage("ms " + ms, Log.FINEST);
 			final Identifier temporalPatternId = this.intervalsAbstractTemporalPatternMap.get(offset);
 			if (temporalPatternId.isVoid())
 				continue;
@@ -786,7 +786,7 @@ public final class IntervalsTemporalPattern
 					for (Iterator iterator = intervalsAbstractTemporalPatternMap2.keySet().iterator(); iterator.hasNext();) {
 						Long offset2 = (Long) iterator.next();
 						Long newOffset = new Long(offset2.longValue() + ms);
-						// assert Log.debugMessage("INTERVALS " + offset2, Log.FINEST);
+						// Log.debugMessage("INTERVALS " + offset2, Log.FINEST);
 
 						this.intervalsAbstractTemporalPatternMap.put(newOffset, intervalsAbstractTemporalPatternMap2.get(offset2));
 						this.intervalsDuration.put(newOffset, intervalsDuration2.get(offset2));
@@ -795,23 +795,23 @@ public final class IntervalsTemporalPattern
 				case ObjectEntities.PERIODICALTEMPORALPATTERN_CODE:
 					PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 							true);
-					// assert Log.debugMessage("PERIODICAL duration: " + duration, Log.FINEST);
+					// Log.debugMessage("PERIODICAL duration: " + duration, Log.FINEST);
 					SortedSet times2 = periodicalTemporalPattern.getTimes(0, duration != null ? duration.longValue() : 0);
 					long firstTime = 0;
 					boolean initedFirstTime = false;
 					for (Iterator iterator = times2.iterator(); iterator.hasNext();) {
 						Date date = (Date) iterator.next();
-						// assert Log.debugMessage("date " + date, Log.FINEST);
+						// Log.debugMessage("date " + date, Log.FINEST);
 						if (!initedFirstTime) {
 							firstTime = date.getTime();
 							initedFirstTime = true;
 						}
-						// assert Log.debugMessage("add " + new Long(ms + date.getTime() - firstTime), Log.FINEST);
+						// Log.debugMessage("add " + new Long(ms + date.getTime() - firstTime), Log.FINEST);
 						this.intervalsAbstractTemporalPatternMap.put(new Long(ms + date.getTime() - firstTime), Identifier.VOID_IDENTIFIER);
 					}
 					break;
 				default:
-					assert Log.debugMessage("temporalPatternId isn't support as temporal pattern", Level.FINEST);
+					Log.debugMessage("temporalPatternId isn't support as temporal pattern", Level.FINEST);
 					break;
 			}
 

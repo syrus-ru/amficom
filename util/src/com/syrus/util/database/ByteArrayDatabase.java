@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.21 2005/10/30 15:20:21 bass Exp $
+ * $Id: ByteArrayDatabase.java,v 1.22 2005/10/31 12:29:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:21 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/31 12:29:58 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -44,7 +44,7 @@ public final class ByteArrayDatabase {
 		final String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE";
 		try {
 			statement = conn.createStatement();
-			assert Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09);
 			ors = statement.executeQuery(s);
 			if (ors.next()) {
 				final Blob blob = ors.getBlob(column);
@@ -78,7 +78,7 @@ public final class ByteArrayDatabase {
 					}
 				}
 			} catch (SQLException sqle) {
-				assert Log.errorMessage(sqle);
+				Log.errorMessage(sqle);
 			}
 		}
 	}

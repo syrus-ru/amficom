@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultCORBAActionProcessor.java,v 1.7 2005/10/30 15:20:13 bass Exp $
+ * $Id: DefaultCORBAActionProcessor.java,v 1.8 2005/10/31 12:29:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.8 $, $Date: 2005/10/31 12:29:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -38,7 +38,7 @@ public class DefaultCORBAActionProcessor implements CORBAActionProcessor {
 							if (this.restoreLogin()) {
 								continue;
 							}
-							assert Log.debugMessage("Login not restored", Level.INFO);
+							Log.debugMessage("Login not restored", Level.INFO);
 							return;
 						}
 						throw new LoginException(are.message);

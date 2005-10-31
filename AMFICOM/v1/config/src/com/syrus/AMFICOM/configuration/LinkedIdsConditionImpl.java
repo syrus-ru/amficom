@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.34 2005/10/30 15:20:19 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.35 2005/10/31 12:29:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/10/30 15:20:19 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/31 12:29:56 $
  * @author $Author: bass $
  * @module config
  */
@@ -59,7 +59,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 			}
 		} catch (final ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 		return condition;
 	}
@@ -121,7 +121,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							Equipment equipment1 = (Equipment) StorableObjectPool.getStorableObject(port.getEquipmentId(), true);
 							condition = this.checkDomain(equipment1);
 						} catch (ApplicationException ae) {
-							assert Log.errorMessage(ae);
+							Log.errorMessage(ae);
 						}
 						break;
 					default:

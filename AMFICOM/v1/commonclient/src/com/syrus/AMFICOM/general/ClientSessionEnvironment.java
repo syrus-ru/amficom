@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.35 2005/10/30 15:20:24 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.36 2005/10/31 12:30:02 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.36 $, $Date: 2005/10/31 12:30:02 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -76,7 +76,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				break;
 			default:
 				final String msg = I18N.getString("Error.UnknownSessionKind") + " -- " + sessionKind;
-				assert Log.errorMessage(msg);
+				Log.errorMessage(msg);
 				throw new IllegalDataException(msg);
 		}
 
@@ -172,7 +172,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		try {
 			this.deactivateServant();
 		} catch (CommunicationException ce) {
-			assert Log.errorMessage(ce);
+			Log.errorMessage(ce);
 		}
 		super.logout();
 	}

@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.25 2005/10/30 14:48:51 bass Exp $
+* $Id: WrapperedTable.java,v 1.26 2005/10/31 12:30:01 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/30 14:48:51 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/31 12:30:01 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -177,12 +177,12 @@ public final class WrapperedTable<T> extends ATable {
 		for (int i=1; i < tsIndices.length; i++) {
 			if (tsIndices[i] - prevIndex > 1) {
 				if (addSelection) {
-					assert Log.debugMessage("add selection "
+					Log.debugMessage("add selection "
 							+ prevIndex + " .. " + tsIndices[i - 1],
 						Log.DEBUGLEVEL09);
 					this.addRowSelectionInterval(prevIndex, tsIndices[i - 1]);
 				} else {
-					assert Log.debugMessage("set selection "
+					Log.debugMessage("set selection "
 						+ prevIndex + " .. " + tsIndices[i - 1],
 					Log.DEBUGLEVEL09);
 					this.setRowSelectionInterval(prevIndex, tsIndices[i - 1]);
@@ -191,12 +191,12 @@ public final class WrapperedTable<T> extends ATable {
 			}
 		}
 		if (addSelection) {
-			assert Log.debugMessage("add selection "
+			Log.debugMessage("add selection "
 				+ prevIndex + " .. " + tsIndices[tsIndices.length - 1],
 			Log.DEBUGLEVEL09);
 			this.addRowSelectionInterval(prevIndex, tsIndices[tsIndices.length - 1]);
 		} else {
-			assert Log.debugMessage("set selection "
+			Log.debugMessage("set selection "
 				+ prevIndex + " .. " + tsIndices[tsIndices.length - 1],
 			Log.DEBUGLEVEL09);
 			this.setRowSelectionInterval(prevIndex, tsIndices[tsIndices.length - 1]);
@@ -225,7 +225,7 @@ public final class WrapperedTable<T> extends ATable {
 		if (index == ts.size()) {
 			indices = tmpIndices;
 		} else {
-			assert Log.debugMessage("allocate size:" 
+			Log.debugMessage("allocate size:" 
 					+ tmpIndices.length 
 					+ ", fill only first " 
 					+ index 

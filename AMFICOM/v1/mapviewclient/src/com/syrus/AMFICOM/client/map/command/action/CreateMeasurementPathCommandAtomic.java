@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMeasurementPathCommandAtomic.java,v 1.25 2005/10/30 16:31:18 bass Exp $$
+ * $$Id: CreateMeasurementPathCommandAtomic.java,v 1.26 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * создание прокладки измерительного пути
  * 
- * @version $Revision: 1.25 $, $Date: 2005/10/30 16:31:18 $
+ * @version $Revision: 1.26 $, $Date: 2005/10/31 12:30:07 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -53,7 +53,7 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand {
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage("create MeasurementPath for SchemePath "  //$NON-NLS-1$
+		Log.debugMessage("create MeasurementPath for SchemePath "  //$NON-NLS-1$
 				+ this.schemePath.getName() 
 				+ " (" + this.schemePath.getId()  //$NON-NLS-1$
 				+ ") with start at node " + this.startNode.getName()  //$NON-NLS-1$

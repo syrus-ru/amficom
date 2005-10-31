@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLStorableObjectCondition.java,v 1.5 2005/10/30 15:20:43 bass Exp $
+* $Id: XMLStorableObjectCondition.java,v 1.6 2005/10/31 12:30:18 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.6 $, $Date: 2005/10/31 12:30:18 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
@@ -51,7 +51,7 @@ public abstract class XMLStorableObjectCondition<T extends StorableObjectConditi
 	}
 
 	protected final Set<Identifier> getIdsByCondition(final String query, final boolean useParent) throws IllegalDataException {
-		assert Log.debugMessage("query:" + query, Log.DEBUGLEVEL10);
+		Log.debugMessage("query:" + query, Log.DEBUGLEVEL10);
 		try {
 			final NodeList idNodeList = XPathAPI.selectNodeList(this.driver.getDoc(), query);
 			final int size = idNodeList.getLength();
@@ -68,7 +68,7 @@ public abstract class XMLStorableObjectCondition<T extends StorableObjectConditi
 			return idSet;
 		} catch (TransformerException e) {
 			final String msg = "Caught " + e.getMessage();
-			assert Log.errorMessage(msg);
+			Log.errorMessage(msg);
 			throw new IllegalDataException(msg, e);
 		}
 	}

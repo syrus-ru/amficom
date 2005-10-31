@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.20 2005/10/30 15:20:22 bass Exp $
+ * $Id: TimeLine.java,v 1.21 2005/10/31 12:29:59 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestLine.TestTimeItem;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:22 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/31 12:29:59 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -140,7 +140,7 @@ public abstract class TimeLine extends JComponent {
 	                                  final int height, 
 	                                  final Color c) {
 		g.setColor(c);
-//		assert Log.debugMessage("x: " + x + ", width: " + width, Log.FINEST);
+//		Log.debugMessage("x: " + x + ", width: " + width, Log.FINEST);
 		g.fillRect(x + 2, y + 2, width - 3, height - 3);
 		g.draw3DRect(x, y, width, height, true);
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.56 2005/10/30 15:20:42 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.57 2005/10/31 12:30:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/10/30 15:20:42 $
+ * @version $Revision: 1.57 $, $Date: 2005/10/31 12:30:18 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -128,19 +128,19 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			ctor.setAccessible(true);
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkIds, new Short(linkedCode), code});
 		} catch (ClassNotFoundException cnfe) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
 					+ LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
@@ -152,29 +152,29 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				else
 					assert false : message;
 			} else
-				assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+				Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
 						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(iae, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(iae, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(se, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
+			Log.debugMessage(se, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
@@ -199,7 +199,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 		} catch (final AssertionError ae) {
 			linkedCode = ObjectEntities.UNKNOWN_CODE;
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
@@ -209,19 +209,19 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			ctor.setAccessible(true);
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkedIds, new Short(linkedCode), entityCode});
 		} catch (ClassNotFoundException cnfe) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
 					+ LinkedIdsCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
@@ -233,7 +233,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				else
 					assert false : message;
 			} else
-				assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+				Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
 						+ className
 						+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
@@ -241,22 +241,22 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(iae, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(iae, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
+			Log.debugMessage(iae, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			assert Log.debugMessage(se, Level.SEVERE);
-			assert Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
+			Log.debugMessage(se, Level.SEVERE);
+			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
@@ -309,7 +309,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 			@Override
 			public boolean isConditionTrue(final StorableObject storableObject) {
-				assert Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
+				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 						+ "Object: " + storableObject.toString() + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
 						Level.WARNING);
@@ -318,7 +318,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 			@Override
 			public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
-				assert Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
+				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
 						+ "Objects: " + identifiables + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
 						Level.WARNING);

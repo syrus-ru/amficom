@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.11 2005/10/30 15:20:54 bass Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.12 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -151,7 +151,7 @@ public class ProtoGroupTreeModel extends AbstractChildrenFactory implements Visu
 			}
 		} 
 		catch (ApplicationException ex) {
-			assert Log.errorMessage(ex);
+			Log.errorMessage(ex);
 		}
 	}
 

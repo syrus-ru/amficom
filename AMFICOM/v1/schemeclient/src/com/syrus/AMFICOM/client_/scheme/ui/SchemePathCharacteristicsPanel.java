@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathCharacteristicsPanel.java,v 1.3 2005/10/30 15:20:55 bass Exp $
+ * $Id: SchemePathCharacteristicsPanel.java,v 1.4 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ public class SchemePathCharacteristicsPanel extends CharacteristicsPanel {
 					super.addCharacteristics(tp.getCharacteristics(true), tp.getId());
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 				showNoSelection();
 			}
 		} 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: CreateMarkCommandAtomic.java,v 1.36 2005/10/30 16:31:17 bass Exp $$
+ * $$Id: CreateMarkCommandAtomic.java,v 1.37 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.36 $, $Date: 2005/10/30 16:31:17 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/31 12:30:07 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -73,7 +73,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		try {
-			assert Log.debugMessage("create mark at link " + this.link.getName()  //$NON-NLS-1$
+			Log.debugMessage("create mark at link " + this.link.getName()  //$NON-NLS-1$
 					+ " (" + this.link.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
@@ -112,7 +112,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 						this.distance);
 				this.mark.setName(I18N.getString(MapEditorResourceKeys.ENTITY_MARK));
 			} catch (CreateObjectException e) {
-				assert Log.debugMessage(e, Level.SEVERE);
+				Log.debugMessage(e, Level.SEVERE);
 			}
 			this.map.addNode(this.mark);
 			MarkController mc = (MarkController)
@@ -125,7 +125,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 		} catch(Exception e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			assert Log.debugMessage(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 	

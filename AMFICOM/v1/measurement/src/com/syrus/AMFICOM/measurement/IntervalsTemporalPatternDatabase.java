@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.21 2005/10/30 15:20:39 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.22 2005/10/31 12:30:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:39 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:15 $
  * @author $Author: bass $
  * @module measurement
  */
@@ -129,7 +129,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				long offset = resultSet.getLong(IntervalsTemporalPatternWrapper.COLUMN_OFFSET);
@@ -166,7 +166,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 					}
 				}
 			} catch (SQLException sqle) {
-				assert Log.errorMessage(sqle);
+				Log.errorMessage(sqle);
 			}
 		}
 
@@ -189,13 +189,13 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.prepareStatement(sql);
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		} catch (SQLException sqle) {
 			final String mesg = "IntervalsTemporalPatternDatabase.remove | Cannot remove " + this.getEntityName()
 					+ " '" + id + "' -- " + sqle.getMessage();
-			assert Log.errorMessage(mesg);
+			Log.errorMessage(mesg);
 		} finally {
 			try {
 				try {
@@ -210,7 +210,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -305,7 +305,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final Long offset : updateMap.keySet()) {
 				final List<Object> row = updateMap.get(offset);
 				final Identifier temporalPatternId = (Identifier) row.get(TEMPORAL_PATTERN_ID_ROW);
@@ -344,7 +344,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -361,7 +361,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final Long offset : setToRemove) {
 				preparedStatement.setLong(1, offset.longValue());
 				preparedStatement.executeUpdate();
@@ -386,7 +386,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}

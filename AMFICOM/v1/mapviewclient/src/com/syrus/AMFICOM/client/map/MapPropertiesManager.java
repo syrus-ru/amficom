@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.54 2005/10/30 15:20:30 bass Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.55 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.54 $, $Date: 2005/10/30 15:20:30 $
+ * @version $Revision: 1.55 $, $Date: 2005/10/31 12:30:07 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -763,7 +763,7 @@ public final class MapPropertiesManager {
 	 * Сохранить текущие настройки отображения в файл.
 	 */
 	public static void saveIniFile() {
-		assert Log.debugMessage(
+		Log.debugMessage(
 				"method call MapPropertiesManager.saveIniFile()", Level.FINE); //$NON-NLS-1$
 
 		try {
@@ -806,8 +806,8 @@ public final class MapPropertiesManager {
 
 			properties.store(new FileOutputStream(iniFileName), null);
 		} catch(java.io.IOException e) {
-			assert Log.debugMessage("Params not saved", Level.WARNING); //$NON-NLS-1$
-			assert Log.debugMessage(e, Level.WARNING);
+			Log.debugMessage("Params not saved", Level.WARNING); //$NON-NLS-1$
+			Log.debugMessage(e, Level.WARNING);
 		}
 	}
 

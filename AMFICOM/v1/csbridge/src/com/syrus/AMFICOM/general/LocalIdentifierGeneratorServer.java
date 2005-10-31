@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGeneratorServer.java,v 1.11 2005/10/30 15:20:13 bass Exp $
+ * $Id: LocalIdentifierGeneratorServer.java,v 1.12 2005/10/31 12:29:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompleti
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/31 12:29:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -32,7 +32,7 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 			final Identifier identifier = LocalIdentifierGenerator.generateIdentifier(entityCode);
 			return identifier.getTransferable();
 		} catch (IllegalObjectEntityException ioee) {
-			assert Log.errorMessage(ioee);
+			Log.errorMessage(ioee);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 					IdlCompletionStatus.COMPLETED_NO,
 					"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
@@ -48,7 +48,7 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 			}
 			return identifiersT;
 		} catch (IllegalObjectEntityException ioee) {
-			assert Log.errorMessage(ioee);
+			Log.errorMessage(ioee);
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 					IdlCompletionStatus.COMPLETED_NO,
 					"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");

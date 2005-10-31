@@ -1,5 +1,5 @@
 /*-
- * $$Id: DeleteSelectionCommand.java,v 1.36 2005/10/30 16:31:18 bass Exp $$
+ * $$Id: DeleteSelectionCommand.java,v 1.37 2005/10/31 12:30:08 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * Удалить выбранные элементы карты. Команда является пучком команд
  * (CommandBundle), удаляющих отдельные элементы.
  * 
- * @version $Revision: 1.36 $, $Date: 2005/10/30 16:31:18 $
+ * @version $Revision: 1.37 $, $Date: 2005/10/31 12:30:08 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -133,7 +133,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 	 */
 	@Override
 	public void execute() {
-		assert Log.debugMessage("method call",  //$NON-NLS-1$
+		Log.debugMessage("method call",  //$NON-NLS-1$
 			Level.FINEST);
 
 		// выполнить все команды в списке

@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.22 2005/10/30 15:20:34 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.23 2005/10/31 12:30:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/30 15:20:34 $
+ * @version $Revision: 1.23 $, $Date: 2005/10/31 12:30:11 $
  * @author $Author: bass $
  * @module mscharserver
  */
@@ -52,7 +52,7 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			super.validateAccess(idlSessionKey, userId, domainId);
-			assert Log.debugMessage("Trying to transmit " + '\'', Level.INFO);
+			Log.debugMessage("Trying to transmit " + '\'', Level.INFO);
 			final TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQueryT);
 			byte[] image;
 			try {
@@ -74,7 +74,7 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			super.validateAccess(idlSessionKey, userId, domainId);
-			assert Log.debugMessage("Trying to stop rendering image" + '\'', Level.INFO);
+			Log.debugMessage("Trying to stop rendering image" + '\'', Level.INFO);
 			MapInfoPool.cancelRendering(new SessionKey(idlSessionKey));
 		} catch (IllegalDataException e) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
@@ -88,7 +88,7 @@ final class MscharServerImpl extends IdentifierGeneratorServerCore implements Ms
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			super.validateAccess(idlSessionKey, userId, domainId);
-			assert Log.debugMessage("Trying to find feature " + featureName, Level.INFO);
+			Log.debugMessage("Trying to find feature " + featureName, Level.INFO);
 			final List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
 			final IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
 			int i = 0;

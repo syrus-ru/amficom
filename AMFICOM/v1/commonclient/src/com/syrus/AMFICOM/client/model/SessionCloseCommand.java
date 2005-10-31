@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/31 12:30:01 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -52,7 +52,7 @@ public class SessionCloseCommand extends AbstractCommand {
 
 			clientSessionEnvironment.logout();
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
 					I18N.getString("Error.SessionClose")));

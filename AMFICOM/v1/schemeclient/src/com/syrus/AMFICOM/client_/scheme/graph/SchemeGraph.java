@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.21 2005/10/30 15:20:56 bass Exp $
+ * $Id: SchemeGraph.java,v 1.22 2005/10/31 12:30:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:56 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:29 $
  * @module schemeclient
  */
 
@@ -243,7 +243,7 @@ public class SchemeGraph extends GPGraph {
 						return;
 					}
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			}
 		}
@@ -438,7 +438,7 @@ public class SchemeGraph extends GPGraph {
 				}
 				return clones;
 			}
-			assert Log.debugMessage("Try open empty cell", Level.FINER);
+			Log.debugMessage("Try open empty cell", Level.FINER);
 		}
 		return null;
 	}

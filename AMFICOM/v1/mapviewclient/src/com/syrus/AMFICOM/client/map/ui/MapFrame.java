@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.84 2005/10/30 15:20:33 bass Exp $$
+ * $$Id: MapFrame.java,v 1.85 2005/10/31 12:30:09 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -206,7 +206,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.84 $, $Date: 2005/10/30 15:20:33 $
+ * @version $Revision: 1.85 $, $Date: 2005/10/31 12:30:09 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -519,7 +519,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	}
 
 	public void closeMap() {
-		assert Log.debugMessage("Closing map", Level.INFO); //$NON-NLS-1$
+		Log.debugMessage("Closing map", Level.INFO); //$NON-NLS-1$
 //		this.setContext(null);
 	}
 

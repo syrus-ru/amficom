@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.18 2005/10/30 15:20:54 bass Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.19 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -199,7 +199,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 						this.data[i][1] = NULL_PORT;
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		} else {
 			this.size = 0;

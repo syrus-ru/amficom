@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.13 2005/10/30 15:20:54 bass Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.14 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -362,7 +362,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 				key = LangModelScheme.getString(key);
 				setText(key);
 			} catch (MissingResourceException e) {
-				assert Log.debugMessage(this.getClass().getSimpleName() + "| resource not found for key " + key, Level.FINER); //$NON-NLS-1$
+				Log.debugMessage(this.getClass().getSimpleName() + "| resource not found for key " + key, Level.FINER); //$NON-NLS-1$
 			}
 			return this;
 		}
@@ -443,7 +443,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.scheme.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(this.imageId, true));
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			}
 			Item item = (Item)this.cmbKindCombo.getSelectedItem();

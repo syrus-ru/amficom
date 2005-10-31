@@ -146,7 +146,7 @@ public final class ElementsTreeFrame extends JInternalFrame implements PropertyC
 	}
 
 	public void setMonitoredElement(final MonitoredElement monitoredElement) {
-//		assert Log.debugMessage("monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Level.FINEST);
+//		Log.debugMessage("monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Level.FINEST);
 		this.paramMap.put(ObjectEntities.MONITOREDELEMENT, monitoredElement);
 		this.treePanel.expandAll(true);
 		this.selectItems();

@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.21 2005/10/30 15:20:39 bass Exp $
+ * $Id: Parameter.java,v 1.22 2005/10/31 12:30:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:39 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:15 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -154,7 +154,7 @@ public final class Parameter implements TransferableObject<IdlParameter>,
 					return Integer.toString(byteArray.toInt());
 				} catch (IOException ioe) {
 					// Never
-					assert Log.errorMessage(ioe);
+					Log.errorMessage(ioe);
 				}
 				break;
 			case DOUBLE:
@@ -162,7 +162,7 @@ public final class Parameter implements TransferableObject<IdlParameter>,
 					return Double.toString(byteArray.toDouble());
 				} catch (IOException ioe) {
 					// Never
-					assert Log.errorMessage(ioe);
+					Log.errorMessage(ioe);
 				}
 				break;
 			case STRING:
@@ -170,7 +170,7 @@ public final class Parameter implements TransferableObject<IdlParameter>,
 					return byteArray.toUTFString();
 				} catch (IOException ioe) {
 					// Never
-					assert Log.errorMessage(ioe);
+					Log.errorMessage(ioe);
 				}
 				break;
 			case DATE:
@@ -178,7 +178,7 @@ public final class Parameter implements TransferableObject<IdlParameter>,
 					return byteArray.toUTFString();
 				} catch (IOException ioe) {
 					// Never
-					assert Log.errorMessage(ioe);
+					Log.errorMessage(ioe);
 				}
 				break;
 			case LONG:
@@ -186,7 +186,7 @@ public final class Parameter implements TransferableObject<IdlParameter>,
 					return Long.toString(byteArray.toLong());
 				} catch (IOException ioe) {
 					// Never
-					assert Log.errorMessage(ioe);
+					Log.errorMessage(ioe);
 				}
 				break;
 			case RAW:
@@ -196,7 +196,7 @@ public final class Parameter implements TransferableObject<IdlParameter>,
 					return LangModelMeasurement.getString(byteArray.toBoolean() ? "on" : "off");
 				} catch (IOException ioe) {
 					// Never
-					assert Log.errorMessage(ioe);
+					Log.errorMessage(ioe);
 				}
 				break;
 		}

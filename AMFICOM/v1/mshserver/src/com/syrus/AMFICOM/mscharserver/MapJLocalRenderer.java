@@ -1,5 +1,5 @@
 /*-
- * $Id: MapJLocalRenderer.java,v 1.10 2005/10/30 15:20:34 bass Exp $
+ * $Id: MapJLocalRenderer.java,v 1.11 2005/10/31 12:30:11 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/10/30 15:20:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/31 12:30:11 $
  * @module mscharserver
  */
 final class MapJLocalRenderer {
@@ -73,24 +73,24 @@ final class MapJLocalRenderer {
 
 	public MapJLocalRenderer() throws IllegalDataException {
 		final String fileToLoad = ApplicationProperties.getString(MAPINFO_DEFINITION_FILE_LOCATION_KEY, DEFAULT_MDF_FILE_LOCATION);
-		assert Log.debugMessage("MapJLocalRenderer<init> | RunningThread - Constructor - Initializing MapJ.", Log.DEBUGLEVEL07);
+		Log.debugMessage("MapJLocalRenderer<init> | RunningThread - Constructor - Initializing MapJ.", Log.DEBUGLEVEL07);
 		this.mapJObject = createMapJ(fileToLoad);
 	}
 
 	private static synchronized MapJ createMapJ(final String fileToLoad) throws IllegalDataException {
-		assert Log.debugMessage("RunningThread - Initializing MapJ instance...", Log.DEBUGLEVEL07);
+		Log.debugMessage("RunningThread - Initializing MapJ instance...", Log.DEBUGLEVEL07);
 		// instantiate a MapJ and set the bounds
 		final MapJ returnValue = new MapJ(); // this MapJ object
 
 		// Query for image locations and load the geoset
 		try {
-			assert Log.debugMessage("Loading geoset...", Log.DEBUGLEVEL07);
+			Log.debugMessage("Loading geoset...", Log.DEBUGLEVEL07);
 			returnValue.loadMapDefinition(fileToLoad);
-			assert Log.debugMessage("Map definition " + fileToLoad + " has been loaded.",
+			Log.debugMessage("Map definition " + fileToLoad + " has been loaded.",
 					Log.DEBUGLEVEL07);
 		} catch (IOException e) {
 			final String msg = "MapJLocalRendererRunningThread.createMapJ |" + " - ERROR!!! - Can't load geoset: " + fileToLoad;
-			assert Log.errorMessage(msg);
+			Log.errorMessage(msg);
 			throw new IllegalDataException(msg);
 		}
 
@@ -107,9 +107,9 @@ final class MapJLocalRenderer {
 		// Setting size, zoom and center point
 		if ((this.imageBuffer == null) || (this.imageBuffer.getWidth() != miWidth) || (this.imageBuffer.getHeight() != miHeight)) {
 			this.imageBuffer = new BufferedImage(miWidth, miHeight, BufferedImage.TYPE_USHORT_565_RGB);
-			assert Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Log.DEBUGLEVEL07);
+			Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Log.DEBUGLEVEL07);
 			this.renderer = new LocalRenderer(this.imageBuffer);
-			assert Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Log.DEBUGLEVEL07);
+			Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Log.DEBUGLEVEL07);
 		}
 
 		this.setSize(miWidth, miHeight);
@@ -124,12 +124,12 @@ final class MapJLocalRenderer {
 		}
 
 		if (this.renderer == null) {
-			assert Log.errorMessage("RunningThread - Constructor - Renderer is not initialized. "
+			Log.errorMessage("RunningThread - Constructor - Renderer is not initialized. "
 					+ "Run setRenderingParameters first.");
 			throw new IllegalDataException("MapJLocalRenderer.render | Failed to initialize Renderer");
 		}
 
-		assert Log.debugMessage("RenderToStream - Before rendering.", Log.DEBUGLEVEL07);
+		Log.debugMessage("RenderToStream - Before rendering.", Log.DEBUGLEVEL07);
 
 		try {
 			this.renderer.render(ImageRequestComposer.create(this.mapJObject, NUM_OF_COLORS, BACKGROUND_COLOR, "image/png"));
@@ -144,44 +144,44 @@ final class MapJLocalRenderer {
 
 		// Output the map as a GIF Image
 		final ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
-		assert Log.debugMessage("RenderToStream - Encoding image.", Log.DEBUGLEVEL07);
+		Log.debugMessage("RenderToStream - Encoding image.", Log.DEBUGLEVEL07);
 		ImageIO.write(this.imageBuffer, "PNG", resultStream);
 
 		resultStream.flush();
 		resultStream.close();
 
 		final byte[] result = resultStream.toByteArray();
-		assert Log.debugMessage("RenderToStream - Successfully rendered.", Log.DEBUGLEVEL07);
+		Log.debugMessage("RenderToStream - Successfully rendered.", Log.DEBUGLEVEL07);
 		return result;
 	}
 
 	void cancelRendering() throws Exception {
-		assert Log.debugMessage("Stopping the rendering of map.", Log.DEBUGLEVEL07);
+		Log.debugMessage("Stopping the rendering of map.", Log.DEBUGLEVEL07);
 
 		this.cancelEncoding = true;
 		this.renderer.interrupt();
 
-		assert Log.debugMessage("Rendering stopped.", Log.DEBUGLEVEL07);
+		Log.debugMessage("Rendering stopped.", Log.DEBUGLEVEL07);
 	}
 
 	List<MapFeature> findFeature(final String searchName) throws IllegalDataException {
 		final List<MapFeature> featureList = new LinkedList<MapFeature>();
-		assert Log.debugMessage("Starting search procedure.", Level.INFO);
+		Log.debugMessage("Starting search procedure.", Level.INFO);
 		for (final Iterator layersIt = this.mapJObject.getLayers().iterator(LayerType.FEATURE); layersIt.hasNext();) {
 			FeatureLayer currLayer = (FeatureLayer) layersIt.next();
-			assert Log.debugMessage("Searching at FeatureLayer: " + currLayer.getName(), Level.INFO);
+			Log.debugMessage("Searching at FeatureLayer: " + currLayer.getName(), Level.INFO);
 			try {
 
 				final List labelColumnsList = currLayer.getLabelProperties().getLabelColumns();
 				if (labelColumnsList.isEmpty()) {
-//					assert Log.debugMessage("No labels' column at the layer.", Log.INFO);
+//					Log.debugMessage("No labels' column at the layer.", Log.INFO);
 					continue;
 				}
 
 				// XXX: wtfit
 				final String labelColumnName = (String) labelColumnsList.iterator().next();
 
-//				assert Log.debugMessage("Got labels' column name: " + labelColumnName, Log.INFO);
+//				Log.debugMessage("Got labels' column name: " + labelColumnName, Log.INFO);
 
 				final FeatureSet fs = currLayer.searchAll(Collections.singletonList(labelColumnName), null);
 				Feature feature = null;
@@ -215,7 +215,7 @@ final class MapJLocalRenderer {
 	 *        Высота
 	 */
 	private void setSize(final int width, final int height) {
-		assert Log.debugMessage("RunningThread - Setting size", Log.DEBUGLEVEL07);
+		Log.debugMessage("RunningThread - Setting size", Log.DEBUGLEVEL07);
 		this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
 	}
 
@@ -226,11 +226,11 @@ final class MapJLocalRenderer {
 	 *        Топологические координаты центральной точки
 	 */
 	private void setCenter(final DoublePoint center) {
-		assert Log.debugMessage("RunningThread - Setting center", Log.DEBUGLEVEL07);
+		Log.debugMessage("RunningThread - Setting center", Log.DEBUGLEVEL07);
 		try {
 			this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
 		} catch (Exception e) {
-			assert Log.errorMessage("RunningThread - ERROR!!! "
+			Log.errorMessage("RunningThread - ERROR!!! "
 					+ "- Failed setting center. Reason" + e.getMessage());
 		}
 	}
@@ -242,13 +242,13 @@ final class MapJLocalRenderer {
 	 *        Массштаб для карты
 	 */
 	private void setScale(final double scale) {
-		assert Log.debugMessage("RunningThread - Setting scale", Log.DEBUGLEVEL07);
+		Log.debugMessage("RunningThread - Setting scale", Log.DEBUGLEVEL07);
 		try {
 			if (scale != 0.0D) {
 				this.mapJObject.setZoom(scale);
 			}
 		} catch (Exception e) {
-			assert Log.errorMessage("RunningThread - ERROR!!! - Failed setting scale.");
+			Log.errorMessage("RunningThread - ERROR!!! - Failed setting scale.");
 		}
 	}
 
@@ -261,13 +261,13 @@ final class MapJLocalRenderer {
 		try {
 			final FeatureLayer layer = (FeatureLayer) this.mapJObject.getLayers().get(layerIndex, LayerType.FEATURE);
 
-			assert Log.debugMessage("RunningThread - Setting visibility for layer " + layer.getName(),
+			Log.debugMessage("RunningThread - Setting visibility for layer " + layer.getName(),
 					Log.DEBUGLEVEL07);
 
 			layer.setEnabled(layerVisible);
 			layer.setAutoLabel(layerLabelsVisible);
 		} catch (Exception exc) {
-			assert Log.errorMessage("RunningThread - ERROR!!! - Failed setting layer visibility. Reason: "
+			Log.errorMessage("RunningThread - ERROR!!! - Failed setting layer visibility. Reason: "
 					+ exc.getMessage());
 		}
 	}

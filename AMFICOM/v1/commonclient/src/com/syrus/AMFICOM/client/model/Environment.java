@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.15 2005/10/30 15:20:24 bass Exp $
+ * $Id: Environment.java,v 1.16 2005/10/31 12:30:01 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:01 $
  * @module commonclient
  */
 public final class Environment {
@@ -240,12 +240,12 @@ public final class Environment {
 	}
 
 	public static void addWindow(final Window window) {
-		assert Log.debugMessage("name: " + window.getName(), Log.DEBUGLEVEL10);
+		Log.debugMessage("name: " + window.getName(), Log.DEBUGLEVEL10);
 		windows.add(window);
 	}
 
 	public static void disposeWindow(final Window window) {
-		assert Log.debugMessage("name: " + window.getName(), Log.DEBUGLEVEL10);
+		Log.debugMessage("name: " + window.getName(), Log.DEBUGLEVEL10);
 		windows.remove(window);
 		window.dispose();
 		checkForExit();
@@ -253,7 +253,7 @@ public final class Environment {
 	
 	public static void checkForExit() {
 		if (windows.isEmpty()) {
-			assert Log.debugMessage(Log.DEBUGLEVEL10);
+			Log.debugMessage(Log.DEBUGLEVEL10);
 			saveProperties();
 			System.exit(0);
 		}

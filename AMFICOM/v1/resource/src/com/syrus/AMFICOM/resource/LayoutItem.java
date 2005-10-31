@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.15 2005/10/30 15:20:20 bass Exp $
+* $Id: LayoutItem.java,v 1.16 2005/10/31 12:29:57 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @author $Author: bass $
  * @module resource
  */
@@ -137,7 +137,7 @@ public final class LayoutItem extends StorableObject<LayoutItem>
 			super.fromTransferable(ili);
 		} catch (ApplicationException ae) {
 			// Never
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 		
 		this.parentId = new Identifier(ili.parentId);

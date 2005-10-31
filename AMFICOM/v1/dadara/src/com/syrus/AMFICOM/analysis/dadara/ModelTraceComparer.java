@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.40 2005/10/30 14:49:09 bass Exp $
+ * $Id: ModelTraceComparer.java,v 1.41 2005/10/31 12:30:19 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/10/30 14:49:09 $
+ * @version $Revision: 1.41 $, $Date: 2005/10/31 12:30:19 $
  * @module
  */
 public class ModelTraceComparer
@@ -92,13 +92,13 @@ public class ModelTraceComparer
 				(ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
 				mtm,
 				rcomp);
-		assert Log.debugMessage(
+		Log.debugMessage(
 				"ModelTraceComparer.compareToMTM: comparing mtae to mtm:",
 				INFO);
-		assert Log.debugMessage(
+		Log.debugMessage(
 				"ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace,
 				INFO);
-		assert Log.debugMessage(
+		Log.debugMessage(
 				"ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents,
 				INFO);
 		if (alarmTrace != null)
@@ -140,7 +140,7 @@ public class ModelTraceComparer
 				&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR) {
 				cur.setCoord(etEvents[i].getBegin());
 				cur.setEndCoord(etEvents[i].getEnd());
-				assert Log.debugMessage("MTC: compareEventsToMTM: etalon event #"
+				Log.debugMessage("MTC: compareEventsToMTM: etalon event #"
 						+ i + " ( " + cur.getCoord() + " .. "
 						+ cur.getEndCoord() + ") is reliably lost",
 						INFO);
@@ -153,7 +153,7 @@ public class ModelTraceComparer
 				&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR) {
 				cur.setCoord(events[i].getBegin());
 				cur.setEndCoord(events[i].getEnd());
-				assert Log.debugMessage("MTC: compareEventsToMTM: probe event #"
+				Log.debugMessage("MTC: compareEventsToMTM: probe event #"
 						+ i + " ( " + cur.getCoord() + " .. "
 						+ cur.getEndCoord() + ") is reliably new",
 						INFO);
@@ -305,7 +305,7 @@ public class ModelTraceComparer
 		}
 		if (alarm.getSeverity().compareTo(SEVERITY_NONE) > 0) {
 			fillAlarmMismatch(y, mtm, alarm);
-			assert Log.debugMessage("level " + alarm.getSeverity()
+			Log.debugMessage("level " + alarm.getSeverity()
 					+ " mismatch "
 					+ (alarm.hasMismatch()
 						? "" + alarm.getMinMismatch() + ".." + alarm.getMaxMismatch()

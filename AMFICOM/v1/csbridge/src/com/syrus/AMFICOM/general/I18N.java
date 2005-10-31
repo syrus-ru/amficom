@@ -1,5 +1,5 @@
 /*-
-* $Id: I18N.java,v 1.2 2005/10/30 15:20:13 bass Exp $
+* $Id: I18N.java,v 1.3 2005/10/31 12:29:53 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.3 $, $Date: 2005/10/31 12:29:53 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module csbridge
@@ -34,7 +34,7 @@ final class I18N {
 			return RESOURCE_BUNDLE.getString(key);
 		}
 		catch (final MissingResourceException mre) {
-			assert Log.errorMessage("Key '" + key + "' not found in resource bundle '" + BUNDLE_NAME + "'");
+			Log.errorMessage("Key '" + key + "' not found in resource bundle '" + BUNDLE_NAME + "'");
 			return "!" + key + "!";
 		}
 	}

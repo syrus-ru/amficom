@@ -59,7 +59,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 					this.endPathElement = this.path.getNextPathElement(this.endPathElement);
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		}
 	}
@@ -81,17 +81,17 @@ public final class PathElementsPanel extends AnalysisPanel {
 							&& Math.abs(distance - d[0]) < 3 / this.scaleX * this.deltaX
 							&& this.path.hasPreviousPathElement(this.activePathElement)) {
 						this.activePathElement = this.path.getPreviousPathElement(this.activePathElement);
-						assert Log.debugMessage("Set previous pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
+						Log.debugMessage("Set previous pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
 								Level.FINER);
 					} else if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT
 							&& Math.abs(distance - d[1]) < 3 / this.scaleX * this.deltaX
 							&& this.path.hasNextPathElement(this.activePathElement)) {
 						this.activePathElement = this.path.getNextPathElement(this.activePathElement);
-						assert Log.debugMessage("Set next pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
+						Log.debugMessage("Set next pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
 								Level.FINER);
 					}
 				} catch (ApplicationException e1) {
-					assert Log.errorMessage(e1);
+					Log.errorMessage(e1);
 				}
 				return;
 			}
@@ -104,7 +104,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 		if (this.setting_active_pe) {
 			if (this.activePathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-				assert Log.debugMessage("PathElement " + this.activePathElement.getName()
+				Log.debugMessage("PathElement " + this.activePathElement.getName()
 						+ " moved on " + ((this.currpos.x - this.startpos.x) / this.scaleX * this.deltaX) + " m", Level.FINER);
 				this.upd_currpos(e);
 				this.paintMovingPE(getGraphics().create());
@@ -136,7 +136,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 						this.path.changeOpticalLength(this.activePathElement, nextNode, -d);
 					}
 				} catch (ApplicationException e1) {
-					assert Log.errorMessage(e1);
+					Log.errorMessage(e1);
 				}
 			}
 
@@ -172,7 +172,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 					final double d[] = this.path.getOpticalDistanceFromStart(pathElement);
 					final int start1 = index2coord((int) Math.round(d[0] / this.deltaX));
 					final int end1 = index2coord((int) Math.round(d[1] / this.deltaX));
-					assert Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
+					Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
 					if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 						final SchemeElement se = pathElement.getSchemeElement();
 						// if muff - paint only small box and dashed line
@@ -181,7 +181,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 						try {
 							type = se.getProtoEquipment().getType();
 						} catch (ApplicationException e) {
-							assert Log.errorMessage(e);
+							Log.errorMessage(e);
 							type = EquipmentType.OTHER;
 						}
 						if (type.equals(EquipmentType.MUFF)) {
@@ -214,7 +214,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 					}
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		}
 	}

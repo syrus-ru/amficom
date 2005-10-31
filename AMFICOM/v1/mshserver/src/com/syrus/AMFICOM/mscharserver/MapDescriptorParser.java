@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDescriptorParser.java,v 1.6 2005/10/30 15:20:34 bass Exp $
+ * $Id: MapDescriptorParser.java,v 1.7 2005/10/31 12:30:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:11 $
  * @module mshserver_v1
  */
 
@@ -40,7 +40,7 @@ final class MapDescriptorParser {
 		try {
 			document = reader.read(descFile);
 		} catch (DocumentException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			return mapDescriptors;
 		}
 		final List<Node> mapNodeList = document.selectNodes("//map");
@@ -48,18 +48,18 @@ final class MapDescriptorParser {
 			final Node nameNode = node.selectSingleNode("name");
 			final Node mdfNode = node.selectSingleNode("mdf");
 			if (nameNode == null || mdfNode == null) {
-				assert Log.errorMessage("Wrong xml format in file " + mapDescriptorFile);
+				Log.errorMessage("Wrong xml format in file " + mapDescriptorFile);
 				continue;
 			}
 			final String name = nameNode.getText();
 			final String mdf = mdfNode.getText();
 			if (name == null || name.equals("") || mdf == null) {
-				assert Log.errorMessage("Wrong xml content in file " + mapDescriptorFile);
+				Log.errorMessage("Wrong xml content in file " + mapDescriptorFile);
 				continue;
 			}
 			final File mdfFile = new File(mdf);
 			if (!mdfFile.isFile()) {
-				assert Log.errorMessage("Couldn't locate mdf: + " + mdfFile.getAbsolutePath());
+				Log.errorMessage("Couldn't locate mdf: + " + mdfFile.getAbsolutePath());
 				continue;
 			}
 			mapDescriptors.add(new MapDescriptor(name, mdfFile.getName(), mdfFile.getPath(), mdfFile.length(), mdfFile.lastModified()));

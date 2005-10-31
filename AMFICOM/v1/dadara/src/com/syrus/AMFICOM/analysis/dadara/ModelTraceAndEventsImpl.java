@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.28 2005/10/18 09:35:43 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.29 2005/10/31 12:30:19 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.io.SignatureMismatchException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.28 $, $Date: 2005/10/18 09:35:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/10/31 12:30:19 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -418,7 +418,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		int pos3 = dos.size();
 		this.cinfo.writeToDOS(dos);
 		int pos4 = dos.size();
-		assert Log.debugMessage("MTAEI: writeToDOS:"
+		Log.debugMessage("MTAEI: writeToDOS:"
 				+ " MT " + (pos2-pos1)     // 66-72% of total
 				+ ", rse " + (pos3-pos2)   // 15-17% of total
 				+ ", cinfo " + (pos4-pos3) // 13-17% of total

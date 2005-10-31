@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.110 2005/10/30 15:20:37 bass Exp $
+ * $Id: NodeLink.java,v 1.111 2005/10/31 12:30:13 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/10/30 15:20:37 $
+ * @version $Revision: 1.111 $, $Date: 2005/10/31 12:30:13 $
  * @module map
  */
 public final class NodeLink extends StorableObject<NodeLink>
@@ -177,7 +177,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 		try {
 			this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
 		} catch(ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 		super.markAsChanged();
 	}
@@ -187,7 +187,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 			try {
 				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
 			} catch(ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		}
 		return this.endNode;
@@ -240,7 +240,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 			try {
 				this.physicalLink = StorableObjectPool.<PhysicalLink>getStorableObject(this.physicalLinkId, true);
 			} catch(ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 				return null;
 			}
 		}
@@ -252,14 +252,14 @@ public final class NodeLink extends StorableObject<NodeLink>
 		try {
 			this.physicalLink = StorableObjectPool.<PhysicalLink>getStorableObject(this.physicalLinkId, true);
 		} catch(ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 	}
 
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
 		this.physicalLinkId = physicalLink.getId();
 		this.physicalLink = physicalLink;
-		assert Log.debugMessage("For node link " + this.id.toString() + " set physicalLinkId = " + this.physicalLinkId.toString(), FINEST);
+		Log.debugMessage("For node link " + this.id.toString() + " set physicalLinkId = " + this.physicalLinkId.toString(), FINEST);
 		super.markAsChanged();
 	}
 
@@ -272,7 +272,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 		try {
 			this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
 		} catch(ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 		markAsChanged();
 	}
@@ -282,7 +282,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 			try {
 				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
 			} catch(ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		}
 		return this.startNode;
@@ -527,7 +527,7 @@ public final class NodeLink extends StorableObject<NodeLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

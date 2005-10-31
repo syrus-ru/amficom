@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.100 2005/10/30 15:20:16 bass Exp $
+ * $Id: SchemeLink.java,v 1.101 2005/10/31 12:29:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/10/30 15:20:16 $
+ * @version $Revision: 1.101 $, $Date: 2005/10/31 12:29:54 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
@@ -469,7 +469,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -615,7 +615,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 
 		final Identifier parentSchemeId1 = super.getParentSchemeId();
 		if (parentSchemeId1.isVoid()) {
-			assert Log.debugMessage("Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
+			Log.debugMessage("Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
 					FINE);
 		}
 		return parentSchemeId1;
@@ -632,7 +632,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 		if (parentSchemeElementIdVoid) {
-			assert Log.debugMessage("Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
+			Log.debugMessage("Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
 					FINE);
 		}
 		return this.parentSchemeElementId;
@@ -645,7 +645,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -661,7 +661,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			assert Log.debugMessage("Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
+			Log.debugMessage("Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
 					FINE);
 		}
 		return this.parentSchemeProtoElementId;
@@ -674,7 +674,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -692,7 +692,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 		try {
 			return StorableObjectPool.getStorableObject(this.getSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -933,7 +933,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 
 		final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
 		if (this.parentSchemeId.equals(newParentSchemeId)) {
-			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -963,7 +963,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 			this.getParentScheme().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeNull) {
-				assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			}
 		}
@@ -1019,7 +1019,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 
 		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
-			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -1040,7 +1040,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 				this.getParentSchemeElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 				if (parentSchemeElementIsNull) {
-					assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+					Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 					StorableObjectPool.delete(this.getReverseDependencies(usePool));
 				}
 			}
@@ -1107,7 +1107,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 
 		final Identifier newParentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 		if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
-			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -1120,7 +1120,7 @@ public final class SchemeLink extends AbstractSchemeLink<SchemeLink>
 				this.getParentSchemeProtoElement().getSchemeLinkContainerWrappee().removeFromCache(this, usePool);
 
 				if (parentSchemeProtoElementNull) {
-					assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+					Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 					StorableObjectPool.delete(this.getReverseDependencies(usePool));
 				}
 			} else {

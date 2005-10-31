@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.111 2005/10/30 15:20:16 bass Exp $
+ * $Id: SchemeDevice.java,v 1.112 2005/10/31 12:29:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/10/30 15:20:16 $
+ * @version $Revision: 1.112 $, $Date: 2005/10/31 12:29:54 $
  * @module scheme
  */
 public final class SchemeDevice
@@ -314,7 +314,7 @@ public final class SchemeDevice
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -440,7 +440,7 @@ public final class SchemeDevice
 		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
 		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 		if (parentSchemeElementIdVoid) {
-			assert Log.debugMessage("Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
+			Log.debugMessage("Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
 					FINE);
 		}
 		return this.parentSchemeElementId;
@@ -453,7 +453,7 @@ public final class SchemeDevice
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -466,7 +466,7 @@ public final class SchemeDevice
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (parentSchemeProtoElementIdVoid) {
-			assert Log.debugMessage("Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
+			Log.debugMessage("Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
 					FINE);
 		}
 		return this.parentSchemeProtoElementId;
@@ -479,7 +479,7 @@ public final class SchemeDevice
 		try {
 			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -668,7 +668,7 @@ public final class SchemeDevice
 
 		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
-			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -680,7 +680,7 @@ public final class SchemeDevice
 			this.getParentSchemeElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeElementNull) {
-				assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			}
 		} else {
@@ -739,7 +739,7 @@ public final class SchemeDevice
 
 		final Identifier newParentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 		if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
-			assert Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -752,7 +752,7 @@ public final class SchemeDevice
 			this.getParentSchemeProtoElement().getSchemeDeviceContainerWrappee().removeFromCache(this, usePool);
 
 			if (parentSchemeProtoElementNull) {
-				assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(this.getReverseDependencies(usePool));
 			}
 		} else {

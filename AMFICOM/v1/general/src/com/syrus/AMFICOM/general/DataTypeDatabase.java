@@ -1,5 +1,5 @@
 /*-
- * $Id: DataTypeDatabase.java,v 1.8 2005/10/30 15:20:43 bass Exp $
+ * $Id: DataTypeDatabase.java,v 1.9 2005/10/31 12:30:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -65,7 +65,7 @@ public final class DataTypeDatabase {
 				codename = dataType.getCodename();
 				description = dataType.getDescription();
 
-				assert Log.debugMessage("Inserting data type of code: " + code + ", codename: '" + codename + "', description: '" + description + "'",
+				Log.debugMessage("Inserting data type of code: " + code + ", codename: '" + codename + "', description: '" + description + "'",
 						Log.DEBUGLEVEL09);
 
 				preparedStatement.setInt(1, code);
@@ -93,7 +93,7 @@ public final class DataTypeDatabase {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 

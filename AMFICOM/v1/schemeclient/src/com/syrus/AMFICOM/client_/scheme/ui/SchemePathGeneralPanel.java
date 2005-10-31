@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.12 2005/10/30 15:20:55 bass Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.13 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -289,7 +289,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions(false));
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 				this.cmbSolutionCombo.setSelectedItem(solution);
 			}
@@ -301,7 +301,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 			try {
 				pathElements = this.schemePath.getPathMembers();
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 				pathElements = new TreeSet<PathElement>();
 			}
 			if (!updateOnly || this.lsPesList.getModel().getSize() != pathElements.size()) {
@@ -368,7 +368,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 					}
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePath.getId(), SchemeEvent.UPDATE_OBJECT));

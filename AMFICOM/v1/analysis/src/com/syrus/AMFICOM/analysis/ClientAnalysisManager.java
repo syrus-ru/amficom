@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.23 2005/10/30 15:20:49 bass Exp $
+ * $Id: ClientAnalysisManager.java,v 1.24 2005/10/31 12:30:22 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:49 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:22 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -60,10 +60,10 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 				minuitParams = new AnalysisParameters(temp, defaultAP);
 		} catch (IOException ex) {
 			// write a error to log, then ignore
-			assert Log.errorMessage("IOException while reading minuitParams from INI file");
+			Log.errorMessage("IOException while reading minuitParams from INI file");
 		} catch (InvalidAnalysisParametersException e) {
 			// write a error to log, then ignore
-			assert Log.errorMessage("InvalidAnalysisParametersException while reading minuitParams from INI file");
+			Log.errorMessage("InvalidAnalysisParametersException while reading minuitParams from INI file");
 		}
 		if (minuitParams == null)
 				minuitParams = (AnalysisParameters)defaultAP.clone();

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.202 2005/10/30 15:20:43 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.203 2005/10/31 12:30:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.202 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.203 $, $Date: 2005/10/31 12:30:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -198,7 +198,7 @@ public final class StorableObjectPool {
 		try {
 			objectPoolClass = Class.forName(objectPoolClass1.getName());
 		} catch (ClassNotFoundException e) {
-			assert Log.errorMessage("Cache class '" + objectPoolClass1.getName() + "' cannot be found, using default");
+			Log.errorMessage("Cache class '" + objectPoolClass1.getName() + "' cannot be found, using default");
 			objectPoolClass = LRUMap.class;
 		}
 	}
@@ -220,7 +220,7 @@ public final class StorableObjectPool {
 			if (obj instanceof LRUMap) {
 				final LRUMap objectPool = (LRUMap) obj;
 				objectPoolMap.put(entityCode, objectPool);
-				assert Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
+				Log.debugMessage("Pool for '" + ObjectEntities.codeToString(entityCode)
 						+ "'/" + entityCode + " of size " + objectPoolSize + " added", Log.DEBUGLEVEL08);
 			} else {
 				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | Object pool class "
@@ -298,13 +298,13 @@ public final class StorableObjectPool {
 					try {
 						putStorableObject(storableObject);
 					} catch (final IllegalObjectEntityException ioee) {
-						assert Log.errorMessage(ioee);
+						Log.errorMessage(ioee);
 					}
 			}
 			return storableObject;
 		}
 
-		assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+		Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 				+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		return null;
 	}
@@ -319,7 +319,7 @@ public final class StorableObjectPool {
 	 */
 	public static <T extends StorableObject> Set<T> getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert Log.debugMessage("Requested for: " + ids, Log.DEBUGLEVEL08);
+		Log.debugMessage("Requested for: " + ids, Log.DEBUGLEVEL08);
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
 		}
@@ -329,7 +329,7 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
@@ -337,7 +337,7 @@ public final class StorableObjectPool {
 		final Set<Identifier> loadIds = new HashSet<Identifier>(ids);
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 		if (entityDeletedIds != null) {
-			assert Log.debugMessage("Found among deleted (excluded): " + entityDeletedIds, Log.DEBUGLEVEL08);
+			Log.debugMessage("Found among deleted (excluded): " + entityDeletedIds, Log.DEBUGLEVEL08);
 			Identifier.subtractFromIdentifiers(loadIds, entityDeletedIds);
 		}
 
@@ -352,13 +352,13 @@ public final class StorableObjectPool {
 			}
 		}
 
-		assert Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		if (useLoader && !loadIds.isEmpty()) {
 			final Set<T> loadedObjects = objectLoader.loadStorableObjects(loadIds);
 
-			assert Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.createStrings(loadedObjects),
+			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.createStrings(loadedObjects),
 					Log.DEBUGLEVEL08);
 
 			for (final T storableObject : loadedObjects) {
@@ -367,7 +367,7 @@ public final class StorableObjectPool {
 			}
 		}
 
-		assert Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		return storableObjects;
@@ -438,11 +438,11 @@ public final class StorableObjectPool {
 		assert (ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids)) : "Condition entity code: "
 				+ condition.getEntityCode() + ", ids entity code: " + StorableObject.getEntityCodeOfIdentifiables(ids);
 
-		assert Log.debugMessage("Requested but: " + ids + ", for condition: " + condition, Log.DEBUGLEVEL08);
+		Log.debugMessage("Requested but: " + ids + ", for condition: " + condition, Log.DEBUGLEVEL08);
 
 		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return Collections.emptySet();
 		}
@@ -450,7 +450,7 @@ public final class StorableObjectPool {
 		final Set<Identifier> loadButIds = new HashSet<Identifier>(ids);
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 		if (entityDeletedIds != null) {
-			assert Log.debugMessage("Found among deleted (added to excluded): " + entityDeletedIds, Log.DEBUGLEVEL08);
+			Log.debugMessage("Found among deleted (added to excluded): " + entityDeletedIds, Log.DEBUGLEVEL08);
 			Identifier.addToIdentifiers(loadButIds, entityDeletedIds);
 		}
 
@@ -464,7 +464,7 @@ public final class StorableObjectPool {
 			}
 		}
 
-		assert Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Found in pool " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
@@ -476,11 +476,11 @@ public final class StorableObjectPool {
 				if (breakOnLoadError) {
 					throw ae;
 				}
-				assert Log.errorMessage(ae);
+				Log.errorMessage(ae);
 				loadedObjects = Collections.emptySet();
 			}
 			assert loadedObjects != null : ErrorMessages.NON_NULL_EXPECTED; 
-			assert Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.createStrings(loadedObjects),
+			Log.debugMessage("Loaded " + loadedObjects.size() + " objects: " + Identifier.createStrings(loadedObjects),
 					Log.DEBUGLEVEL08);
 
 			for (final T loadedStorableObject : loadedObjects) {
@@ -494,7 +494,7 @@ public final class StorableObjectPool {
 						setStorableObjectAttributes(poolStorableObject, loadedStorableObject);
 						storableObjects.add(poolStorableObject);
 					} else {
-						assert Log.errorMessage("Local version of object '" + id
+						Log.errorMessage("Local version of object '" + id
 								+ "' do not match condition, but remote version matches condition; it is changed locally -- not returning it");
 					}
 				}
@@ -512,7 +512,7 @@ public final class StorableObjectPool {
 			}
 		}
 
-		assert Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
+		Log.debugMessage("Returning " + storableObjects.size() + " objects: " + Identifier.createStrings(storableObjects),
 				Log.DEBUGLEVEL08);
 
 		return storableObjects;
@@ -597,7 +597,7 @@ public final class StorableObjectPool {
 					}
 				}
 			} else {
-				assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+				Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 						+ ObjectEntities.codeToString(entityKey) + "'/" + entityKey);
 				continue;
 			}
@@ -622,7 +622,7 @@ public final class StorableObjectPool {
 				}
 			}
 		} else {
-			assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
@@ -658,7 +658,7 @@ public final class StorableObjectPool {
 					if (storableObject != null) {
 						storableObject.markAsDeleted();
 					} else {
-						assert Log.debugMessage("Object '" + id + "' not found in pool, probably already deleted", Log.DEBUGLEVEL08);
+						Log.debugMessage("Object '" + id + "' not found in pool, probably already deleted", Log.DEBUGLEVEL08);
 					}
 				}
 			}
@@ -693,7 +693,7 @@ public final class StorableObjectPool {
 			objectPool.remove(id);
 		}
 		else {
-			assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
@@ -743,7 +743,7 @@ public final class StorableObjectPool {
 				}
 			}
 			else {
-				assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+				Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 						+ ObjectEntities.codeToString(entityKey) + "'/" + entityKey);
 			}
 		}
@@ -891,7 +891,7 @@ public final class StorableObjectPool {
 			}
 		}
 		else {
-			assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
@@ -926,7 +926,7 @@ public final class StorableObjectPool {
 		}
 
 		if (storableObject.isChanged()) {
-			assert Log.debugMessage("Object '" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL08);
+			Log.debugMessage("Object '" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL08);
 			DEPENDENCY_SORTED_CONTAINER.put(storableObject, dependencyLevel);
 		}
 	}
@@ -943,7 +943,7 @@ public final class StorableObjectPool {
 			if (objectPool != null) {
 				return objectPool.unmodifiableGet(id);
 			}
-			assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return null;
 		} else if (identifiable instanceof StorableObject) {
@@ -992,7 +992,7 @@ public final class StorableObjectPool {
 				setUpdatedObjects.add(storableObject);
 			}
 
-			assert Log.debugMessage("Saving objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL08);
+			Log.debugMessage("Saving objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL08);
 			objectLoader.saveStorableObjects(storableObjects);
 
 			for (final StorableObject setUpdatedObject : setUpdatedObjects) {
@@ -1018,7 +1018,7 @@ public final class StorableObjectPool {
 				try {
 					Thread.sleep(LOCK_TIME_WAIT);
 				} catch (InterruptedException ie) {
-					assert Log.errorMessage(ie);
+					Log.errorMessage(ie);
 				}
 			}
 			if (!LOCKED_IDS.contains(id)) {
@@ -1056,7 +1056,7 @@ public final class StorableObjectPool {
 				storableObjects.add(storableObject);
 			} catch (final ApplicationException ae) {
 				if (continueOnError) {
-					assert Log.debugMessage(ae, Level.SEVERE);
+					Log.debugMessage(ae, Level.SEVERE);
 					continue;
 				} // else
 				throw ae;
@@ -1093,7 +1093,7 @@ public final class StorableObjectPool {
 			try {
 				storableObject = (T) transferable.getNative();
 			} catch (final IdlCreateObjectException coe) {
-				assert Log.debugMessage(coe, Level.SEVERE);
+				Log.debugMessage(coe, Level.SEVERE);
 				throw new CreateObjectException(coe.detailMessage);
 			}
 		}
@@ -1113,7 +1113,7 @@ public final class StorableObjectPool {
 	 */
 	public static void refresh(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert Log.debugMessage("Requested for: " + ids, Log.DEBUGLEVEL08);
+		Log.debugMessage("Requested for: " + ids, Log.DEBUGLEVEL08);
 		if (ids.isEmpty()) {
 			return;
 		}
@@ -1123,7 +1123,7 @@ public final class StorableObjectPool {
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
-			assert Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+			Log.errorMessage(ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 			return;
 		}
@@ -1141,12 +1141,12 @@ public final class StorableObjectPool {
 		}
 
 		if (refreshObjects.isEmpty()) {
-			assert Log.debugMessage("LRUMap for '" + ObjectEntities.codeToString(entityCode) + "' entity has no elements to refresh",
+			Log.debugMessage("LRUMap for '" + ObjectEntities.codeToString(entityCode) + "' entity has no elements to refresh",
 					Log.DEBUGLEVEL08);
 			return;
 		}
 
-		assert Log.debugMessage("Refreshing pool for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Log.DEBUGLEVEL08);
+		Log.debugMessage("Refreshing pool for '" + ObjectEntities.codeToString(entityCode) + "'s: " + ids, Log.DEBUGLEVEL08);
 
 		refresh(refreshObjects, entityCode, objectPool);
 	}
@@ -1174,12 +1174,12 @@ public final class StorableObjectPool {
 					}
 				}
 				if (refreshObjects.isEmpty()) {
-					assert Log.debugMessage("LRUMap for entity '" + ObjectEntities.codeToString(entityCode) + "' has no elements to refresh",
+					Log.debugMessage("LRUMap for entity '" + ObjectEntities.codeToString(entityCode) + "' has no elements to refresh",
 							Log.DEBUGLEVEL08);
 					continue;
 				}
 
-				assert Log.debugMessage("Refreshing pool for entity: '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode,
+				Log.debugMessage("Refreshing pool for entity: '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode,
 						Log.DEBUGLEVEL08);
 
 				refresh(refreshObjects, entityCode, objectPool);				
@@ -1216,7 +1216,7 @@ public final class StorableObjectPool {
 			assert remoteVersion != null : ErrorMessages.NON_NULL_EXPECTED + " for object '" + id + "'";
 
 			if (remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION)) {
-				assert Log.debugMessage("Object '" + ObjectEntities.codeToString(entityCode) + "' '" + id
+				Log.debugMessage("Object '" + ObjectEntities.codeToString(entityCode) + "' '" + id
 						+ "' removed remotely -- removing locally", Log.DEBUGLEVEL08);
 				objectPool.remove(id);
 			} else if (version.isOlder(remoteVersion)) {
@@ -1225,7 +1225,7 @@ public final class StorableObjectPool {
 		}
 
 		if (reloadObjectIds.isEmpty()) {
-			assert Log.debugMessage("LRUMap for '" + ObjectEntities.codeToString(entityCode) + "' entity has no elements to reload",
+			Log.debugMessage("LRUMap for '" + ObjectEntities.codeToString(entityCode) + "' entity has no elements to reload",
 					Log.DEBUGLEVEL08);
 			return;
 		}
@@ -1235,7 +1235,7 @@ public final class StorableObjectPool {
 			final Identifier id = reloadedStorableObject.getId();
 			final StorableObject poolStorableObject = objectPool.get(id);
 			setStorableObjectAttributes(poolStorableObject, reloadedStorableObject);
-			assert Log.debugMessage("Reloaded: '" + id + "' with version: " + reloadedStorableObject.getVersion(), Log.DEBUGLEVEL08);
+			Log.debugMessage("Reloaded: '" + id + "' with version: " + reloadedStorableObject.getVersion(), Log.DEBUGLEVEL08);
 		}
 	}
 
@@ -1253,7 +1253,7 @@ public final class StorableObjectPool {
 		final Properties properties = System.getProperties();
 		final String host = ApplicationProperties.getString("ORBInitialHost", DEFAULT_ORB_INITIAL_HOST);
 		final int port = ApplicationProperties.getInt("ORBInitialPort", DEFAULT_ORB_INITIAL_PORT);
-		assert Log.debugMessage("host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
+		Log.debugMessage("host: " + host + ", port: " + port, Log.DEBUGLEVEL09);
 		properties.setProperty("org.omg.CORBA.ORBInitialHost", host);
 		properties.setProperty("org.omg.CORBA.ORBInitialPort", Integer.toString(port));
 		final String[] args = null;
@@ -1274,7 +1274,7 @@ public final class StorableObjectPool {
 		try {
 			localStorableObject.fromTransferable(remoteStorableObject.getTransferable(CRUTCH_ORB));
 		} catch (ApplicationException ae) {
-			assert Log.errorMessage(ae);
+			Log.errorMessage(ae);
 		}
 	}
 
@@ -1292,8 +1292,8 @@ public final class StorableObjectPool {
 				try {
 					putStorableObjects(storableObjects);
 				} catch (IllegalObjectEntityException e) {
-					assert Log.errorMessage("Cannot get entity '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-					assert Log.errorMessage(e);
+					Log.errorMessage("Cannot get entity '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+					Log.errorMessage(e);
 				}
 				final long time1 = System.currentTimeMillis();
 				refresh(Identifier.createIdentifiers(storableObjects));
@@ -1301,7 +1301,7 @@ public final class StorableObjectPool {
 				
 			}
 
-			assert Log.debugMessage("deserializing time " + (System.currentTimeMillis() - time0)
+			Log.debugMessage("deserializing time " + (System.currentTimeMillis() - time0)
 					+ " ms, refreshing time " + refreshingTime + " ms", Log.DEBUGLEVEL08);
 
 		}
@@ -1316,7 +1316,7 @@ public final class StorableObjectPool {
 				final LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
 				saver.save(map, ObjectEntities.codeToString(entityCode), true);
 			}
-			assert Log.debugMessage("serializing time " + (System.currentTimeMillis() - time0) + " ms", Log.DEBUGLEVEL08);
+			Log.debugMessage("serializing time " + (System.currentTimeMillis() - time0) + " ms", Log.DEBUGLEVEL08);
 		}
 	}
 
@@ -1329,7 +1329,7 @@ public final class StorableObjectPool {
 			((StorableObjectResizableLRUMap) objectPool).truncate(true);
 		}
 		else {
-			assert Log.errorMessage("ERROR: Object pool class '" + objectPool.getClass().getName()
+			Log.errorMessage("ERROR: Object pool class '" + objectPool.getClass().getName()
 					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool");
 		}
 	}

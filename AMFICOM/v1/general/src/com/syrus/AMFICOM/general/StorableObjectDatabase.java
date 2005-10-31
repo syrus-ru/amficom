@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.201 2005/10/30 15:20:43 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.202 2005/10/31 12:30:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.201 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.202 $, $Date: 2005/10/31 12:30:18 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -124,7 +124,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			case MODE_UPDATE:
 				return columns + this.getColumnsTmpl();
 			default:
-				assert Log.errorMessage("Unknown mode: " + mode);
+				Log.errorMessage("Unknown mode: " + mode);
 				return null;
 		}
 	}
@@ -251,7 +251,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				final T storableObject = this.updateEntityFromResultSet(null, resultSet);
@@ -281,7 +281,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -370,7 +370,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, Set<Identifier>> linkedEntityIdsMap = new HashMap<Identifier, Set<Identifier>>();
@@ -409,7 +409,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -448,7 +448,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, EnumSet<E>> linkedCodesMap = new HashMap<Identifier, EnumSet<E>>();
@@ -462,7 +462,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					linkedCodes.add(EnumUtil.valueOf(enumClass, resultSet.getInt(linkedCodeColumnName)));
 				} catch (IllegalArgumentException iae) {
-					assert Log.errorMessage(iae);
+					Log.errorMessage(iae);
 				}
 			}
 
@@ -491,7 +491,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -508,7 +508,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			resultSet.next();
 			final int count = resultSet.getInt(aliasCount);
@@ -528,7 +528,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				resultSet = null;
 			}
 			catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 			finally {
 				if (connection != null) {
@@ -558,7 +558,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
@@ -591,7 +591,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -623,7 +623,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
@@ -655,7 +655,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 
@@ -688,11 +688,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final T storableObject : storableObjects) {
 				id = storableObject.getId();
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_INSERT);
-				assert Log.debugMessage("Inserting  " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
+				Log.debugMessage("Inserting  " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
@@ -702,7 +702,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					connection.rollback();
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 			final String mesg = "Cannot insert " + this.getEntityName() + " '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
@@ -720,7 +720,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -760,7 +760,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					linkedId = linkedIdIt.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
-					assert Log.debugMessage("Inserting linked entity  '" + linkedId + "' for '" + id + "'", Log.DEBUGLEVEL09);
+					Log.debugMessage("Inserting linked entity  '" + linkedId + "' for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 				connection.commit();
@@ -770,7 +770,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					connection.rollback();
 				} catch (SQLException sqle1) {
-					assert Log.errorMessage(sqle1);
+					Log.errorMessage(sqle1);
 				}
 			}
 			final String mesg = "Cannot insert linked entity  '" + linkedId + "' for '" + id + "' -- " + sqle.getMessage();
@@ -789,7 +789,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -832,7 +832,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					linkedEnum = linkedCodeIt.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					preparedStatement.setInt(2, EnumUtil.getCode(linkedEnum));
-					assert Log.debugMessage("Inserting linked enum  '" + linkedEnum + "' for '" + id + "'", Log.DEBUGLEVEL09);
+					Log.debugMessage("Inserting linked enum  '" + linkedEnum + "' for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 				connection.commit();
@@ -842,7 +842,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				try {
 					connection.rollback();
 				} catch (SQLException sqle1) {
-					assert Log.errorMessage(sqle1);
+					Log.errorMessage(sqle1);
 				}
 			}
 			final String mesg = "Cannot insert linked enum  '" + linkedEnum + "' for '" + id + "' -- " + sqle.getMessage();
@@ -861,7 +861,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -944,7 +944,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql.toString());
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final T storableObject : storableObjects) {
 				id = storableObject.getId();
 
@@ -955,12 +955,12 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					try {
 						connection.rollback();
 					} catch (SQLException sqle1) {
-						assert Log.errorMessage(sqle1);
+						Log.errorMessage(sqle1);
 					}
 					throw new UpdateObjectException("Cannot set entity for prepared statement -- " + ide.getMessage(), ide);
 				}
 
-				assert Log.debugMessage("Updating " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
+				Log.debugMessage("Updating " + this.getEntityName() + " '" + id + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
@@ -971,7 +971,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					connection.rollback();
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 			final String mesg = "Cannot update " + this.getEntityName() + " '" + id + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
@@ -990,7 +990,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1186,11 +1186,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + stringBuffer, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			statement.executeUpdate(stringBuffer.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
-			assert Log.errorMessage(sqle1);
+			Log.errorMessage(sqle1);
 		} finally {
 			try {
 				try {
@@ -1205,7 +1205,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1243,11 +1243,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
-			assert Log.errorMessage(sqle1);
+			Log.errorMessage(sqle1);
 		} finally {
 			try {
 				try {
@@ -1262,7 +1262,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1308,11 +1308,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			assert Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
-			assert Log.errorMessage(sqle1);
+			Log.errorMessage(sqle1);
 		} finally {
 			try {
 				try {
@@ -1327,7 +1327,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 			} catch (SQLException sqle1) {
-				assert Log.errorMessage(sqle1);
+				Log.errorMessage(sqle1);
 			}
 		}
 	}
@@ -1474,7 +1474,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			conditionQuery = databaseStorableObjectCondition.getSQLQuery();
 		} catch (IllegalObjectEntityException ioee) {
-			assert Log.errorMessage(ioee);
+			Log.errorMessage(ioee);
 			conditionQuery = DatabaseStorableObjectCondition.FALSE_CONDITION;
 		}
 		return conditionQuery;
@@ -1496,17 +1496,17 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			constructor.setAccessible(true);
 			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor.newInstance(new Object[] {condition});
 		} catch (ClassNotFoundException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		} catch (SecurityException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		} catch (NoSuchMethodException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		} catch (IllegalArgumentException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		} catch (InstantiationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		} catch (IllegalAccessException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		} catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
@@ -1517,7 +1517,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					assert false : message;
 				}
 			} else {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 		}
 		return databaseStorableObjectCondition;

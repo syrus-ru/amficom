@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMapLibraryImpl.java,v 1.3 2005/10/30 15:20:37 bass Exp $
+ * $Id: IdlMapLibraryImpl.java,v 1.4 2005/10/31 12:30:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/10/30 15:20:37 $
+ * @version $Revision: 1.4 $, $Date: 2005/10/31 12:30:13 $
  * @module map
  */
 
@@ -61,7 +61,7 @@ public class IdlMapLibraryImpl extends IdlMapLibrary {
 		try {
 			return new MapLibrary(this);
 		} catch (final CreateObjectException coe) {
-			assert Log.debugMessage(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

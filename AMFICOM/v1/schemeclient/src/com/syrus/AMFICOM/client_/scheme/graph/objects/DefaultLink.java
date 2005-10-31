@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.19 2005/10/30 15:20:56 bass Exp $
+ * $Id: DefaultLink.java,v 1.20 2005/10/31 12:30:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/10/30 15:20:56 $
+ * @version $Revision: 1.20 $, $Date: 2005/10/31 12:30:29 $
  * @module schemeclient
  */
 
@@ -451,7 +451,7 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 		try {
 			return (SchemeLink) StorableObjectPool.getStorableObject(this.scheme_link_id, true);
 		} catch (ApplicationException ex) {
-			assert Log.errorMessage(ex);
+			Log.errorMessage(ex);
 			return null;
 		}
 	}

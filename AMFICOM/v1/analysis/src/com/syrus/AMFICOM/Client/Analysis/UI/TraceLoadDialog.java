@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.11 2005/10/30 15:20:48 bass Exp $
+ * $Id: TraceLoadDialog.java,v 1.12 2005/10/31 12:30:22 bass Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/10/30 15:20:48 $
+ * @version $Revision: 1.12 $, $Date: 2005/10/31 12:30:22 $
  * @module analysis
  */
 
@@ -148,7 +148,7 @@ public class TraceLoadDialog {
 					}
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 			}
 			if (selectedResults.isEmpty()) {
 				// XXX: error processing: выдать сообщение об ошибке, что нет результатов

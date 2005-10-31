@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.21 2005/10/30 15:20:13 bass Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.22 2005/10/31 12:29:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/30 15:20:13 $
+ * @version $Revision: 1.22 $, $Date: 2005/10/31 12:29:53 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -117,7 +117,7 @@ public class VerifiedConnectionManager {
 				this.onRestoreConnection(servantName);
 			}
 		} catch (CommunicationException ce) {
-			assert Log.errorMessage(ce);
+			Log.errorMessage(ce);
 			this.referencesMap.put(servantName, null);
 			this.disconnectedServants.add(servantName);
 			this.onLoseConnection(servantName);
@@ -129,7 +129,7 @@ public class VerifiedConnectionManager {
 	 * @param servantName
 	 */
 	protected void onLoseConnection(final String servantName) {
-		assert Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
+		Log.debugMessage("Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		this.firePropertyChangeListners(new PropertyChangeEvent(this, servantName, Boolean.TRUE, Boolean.FALSE));
 	}
 
@@ -138,7 +138,7 @@ public class VerifiedConnectionManager {
 	 * @param servantName
 	 */
 	protected void onRestoreConnection(final String servantName) {
-		assert Log.debugMessage("Connection with '" + servantName + "' restored", Log.DEBUGLEVEL08);
+		Log.debugMessage("Connection with '" + servantName + "' restored", Log.DEBUGLEVEL08);
 		
 		this.firePropertyChangeListners(new PropertyChangeEvent(this, servantName, Boolean.FALSE, Boolean.TRUE));
 	}

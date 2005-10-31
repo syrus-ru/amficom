@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.79 2005/10/30 15:20:15 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.80 2005/10/31 12:29:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/10/30 15:20:15 $
+ * @version $Revision: 1.80 $, $Date: 2005/10/31 12:29:54 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
@@ -257,7 +257,7 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -275,7 +275,7 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 					? null
 					: schemeCableLinks.iterator().next();
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			return null;
 		}
 	}
@@ -421,7 +421,7 @@ public final class SchemeCablePort extends AbstractSchemePort<SchemeCablePort>
 		this.getParentSchemeDevice().getSchemeCablePortContainerWrappee().removeFromCache(this, usePool);
 
 		if (parentSchemeDevice == null) {
-			assert Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(this.getReverseDependencies(usePool));
 		} else {
 			parentSchemeDevice.getSchemeCablePortContainerWrappee().addToCache(this, usePool);

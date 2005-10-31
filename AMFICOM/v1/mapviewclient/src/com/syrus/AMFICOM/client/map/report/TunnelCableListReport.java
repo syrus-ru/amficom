@@ -40,8 +40,8 @@ public class TunnelCableListReport {
 						vertDivisionsCount),
 				getTableColumnWidths(vertDivisionsCount));
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e.getMessage());
-			assert Log.errorMessage(e);			
+			Log.errorMessage(e.getMessage());
+			Log.errorMessage(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
 					tableStorableElement.getModelClassName(),

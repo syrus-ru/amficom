@@ -127,7 +127,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
 				TraceSelectorFrame selectFrame = new TraceSelectorFrame(AnalyseMainFrame.this.dispatcher);
 				desktopPane.add(selectFrame);
 				return selectFrame;
@@ -137,7 +137,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
 				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
 					@Override
 					public String getReportTitle() {
@@ -153,7 +153,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
 				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrame.this.dispatcher) {
 					@Override
 					public String getReportTitle() {
@@ -169,7 +169,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(NOISE_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | NOISE_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | NOISE_FRAME", Level.FINEST);
 				ScalableFrame noiseFrame = new ScalableFrame(new ScalableLayeredPanel()) {
 					@Override
 					public String getReportTitle() {
@@ -186,7 +186,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		this.frames.put(FILTERED_FRAME, new UIDefaults.LazyValue() {
 //
 //			public Object createValue(UIDefaults table) {
-//				assert Log.debugMessage(".createValue | FILTERED_FRAME", Log.FINEST);
+//				Log.debugMessage(".createValue | FILTERED_FRAME", Log.FINEST);
 //				ScalableFrame filteredFrame = new ScalableFrame(new ScalableLayeredPanel());
 //				filteredFrame.setTitle(LangModelAnalyse.getString("filteredTitle"));
 //				desktopPane.add(filteredFrame);
@@ -198,7 +198,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		
 		this.frames.put(NOISE_HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | NOISE_HISTOGRAMM_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | NOISE_HISTOGRAMM_FRAME", Level.FINEST);
 				
 				ScalableLayeredPanel layeredPanel = new ScalableLayeredPanel();
 				noiseHistogrammPanel = new NoiseHistogrammPanel(layeredPanel);
@@ -283,7 +283,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
 				EventsFrame eventsFrame = new EventsFrame(aContext, false) {
 					@Override
 					public String getReportTitle() {
@@ -299,7 +299,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(DETAILED_EVENTS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Level.FINEST);
 				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame();
 				desktopPane.add(detailedEvFrame);
 				return detailedEvFrame;
@@ -309,7 +309,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
 				PathElementsFrame analysisFrame = new PathElementsFrame(aContext, AnalyseMainFrame.this.dispatcher)  {
 					@Override
 					public String getReportTitle() {
@@ -325,7 +325,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
 				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrame.this.dispatcher) ;
 				desktopPane.add(mInfoFrame);
 				return mInfoFrame;
@@ -335,7 +335,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
 				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext) {
 					@Override
 					public String getReportTitle() {
@@ -351,7 +351,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				assert Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Level.FINEST);
+				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Level.FINEST);
 				HistogrammFrame histogrammFrame = new HistogrammFrame(AnalyseMainFrame.this.dispatcher) {
 					@Override
 					public String getReportTitle() {

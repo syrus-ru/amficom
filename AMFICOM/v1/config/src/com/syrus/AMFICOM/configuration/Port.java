@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.103 2005/10/30 15:20:19 bass Exp $
+ * $Id: Port.java,v 1.104 2005/10/31 12:29:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/10/30 15:20:19 $
+ * @version $Revision: 1.104 $, $Date: 2005/10/31 12:29:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -215,7 +215,7 @@ public final class Port extends StorableObject<Port>
 		try {
 			this.setType(StorableObjectPool.<PortType>getStorableObject(typeId, true));
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 		}
 	}
 

@@ -44,7 +44,7 @@ public class PathSaveCommand extends AbstractCommand {
 			aModel.fireModelChanged();
 			
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageCache.java,v 1.24 2005/10/30 15:20:33 bass Exp $
+ * $Id: TopologicalImageCache.java,v 1.25 2005/10/31 12:30:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/30 15:20:33 $
+ * @version $Revision: 1.25 $, $Date: 2005/10/31 12:30:09 $
  * @author $Author: bass $
  * @author Peter Peskovsky
  * @module mapviewclient
@@ -191,7 +191,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	}
 
 	public void setSize(Dimension newSize) throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(" TIC | setSize | just entered.",Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage(" TIC | setSize | just entered.",Level.FINEST); //$NON-NLS-1$
 		
 		if ((newSize.width <= 0) || (newSize.height <= 0))
 			return;
@@ -277,7 +277,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * Центр в сферических координатах
 	 */
 	public void setCenter(DoublePoint newCenter) throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(" TIC - setCenter - just entered.",Log.DEBUGLEVEL10);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC - setCenter - just entered.",Log.DEBUGLEVEL10);		 //$NON-NLS-1$
 		if (this.imageSize == null) {
 			this.center = newCenter;			
 			return;
@@ -313,7 +313,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * Масштаб
 	 */
 	public void setScale(double newScale) throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(" TIC | setScale | just entered.",Level.FINEST);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC | setScale | just entered.",Level.FINEST);		 //$NON-NLS-1$
 		if (this.imageSize == null) {
 			this.scale = newScale;			
 			return;
@@ -336,7 +336,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	}
 
 	private void nulifyCache() throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(" TIC | nulifyCache.",Level.FINEST);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC | nulifyCache.",Level.FINEST);		 //$NON-NLS-1$
 //		this.requestToPaint = null;
 		this.cacheOfImages.clear();
 		this.loadingThread.clearQueue();
@@ -400,7 +400,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 		if(this.imageSize == null) {
 			return;
 		}
-		assert Log.debugMessage(" TIC | analyzeMouseLocation | just entered.",Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage(" TIC | analyzeMouseLocation | just entered.",Level.FINEST); //$NON-NLS-1$
 		
 		if (this.mode == TopologicalImageCache.MODE_SCALE_CHANGING)
 			return;
@@ -674,7 +674,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 			}
 		}
 
-		assert Log.debugMessage(" TIC | getImage | returning image",Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage(" TIC | getImage | returning image",Level.FINEST); //$NON-NLS-1$
 
         Image imageToReturn = this.requestToPaint.getImage();
         
@@ -739,9 +739,9 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 */
 	private void createMovingRequests()
 			throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(" TIC | createMovingRequests | just entered.",Level.FINEST);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC | createMovingRequests | just entered.",Level.FINEST);		 //$NON-NLS-1$
 		this.requestToPaint = this.setPriorityForRequest(this.center,this.scale,TopologicalImageQuery.PRIORITY_EXPRESS);
-		assert Log.debugMessage(" TIC | createMovingRequests | exiting.",Level.FINEST);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC | createMovingRequests | exiting.",Level.FINEST);		 //$NON-NLS-1$
 	}
 
 	/**
@@ -754,7 +754,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * 
 	 */
 	private void clearFarAndUnloadedSegments() throws MapConnectionException, MapDataException {
-		assert Log.debugMessage(" TIC | clearFarAndUnloadedSegments | just entered.",Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage(" TIC | clearFarAndUnloadedSegments | just entered.",Level.FINEST); //$NON-NLS-1$
 		
 		double dX = TopologicalImageCache.CACHE_SIZE * 1.01 * this.xDifferenceSph;
 		double dY = TopologicalImageCache.CACHE_SIZE * 1.01 * this.yDifferenceSph;		
@@ -778,14 +778,14 @@ public class TopologicalImageCache implements MapImageRenderer {
 					&& (curRequest.getPriority() != TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
 					&& (curRequest != this.requestToPaint)) {
 				// Удаляем сегмент - не имеет смысла его подгружает
-				assert Log.debugMessage(" TIC | clearFarAndUnloadedSegments | removing request." //$NON-NLS-1$
+				Log.debugMessage(" TIC | clearFarAndUnloadedSegments | removing request." //$NON-NLS-1$
 						+ curRequest,Level.FINEST);
 				this.loadingThread.removeRequest(curRequest);
 				it.remove();
 			}
 		}
 		
-		assert Log.debugMessage(" TIC | clearFarAndUnloadedSegments | exiting.",Level.FINEST);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC | clearFarAndUnloadedSegments | exiting.",Level.FINEST);		 //$NON-NLS-1$
 	}
 
 	/**
@@ -793,13 +793,13 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 * 
 	 */
 	private void clearOldSegments() {
-		assert Log.debugMessage(" TIC | clearOldSegments | just entered.",Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage(" TIC | clearOldSegments | just entered.",Level.FINEST); //$NON-NLS-1$
 
 		// Сортируем отчёты (по убыванию, чтобы более новые потом и искать
 		// недолго было)
 		Collections.sort(this.cacheOfImages);
 
-		assert Log.debugMessage(" TIC | clearOldSegments | Collection sorted.",Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage(" TIC | clearOldSegments | Collection sorted.",Level.FINEST); //$NON-NLS-1$
 
 		// Удаляем последние MAX_EXCEEDING_COUNT элементов
 		for (ListIterator lIt = this.cacheOfImages
@@ -809,7 +809,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 			lIt.remove();
 		}
 
-		assert Log.debugMessage(" TIC | clearOldSegments | Old elements removed. Exiting.",Level.FINEST); //$NON-NLS-1$
+		Log.debugMessage(" TIC | clearOldSegments | Old elements removed. Exiting.",Level.FINEST); //$NON-NLS-1$
 	}
 
 	// ////////////////////////////////////Функции для кэша по масштабу
@@ -820,7 +820,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 	 */
 	private void createScaleRequests() throws MapConnectionException,
 			MapDataException {
-		assert Log.debugMessage(" TIC | createScaleRequests | just entered.",Level.FINEST);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC | createScaleRequests | just entered.",Level.FINEST);		 //$NON-NLS-1$
 		if ((this.cacheOfImages.size() == 0)
 				|| (	(!TopologicalImageCache.compare(this.scale, this.mapContext.getScale() * MapContext.ZOOM_FACTOR))
 						&&(!TopologicalImageCache.compare(this.scale * MapContext.ZOOM_FACTOR, this.mapContext.getScale())))) {
@@ -829,7 +829,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 			// грузим все изображения заново.
 			int direction = (this.scale < this.mapContext.getScale()) ? 1 : -1;
 			renewScaleImages(direction);
-			assert Log.debugMessage(" TIC | createScaleRequests | exiting.",Level.FINEST);			 //$NON-NLS-1$
+			Log.debugMessage(" TIC | createScaleRequests | exiting.",Level.FINEST);			 //$NON-NLS-1$
 			return;
 		}
 
@@ -859,7 +859,7 @@ public class TopologicalImageCache implements MapImageRenderer {
 				+ TopologicalImageCache.MAX_EXCEEDING_COUNT)
 			this.clearOldSegments();
 		
-		assert Log.debugMessage(" TIC | createScaleRequests | exiting.",Level.FINEST);		 //$NON-NLS-1$
+		Log.debugMessage(" TIC | createScaleRequests | exiting.",Level.FINEST);		 //$NON-NLS-1$
 	}
 
 	private static boolean compare(double p1, double p2) {

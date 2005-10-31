@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.17 2005/10/30 15:20:48 bass Exp $
+ * $Id: GUIUtil.java,v 1.18 2005/10/31 12:30:22 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:48 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:22 $
  * @module
  */
 public class GUIUtil {
@@ -77,7 +77,7 @@ public class GUIUtil {
 			showErrorMessage(MSG_ERROR_DATABASE_EXCEPTION);
 		} else {
 			e.printStackTrace();
-			assert Log.debugMessage(e, Log.DEBUGLEVEL03);
+			Log.debugMessage(e, Log.DEBUGLEVEL03);
 		}
 	}
 

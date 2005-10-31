@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.23 2005/10/30 15:20:48 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.24 2005/10/31 12:30:22 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/30 15:20:48 $
+ * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:22 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -330,12 +330,12 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			}
 		} else if (nodeObject instanceof Date) {
 			Date startDate = (Date) nodeObject;
-			assert Log.debugMessage("startDate is " + startDate, Level.FINEST);
+			Log.debugMessage("startDate is " + startDate, Level.FINEST);
 			calendar.setTime(startDate);
 			calendar.add(Calendar.MONTH, 1);
 			calendar.add(Calendar.SECOND, -1);
 			Date endDate = calendar.getTime();
-			assert Log.debugMessage("endDate is " + endDate, Level.FINEST);
+			Log.debugMessage("endDate is " + endDate, Level.FINEST);
 			Item parent = item.getParent();
 			Object parentObject = parent.getObject();
 			if (parentObject.equals(DATES)) {

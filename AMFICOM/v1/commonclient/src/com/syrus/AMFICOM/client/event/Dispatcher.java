@@ -1,5 +1,5 @@
 /*-
- * $Id: Dispatcher.java,v 1.16 2005/10/30 15:20:24 bass Exp $
+ * $Id: Dispatcher.java,v 1.17 2005/10/31 12:30:01 bass Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.16 $, $Date: 2005/10/30 15:20:24 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:01 $
  * @author $Author: bass $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -37,7 +37,7 @@ public class Dispatcher {
 
 	// регистрация связывает подписчика с определенным событием
 	public synchronized void addPropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
-		assert Log.debugMessage("propertyName:" + propertyName
+		Log.debugMessage("propertyName:" + propertyName
 				+ ", listener: " + listener.getClass().getName(), Log.DEBUGLEVEL10);
 		List<PropertyChangeListener> listeners = this.events.get(propertyName);
 		if (listeners == null) {
@@ -48,7 +48,7 @@ public class Dispatcher {
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		} else {
-			assert Log.debugMessage("already added listener: " + listener.getClass().getName(),
+			Log.debugMessage("already added listener: " + listener.getClass().getName(),
 					Level.WARNING);
 		}
 	}
@@ -56,11 +56,11 @@ public class Dispatcher {
 	// унрегистрация убирает связь подписчика с определенным событием
 	public void removePropertyChangeListener(final String propertyName, final PropertyChangeListener listener) {
 		final List<PropertyChangeListener> listeners = this.events.get(propertyName);
-		assert Log.debugMessage("propertyName:" + propertyName
+		Log.debugMessage("propertyName:" + propertyName
 				+ ", listener: " + listener.getClass().getName(), Log.DEBUGLEVEL10);
 		if (listeners != null) {
 			if (!listeners.remove(listener)) {
-				assert Log.debugMessage("there is no added listener: "
+				Log.debugMessage("there is no added listener: "
 						+ listener.getClass().getName(), Level.WARNING);
 			}
 		}
@@ -72,13 +72,13 @@ public class Dispatcher {
 
 	@SuppressWarnings("unused")
 	private void printListeners() {
-		assert Log.debugMessage("this.hashCode(): " + this.hashCode(), Level.FINEST);
+		Log.debugMessage("this.hashCode(): " + this.hashCode(), Level.FINEST);
 		for (Iterator iterator = this.events.keySet().iterator(); iterator.hasNext();) {
 			final String propertyName = (String) iterator.next();
 			List<PropertyChangeListener> listeners = this.events.get(propertyName);
-			assert Log.debugMessage("propertyName: " + propertyName, Level.FINEST);
+			Log.debugMessage("propertyName: " + propertyName, Level.FINEST);
 			for (PropertyChangeListener changeListener : listeners) {
-				assert Log.debugMessage("changeListener : " + changeListener.getClass().getName(), Level.FINEST);
+				Log.debugMessage("changeListener : " + changeListener.getClass().getName(), Level.FINEST);
 			}
 		}
 	}
@@ -95,17 +95,17 @@ public class Dispatcher {
 				 * yeah, really compare references, skip sending message to source
 				 */
 				if (!canSendToSelf && listener == source) {
-					assert Log.debugMessage("propertyName: " + propertyName
+					Log.debugMessage("propertyName: " + propertyName
 							+ ", listener == source (" + source.getClass().getName() + ")", Log.DEBUGLEVEL10);
 					continue;
 				}
 
-				assert Log.debugMessage("propertyName: " + propertyName
+				Log.debugMessage("propertyName: " + propertyName
 						+ ", listener: " + listener.getClass().getName(), Log.DEBUGLEVEL10);
 				listener.propertyChange(event);
 			}
 		} else {
-			assert Log.debugMessage("listener for '" + propertyName
+			Log.debugMessage("listener for '" + propertyName
 					+ "' is " + (listeners == null ? "'null'" : "empty"), Log.DEBUGLEVEL10);
 		}
 	}

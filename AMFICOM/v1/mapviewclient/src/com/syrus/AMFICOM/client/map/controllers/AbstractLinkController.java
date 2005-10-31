@@ -1,5 +1,5 @@
 /*-
- * $$Id: AbstractLinkController.java,v 1.48 2005/10/30 15:20:32 bass Exp $$
+ * $$Id: AbstractLinkController.java,v 1.49 2005/10/31 12:30:09 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Shitlet;
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.48 $, $Date: 2005/10/30 15:20:32 $
+ * @version $Revision: 1.49 $, $Date: 2005/10/31 12:30:09 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -139,7 +139,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				return type;
 			}
 		} catch (ApplicationException ex) {
-			assert Log.debugMessage("Exception searching CharacteristicType. Creating new one.", Level.CONFIG); //$NON-NLS-1$
+			Log.debugMessage("Exception searching CharacteristicType. Creating new one.", Level.CONFIG); //$NON-NLS-1$
 		}
 
 		try {
@@ -168,14 +168,14 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			final Set<Characteristic> characteristics = characterizable.getCharacteristics(false);
 			final long f = System.nanoTime();
 			MapViewController.addTime6(f - d);
-//			assert Log.debugMessage("at " + (f - d) + "ns", Level.INFO);
+//			Log.debugMessage("at " + (f - d) + "ns", Level.INFO);
 			for (final Characteristic ch : characteristics) {
 				if (ch.getType().equals(characteristicType)) {
 					return ch;
 				}
 			}
 		} catch (ApplicationException e) {
-			assert Log.debugMessage(e, Level.WARNING);
+			Log.debugMessage(e, Level.WARNING);
 		}
 		return null;
 	}

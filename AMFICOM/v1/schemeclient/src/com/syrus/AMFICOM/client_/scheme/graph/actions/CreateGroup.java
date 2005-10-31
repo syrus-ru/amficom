@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.20 2005/10/30 15:20:54 bass Exp $
+ * $Id: CreateGroup.java,v 1.21 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -75,14 +75,14 @@ public class CreateGroup extends AbstractAction {
 
 		for (Object cell : graph.getSelectionCells()) {
 			if (cell instanceof DefaultCableLink) {
-				assert Log.debugMessage(LangModelGraph.getString("Error.group.cable"), Level.WARNING); //$NON-NLS-1$
+				Log.debugMessage(LangModelGraph.getString("Error.group.cable"), Level.WARNING); //$NON-NLS-1$
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 						LangModelGraph.getString("Error.group.cable"), //$NON-NLS-1$
 						LangModelGraph.getString("error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
 				return;
 			} else if (cell instanceof Rack) {
-				assert Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
+				Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 						LangModelGraph.getString("Error.group.rack"), //$NON-NLS-1$
 						LangModelGraph.getString("error"), //$NON-NLS-1$
@@ -91,7 +91,7 @@ public class CreateGroup extends AbstractAction {
 			} else if (cell instanceof DeviceGroup) {
 				DeviceGroup group = (DeviceGroup)cell;
 				if (group.getType() == DeviceGroup.SCHEME) {
-					assert Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
+					Log.debugMessage(LangModelGraph.getString("Error.group.scheme"), Level.WARNING); //$NON-NLS-1$
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 							LangModelGraph.getString("Error.group.scheme"), //$NON-NLS-1$
 							LangModelGraph.getString("error"), //$NON-NLS-1$
@@ -113,7 +113,7 @@ public class CreateGroup extends AbstractAction {
 			try {
 				protoElement = SchemeObjectsFactory.createSchemeProtoElement();
 			} catch (CreateObjectException e1) {
-				assert Log.errorMessage(e1);
+				Log.errorMessage(e1);
 				return;
 			}
 			counter++;
@@ -125,7 +125,7 @@ public class CreateGroup extends AbstractAction {
 				try {
 					element = SchemeObjectsFactory.createSchemeElement(res.getScheme());
 				} catch (ApplicationException e1) {
-					assert Log.errorMessage(e1);
+					Log.errorMessage(e1);
 					return;
 				}
 				counter++;
@@ -161,7 +161,7 @@ public class CreateGroup extends AbstractAction {
 													LangModelGraph.getString("error_port_type_not_set"), //$NON-NLS-1$
 													LangModelGraph.getString("error"), //$NON-NLS-1$
 													JOptionPane.OK_OPTION);
-											assert Log.debugMessage("Port type not set for " + ellipse.getSchemePort().getName(), Level.WARNING); //$NON-NLS-1$
+											Log.debugMessage("Port type not set for " + ellipse.getSchemePort().getName(), Level.WARNING); //$NON-NLS-1$
 											return new Object[0];
 										}
 										new_cells.add(ellipse);
@@ -172,7 +172,7 @@ public class CreateGroup extends AbstractAction {
 													LangModelGraph.getString("error_port_type_not_set"), //$NON-NLS-1$
 													LangModelGraph.getString("error"), //$NON-NLS-1$
 													JOptionPane.OK_OPTION);
-											assert Log.debugMessage("Port type not set for " + ellipse.getSchemeCablePort().getName(), Level.WARNING); //$NON-NLS-1$
+											Log.debugMessage("Port type not set for " + ellipse.getSchemeCablePort().getName(), Level.WARNING); //$NON-NLS-1$
 											return new Object[0];
 										}
 										new_cells.add(ellipse);
@@ -228,7 +228,7 @@ public class CreateGroup extends AbstractAction {
 			proto.setSchemeLinks(childSchemeLinks, false);
 			proto.setSchemeProtoElements(childSchemeProtoElements, false);
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 		return group;
 	}
@@ -273,7 +273,7 @@ public class CreateGroup extends AbstractAction {
 				element2.setParentSchemeElement(element, false);
 			}
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 		return group;
 	}

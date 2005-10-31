@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.20 2005/10/30 15:20:42 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.21 2005/10/31 12:30:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:42 $
+ * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -95,8 +95,8 @@ public final class LocalXmlIdentifierPool {
 		
 //		When working with a large amount of objects ( ~ 26k ) this code
 //		results in significant performance degradation blia (w/o any cunt).	
-//		assert Log.debugMessage("FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
-//		assert Log.debugMessage("REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
+//		Log.debugMessage("FORWARD_MAP " + FORWARD_MAP.values(), Log.DEBUGLEVEL09);
+//		Log.debugMessage("REVERSE_MAP " + REVERSE_MAP.values(), Log.DEBUGLEVEL09);
 
 	}
 
@@ -120,7 +120,7 @@ public final class LocalXmlIdentifierPool {
 					+ importType + "''");
 		}
 		
-		assert Log.debugMessage("id:" + id 
+		Log.debugMessage("id:" + id 
 			+ ", importType:" + importType
 			+ ", xmlId:" + xmlId, Log.DEBUGLEVEL09);
 		
@@ -147,7 +147,7 @@ public final class LocalXmlIdentifierPool {
 					+ importType + "''");
 		}
 		
-		assert Log.debugMessage("xmlId:" + xmlId 
+		Log.debugMessage("xmlId:" + xmlId 
 			+ ", importType:" + importType
 			+ ", id:" + id , Log.DEBUGLEVEL09);
 		return id;
@@ -320,7 +320,7 @@ public final class LocalXmlIdentifierPool {
 			try {
 				XmlIdentifierDatabase.retrievePrefetchedMap(importType);
 			} catch (final RetrieveObjectException roe) {
-				assert Log.errorMessage(roe);
+				Log.errorMessage(roe);
 				return;
 			}
 			PREFETCHED_IMPORT_TYPES.add(importType);
@@ -359,7 +359,7 @@ public final class LocalXmlIdentifierPool {
 		try {
 			XmlIdentifierDatabase.insertKeys(keysToCreate);
 		} catch (final CreateObjectException coe) {
-			assert Log.errorMessage(coe);
+			Log.errorMessage(coe);
 		}
 	}
 
@@ -369,7 +369,7 @@ public final class LocalXmlIdentifierPool {
 		Runtime.getRuntime().addShutdownHook(new Thread("LocalXmlIdentifierPool -- debug overhead meter") {
 			@Override
 			public void run() {
-				assert Log.debugMessage("LocalXmlIdentifierPool | additional sanity checks took "
+				Log.debugMessage("LocalXmlIdentifierPool | additional sanity checks took "
 								+ totalDebugOverheadNanos
 								+ " nanosecond(s) in total",
 						INFO);
@@ -384,7 +384,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Maxim Selivanov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:42 $
+	 * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -402,7 +402,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:42 $
+	 * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -475,7 +475,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.20 $, $Date: 2005/10/30 15:20:42 $
+	 * @version $Revision: 1.21 $, $Date: 2005/10/31 12:30:17 $
 	 * @module general
 	 */
 	static final class XmlKey extends State {

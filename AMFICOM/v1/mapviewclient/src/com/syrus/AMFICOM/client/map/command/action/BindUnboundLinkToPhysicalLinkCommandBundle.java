@@ -1,5 +1,5 @@
 /*-
- * $$Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.34 2005/10/30 16:31:18 bass Exp $$
+ * $$Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.35 2005/10/31 12:30:07 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  *  команда привязывания непривязанной линии к тоннелю. концевые узлы
  *  неправязанной линии и тоннеля должны совпадать
  * 
- * @version $Revision: 1.34 $, $Date: 2005/10/30 16:31:18 $
+ * @version $Revision: 1.35 $, $Date: 2005/10/31 12:30:07 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -57,7 +57,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends
 
 	@Override
 	public void execute() {
-		assert Log.debugMessage("bind " + this.unbound.getId()  //$NON-NLS-1$
+		Log.debugMessage("bind " + this.unbound.getId()  //$NON-NLS-1$
 				+ " to " + this.link.getName() + " (" + this.link.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			Level.FINEST);
 
@@ -95,7 +95,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
-			assert Log.debugMessage(e, Level.SEVERE);
+			Log.debugMessage(e, Level.SEVERE);
 		}
 	}
 	

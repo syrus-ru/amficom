@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.13 2005/10/30 15:20:54 bass Exp $
+ * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.14 2005/10/31 12:30:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/10/30 15:20:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/10/31 12:30:28 $
  * @module schemeclient
  */
 
@@ -66,7 +66,7 @@ public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
 					}
 				}
 			} catch (ApplicationException e) {
-				assert Log.errorMessage(e);
+				Log.errorMessage(e);
 				showNoSelection();
 			}
 		} 

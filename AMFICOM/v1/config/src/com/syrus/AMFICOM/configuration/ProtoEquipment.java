@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoEquipment.java,v 1.18 2005/10/30 15:20:19 bass Exp $
+ * $Id: ProtoEquipment.java,v 1.19 2005/10/31 12:29:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/30 15:20:19 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/31 12:29:56 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -193,7 +193,7 @@ public final class ProtoEquipment extends StorableObject<ProtoEquipment>
 		} catch (final CreateObjectException coe) {
 			throw coe;
 		} catch (final ApplicationException ae) {
-			assert Log.debugMessage(ae, SEVERE);
+			Log.debugMessage(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}

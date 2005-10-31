@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.14 2005/10/30 15:20:43 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.15 2005/10/31 12:30:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/10/30 15:20:43 $
+ * @version $Revision: 1.15 $, $Date: 2005/10/31 12:30:19 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -86,7 +86,7 @@ public final class XmlComplementorRegistry {
 			final String className = storableObject.getClass().getName();
 			if (!QUIET_CLASS_NAMES.contains(className)) {
 				QUIET_CLASS_NAMES.add(className);
-				assert Log.debugMessage("no complementor(s) found fot type: "
+				Log.debugMessage("no complementor(s) found fot type: "
 						+ className + " (this message will only be issued once)",
 						INFO);
 			}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.16 2005/10/30 15:20:48 bass Exp $
+ * $Id: ResultChildrenFactory.java,v 1.17 2005/10/31 12:30:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/30 15:20:48 $
+ * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:22 $
  * @module analysis
  */
 
@@ -109,7 +109,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 		item2.setChildrenFactory(this);
 		item2.setDefaultCondition(new CompoundCondition(addCondition, CompoundConditionSort.AND, timeCondition));
 		SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-		assert Log.debugMessage(title + " (from " + sdf.format(startDate) + " to " + sdf.format(endDate) + ")", Level.FINEST);
+		Log.debugMessage(title + " (from " + sdf.format(startDate) + " to " + sdf.format(endDate) + ")", Level.FINEST);
 		return item2;
 	}
 	
@@ -159,9 +159,9 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					}
 				} catch (IllegalObjectEntityException ex) {
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), ex.getMessage());
-					assert Log.errorMessage(ex);
+					Log.errorMessage(ex);
 				} catch (ApplicationException ex) {
-					assert Log.errorMessage(ex);
+					Log.errorMessage(ex);
 				}
 			} else if (s.equals(DATES)) {
 				/*if (item.getChildren().isEmpty()) { // add only if no children as they are constant
@@ -275,7 +275,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					item6.setFilter(f);
 					item.addChild(item6);
 				} catch (CreateObjectException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			} else if (s.equals(MEASUREMENTSETUPS)) {
 				try {
@@ -363,7 +363,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 					i++;
 				}
 			} catch (ApplicationException ex) {
-				assert Log.errorMessage(ex);
+				Log.errorMessage(ex);
 			}
 		} 
 		else if (nodeObject instanceof Test) {

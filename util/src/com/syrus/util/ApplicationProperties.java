@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.15 2005/10/30 15:20:21 bass Exp $
+ * $Id: ApplicationProperties.java,v 1.16 2005/10/31 12:29:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/30 15:20:21 $
+ * @version $Revision: 1.16 $, $Date: 2005/10/31 12:29:58 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -77,7 +77,7 @@ public class ApplicationProperties {
 			try {
 				return applicationResourceBundle.getString(key);
 			} catch (Exception e) {
-				assert Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
 			}
 		}
 
@@ -85,11 +85,11 @@ public class ApplicationProperties {
 			try {
 				return commonResourceBundle.getString(key);
 			} catch (Exception e) {
-				assert Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
 			}
 		}
 
-		assert Log.debugMessage("Returning default for key '" + key + "' -- '" + defaultValue + "'", Log.DEBUGLEVEL02);
+		Log.debugMessage("Returning default for key '" + key + "' -- '" + defaultValue + "'", Log.DEBUGLEVEL02);
 		return defaultValue;
 	}
 
@@ -98,7 +98,7 @@ public class ApplicationProperties {
 			try {
 				return Integer.parseInt(applicationResourceBundle.getString(key));
 			} catch (Exception e) {
-				assert Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + applicationFileName + "; using common file", Log.DEBUGLEVEL02);
 			}
 		}
 
@@ -106,11 +106,11 @@ public class ApplicationProperties {
 			try {
 				return Integer.parseInt(commonResourceBundle.getString(key));
 			} catch (Exception e) {
-				assert Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
+				Log.debugMessage("Cannot get resource '" + key + "' from " + commonFileName, Log.DEBUGLEVEL02);
 			}
 		}
 
-		assert Log.debugMessage("Returning default for key '" + key + "' -- " + defaultValue, Log.DEBUGLEVEL02);
+		Log.debugMessage("Returning default for key '" + key + "' -- " + defaultValue, Log.DEBUGLEVEL02);
 		return defaultValue;
 	}
 

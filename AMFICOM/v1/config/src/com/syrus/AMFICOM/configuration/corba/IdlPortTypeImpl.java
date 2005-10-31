@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPortTypeImpl.java,v 1.6 2005/10/30 15:20:19 bass Exp $
+ * $Id: IdlPortTypeImpl.java,v 1.7 2005/10/31 12:29:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:19 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/31 12:29:56 $
  * @module config
  */
 final class IdlPortTypeImpl extends IdlPortType {
@@ -64,7 +64,7 @@ final class IdlPortTypeImpl extends IdlPortType {
 		try {
 			return new PortType(this);
 		} catch (final CreateObjectException coe) {
-			assert Log.debugMessage(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

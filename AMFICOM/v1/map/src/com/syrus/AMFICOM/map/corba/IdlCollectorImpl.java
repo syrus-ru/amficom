@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCollectorImpl.java,v 1.6 2005/10/30 15:20:37 bass Exp $
+ * $Id: IdlCollectorImpl.java,v 1.7 2005/10/31 12:30:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/10/30 15:20:37 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/31 12:30:13 $
  * @module map
  */
 final class IdlCollectorImpl extends IdlCollector {
@@ -58,7 +58,7 @@ final class IdlCollectorImpl extends IdlCollector {
 		try {
 			return new Collector(this);
 		} catch (final CreateObjectException coe) {
-			assert Log.debugMessage(coe, SEVERE);
+			Log.debugMessage(coe, SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

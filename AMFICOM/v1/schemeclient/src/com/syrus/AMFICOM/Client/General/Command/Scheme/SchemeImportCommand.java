@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.34 2005/10/30 15:20:54 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.35 2005/10/31 12:30:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,14 +73,14 @@ public class SchemeImportCommand extends ImportExportCommand {
 			aModel.setEnabled("Menu.import.commit", true);
 			aModel.fireModelChanged();
 		} catch (CreateObjectException e) {
-			assert Log.errorMessage(e.getMessage());
+			Log.errorMessage(e.getMessage());
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelScheme.getString("Message.error.scheme_import"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		} catch (XmlException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					LangModelScheme.getString("Message.error.xml_format_incorrect"), //$NON-NLS-1$
 					LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
@@ -88,9 +88,9 @@ public class SchemeImportCommand extends ImportExportCommand {
 			return;
 		}
 		catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		} catch (IOException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 		}
 	}
 	
@@ -153,7 +153,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 					scheme.setHeight(SCHEME_SIZE.height);
 					SchemeActions.putToGraph(scheme, this.pane);
 				} catch (ApplicationException e) {
-					assert Log.errorMessage(e);
+					Log.errorMessage(e);
 				}
 			}
 			break;

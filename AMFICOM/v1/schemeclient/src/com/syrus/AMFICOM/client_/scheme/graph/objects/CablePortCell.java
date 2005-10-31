@@ -1,5 +1,5 @@
 /*
- * $Id: CablePortCell.java,v 1.17 2005/10/30 15:20:56 bass Exp $
+ * $Id: CablePortCell.java,v 1.18 2005/10/31 12:30:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/10/30 15:20:56 $
+ * @version $Revision: 1.18 $, $Date: 2005/10/31 12:30:29 $
  * @module schemeclient
  */
 
@@ -76,7 +76,7 @@ public class CablePortCell extends DefaultGraphCell implements IdentifiableCell 
 		try {
 			return (SchemeCablePort)StorableObjectPool.getStorableObject(this.schemeCableportId, true);
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			return null;
 		}
 	}

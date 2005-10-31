@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.18 2005/10/30 15:20:27 bass Exp $
+ * $Id: ViewItem.java,v 1.19 2005/10/31 12:30:03 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/30 15:20:27 $
+ * @version $Revision: 1.19 $, $Date: 2005/10/31 12:30:03 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -95,7 +95,7 @@ public class ViewItem extends AbstractItem implements Item {
 
 	private void addChild(Item childItem, boolean addToSource) {
 
-		assert Log.debugMessage("this.name: " + this.sourceItem.getName() + "\n\t name: "
+		Log.debugMessage("this.name: " + this.sourceItem.getName() + "\n\t name: "
 				+ childItem.getName(), Level.FINEST);
 		if (this.children == null) this.children = new LinkedList<Item>();
 
@@ -133,7 +133,7 @@ public class ViewItem extends AbstractItem implements Item {
 
 		if (this.children != null) {
 
-			assert Log.debugMessage("this.name: " + this.sourceItem.getName() + "\n\t name: "
+			Log.debugMessage("this.name: " + this.sourceItem.getName() + "\n\t name: "
 					+ childItem.getName(), Level.FINEST);
 			this.children.remove(viewItem);
 		}
@@ -141,7 +141,7 @@ public class ViewItem extends AbstractItem implements Item {
 
 	@Override
 	public void setParent(Item parent) {
-		assert Log.debugMessage("this.name: " + this.sourceItem.getName() + " \n\t name: "
+		Log.debugMessage("this.name: " + this.sourceItem.getName() + " \n\t name: "
 				+ (parent == null ? "'null'" : parent.getName()), Level.FINEST);
 		ViewItem viewItem;
 		if (parent instanceof ViewItem) {
@@ -193,10 +193,10 @@ public class ViewItem extends AbstractItem implements Item {
 
 	public int getHierarchicalWidth() {
 		int w = 0;
-		assert Log.debugMessage(this.getName() + ", width: " + this.width, Level.FINEST);
+		Log.debugMessage(this.getName() + ", width: " + this.width, Level.FINEST);
 		if (super.parent != null && !super.parent.isService()) {
 			ViewItem viewItem = (ViewItem) super.parent;
-			assert Log.debugMessage(super.parent.getName() + super.parent.getName(), Level.FINEST);
+			Log.debugMessage(super.parent.getName() + super.parent.getName(), Level.FINEST);
 			w = viewItem.getHierarchicalWidth();
 		}		
 		return w + this.width;
