@@ -1,5 +1,5 @@
 /*-
- * $Id: MapEditorResourceKeys.java,v 1.10 2005/10/24 15:43:25 krupenn Exp $
+ * $Id: MapEditorResourceKeys.java,v 1.11 2005/10/31 16:10:01 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/24 15:43:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/10/31 16:10:01 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapclient
@@ -256,5 +256,9 @@ public interface MapEditorResourceKeys extends ResourceKeys {
 	String ERROR = "Error.Error";
 
 	String LABEL_COLLECTOR = "Label.Collector";
+
+	String ERROR_NO_PERMISSION = "Error.NoPermission";
+
+	String ERROR_OPERATION_PROHIBITED_IN_MODULE = "Error.OperationProhibitedInModule";
 
 }
