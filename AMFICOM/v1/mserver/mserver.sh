@@ -28,5 +28,5 @@ $LIB/mcm_interface.jar:\
 $LIB/util.jar
 
 JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8002,server=y,suspend=n"
-$JAVA -Xms128m -Xmx256m -server -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH com.syrus.AMFICOM.mserver.MeasurementServer &
+$JAVA -Xms128m -Xmx256m -ea -server -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH com.syrus.AMFICOM.mserver.MeasurementServer &
 echo $! > `dirname $0`/mserver.pid
