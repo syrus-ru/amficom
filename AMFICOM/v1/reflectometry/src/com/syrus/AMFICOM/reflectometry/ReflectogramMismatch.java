@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.12 2005/10/31 07:17:31 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.13 2005/10/31 13:55:09 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.TransferableObject;
  * 
  * @author Old Wise Saa
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/10/31 07:17:31 $
+ * @version $Revision: 1.13 $, $Date: 2005/10/31 13:55:09 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -81,7 +81,7 @@ public interface ReflectogramMismatch {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.12 $, $Date: 2005/10/31 07:17:31 $
+	 * @version $Revision: 1.13 $, $Date: 2005/10/31 13:55:09 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -143,7 +143,7 @@ public interface ReflectogramMismatch {
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.12 $, $Date: 2005/10/31 07:17:31 $
+	 * @version $Revision: 1.13 $, $Date: 2005/10/31 13:55:09 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
@@ -151,21 +151,27 @@ public interface ReflectogramMismatch {
 		 * не определено
 		 * XXX: не должен использоваться
 		 */
-		TYPE_UNDEFINED,
+		TYPE_UNDEFINED("ReflectogramMismatch.AlarmType.Undefined"),
 		/**
 		 * обрыв линии
 		 */
-		TYPE_LINEBREAK,
+		TYPE_LINEBREAK("ReflectogramMismatch.AlarmType.LineBreak"),
 		/**
 		 * выход за маски
 		 */
-		TYPE_OUTOFMASK,
+		TYPE_OUTOFMASK("ReflectogramMismatch.AlarmType.OutOfMask"),
 		/**
 		 * новое/потерянное событие в пределах масок
 		 */
-		TYPE_EVENTLISTCHANGED;
+		TYPE_EVENTLISTCHANGED("ReflectogramMismatch.AlarmType.EventListChanged");
 
 		private static AlarmType[] values = values();
+
+		private final String key;
+
+		private AlarmType(final String key) {
+			this.key = key;
+		}
 
 		/**
 		 * @param orb
@@ -173,6 +179,14 @@ public interface ReflectogramMismatch {
 		 */
 		public IdlAlarmType getTransferable(final ORB orb) {
 			return IdlAlarmType.from_int(this.ordinal());
+		}
+
+		public String locallizedName() {
+			return I18N.getString(this.key);
+		}
+
+		public String localizedDescription() {
+			return I18N.getString("ReflectogramMismatch.AlarmType") + ":\t" + this.locallizedName();
 		}
 
 		/**
