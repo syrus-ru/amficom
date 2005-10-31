@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.76 2005/10/31 10:47:07 arseniy Exp $
+ * $Id: Transceiver.java,v 1.77 2005/10/31 11:27:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -33,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/10/31 10:47:07 $
+ * @version $Revision: 1.77 $, $Date: 2005/10/31 11:27:15 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -272,10 +273,17 @@ final class Transceiver extends SleepButWorkThread {
 									+ ", duration: " + (measurementDuration / 1000) + " sec; removing", Log.DEBUGLEVEL07);
 							it.remove();
 							this.scheduledMeasurements.remove(measurement);
+							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 						}
 					} catch (ApplicationException ae) {
 						Log.errorMessage(ae);
 					}
+				}
+
+				try {
+					StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, LoginManager.getUserId(), false);
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
 				}
 			}
 		}
