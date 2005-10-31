@@ -249,7 +249,7 @@ BellcoreStructure* PK7600OTDRController::runMeasurement() const {
 	}
 
 	BellcoreStructure* bellcoreStructure =  new BellcoreStructure();
-	//this->fillBellcoreStructure(bellcoreStructure, waveFormHeader, waveFormData);
+	this->fillBellcoreStructure(bellcoreStructure, waveFormHeader, waveFormData);
 
 	free(waveFormHeader);
 	delete[] waveFormData;
@@ -260,6 +260,104 @@ BellcoreStructure* PK7600OTDRController::runMeasurement() const {
 void PK7600OTDRController::fillBellcoreStructure(BellcoreStructure* bellcoreStructure,
 							OTDRWaveformHeader* waveFormHeader,
 							OTDRWaveformData*  waveFormData) const {
+
+	bellcoreStructure->add_field_gen_params("Cable ID",
+						"Fiber ID",
+						0,
+						this->waveLengthM,
+						"Originating location",
+						"Terminating location",
+						"Cable code",
+						"DF",
+						"Operator",
+						"QuestProbe OTDR");
+
+
+	char sr[5];
+	memset(sr, 0, 5);
+	sprintf(sr, "%hu", this->otdrPluginInfo->revisionId);
+	bellcoreStructure->add_field_sup_params(this->otdrPluginInfo->manufacturerName,
+						this->otdrPluginInfo->modelName, //"Nettest QuestProbe"
+						this->otdrPluginInfo->serialNumber,
+						this->otdrPluginInfo->modelNumber,
+						this->otdrPluginInfo->partNumber,
+						sr,
+						"Other");
+
+
+	//Get the number of 100-nanosecond intervals since 1.01.1601
+	SYSTEMTIME sysTime;
+	GetSystemTime(&sysTime);
+	FILETIME fileTime;
+	SystemTimeToFileTime(&sysTime,&fileTime);
+	ULARGE_INTEGER * time = (ULARGE_INTEGER *) (&fileTime);
+	//Get the same value for time 00:00 1.01.1970
+	SYSTEMTIME sysTime1970;
+	sysTime1970.wYear = 1970;
+	sysTime1970.wMonth = 1;
+	sysTime1970.wDay = 1;
+	sysTime1970.wHour = 0;
+	sysTime1970.wMinute = 0;
+	sysTime1970.wSecond = 0;
+	sysTime1970.wMilliseconds = 0;
+	FILETIME fileTime1970;
+	SystemTimeToFileTime(&sysTime1970,&fileTime1970);
+	ULARGE_INTEGER * time1970 = (ULARGE_INTEGER *) (&fileTime1970);
+	//Calculate difference between theese two dates -- current time since 00:00 1.01.1970 in seconds
+	unsigned long dts = (unsigned long) (time->QuadPart/10000000 - time1970->QuadPart/10000000);
+
+	short tpw = 1;
+	short* pwu = new short[tpw];
+	pwu[0] = (short) this->pulseWidthM;
+	int* ds = new int[tpw];
+	ds[0] = (int) (10000. * this->resolutionM * this->iorM * 100. / 3.);//10000. - ???
+	int* nppw = new int[tpw];
+	nppw[0] = (long) ((float) (this->pulseWidthM) * 3. / (this->iorM * this->resolutionM * 10.));
+
+	bellcoreStructure->add_field_fxd_params(dts,
+						"mt",
+						(short) (this->waveLengthM * 10),
+						(int) waveFormHeader->FPOffset,//0
+						tpw,
+						pwu,
+						ds,
+						nppw,
+						this->iorM * 100000,
+						this->scansM,
+						(int) (this->traceLengthM * 1000.f * this->iorM * 100. / 3.));
+
+	delete[] pwu;
+	delete[] ds;
+	delete[] nppw;
+
+
+	int np = waveFormHeader->NumPts;
+
+	int tndp = np;
+	short tsf = 1;
+	int* tps = new int[tsf];
+	tps[0] = np;
+	short* sf = new short[tsf];
+	sf[0] = 1000;
+	unsigned short** dsf = new unsigned short*[tsf];
+	dsf[0] = new unsigned short[np];
+	for (int i = 0; i < np; i++) {
+		dsf[0][i] = 65535 - waveFormData[i];
+	}
+	bellcoreStructure->add_field_data_pts(tndp,
+						tsf,
+						tps,
+						sf,
+						dsf);
+	delete[] tps;
+	delete[] sf;
+	//!!! Don't delete dsf - it will be deleted in the destructor of BellcoreStructure
+
+
+	bellcoreStructure->add_field_cksum(0);
+
+
+	bellcoreStructure->add_field_map();
 }
 
 tCardType PK7600OTDRController::getCardType() const {
