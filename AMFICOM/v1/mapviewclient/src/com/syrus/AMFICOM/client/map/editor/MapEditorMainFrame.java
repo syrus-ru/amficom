@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapEditorMainFrame.java,v 1.68 2005/10/21 14:22:28 krupenn Exp $$
+ * $$Id: MapEditorMainFrame.java,v 1.69 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,12 @@ import java.beans.PropertyChangeEvent;
 
 import javax.swing.UIDefaults;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseLibraryCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseViewCommand;
@@ -73,7 +75,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
- * @version $Revision: 1.68 $, $Date: 2005/10/21 14:22:28 $
+ * @version $Revision: 1.69 $, $Date: 2005/10/31 15:29:31 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -437,6 +439,10 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	public void loggedIn() {
 		new CloseAllInternalCommand(this.desktopPane).execute();
 
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_ENTER)) {
+			return;
+		}
+		
 		new ViewMapAllCommand(
 				this.desktopPane,
 				this.aContext,

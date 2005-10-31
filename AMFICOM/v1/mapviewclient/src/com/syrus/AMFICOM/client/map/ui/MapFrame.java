@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapFrame.java,v 1.85 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: MapFrame.java,v 1.86 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -206,8 +207,8 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * окна карты хранится в пуле с ключом "environment", идентификатор 
  * "mapmainframe". существует только один объект 
  * 
- * @version $Revision: 1.85 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.86 $, $Date: 2005/10/31 15:29:31 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -551,17 +552,20 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 			}
 		}
 		if (changesPresent) {
-
-			final String message = I18N.getString(MapEditorResourceKeys.MESSAGE_UNSAVED_ELEMENTS_PRESENT);
-
-			final int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-					message,
-					I18N.getString(MapEditorResourceKeys.TITLE_OBJECT_WAS_CHANGED),
-					JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE);
-			if (ret == JOptionPane.YES_OPTION) {
+			if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_SAVE_TOPOLOGICAL_SCHEME)) {
 				cleanChangedObjects();
 				changesPresent = false;
+			}
+			else {
+				final int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+						I18N.getString(MapEditorResourceKeys.MESSAGE_UNSAVED_ELEMENTS_PRESENT),
+						I18N.getString(MapEditorResourceKeys.TITLE_OBJECT_WAS_CHANGED),
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE);
+				if (ret == JOptionPane.YES_OPTION) {
+					cleanChangedObjects();
+					changesPresent = false;
+				}
 			}
 		}
 		return changesPresent;

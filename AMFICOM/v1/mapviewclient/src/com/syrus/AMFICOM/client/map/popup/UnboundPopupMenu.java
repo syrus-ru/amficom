@@ -1,5 +1,5 @@
 /*-
- * $$Id: UnboundPopupMenu.java,v 1.28 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: UnboundPopupMenu.java,v 1.29 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.DeleteNodeCommandBundle;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -23,7 +28,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.29 $, $Date: 2005/10/31 15:29:31 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -80,6 +85,23 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	void removeUnbound() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(this.unbound);
 		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
@@ -91,6 +113,23 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	void bind() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		SiteNode site = super.selectSiteNode();
 		if(site != null) {
 			BindUnboundNodeToSiteCommandBundle command = 
@@ -106,6 +145,23 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	void generateSite() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP_VIEW)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
 			super.convertUnboundNodeToSite(this.unbound, proto);

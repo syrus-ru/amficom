@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkEditor.java,v 1.35 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: PhysicalLinkEditor.java,v 1.36 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,15 +27,19 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.PhysicalLinkController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
@@ -47,8 +51,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/10/31 15:29:31 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -634,6 +638,23 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 	@Override
 	public void commitChanges() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		String name = this.nameTextField.getText();
 		if(MiscUtil.validName(name)) {
 			try 

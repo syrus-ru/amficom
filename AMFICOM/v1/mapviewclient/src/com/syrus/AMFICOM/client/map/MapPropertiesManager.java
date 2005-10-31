@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.55 2005/10/31 12:30:07 bass Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.56 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,11 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Checker;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
@@ -51,8 +53,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.55 $, $Date: 2005/10/31 12:30:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/10/31 15:29:31 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -398,6 +400,21 @@ public final class MapPropertiesManager {
 	 */
 	private MapPropertiesManager()
 	{//empty
+	}
+
+	public static boolean isPermitted(PermissionCodename code) {
+		if (code == null) {
+			// the functionality requested is not defined for this mode
+			return false;
+		}
+		try {
+//			System.err.println("Permission checked for " + op);
+			return Checker.isPermitted(code);
+		} catch (ApplicationException e) {
+			assert Log.errorMessage(e);
+			// XXX: if an ApplicationException happens, treat as 'disallow'
+			return false;
+		}
 	}
 
 	/**

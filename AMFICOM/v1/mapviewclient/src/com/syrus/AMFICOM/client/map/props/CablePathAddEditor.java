@@ -1,5 +1,5 @@
 /*-
- * $$Id: CablePathAddEditor.java,v 1.34 2005/10/31 12:30:09 bass Exp $$
+ * $$Id: CablePathAddEditor.java,v 1.35 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,18 +33,23 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -61,8 +66,8 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/10/31 12:30:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/10/31 15:29:31 $
+ * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -796,19 +801,34 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.logicalNetLayer.sendSelectionChangeEvent();
 	}
 
-	void removeBinding() throws ApplicationException
-	{
+	void removeBinding() throws ApplicationException {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
+
 		PhysicalLink link = (PhysicalLink)this.model.getObject(this.table.getSelectedRow());
 		CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(link);
-		if(link instanceof UnboundLink)
-		{
+		if(link instanceof UnboundLink) {
 			UnboundLink unbound = (UnboundLink)link;
 
 			CableChannelingItem previousCbleChannelingItem = this.cablePath.previousLink(cableChannelingItem);
 			PhysicalLink previous = this.cablePath.getBinding().get(previousCbleChannelingItem);
 
-			if(unbound.getStartNode().equals(unbound.getEndNodeId()))
-			{
+			if(unbound.getStartNode().equals(unbound.getEndNodeId())) {
 				this.cablePath.removeLink(cableChannelingItem);
 				cableChannelingItem.setParentPathOwner(null, false);
 
@@ -818,11 +838,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				command.setNetMapViewer(this.netMapViewer);
 				command.execute();
 				this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
-			}
-			else
-			if(previous != null
-				&& previous instanceof UnboundLink)
-			{
+			} else if(previous != null
+				&& previous instanceof UnboundLink) {
 				UnboundLink unboundPrevious = (UnboundLink)previous;
 				AbstractNode removedNode = cableChannelingItem.getStartSiteNode();
 				SiteNode newEndNode = cableChannelingItem.getEndSiteNode();
@@ -833,8 +850,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				if(unboundPrevious.getStartNode().equals(removedNode))
 					unboundPrevious.setStartNode(newEndNode);
 					
-				for(Iterator it = unboundPrevious.getNodeLinksAt(removedNode).iterator(); it.hasNext();)
-				{
+				for(Iterator it = unboundPrevious.getNodeLinksAt(removedNode).iterator(); it.hasNext();) {
 					NodeLink nl = (NodeLink)it.next();
 					if(nl.getEndNode().equals(removedNode))
 						nl.setEndNode(newEndNode);
@@ -854,10 +870,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				command.execute();
 				this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 			}
-		}
-		else
+		} else {
 		// replace binding to physical link with unbound link
-		{
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 					link.getStartNode(),
 					link.getEndNode());
@@ -1041,6 +1055,24 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	}
 	
 	void addBinding() throws ApplicationException {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
+
 		PhysicalLink selectedStartLink = getSelectedPhysicalLink(this.startLinkComboBox);
 		PhysicalLink selectedEndLink = getSelectedPhysicalLink(this.endLinkComboBox);
 		
@@ -1054,6 +1086,24 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	void addChainBinding() throws ApplicationException {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
+
 		PhysicalLink selectedStartLink = getSelectedPhysicalLink(this.startLinkComboBox);
 		PhysicalLink selectedEndLink = getSelectedPhysicalLink(this.endLinkComboBox);
 

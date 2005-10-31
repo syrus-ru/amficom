@@ -1,5 +1,5 @@
 /*-
- * $$Id: SelectionPopupMenu.java,v 1.33 2005/10/11 08:56:12 krupenn Exp $$
+ * $$Id: SelectionPopupMenu.java,v 1.34 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,16 @@ import java.util.List;
 
 import javax.swing.JMenuItem;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -36,7 +40,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/10/11 08:56:12 $
+ * @version $Revision: 1.34 $, $Date: 2005/10/31 15:29:31 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -179,6 +183,23 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void removeSelection() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
 		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
@@ -190,6 +211,23 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void insertSite() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
 			for(Iterator it = new LinkedList(this.selection.getElements()).iterator(); it.hasNext();) {
@@ -201,6 +239,23 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void generateCabling() {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		SiteNodeType proto = super.selectSiteNodeType();
 
 		if(proto != null) {
@@ -244,6 +299,23 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void newCollector() throws ApplicationException, MapDataException, MapConnectionException {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		Collector collector = super.createCollector();
 		if(collector != null) {
 			super.addLinksToCollector(collector, this.selection.getElements());
@@ -255,6 +327,23 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void addToCollector() throws ApplicationException, MapConnectionException, MapDataException {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		Collector collector = super.selectCollector();
 		if(collector != null) {
 			super.addLinksToCollector(collector, this.selection.getElements());
@@ -266,6 +355,23 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void removeFromCollector() throws ApplicationException, MapConnectionException, MapDataException {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
 			Collector collector = 
@@ -281,6 +387,23 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void removeCollector() throws ApplicationException, MapConnectionException, MapDataException {
+		final ApplicationContext aContext = this.netMapViewer.getLogicalNetLayer().getContext();
+		if(!aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_OPERATION_PROHIBITED_IN_MODULE)));
+			return;
+		}
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this,
+							StatusMessageEvent.STATUS_MESSAGE,
+							I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION)));
+			return;
+		}
 		for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink )it.next();
 			Collector collector = 

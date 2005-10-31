@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapDropTargetListener.java,v 1.46 2005/10/21 15:34:18 krupenn Exp $$
+ * $$Id: MapDropTargetListener.java,v 1.47 2005/10/31 15:29:31 krupenn Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,10 +21,12 @@ import java.util.Iterator;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
@@ -53,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * Обработчик событий drag/drop в окне карты
  * 
- * @version $Revision: 1.46 $, $Date: 2005/10/21 15:34:18 $
+ * @version $Revision: 1.47 $, $Date: 2005/10/31 15:29:31 $
  * @author $Author: krupenn $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -160,6 +162,14 @@ public final class MapDropTargetListener implements DropTargetListener {
 	}
 
 	protected void mapElementDropped(SiteNodeType nodeType, Point point) {
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME)) {
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(), 
+					I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION), 
+					I18N.getString(MapEditorResourceKeys.ERROR), 
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		LogicalNetLayer logicalNetLayer = this.netMapViewer
 				.getLogicalNetLayer();
 		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(
@@ -172,6 +182,14 @@ public final class MapDropTargetListener implements DropTargetListener {
 	}
 
 	protected void schemeElementDropped(SchemeElement schemeElement, Point point) {
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(), 
+					I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION), 
+					I18N.getString(MapEditorResourceKeys.ERROR), 
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		LogicalNetLayer logicalNetLayer = this.netMapViewer
 				.getLogicalNetLayer();
 		MapView mapView = logicalNetLayer.getMapView();
@@ -222,6 +240,14 @@ public final class MapDropTargetListener implements DropTargetListener {
 	}
 
 	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink) {
+		if(!MapPropertiesManager.isPermitted(PermissionCodename.MAP_EDITOR_EDIT_BINDING)) {
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(), 
+					I18N.getString(MapEditorResourceKeys.ERROR_NO_PERMISSION), 
+					I18N.getString(MapEditorResourceKeys.ERROR), 
+					JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		LogicalNetLayer logicalNetLayer = this.netMapViewer
 				.getLogicalNetLayer();
 		MapView mapView = logicalNetLayer.getMapView();
