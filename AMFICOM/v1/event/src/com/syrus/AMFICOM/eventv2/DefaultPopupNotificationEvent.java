@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.6 2005/10/31 07:17:31 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.7 2005/10/31 10:53:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/10/31 07:17:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/10/31 10:53:30 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -84,7 +84,7 @@ public final class DefaultPopupNotificationEvent extends
 				+ (lineMismatchEvent.isAffectedPathElementSpacious()
 						? "Physical Distance To Path Element Start:\t" + lineMismatchEvent.getPhysicalDistanceToStart() + " meter(s)" + '\n'
 						+ "Physical Distance To Path Element End:\t" + lineMismatchEvent.getPhysicalDistanceToStart() + " meter(s)" + '\n'
-						: "" + lineMismatchEvent.getPhysicalDistanceToEnd() + '\n');
+						: "");
 		this.resultId = lineMismatchEvent.getResultId();
 		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
 		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
