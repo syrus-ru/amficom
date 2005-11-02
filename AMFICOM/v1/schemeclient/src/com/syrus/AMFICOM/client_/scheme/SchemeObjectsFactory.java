@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.51 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.52 2005/11/02 17:21:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,8 +80,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.52 $, $Date: 2005/11/02 17:21:40 $
  * @module schemeclient
  */
 
@@ -313,9 +313,9 @@ public class SchemeObjectsFactory {
 		return ir;
 	}
 
-	public static MeasurementPort createMeasurementPort(MeasurementPortType type, SchemePort port) throws CreateObjectException {
+	public static MeasurementPort createMeasurementPort(MeasurementPortType type, SchemePort port, KIS kis) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		MeasurementPort measurementPort = MeasurementPort.createInstance(userId, type, port.getName(), port.getDescription(), port.getParentSchemeDevice().getParentSchemeElement().getKis().getId(), port.getPort().getId());
+		MeasurementPort measurementPort = MeasurementPort.createInstance(userId, type, port.getName(), port.getDescription(), kis.getId(), port.getPort().getId());
 		return measurementPort;
 	}
 

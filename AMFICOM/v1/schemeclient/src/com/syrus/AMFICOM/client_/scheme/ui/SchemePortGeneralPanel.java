@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.30 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.31 2005/11/02 17:21:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,8 +72,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.31 $, $Date: 2005/11/02 17:21:40 $
  * @module schemeclient
  */
 
@@ -82,6 +82,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	protected Set<SchemePort> schemePorts;
 	protected SchemePort schemePort;
 	protected SchemeElement parent;
+	protected KIS kis;
 
 	static JColorChooser tcc;
 	JPanel pnPanel0 = new JPanel();
@@ -471,7 +472,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		this.lbPortLabel.setVisible(b);
 		this.pnPortPanel.setVisible(b);
 
-		if (b && this.parent != null && this.parent.getKis() != null) {
+		if (b && this.kis != null) {
 			this.setMPTypeEnabled(true);
 		} else {
 			this.setMPTypeEnabled(false);
@@ -536,13 +537,18 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
 					port = this.schemePort.getPort();
 					mPort = this.schemePort.getMeasurementPort();
-					KIS kis = null;
+					this.kis = null;
+
 					if (this.parent != null) {
-						kis = this.parent.getKis();
+						SchemeElement topParent = this.parent;
+						while (this.kis == null && topParent != null) {
+							this.kis = topParent.getKis();
+							topParent = topParent.getParentSchemeElement();
+						}
 					}
 					
-					if (kis != null) {
-						final Set<MeasurementPort> mPorts = kis.getMeasurementPorts(false);
+					if (this.kis != null) {
+						final Set<MeasurementPort> mPorts = this.kis.getMeasurementPorts(false);
 						if (!mPorts.isEmpty()) {
 							this.rbExistMPBut.setEnabled(true);
 							this.rbExistMPBut.doClick();
@@ -636,10 +642,10 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					mp = (MeasurementPort) this.cmbExistMPCombo.getSelectedItem();
 					this.schemePort.setMeasurementPort(mp);
 				} else {
-					if (this.parent != null && this.parent.getKis() != null) {
+					if (this.parent != null && this.kis != null) {
 						try {
 							final MeasurementPortType mpType = (MeasurementPortType) this.cmbMpTypeCombo.getSelectedItem();
-							mp = SchemeObjectsFactory.createMeasurementPort(mpType, this.schemePort);
+							mp = SchemeObjectsFactory.createMeasurementPort(mpType, this.schemePort, this.kis);
 							mp.setName(this.tfNewMPText.getText());
 							mp.setDescription(this.schemePort.getDescription());
 							mp.setType(mpType);

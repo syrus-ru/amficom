@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.39 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.40 2005/11/02 17:21:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,8 +78,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.40 $, $Date: 2005/11/02 17:21:40 $
  * @module schemeclient
  */
 
@@ -221,6 +221,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 		if (groups > 1) {
 			this.gr.setEnabled(true);
+			this.gr2.setEnabled(true);
 		}
 		if (groups + racks > 1 && racks < 2) {
 			this.gr3.setEnabled(true);
