@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.13 2005/10/31 13:55:09 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.14 2005/11/02 10:59:56 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.TransferableObject;
  * Свойство {@link #getCoord} содержит локальную оптическую дистанцию (в точках)
  * объекта или события, с которым ассоциировано отклонение.
  * Свойство {@link #getDistance()} представляет ту же локальную оптическую
- * дистанцию в метрах
+ * дистанцию в метрах.
  * Для перевода локальной оптической дистанции
  * в схемную оптическую дистанцию есть два способа:
  * <ol>
@@ -68,8 +68,8 @@ import com.syrus.util.TransferableObject;
  * если был бы доступен только один якорь.
  * 
  * @author Old Wise Saa
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/10/31 13:55:09 $
+ * @author $Author: saa $
+ * @version $Revision: 1.14 $, $Date: 2005/11/02 10:59:56 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -80,8 +80,8 @@ public interface ReflectogramMismatch {
 	 * событие: будет ли создан аларм, или же будет предупреждение.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.13 $, $Date: 2005/10/31 13:55:09 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.14 $, $Date: 2005/11/02 10:59:56 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -142,8 +142,8 @@ public interface ReflectogramMismatch {
 	/**
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.13 $, $Date: 2005/10/31 13:55:09 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.14 $, $Date: 2005/11/02 10:59:56 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
