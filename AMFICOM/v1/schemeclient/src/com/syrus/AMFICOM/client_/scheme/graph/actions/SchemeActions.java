@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.50 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeActions.java,v 1.51 2005/11/02 17:19:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,8 +96,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.51 $, $Date: 2005/11/02 17:19:39 $
  * @module schemeclient
  */
 
@@ -702,6 +702,7 @@ public class SchemeActions {
 	public static final long SCHEME_HAS_LINK	=							0x00000004;
 	public static final long SCHEME_HAS_HIERARCHY_PORT	=		0x00000008;
 	public static final long SCHEME_HAS_DEVICE_GROUP	=		0x00000010;
+	public static final long SCHEME_HAS_UNGROUPED_LINK	=		0x00000020;
 	
 	public static long getGraphState(SchemeGraph graph) {
 		long status = 0;
@@ -714,6 +715,9 @@ public class SchemeActions {
 			for (int i = 0; i < cells.length; i++) {
 				if (cells[i] instanceof DefaultLink) {
 					status |= SCHEME_HAS_LINK;
+					if (((DefaultLink)cells[i]).getParent() == null) {
+						status |= SCHEME_HAS_UNGROUPED_LINK;
+					}
 				} else if (cells[i] instanceof BlockPortCell) {
 					status |= SCHEME_HAS_HIERARCHY_PORT;
 				} else if (cells[i] instanceof DeviceCell && !GraphActions.hasGroupedParent(cells[i])) {
@@ -1049,6 +1053,23 @@ public class SchemeActions {
 		}
 		
 		return true;
+	}
+	
+	public static void fixAutoCommutation(SchemeGraph graph) throws ApplicationException {
+		for (Object obj : graph.getAll()) {
+			if (obj instanceof DefaultCableLink) {
+				DefaultCableLink cableCell = (DefaultCableLink)obj;
+				SchemeCableLink schemeCableLink = cableCell.getSchemeCableLink();
+				SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
+				if (sourcePort != null) {
+					SchemeActions.performAutoCommutation(sourcePort, schemeCableLink, true);			
+				}
+				SchemeCablePort targetPort = schemeCableLink.getTargetAbstractSchemePort();
+				if (targetPort != null) {
+					SchemeActions.performAutoCommutation(targetPort, schemeCableLink, false);			
+				}
+			}
+		}
 	}
 	
 	public static void performAutoCommutation(SchemeCablePort scp, SchemeCableLink scl, boolean is_source) throws ApplicationException {
