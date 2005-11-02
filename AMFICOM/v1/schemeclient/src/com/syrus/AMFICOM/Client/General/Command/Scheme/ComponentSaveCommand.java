@@ -73,7 +73,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 				proto = this.cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
 			} else {
 				// check if the olny DeviceGroup exists
-				DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
+				DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, graph.getRoots());
 				if (groups.length > 1) {
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
@@ -82,7 +82,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 							JOptionPane.OK_OPTION);
 					return;
 				}
-				if ((status & SchemeActions.SCHEME_HAS_LINK) != 0) {
+				if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_LINK) != 0) {
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 							LangModelScheme.getString("Message.error.simple_component_link"),  //$NON-NLS-1$
 							LangModelScheme.getString("Message.error"), //$NON-NLS-1$
@@ -113,22 +113,34 @@ public class ComponentSaveCommand extends AbstractCommand {
 					JOptionPane.OK_OPTION);
 			return;
 		}
-
-		// add internal objects - SL, SPE
-		Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
-		Set<SchemeProtoElement> schemeProtoElements = new HashSet<SchemeProtoElement>();
-		Object[] objects = graph.getRoots();
-		for (Object object : objects) {
-			if (object instanceof DefaultLink)
-				schemeLinks.add(((DefaultLink)object).getSchemeLink());
-			else if (object instanceof DeviceGroup) {
-				SchemeProtoElement schemeProto = ((DeviceGroup)object).getProtoElement();
-				assert schemeProto != null;
-				if (!schemeProto.equals(proto))
-					schemeProtoElements.add(schemeProto);
-			}
+		
+		if (proto.getParentSchemeProtoElement() != null) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					LangModelScheme.getString("Message.error.component_parent_not_set"),  //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
+			return;
 		}
 		try {
+			// add internal objects - SL, SPE
+			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+			Set<SchemeProtoElement> schemeProtoElements = new HashSet<SchemeProtoElement>();
+			Object[] objects = graph.getRoots();
+			for (Object object : objects) {
+				if (object instanceof DefaultLink)
+					schemeLinks.add(((DefaultLink)object).getSchemeLink());
+				else if (object instanceof DeviceGroup) {
+					SchemeProtoElement schemeProto = ((DeviceGroup)object).getProtoElement();
+					assert schemeProto != null;
+					if (!schemeProto.equals(proto)) {
+						schemeProtoElements.add(schemeProto);
+					} else {
+						schemeLinks.addAll(schemeProto.getSchemeLinks(false));
+						schemeProtoElements.addAll(schemeProto.getSchemeProtoElements(false));
+					}
+				}
+			}
+
 			proto.setSchemeLinks(schemeLinks, false);
 			proto.setSchemeProtoElements(schemeProtoElements, false);
 
