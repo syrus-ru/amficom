@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.19 2005/10/31 12:30:22 bass Exp $
+ * $Id: DetailedEventResource.java,v 1.20 2005/11/02 08:15:09 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/10/31 12:30:22 $
+ * @author $Author: saa $
+ * @version $Revision: 1.20 $, $Date: 2005/11/02 08:15:09 $
  * @module analysis
  */
 
@@ -52,7 +52,8 @@ public class DetailedEventResource {
 	
 	// Basic details
 	private String number = DASH;
-	private String type = DEFAULT_TYPE;
+	private String typeGeneral = DEFAULT_TYPE;
+	private String typeDetailed = DEFAULT_TYPE;
 	private String location = DASH;
 	private String length = DASH;
 	private String reflectance = DASH;
@@ -89,7 +90,7 @@ public class DetailedEventResource {
 		this.event = ev;
 		setNumber(Integer.toString(num));
 		int sType = ev.getEventType();
-		setType(AnalysisUtil.getDetailedEventName(ev));
+		setTypeDetailed(AnalysisUtil.getDetailedEventName(ev));
 		setLocation(Double.toString(MathRef.round_3(res * ev.getBegin())));
 		setLength(Double.toString(MathRef.round_3(res * (DetailedEventUtil.getWidth(ev)))));
 		
@@ -134,7 +135,7 @@ public class DetailedEventResource {
 		String sMT = " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_MT);
 		
 		int sType = ev.getEventType();
-		setType(AnalysisUtil.getDetailedEventName(ev));
+		//setType(AnalysisUtil.getDetailedEventName(ev));
 		setExtension(Double.toString(MathRef.round_3(res * (DetailedEventUtil.getWidth(ev)))) + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_KM));
 		
 		switch (sType) {
@@ -179,7 +180,7 @@ public class DetailedEventResource {
 			EvaluationPerEventResult perEvent,
 			int perEventId) {
 		this.event = dataEvent;
-		setType(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
+		setTypeGeneral(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
 		setEtalonType(etalonEvent != null ? AnalysisUtil.getSimpleEventNameByType(etalonEvent.getEventType()) : DEFAULT_TYPE);
 		
 		DetailedEvent ev = dataEvent != null ? dataEvent : etalonEvent;
@@ -316,16 +317,23 @@ public class DetailedEventResource {
 	public void setReflectance(String reflectance) {
 		this.reflectance = reflectance;
 	}
-	
-	public String getType() {
-		return this.type;
+
+	public String getTypeDetailed() {
+		return this.typeDetailed;
 	}
-	
-	public void setType(String type) {
-		this.type = type;
+
+	public void setTypeDetailed(String type) {
+		this.typeDetailed = type;
 	}
-	
-	
+
+	public String getTypeGeneral() {
+		return this.typeGeneral;
+	}
+
+	public void setTypeGeneral(String type) {
+		this.typeGeneral = type;
+	}
+
 	public String getAdz() {
 		return this.adz;
 	}

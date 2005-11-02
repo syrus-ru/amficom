@@ -77,8 +77,8 @@ implements EtalonMTMListener, CurrentEventChangeListener,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
 
-	private static final String[] COMPARE_KEYS = new String[] { DetailedEventWrapper.KEY_TYPE,
-			DetailedEventWrapper.KEY_ETALON_TYPE,
+	private static final String[] COMPARE_KEYS = new String[] { DetailedEventWrapper.KEY_TYPE_GENERAL,
+			DetailedEventWrapper.KEY_ETALON_TYPE_GENERAL,
 			DetailedEventWrapper.KEY_ETALON_MAX_DEVIATION,
 			DetailedEventWrapper.KEY_ETALON_MEAN_DEVIATION,
 			DetailedEventWrapper.KEY_LOSS_DIFFERENCE,

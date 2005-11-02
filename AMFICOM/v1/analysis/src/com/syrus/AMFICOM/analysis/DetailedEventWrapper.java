@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventWrapper.java,v 1.6 2005/10/17 13:11:25 saa Exp $
+ * $Id: DetailedEventWrapper.java,v 1.7 2005/11/02 08:15:09 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/10/17 13:11:25 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/02 08:15:09 $
  * @module analysis
  */
 
@@ -27,7 +27,8 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 	
 	public static final String KEY_N = "eventNum";
 	public static final String KEY_IMAGE = "eventImage";
-	public static final String KEY_TYPE = "eventType";
+	public static final String KEY_TYPE_GENERAL = "eventTypeGeneral";
+	public static final String KEY_TYPE_DETAILED = "eventTypeDetailed";
 	public static final String KEY_DISTANCE = "eventStartLocationKM";
 	public static final String KEY_LENGTH = "eventLengthKM";
 	public static final String KEY_REFLECTANCE = "eventReflectanceDB";
@@ -45,7 +46,7 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 	public static final String KEY_MAX_LEVEL = "eventMaxLevel";
 	public static final String KEY_MIN_LEVEL = "eventMinLevel";
 	
-	public static final String KEY_ETALON_TYPE = "etEventType";
+	public static final String KEY_ETALON_TYPE_GENERAL = "etEventTypeGeneral";
 	public static final String KEY_ETALON_MAX_DEVIATION = "maxDeviation";
 	public static final String KEY_ETALON_MEAN_DEVIATION = "meanDeviation";
 	public static final String KEY_LOSS_DIFFERENCE = "dLoss";
@@ -65,11 +66,12 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 
 	private DetailedEventWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { KEY_N, KEY_TYPE, KEY_DISTANCE,
+		final String[] keysArray = new String[] { KEY_N,
+				KEY_TYPE_GENERAL, KEY_TYPE_DETAILED, KEY_DISTANCE,
 				KEY_LENGTH, KEY_REFLECTANCE, KEY_LOSS, KEY_ATTENUATION,
 				KEY_START_LEVEL, KEY_END_LEVEL, KEY_MEAN_DEVIATION, KEY_MAXDEVIATION,
 				KEY_REFLECTION_LEVEL, KEY_ADZ, KEY_EDZ, KEY_MAX_LEVEL, KEY_MIN_LEVEL,
-				KEY_EXTENSION, KEY_ETALON_TYPE, KEY_ETALON_MAX_DEVIATION,
+				KEY_EXTENSION, KEY_ETALON_TYPE_GENERAL, KEY_ETALON_MAX_DEVIATION,
 				KEY_ETALON_MEAN_DEVIATION, KEY_LOSS_DIFFERENCE,
 				KEY_LOCATION_DIFFERENCE, KEY_LENGTH_DIFFERENCE, KEY_IMAGE,
 				KEY_QUALITY_QI, KEY_QUALITY_KI
@@ -116,8 +118,10 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 		}
 		if (key.equals(KEY_IMAGE)) {
 			return ev.getImage();
-		} else if (key.equals(KEY_TYPE)) {
-			return ev.getType();
+		} else if (key.equals(KEY_TYPE_GENERAL)) {
+			return ev.getTypeGeneral();
+		} else if (key.equals(KEY_TYPE_DETAILED)) {
+			return ev.getTypeDetailed();
 		} else if (key.equals(KEY_DISTANCE)) {
 			return ev.getLocation();
 		} else if (key.equals(KEY_LENGTH)) {
@@ -148,7 +152,7 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 			return ev.getMinLevel();
 		} else if (key.equals(KEY_EXTENSION)) {
 			return ev.getExtension();
-		} else if (key.equals(KEY_ETALON_TYPE)) {
+		} else if (key.equals(KEY_ETALON_TYPE_GENERAL)) {
 			return ev.getEtalonType();
 		} else if (key.equals(KEY_ETALON_MAX_DEVIATION)) {
 			return ev.getEtalonMaxDeviation();
@@ -180,8 +184,10 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 	public void setValue(final DetailedEventResource ev, final String key, final Object value) {
 		if (key.equals(KEY_N)) {
 			ev.setNumber((String) value);
-		} else if (key.equals(KEY_TYPE)) {
-			ev.setType((String) value);
+		} else if (key.equals(KEY_TYPE_GENERAL)) {
+			ev.setTypeGeneral((String) value);
+		} else if (key.equals(KEY_TYPE_DETAILED)) {
+			ev.setTypeDetailed((String) value);
 		} else if (key.equals(KEY_DISTANCE)) {
 			ev.setLocation((String) value);
 		} else if (key.equals(KEY_LENGTH)) {
@@ -212,7 +218,7 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 			ev.setMinLevel((String) value);
 		} else if (key.equals(KEY_EXTENSION)) {
 			ev.setExtension((String) value);
-		} else if (key.equals(KEY_ETALON_TYPE)) {
+		} else if (key.equals(KEY_ETALON_TYPE_GENERAL)) {
 			ev.setEtalonType((String) value);
 		} else if (key.equals(KEY_ETALON_MAX_DEVIATION)) {
 			ev.setEtalonMaxDeviation((String) value);
