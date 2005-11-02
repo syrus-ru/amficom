@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.35 2005/10/31 12:30:26 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.36 2005/11/02 17:19:08 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -152,6 +152,7 @@ public class SchemeImportCommand extends ImportExportCommand {
 					scheme.setWidth(SCHEME_SIZE.width);
 					scheme.setHeight(SCHEME_SIZE.height);
 					SchemeActions.putToGraph(scheme, this.pane);
+					SchemeActions.fixAutoCommutation(this.pane.getGraph());
 				} catch (ApplicationException e) {
 					Log.errorMessage(e);
 				}
