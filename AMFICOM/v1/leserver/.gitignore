@@ -17,3 +17,4 @@ orb.db
 .project
 .settings
 docs
+.refactorings
