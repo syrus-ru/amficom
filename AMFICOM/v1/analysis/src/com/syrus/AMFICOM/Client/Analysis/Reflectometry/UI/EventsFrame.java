@@ -217,7 +217,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 					DetailedEventWrapper.KEY_REFLECTANCE,
 					DetailedEventWrapper.KEY_LOSS,
 					DetailedEventWrapper.KEY_ATTENUATION,
-					DetailedEventWrapper.KEY_QUALITY_QI,
+					// DetailedEventWrapper.KEY_QUALITY_QI,
 					DetailedEventWrapper.KEY_QUALITY_KI
 					}
 			: new String[] {
