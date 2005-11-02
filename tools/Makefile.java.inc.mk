@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.8 2005/10/25 19:50:43 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.9 2005/11/02 08:42:01 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -138,6 +138,20 @@ ifeq ($(TROVE4J_HOME),)
 TROVE4JCLASSPATH = $(EXTLIBDIR)/trove.jar
 else
 TROVE4JCLASSPATH = $(TROVE4J_HOME)/lib/trove.jar
+endif
+
+# JavaBeans Activation Framework
+ifeq ($(JAF_HOME),)
+JAFCLASSPATH = $(EXTLIBDIR)/activation.jar
+else
+JAFCLASSPATH = $(JAF_HOME)/activation.jar
+endif
+
+# JavaMail
+ifeq ($(JAVAMAIL_HOME),)
+JAVAMAILCLASSPATH = $(EXTLIBDIR)/mail.jar
+else
+JAVAMAILCLASSPATH = $(JAVAMAIL_HOME)/mail.jar
 endif
 
 ENCODING ?= KOI8-R

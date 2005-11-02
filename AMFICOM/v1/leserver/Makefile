@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.25 2005/10/22 19:22:35 arseniy Exp $
+# $Id: Makefile,v 1.26 2005/11/02 08:42:00 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -34,7 +34,7 @@ measurement \
 map \
 scheme
 
-EXTCLASSPATH := $(TROVE4JCLASSPATH)
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(JAFCLASSPATH):$(JAVAMAILCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
