@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry sourcepath="/TROVE4J_HOME/src" kind="var" path="TROVE4J_HOME/lib/trove.jar">
+		<attributes>
+			<attribute value="file:/export/pkg/trove/noarch/trove-1.1b4/javadocs" name="javadoc_location"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/leserver_interface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
+	<classpathentry kind="var" path="JAF_HOME/activation.jar"/>
+	<classpathentry sourcepath="/JAVAMAIL_HOME/src" kind="var" path="JAVAMAIL_HOME/mail.jar"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>

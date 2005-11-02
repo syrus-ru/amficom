@@ -13,9 +13,6 @@ classes
 logs
 cache
 orb.db
-.classpath
-.project
-.settings
 docs
 .refactorings
 common.properties
