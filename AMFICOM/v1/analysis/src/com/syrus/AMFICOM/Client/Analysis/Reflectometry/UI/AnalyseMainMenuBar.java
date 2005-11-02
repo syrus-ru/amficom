@@ -220,7 +220,6 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTrace.add(menuTraceClose);
 //		menuTrace.add(menuTraceCloseEtalon);
 		menuTrace.add(menuTraceRemoveCompare);
-		menuTrace.addSeparator();
 //		menuTrace.add(menuAnalyseUpload);
 //		menuTrace.add(menuNetStudy);
 		menuTrace.addSeparator();
