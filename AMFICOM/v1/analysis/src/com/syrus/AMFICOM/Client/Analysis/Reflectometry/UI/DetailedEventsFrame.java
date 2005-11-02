@@ -116,6 +116,7 @@ implements EtalonMTMListener, CurrentEventChangeListener,
 		this.mainTable = new WrapperedPropertyTable<DetailedEventResource>(
 				new WrapperedPropertyTableModel<DetailedEventResource>(
 						DetailedEventWrapper.getInstance(), this.res, EMPTY_KEYS));
+		this.mainTable.setTableHeader(null);
 
 		this.tabbedPane = new JTabbedPane();
 		this.getContentPane().add(this.tabbedPane);
@@ -141,6 +142,7 @@ implements EtalonMTMListener, CurrentEventChangeListener,
 		this.comparativeTable = new WrapperedPropertyTable<DetailedEventResource>(
 				new WrapperedPropertyTableModel<DetailedEventResource>(
 						DetailedEventWrapper.getInstance(), this.res, COMPARE_KEYS));
+		this.comparativeTable.setTableHeader(null);
 		this.comparativeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.comparativeTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 		this.comparativeTable.getColumnModel().getColumn(1).setPreferredWidth(100);
