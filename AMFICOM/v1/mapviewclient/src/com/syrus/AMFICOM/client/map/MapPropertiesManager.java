@@ -1,5 +1,5 @@
 /*-
- * $$Id: MapPropertiesManager.java,v 1.56 2005/10/31 15:29:31 krupenn Exp $$
+ * $$Id: MapPropertiesManager.java,v 1.57 2005/11/02 16:33:55 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @version $Revision: 1.56 $, $Date: 2005/10/31 15:29:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.57 $, $Date: 2005/11/02 16:33:55 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -411,7 +411,7 @@ public final class MapPropertiesManager {
 //			System.err.println("Permission checked for " + op);
 			return Checker.isPermitted(code);
 		} catch (ApplicationException e) {
-			assert Log.errorMessage(e);
+			Log.errorMessage(e);
 			// XXX: if an ApplicationException happens, treat as 'disallow'
 			return false;
 		}
