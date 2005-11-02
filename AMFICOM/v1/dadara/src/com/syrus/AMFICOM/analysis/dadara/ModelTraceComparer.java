@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.41 2005/10/31 12:30:19 bass Exp $
+ * $Id: ModelTraceComparer.java,v 1.42 2005/11/02 09:16:12 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/10/31 12:30:19 $
+ * @author $Author: saa $
+ * @version $Revision: 1.42 $, $Date: 2005/11/02 09:16:12 $
  * @module
  */
 public class ModelTraceComparer
@@ -434,7 +434,7 @@ public class ModelTraceComparer
 	
 				// пропускаем события, для которых привязка не определена
 	
-				if (ea == SOAnchorImpl.VOID_ANCHOR)
+				if (ea.getValue() == SOAnchorImpl.VOID_ANCHOR.getValue())
 					continue;
 	
 				// итак, это событие может быть использовано для привязки
