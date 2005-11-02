@@ -18,3 +18,4 @@ orb.db
 .settings
 docs
 .refactorings
+common.properties
