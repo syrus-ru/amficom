@@ -15,4 +15,7 @@ cache
 orb.db
 docs
 .refactorings
+.settings
+.classpath
+.project
 common.properties
