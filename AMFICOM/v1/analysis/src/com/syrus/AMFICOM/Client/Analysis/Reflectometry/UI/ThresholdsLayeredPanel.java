@@ -6,12 +6,13 @@ import java.beans.PropertyChangeListener;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
 implements PropertyChangeListener,
-	CurrentEventChangeListener, EtalonMTMListener
+	CurrentEventChangeListener, EtalonMTMListener, PrimaryRefAnalysisListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -43,6 +44,7 @@ implements PropertyChangeListener,
 		// на RefUpdateEvent подписывается суперкласс - нам подписываться не надо
 		Heap.addCurrentEventChangeListener(this);
 		Heap.addEtalonMTMListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
 	}
 
 	@Override
@@ -153,5 +155,19 @@ implements PropertyChangeListener,
 	public void etalonMTMRemoved()
 	{
 		etalonUpdated();
+	}
+
+	public void primaryRefAnalysisCUpdated() {
+		for(int i=0; i<this.jLayeredPane.getComponentCount(); i++) {
+			SimpleGraphPanel panel = (SimpleGraphPanel)this.jLayeredPane.getComponent(i);
+			if (panel instanceof ThresholdsPanel) {
+				((ThresholdsPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
+				this.jLayeredPane.repaint();
+			}
+		}
+	}
+
+	public void primaryRefAnalysisRemoved() {
+		// do nothing. Panel will be removed when bsHashRemoved comes
 	}
 }
