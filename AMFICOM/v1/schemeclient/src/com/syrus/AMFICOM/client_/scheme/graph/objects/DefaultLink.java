@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.20 2005/10/31 12:30:29 bass Exp $
+ * $Id: DefaultLink.java,v 1.21 2005/11/03 11:51:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,11 +27,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.21 $, $Date: 2005/11/03 11:51:04 $
  * @module schemeclient
  */
 
@@ -216,6 +218,7 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 			if (DefaultLink.this._to == null) {
 				DefaultLink.this._to = new Point();
 			}
+			
 			if (from != null && to != null) {
 				// Handle self references
 				if (edge.getSource() == edge.getTarget() && edge.getSource() != null) {
@@ -231,9 +234,9 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 					DefaultLink.this.routed[3] = new Point(bounds.x + 2 * width, bounds.y + bounds.height);
 				} else {
 					if (DefaultLink.this.routed == null) {
-						 DefaultLink.this.routed = createDefaultRouting(graph, from, to);
+						 DefaultLink.this.routed = createDefaultRouting(graph, from, to, DefaultLink.this.source1, DefaultLink.this.target1);
 					} else {
-						Point[] p1 = createDefaultRouting(graph, from, to);
+						Point[] p1 = createDefaultRouting(graph, from, to, DefaultLink.this.source1, DefaultLink.this.target1);
 						if (DefaultLink.this.routed.length != p1.length) {
 							DefaultLink.this.routed = p1;
 						}
@@ -304,15 +307,22 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 								if (p.length == 2) {
 									// только горизонтальные перемещения доступны
 									if (p[0].x != _p[0].x && p[1].x == _p[1].x) { // двигаем точку 0
-										if (p[0].x >= to.x) {
+										if (p[0].x >= to.x && p1[0].x < to.x) {
 											p[0].x = to.x - grid;
 										}
 										p[1].x = p[0].x;
 									} else if (p[1].x != _p[1].x && p[0].x == _p[0].x) { // двигаем точку 1
-										if (p[1].x <= from.x) {
+										if (p[1].x <= from.x && p1[1].x > from.x) {
 											p[1].x = from.x + grid;
 										}
 										p[0].x = p[1].x;
+//									if (p[0].x != _p[0].x && p[1].x == _p[1].x) { // двигаем точку 0
+//										p[1].x = p[0].x;
+//									} else if (p[1].x != _p[1].x && p[0].x == _p[0].x) { // двигаем точку 1
+//										if (p[1].x <= from.x) {
+//											p[1].x = from.x + grid;
+//										}
+//										p[0].x = p[1].x;
 									} else { // сбрасываем все изменения по х
 										for (int i = 0; i < p.length; i++) {
 											p[i].x = _p[i].x;
@@ -341,16 +351,16 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 										p[1].x = p[0].x;
 										changed = true;
 									} else if (p[1].x != _p[1].x && p[2].x == _p[2].x) { // двигаем точку 1
-										if (p[1].x <= from.x) {
-											p[1].x = from.x + grid;
-										}
+//										if (p[1].x <= from.x) {
+//											p[1].x = from.x + grid;
+//										}
 										p[0].x = p[1].x;
 										changed = true;
 									} 
 									if (p[2].x != _p[2].x && p[1].x == _p[1].x) { // двигаем точку 2
-										if (p[2].x >= to.x) {
-											p[2].x = to.x - grid;
-										}
+//										if (p[2].x >= to.x) {
+//											p[2].x = to.x - grid;
+//										}
 										p[3].x = p[2].x;
 										changed = true;
 									} else if (p[3].x != _p[3].x && p[2].x == _p[2].x) { // двигаем точку 3
@@ -387,12 +397,12 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 								if (p[p.length-1].y != to.y) {
 									p[p.length-1].y = to.y;
 								}
-								if (p[0].x <= from.x) {
-									p[0].x = from.x + grid;
-								}
-								if (p[p.length-1].x >= to.x) {
-									p[p.length-1].x = to.x - grid;
-								}
+//								if (p[0].x <= from.x) {
+//									p[0].x = from.x + grid;
+//								}
+//								if (p[p.length-1].x >= to.x) {
+//									p[p.length-1].x = to.x - grid;
+//								}
 							}
 						} else {
 							DefaultLink.this._routed = new Point[DefaultLink.this.routed.length];
@@ -426,23 +436,58 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 		}
 	}
 	
-	Point[] createDefaultRouting(SchemeGraph graph, Point from, Point to) {
-		int x2 = from.x + ((to.x - from.x) / 2);
-		int y2 = from.y + ((to.y - from.y) / 2);
+	Point[] createDefaultRouting(SchemeGraph graph, Point from, Point to, DefaultPort sourcePort, DefaultPort targetPort) {
+		Point[] p = null;
 		int grid = graph.getGridSize();
-		Point[] p;
-		if (from.x + graph.getGridSize() * 3 <= to.x) {
-			p = new Point[2];
-//			p[0] = graph.snap(new Point(from.x + grid, from.y));
-			p[0] = graph.snap(new Point(x2, from.y));
-			p[1] = graph.snap(new Point(x2, to.y));
-//			p[3] = graph.snap(new Point(to.x - grid, to.y));
-		} else {
-			p = new Point[4];
-			p[0] = graph.snap(new Point(from.x + grid, from.y));
-			p[1] = graph.snap(new Point(from.x + grid, y2));
-			p[2] = graph.snap(new Point(to.x - grid, y2));
-			p[3] = graph.snap(new Point(to.x - grid, to.y));
+
+		if (sourcePort != null && targetPort != null) {
+			SchemePort startPort = ((PortCell)sourcePort.getParent()).getSchemePort();
+			SchemePort endPort = ((PortCell)targetPort.getParent()).getSchemePort();
+			//	special action in case of codirection
+			if (startPort.getDirectionType() == endPort.getDirectionType()) {
+				p = new Point[2];
+				if (startPort.getDirectionType() == IdlDirectionType._IN) {
+					int minx = Math.min(from.x, to.x);
+					p[0] = graph.snap(new Point(minx - grid, from.y));
+					p[1] = graph.snap(new Point(minx - grid, to.y));
+				} else {
+					int maxx = Math.max(from.x, to.x);
+					p[0] = graph.snap(new Point(maxx + grid, from.y));
+					p[1] = graph.snap(new Point(maxx + grid, to.y));
+				}
+			} else if (startPort.getDirectionType() == IdlDirectionType._IN) { //	special action in case of moving in reverse direction
+				int x2 = from.x + ((to.x - from.x) / 2);
+				int y2 = from.y + ((to.y - from.y) / 2);
+				if (from.x - grid * 3 < to.x) {
+					p = new Point[4];
+					p[0] = graph.snap(new Point(from.x - grid, from.y));
+					p[1] = graph.snap(new Point(from.x - grid, y2));
+					p[2] = graph.snap(new Point(to.x + grid, y2));
+					p[3] = graph.snap(new Point(to.x + grid, to.y));
+				} else {
+					p = new Point[2];
+					p[0] = graph.snap(new Point(x2, from.y));
+					p[1] = graph.snap(new Point(x2, to.y));
+				}
+			}
+		}
+
+		if (p == null) {
+			int x2 = from.x + ((to.x - from.x) / 2);
+			int y2 = from.y + ((to.y - from.y) / 2);
+			if (from.x + graph.getGridSize() * 3 <= to.x) {
+				p = new Point[2];
+//				p[0] = graph.snap(new Point(from.x + grid, from.y));
+				p[0] = graph.snap(new Point(x2, from.y));
+				p[1] = graph.snap(new Point(x2, to.y));
+//				p[3] = graph.snap(new Point(to.x - grid, to.y));
+			} else {
+				p = new Point[4];
+				p[0] = graph.snap(new Point(from.x + grid, from.y));
+				p[1] = graph.snap(new Point(from.x + grid, y2));
+				p[2] = graph.snap(new Point(to.x - grid, y2));
+				p[3] = graph.snap(new Point(to.x - grid, to.y));
+			}
 		}
 		return p;
 	}
