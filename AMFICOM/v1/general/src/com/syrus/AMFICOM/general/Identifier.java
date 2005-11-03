@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.88 2005/10/09 15:45:10 bass Exp $
+ * $Id: Identifier.java,v 1.89 2005/11/03 11:21:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.TransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.88 $, $Date: 2005/10/09 15:45:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.89 $, $Date: 2005/11/03 11:21:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -240,9 +240,9 @@ public final class Identifier implements Comparable<Identifier>,
 	}
 
 	/**
-	 * Creates new set of identifiers from the given set of identifiables
+	 * Creates new set of identifiers from the given set of identifiables.
 	 * @param identifiables
-	 * @return Set of identifiers
+	 * @return Set (modifiable) of identifiers
 	 */
 	public static Set<Identifier> createIdentifiers(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
