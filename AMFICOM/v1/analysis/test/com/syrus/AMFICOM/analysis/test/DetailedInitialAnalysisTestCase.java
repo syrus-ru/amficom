@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.11 2005/10/17 14:20:09 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.12 2005/11/03 15:39:39 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -28,13 +28,14 @@ import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
+import com.syrus.util.Application;
 import com.syrus.util.HashCodeGenerator;
 
 /**
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/10/17 14:20:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/03 15:39:39 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -166,6 +167,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 
 	public final void testAnalysisDB()
 	throws IOException, InvalidAnalysisParametersException {
+		Application.init("test");
 		AnalysisParameters ap = new AnalysisParameters(
 				A_PARAMS,
 				ClientAnalysisManager.getDefaultAPClone());
