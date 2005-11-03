@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.141 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.142 2005/11/03 13:51:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.141 $, $Date: 2005/10/31 10:47:23 $
+ * @version $Revision: 1.142 $, $Date: 2005/11/03 13:51:29 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -497,9 +497,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			transceivers.get(kisId).shutdown();
 		}
 
-		for (final Identifier testId : testProcessors.keySet()) {
-			final TestProcessor testProcessor = testProcessors.get(testId);
-			testProcessor.shutdown();
+		synchronized (testProcessors) {
+			for (final Identifier testId : testProcessors.keySet()) {
+				final TestProcessor testProcessor = testProcessors.get(testId);
+				testProcessor.shutdown();
+			}
 		}
 
 		eventQueue.shutdown();
