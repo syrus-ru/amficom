@@ -15,6 +15,9 @@ TROVECLASSPATH=$EXTLIB/trove.jar
 XMLCLASSPATH=$EXTLIB/xbean.jar:\
 $LIB/generalxml.jar
 
+MAILCLASSPATH=$EXTLIB/activation.jar:\
+$EXTLIB/mail.jar
+
 APPCLASSPATH=\
 $LIB/leserver.jar:\
 $LIB/general.jar:\
@@ -28,5 +31,5 @@ $LIB/csbridge.jar:\
 $LIB/reflectometry.jar:\
 $LIB/util.jar
 
-$JAVA -Xms128m -Xmx256m -server -ea -classpath $APPCLASSPATH:$XMLCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH com.syrus.AMFICOM.leserver.LoginEventServer &
+$JAVA -Xms128m -Xmx256m -server -ea -classpath $APPCLASSPATH:$XMLCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$MAILCLASSPATH com.syrus.AMFICOM.leserver.LoginEventServer &
 echo $! > `dirname $0`/leserver.pid
