@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.77 2005/10/31 11:27:15 arseniy Exp $
+ * $Id: Transceiver.java,v 1.78 2005/11/03 12:31:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/10/31 11:27:15 $
+ * @version $Revision: 1.78 $, $Date: 2005/11/03 12:31:13 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -127,7 +127,7 @@ final class Transceiver extends SleepButWorkThread {
 			this.cleanOldMeasurements();
 
 			synchronized (this) {
-				while (this.testProcessors.isEmpty()) {
+				while (this.testProcessors.isEmpty() && this.kisReport == null) {
 					try {
 						this.wait(10000);
 					} catch (InterruptedException ie) {
@@ -273,7 +273,9 @@ final class Transceiver extends SleepButWorkThread {
 									+ ", duration: " + (measurementDuration / 1000) + " sec; removing", Log.DEBUGLEVEL07);
 							it.remove();
 							this.scheduledMeasurements.remove(measurement);
-							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+							if (this.kisReport == null || !this.kisReport.getMeasurementId().equals(measurementId)) {
+								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+							}
 						}
 					} catch (ApplicationException ae) {
 						Log.errorMessage(ae);
@@ -360,7 +362,9 @@ final class Transceiver extends SleepButWorkThread {
 	synchronized void shutdown() {
 		this.scheduledMeasurements.clear();
 		this.running = false;
-		this.kisConnection.drop();
+		if (this.kisConnection != null) {
+			this.kisConnection.drop();
+		}
 		this.notifyAll();
 	}
 }
