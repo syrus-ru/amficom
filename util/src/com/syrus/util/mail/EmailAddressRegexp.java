@@ -1,5 +1,5 @@
 /*-
- * $Id: EmailAddressRegexp.java,v 1.1 2005/11/02 15:03:47 bass Exp $
+ * $Id: EmailAddressRegexp.java,v 1.2 2005/11/03 11:54:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.util.mail;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/11/02 15:03:47 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/03 11:54:31 $
  * @module util
  */
 public enum EmailAddressRegexp {
@@ -26,10 +26,20 @@ public enum EmailAddressRegexp {
 	 */
 	ADVANCED("^[^@]+@[^@]+\\.[^@]+$"),
 	/**
-	 * An alternative to Bugzilla's Advanced, courtesy of Vladimir ``Bob''
-	 * Dolzhenko.
+	 * <p>An alternative to Bugzilla's Advanced, courtesy of Vladimir ``Bob''
+	 * Dolzhenko.</p>
+	 *
+	 * <p>The pattern has been slightly modified from its original value to
+	 * allow validation of the following addresses:<ul>
+	 * <li><a href = "mailto:bass@localhost">bass@localhost</a>;</li>
+	 * <li><a href = "mailto:bass@localhost.localdomain">bass@localhost.localdomain</a>;</li>
+	 * <li><a href = "mailto:bass@2ka">bass@2ka</a>;</li>
+	 * <li><a href = "mailto:bass@2ka.mipt.ru">bass@2ka.mipt.ru</a>;</li>
+	 * <li><a href = "mailto:bass@194.85.82.65">bass@194.85.82.65</a>;</li>
+	 * <li><a href = "mailto:bass@bass.science.syrus.ru">bass@bass.science.syrus.ru</a>;</li>
+	 * <li><a href = "mailto:bass@sfv240-01">bass@sfv240-01</a>.</li></ul></p>
 	 */
-	BOB_S_ADVANCED("^[-a-z0-9_.]+@([-a-z0-9]+\\.)+[a-z]{2,4}$");
+	BOB_S_ADVANCED("^[-a-z0-9_.]+@[-a-z0-9]+(\\.[-a-z0-9]+)*$");
 
 	private String value;
 

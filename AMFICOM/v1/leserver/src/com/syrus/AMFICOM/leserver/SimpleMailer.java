@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.1 2005/11/02 14:22:18 bass Exp $
+ * $Id: SimpleMailer.java,v 1.2 2005/11/03 11:54:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,21 @@
 
 package com.syrus.AMFICOM.leserver;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.mail.Authenticator;
 import javax.mail.MessagingException;
@@ -24,15 +34,15 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
+import com.syrus.util.mail.EmailAddressRegexp;
 
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/11/02 14:22:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/03 11:54:31 $
  * @module leserver
  */
 public final class SimpleMailer {
@@ -79,57 +89,60 @@ public final class SimpleMailer {
 	private static final String DEFAULT_MAIL_DEBUG = MAIL_DEBUG_NONE;
 
 
-	static final String CHARSET = System.getProperty("file.encoding", "KOI8-R");
+	private static final String CHARSET = System.getProperty("file.encoding", "KOI8-R");
+
+	private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(EmailAddressRegexp.BOB_S_ADVANCED.getValue());
+
+	private static final Pattern PASSWD_RECORD_PATTERN = Pattern.compile("^([^:]*):([^:]*):([^:]*):([^:]*):([^:]*):([^:]*):([^:]*)$");
+
+	private static final Pattern DESCRIPTION_PATTERN = Pattern.compile("([^,]*)(,[^,]*){0,3}");
 
 	private static Session session;
 
-	private static volatile boolean initialized;
+	private static InternetAddress from;
 
-	private static String returnAddress;
-
-	/**
-	 * DCL's are bad, yes I know that.
-	 */
-	private static void initialize() {
-		if (!initialized) {
-			synchronized (SimpleMailer.class) {
-				if (!initialized) {
-					initialize0();
-					initialized = true;
-				}
-			}
-		}
+	static {
+		initialize();
 	}
 
-	private static void initialize0() {
+	private SimpleMailer() {
+		assert false;
+	}
+
+	private static void initialize() {
 		String smtpHost = ApplicationProperties.getString(KEY_SMTP_HOST, DEFAULT_SMTP_HOST);
 		if (smtpHost == null || smtpHost.length() == 0) {
-			Log.debugMessage("SMTP host is either null or empty; changing to " + DEFAULT_SMTP_HOST, WARNING); 
+			Log.debugMessage("SMTP host is either null or empty; changing to ``"
+					+ DEFAULT_SMTP_HOST + "''",
+					WARNING); 
 			smtpHost = DEFAULT_SMTP_HOST;
 		}
 
 		int smtpPort = ApplicationProperties.getInt(KEY_SMTP_PORT, DEFAULT_SMTP_PORT);
 		if (0 > smtpPort || smtpPort > 0xFFFF) {
-			Log.debugMessage("SMTP port out of range; changing to " + DEFAULT_SMTP_PORT, WARNING); 
+			Log.debugMessage("SMTP port: " + smtpPort
+					+ " is out of range; changing to "
+					+ DEFAULT_SMTP_PORT,
+					WARNING); 
 			smtpPort = DEFAULT_SMTP_PORT;
 		}
 
 		boolean useAuth = ApplicationProperties.getBoolean(KEY_USE_SMTP_AUTH, DEFAULT_USE_SMTP_AUTH);
 
-		String smtpUsername = null;
-		if (useAuth) {
-			smtpUsername = ApplicationProperties.getString(KEY_SMTP_USERNAME, DEFAULT_SMTP_USERNAME);
-			if (smtpUsername == null || smtpUsername.length() == 0) {
-				Log.debugMessage("SMTP username is either null or empty; disabling SMTP authentication", WARNING);
-				useAuth = false;
-			}
+		String smtpUsername = ApplicationProperties.getString(KEY_SMTP_USERNAME, DEFAULT_SMTP_USERNAME);
+		if (smtpUsername == null || smtpUsername.length() == 0) {
+			Log.debugMessage("SMTP username is either null or empty; changing to ``"
+					+ DEFAULT_SMTP_USERNAME + "''",
+					WARNING);
+			smtpUsername = DEFAULT_SMTP_USERNAME;
 		}
 
 		String smtpPassword = null;
 		if (useAuth) {
 			smtpPassword = ApplicationProperties.getString(KEY_SMTP_PASSWORD, DEFAULT_SMTP_PASSWORD);
 			if (smtpPassword == null) {
-				Log.debugMessage("SMTP password is null; disabling SMTP authentication", WARNING);
+				Log.debugMessage("SMTP password is null; disabling SMTP authentication",
+						WARNING);
 				useAuth = false;
 			}
 		}
@@ -151,7 +164,10 @@ public final class SimpleMailer {
 		final boolean debug = (mailDebug != MAIL_DEBUG_NONE);
 		final boolean debugOutToStderr = (mailDebug != MAIL_DEBUG_STDOUT);
 		if (debug && debugOutToStderr && mailDebug != MAIL_DEBUG_STDERR) {
-			Log.debugMessage("Unrecognized MailDebug property value: " + mailDebug + "; changing to " + DEFAULT_MAIL_DEBUG, WARNING);
+			Log.debugMessage("Unrecognized MailDebug property value: ``"
+					+ mailDebug + "''; changing to ``"
+					+ DEFAULT_MAIL_DEBUG + "''",
+					WARNING);
 			mailDebug = DEFAULT_MAIL_DEBUG;
 		}
 
@@ -166,119 +182,173 @@ public final class SimpleMailer {
 			session.setDebugOut(debugOutToStderr ? System.err : System.out);
 		}
 		session.setDebug(debug);
+
+		from = getInternetAddress(smtpUsername + '@' + smtpHost);
 	}
 
-	private SimpleMailer() {
-		assert false;
-	}
+	/**
+	 * @param address
+	 */
+	private static String getPersonal(final String address) {
+		final String smtpUsername = address.substring(0, address.indexOf('@'));
+		final String smtpHostname = address.substring(address.indexOf('@') + 1);
 
-	public static void sendMail(MailIdentity from, MailIdentity to, String subject, String body) {
-		if (to == null)
-			throw new IllegalArgumentException("The \"To:\" field cannot be empty.");
-		if ((body == null) || (body.length() == 0))
-			throw new IllegalArgumentException("Message body cannot be empty.");
+		boolean lookupPersonal = false;
+		try {
+			final InetAddress localHost = InetAddress.getLocalHost();
+			final InetAddress smtpHost = InetAddress.getByName(smtpHostname);
+			final String canonicalHostName = smtpHost.getCanonicalHostName();
+			final String hostAddress = smtpHost.getHostAddress();
+			if (smtpHost.isLoopbackAddress()) {
+				Log.debugMessage("SMTP host is a loopback address; sender's personal name lookup will be performed",
+						INFO);
+				lookupPersonal = true;
+			}
+			if (localHost.getCanonicalHostName().equals(canonicalHostName)) {
+				Log.debugMessage("SMTP host is a local host since canonical host names match: ``"
+						+ canonicalHostName
+						+ "''; sender's personal name lookup will be performed",
+						INFO);
+				lookupPersonal = true;
+			}
+			if (localHost.getHostAddress().equals(hostAddress)) {
+				Log.debugMessage("SMTP host is a local host since host addresses match: ``"
+						+ hostAddress
+						+ "''; sender's personal name lookup will be performed",
+						INFO);
+				lookupPersonal = true;
+			}
+		} catch (final UnknownHostException uhe) {
+			Log.debugMessage(uhe, SEVERE);
+		}
 
-		initialize();
+		if (!lookupPersonal) {
+			return null;
+		}
+
+		final String osName = System.getProperty("os.name");
+		if (osName == null || (osName.indexOf("SunOS") == -1
+				&& osName.indexOf("Solaris") == -1
+				&& osName.indexOf("Linux") == -1)) {
+			return null;
+		}
 
 		try {
-			MimeMessage mimeMessage = new MimeMessage(session);
-			mimeMessage.setFrom(from.toInternetAddress());
-			mimeMessage.setRecipients(RecipientType.TO, new InternetAddress[]{to.toInternetAddress()});
+			String personal = null;
+			final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream("/etc/passwd"), CHARSET));
+			String line;
+			while ((line = in.readLine()) != null) {
+				final Matcher passwdRecordmatcher = PASSWD_RECORD_PATTERN.matcher(line);
+				if (!passwdRecordmatcher.matches()) {
+					Log.debugMessage("The line: ``" + line
+							+ "'' is not a valid passwd file record; skipping",
+							WARNING);
+					continue;
+				}
+
+				final String login = passwdRecordmatcher.group(1);
+				if (!login.equals(smtpUsername)) {
+					continue;
+				}
+
+				Log.debugMessage("User's logname: ``" + login
+						+ "'' found in the passwd file",
+						INFO);
+				final String description = passwdRecordmatcher.group(5);
+				final Matcher descriptionMatcher = DESCRIPTION_PATTERN.matcher(description);
+				if (!descriptionMatcher.matches()) {
+					Log.debugMessage("The line: ``" + description
+							+ "'' is not a valid description entry; aborting",
+							WARNING);
+					break;
+				}
+				personal = descriptionMatcher.group(1);
+				Log.debugMessage("Personal name: ``" + personal
+						+ "'' found for logname: ``"
+						+ login + "''",
+						INFO);
+				if (personal.length() == 0) {
+					personal = null;
+				}
+			}
+			in.close();
+
+			if (personal == null) {
+				Log.debugMessage("No or empty personal name was found for logname: ``"
+						+ smtpUsername
+						+ "''",
+						WARNING);
+			}
+			return personal;
+		} catch (final IOException ioe) {
+			Log.debugMessage(ioe, SEVERE);
+			return null;
+		}
+	}
+
+	/**
+	 * @param address
+	 * @param subject
+	 * @param body
+	 */
+	public static void sendMail(final String address, final String subject, final String body) {
+		if (body == null || body.length() == 0) {
+			throw new IllegalArgumentException("Message body cannot be empty.");
+		}
+
+		try {
+			final MimeMessage mimeMessage = new MimeMessage(session);
+			mimeMessage.setFrom(from);
+			mimeMessage.setRecipients(RecipientType.TO, new InternetAddress[]{getInternetAddress(address)});
 			mimeMessage.setSubject(subject, CHARSET);
 			mimeMessage.setSentDate(new Date());
 			mimeMessage.setContent(body, "text/plain; charset=" + CHARSET);
 			Transport.send(mimeMessage);
-		} catch (final MessagingException me) {
-			me.printStackTrace();
-			try {
-				me.getNextException().printStackTrace();
-			} catch (final NullPointerException npe) {
-				// empty
+		} catch (MessagingException me) {
+			while (me != null) {
+				Log.debugMessage(me, SEVERE);
+				final Exception nextException = me.getNextException();
+				if (nextException instanceof MessagingException
+						|| nextException == null) {
+					me = (MessagingException) nextException;
+					continue;
+				}
+				Log.debugMessage(nextException, SEVERE);
+				break;
 			}
 		}
-	}
-
-	public static void sendMail(final MailIdentity to, final String subject, final String body) {
-		sendMail(getDefaultMailIdentity(), to, subject, body);
-	}
-
-	public static void sendMail(final MailIdentity from, final MailIdentity to, final String body) {
-		sendMail(from, to, getDefaultSubject(), body);
-	}
-
-	public static void sendMail(final MailIdentity to, final String body) {
-		sendMail(getDefaultMailIdentity(), to, getDefaultSubject(), body);
 	}
 
 	/**
-	 * @todo On UNIX, obtain user's real name from /etc/passwd file. The
-	 *       following sequence works fine:
-	 *       grep ^${LOGNAME}\: /etc/passwd | cut -d \: -f 5 | cut -d , -f 1
+	 * @param address
 	 */
-	private static MailIdentity getDefaultMailIdentity() {
-		return new MailIdentity(returnAddress);
-	}
-
-	private static String getDefaultSubject() {
-		return "(no subject)";
-	}
-
-	public static void main(final String args[]) {
-		Application.init("leserver");
-		initialize();
-	}
-
-//	public static void main(String args[]) throws IOException {
-//		MailIdentity from = new MailIdentity("\"Andrew ``Bass'' Shcheglov\"", "bass@localhost");
-//		MailIdentity to = new MailIdentity("Andrew ``Bass'' Shcheglov", "bass");
-//		String subject = "Sample Subject.";
-//		String body = "Sample Body.\n\n--\nYours sincerely,\n\tAndrew ``Bass'' Shcheglov.";
-//		SimpleMailer simpleMailer = new SimpleMailer();
-//		simpleMailer.sendMail(to, body);
-//		simpleMailer.sendMail(from, to, body);
-//		simpleMailer.sendMail(to, subject, body);
-//		simpleMailer.sendMail(from, to, subject, body);
-//	}
-
-	private static final class MailIdentity {
-		private String name;
-
-		private String address;
-
-		public MailIdentity(final String address) {
-			this(null, address);
+	private static InternetAddress getInternetAddress(final String address) {
+		if (address == null) {
+			throw new NullPointerException("e-mail address is null");
+		} else if (!EMAIL_ADDRESS_PATTERN.matcher(address).matches()) {
+			throw new IllegalArgumentException("e-mail address: ``" + address + "'' is invalid");
 		}
 
-		/**
-		 * @todo Check the e-mail address for validity. Addresses may be local
-		 *       (jsmith) or remote (jsmith@mydomain.com).
-		 * @todo Implement filtering of quotation marks in name.
-		 */
-		public MailIdentity(final String name, final String address) {
-			if (address == null || address.length() == 0) {
-				throw new IllegalArgumentException("E-mail address is invalid.");
-			}
-			this.name = name;
-			this.address = address;
-		}
-
-		String getAddress() {
-			return this.address;
-		}
-
-		public InternetAddress toInternetAddress() throws AddressException {
+		try {
+			return new InternetAddress(address, getPersonal(address), CHARSET);
+		} catch (final UnsupportedEncodingException uee) {
+			/*
+			 * Almost never.
+			 */
 			try {
-				return new InternetAddress(this.address, this.name, CHARSET);
-			} catch (final UnsupportedEncodingException uee) {
-				return new InternetAddress(this.address, true);
+				return new InternetAddress(address, true);
+			} catch (final AddressException ae) {
+				Log.debugMessage(ae, SEVERE);
+				try {
+					return new InternetAddress(address, false);
+				} catch (final AddressException ae2) {
+					/*
+					 * Never.
+					 */
+					assert false;
+					return null;
+				}
 			}
-		}
-
-		@Override
-		public String toString() {
-			return (this.name == null || this.name.length() == 0)
-					? this.address
-					: this.name + " <" + this.address + '>';
 		}
 	}
 }
