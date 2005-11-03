@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.9 2005/10/30 20:16:45 bass Exp $
+ * $Id: AbstractLogger.java,v 1.10 2005/11/03 14:38:41 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/10/30 20:16:45 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/11/03 14:38:41 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -109,9 +109,11 @@ abstract class AbstractLogger implements Logger {
 		try {
 			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue())
 					|| debugLevel.intValue() == this.logDebugLevel.intValue()) {
-				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+				if (this.debugLog == null) {
+					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+				}
 				this.logMessage(this.debugLog, message);
-				this.debugLog.close();
+				this.debugLog.flush();
 				if (this.echoDebug) {
 					this.logMessage(System.out, message);
 				}
@@ -127,9 +129,11 @@ abstract class AbstractLogger implements Logger {
 		try {
 			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue())
 					|| debugLevel.intValue() == this.logDebugLevel.intValue()) {
-				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+				if (this.debugLog == null) {
+					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
+				}
 				this.logThrowable(this.debugLog, t);
-				this.debugLog.close();
+				this.debugLog.flush();
 				if (this.echoDebug) {
 					this.logThrowable(System.out, t);
 				}
@@ -143,9 +147,11 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void errorMessage(final String message) {
 		this.checkLogRollover();
 		try {
-			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
+			if (this.errorLog == null) {
+				this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
+			}
 			this.logMessage(this.errorLog, message);
-			this.errorLog.close();
+			this.errorLog.flush();
 
 			if (this.echoError) {
 				this.logMessage(System.err, message);
@@ -159,9 +165,11 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void errorException(final Throwable t) {
 		this.checkLogRollover();
 		try {
-			this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
+			if (this.errorLog == null) {
+				this.errorLog = new PrintWriter(new FileWriter(this.errorLogFileName, true), true);
+			}
 			this.logThrowable(this.errorLog, t);
-			this.errorLog.close();
+			this.errorLog.flush();
 
 			if (this.echoError) {
 				this.logThrowable(System.err, t);
@@ -180,6 +188,8 @@ abstract class AbstractLogger implements Logger {
 			this.logDate = new Date();
 			this.errorLogFileName = this.createLogFileName(ERROR);
 			this.debugLogFileName = this.createLogFileName(DEBUG);
+			this.debugLog = null;
+			this.errorLog = null;
 		}
 	}
 
