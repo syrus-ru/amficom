@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.22 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeGraph.java,v 1.23 2005/11/03 11:51:43 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.23 $, $Date: 2005/11/03 11:51:43 $
  * @module schemeclient
  */
 
@@ -431,7 +431,12 @@ public class SchemeGraph extends GPGraph {
 				new_attributes = GraphConstants.replaceKeys(clones, new_attributes);
 				// вставляем клонированные селлы
 				Object[] cloned_cells = clones.values().toArray();
-				getGraphLayoutCache().insert(cloned_cells, viewAttributes, cs, null, null);
+				
+				try {
+					getGraphLayoutCache().insert(cloned_cells, viewAttributes, cs, null, null);
+				} catch (Exception e) {
+					Log.errorMessage(e);
+				}
 				
 				if (p != null) { // переносим вставленный объект в новую точку
 					GraphActions.move(this, cloned_cells, p, isCenterPoint);
