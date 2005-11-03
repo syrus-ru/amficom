@@ -11,5 +11,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
+	<classpathentry kind="var" path="EXTLIB/activation.jar"/>
+	<classpathentry kind="var" path="EXTLIB/mail.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
