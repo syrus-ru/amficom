@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommitCommand.java,v 1.10 2005/10/31 12:30:26 bass Exp $
+ * $Id: SchemeImportCommitCommand.java,v 1.11 2005/11/04 12:55:09 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,15 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
@@ -51,18 +52,19 @@ public class SchemeImportCommitCommand extends AbstractCommand {
 			StorableObjectPool.flush(ObjectEntities.CABLETHREAD_TYPE_CODE, userId, false);
 			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, userId, false);
 			
-			// TODO save by hierarchy
-			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOGROUP_CODE, userId, false);
-			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOELEMENT_CODE, userId, false);
-//			LinkedIdsCondition condition = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, 
-//					ObjectEntities.SCHEMEPROTOGROUP_CODE);
-//			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition, false);
-//			groups.remove(SchemeObjectsFactory.stubProtoGroup);
-//
-//			for (SchemeProtoGroup group : groups) {
-//				Set<Identifiable> ids = group.getReverseDependencies(false);
-//				StorableObjectPool.flush(ids, userId, false);
-//			}
+			EquivalentCondition condition1 = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
+			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, false);
+			groups.remove(SchemeObjectsFactory.stubProtoGroup);
+			StorableObjectPool.flush(groups, userId, false);
+
+			EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.SCHEMEPROTOELEMENT_CODE);
+			Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition2, false);
+			protos.remove(SchemeObjectsFactory.stubProtoElement);
+
+			for (SchemeProtoElement proto : protos) {
+				Set<Identifiable> ids = proto.getReverseDependencies(false);
+				StorableObjectPool.flush(ids, userId, false);
+			}
 			LocalXmlIdentifierPool.flush();
 			
 			ApplicationModel aModel = this.aContext.getApplicationModel();
