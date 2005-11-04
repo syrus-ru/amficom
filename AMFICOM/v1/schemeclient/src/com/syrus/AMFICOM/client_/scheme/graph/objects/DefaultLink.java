@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.21 2005/11/03 11:51:04 stas Exp $
+ * $Id: DefaultLink.java,v 1.22 2005/11/04 12:49:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/11/03 11:51:04 $
+ * @version $Revision: 1.22 $, $Date: 2005/11/04 12:49:51 $
  * @module schemeclient
  */
 
@@ -444,6 +444,7 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 			SchemePort startPort = ((PortCell)sourcePort.getParent()).getSchemePort();
 			SchemePort endPort = ((PortCell)targetPort.getParent()).getSchemePort();
 			//	special action in case of codirection
+			if (startPort != null && endPort != null) { // this may be in import
 			if (startPort.getDirectionType() == endPort.getDirectionType()) {
 				p = new Point[2];
 				if (startPort.getDirectionType() == IdlDirectionType._IN) {
@@ -470,6 +471,7 @@ public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 					p[1] = graph.snap(new Point(x2, to.y));
 				}
 			}
+		}
 		}
 
 		if (p == null) {

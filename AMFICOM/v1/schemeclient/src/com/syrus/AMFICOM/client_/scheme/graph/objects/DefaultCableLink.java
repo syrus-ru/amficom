@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.22 2005/11/03 11:51:03 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.23 2005/11/04 12:49:51 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/11/03 11:51:03 $
+ * @version $Revision: 1.23 $, $Date: 2005/11/04 12:49:51 $
  * @module schemeclient
  */
 
@@ -437,6 +437,7 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 			SchemeCablePort startPort = ((CablePortCell)sourcePort.getParent()).getSchemeCablePort();
 			SchemeCablePort endPort = ((CablePortCell)targetPort.getParent()).getSchemeCablePort();
 			//	special action in case of codirection
+			if (startPort != null && endPort != null) { // this may be in import
 			if (startPort.getDirectionType() == endPort.getDirectionType()) {
 				p = new Point[2];
 				if (startPort.getDirectionType() == IdlDirectionType._IN) {
@@ -463,6 +464,7 @@ public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 					p[1] = graph.snap(new Point(x2, to.y));
 				}
 			}
+		}
 		}
 
 		if (p == null) {
