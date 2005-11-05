@@ -1,5 +1,5 @@
 /*-
- * $Id: CableType.java,v 1.6 2005/09/12 06:11:57 stas Exp $
+ * $Id: CableType.java,v 1.7 2005/11/05 13:42:44 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,9 @@ import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableThreadTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class CableType {
-	public static final String TYPE = UniCableMapType.UCM_CABLE_TYPE;
+//	public static final String TYPE = UniCableMapType.UCM_CABLE_TYPE;
 	
 	private String id;
 	private String name;

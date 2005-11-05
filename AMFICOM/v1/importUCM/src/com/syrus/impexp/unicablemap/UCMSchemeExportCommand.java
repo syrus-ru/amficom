@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.18 2005/10/17 07:58:12 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.19 2005/11/05 13:42:44 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.xmlbeans.XmlOptions;
 
@@ -52,11 +54,12 @@ import com.syrus.impexp.unicablemap.objects.Equipment;
 import com.syrus.impexp.unicablemap.objects.LinkType;
 import com.syrus.impexp.unicablemap.objects.MuffType;
 import com.syrus.impexp.unicablemap.objects.Port;
+import com.syrus.impexp.unicablemap.objects.SimplePort;
 import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/10/17 07:58:12 $
+ * @version $Revision: 1.19 $, $Date: 2005/11/05 13:42:44 $
  * @module importUCM
  */
 
@@ -160,7 +163,12 @@ public class UCMSchemeExportCommand {
 							list = new LinkedList<Site>();
 							this.cableInlets.put(cable, list);
 						}
-						list.add(this.sites.get(Integer.valueOf(ucmLink.parent.un)));
+						final Site cableInlet = this.sites.get(String.valueOf(ucmLink.parent.un));
+						if(cableInlet == null) {
+							 System.err.println("cannot find cable inlet with id = " + ucmLink.parent.un
+									 + " in preloaded cable inlets for cable " + cable.getId());
+						}
+						list.add(cableInlet);
 					}
 				}
 			}
@@ -266,7 +274,7 @@ public class UCMSchemeExportCommand {
 		for(UniCableMapLink ucmLink : this.ucmDatabase.getParents(ucmObject)) {
 			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_TUNNEL_CABLE)) {
 				UniCableMapObject tunnel = ucmLink.parent;
-				final Link link = this.links.get(Integer.valueOf(tunnel.un));
+				final Link link = this.links.get(Integer.toString(tunnel.un));
 				if(link == null) {
 					int a = 0;
 				}
@@ -575,24 +583,130 @@ public class UCMSchemeExportCommand {
 				}
 			}
 
-			int inPorts = 0, outPorts = 0;
+			int inCablePorts = 0, outCablePorts = 0;
+			Map<UniCableMapObject, SimplePort> vol2portIn = new HashMap<UniCableMapObject, SimplePort>();
+//			Map<UniCableMapObject, SimplePort> vol2portOut = new HashMap<UniCableMapObject, SimplePort>();
 			for(UniCableMapLink ucmLink : this.ucmDatabase.getChildren(ucmObject)) {
-				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_START_STARTS)) {
-					 muf.addOutputPort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
-					 outPorts++;
-				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
-					 muf.addInputPort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
-					 inPorts++;
+//				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_START_STARTS)) {
+//					 muf.addOutputCablePort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
+//					 outPorts++;
+//				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
+//					 muf.addInputCablePort(String.valueOf(ucmLink.child.un + "^" + muf.getId()));
+//					 inPorts++;
+//				} else 
+					if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_GENERALIATION_DETALIZATION)) {
+					UniCableMapObject raspaika = ucmLink.child;
+					for(UniCableMapLink ucmLink2 : this.ucmDatabase.getChildren(raspaika)) {
+						if(ucmLink2.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
+							// для каждого разреза создаем внутренний ВРМ
+							UniCableMapObject razrez = ucmLink2.child;
+							Element vrm = new Element(razrez.un);
+							vrm.setEquipmentTypeId("UCM_ODF");
+							vrm.setKind("SCHEME_ELEMENT");
+							vrm.setName("ODF " + (inCablePorts + outCablePorts + 1) + muf.getName());
+							vrm.setLabel("КП");
+							muf.addElement(vrm);
+							
+							boolean isSource = false;
+							for(UniCableMapLink ucmLink3 : this.ucmDatabase.getParents(razrez)) {
+								if(ucmLink3.mod.text.equals(UniCableMapLinkType.UCM_CABLE_LAYOUT)) {
+									UniCableMapObject cable = ucmLink3.parent;
+									for(UniCableMapLink ucmLink4 : this.ucmDatabase.getParents(cable)) {
+										if(ucmLink4.mod.text.equals(UniCableMapLinkType.UCM_END_ENDS)) {
+											UniCableMapObject muff = ucmLink4.parent;
+											if (muff.un == ucmObject.un) {
+												isSource = false;
+												//	создаем кабельный ввод
+												Port port = vrm.addInputCablePort(Integer.toString(ucmObject.un) + "^" + vrm.getId());
+												inCablePorts++;
+												port.setName(inCablePorts + "i");
+											}
+										}
+										if(ucmLink4.mod.text.equals(UniCableMapLinkType.UCM_START_STARTS)) {
+											UniCableMapObject muff = ucmLink4.parent;
+											if (muff.un == ucmObject.un) {
+												isSource = true;
+												//	создаем кабельный ввод
+												Port port = vrm.addOutputCablePort(Integer.toString(ucmObject.un) + "^" + vrm.getId());
+												outCablePorts++;
+												port.setName(outCablePorts + "o");
+											}
+										}
+									}
+								}
+							}
+
+							vrm.initCounter();
+							// для каждого волокна создаем порт 
+							for(UniCableMapLink ucmLink3 : this.ucmDatabase.getChildren(razrez)) {
+								if(ucmLink3.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
+									UniCableMapObject volokno = ucmLink3.child;
+									if (isSource) {
+										SimplePort p = vrm.addInputPort(Integer.toString(volokno.un) + "^" + vrm.getId());
+										vol2portIn.put(volokno, p);
+									} else {
+										SimplePort p = vrm.addOutputPort(Integer.toString(volokno.un) + "^" + vrm.getId());
+										vol2portIn.put(volokno, p);
+//										vol2portOut.put(volokno, p);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
-			if (inPorts + outPorts > 0) {
+			// create Links
+			if (muf.getName().startsWith("Башил")) {
+				System.out.println("");
+			}
+			
+			for(UniCableMapObject vol : new HashSet<UniCableMapObject>(vol2portIn.keySet())) {
+				SimplePort inPort = vol2portIn.get(vol);
+				if (inPort != null) {
+					
+
+				SimplePort outPort = null;
+				for(UniCableMapLink ucmLink3 : this.ucmDatabase.getChildren(vol)) {
+					if(ucmLink3.mod.text.equals(UniCableMapLinkType.UCM_SOURCE_TARGET)) {
+						UniCableMapObject volokno = ucmLink3.child;
+//						outPort = vol2portOut.get(volokno);
+						outPort = vol2portIn.get(volokno);
+						if (outPort != null) {
+							vol2portIn.remove(vol);
+							vol2portIn.remove(volokno);
+							break;
+						}
+					}
+				}
+				
+				Integer typeId =  linktypes.keySet().iterator().next();
+				if (outPort != null) {
+					com.syrus.impexp.unicablemap.objects.Link link = 
+							new com.syrus.impexp.unicablemap.objects.Link(outPort.getId() + "-" + inPort.getId());
+					link.setEndPortId(inPort.getId());
+					link.setStartPortId(outPort.getId());
+					link.setName("OЛ" + inPort.getName());
+					link.setTypeId(typeId);
+					muf.addLink(link);
+				} else if (vol2portIn.containsKey(vol)) {
+					System.err.println("Complimentary port not found can't create internal link");
+				} else {
+					System.out.println();
+				}
+				} else {
+					System.out.println();
+				}
+			}
+				
+			
+			if (inCablePorts + outCablePorts > 0) {
 				this.equipments.add(eq);
 				this.muffs.put(Integer.valueOf(ucmObject.un), muf);
 			}
-			if (inPorts == 0) {
+			if (inCablePorts == 0) {
 				System.out.println("Муфта " + ucmObject.text + " [" + ucmObject.un + "]" +  " не имеет конечного кабеля");
 			}
-			if (outPorts == 0) {
+			if (outCablePorts == 0) {
 				System.out.println("Муфта " + ucmObject.text + " [" + ucmObject.un + "]" +  " не имеет начального кабеля");
 			}
 		}
@@ -642,10 +756,10 @@ public class UCMSchemeExportCommand {
 					 Element building = this.buildings.get(Integer.valueOf(ucmLink.parent.un));
 					 Port port;
 					 if (directionType.equals(DirectionType.IN)) {
-						 port = building.addInputPort(cable.getId() + "^" + obj.un);
+						 port = building.addInputCablePort(cable.getId() + "^" + obj.un);
 						 port.setDescription(obj.text);
 					 } else {
-						 port = building.addOutputPort(cable.getId() + "^" + obj.un);
+						 port = building.addOutputCablePort(cable.getId() + "^" + obj.un);
 						 port.setDescription(obj.text);
 					 }
 					 return port.getId();
@@ -664,10 +778,10 @@ public class UCMSchemeExportCommand {
 									Element building = this.buildings.get(Integer.valueOf(plan.un));
 									 Port port;
 									 if (directionType.equals(DirectionType.IN)) {
-										 port = building.addInputPort(cable.getId() + "^" + obj.un);
+										 port = building.addInputCablePort(cable.getId() + "^" + obj.un);
 										 port.setDescription(obj.text);
 									 } else {
-										 port = building.addOutputPort(cable.getId() + "^" + obj.un);
+										 port = building.addOutputCablePort(cable.getId() + "^" + obj.un);
 										 port.setDescription(obj.text);
 									 }
 									 return port.getId();
@@ -809,7 +923,7 @@ public class UCMSchemeExportCommand {
 			if (counter++ > number) {
 				break;
 			}
-			ses.add(muff.toXMLObject(xmlScheme.getId()));
+			ses.add(muff.toXMLObject(xmlScheme.getId(), true));
 		}
 		counter = 0;
 		for (Element building : this.buildings.values()) {
@@ -817,7 +931,7 @@ public class UCMSchemeExportCommand {
 				break;
 			}
 			if (building.getDevice() != null) {
-				ses.add(building.toXMLObject(xmlScheme.getId()));
+				ses.add(building.toXMLObject(xmlScheme.getId(), true));
 			}
 		}
 		xmlSchemeElements.setSchemeElementArray(ses.toArray(new XmlSchemeElement[ses.size()]));

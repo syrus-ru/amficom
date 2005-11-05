@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.11 2005/10/11 16:02:08 krupenn Exp $
+ * $Id: Cable.java,v 1.12 2005/11/05 13:42:44 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.impexp.unicablemap.objects;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,11 +22,10 @@ import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItemSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThreadSeq;
-import com.syrus.impexp.unicablemap.UniCableMapType;
 import com.syrus.impexp.unicablemap.map.Link;
 
 public class Cable {
-	public static final String TYPE = UniCableMapType.UCM_CABLE_LINEAR;
+//	public static final String TYPE = UniCableMapType.UCM_CABLE_LINEAR;
 	
 	private String id;
 	private String name;
@@ -156,7 +154,8 @@ public class Cable {
 		
 		xmlCL.setPhysicalLength(length);
 		xmlCL.setOpticalLength(length);
-		
+	
+//		if (false) {
 		if (!this.threads.isEmpty()) {
 			XmlSchemeCableThreadSeq xmlSchemeThreads = xmlCL.addNewSchemeCableThreads();
 
@@ -167,6 +166,7 @@ public class Cable {
 			xmlSchemeThreads.setSchemeCableThreadArray(scts.toArray(new XmlSchemeCableThread[scts.size()]));	
 		}
 
+//		if (false) {
 		if (!this.channelingItems.isEmpty()) {
 			XmlCableChannelingItemSeq xmlChannelingItems = xmlCL.addNewCableChannelingItems();
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ChannelingItem.java,v 1.8 2005/10/17 06:58:45 krupenn Exp $
+ * $Id: ChannelingItem.java,v 1.9 2005/11/05 13:42:44 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,10 +80,10 @@ public class ChannelingItem {
 			System.err.println("tunnelId is null for " + this);
 		} else {
 			pluid.setStringValue(this.tunnelId);
-			XmlIdentifier bluid = xmlCCI.addNewPipeBlockId();
 			if (this.blockId == null) {
 //				System.err.println("blockId is null for " + this.id + " ( tunnel " + this.tunnelId + ")");
 			} else {
+				XmlIdentifier bluid = xmlCCI.addNewPipeBlockId();
 				bluid.setStringValue(this.blockId);
 			}
 		}
