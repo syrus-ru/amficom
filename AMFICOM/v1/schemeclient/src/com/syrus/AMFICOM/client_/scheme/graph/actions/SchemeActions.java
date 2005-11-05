@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.51 2005/11/02 17:19:39 stas Exp $
+ * $Id: SchemeActions.java,v 1.52 2005/11/05 13:43:20 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static java.util.logging.Level.FINER;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,6 +83,7 @@ import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeCablePortWrapper;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
@@ -97,7 +100,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.51 $, $Date: 2005/11/02 17:19:39 $
+ * @version $Revision: 1.52 $, $Date: 2005/11/05 13:43:20 $
  * @module schemeclient
  */
 
@@ -521,7 +524,192 @@ public class SchemeActions {
 			}
 		}
 		schemeGraph.setMakeNotifications(true);
-	} 
+	}
+	
+	public static void generateImage(SchemeGraph graph, SchemeElement se) throws ApplicationException {
+		Set<SchemeElement> schemeElements = se.getSchemeElements(false);
+		
+		if (schemeElements.isEmpty()) { // generate image from device and ports
+			int grid = graph.getGridSize();
+			int totalHeight = grid * 10;
+			List<DefaultGraphCell> insertedObjects = new LinkedList<DefaultGraphCell>();
+			
+			for (SchemeDevice device : se.getSchemeDevices(false)) {
+				List<AbstractSchemePort> inPorts = new LinkedList<AbstractSchemePort>();
+				List<AbstractSchemePort> outPorts = new LinkedList<AbstractSchemePort>();
+				
+				List<SchemePort> ports = new LinkedList<SchemePort>(device.getSchemePorts(false));
+				List<SchemeCablePort> cablePorts = new LinkedList<SchemeCablePort>(device.getSchemeCablePorts(false));
+				
+				Collections.sort(ports, new NumberedComparator<SchemePort>(
+						SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+				Collections.sort(cablePorts, new NumberedComparator<SchemeCablePort>(
+						SchemeCablePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+				
+				for (SchemePort port : ports) {
+					if (port.getDirectionType() == IdlDirectionType._IN) {
+						inPorts.add(port);
+					} else {
+						outPorts.add(port);
+					}
+				}
+				for (SchemeCablePort port : cablePorts) {
+					if (port.getDirectionType() == IdlDirectionType._IN) {
+						inPorts.add(port);
+					} else {
+						outPorts.add(port);
+					}
+				}
+				
+				int max = Math.max(1, Math.max(inPorts.size(), outPorts.size()));
+				
+				// create device cell
+				Rectangle bounds = new Rectangle(grid * 10, totalHeight, grid * 4, grid * (1 + max));
+				DeviceCell deviceCell = createDevice(graph, se.getLabel(), bounds, device.getId());
+				insertedObjects.add(deviceCell);
+				
+				int counter = 0;
+				for (AbstractSchemePort port : outPorts) {
+					Point p = graph.snap(new Point(bounds.x + bounds.width + grid, (int)(bounds.y + grid*(0.5 + (max - outPorts.size()) / 2 + counter++))));
+					
+					Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
+					if (port instanceof SchemeCablePort) {
+						CablePortCell portCell = SchemeActions.createCablePort(graph, deviceCell, p, port.getName(), port.getDirectionType(), color, port.getId());
+						insertedObjects.add(portCell);
+					} else {
+						PortCell portCell = SchemeActions.createPort(graph, deviceCell, p, port.getName(), port.getDirectionType(), color, port.getId());
+						insertedObjects.add(portCell);
+					}
+				}
+				counter = 0;
+				for (AbstractSchemePort port : inPorts) {
+					Point p = graph.snap(new Point(bounds.x - grid, (int)(bounds.y + grid*(0.5 + (max - inPorts.size()) / 2 + counter++))));
+					
+					Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
+					if (port instanceof SchemeCablePort) {
+						CablePortCell portCell = SchemeActions.createCablePort(graph, deviceCell, p, port.getName(), port.getDirectionType(), color, port.getId());
+						insertedObjects.add(portCell);
+					} else {
+						PortCell portCell = SchemeActions.createPort(graph, deviceCell, p, port.getName(), port.getDirectionType(), color, port.getId());
+						insertedObjects.add(portCell);
+					}
+				}
+				totalHeight = totalHeight + grid * (6 + max);
+			}
+			
+			//	fix PortEdges
+			List<Object> edges = new LinkedList<Object>();
+			for (Object cell : graph.getAll()) {
+				if (cell instanceof PortEdge) {
+					edges.add(cell);
+				}
+			}
+			graph.getGraphLayoutCache().toFront(edges.toArray());
+			
+			Object[] insertedCells = insertedObjects.toArray();
+			graph.setSelectionCells(insertedCells);
+			
+			CreateGroup.createGroup(graph, insertedCells, se.getId(), DeviceGroup.SCHEME_ELEMENT);
+			
+			// save image
+			SchemeImageResource res = SchemeObjectsFactory.createSchemeImageResource();
+			res.setData((List)graph.getArchiveableState());
+			se.setSchemeCell(res);
+
+		} else { // generate image from inner schemeElements
+			for (SchemeElement child : schemeElements) {
+				generateImage(graph, child);
+			}
+			
+			int leftCount = 0;
+			int rightCount = 0;
+			for (SchemeElement child : schemeElements) {
+				Point p;
+				int grid = graph.getGridSize();
+				Set<SchemeCablePort> cablePorts = child.getSchemeCablePortsRecursively(false);
+				if (!cablePorts.isEmpty()) {
+					if (cablePorts.iterator().next().getDirectionType() == IdlDirectionType._IN) {
+						p = new Point(grid * 8, grid * (leftCount * 20 + 6));
+						leftCount++;
+					} else {
+						p = new Point(grid * 28, grid * (rightCount * 20 + 6));
+						rightCount++;
+					}
+				} else {
+					p = new Point(grid * 18, grid * 25);
+					Log.debugMessage("No cable ports found during generate outer image", FINER);
+				}
+				
+				SchemeActions.openSchemeImageResource(graph, child.getSchemeCell(), true, p, false);
+			}
+			
+			for (SchemeLink link : se.getSchemeLinks(false)) {
+				PortCell sourcePortCell = findPortCellById(graph, link.getSourceAbstractSchemePortId());
+				PortCell targetPortCell = findPortCellById(graph, link.getTargetAbstractSchemePortId());
+				
+				PortView sourceView = null;
+				PortView targetView = null;
+					
+				try {
+					DefaultPort source = SchemeActions.getSuitablePort(sourcePortCell, link.getId());
+					sourceView = (PortView)graph.getGraphLayoutCache().getMapping(source, false);
+				} catch (CreateObjectException e) {
+					Log.errorMessage(e.getMessage());
+					return;
+				}
+				
+				try {
+					DefaultPort target = SchemeActions.getSuitablePort(targetPortCell, link.getId());
+					targetView = (PortView)graph.getGraphLayoutCache().getMapping(target, false);
+				} catch (CreateObjectException e) {
+					Log.errorMessage(e.getMessage());
+					return;
+				}
+				
+				// TODO some more reasonable point
+				Point p = new Point(100, 100); 
+				int d = graph.getGridSize();
+				Point p1 = sourceView == null ? new Point(p.x - 2 * d, p.y) : sourceView.getBounds().getLocation();
+				Point p2 = targetView == null ? new Point(p.x + 2 * d, p.y) : targetView.getBounds().getLocation();
+				
+				DefaultLink linkCell = SchemeActions.createLink(graph, sourceView, targetView, p1, p2, link.getId(), true);
+				linkCell.setUserObject(link.getName());
+			}
+			
+			// all cablePorts go up level and fix PortEdges
+			List<Object> edges = new LinkedList<Object>();
+			for (Object cell : graph.getAll()) {
+				if (cell instanceof CablePortCell) {
+					CreateBlockPortAction.create(graph, cell);
+				} else if (cell instanceof PortEdge) {
+					edges.add(cell);
+				}
+			}
+			graph.getGraphLayoutCache().toFront(edges.toArray());
+			
+			ArrayList<BlockPortCell> blockports_in = new ArrayList<BlockPortCell>();
+			ArrayList<BlockPortCell> blockports_out = new ArrayList<BlockPortCell>();
+			BlockPortCell[] bpcs = GraphActions.findTopLevelPorts(graph, graph.getAll());
+			for (int i = 0; i < bpcs.length; i++) {
+				AbstractSchemePort port = bpcs[i].getAbstractSchemePort();
+				if (port.getDirectionType() == IdlDirectionType._IN)
+					blockports_in.add(bpcs[i]);
+				else
+					blockports_out.add(bpcs[i]);
+			}
+			
+			SchemeImageResource res = SchemeObjectsFactory.createSchemeImageResource();
+			res.setData((List)graph.getArchiveableState());
+			se.setSchemeCell(res);
+			
+			// create UGO
+			CreateUgo.createMuffUgo(se, graph, null, EMPTY, blockports_in, blockports_out);
+			SchemeImageResource ugo = SchemeObjectsFactory.createSchemeImageResource();
+			ugo.setData((List)graph.getArchiveableState());
+			se.setUgoCell(ugo);
+		}
+		GraphActions.clearGraph(graph);
+	}
 	
 	public static Set<Identifier> getPlacedObjects(SchemeGraph graph) {
 		graph.setMakeNotifications(false);
@@ -694,6 +882,8 @@ public class SchemeActions {
 		graph.getModel().insert(new Object[] { edge }, viewMap, cs, null, null);
 		graph.addSelectionCell(visualPort);
 
+		graph.getGraphLayoutCache().toFront(new Object[] { edge });
+		
 		return visualPort;
 	}
 	
@@ -1143,7 +1333,7 @@ public class SchemeActions {
 		}
 	}
 	
-	public static  DefaultPort getSuitablePort(CablePortCell sourcePortCell, Identifier cableId) throws CreateObjectException {
+	public static  DefaultPort getSuitablePort(DefaultGraphCell sourcePortCell, Identifier cableId) throws CreateObjectException {
 		if (sourcePortCell != null) {
 			for (Object obj : sourcePortCell.getChildren()) {
 				DefaultPort defaultPort = (DefaultPort)obj;
@@ -1156,6 +1346,13 @@ public class SchemeActions {
 						 if (link instanceof DefaultCableLink && ((DefaultCableLink)link).getSchemeCableLinkId().equals(cableId)) {
 							 JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 										LangModelScheme.getString("Message.information.schemecablelink_already_connected"),  //$NON-NLS-1$
+										LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
+										JOptionPane.INFORMATION_MESSAGE);
+							 throw new CreateObjectException("SchemeCableLink already connected");
+						 }
+						 if (link instanceof DefaultLink && ((DefaultLink)link).getSchemeLinkId().equals(cableId)) {
+							 JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+										LangModelScheme.getString("Message.information.schemelink_already_connected"),  //$NON-NLS-1$
 										LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
 										JOptionPane.INFORMATION_MESSAGE);
 							 throw new CreateObjectException("SchemeCableLink already connected");

@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.15 2005/10/31 12:30:25 bass Exp $
+ * $Id: ImportExportCommand.java,v 1.16 2005/11/05 13:43:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
@@ -79,6 +80,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemePort;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.util.Log;
 
@@ -89,6 +91,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 	protected static final String UCM_SPLIT_MUFF = "UCM.codename.split_muff";
 	protected static final String UCM_STRAIGHT_MUFF = "UCM.codename.straight_muff";
 	protected static final String UCM_SCHEMED_EQT = "UCM_SCHEMED";
+	protected static final String UCM_ODF_EQT = "UCM_ODF";
 	
 	protected static final String ID_PREFIX = "id";
 	protected static File currentDirectory = new File("/export");
@@ -381,6 +384,24 @@ public abstract class ImportExportCommand extends AbstractCommand {
 								}	
 							}
 						}
+						
+						if (xmlSchemeElement.isSetProtoEquipmentId()) {
+							XmlIdentifier protoEqId = xmlSchemeElement.getProtoEquipmentId();
+							if (protoEqId.getStringValue().equals(UCM_ODF_EQT)) {
+								xmlSchemeElement.unsetProtoEquipmentId();
+								
+								final TypicalCondition condition = new TypicalCondition(
+										EquipmentType.CABLE_PANEL, 
+										OperationSort.OPERATION_EQUALS, 
+										ObjectEntities.PROTOEQUIPMENT_CODE, 
+										StorableObjectWrapper.COLUMN_TYPE_CODE);
+								final Set<ProtoEquipment> protoEquipments = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+								if (!protoEquipments.isEmpty()) {
+									protoEquipments.iterator().next().getId().getXmlTransferable(xmlSchemeElement.addNewProtoEquipmentId(), importType);
+								}
+							}
+						}
+						
 						// TODO if SE moved to another scheme - substitute it id to xmlSE
 						// TODO do it for SCL, SL, SE, S
 						if (schemeElement != null) {
@@ -795,6 +816,43 @@ public abstract class ImportExportCommand extends AbstractCommand {
 									schemeCablePort.unsetCablePortTypeId();
 								}
 								portType.getId().getXmlTransferable(schemeCablePort.addNewCablePortTypeId(), importType);
+							}
+							break;
+						case POST_IMPORT:
+							break;
+						case EXPORT:
+							break;
+						}
+					}
+				});				
+			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
+		
+		final TypicalCondition condition2 = new TypicalCondition(PortTypeKind._PORT_KIND_SIMPLE,
+				0,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.PORT_TYPE_CODE,
+				PortTypeWrapper.COLUMN_KIND);
+		try {
+			final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+			if (!portTypes.isEmpty()) {
+				final PortType portType = portTypes.iterator().next(); 
+				XmlComplementorRegistry.registerComplementor(SCHEMEPORT_CODE, new XmlComplementor() {
+					public void complementStorableObject(
+							final XmlStorableObject storableObject,
+							final String importType,
+							final ComplementationMode mode)
+					throws CreateObjectException, UpdateObjectException {
+						switch (mode) {
+						case PRE_IMPORT:
+							if (importType.equals(UCM_IMPORT)) {
+								final XmlSchemePort schemePort = (XmlSchemePort) storableObject;
+								if (schemePort.isSetPortTypeId()) {
+									schemePort.unsetPortTypeId();
+								}
+								portType.getId().getXmlTransferable(schemePort.addNewPortTypeId(), importType);
 							}
 							break;
 						case POST_IMPORT:

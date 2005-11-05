@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.36 2005/11/02 17:19:08 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.37 2005/11/05 13:43:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -136,12 +136,12 @@ public class SchemeImportCommand extends ImportExportCommand {
 					errorMessages.add(LangModelScheme.getString("Message.warning.cable_no_target") + schemeCableLink.getName()); //$NON-NLS-1$
 				}
 			}
-			if (errorMessages.size() > 0) {
-				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
-						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
-					throw new CreateObjectException("incorrect input data");
-				}
-			}
+//			if (errorMessages.size() > 0) {
+//				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
+//						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
+//					throw new CreateObjectException("incorrect input data");
+//				}
+//			}
 			
 			if (xmlScheme.getImportType().equals(UCM_IMPORT)) {
 				try {

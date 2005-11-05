@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUCMConverter.java,v 1.12 2005/10/31 12:30:26 bass Exp $
+ * $Id: ImportUCMConverter.java,v 1.13 2005/11/05 13:43:20 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -165,7 +165,7 @@ public class ImportUCMConverter {
 	
 	void parseSchemeElements(Scheme scheme) throws ApplicationException {
 		this.objectsToDelete = new HashSet<Identifiable>();
-		initMuffs();
+//		initMuffs();
 		initVrms();
 		initPlacedObjects(scheme);
 		
@@ -251,8 +251,13 @@ public class ImportUCMConverter {
 						schemeElement.setUgoCell(internalScheme.getUgoCell().clone());
 					}
 				} else if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
+					
+					SchemeActions.generateImage(invisibleGraph, schemeElement);
+					
+					
+					
 //					ProtoEquipment protoEquipment = schemeElement.getProtoEquipment();
-					Set<SchemeCablePort> existingCablePorts = schemeElement.getSchemeCablePortsRecursively(false);
+/*					Set<SchemeCablePort> existingCablePorts = schemeElement.getSchemeCablePortsRecursively(false);
 					if (existingCablePorts.size() < 3) { // straight muff
 						// count how many threads in connected fibers
 						int maxFibers = 8;
@@ -358,7 +363,7 @@ public class ImportUCMConverter {
 						if (existingCablePorts.size() > 0) {
 							new CreateTopLevelSchemeAction(schemePane).execute();
 						}
-					} 
+					}*/ 
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -526,6 +531,7 @@ public class ImportUCMConverter {
 		this.placedObjectIds = SchemeActions.getPlacedObjects(this.pane.getGraph());
 	}
 	
+	/*
 	private void initMuffs() throws ApplicationException {
 		final TypicalCondition condition1 = new TypicalCondition(EquipmentType.MUFF, 
 				OperationSort.OPERATION_EQUALS, 
@@ -558,7 +564,7 @@ public class ImportUCMConverter {
 			Log.debugMessage("No straight muffs found", Level.WARNING);
 			throw new CreateObjectException("No straight muffs found");
 		}
-	}
+	}*/
 	
 	private void initVrms() throws ApplicationException {
 		final TypicalCondition condition1 = new TypicalCondition(EquipmentType.CABLE_PANEL, 
