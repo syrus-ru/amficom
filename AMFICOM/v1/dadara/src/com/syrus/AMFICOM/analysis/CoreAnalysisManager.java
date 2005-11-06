@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.131 2005/10/31 12:30:20 bass Exp $
+ * $Id: CoreAnalysisManager.java,v 1.132 2005/11/06 11:42:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,14 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.131 $, $Date: 2005/10/31 12:30:20 $
+ * @author $Author: saa $
+ * @version $Revision: 1.132 $, $Date: 2005/11/06 11:42:50 $
  * @module
  */
 
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_LINEBREAK;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
+
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 
@@ -332,6 +333,7 @@ public class CoreAnalysisManager
 		Log.debugMessage("raw.length=" + trace.getRawTrace().length
 				+ " filtered.traceLength=" + trace.getFilteredTrace().length
 				+ " res.traceLength=" + res.traceLength, FINER);
+
 		return res;
 	}
 
@@ -400,6 +402,7 @@ public class CoreAnalysisManager
 		Log.debugMessage("y.length=" + tpa.y.length
 				+ " tpa.traceLength=" + tpa.traceLength
 				+ " rse.traceLength=" + traceLength, FINER);
+
 		long t2 = System.nanoTime();
 
 		// фитируем
@@ -563,7 +566,7 @@ public class CoreAnalysisManager
 
 	/**
 	 * Выполняет пре-фильтрацию, а затем анализ одной рефлектограммы
-	 * XXX: пометить deprecated?
+	 * XXX: пометить deprecated? используется в mcm
 	 * @param bs исходная р/г
 	 * @param ap параметры анализа
 	 * @return результаты анализа {@link AnalysisResult}
