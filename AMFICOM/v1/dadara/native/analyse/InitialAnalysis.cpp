@@ -14,7 +14,7 @@
 
 static	SineWavelet wavelet; // используемый вейвлет
 
-//#define SEARCH_EOT_BY_WLET
+#define SEARCH_EOT_BY_WLET
 //#define SPLICE_CAN_BE_EOT
 //#define NONID_CAN_BE_EOT
 
@@ -360,15 +360,6 @@ return;}
 #ifdef SEARCH_EOT_BY_WLET
 	int scaleEOT = scaleB * 10;
 	wavelet.transform(scaleEOT, data, data_length, 0, data_length - 1, TEMP + 0, getWLetNorma(scaleEOT));
-	/*
-	{
-		int i;
-		FILE *f = fopen("image.tmp", "w");
-		assert(f);
-		for (i = 0; i < data_length; i++)
-			fprintf(f, "%d %g %g\n", i, data[i], TEMP[i]);
-		fclose(f);
-	}// */
 
 	int eotByFall = -1;
 	{
@@ -377,9 +368,31 @@ return;}
 			if (eotByFall < 0 || TEMP[i] < TEMP[eotByFall])
 				eotByFall = i;
 		}
+		int tuneFactor = 6; // XXX: tune parameter, suits testDB when is between 3 .. 80
+		int iFrom = eotByFall - scaleEOT * tuneFactor;
+		if (iFrom < 0) iFrom = 0;
+		TEMP[iFrom] = 0; // just a visualization code
+		bool changeSign = false;
+		for (i = iFrom; i < eotByFall; i++)
+			if (TEMP[i] > 0)
+				changeSign = true;
+		if (changeSign)
+			eotByFall -= scaleEOT;
 	}
 	if (eotByFall > lastPoint)
 		eotByFall = lastPoint;
+
+#ifdef DEBUG_INITIAL_ANALYSIS
+	///*
+	{
+		int i;
+		FILE *f = fopen("image.tmp", "w");
+		assert(f);
+		for (i = 0; i < data_length; i++)
+			fprintf(f, "%d %g %g\n", i, data[i], TEMP[i]);
+		fclose(f);
+	}// */
+#endif
 
     processEndOfTrace(eotByFall);// если ни одного коннектора не будет найдено, то удалятся все события правее softEotLength
 #else
@@ -1227,6 +1240,11 @@ void InitialAnalysis::processEndOfTrace(int softEotLength)
 			ev->type = EventParams::ENDOFTRACE;
 	break;
 		}
+#ifdef SEARCH_EOT_BY_WLET
+		if (ev->begin < softEotLength) {
+	break;
+		}
+#endif
 		events->slowRemove(i);
 	}
 }
@@ -1447,6 +1465,7 @@ void InitialAnalysis::performTransformationOnly(double* data, int begin, int end
 	assert(begin >= 0);
 	assert(end <= lastPoint + 1);
 	wavelet.transform(freq, data, lastPoint + 1, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
+	//wavelet.transform(freq, data, data_length, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
 }
 //------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getMinScale() {
