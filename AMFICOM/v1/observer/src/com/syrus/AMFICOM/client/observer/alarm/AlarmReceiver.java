@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmReceiver.java,v 1.4 2005/10/31 12:30:02 bass Exp $
+ * $Id: AlarmReceiver.java,v 1.5 2005/11/06 14:37:32 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,14 +52,12 @@ public class AlarmReceiver implements PopupMessageReceiver {
 	}
 
 	public void receiveMessage(Event event) {
+		PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent)event;
+		Identifier resultId = popupNotificationEvent.getResultId();
+		double optDistance = popupNotificationEvent.getMismatchOpticalDistance();
 		
-//		PopupNotificationEvent popupNotificationEvent = (PopupNotificationEvent)event;
-//		Identifier resultId = popupNotificationEvent.getResultId();
-//		double optDistance = popupNotificationEvent.getMismatchOpticalDistance();
-		
-		Identifier resultId = new Identifier("Result_985");
-		
-		double optDistance = 1000;
+//		Identifier resultId = new Identifier("Result_985");
+//		double optDistance = 1000;
 		
 		try {
 			Result result = StorableObjectPool.getStorableObject(resultId, true);

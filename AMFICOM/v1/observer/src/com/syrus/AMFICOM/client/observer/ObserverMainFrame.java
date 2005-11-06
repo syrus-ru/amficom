@@ -362,7 +362,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 	@Override
 	public void loggedIn() {
-		AlarmReceiver.getInstance().setContext(this.aContext);
+//		AlarmReceiver.getInstance().setContext(this.aContext);
 
 		Command command = new OpenSchemeViewCommand(this.aContext);
 		command.execute();
