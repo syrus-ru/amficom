@@ -135,7 +135,8 @@ private:
     int  processIfIsNonId(int i, ArrList& splashes);// поиск неид. областей (есть и другой код, создающий неид. области)
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
     void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2, double l);
-    void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
+    void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2, double aMax);
+    void setUnrecognizedParamsBySplashes( EventParams& ep, int begin, int end, double aMax);
 
 	// этап 3.2. - уточнение начал и концов
 	void processEventsBeginsEnds(double *f_wletTEMP); // уточн€ет начала и концы событий
@@ -143,7 +144,7 @@ private:
 	void correctConnectorFront(EventParams* connector);
 
 	// ====== ѕя“џ… Ё“јѕ јЌјЋ»«ј - ќЅ–јЅќ“ ј —ќЅџ“»… =======
-    void processEndOfTrace();  // удалить все событи€ после последнего отражательного и переименовать отражательное в "конец волокна"
+    void processEndOfTrace(int softEotLength);
     void addLinearPartsBetweenEvents();
     void excludeShortLinesBetweenConnectors(double* data, int szc);
     void excludeShortLinesBetweenLossAndConnectors(double* arr, int szc);// удалить небольшие линейные участки , возникающие вследствие неточностей анализа между потер€ми пред коннекторами

@@ -14,6 +14,10 @@
 
 static	SineWavelet wavelet; // используемый вейвлет
 
+//#define SEARCH_EOT_BY_WLET
+//#define SPLICE_CAN_BE_EOT
+//#define NONID_CAN_BE_EOT
+
 #define xsign(f) ((f)>=0?1:-1)
 inline double fmin(double a, double b) { return a < b ? a : b; }
 inline double fmax(double a, double b) { return a > b ? a : b; }
@@ -100,7 +104,11 @@ InitialAnalysis::InitialAnalysis(
     WaveletDataConvolution(noise, lastPoint+1, scaleB);
 
 	prf_b("IA: analyse");
+#ifdef SEARCH_EOT_BY_WLET
+	double *f_wletTEMP	= new double[data_length]; // space for temporal wavelet image parts
+#else
 	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
+#endif
 	performAnalysis(f_wletTEMP, scaleB, scaleFactor);
 	delete[] f_wletTEMP;
 #ifdef DEBUG_INITIAL_ANALYSIS
@@ -349,7 +357,34 @@ return;}
 	accSpl.disposeAll(); // очищаем массив ArrList
 
 	// ====== ПЯТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
-    processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
+#ifdef SEARCH_EOT_BY_WLET
+	int scaleEOT = scaleB * 10;
+	wavelet.transform(scaleEOT, data, data_length, 0, data_length - 1, TEMP + 0, getWLetNorma(scaleEOT));
+	/*
+	{
+		int i;
+		FILE *f = fopen("image.tmp", "w");
+		assert(f);
+		for (i = 0; i < data_length; i++)
+			fprintf(f, "%d %g %g\n", i, data[i], TEMP[i]);
+		fclose(f);
+	}// */
+
+	int eotByFall = -1;
+	{
+		int i;
+		for (i = 0; i < lastPoint + scaleEOT && i < data_length; i++) {
+			if (eotByFall < 0 || TEMP[i] < TEMP[eotByFall])
+				eotByFall = i;
+		}
+	}
+	if (eotByFall > lastPoint)
+		eotByFall = lastPoint;
+
+    processEndOfTrace(eotByFall);// если ни одного коннектора не будет найдено, то удалятся все события правее softEotLength
+#else
+	processEndOfTrace(0);
+#endif
     addLinearPartsBetweenEvents();
     excludeShortLinesBetweenConnectors(data, scaleB);
     excludeShortLinesBetweenLossAndConnectors(data, scaleB); // scaleB  - масштаб вейвлета
@@ -466,15 +501,18 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
     if(splashes.getLength() == 0)
 return;
 	// напоследок добавляем фиктивный всплеск вниз так как из за резкого спада до нуля в конце всплеск может не успеть уйти вниз достаточно и конец не будет распознан
+	/*
 	Splash* splend = (Splash*)splashes[splashes.getLength()-1];
     if(splend->sign > 0)
     {   Splash* spl = new Splash(wlet_width);
     	spl->begin_thr 		= lastPoint+1; spl->begin_weld 	= lastPoint+1; spl->begin_conn 	= lastPoint+1;
         spl->end_thr 		= lastPoint+2; spl->end_weld 	= lastPoint+2; spl->end_conn 	= lastPoint+2;
+		//spl->f_extr			= 0;
 		spl->sign			= -1;
 		// fillSplashRParameters() не вызываем, т.к. это невозможно, да и ни к чему
         splashes.add(spl);
     }
+	*/
 #ifdef debug_lines
     // отображаем пороги
     xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
@@ -582,7 +620,7 @@ void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes
 return;
     int i0 = processDeadZone(splashes, dzMaxDist);// ищем мёртвую зону
 	// ищем остальные коннекторы  и сварки
-    for(int i = i0; i<splashes.getLength()-1; i++) // XXX: < or <= ?
+    for(int i = i0; i<splashes.getLength(); i++)
     {
 	  EventParams *ep = 0;
 	  int len;
@@ -603,20 +641,25 @@ return;
       { i+= len - 1;
     continue;
       }
-      Splash* sp1 = (Splash*)splashes[i];
-      Splash* sp2 = (Splash*)splashes[i+1];
-      int dist = abs(sp2->begin_weld - sp1->end_weld);
-      // две сварки "+" и "-" очень близко
-      if( dist<rSSmall			// если всплески очень близко
-          && (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
-          && ( sp1->begin_weld != -1 && sp2->begin_weld != -1)// и при этом как минимум сварочные
-        )
-      {   EventParams *ep = new EventParams;
-          setUnrecognizedParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
-          events->add(ep);
-          i++;// потому что состоит из двух всплесков
+	  Splash* sp1 = (Splash*)splashes[i];
+	  if (i + 1 < splashes.getLength()) {
+		  Splash* sp2 = (Splash*)splashes[i+1];
+		  int dist = abs(sp2->begin_weld - sp1->end_weld);
+		  // две сварки "+" и "-" очень близко
+		  if( dist<rSSmall			// если всплески очень близко
+			  && (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
+			  && ( sp1->begin_weld != -1 && sp2->begin_weld != -1)// и при этом как минимум сварочные
+			)
+		  {   EventParams *ep = new EventParams;
+			  double v1 = fabs(sp1->f_extr);
+			  double v2 = fabs(sp2->f_extr);
+			  setUnrecognizedParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2,
+				  v1 > v2 ? v1 : v2);
+			  events->add(ep);
+			  i++;// потому что состоит из двух всплесков
 	continue;
-      }
+		  }
+	  }
       // сварка
       if( sp1->begin_weld!= -1 && fabs(sp1->end_weld-sp1->begin_weld)>1) //сварка
       {	EventParams *ep = new EventParams;
@@ -738,6 +781,10 @@ void InitialAnalysis::setSpliceParamsBySplash(EventParams& ep, Splash& sp)
 	ep.R = sp.r_weld;
 
 	ep.spliceSplash = &sp;
+
+#ifdef SPLICE_CAN_BE_EOT
+	ep.can_be_endoftrace = ep.R > 3 && (fabs(sp.f_extr) > minimalEnd || ep.end >= lastPoint - 1); // XXX: very rough way
+#endif
 }
 //------------------------------------------------------------------------------------------------------------
 // Проводим разномасштабный авейвлет-анализ для уточнения положения сварок
@@ -1095,7 +1142,8 @@ int InitialAnalysis::processMaskedToNonId(int i, ArrList& splashes)
 			break;
 	}
 	EventParams &ep = *new EventParams;
-	setUnrecognizedParamsBySplashes(ep, *(Splash*)splashes[i], *(Splash*)splashes[j - 1]);
+	// aMax = 0, т.к. звон не должен интерпретироваться как конец волокна
+	setUnrecognizedParamsBySplashes(ep, *(Splash*)splashes[i], *(Splash*)splashes[j - 1], 0);
 	events->add(&ep);
 	return j - i;
 }
@@ -1145,22 +1193,25 @@ int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
 
 	// создаем неид. событие
 	EventParams &ep = *new EventParams;
-    ep.type = EventParams::UNRECOGNIZED;
-    ep.begin = eventBegin;
-    if(ep.begin<0) {ep.begin=0;}
-    ep.end = eventEnd;
-    if(ep.end>lastPoint) {ep.end=lastPoint;}
+	setUnrecognizedParamsBySplashes(ep, eventBegin, eventEnd, ampl);
 	events->add(&ep);
 	return j - i;
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
+void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2, double aMax )
+{
+	setUnrecognizedParamsBySplashes(ep, sp1.begin_thr, sp2.end_thr, aMax);
+}
+void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, int begin, int end, double aMax)
 {  ep.type = EventParams::UNRECOGNIZED;
-   ep.begin = sp1.begin_thr;
+   ep.begin = begin;
    if(ep.begin<0){ep.begin=0;}
-   ep.end = sp2.end_thr;
+   ep.end = end;
    if(ep.end>lastPoint){ep.end = lastPoint;}
    ep.spliceSplash = 0;
+#ifdef NONID_CAN_BE_EOT
+   ep.can_be_endoftrace = aMax > minimalEnd;
+#endif
 }
 // -------------------------------------------------------------------------------------------------
 //
@@ -1168,17 +1219,16 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& 
 //
 //------------------------------------------------------------------------------------------------------------
 // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
-void InitialAnalysis::processEndOfTrace()
-{   for(int i=events->getLength()-1; i>0; i--)
+void InitialAnalysis::processEndOfTrace(int softEotLength)
+{	for(int i=events->getLength()-1; i>0; i--)
 	{   EventParams* ev = (EventParams*)(*events)[i];
-    	if( !ev->can_be_endoftrace)  // true  может быть только у отражательного события
-        {   events->slowRemove(i);
-        }
-        else
-     	{	ev->type = EventParams::ENDOFTRACE;
-    break;
-        }
-    }
+		if (ev->can_be_endoftrace)
+		{
+			ev->type = EventParams::ENDOFTRACE;
+	break;
+		}
+		events->slowRemove(i);
+	}
 }
 //------------------------------------------------------------------------------------------------------------
 // ВАЖНО: предполагаем что линейных событий ещё нет ВООБЩЕ ! (иначе будет неправильно работать)
