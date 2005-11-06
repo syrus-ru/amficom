@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.20 2005/11/02 08:15:09 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.21 2005/11/06 11:38:33 saa Exp $
  *
  * Copyright њ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,10 +29,11 @@ import com.syrus.AMFICOM.analysis.dadara.events.HavingLoss;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/11/02 08:15:09 $
+ * @version $Revision: 1.21 $, $Date: 2005/11/06 11:38:33 $
  * @module analysis
  */
 
@@ -232,7 +233,13 @@ public class DetailedEventResource {
 				&& dataEvent != null && dataEvent instanceof HavingLoss) {
 //			Log.debugMessage("hasQK=" + perEvent.hasQK(perEventId),
 //					Level.FINEST);
-			if (perEvent.hasQK(perEventId)) {
+			if (perEventId >= perEvent.getNEvents()) {
+				// ѕроверка perEventId < perEvent.getNEvents() делаетс€ на случай несовпадени€ результатов анализа,
+				// полученных с сервера и результатов анализа на клиенте. (¬едь клиент все равно 'переделывает' анализ, хоть это и не очень здорово)
+				Log.errorMessage("perEventId >= perEvent.getNEvents(): seems that local analysis gave result different from loaded one. Trying to ignore the problem...");
+				setQi(DASH);
+				setKi(DASH);
+			} else if (perEvent.hasQK(perEventId)) {
 				setQi(String.valueOf(MathRef.round_2(perEvent.getQ(perEventId))));
 				setKi(String.valueOf(MathRef.round_2(perEvent.getK(perEventId))));
 			} else {
