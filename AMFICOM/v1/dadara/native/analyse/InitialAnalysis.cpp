@@ -1237,7 +1237,6 @@ void InitialAnalysis::processEndOfTrace(int softEotLength)
 	{   EventParams* ev = (EventParams*)(*events)[i];
 		if (ev->can_be_endoftrace)
 		{
-			ev->type = EventParams::ENDOFTRACE;
 	break;
 		}
 #ifdef SEARCH_EOT_BY_WLET
@@ -1247,6 +1246,8 @@ void InitialAnalysis::processEndOfTrace(int softEotLength)
 #endif
 		events->slowRemove(i);
 	}
+	if (i != 0)
+		((EventParams*)(*events)[i])->type = EventParams::ENDOFTRACE;
 }
 //------------------------------------------------------------------------------------------------------------
 // ВАЖНО: предполагаем что линейных событий ещё нет ВООБЩЕ ! (иначе будет неправильно работать)
