@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.68 2005/10/25 19:53:15 bass Exp $
+ * $Id: Domain.java,v 1.69 2005/11/06 12:55:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/10/25 19:53:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.69 $, $Date: 2005/11/06 12:55:05 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -230,12 +230,20 @@ public final class Domain extends DomainMember<Domain>
 	 *
 	 * @param domain
 	 * @return true if this is child of domain, false otherwise
+	 * @throws ApplicationException 
 	 */
-	public boolean isChild(final Domain domain) {
+	public boolean isChild(final Domain domain) 
+	throws ApplicationException {
 		/**
 		 * calculate parent tree
 		 */
-		return this.domainId.equals(domain);
+		final boolean child = this.domainId.equals(domain);
+		if (!child && !this.domainId.isVoid()) {
+			final Domain parentDomain = 
+				StorableObjectPool.getStorableObject(this.domainId, true);
+			return parentDomain.isChild(domain);
+		}
+		return child;
 	}	
 
 	public Identifier getParentDomainId() {
