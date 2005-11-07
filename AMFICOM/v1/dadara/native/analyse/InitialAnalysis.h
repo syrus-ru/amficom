@@ -134,7 +134,7 @@ private:
     int  processMaskedToNonId(int i, ArrList& splashes);// поиск неид. областей по маскированным областям - проверка до проверки коннекторов
     int  processIfIsNonId(int i, ArrList& splashes);// поиск неид. областей (есть и другой код, создающий неид. области)
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
-    void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2, double l);
+    void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash* sp2p, double l); // sp2p may be null (event ends at eol)
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2, double aMax);
     void setUnrecognizedParamsBySplashes( EventParams& ep, int begin, int end, double aMax);
 

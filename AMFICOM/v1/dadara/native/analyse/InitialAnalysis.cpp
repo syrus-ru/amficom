@@ -996,28 +996,35 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 		return ret;
 	double distCrit = fabs(sp1->f_extr) > rACrit ? rSBig : rSSmall;
 
-	for (int j = i + 1; j < splashes.getLength(); j++) {
-		Splash *tmp = (Splash*)splashes[j];
-		double ltmp = fabs(tmp->begin_thr - sp1->end_thr);
+	int splLen = splashes.getLength();
+	for (int j = i + 1; j <= splLen; j++) {
+		// обрабатываем как реальные всплески, так и виртуальный всплеск вниз в конце волокна
+		Splash *tmp1 = j < splLen ? (Splash*)splashes[j] : 0;
+		int tmp_begin = tmp1 ? tmp1->begin_thr : lastPoint;
+		int tmp_sign = tmp1 ? tmp1->sign : -1;
+		bool tmp_hasConnAmpl = tmp1 ? tmp1->begin_conn != -1 : true;
+		bool tmp_hasWeldAmpl = tmp1 ? tmp1->begin_weld != -1 : true;
+
+		double ltmp = fabs(tmp_begin - sp1->end_thr);
 		if (ltmp > distCrit) // достигли макс. протяжености
 	break;
-		if (tmp->sign > 0) { // подъем
-			if (tmp->begin_conn != -1)
+		if (tmp_sign > 0) { // подъем
+			if (tmp_hasConnAmpl)
 	break; // подъем конн. и выше - это уже не наш коннектор
 			else
 	continue; // подъем меньше конн. - игнорируем; XXX: вообще говоря, нужнее всего игнорировать фиктивные подъемы, возникающие из-за centerWletImage, а эту в-ну лучше рассчитывать из наклона и ширины в/л, а не брать такую грубую оценку как эта
 		}
 		// спад в пределах макс. протяженности
-		if (tmp->begin_conn != -1) {
+		if (tmp_hasConnAmpl) {
 			// коннекторной амплитуды
 			ret = j - i + 1;
-			sp2 = tmp;
+			sp2 = tmp1;
 			l12 = ltmp;
 	break; // на нем и останавливаемся
-		} else if (tmp->begin_weld != -1) {
+		} else if (tmp_hasWeldAmpl) {
 			// сварочной амплитуды - кандидат на спад
 			ret = j - i + 1;
-			sp2 = tmp;
+			sp2 = tmp1;
 			l12 = ltmp;
 	continue; // не останавливаемся, продолжаем поиск
 		}
@@ -1026,7 +1033,7 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 	if (ret == 0)
 		return ret;
 	ep = new EventParams;
-	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2, l12 );
+	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, sp2, l12 ); // sp2 may be null
 	//correctConnectorFront(ep); // уточняем фронт коннекора
 #ifdef debug_lines
 	double begin = ep->begin, end = ep->end;
@@ -1035,18 +1042,23 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 	return ret;
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2, double l)
+void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash* sp2p, double l)
 {   double r1s, r1b, r2, r3s, r3b, rmin;
     ep.type = EventParams::CONNECTOR;
     ep.begin = sp1.begin_thr;
     if(ep.begin<0){ep.begin=0;}
-    ep.end = sp2.end_thr;
-    if(sp2.begin_conn != -1 && sp2.sign > 0)// если это начало нового коннектора
-    { ep.end = sp2.begin_thr;// если два коннектора рядом, то конец первого совпадает с началом следующего
-    }
-    if(ep.end>lastPoint)
-    { ep.end = lastPoint;
-    }
+	
+	if (sp2p) {
+		ep.end = sp2p->end_thr;
+		if(sp2p->begin_conn != -1 && sp2p->sign > 0) {// если это начало нового коннектора
+			ep.end = sp2p->begin_thr;// если два коннектора рядом, то конец первого совпадает с началом следующего
+		}
+		if(ep.end>lastPoint) {
+			ep.end = lastPoint;
+		}
+	} else {
+		ep.end = lastPoint;
+	}
 	//// remove this
     //double max1 = -1, max2 = -1, max3 = -1;
     //int i;
@@ -1067,7 +1079,7 @@ void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1,
 	r2  = sp1.r_weld;
 
     assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
-	int av_scale = (sp1.scale + sp2.scale) / 2; // используем средний масштаб для определения R3-параметров. XXX: возможно, надо использовать максимальный либо начальный
+	int av_scale = sp2p ? (sp1.scale + sp2p->scale) / 2 : sp1.scale; // используем средний масштаб для определения R3-параметров. XXX: возможно, надо использовать максимальный либо начальный
     r3s = r2*(rSSmall - l)/av_scale;
     r3b = r2*(rSBig - l)/av_scale;
     // может ли этот "коннектор" быть концом волокна?
