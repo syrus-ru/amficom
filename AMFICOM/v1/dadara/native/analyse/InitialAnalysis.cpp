@@ -327,7 +327,6 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFact
 	} //for (scaleIndex ... 
 	if(accSpl.getLength() == 0){
 return;}
-
 	// ====== ÒÐÅÒÈÉ ÝÒÀÏ - ÔÈËÜÒÐÀÖÈß ÂÑÏËÅÑÊÎÂ ======
 	// óäàëÿåì âñïëåñêè ïîñëå ñïàäîâ ïðè ìàñêèðîâàíèè
 	//removedMaskedSplashes(accSpl);
@@ -349,13 +348,11 @@ return;}
 			fflush(stderr);
 		}
 #endif
-
 	// ======= ×ÅÒÂÅÐÒÛÉ ÝÒÀÏ ÀÍÀËÈÇÀ - ÎÏÐÅÄÅËÅÍÈÅ ÑÎÁÛÒÈÉ ÏÎ ÂÑÏËÅÑÊÀÌ =======
 	findEventsBySplashes(TEMP, accSpl, scaleB); // ïî âûäåëåííûì âñïëåñêàì îïðåäåëèòü ñîáûòèÿ (ïî ñóòè - ñãðóïïèðîâàòü âñïëñåñêè)
 	processEventsBeginsEnds(TEMP); // óòî÷íèòü ãðàíèöû ñîáûòèé (ìîæåò èñïîëüçîâàòü accSpl ÷åðåç ññûëêè èç EventParams)
 	// èñïîëüçóåì ArrList è åãî îáúåêòû
 	accSpl.disposeAll(); // î÷èùàåì ìàññèâ ArrList
-
 	// ====== ÏßÒÛÉ ÝÒÀÏ ÀÍÀËÈÇÀ - ÎÁÐÀÁÎÒÊÀ ÑÎÁÛÒÈÉ =======
 #ifdef SEARCH_EOT_BY_WLET
 	int scaleEOT = scaleB * 10;
@@ -1258,7 +1255,7 @@ void InitialAnalysis::processEndOfTrace(int softEotLength) {
 #endif
 		events->slowRemove(i);
 	}
-	if (i != 0) {
+	if (i > 0) {
 		((EventParams*)(*events)[i])->type = EventParams::ENDOFTRACE;
 	}
 }
