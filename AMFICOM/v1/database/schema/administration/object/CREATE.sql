@@ -1,9 +1,9 @@
--- $Id: CREATE.sql,v 1.8 2005/10/20 11:08:35 bob Exp $
+-- $Id: CREATE.sql,v 1.9 2005/11/07 20:34:04 bass Exp $
 
 @@domain;
 @@server;
 @@mcm;
 @@serverprocess;
 @@role;
-@@systemuserrole
-@@permittionattributes
+@@systemuserrole;
+@@permissionattributes;

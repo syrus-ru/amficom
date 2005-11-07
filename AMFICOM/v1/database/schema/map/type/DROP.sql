@@ -1,9 +1,9 @@
--- $Id: DROP.sql,v 1.4 2005/08/03 15:24:00 max Exp $
+-- $Id: DROP.sql,v 1.5 2005/11/07 20:34:04 bass Exp $
 
-DROP TABLE PhysicalLinkType;
 DROP TABLE SiteNodeType;
+DROP TABLE PhysicalLinkType;
 DROP TABLE MapLibrary;
 
+DROP SEQUENCE SiteNodeType_Seq;
 DROP SEQUENCE PhysicalLinkType_Seq;
-DROP SEQUENCE sitenodetype_seq;
 DROP SEQUENCE MapLibrary_Seq;

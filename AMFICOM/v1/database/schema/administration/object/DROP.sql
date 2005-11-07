@@ -1,4 +1,4 @@
--- $Id: DROP.sql,v 1.8 2005/10/20 11:08:35 bob Exp $
+-- $Id: DROP.sql,v 1.9 2005/11/07 20:34:04 bass Exp $
 
 DROP TABLE PermissionAttributes;
 DROP TABLE SystemUserRoleLink;
@@ -8,9 +8,9 @@ DROP TABLE MCM;
 DROP TABLE Server;
 DROP TABLE Domain;
 
-DROP TABLE PermissionAttributes_seq;
-DROP SEQUENCE Role_seq; 
-DROP SEQUENCE ServerProcess_seq;
-DROP SEQUENCE mcm_seq;
-DROP SEQUENCE server_seq;
-DROP SEQUENCE domain_seq;
+DROP SEQUENCE PermissionAttributes_Seq;
+DROP SEQUENCE Role_Seq; 
+DROP SEQUENCE ServerProcess_Seq;
+DROP SEQUENCE MCM_Seq;
+DROP SEQUENCE Server_Seq;
+DROP SEQUENCE Domain_Seq;
