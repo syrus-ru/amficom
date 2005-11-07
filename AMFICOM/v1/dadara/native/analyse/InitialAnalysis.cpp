@@ -1232,11 +1232,11 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, int begi
 //
 //------------------------------------------------------------------------------------------------------------
 // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
-void InitialAnalysis::processEndOfTrace(int softEotLength)
-{	for(int i=events->getLength()-1; i>0; i--)
-	{   EventParams* ev = (EventParams*)(*events)[i];
-		if (ev->can_be_endoftrace)
-		{
+void InitialAnalysis::processEndOfTrace(int softEotLength) {
+	int i;
+	for(i = events->getLength() - 1; i > 0; i--) {
+		EventParams* ev = (EventParams*)(*events)[i];
+		if (ev->can_be_endoftrace) {
 	break;
 		}
 #ifdef SEARCH_EOT_BY_WLET
@@ -1246,8 +1246,9 @@ void InitialAnalysis::processEndOfTrace(int softEotLength)
 #endif
 		events->slowRemove(i);
 	}
-	if (i != 0)
+	if (i != 0) {
 		((EventParams*)(*events)[i])->type = EventParams::ENDOFTRACE;
+	}
 }
 //------------------------------------------------------------------------------------------------------------
 // ВАЖНО: предполагаем что линейных событий ещё нет ВООБЩЕ ! (иначе будет неправильно работать)
