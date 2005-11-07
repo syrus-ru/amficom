@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.11 2005/11/07 14:46:35 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.12 2005/11/07 15:09:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -227,9 +227,10 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int[] connPosOneOnly= {0, dist1 };
 		int[] connPosDZOnly	= {0 };
 		int distHalf = N / 2;
+		int[] connPos2Half	= {0, dist1, distHalf};
 
 		System.out.println("generating trace...");
-		PFTrace trace = generateTestTrace(N, N, connPos1, true);
+		PFTrace trace = generateTestTrace(N, N, connPos1, false);
 		System.out.println("Analysing trace...");
 		Collection<PFTrace> trColl =
 			new ArrayList<PFTrace>();
@@ -330,7 +331,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 		// Сверяем тип и дистанцию при обрыве с отражением, на лин. участке
 
-		PFTrace traceReflBreak2 = generateTestTrace(N, distHalf, connPosDZOnly, true);
+		PFTrace traceReflBreak2 = generateTestTrace(N, distHalf, connPos2Half, true);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -345,7 +346,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
-		assertEquals("" + res.getCoord() + " was expected to be " + (distHalf + 1),
+		assertEquals("Alarm coord",
 				res.getCoord(),
 				(distHalf + 1),
 				.0); // Дистанция события, где произошел обрыв
@@ -367,7 +368,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
-		assertEquals("" + res.getCoord() + " was expected to be " + (distHalf + 1),
+		assertEquals("Alarm coord",
 				res.getCoord(),
 				(distHalf + 1),
 				.0); // Дистанция события, где произошел обрыв
