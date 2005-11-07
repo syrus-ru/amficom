@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2005/10/27 10:58:11 arseniy Exp $
+# $Id: Makefile,v 1.2 2005/11/07 08:39:16 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -40,6 +40,9 @@ SOURCES := $(shell find $(SRCDIR) -name '*.java')
 
 
 $(LIBNAME):	.mach
+	$(CP) $(SRCDIR)/com/syrus/AMFICOM/resource/observer_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/observer.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/resource
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
@@ -73,5 +76,6 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(SOURCES) \
-		Map.properties mapeditor.properties \
-		mapeditor.sh
+		$(SRCDIR)/com/syrus/AMFICOM/resource/observer_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/observer.properties \
+		observer.sh
