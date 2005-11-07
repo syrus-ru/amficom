@@ -1,0 +1,48 @@
+<ext:root xmlns:ext="http://syrus.com/AMFICOM/extensions/">
+  <ext:extension xsi:type="man:managerExtensions" id="com.syrus.AMFICOM.manager.ManagerHandler" xmlns:man="http://syrus.com/AMFICOM/extensions/manager/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <man:managerResource xsi:type="man:uiHandler" id="Domain" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.DomainBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="Domain" beanFactoryClass="com.syrus.AMFICOM.manager.DomainBeanFactory"/>
+    <man:managerResource xsi:type="man:uiHandler" id="SystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.SystemUserBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="SystemUser" beanFactoryClass="com.syrus.AMFICOM.manager.UserBeanFactory"/>
+    <man:managerResource xsi:type="man:uiHandler" id="Server" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.ServerBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="Server" beanFactoryClass="com.syrus.AMFICOM.manager.ServerBeanFactory"/>
+    <man:managerResource xsi:type="man:uiHandler" id="KIS" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.KISBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="KIS" beanFactoryClass="com.syrus.AMFICOM.manager.RTUBeanFactory"/>
+    <man:managerResource xsi:type="man:uiHandler" id="MCM" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MCMBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="MCM" beanFactoryClass="com.syrus.AMFICOM.manager.MCMBeanFactory"/>
+    <man:managerResource xsi:type="man:uiHandler" id="Role" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RoleBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.RoleBeanFactory"/>
+    <man:managerResource xsi:type="man:beanFactory" id="PermissionAttributesSystemUser" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
+    <man:managerResource xsi:type="man:beanFactory" id="PermissionAttributesRole" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
+    <man:managerResource xsi:type="man:uiHandler" id="administrationSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="schemeSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="elementsEditorSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="mapEditorSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="optimizationSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="modelingSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="schedulerSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="analysisSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="researchSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="evaluationSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="observerSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="predictionSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="reportSystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="administrationRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="schemeRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="elementsEditorRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="mapEditorRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="optimizationRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="modelingRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="schedulerRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="analysisRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="researchRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="evaluationRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="observerRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="predictionRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="reportRole" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+    <man:managerResource xsi:type="man:uiHandler" id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.NetBeanFactory"/>
+    <man:managerResource xsi:type="man:uiHandler" id="Workstation" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI"/>
+    <man:managerResource xsi:type="man:beanFactory" id="Workstation" beanFactoryClass="com.syrus.AMFICOM.manager.WorkstationBeanFactory"/>
+  </ext:extension>
+</ext:root>

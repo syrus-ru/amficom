@@ -1,0 +1,20 @@
+
+<xs:schema 
+	xmlns:xs = "http://www.w3.org/2001/XMLSchema"
+	xmlns:e = "http://syrus.com/AMFICOM/extensions/"
+	targetNamespace = "http://syrus.com/AMFICOM/extensions/"
+	elementFormDefault = "qualified">
+
+    <xs:complexType name="extension-point" abstract="true">
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="root">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="extension" type="e:extension-point" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>
