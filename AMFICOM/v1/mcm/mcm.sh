@@ -1,8 +1,5 @@
 #!/bin/bash
 
-
-JAVA=$JAVA_HOME/bin/java
-
 LIB=$HOME/lib
 EXTLIB=$HOME/extlib
 
@@ -15,9 +12,11 @@ $ORACLE_HOME/jdbc/lib/orai18n.jar:\
 $ORACLE_HOME/jdbc/lib/classes12.jar:\
 $ORACLE_HOME/jdbc/lib/nls_charset12.jar
 
-TROVECLASSPATH=$EXTLIB/trove.jar
+TROVECLASSPATH=\
+$EXTLIB/trove.jar
 
-XMLCLASSPATH=$EXTLIB/xbean.jar:\
+XMLCLASSPATH=\
+$EXTLIB/xbean.jar:\
 $LIB/generalxml.jar:\
 $LIB/configurationxml.jar
 
@@ -35,7 +34,16 @@ $LIB/leserver_interface.jar:\
 $LIB/mserver_interface.jar:\
 $LIB/util.jar
 
+CLASSPATH=\
+${APPCLASSPATH}:\
+${ORACLECLASSPATH}:\
+${TROVECLASSPATH}:\
+${XMLCLASSPATH}
 
-JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"
-$JAVA -Xms128m -Xmx256m -server -ea -Djava.library.path=$TRANSCEIVER:$DADARA -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH com.syrus.AMFICOM.mcm.MeasurementControlModule
-# -setup
+APPNAME="mcm"
+JAVAFLAGS="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n"
+JAVAFLAGS="${JAVAFLAGS} -Xms128m -Xmx256m -server -ea -Djava.library.path=${TRANSCEIVER}:${DADARA}"
+MAIN="com.syrus.AMFICOM.mcm.MeasurementControlModule"
+#MAINOPTS="-setup"
+
+. `dirname $0`/amficomsrvrc

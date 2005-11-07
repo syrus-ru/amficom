@@ -2,8 +2,6 @@
 
 echo "*** Mscharserver v1.0.0 ``Bobruysk''"
 
-
-JAVA=java
 LIB=$HOME/lib
 EXTLIB=$HOME/extlib
 
@@ -13,9 +11,11 @@ $ORACLE_HOME/jdbc/lib/orai18n.jar:\
 $ORACLE_HOME/jdbc/lib/classes12.jar:\
 $ORACLE_HOME/jdbc/lib/nls_charset12.jar
 
-TROVECLASSPATH=$EXTLIB/trove.jar
+TROVECLASSPATH=\
+$EXTLIB/trove.jar
 
-XMLCLASSPATH=$EXTLIB/xbean.jar:\
+XMLCLASSPATH=\
+$EXTLIB/xbean.jar:\
 $EXTLIB/dom4j-1.6.jar:\
 $EXTLIB/jaxen-1.1-beta-6.jar:\
 $LIB/generalxml.jar:\
@@ -50,8 +50,17 @@ $LIB/util.jar:\
 $LIB/resource.jar:\
 $LIB/mapview.jar
 
+CLASSPATH=\
+${APPCLASSPATH}:\
+${ORACLECLASSPATH}:\
+${TROVECLASSPATH}:\
+${XMLCLASSPATH}:\
+${MAPINFOCLASSPATH}
 
-JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=n"
-$JAVA -Xms128m -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$XMLCLASSPATH:$MAPINFOCLASSPATH com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer &
-# Expands to the process ID of the most recently executed background (asynchronous) command.
-echo $! > `dirname $0`/mscharserver.pid
+APPNAME="mscharserver"
+JAVAFLAGS="-agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=n"
+JAVAFLAGS="${JAVAFLAGS} -Xms128m -Xmx256m -server -ea"
+MAIN="com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer"
+MAINOPTS=""
+
+. `dirname $0`/amficomsrvrc

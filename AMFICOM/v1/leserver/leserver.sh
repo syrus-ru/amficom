@@ -1,21 +1,23 @@
 #!/bin/bash
 
-
-JAVA=java
 LIB=$HOME/lib
 EXTLIB=$HOME/extlib
 
-ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
+ORACLECLASSPATH=\
+$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:\
 $ORACLE_HOME/jdbc/lib/orai18n.jar:\
 $ORACLE_HOME/jdbc/lib/classes12.jar:\
 $ORACLE_HOME/jdbc/lib/nls_charset12.jar
 
-TROVECLASSPATH=$EXTLIB/trove.jar
-
-XMLCLASSPATH=$EXTLIB/xbean.jar:\
+XMLCLASSPATH=\
+$EXTLIB/xbean.jar:\
 $LIB/generalxml.jar
 
-MAILCLASSPATH=$EXTLIB/activation.jar:\
+TROVECLASSPATH=\
+$EXTLIB/trove.jar
+
+MAILCLASSPATH=\
+$EXTLIB/activation.jar:\
 $EXTLIB/mail.jar
 
 APPCLASSPATH=\
@@ -31,5 +33,17 @@ $LIB/csbridge.jar:\
 $LIB/reflectometry.jar:\
 $LIB/util.jar
 
-$JAVA -Xms128m -Xmx256m -server -ea -classpath $APPCLASSPATH:$XMLCLASSPATH:$ORACLECLASSPATH:$TROVECLASSPATH:$MAILCLASSPATH com.syrus.AMFICOM.leserver.LoginEventServer &
-echo $! > `dirname $0`/leserver.pid
+CLASSPATH=\
+${APPCLASSPATH}:\
+${ORACLECLASSPATH}:\
+${TROVECLASSPATH}:\
+${MAILCLASSPATH}:\
+${XMLCLASSPATH}
+
+APPNAME="leserver"
+#JAVAFLAGS="-agentlib:jdwp=transport=dt_socket,address=8001,server=y,suspend=n"
+JAVAFLAGS="${JAVAFLAGS} -Xms128m -Xmx256m -server -ea"
+MAIN="com.syrus.AMFICOM.leserver.LoginEventServer"
+MAINOPTS=""
+
+. `dirname $0`/amficomsrvrc
