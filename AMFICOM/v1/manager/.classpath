@@ -14,5 +14,11 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/trove.jar"/>
+	<classpathentry kind="lib" path="managerext.jar"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry sourcepath="ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.0/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
+	<classpathentry kind="var" path="XMLBEANS_HOME/lib/xbean.jar"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/extension.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/extensions"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
