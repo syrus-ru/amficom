@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.12 2005/11/07 15:09:03 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.13 2005/11/07 16:16:17 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -228,6 +228,8 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int[] connPosDZOnly	= {0 };
 		int distHalf = N / 2;
 		int[] connPos2Half	= {0, dist1, distHalf};
+		double deltaReflectiveEotAtLinear = 0.0;
+		double deltaLossyEotAtLinear = 5.0;
 
 		System.out.println("generating trace...");
 		PFTrace trace = generateTestTrace(N, N, connPos1, false);
@@ -244,6 +246,12 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		res = ModelTraceComparer.compareMTAEToMTM(mtm.getMTAE(), mtm);
 		System.out.println("compare mtae: " + res);
 		assertTrue(res == null);
+
+		// готовим длину волокна по эталону
+		int etLength = mtm.getMTAE().getNEvents() > 0
+		? mtm.getMTAE().getSimpleEvent(
+				mtm.getMTAE().getNEvents() - 1).getBegin()
+		: 0; // если в эталоне нет событий, считаем его длину нулевой
 
 		// Сверяем исходную р/г
 
@@ -263,6 +271,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
+		assertTrue(res.getCoord() <= etLength);
 		assertTrue(res.getCoord() + "==" + dist1, res.getCoord() == dist1); // должна сработать привязка
 
 		// Сверяем наличие привязки при уходе начала коннектора влево за пределами маски
@@ -275,6 +284,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
+		assertTrue(res.getCoord() <= etLength);
 		assertTrue(res.getCoord() + "<" + dist1, res.getCoord() < dist1); // привязки уже быть не должно
 
 		// Сверяем наличие привязки при уходе начала коннектора влево в спорном случае
@@ -287,6 +297,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
+		assertTrue(res.getCoord() <= etLength);
 		assertTrue(res.getCoord() == dist1); // спорный случай. В текущей версии привязка быть должна
 
 		// Сверяем тип и дистанцию при обрыве с отражением, на участке коннектора
@@ -306,6 +317,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertTrue(res.getCoord() <= etLength);
 		assertTrue("" + res.getCoord() + " was expected to be " + dist1,
 				res.getCoord() == dist1); // Дистанция события, где произошел обрыв
 
@@ -326,12 +338,13 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertTrue(res.getCoord() <= etLength);
 		assertTrue("" + res.getCoord() + " was expected to be " + dist1,
 				res.getCoord() == dist1); // Дистанция события, где произошел обрыв
 
 		// Сверяем тип и дистанцию при обрыве с отражением, на лин. участке
 
-		PFTrace traceReflBreak2 = generateTestTrace(N, distHalf, connPos2Half, true);
+		PFTrace traceReflBreak2 = generateTestTrace(N, distHalf, connPos2Half, false);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -346,14 +359,15 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertTrue(res.getCoord() <= etLength);
 		assertEquals("Alarm coord",
 				res.getCoord(),
-				(distHalf + 1),
-				.0); // Дистанция события, где произошел обрыв
+				distHalf,
+				deltaReflectiveEotAtLinear); // Дистанция события, где произошел обрыв
 
 		// Сверяем тип и дистанцию при обрыве без отражения, на лин. участке
 
-		PFTrace traceLossBreak2 = generateTestTrace(N, distHalf, connPosDZOnly, false);
+		PFTrace traceLossBreak2 = generateTestTrace(N, distHalf, connPosDZOnly, true);
 		{
 			// Тут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
@@ -368,10 +382,11 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertTrue(res.getCoord() <= etLength);
 		assertEquals("Alarm coord",
 				res.getCoord(),
-				(distHalf + 1),
-				.0); // Дистанция события, где произошел обрыв
+				distHalf,
+				deltaLossyEotAtLinear); // Дистанция события, где произошел обрыв
 
 
 		// проверка создания объектов эталона и результата анализа
