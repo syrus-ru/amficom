@@ -1475,8 +1475,11 @@ void InitialAnalysis::performTransformationOnly(double* data, int begin, int end
 {	//int len = end - begin;
 	assert(begin >= 0);
 	assert(end <= lastPoint + 1);
+#ifdef SEARCH_EOT_BY_WLET
+	wavelet.transform(freq, data, data_length, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
+#else
 	wavelet.transform(freq, data, lastPoint + 1, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
-	//wavelet.transform(freq, data, data_length, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
+#endif
 }
 //------------------------------------------------------------------------------------------------------------
 int InitialAnalysis::getMinScale() {
