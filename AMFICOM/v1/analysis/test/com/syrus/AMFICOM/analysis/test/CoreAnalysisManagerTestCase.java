@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.10 2005/11/07 13:32:40 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.11 2005/11/07 14:46:35 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -224,7 +224,9 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int[] connPos1m4	= {0, dist1m4, N / 3 * 2};
 		int[] connPos1m5	= {0, dist1m5, N / 3 * 2};
 		int[] connPos1m6	= {0, dist1m6, N / 3 * 2};
-		int[] connPosOneOnly	= {0, dist1 };
+		int[] connPosOneOnly= {0, dist1 };
+		int[] connPosDZOnly	= {0 };
+		int distHalf = N / 2;
 
 		System.out.println("generating trace...");
 		PFTrace trace = generateTestTrace(N, N, connPos1, true);
@@ -286,18 +288,18 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() == dist1); // спорный случай. ¬ текущей версии прив€зка быть должна
 
-		// —вер€ем тип и дистанцию при обрыве с уходом вниз в конце волокна
+		// —вер€ем тип и дистанцию при обрыве с отражением, на участке коннектора
 
-		PFTrace traceLossBreak = generateTestTrace(N, dist1, connPosOneOnly, true);
+		PFTrace traceReflBreak1 = generateTestTrace(N, dist1, connPosOneOnly, false);
 		{
 			// “ут мы еще проверим результат собственно анализа, что длина трассы получена правильно
 			AnalysisResult aResult =
-				CoreAnalysisManager.performAnalysis(traceLossBreak, defaultAP);
+				CoreAnalysisManager.performAnalysis(traceReflBreak1, defaultAP);
 			int len = aResult.getMTAE().getModelTrace().getLength();
 			assertTrue("Too short trace length: " + len, len >= dist1);
 		}
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
-				traceLossBreak,
+				traceReflBreak1,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
@@ -305,6 +307,71 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
 		assertTrue("" + res.getCoord() + " was expected to be " + dist1,
 				res.getCoord() == dist1); // ƒистанци€ событи€, где произошел обрыв
+
+		// —вер€ем тип и дистанцию при обрыве без отражени€, на участке коннектора
+
+		PFTrace traceLossBreak1 = generateTestTrace(N, dist1, connPosDZOnly, false);
+		{
+			// “ут мы еще проверим результат собственно анализа, что длина трассы получена правильно
+			AnalysisResult aResult =
+				CoreAnalysisManager.performAnalysis(traceLossBreak1, defaultAP);
+			int len = aResult.getMTAE().getModelTrace().getLength();
+			assertTrue("Too short trace length: " + len, len >= dist1);
+		}
+		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
+				traceLossBreak1,
+				defaultAP, breakThresh, mtm, null));
+		System.out.println("compare diff: " + res);
+		assertTrue(res != null); // должен быть обнаружен аларм
+		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertTrue("" + res.getCoord() + " was expected to be " + dist1,
+				res.getCoord() == dist1); // ƒистанци€ событи€, где произошел обрыв
+
+		// —вер€ем тип и дистанцию при обрыве с отражением, на лин. участке
+
+		PFTrace traceReflBreak2 = generateTestTrace(N, distHalf, connPosDZOnly, true);
+		{
+			// “ут мы еще проверим результат собственно анализа, что длина трассы получена правильно
+			AnalysisResult aResult =
+				CoreAnalysisManager.performAnalysis(traceReflBreak2, defaultAP);
+			int len = aResult.getMTAE().getModelTrace().getLength();
+			assertTrue("Too short trace length: " + len, len >= distHalf);
+		}
+		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
+				traceReflBreak2,
+				defaultAP, breakThresh, mtm, null));
+		System.out.println("compare diff: " + res);
+		assertTrue(res != null); // должен быть обнаружен аларм
+		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertEquals("" + res.getCoord() + " was expected to be " + (distHalf + 1),
+				res.getCoord(),
+				(distHalf + 1),
+				.0); // ƒистанци€ событи€, где произошел обрыв
+
+		// —вер€ем тип и дистанцию при обрыве без отражени€, на лин. участке
+
+		PFTrace traceLossBreak2 = generateTestTrace(N, distHalf, connPosDZOnly, false);
+		{
+			// “ут мы еще проверим результат собственно анализа, что длина трассы получена правильно
+			AnalysisResult aResult =
+				CoreAnalysisManager.performAnalysis(traceLossBreak2, defaultAP);
+			int len = aResult.getMTAE().getModelTrace().getLength();
+			assertTrue("Too short trace length: " + len, len >= distHalf);
+		}
+		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
+				traceLossBreak2,
+				defaultAP, breakThresh, mtm, null));
+		System.out.println("compare diff: " + res);
+		assertTrue(res != null); // должен быть обнаружен аларм
+		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertEquals("" + res.getCoord() + " was expected to be " + (distHalf + 1),
+				res.getCoord(),
+				(distHalf + 1),
+				.0); // ƒистанци€ событи€, где произошел обрыв
+
 
 		// проверка создани€ объектов эталона и результата анализа
 
