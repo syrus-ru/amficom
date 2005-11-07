@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.9 2005/11/07 11:21:32 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.10 2005/11/07 13:32:40 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -149,34 +149,43 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		double v = ((pos * 27) % 37) / 36.0;
 		return v - 0.5;
 	}
-	private static double[] generateTestBellcoreYArray(int len, int[] connPos) {
+	private static double[] generateTestBellcoreYArray(
+			int len, int traceLength, int[] connPos) {
 		final int N = len;
 		double noise = 10.0;
 		double s2n = 5.0;
 		double resolution = 1.0; // m
 		double att = 0.22; // db/km
 		double y0 = noise + s2n + N * 0.5 * att / 1e3 * resolution;
-		final int NCONN = 3;
 		double[] connAmpl = {15, 10, 15};
 		int connLen = 50;
 		double[] ret = new double[N];
 		for (int i = 0; i < ret.length; i++) {
-			double yc = y0 - i * att / 1e3 * resolution;
-			for (int j = 0; j < NCONN; j++) {
+			double levelC = y0 - i * att / 1e3 * resolution;
+			double aC = i <= traceLength ? Math.pow(10.0, (levelC) / 5.0) : 0;
+			for (int j = 0; j < connPos.length; j++) {
 				if (i > connPos[j] && i < connPos[j] + connLen) {
-					yc += connAmpl[j];
+					aC += Math.pow(10.0, (connAmpl[j] + levelC) / 5.0);
 				}
 			}
-			double tmp = Math.pow(10.0, noise / 5.0) * xRand(i)
-				+ Math.pow(10.0, yc / 5.0);
+			double tmp = aC + Math.pow(10.0, noise / 5.0) * xRand(i);
 			ret[i] = 5.0 * Math.log10(tmp > 1.0 ? tmp : 1);
 		}
+		// shift to max = 0
+//		double vMax = ret[0];
+//		for (int i = 1; i < ret.length; i++) {
+//			if (vMax < ret[i])
+//				vMax = ret[i];
+//		}
+//		for (int i = 0; i < ret.length; i++) {
+//			ret[i] -= vMax;
+//		}
 		return ret;
 	}
 
-	private static PFTrace generateTestTrace(int len, int[] connPos,
+	private static PFTrace generateTestTrace(int dataLength, int traceLength, int[] connPos,
 			boolean dumpToFile) {
-		double[] y = generateTestBellcoreYArray(len, connPos);
+		double[] y = generateTestBellcoreYArray(dataLength, traceLength, connPos);
 		if (dumpToFile) {
 			PrintStream str;
 			try {
@@ -215,8 +224,10 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		int[] connPos1m4	= {0, dist1m4, N / 3 * 2};
 		int[] connPos1m5	= {0, dist1m5, N / 3 * 2};
 		int[] connPos1m6	= {0, dist1m6, N / 3 * 2};
+		int[] connPosOneOnly	= {0, dist1 };
+
 		System.out.println("generating trace...");
-		PFTrace trace = generateTestTrace(N, connPos1, true);
+		PFTrace trace = generateTestTrace(N, N, connPos1, true);
 		System.out.println("Analysing trace...");
 		Collection<PFTrace> trColl =
 			new ArrayList<PFTrace>();
@@ -241,7 +252,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 		// —вер€ем наличие прив€зки при уходе начала коннектора влево в пределах маски
 
-		PFTrace trace1 = generateTestTrace(N, connPos1m4, false); 
+		PFTrace trace1 = generateTestTrace(N, N, connPos1m4, false); 
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace1,
 				defaultAP, breakThresh, mtm, null));
@@ -253,7 +264,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 		// —вер€ем наличие прив€зки при уходе начала коннектора влево за пределами маски
 
-		PFTrace trace2 = generateTestTrace(N, connPos1m6, false);
+		PFTrace trace2 = generateTestTrace(N, N, connPos1m6, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace2,
 				defaultAP, breakThresh, mtm, null));
@@ -265,7 +276,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 
 		// —вер€ем наличие прив€зки при уходе начала коннектора влево в спорном случае
 
-		PFTrace trace3 = generateTestTrace(N, connPos1m5, false);
+		PFTrace trace3 = generateTestTrace(N, N, connPos1m5, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace3,
 				defaultAP, breakThresh, mtm, null));
@@ -274,6 +285,26 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
 		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() == dist1); // спорный случай. ¬ текущей версии прив€зка быть должна
+
+		// —вер€ем тип и дистанцию при обрыве с уходом вниз в конце волокна
+
+		PFTrace traceLossBreak = generateTestTrace(N, dist1, connPosOneOnly, true);
+		{
+			// “ут мы еще проверим результат собственно анализа, что длина трассы получена правильно
+			AnalysisResult aResult =
+				CoreAnalysisManager.performAnalysis(traceLossBreak, defaultAP);
+			int len = aResult.getMTAE().getModelTrace().getLength();
+			assertTrue("Too short trace length: " + len, len >= dist1);
+		}
+		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
+				traceLossBreak,
+				defaultAP, breakThresh, mtm, null));
+		System.out.println("compare diff: " + res);
+		assertTrue(res != null); // должен быть обнаружен аларм
+		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_LINEBREAK); // тип аларма
+		assertTrue("" + res.getCoord() + " was expected to be " + dist1,
+				res.getCoord() == dist1); // ƒистанци€ событи€, где произошел обрыв
 
 		// проверка создани€ объектов эталона и результата анализа
 
