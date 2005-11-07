@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.8 2005/10/06 15:53:58 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.9 2005/11/07 11:21:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.io.BellcoreCreator;
 import com.syrus.io.DataFormatException;
 import com.syrus.io.SignatureMismatchException;
@@ -148,7 +149,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		double v = ((pos * 27) % 37) / 36.0;
 		return v - 0.5;
 	}
-	private static double[] generateTestBellcoreYArray(int len, int dist) {
+	private static double[] generateTestBellcoreYArray(int len, int[] connPos) {
 		final int N = len;
 		double noise = 10.0;
 		double s2n = 5.0;
@@ -156,7 +157,6 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		double att = 0.22; // db/km
 		double y0 = noise + s2n + N * 0.5 * att / 1e3 * resolution;
 		final int NCONN = 3;
-		int[] connPos = {0, dist, N / 3 * 2}; // FIXME
 		double[] connAmpl = {15, 10, 15};
 		int connLen = 50;
 		double[] ret = new double[N];
@@ -174,9 +174,9 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		return ret;
 	}
 
-	private static PFTrace generateTestTrace(int len, int dist,
+	private static PFTrace generateTestTrace(int len, int[] connPos,
 			boolean dumpToFile) {
-		double[] y = generateTestBellcoreYArray(len, dist);
+		double[] y = generateTestBellcoreYArray(len, connPos);
 		if (dumpToFile) {
 			PrintStream str;
 			try {
@@ -202,11 +202,21 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 	// проверка сравнени€ масок и определени€ событи€, обусловившего аларм
 	public final void testTraceComparison()
 	throws IncompatibleTracesException, DataFormatException {
+
+		// √отовим рефлектограммы и эталон
+
 		System.out.println("testTraceComparison():");
 		final int N = 10000;
-		final int dist1 = N / 3;
+		int dist1 = N / 3;
+		int dist1m4 = N / 3 - 4;
+		int dist1m5 = N / 3 - 5;
+		int dist1m6 = N / 3 - 6;
+		int[] connPos1		= {0, dist1,   N / 3 * 2};
+		int[] connPos1m4	= {0, dist1m4, N / 3 * 2};
+		int[] connPos1m5	= {0, dist1m5, N / 3 * 2};
+		int[] connPos1m6	= {0, dist1m6, N / 3 * 2};
 		System.out.println("generating trace...");
-		PFTrace trace = generateTestTrace(N, dist1, true);
+		PFTrace trace = generateTestTrace(N, connPos1, true);
 		System.out.println("Analysing trace...");
 		Collection<PFTrace> trColl =
 			new ArrayList<PFTrace>();
@@ -221,40 +231,52 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		System.out.println("compare mtae: " + res);
 		assertTrue(res == null);
 
+		// —вер€ем исходную р/г
+
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare bs: " + res);
 		assertTrue(res == null); // аларма быть не должно
 
-		PFTrace trace1 = generateTestTrace(N, dist1 - 4, false); 
+		// —вер€ем наличие прив€зки при уходе начала коннектора влево в пределах маски
+
+		PFTrace trace1 = generateTestTrace(N, connPos1m4, false); 
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace1,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() + "==" + dist1, res.getCoord() == dist1); // должна сработать прив€зка
 
-		PFTrace trace2 = generateTestTrace(N, dist1 - 6, false);
+		// —вер€ем наличие прив€зки при уходе начала коннектора влево за пределами маски
+
+		PFTrace trace2 = generateTestTrace(N, connPos1m6, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace2,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() + "<" + dist1, res.getCoord() < dist1); // прив€зки уже быть не должно
 
-		PFTrace trace3 = generateTestTrace(N, dist1 - 5, false);
+		// —вер€ем наличие прив€зки при уходе начала коннектора влево в спорном случае
+
+		PFTrace trace3 = generateTestTrace(N, connPos1m5, false);
 		res = getFirstMismatch(CoreAnalysisManager.analyseCompareAndMakeAlarms(
 				trace3,
 				defaultAP, breakThresh, mtm, null));
 		System.out.println("compare diff: " + res);
 		assertTrue(res != null); // должен быть обнаружен аларм
 		assertTrue(res.getEndCoord() >= res.getCoord()); // корректность аларма
+		assertTrue(res.getAlarmType() == ReflectogramMismatch.AlarmType.TYPE_OUTOFMASK); // тип аларма
 		assertTrue(res.getCoord() == dist1); // спорный случай. ¬ текущей версии прив€зка быть должна
 
 		// проверка создани€ объектов эталона и результата анализа
+
 		Etalon etalon = new Etalon(mtm, breakThresh,
 				new EventAnchorer(mtm.getMTAE().getNEvents()));
 		assertNotNull(etalon);
@@ -266,6 +288,7 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		assertTrue(res != null); // должен быть обнаружен аларм
 
 		// проверка с восстановленными эталоном и результатом анализа
+
 		Etalon etRest =
 			(Etalon)DataStreamableUtil.readDataStreamableFromBA(
 					DataStreamableUtil.writeDataStreamableToBA(etalon),
