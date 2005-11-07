@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.132 2005/11/06 11:42:50 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.133 2005/11/07 16:13:43 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.132 $, $Date: 2005/11/06 11:42:50 $
+ * @version $Revision: 1.133 $, $Date: 2005/11/07 16:13:43 $
  * @module
  */
 
@@ -842,8 +842,12 @@ public class CoreAnalysisManager
 		//    чтобы дистанция обрыва определялась верно хотя бы на коннекторах
 //		if (breakPos < 0 && ar.getTraceLength() < etMinLength)
 //		breakPos = ar.getTraceLength();
-		if (breakPos < 0 && mt.getLength() < etMinLength)
-		breakPos = mt.getLength();
+		if (breakPos < 0 && mt.getLength() < etMinLength) {
+			// устанавливаем breakPos в начала конца волокна
+			final int nEvents = mtae.getNEvents();
+			breakPos = nEvents > 0
+				? mtae.getSimpleEvent(nEvents - 1).getBegin() : 0;
+		}
 
 		// [fixed] проблема - breakPos случится при первом же уходе ниже minTraceLevel,
 		// что очень вероятно на последних километрах абс. нормальной р/г
