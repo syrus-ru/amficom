@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionBean.java,v 1.2 2005/10/18 15:10:38 bob Exp $
+ * $Id: PermissionBean.java,v 1.3 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,27 +33,20 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class PermissionBean extends Bean implements UserItem {
+public final class PermissionBean extends Bean implements UserItem {
 
-	private static final String UI_CLASS_ID = "PermissionAttributesBeanUI";
-	
 	private PermissionAttributes permissionAttributes;
 	private HashMap<PermissionCodename, Boolean>	rolePermissionMap;	
-	
+
 	@Override
-	public String getUIClassID() {
-		return UI_CLASS_ID;
-	}
-	
-	@Override
-	protected void setId(Identifier id) throws ApplicationException {
-		super.setId(id);
-		this.permissionAttributes = StorableObjectPool.getStorableObject(this.id, true);
+	protected void setIdentifier(Identifier id) throws ApplicationException {
+		super.setIdentifier(id);
+		this.permissionAttributes = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
 
 	@Override
@@ -65,17 +58,17 @@ public class PermissionBean extends Bean implements UserItem {
 	public void setName(String name) {
 	}
 	
-	public final Identifier getUserId() {
+	public final Identifier getParentId() {
 		return this.permissionAttributes.getParentId();
 	}
 	
-	public final void setUserId(Identifier userId) {
+	public final void setParentId(final Identifier parentId) {
 		Identifier userId2 = this.permissionAttributes.getParentId();
-		if (userId2 != userId &&
-				(userId2 != null && !userId2.equals(userId) ||
-				!userId.equals(userId2))) {
-			this.permissionAttributes.setParentId(userId);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_USER_ID, userId2, userId));
+		if (userId2 != parentId &&
+				(userId2 != null && !userId2.equals(parentId) ||
+				!parentId.equals(userId2))) {
+			this.permissionAttributes.setParentId(parentId);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_USER_ID, userId2, parentId));
 		}		
 	}
 	
@@ -87,7 +80,7 @@ public class PermissionBean extends Bean implements UserItem {
 	
 	public void setDomainId(final Identifier oldDomainId,
 	                        final Identifier newDomainId) {
-		assert Log.debugMessage("PermissionBean.setDomainId | oldDomainId:" 
+		assert Log.debugMessage("oldDomainId:" 
 				+ oldDomainId
 				+ ", newDomainId:"
 				+ newDomainId, 
@@ -97,22 +90,28 @@ public class PermissionBean extends Bean implements UserItem {
 	
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("PermissionBean.dispose | " + this.id, Log.DEBUGLEVEL09);
-		StorableObjectPool.delete(this.id);
+		Log.debugMessage(this.identifier.getIdentifierString(), Log.DEBUGLEVEL09);
+		StorableObjectPool.delete(this.identifier);
 		super.disposeLayoutItem();
 	}
 
+	public final boolean getRolePermission(final PermissionCodename permissionCodename) 
+	throws ApplicationException {
+		final Boolean b = this.getRolePermissions().get(permissionCodename);
+		return b == null ? false : b.booleanValue();
+	}
 	
-	public final Map<PermissionCodename, Boolean> getRolePermissions() 
-	throws ApplicationException{
+	public void updateRolePermissions() throws ApplicationException {
 		if (this.rolePermissionMap == null) {
 			this.rolePermissionMap = new HashMap<PermissionCodename, Boolean>();
-			
-			final SystemUser systemUser = 
-				StorableObjectPool.getStorableObject(this.permissionAttributes.getParentId(), true);
-			
-			final Set<Identifier> roleIds = systemUser.getRoleIds();
-			
+		} else {
+			this.rolePermissionMap.clear();
+		}
+		final SystemUser systemUser = 
+			StorableObjectPool.getStorableObject(this.permissionAttributes.getParentId(), true);
+		
+		final Set<Identifier> roleIds = systemUser.getRoleIds();
+		if (!roleIds.isEmpty()) {
 			final Module module = this.permissionAttributes.getModule();
 			final CompoundCondition compoundCondition = 
 				new CompoundCondition(
@@ -140,13 +139,27 @@ public class PermissionBean extends Bean implements UserItem {
 					}
 				}
 				this.rolePermissionMap.put(codename, Boolean.valueOf(permitted));
-			}
+			}	
 		}
+		assert Log.debugMessage(this.hashCode() , Log.DEBUGLEVEL09);
+		this.firePropertyChangeEvent(new PropertyChangeEvent(this, ObjectEntities.PERMATTR, null, null));
+	}
+	
+	private final Map<PermissionCodename, Boolean> getRolePermissions() 
+	throws ApplicationException{
+		if (this.rolePermissionMap == null) {
+			this.updateRolePermissions();
+		}			
 		
 		return this.rolePermissionMap;
 	}
 	
 	public final PermissionAttributes getPermissionAttributes() {
 		return this.permissionAttributes;
+	}
+	
+	@Override
+	public String getCodename() {
+		return this.permissionAttributes.getModule().getCodename() + ObjectEntities.SYSTEMUSER;
 	}
 }

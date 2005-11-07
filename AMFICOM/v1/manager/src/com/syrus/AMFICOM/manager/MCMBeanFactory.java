@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.14 2005/10/18 15:10:38 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.15 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,29 +18,21 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.15 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class MCMBeanFactory extends IdentifiableBeanFactory<MCMBean> {
+public final class MCMBeanFactory extends IdentifiableBeanFactory<MCMBean> {
 	
-	private static MCMBeanFactory instance;
-	
-	private MCMBeanFactory(final ManagerMainFrame graphText) {
+	public MCMBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.MeasurementContolModule", 
 			"Manager.Entity.MeasurementContolModule.acronym");
 		super.graphText = graphText;
-	}
-	
-	public static final synchronized  MCMBeanFactory getInstance(final ManagerMainFrame graphText) {
-		if(instance == null) {
-			instance = new MCMBeanFactory(graphText);
-		}		
-		return instance;
 	}
 
 	@Override
@@ -67,11 +59,12 @@ public class MCMBeanFactory extends IdentifiableBeanFactory<MCMBean> {
 		final MCMBean bean = new MCMBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
-		bean.setCodeName(identifier.getIdentifierString());
+		bean.setId(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
-		bean.setId(identifier);			
+		bean.setIdentifier(identifier);			
 		
-		Dispatcher dispatcher = super.graphText.getDispatcher();
+		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+		final Dispatcher dispatcher = managerModel.getDispatcher();
 //		dispatcher.addPropertyChangeListener(
 //			PROPERTY_USERS_REFRESHED,
 //			new PropertyChangeListener() {
@@ -114,8 +107,8 @@ public class MCMBeanFactory extends IdentifiableBeanFactory<MCMBean> {
 										AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().startsWith(ObjectEntities.MCM) &&
-						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
+						sourceBean.getId().startsWith(ObjectEntities.MCM) &&
+						targetBean.getId().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
 		}

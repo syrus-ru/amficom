@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.18 2005/10/18 15:10:39 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.19 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,26 +18,17 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.19 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainBeanFactory extends IdentifiableBeanFactory<DomainBean> {
+public final class DomainBeanFactory extends IdentifiableBeanFactory<DomainBean> {
 	
-	private static DomainBeanFactory instance;
-	
-	private DomainBeanFactory(final ManagerMainFrame graphText) {
+	public DomainBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Domain", 
 			"Manager.Entity.Domain");
 		super.graphText = graphText;
-	}
-	
-	public static final synchronized DomainBeanFactory getInstance(final ManagerMainFrame graphText) {
-		if(instance == null) {
-			instance = new DomainBeanFactory(graphText);
-		}		
-		return instance;
 	}
 
 	@Override
@@ -54,9 +45,9 @@ public class DomainBeanFactory extends IdentifiableBeanFactory<DomainBean> {
 		final DomainBean bean = new DomainBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
-		bean.setCodeName(id.getIdentifierString());
+		bean.setId(id.getIdentifierString());
 		bean.setValidator(this.getValidator());
-		bean.setId(id);		
+		bean.setIdentifier(id);		
 		return bean;
 	}
 
@@ -68,9 +59,9 @@ public class DomainBeanFactory extends IdentifiableBeanFactory<DomainBean> {
 				                       	final AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
-						(sourceBean.getCodeName().startsWith(ObjectEntities.DOMAIN) ||
-						 sourceBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME) &&
-						targetBean.getCodeName().startsWith(ObjectEntities.DOMAIN));
+						(sourceBean.getId().startsWith(ObjectEntities.DOMAIN) ||
+						 sourceBean.getId().startsWith(NetBeanFactory.NET_CODENAME) &&
+						targetBean.getId().startsWith(ObjectEntities.DOMAIN));
 				}
 			};
 		}

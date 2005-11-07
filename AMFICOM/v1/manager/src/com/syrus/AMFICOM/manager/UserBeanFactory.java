@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.25 2005/10/18 15:10:38 bob Exp $
+* $Id: UserBeanFactory.java,v 1.26 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.administration.RoleWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -29,28 +30,29 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
+import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.26 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class UserBeanFactory extends IdentifiableBeanFactory<UserBean> {
+public final class UserBeanFactory extends IdentifiableBeanFactory<UserBean> {
 
-	private static UserBeanFactory instance;
-	
 	private SortedSet<Role> roles;
 
-	private UserBeanFactory(final ManagerMainFrame graphText) {
+	public UserBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.User", 
 			"Manager.Entity.User");
 		super.graphText = graphText;
 		this.roles = 
 			new TreeSet<Role>(
-				new WrapperComparator<Role>(RoleWrapper.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION));
+				new WrapperComparator<Role>(RoleWrapper.getInstance(), 
+						StorableObjectWrapper.COLUMN_DESCRIPTION));
 		
 		try {
 			final Set<Role> roles1 = 
@@ -63,15 +65,7 @@ public class UserBeanFactory extends IdentifiableBeanFactory<UserBean> {
 		}
 
 	}
-	
-	public static final synchronized UserBeanFactory getInstance(final ManagerMainFrame graphText) {
-		if (instance == null) {
-			instance = new UserBeanFactory(graphText);
-		}
-		return instance;
-	}
 
-	
 	@Override
 	public UserBean createBean(final Perspective perspective) 
 	throws ApplicationException {
@@ -118,12 +112,13 @@ public class UserBeanFactory extends IdentifiableBeanFactory<UserBean> {
 		final UserBean bean = new UserBean(this.roles);
 		++super.count;
 		bean.setGraphText(super.graphText);
-		bean.setCodeName(identifier.getIdentifierString());
+		bean.setId(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());	
 		
-		bean.setId(identifier);
-		
-		super.graphText.getDispatcher().firePropertyChange(
+		bean.setIdentifier(identifier);
+		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+		final Dispatcher dispatcher = managerModel.getDispatcher();
+		dispatcher.firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, bean));
 
 		
@@ -141,14 +136,14 @@ public class UserBeanFactory extends IdentifiableBeanFactory<UserBean> {
 				
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
-					System.out.println("UserBeanFactory.Validator$1.isValid() | " 
-						+ sourceBean.getName() 
+					assert Log.debugMessage(sourceBean.getName() 
 						+ " -> " 
-						+ targetBean.getName());
+						+ targetBean.getName() , 
+						Log.DEBUGLEVEL10);
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().startsWith(ObjectEntities.SYSTEMUSER) &&
-						targetBean.getCodeName().startsWith(WorkstationBeanFactory.WORKSTATION_CODENAME);
+						sourceBean.getId().startsWith(ObjectEntities.SYSTEMUSER) &&
+						targetBean.getId().startsWith(WorkstationBeanFactory.WORKSTATION_CODENAME);
 				}
 			};
 		}

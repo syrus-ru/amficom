@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.13 2005/10/18 15:10:39 bob Exp $
+* $Id: Manager.java,v 1.14 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.administration.Role.RoleCodename;
 import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
+import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,15 +48,24 @@ public class Manager extends AbstractApplication {
 	
 	public Manager() {
 		super(APPLICATION_NAME);
+
 	}
 	
 	@Override
 	protected void init() {
+		
+		
+		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
+		extensionLauncher.addExtensions("xml/manager.xml");	
 		super.aContext.setApplicationModel(new ManagerModel(super.aContext));
 		
 		try {
-			TypicalCondition tc = new TypicalCondition("sys", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
-			Set<SystemUser> systemUserWithLoginSys = StorableObjectPool.getStorableObjectsByCondition(tc, true);
+			TypicalCondition tc = new TypicalCondition("sys", 
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.SYSTEMUSER_CODE, 
+				SystemUserWrapper.COLUMN_LOGIN);
+			Set<SystemUser> systemUserWithLoginSys = 
+				StorableObjectPool.getStorableObjectsByCondition(tc, true);
 
 			assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
 			
@@ -78,7 +88,7 @@ public class Manager extends AbstractApplication {
 		Launcher.launchApplicationClass(Manager.class);
 	}
 	
-	void createRolePermissions() throws ApplicationException {			
+	void createRolePermissions() throws ApplicationException {
 		
 		assert false;
 		
@@ -145,16 +155,16 @@ public class Manager extends AbstractApplication {
 				attributes.setPermissionEnable(PermissionCodename.ADMINISTRATION_DELETE_USER, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						mediaMonitoringAdministator.getId(), 
-						Module.MODELING);
-				
-				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						mediaMonitoringAdministator.getId(), 
+//						Module.MODELING);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+//			}
 			
 			{
 				final PermissionAttributes attributes = 
@@ -186,9 +196,9 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
 			}
 			
 			{
@@ -206,24 +216,24 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.MAPVIEW);
+						Module.MAP_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_ENTER, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						analyst.getId(), 
-						Module.MODELING);
-				
-				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						analyst.getId(), 
+//						Module.MODELING);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
+//			}
 			
 			{
 				final PermissionAttributes attributes = 
@@ -275,6 +285,7 @@ public class Manager extends AbstractApplication {
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_EDIT_ETALON, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_REFLECTOGRAM_FILE, true);
@@ -285,23 +296,23 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						analyst.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_SCHEME, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						analyst.getId(), 
-						Module.PREDICTION);
-				
-				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						analyst.getId(), 
+//						Module.PREDICTION);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
+//			}
 		}
 		
 		{
@@ -321,9 +332,9 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						operator.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
 			}
 			
 			{
@@ -341,21 +352,21 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						operator.getId(), 
-						Module.MAPVIEW);
+						Module.MAP_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_ENTER, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						operator.getId(), 
-						Module.MODELING);
-				
-				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						operator.getId(), 
+//						Module.MODELING);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+//			}
 			
 			{
 				final PermissionAttributes attributes = 
@@ -404,6 +415,7 @@ public class Manager extends AbstractApplication {
 				
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
 			}
@@ -413,25 +425,25 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						operator.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ALARM_MANAGE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);				
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ALARM_MANAGE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						operator.getId(), 
-						Module.PREDICTION);
-				
-				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						operator.getId(), 
+//						Module.PREDICTION);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_SAVE_PROGNOSTICATION_REFLECTOGRAM, true);
+//			}
 		}
 		
 		{
@@ -478,6 +490,7 @@ public class Manager extends AbstractApplication {
 				
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 			}
 			
@@ -486,11 +499,11 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						subscriber.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);				
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}			
 		}
 		
@@ -512,12 +525,12 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						planner.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_CREATE_AND_EDIT, true);
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_CREATE_CHANGE_SAVE_TYPE, true);
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_SAVING, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_CREATE_AND_EDIT, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_CREATE_CHANGE_SAVE_TYPE, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_SAVING, true);
 			}
 			
 			{
@@ -537,43 +550,43 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						planner.getId(), 
-						Module.MAPVIEW);
+						Module.MAP_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_EDIT_BINDING, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_EDIT_TOPOLOGICAL_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_SAVE_BINDING, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_SAVE_TOPOLOGICAL_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.MAPVIEW_SAVE_TOPOLOGICAL_VIEW, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_EDIT_BINDING, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_EDIT_TOPOLOGICAL_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_SAVE_BINDING, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_SAVE_TOPOLOGICAL_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.MAP_EDITOR_SAVE_TOPOLOGICAL_VIEW, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						planner.getId(), 
-						Module.MODELING);
-				
-				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						planner.getId(), 
+//						Module.MODELING);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+//			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						planner.getId(), 
-						Module.OPTIMIZATION);
-				
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_SET_OPTIMIZATION_OPTIONS, true);
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_START_OPTIMIZATION, true);
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_ABORT_OPTIMIZATION, true);
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_SAVE_OPTIMIZATION_OPTIONS, true);
-				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_SAVE_OPTIMIZATION_RESULT, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						planner.getId(), 
+//						Module.OPTIMIZATION);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_OPEN_MAP, true);
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_OPEN_SCHEME, true);
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_SET_OPTIMIZATION_OPTIONS, true);
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_START_OPTIMIZATION, true);
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_ABORT_OPTIMIZATION, true);
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_SAVE_OPTIMIZATION_OPTIONS, true);
+//				attributes.setPermissionEnable(PermissionCodename.OPTIMIZATION_SAVE_OPTIMIZATION_RESULT, true);
+//			}
 		
 		}
 		
@@ -595,9 +608,9 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						specialist.getId(), 
-						Module.SCHEME_EDITOR);
+						Module.ELEMENTS_EDITOR);
 				
-				attributes.setPermissionEnable(PermissionCodename.SCHEME_EDITOR_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.ELEMENTS_EDITOR_ENTER, true);
 			}
 			
 			{
@@ -610,19 +623,19 @@ public class Manager extends AbstractApplication {
 				attributes.setPermissionEnable(PermissionCodename.SCHEME_ENTER, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						specialist.getId(), 
-						Module.MODELING);
-				
-				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
-				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						specialist.getId(), 
+//						Module.MODELING);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
+//				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
+//			}
 			
 			{
 				final PermissionAttributes attributes = 
@@ -671,6 +684,7 @@ public class Manager extends AbstractApplication {
 				
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_ENTER, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_ETALON_REFLECTOGRAM, true);
+				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_OPEN_REFLECTOGRAM_FILE, true);
 				attributes.setPermissionEnable(PermissionCodename.EVALUATION_SAVE_MEASUREMENT_SETUP, true);
 			}
@@ -680,25 +694,25 @@ public class Manager extends AbstractApplication {
 					PermissionAttributes.createInstance(userId, 
 						Identifier.VOID_IDENTIFIER, 
 						specialist.getId(), 
-						Module.OBSERVE);
+						Module.OBSERVER);
 				
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ENTER, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MAP, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_SCHEME, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_ALARM_MANAGE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_OPEN_MEASUREMENT_ARCHIVE, true);
-				attributes.setPermissionEnable(PermissionCodename.OBSERVE_QUICK_TASK, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_ALARM_MANAGE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_OPEN_MEASUREMENT_ARCHIVE, true);
+				attributes.setPermissionEnable(PermissionCodename.OBSERVER_QUICK_TASK, true);
 			}
 			
-			{
-				final PermissionAttributes attributes = 
-					PermissionAttributes.createInstance(userId, 
-						Identifier.VOID_IDENTIFIER, 
-						specialist.getId(), 
-						Module.PREDICTION);
-				
-				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);				
-			}
+//			{
+//				final PermissionAttributes attributes = 
+//					PermissionAttributes.createInstance(userId, 
+//						Identifier.VOID_IDENTIFIER, 
+//						specialist.getId(), 
+//						Module.PREDICTION);
+//				
+//				attributes.setPermissionEnable(PermissionCodename.PREDICTION_ENTER, true);				
+//			}
 			
 			{
 				final PermissionAttributes attributes = 
@@ -755,15 +769,6 @@ public class Manager extends AbstractApplication {
 				LayoutItem.CHARACTERISCTIC_TYPE_Y, 
 				"y coordinate", 
 				"y coordinate", 
-				DataType.STRING, 
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-		}
-		{
-			CharacteristicType.createInstance(userId, 
-				CharacteristicTypeCodenames.USER_NATURE, 
-				"Тип должностного лица", 
-				"Тип", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
 			

@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainBeanUI.java,v 1.1 2005/10/18 15:10:39 bob Exp $
+* $Id: DomainBeanUI.java,v 1.2 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,14 +9,14 @@
 package com.syrus.AMFICOM.manager.viewers;
 
 import java.awt.event.ActionEvent;
-import java.net.URL;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.UIManager;
 
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Port;
@@ -33,12 +33,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-class DomainBeanUI extends TableBeanUI<DomainBean> {
+public class DomainBeanUI extends TableBeanUI<DomainBean> {
 	
 	public DomainBeanUI(final ManagerMainFrame managerMainFrame) {
 		super(managerMainFrame,
@@ -50,13 +50,15 @@ class DomainBeanUI extends TableBeanUI<DomainBean> {
 				"com/syrus/AMFICOM/manager/resources/domain2.png");
 	}
 
+	@Override
 	public JPopupMenu getPopupMenu(final DomainBean domainBean,
 	                               final Object cell) {
 		if (cell != null) {
 			final JPopupMenu popupMenu = new JPopupMenu();			
 			
-			final AbstractAction action = new AbstractAction(I18N.getString("Manager.Dialog.EnterIntoDomain")) {
+			final AbstractAction enterAction = new AbstractAction(I18N.getString("Manager.Dialog.EnterIntoDomain")) {
 
+				@SuppressWarnings("unqualified-field-access")
 				public void actionPerformed(ActionEvent e) {
 					
 					MPort port = (MPort) ((DefaultGraphCell) cell).getChildAt(0);
@@ -77,7 +79,7 @@ class DomainBeanUI extends TableBeanUI<DomainBean> {
 						AbstractBean bean2 = port3.getBean();
 						
 						if (bean2 == null || 
-								!bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
+								!bean2.getId().startsWith(NetBeanFactory.NET_CODENAME)) {
 							JOptionPane.showMessageDialog(popupMenu, 
 								I18N.getString("Manager.Error.DomainContainsNotOnlyNetwork"), 
 								I18N.getString("Manager.Error"),
@@ -86,23 +88,19 @@ class DomainBeanUI extends TableBeanUI<DomainBean> {
 						}
 					}
 					
-					managerMainFrame.setPerspective(new DomainPerpective(managerMainFrame, domainBean, cell));				
+					managerMainFrame.setPerspective(new DomainPerpective(managerMainFrame, domainBean));				
 					
 					
 					
 				}
 			};
 			
-			Icon icon;
-			URL resource = DomainBean.class.getClassLoader().getResource("com/syrus/AMFICOM/manager/resources/icons/enter.gif");
-			if (resource != null) {
-				icon = new ImageIcon(resource);
+			final Icon enterIcon = UIManager.getIcon(ENTER_ICON);
+			if (enterIcon != null) {
+				enterAction.putValue(Action.SMALL_ICON, enterIcon);
 			}
 			
-			// TODO
-			
-			
-			popupMenu.add(action);
+			popupMenu.add(enterAction);
 			return popupMenu;
 		}
 

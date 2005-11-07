@@ -1,5 +1,5 @@
 /*-
-* $Id: KISBeanUI.java,v 1.1 2005/10/18 15:10:39 bob Exp $
+* $Id: KISBeanUI.java,v 1.2 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,19 +20,20 @@ import java.beans.PropertyChangeListener;
 import com.syrus.AMFICOM.manager.RTUBean;
 import com.syrus.AMFICOM.manager.RTUBeanWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-class KISBeanUI extends TableBeanUI<RTUBean> {	
+public class KISBeanUI extends TableBeanUI<RTUBean> {	
 	
 	public KISBeanUI(final ManagerMainFrame managerMainFrame) {
 		super(managerMainFrame,
-			RTUBeanWrapper.getInstance(managerMainFrame.getDispatcher()),
+			RTUBeanWrapper.getInstance(((ManagerModel)managerMainFrame.getModel()).getDispatcher()),
 			new String[] { KEY_NAME, 
 				KEY_DESCRIPTION, 
 				KEY_MCM_ID,
@@ -40,8 +41,9 @@ class KISBeanUI extends TableBeanUI<RTUBean> {
 				KEY_PORT}, 
 				"com/syrus/AMFICOM/manager/resources/icons/rtu.gif", 
 				"com/syrus/AMFICOM/manager/resources/rtu.png");
-		
-		managerMainFrame.getDispatcher().addPropertyChangeListener(
+		final ManagerModel managerModel = (ManagerModel)managerMainFrame.getModel();
+
+		managerModel.getDispatcher().addPropertyChangeListener(
 			RTUBeanWrapper.PROPERTY_MCMS_REFRESHED,
 			new PropertyChangeListener() {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.11 2005/10/18 15:10:38 bob Exp $
+ * $Id: ServerBean.java,v 1.12 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,16 @@ import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_NAME;
 import java.beans.PropertyChangeEvent;
 
 import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -30,18 +32,11 @@ import com.syrus.util.Log;
 public class ServerBean extends Bean implements DomainNetworkItem {
 
 	private Server server;
-	
-	private static final String UI_CLASS_ID = "ServerBeanUI";
-	
+
 	@Override
-	public String getUIClassID() {
-		return UI_CLASS_ID;
-	}
-	
-	@Override
-	protected void setId(Identifier id) throws ApplicationException {
-		super.setId(id);
-		this.server = StorableObjectPool.getStorableObject(this.id, true);
+	protected void setIdentifier(Identifier id) throws ApplicationException {
+		super.setIdentifier(id);
+		this.server = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
 
 	public final String getDescription() {
@@ -70,7 +65,9 @@ public class ServerBean extends Bean implements DomainNetworkItem {
 				(name2 != null && !name2.equals(name) ||
 				!name.equals(name2))) {
 			this.server.setName(name);
-			this.graphText.getDispatcher().firePropertyChange(
+			final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+			final Dispatcher dispatcher = managerModel.getDispatcher();
+			dispatcher.firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.SERVER, null, this));
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
 		}		
@@ -104,8 +101,13 @@ public class ServerBean extends Bean implements DomainNetworkItem {
 
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("ServerBean.dispose | " + this.id, Log.DEBUGLEVEL10);
-		StorableObjectPool.delete(this.id);
+		Log.debugMessage("ServerBean.dispose | " + this.identifier, Log.DEBUGLEVEL10);
+		StorableObjectPool.delete(this.identifier);
 		super.disposeLayoutItem();
+	}
+	
+	@Override
+	public String getCodename() {
+		return ObjectEntities.SERVER;
 	}
 }

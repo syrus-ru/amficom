@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerModel.java,v 1.3 2005/09/04 11:28:38 bob Exp $
+* $Id: ManagerModel.java,v 1.4 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/04 11:28:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -34,7 +34,6 @@ public class ManagerModel extends ApplicationModel {
 		this.add(MENU_SESSION_CLOSE);
 		this.add(MENU_SESSION_OPTIONS);
 		this.add(MENU_SESSION_CHANGE_PASSWORD);
-		this.add(MENU_SESSION_DOMAIN);
 		this.add(MENU_EXIT);
 
 		this.add(MENU_VIEW);
@@ -61,6 +60,10 @@ public class ManagerModel extends ApplicationModel {
 		this.setEnabled(MENU_VIEW, true);
 		this.setEnabled(MENU_VIEW_ARRANGE, true);
 
+	}
+	
+	public final Dispatcher getDispatcher() {
+		return this.dispatcher;
 	}
 }
 

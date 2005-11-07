@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.20 2005/10/18 15:10:38 bob Exp $
+ * $Id: AbstractBean.java,v 1.21 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,19 +27,19 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.21 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public abstract class AbstractBean {
 
-	protected Identifier	id;
+	protected Identifier	identifier;
 	
 	protected Validator		validator;
 
-	protected String		codeName;
-
+	protected String		id;
+	
 	protected ManagerMainFrame	graphText;
 	
 	protected AbstractBean() {
@@ -48,12 +48,12 @@ public abstract class AbstractBean {
 
 	protected AbstractBean(final Identifier id,
 			final Validator validator) {
-		this.id = id;
+		this.identifier = id;
 		this.validator = validator;
 	}
 
-	public final Identifier getId() {
-		return this.id;
+	public final Identifier getIdentifier() {
+		return this.identifier;
 	}
 
 	public boolean isTargetValid(final AbstractBean targetBean) {
@@ -64,14 +64,12 @@ public abstract class AbstractBean {
 	                                     final MPort newPort) 
 	throws ApplicationException;
 	
-	public abstract String getUIClassID();
-
 	public abstract void dispose() throws ApplicationException;
 	
 	public final void disposeLayoutItem() throws ApplicationException {
 		final CompoundCondition compoundCondition = 
 			new CompoundCondition(new TypicalCondition(
-				this.getCodeName(), 
+				this.getId(), 
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.LAYOUT_ITEM_CODE,
 				StorableObjectWrapper.COLUMN_NAME),
@@ -98,30 +96,32 @@ public abstract class AbstractBean {
 	}
 
 	@SuppressWarnings("unused")
-	protected void setId(final Identifier id) 
+	protected void setIdentifier(final Identifier id) 
 	throws ApplicationException {
-		this.id = id;
+		this.identifier = id;
 	}
 
 	protected final void setValidator(final Validator validator) {
 		this.validator = validator;
 	}
 	
-	public final String getCodeName() {
-		return this.codeName;
+	public final String getId() {
+		return this.id;
 	}
 	
-	public final void setCodeName(final String codeName) {
-		this.codeName = codeName;
+	public final void setId(final String codeName) {
+		this.id = codeName;
 	}
 	
 	public abstract String getName();
+	
+	public abstract String getCodename();
 	
 	public abstract void setName(final String name);
 
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " is " + this.codeName + '/' + this.getName() + '/';
+		return this.getClass().getName() + " is " + this.id + '/' + this.getName() + '/';
 	}
 	
 	public final void setGraphText(final ManagerMainFrame graphText) {

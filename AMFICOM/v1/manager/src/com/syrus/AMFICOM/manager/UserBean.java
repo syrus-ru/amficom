@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.23 2005/10/18 15:10:38 bob Exp $
+ * $Id: UserBean.java,v 1.24 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -33,12 +34,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.UI.GraphRoutines;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.24 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -54,13 +57,6 @@ public class UserBean extends Bean implements WorkstationItem {
 	private Identifier	domainId;
 	private Map<Module, PermissionAttributes>	permissionAttributesMap;
 
-	private static final String UI_CLASS_ID = "SystemUserBeanUI";
-	
-	@Override
-	public String getUIClassID() {
-		return UI_CLASS_ID;
-	}
-	
 	UserBean(final SortedSet<Role> names) {
 		this.roles = names;
 		
@@ -80,13 +76,14 @@ public class UserBean extends Bean implements WorkstationItem {
 		assert Log.debugMessage("UserBean.dispose | " 
 				+ Identifier.createIdentifiers(this.user.getCharacteristics(false)),
 			Log.DEBUGLEVEL09);
-		assert Log.debugMessage("UserBean.dispose | " + this.id, Log.DEBUGLEVEL09);		
+		assert Log.debugMessage("UserBean.dispose | " + this.identifier, Log.DEBUGLEVEL09);		
 		StorableObjectPool.delete(this.user.getCharacteristics(false));
-		StorableObjectPool.delete(this.id);		
+		StorableObjectPool.delete(this.identifier);		
 		
+		final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
 		for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 			Bean portBean = 
-				(Bean) this.graphText.getCell(layoutItem);
+				(Bean) graphRoutines.getBean(layoutItem);
 			portBean.dispose();
 		}
 
@@ -94,10 +91,10 @@ public class UserBean extends Bean implements WorkstationItem {
 	}
 	
 	@Override
-	protected void setId(Identifier storableObject) 
+	protected void setIdentifier(Identifier storableObject) 
 	throws ApplicationException {
-		super.setId(storableObject);
-		this.user = StorableObjectPool.getStorableObject(this.id, true);
+		super.setIdentifier(storableObject);
+		this.user = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
 
 //	@Override
@@ -110,7 +107,37 @@ public class UserBean extends Bean implements WorkstationItem {
 //		GraphConstants.setForeground(attributes, Color.BLACK);
 //	}
 
-	private Characteristic findCharacteristic(String codename) throws ApplicationException {
+	private void refreshRoles() throws ApplicationException {
+		Log.debugMessage(Log.DEBUGLEVEL09);
+		final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+		for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
+			assert Log.debugMessage(layoutItem.getName() +", " + layoutItem.getLayoutName() , Log.DEBUGLEVEL09);
+			final Bean bean = 
+				(Bean) graphRoutines.getBean(layoutItem);
+			assert Log.debugMessage(bean, Log.DEBUGLEVEL09);
+			if (bean instanceof PermissionBean) {
+				PermissionBean permissionBean = (PermissionBean) bean;
+				permissionBean.updateRolePermissions();
+			}
+		}
+	}
+	
+	public void addRole(final Role role) throws ApplicationException {
+		this.user.addRole(role);
+		this.refreshRoles();
+	}
+	
+	public void removeRole(final Role role) throws ApplicationException {
+		this.user.removeRole(role);
+		this.refreshRoles();
+	}
+	
+	public boolean containsRole(final Role role) {
+		final Set<Identifier> roleIds = this.user.getRoleIds();
+		return roleIds.contains(role.getId());
+	}
+	
+	private Characteristic findCharacteristic(final String codename) throws ApplicationException {
 		TypicalCondition typicalCondition = new TypicalCondition(codename, 
 			OperationSort.OPERATION_EQUALS, 
 			ObjectEntities.CHARACTERISTIC_TYPE_CODE,
@@ -125,7 +152,15 @@ public class UserBean extends Bean implements WorkstationItem {
 					return characteristic;
 				}
 			}			
-			Characteristic characteristic = Characteristic.createInstance(LoginManager.getUserId(), characteristicType, codename, codename, "", this.user, true, true);
+			final Characteristic characteristic = 
+				Characteristic.createInstance(LoginManager.getUserId(), 
+					characteristicType, 
+					codename, 
+					codename, 
+					"", 
+					this.user, 
+					true, 
+					true);
 			return characteristic;
 		}
 		
@@ -183,7 +218,9 @@ public class UserBean extends Bean implements WorkstationItem {
 				!name.equals(name2))) {
 			String oldValue = name2;
 			this.user.setName(name);
-			this.graphText.getDispatcher().firePropertyChange(
+			final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+			final Dispatcher dispatcher = managerModel.getDispatcher();
+			dispatcher.firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, this));
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.NAME, oldValue, name));
 		}
@@ -195,6 +232,14 @@ public class UserBean extends Bean implements WorkstationItem {
 	}
 
 	public final void setLogin(final String login) {
+		
+		// only latin chars, digits and underscore allow
+		final String pattern = "[-A-Za-z0-9_]+";
+		if (!login.matches(pattern)) {
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.LOGIN, login, this.user.getLogin()));
+			return;
+		}
+		
 		String login2 = this.user.getLogin();
 		if (login2 != login &&
 				(login2 != null && !login2.equals(login) ||
@@ -205,10 +250,6 @@ public class UserBean extends Bean implements WorkstationItem {
 		}
 	}
 	
-	protected final String getNature() throws ApplicationException {
-		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_NATURE);
-	}
-
 	public final String getBuilding() throws ApplicationException {
 		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_BUILDING);
 	}
@@ -274,7 +315,12 @@ public class UserBean extends Bean implements WorkstationItem {
 	}
 
 	
-	public final void setEmail(String email) throws ApplicationException {
+	public final void setEmail(final String email) throws ApplicationException {		
+		if (email.trim().length() > 0 && !email.matches("[-a-z0-9_.]+@([-a-z0-9]+\\.)+[a-z]{2,3}")) {
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.USER_EMAIL, email, this.getEmail()));
+			return;
+		}
+		
 		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_EMAIL, 
 			email,
 			UserBeanWrapper.USER_EMAIL);
@@ -331,7 +377,7 @@ public class UserBean extends Bean implements WorkstationItem {
 	private Set<LayoutItem> getBeanChildrenLayoutItems() 
 	throws ApplicationException{
 		final TypicalCondition typicalCondition = 
-			new TypicalCondition(this.codeName, 
+			new TypicalCondition(this.id, 
 				OperationSort.OPERATION_EQUALS, 
 				ObjectEntities.LAYOUT_ITEM_CODE, 
 				LayoutItemWrapper.COLUMN_LAYOUT_NAME);
@@ -357,6 +403,7 @@ public class UserBean extends Bean implements WorkstationItem {
 				+ ", now:" + newDomainId, 
 			Log.DEBUGLEVEL09);
 		try {			
+			final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				assert Log.debugMessage("UserBean.setDomainId | 1 " + layoutItem.getName() 
 					+ ", " + layoutItem.getLayoutName(), 
@@ -366,7 +413,7 @@ public class UserBean extends Bean implements WorkstationItem {
 					+ layoutItem.getName() 
 					+ ", layoutName:" 
 					+ layoutItem.getLayoutName()
-					+ ", this.codeName:" + this.codeName, 
+					+ ", this.codeName:" + this.id, 
 				Log.DEBUGLEVEL09);		
 
 				if (layoutItem.getLayoutName().startsWith(ObjectEntities.SYSTEMUSER)) {
@@ -381,7 +428,7 @@ public class UserBean extends Bean implements WorkstationItem {
 					Log.DEBUGLEVEL09);		
 					layoutItem.setLayoutName(layoutName);
 					UserItem portBean = 
-						(UserItem) this.graphText.getCell(layoutItem);
+						(UserItem) graphRoutines.getBean(layoutItem);
 					portBean.setDomainId(oldDomainId, newDomainId);
 				}					
 			}
@@ -402,7 +449,7 @@ public class UserBean extends Bean implements WorkstationItem {
 				this.domainId = domainId1;
 				final Domain domain = 
 					(Domain) StorableObjectPool.getStorableObject(domainPerpective.getDomainId(), true);
-				permissionAttributes = domain.getPermissionAttributes(this.id, module);
+				permissionAttributes = domain.getPermissionAttributes(this.identifier, module);
 				this.permissionAttributesMap.put(module, permissionAttributes);
 			}
 			return permissionAttributes;
@@ -418,4 +465,8 @@ public class UserBean extends Bean implements WorkstationItem {
 		return this.roles;
 	}
 
+	@Override
+	public String getCodename() {
+		return ObjectEntities.SYSTEMUSER;
+	}	
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.24 2005/10/18 15:10:38 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.25 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
@@ -26,32 +27,23 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.25 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
+public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	
 	public static final String NET_CODENAME = "Net";
 	
-	private static NetBeanFactory instance;
-	
 	private Validator validator;
 	
-	private NetBeanFactory(final ManagerMainFrame graphText) {
+	public NetBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Net", 
 			"Manager.Entity.Net");
 		super.graphText = graphText;
 	}
 	
-	public static final synchronized NetBeanFactory getInstance(final ManagerMainFrame graphText) {
-		if(instance == null) {
-			instance = new NetBeanFactory(graphText);
-		}		
-		return instance;
-	}
-
 	@Override
 	public NonStorableBean createBean(Perspective perspective) 
 	throws ApplicationException {
@@ -63,28 +55,25 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	throws ApplicationException {
 		++super.count;
 		final NonStorableBean bean = new NonStorableBean() {
-			private static final String UI_CLASS_ID = "NetBeanUI";
-			
-			@Override
-			public String getUIClassID() {
-				return UI_CLASS_ID;
-			}
 			
 			private Set<LayoutItem> getBeanChildrenLayoutItems() 
 			throws ApplicationException{
 				final TypicalCondition typicalCondition = 
-					new TypicalCondition(this.getCodeName(), 
+					new TypicalCondition(this.getId(), 
 						OperationSort.OPERATION_EQUALS, 
 						ObjectEntities.LAYOUT_ITEM_CODE, 
 						StorableObjectWrapper.COLUMN_NAME);
 
-				final Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
-					typicalCondition, 
-					true, 
-					true);
+				final Set<LayoutItem> beanLayoutItems = 
+					StorableObjectPool.getStorableObjectsByCondition(
+						typicalCondition, 
+						true, 
+						true);
 				
 				for(final Iterator<LayoutItem> it = beanLayoutItems.iterator(); it.hasNext();) {
 					final LayoutItem layoutItem = it.next();
+					assert Log.debugMessage("" + layoutItem.getLayoutName() + ", " + layoutItem.getName(),
+						Log.DEBUGLEVEL04);
 					if (!layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
 						it.remove();
 					}
@@ -100,7 +89,7 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 					true);
 				
 				beanChildrenLayoutItems.addAll(beanLayoutItems);
-				return beanChildrenLayoutItems;
+				return beanChildrenLayoutItems;				
 			}
 			
 			@Override
@@ -119,7 +108,8 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 							+ layoutItem.getLayoutName(),							
 						Log.DEBUGLEVEL10);		
 						
-						AbstractBean childBean = this.graphText.getCell(layoutItem);
+						final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+						AbstractBean childBean = graphRoutines.getBean(layoutItem);
 						System.out.println(".dispose() | " + childBean);
 						childBean.dispose();
 						childBean.disposeLayoutItem();
@@ -128,7 +118,7 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 				
 				super.disposeLayoutItem();
 				
-				this.graphText.valueChanged(null);
+				this.graphText.getGraph().getSelectionModel().clearSelection();
 			}
 			
 			@Override
@@ -138,13 +128,13 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 				Identifier parentDomainId = Identifier.VOID_IDENTIFIER;
 				
 				if (newPort != null) {
-					parentDomainId = ((DomainBean)newPort.getUserObject()).getId();
+					parentDomainId = ((DomainBean)newPort.getUserObject()).getIdentifier();
 				}
 				
 				Identifier oldParentDomainId = Identifier.VOID_IDENTIFIER;
 				
 				if (oldPort != null) {
-					oldParentDomainId = ((DomainBean)oldPort.getUserObject()).getId();
+					oldParentDomainId = ((DomainBean)oldPort.getUserObject()).getIdentifier();
 				}
 
 				assert Log.debugMessage("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
@@ -168,7 +158,8 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 						Log.DEBUGLEVEL10);		
 						layoutItem.setLayoutName(layoutName);
 						
-						AbstractBean cell = this.graphText.getCell(layoutItem);
+						final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+						AbstractBean cell = graphRoutines.getBean(layoutItem);
 						if (cell instanceof DomainNetworkItem) {
 							DomainNetworkItem portBean = (DomainNetworkItem) cell;						
 							portBean.setDomainId(oldParentDomainId, parentDomainId);
@@ -176,13 +167,19 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 					}
 				}
 				
-				this.graphText.valueChanged(null); 
+				this.graphText.getGraph().getSelectionModel().clearSelection();
+			}
+			
+			@Override
+			public String getCodename() {
+				return NET_CODENAME;
 			}
 		};
+		bean.setName(this.getName());
 		bean.setGraphText(super.graphText);
-		bean.setCodeName(codename);
+		bean.setId(codename);
 		bean.setValidator(this.getValidator());
-		bean.setId(Identifier.VOID_IDENTIFIER);
+		bean.setIdentifier(Identifier.VOID_IDENTIFIER);
 		return bean;
 	}
 	
@@ -204,8 +201,8 @@ public class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 							Log.DEBUGLEVEL10);
 						return sourceBean != null && 
 							targetBean != null && 
-							sourceBean.getCodeName().startsWith(NET_CODENAME) &&
-							targetBean.getCodeName().startsWith(ObjectEntities.DOMAIN);
+							sourceBean.getId().startsWith(NET_CODENAME) &&
+							targetBean.getId().startsWith(ObjectEntities.DOMAIN);
 					}
 				};
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.14 2005/10/18 15:10:39 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.15 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,23 +8,17 @@
 
 package com.syrus.AMFICOM.manager.UI;
 
-import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -52,32 +46,16 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.UndoableEditEvent;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 
 import org.jgraph.JGraph;
-import org.jgraph.event.GraphModelEvent;
-import org.jgraph.event.GraphModelListener;
-import org.jgraph.event.GraphSelectionEvent;
-import org.jgraph.event.GraphSelectionListener;
-import org.jgraph.event.GraphModelEvent.GraphModelChange;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.ConnectionSet;
 import org.jgraph.graph.DefaultCellViewFactory;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.Edge;
-import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 
-import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
-import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
@@ -87,51 +65,26 @@ import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.Identifiable;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.AbstractBeanFactory;
-import com.syrus.AMFICOM.manager.Bean;
-import com.syrus.AMFICOM.manager.DomainBeanFactory;
-import com.syrus.AMFICOM.manager.MCMBeanFactory;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.NetBeanFactory;
-import com.syrus.AMFICOM.manager.PermissionBeanFactory;
+import com.syrus.AMFICOM.manager.ManagerHandler;
 import com.syrus.AMFICOM.manager.Perspective;
-import com.syrus.AMFICOM.manager.RTUBeanFactory;
-import com.syrus.AMFICOM.manager.ServerBeanFactory;
-import com.syrus.AMFICOM.manager.UserBeanFactory;
-import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
-import com.syrus.AMFICOM.resource.LayoutItem;
-import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.15 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectionListener {	
+public class ManagerMainFrame extends AbstractMainFrame {	
 	
 	JGraph						graph;
 
 	JTree						tree;
 
-	NonRootGraphTreeModel		treeModel;
+	private NonRootGraphTreeModel		treeModel;
 
 	JPanel				propertyPanel;
 
@@ -142,20 +95,11 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	protected Action			undo, redo, remove, group, ungroup, tofront, toback,
 			cut, copy, paste;
 
-	GridBagConstraints	gbc2;
-
 	Perspective			perspective;
-	
-	Identifier			xTypeId;
-	Identifier			yTypeId;
-	Identifier			nonStorableObjectNameTypeId;
 	
 	boolean						arranging;
 	
-	private Map<String, AbstractBean> beanMap;
-	private Map<String, AbstractBeanFactory> factoryMap;
-
-	private ManagerGraphModel	graphModel;
+	ManagerGraphModel	graphModel;
 	
 	UIDefaults					frames;
 	
@@ -168,9 +112,13 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	JScrollPane pane;
 	JTabbedPane tabbedPane;
 
-	HashMap<JComponent, Perspective>	perspectiveMap;
+	Map<JComponent, Perspective>	perspectiveMap;
 
-	private BeanUI	beanUI;
+	BeanUI	beanUI;
+
+	ManagerHandler	managerHandler;
+
+	private GraphRoutines	graphRoutines;
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
 		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
@@ -238,12 +186,17 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		
 		final JDesktopPane desktopPane1 = this.desktopPane;
 		
-		{
+		
+		final boolean localDomainAccess = Boolean.parseBoolean(System.getProperty("manager.localdomain.access"));
+		if (localDomainAccess){
 			// XXX testing bypass
 			super.toolBar.addSeparator();
-			final AbstractAction enterDomains = new AbstractAction("D") {			
+			final AbstractAction enterDomains = new AbstractAction("D") {	
+				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
 				public void actionPerformed(ActionEvent e) {
-					ManagerMainFrame.this.windowArranger.arrange();
+					final JButton button = (JButton) e.getSource();
+					button.setEnabled(false);
+					windowArranger.arrange();
 					ApplicationContext context = ManagerMainFrame.this.getContext();
 					ApplicationModel applicationModel = context.getApplicationModel();
 					Command command = applicationModel.getCommand(ManagerModel.DOMAINS_COMMAND);
@@ -254,6 +207,8 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			enterDomains.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_D));
 			super.toolBar.add(enterDomains);
 		}
+		
+		
 		
 		this.setWindowArranger(new WindowArranger(this) {
 
@@ -306,9 +261,10 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		
 		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
 
+			@SuppressWarnings("hiding")
 			public Object createValue(UIDefaults table) {
-				JScrollPane pane = new JScrollPane(ManagerMainFrame.this.tree);
-				JInternalFrame frame = new JInternalFrame(I18N.getString(TREE_FRAME), true);
+				final JScrollPane pane = new JScrollPane(ManagerMainFrame.this.tree);
+				final JInternalFrame frame = new JInternalFrame(I18N.getString(TREE_FRAME), true);
 				frame.setIconifiable(true);
 				frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 				desktopPane1.add(frame);
@@ -317,8 +273,10 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			}
 		});		
 		
+		
 		this.frames.put(GRAPH_FRAME, new UIDefaults.LazyValue() {
 
+			@SuppressWarnings("unqualified-field-access")
 			public Object createValue(UIDefaults table){
 			
 			// show graph frame
@@ -393,11 +351,11 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 				desktopPane1.add(frame);				
 				ManagerMainFrame.this.propertyPanel = new JPanel(new GridBagLayout());
-				ManagerMainFrame.this.gbc2 = new GridBagConstraints();
-				ManagerMainFrame.this.gbc2.fill = GridBagConstraints.BOTH;
-				ManagerMainFrame.this.gbc2.weightx = 1.0;
-				ManagerMainFrame.this.gbc2.weighty = 1.0;
-				ManagerMainFrame.this.gbc2.gridwidth = GridBagConstraints.REMAINDER;
+				final GridBagConstraints gbc2 = new GridBagConstraints();
+				gbc2.fill = GridBagConstraints.BOTH;
+				gbc2.weightx = 1.0;
+				gbc2.weighty = 1.0;
+				gbc2.gridwidth = GridBagConstraints.REMAINDER;
 	
 				
 				frame.getContentPane().add(ManagerMainFrame.this.propertyPanel);			
@@ -414,8 +372,11 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		applicationModel.setCommand(GRAPH_FRAME, this.getShowWindowLazyCommand(this.frames, GRAPH_FRAME));
 		applicationModel.setCommand(PROPERTIES_FRAME, this.getShowWindowLazyCommand(this.frames, PROPERTIES_FRAME));
 		
-		this.beanMap = new HashMap<String, AbstractBean>();
-		this.initFactories();
+		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
+		this.managerHandler = 
+			extensionLauncher.getExtensionHandler("com.syrus.AMFICOM.manager.ManagerHandler");
+		
+		this.managerHandler.setManagerMainFrame(this);
 		
 		// Construct Model and Graph
 		this.graphModel = new ManagerGraphModel();
@@ -423,7 +384,16 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		this.graph = new JGraph(this.graphModel,
 			new GraphLayoutCache(this.graphModel,
 					new DefaultCellViewFactory(),
-					true));
+					true)) {
+			@Override
+			public String getToolTipText(MouseEvent e) {
+				return e.getX() + " x " + e.getY();
+			}
+		};
+		
+		this.graph.setToolTipText("");
+		
+		this.graphRoutines = new GraphRoutines(this);
 		
 		//	Use a Custom Marquee Handler
 		this.graph.setMarqueeHandler(new ManagerMarqueeHandler(this));
@@ -456,27 +426,16 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		this.createModelListener();		
 	}
 
-
-	private final void initFactories() {
-		this.factoryMap = new HashMap<String, AbstractBeanFactory>();
-	
-		for(final Module module : Module.getValueList()) {
-			final AbstractBeanFactory factory = PermissionBeanFactory.getInstance(this, module);
-			this.factoryMap.put(factory.getCodename(), factory);				
-		}
+	@Override
+	public void loggedIn() {
+		// TODO Auto-generated method stub
 		
-		final AbstractBeanFactory[] factories = new AbstractBeanFactory[] {
-				UserBeanFactory.getInstance(this),
-				DomainBeanFactory.getInstance(this),
-				WorkstationBeanFactory.getInstance(this),
-				MCMBeanFactory.getInstance(this),
-				NetBeanFactory.getInstance(this),
-				RTUBeanFactory.getInstance(this),
-				ServerBeanFactory.getInstance(this)
-		};
-		for(final AbstractBeanFactory factory : factories) {
-			this.factoryMap.put(factory.getCodename(), factory);
-		}
+	}
+	
+	@Override
+	public void loggedOut() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
@@ -499,587 +458,14 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	}
 	
 	private void createModelListener() {
-		this.graph.getModel().addGraphModelListener(
-			new GraphModelListener() {
-			public void graphChanged(GraphModelEvent e) {
-				try {
-					if (ManagerMainFrame.this.arranging) {
-						return;
-					}
-					GraphModelChange change = e.getChange();
-					
-					GraphModel model = ManagerMainFrame.this.graph.getModel();
-					
-					Object[] inserted = change.getInserted();
-					Object[] changed = change.getChanged();
-					Object[] removed = change.getRemoved();
-					
-					if (inserted != null) {
-						for(Object insertedObject : inserted) {
-							if (model.isPort(insertedObject)) {
-								TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) insertedObject);
-								if (pathToRoot != null)
-									ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
-							}
-						}
-					}
-					
-					if (changed != null && removed == null) {
-						for(Object changedObject : changed) {
-							Log.debugMessage(".graphChanged() | changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']', Log.DEBUGLEVEL10);
-							if (model.isPort(changedObject)) {
-								TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) changedObject);
-								if (pathToRoot != null) {
-									ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
-								}
-							} else  if (model.isEdge(changedObject)) {
-								Edge edge = (Edge) changedObject;
-								final MPort source = (MPort) edge.getSource();
-								final MPort target = (MPort) edge.getTarget();
-								source.updateCache();
-								target.updateCache();
-								
-								Log.debugMessage(".graphChanged() | " + source  +" -> " + target,
-									Log.DEBUGLEVEL10);
-								AbstractBean bean = source.getUserObject();
-								
-								
-								ConnectionSet connectionSet = change.getConnectionSet();							
-								MPort source2 = (MPort) connectionSet.getPort(edge, true);
-								MPort target2 = (MPort) connectionSet.getPort(edge, false);
-	
-								Log.debugMessage(".graphChanged() | ' " + source2  +" -> " + target2, Log.DEBUGLEVEL10);
-								
-								if (source2 != null) {
-									source2.updateCache();
-								}
-								
-								if (target2 == null) {
-									AbstractBean bean2 = source2.getUserObject();
-									Log.debugMessage(".graphChanged() | " + bean2, Log.DEBUGLEVEL10);
-									bean2.applyTargetPort(null, null);
-									LayoutItem layoutItem = this.getLayoutItem(bean2.getCodeName());
-									Log.debugMessage(
-										"JGraphText.createModelListener | set layoutItem:" 
-										+ layoutItem.getName() 
-										+ ", parentId:" + Identifier.VOID_IDENTIFIER,
-										Log.DEBUGLEVEL10);
-									layoutItem.setParentId(Identifier.VOID_IDENTIFIER); 
-								} else {
-									target2.updateCache();
-								}
-								bean.applyTargetPort(target2, target);
-								
-								
-								if (!ManagerMainFrame.this.arranging) {
-									
-									assert Log.debugMessage(
-										"ManagerMainFrame.createModelListener | " + target,
-										Log.DEBUGLEVEL09);
-
-									assert Log.debugMessage(
-										"ManagerMainFrame.createModelListener | " + target.getBean(),
-										Log.DEBUGLEVEL09);
-
-									assert Log.debugMessage(
-										"ManagerMainFrame.createModelListener | " + target.getBean().getCodeName(),
-										Log.DEBUGLEVEL09);
-									
-									String codeName = bean.getCodeName();
-									LayoutItem sourceItem = this.getLayoutItem(codeName);
-									Identifier targetItemId = 
-										target != null ? 
-												this.getLayoutItem(target.getBean().getCodeName()).getId() :
-												Identifier.VOID_IDENTIFIER;
-									sourceItem.setParentId(targetItemId);
-								}
-								
-							} else {
-								DefaultGraphCell cell = (DefaultGraphCell)changedObject;
-								MPort port = (MPort) cell.getChildAt(0);
-								AbstractBean bean = port.getBean();
-								if (bean != null) {
-									bean.setName((String) cell.getUserObject());
-								}
-								
-								AttributeMap attributes = cell.getAttributes();
-								Rectangle2D rectangle2D = GraphConstants.getBounds(attributes);
-								String title = cell.getUserObject().toString();
-	
-								if (!ManagerMainFrame.this.arranging) {								
-									String codeName = bean.getCodeName();
-									LayoutItem item = this.getLayoutItem(codeName);
-									if (item == null) {
-										item = LayoutItem.createInstance(LoginManager.getUserId(),
-											Identifier.VOID_IDENTIFIER,
-											ManagerMainFrame.this.perspective.getCodename(),
-											codeName);
-										
-										Characteristic.createInstance(LoginManager.getUserId(),
-											(CharacteristicType) StorableObjectPool.getStorableObject(ManagerMainFrame.this.xTypeId, true),
-											"x",
-											"x",
-											Integer.toString((int) rectangle2D.getX()),
-											item,
-											true,
-											true);
-										
-										Characteristic.createInstance(LoginManager.getUserId(),
-											(CharacteristicType) StorableObjectPool.getStorableObject(ManagerMainFrame.this.yTypeId, true),
-											"y",
-											"y",
-											Integer.toString((int) rectangle2D.getY()),
-											item,
-											true,
-											true);
-										
-										if (bean.getId().isVoid()) {
-											Characteristic.createInstance(LoginManager.getUserId(),
-												(CharacteristicType) StorableObjectPool.getStorableObject(ManagerMainFrame.this.nonStorableObjectNameTypeId, true),
-												"title",
-												"title",
-												title,
-												item,
-												true,
-												true);
-										}
-										
-									} else {
-										for(Characteristic characteristic : item.getCharacteristics(false)) {
-											String codename = characteristic.getType().getCodename();
-											if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
-												characteristic.setValue(Integer.toString((int) rectangle2D.getX()));
-											} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_Y)) {
-												characteristic.setValue(Integer.toString((int) rectangle2D.getY()));
-											} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_NAME)) {
-												characteristic.setValue(title);
-											}
-										}
-	
-									} 
-								}
-							
-							}
-						}
-					} 
-					if (removed != null) {
-						if (changed != null) {
-							for(Object changedObject : changed) {
-								System.out.println(".graphChanged() | changedObject after delete " + changedObject + '[' + changedObject.getClass().getName() + ']');
-							}
-						}
-						for(Object removedObject : removed) {
-							System.out.println(".graphChanged() | removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
-							// First of all remove all edges
-							 if (model.isEdge(removedObject)) {
-								Edge edge = (Edge) removedObject;
-								ConnectionSet connectionSet = change.getConnectionSet();							
-								MPort source = (MPort) connectionSet.getPort(edge, true);
-								MPort target = (MPort) connectionSet.getPort(edge, false);
-	
-								AbstractBean bean = source.getUserObject();
-								bean.applyTargetPort(target, null);
-								final LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
-								Log.debugMessage(".graphChanged | removedObject | layoutItem:" 
-										+ layoutItem.getName() 
-										+ ", layoutName:" 
-										+ layoutItem.getLayoutName(),
-									Log.DEBUGLEVEL10);
-								layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
-							 } 
-						}
-						
-						for(Object removedObject : removed) {
-							System.out.println(".graphChanged() | removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
-							// First of all remove all edges
-							 if (model.isPort(removedObject)) {
-								 MPort source = (MPort) removedObject;
-								 AbstractBean bean = source.getUserObject();
-								 bean.dispose();
-							 }
-						}
-					}				
-				} catch (final ApplicationException exception) {
-					// TODO Auto-generated catch block
-					exception.printStackTrace();
-					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, exception
-							.getMessage(), I18N.getString("Manager.Error"),
-						JOptionPane.ERROR_MESSAGE);
-				}
-			}
-			
-			private LayoutItem getLayoutItem(final String codename) throws ApplicationException {
-				CompoundCondition compoundCondition = 
-					new CompoundCondition(new TypicalCondition(
-						ManagerMainFrame.this.perspective.getCodename(), 
-						OperationSort.OPERATION_EQUALS,
-						ObjectEntities.LAYOUT_ITEM_CODE,
-						LayoutItemWrapper.COLUMN_LAYOUT_NAME),
-						CompoundConditionSort.AND,
-						new LinkedIdsCondition(
-							LoginManager.getUserId(),
-							ObjectEntities.LAYOUT_ITEM_CODE)
-//			XXX uncommented when using javac				
-//							{
-//						
-//							@Override
-//							public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
-//								return storableObjects.isEmpty();
-//							}
-//						}
-			);
-				
-				compoundCondition.addCondition(new TypicalCondition(
-					codename, 
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.LAYOUT_ITEM_CODE,
-					StorableObjectWrapper.COLUMN_NAME));
-				
-				Set<LayoutItem> layoutItems = 
-					StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-				
-				if (layoutItems.isEmpty()) {
-					return null;
-				}
-				return layoutItems.iterator().next();
-			}
-			
-		});
+		this.graph.getModel().addGraphModelListener(new ManagerGraphModelListener(this));
 	}
 	
-	final JToolBar createPerspecives() {		
-		
+	final JToolBar createPerspecives() {	
 		final JToolBar perspectives = new JToolBar();
-		
 		perspectives.setFloatable(false);
-
 		perspectives.addSeparator();
-		
 		return perspectives;
-	}
-	
-	private void arrangeLayoutItems() throws ApplicationException {
-		this.arranging = true;
-		TypicalCondition typicalCondition = new TypicalCondition(
-			this.perspective.getCodename(), 
-			OperationSort.OPERATION_EQUALS,
-			ObjectEntities.LAYOUT_ITEM_CODE,
-			LayoutItemWrapper.COLUMN_LAYOUT_NAME);
-		
-		LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
-			LoginManager.getUserId(),
-			ObjectEntities.LAYOUT_ITEM_CODE) {
-			@Override
-			public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
-				return storableObjects.isEmpty();
-			}
-		};
-		
-		CompoundCondition compoundCondition = 
-			new CompoundCondition(typicalCondition,
-				CompoundConditionSort.AND,
-				linkedIdsCondition);
-		
-		
-		Set<LayoutItem> layoutItems = 
-			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-		
-		if (this.xTypeId == null) {
-			typicalCondition = new TypicalCondition(
-				LayoutItem.CHARACTERISCTIC_TYPE_X, 
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.CHARACTERISTIC_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-			
-			Set<CharacteristicType> storableObjectsByCondition = 
-				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-			
-			this.xTypeId = storableObjectsByCondition.iterator().next().getId();
-		
-		}
-		if (this.yTypeId == null) {
-			typicalCondition = new TypicalCondition(
-					LayoutItem.CHARACTERISCTIC_TYPE_Y, 
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.CHARACTERISTIC_TYPE_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-				
-			Set<CharacteristicType> storableObjectsByCondition = 
-				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-			
-			this.yTypeId = storableObjectsByCondition.iterator().next().getId();
-		}
-		
-		if (this.nonStorableObjectNameTypeId == null) {
-			typicalCondition = new TypicalCondition(
-					LayoutItem.CHARACTERISCTIC_TYPE_NAME, 
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.CHARACTERISTIC_TYPE_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-				
-			Set<CharacteristicType> storableObjectsByCondition = 
-				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
-			
-			this.nonStorableObjectNameTypeId = storableObjectsByCondition.iterator().next().getId();
-		}
-
-		for(LayoutItem layoutItem : layoutItems) {
-			this.arrangeCell(layoutItem);
-		}
-		this.arranging = false;	
-	}
-
-	public DefaultGraphCell arrangeCell(final LayoutItem item) 
-	throws NumberFormatException, ApplicationException {
-		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		GraphModel model = this.graph.getModel();
-		
-		DefaultGraphCell parentCell = null;
-		Identifier parentId = item.getParentId();
-		if (!parentId.isVoid()) {
-			LayoutItem parentItem = StorableObjectPool.getStorableObject(parentId, true);
-			parentCell = this.arrangeCell(parentItem);
-		}
-		
-		
-				
-		DefaultGraphCell itemCell = null;		
-		int x = 0;
-		int y = 0;
-		String title = null;
-		for(Characteristic characteristic : item.getCharacteristics(false)) {
-			String codename = characteristic.getType().getCodename();
-			if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
-				x = Integer.parseInt(characteristic.getValue());
-			} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_Y)) {
-				y = Integer.parseInt(characteristic.getValue());
-			} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_NAME)) {
-				title = characteristic.getValue();
-			}
-		}
-		
-		itemCell = this.getDefaultGraphCell(item);
-		
-		if (itemCell == null) {
-			AbstractBean bean = this.getCell(item);
-			
-			final BeanUI beanUI = BeanUI.BeanUIFactory.getBeanUI(bean.getUIClassID(), this);
-			
-			itemCell = this.createChild(
-				null, 
-				title != null ? title : bean.getName(), 
-				bean, 
-				x, 
-				y, 
-				0, 
-				0, 
-				beanUI.getImage(bean));
-			if (!graphLayoutCache.isVisible(itemCell)) {
-				graphLayoutCache.setVisible(itemCell, true);
-			}
-			
-			if (parentCell != null) {
-				MPort port = (MPort) itemCell.getChildAt(0);
-				MPort parentPort = (MPort) parentCell.getChildAt(0);
-				Edge connectionEdge = null;
-				for(int j = 0; j<model.getRootCount(); j++) {
-					DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
-					if (model.isEdge(edgeCell)) {
-						Edge edge = (Edge) edgeCell;
-						Object target = edge.getSource();
-						Object source = edge.getTarget();
-						
-						if (target == port && source == parentPort) {
-							connectionEdge = edge;
-							break;
-						}
-					}
-				}
-				
-				if (connectionEdge != null) {
-					// make edge visible
-					if (!graphLayoutCache.isVisible(connectionEdge)) {
-						graphLayoutCache.setVisible(connectionEdge, true);
-					}
-				} else {
-					// otherwise create edge
-					this.createEdge(itemCell, parentCell);
-				}
-			}
-		} else {
-			final AttributeMap attributeMap = new AttributeMap();
-			GraphConstants.setBounds(attributeMap,
-				new Rectangle2D.Double(x, y, 0, 0));
-			if (title != null) {
-				GraphConstants.setValue(attributeMap,
-					title);
-			}
-			Map viewMap = new Hashtable();
-			viewMap.put(itemCell, attributeMap);
-			model.edit(viewMap, null, null, null);
-			
-			
-			if (parentCell != null) {
-				MPort parentPort = (MPort) parentCell.getChildAt(0);
-				Edge connectionEdge = null;
-				for(int j = 0; j<model.getRootCount(); j++) {
-					DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
-					if (model.isEdge(edgeCell)) {
-						Edge edge = (Edge) edgeCell;
-						Object target = edge.getSource();
-						Object source = edge.getTarget();								
-						if (source == parentPort && target == itemCell.getChildAt(0)) {
-							connectionEdge = edge;
-							break;
-						}
-					}
-				}
-				
-				
-				if (connectionEdge != null) {
-					// make edge visible
-					if (!graphLayoutCache.isVisible(connectionEdge)) {
-						graphLayoutCache.setVisible(connectionEdge, true);
-					}
-				} else {
-					// otherwise create edge
-					this.createEdge(itemCell, parentCell);
-				}
-			}
-		}
-		
-		return itemCell;
-	}
-	
-	public DefaultGraphCell getDefaultGraphCell(final LayoutItem item) {
-		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		final GraphModel model = this.graph.getModel();
-		
-		final String name = item.getName();
-		
-		for(int i = 0; i < model.getRootCount(); i++) {
-			DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
-			if (!model.isEdge(cell) && !model.isPort(cell)) {				
-				MPort port = (MPort) cell.getChildAt(0);
-				AbstractBean bean = port.getBean();
-				if (name.equals(bean.getCodeName())) {
-					if (!graphLayoutCache.isVisible(cell)) {
-						graphLayoutCache.setVisible(cell, true);
-					}
-					
-					return cell;
-				}
-			}
-		}
-		
-		return null;
-	}
-	
-	private AbstractBeanFactory getFactory(final String name) {
-		assert Log.debugMessage("ManagerMainFrame.getFactory | name:" + name, Log.DEBUGLEVEL09);
-		for(final String  codename: this.factoryMap.keySet()) {
-			assert Log.debugMessage("ManagerMainFrame.getFactory | " + codename,
-				Log.DEBUGLEVEL09);
-			if (name.startsWith(codename)) {
-				assert Log.debugMessage("ManagerMainFrame.getFactory | found " + codename,
-					Log.DEBUGLEVEL09);
-				return this.factoryMap.get(codename);
-			}
-		}
-		assert Log.debugMessage("ManagerMainFrame.getFactory | factory for " + name + " not found", Log.DEBUGLEVEL02);
-		return null;
-	}
-	
-	public AbstractBean getCell(final LayoutItem layoutItem) {
-		final String name = layoutItem.getName();
-		
-		AbstractBean bean = this.beanMap.get(name);
-		
-		if (bean == null) {
-			AbstractBeanFactory factory = this.getFactory(name);
-			try {
-				bean = factory.createBean(name);
-			} catch (final ApplicationException ae) {
-				ae.printStackTrace();
-				JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
-					ae.getMessage(), 
-					I18N.getString("Manager.Error"),
-					JOptionPane.ERROR_MESSAGE);
-			}
-			this.beanMap.put(name, bean);
-		}
-		
-		return bean;
-	}
-	
-	public void showOnly(final String[] names) {
-		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		final GraphModel model = this.graph.getModel();
-		
-		for(int i = 0; i<model.getRootCount(); i++) {
-			final Object rootAt = model.getRootAt(i);
-			if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
-				MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
-				AbstractBean bean = port.getBean();				
-				boolean hide = true;
-				
-				if (bean != null) {
-					String codeName = bean.getCodeName();
-					for (String name : names) {
-						if (codeName.startsWith(name)) {
-							hide = false;
-							break;
-						}
-					}
-				}
-				
-				graphLayoutCache.setVisible(port.getParent(), !hide);
-			}
-		}
-		
-		this.treeModel.removeAllAvailableCodenames();
-		for(String codename: names) {
-			this.treeModel.addAvailableCodename(codename);
-		}
-		
-		this.graph.repaint();
-		this.undoManager.discardAllEdits();
-		this.updateHistoryButtons();
-	}
-	
-	public void hideTillCell(final MPort startPort, 
-	                         final MPort port) {
-		
-		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		graphLayoutCache.setVisible(startPort.getParent(), false);
-
-		if (startPort == port) {
-			return;
-		}
-		final List<Port> targets = startPort.getSources();
-		
-		for(Port targetPort: targets) {			
-				this.hideTillCell((MPort) targetPort, port);
-		}
-	}
-	
-	public void showOnlyDescendants(final DefaultGraphCell cell) {		
-		GraphModel model = this.graph.getModel();		
-		
-		MPort selectedPort = (MPort) cell.getChildAt(0);
-		
-		for(int i = 0; i<model.getRootCount(); i++) {
-			Object rootAt = model.getRootAt(i);
-			if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
-				MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
-				List<Port> sources = port.getTargets();
-				if (sources.isEmpty()) {
-					this.hideTillCell(port, selectedPort);
-				}
-			}
-			
-		}
-		this.treeModel.setRoot(cell);
 	}
 	
 	JToolBar createToolBar() {
@@ -1288,195 +674,13 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		return this.entityToolBar.add(abstractAction);
 	}	
 
-	DefaultEdge createEdge(final DefaultGraphCell source, 
-	                       final DefaultGraphCell target) {
-		return this.createEdge(source, 
-			target, 
-			true);
-	}
-	
-	private DefaultEdge createEdge(final DefaultGraphCell source, 
-	                               final DefaultGraphCell target,
-	                               final boolean addToGraph) {
-		
-		MPort sourcePort = (MPort) source.getChildAt(0);
-		MPort targetPort = (MPort) target.getChildAt(0);
-		if (sourcePort != targetPort) {
-			final boolean canConnect =
-				this.graphModel.isConnectionPermitted(sourcePort, targetPort);
-			if (canConnect) {
-				DefaultEdge edge = new DefaultEdge();
-				edge.setSource(sourcePort);
-				edge.setTarget(targetPort);
-//				 Set Arrow Style for edge
-				this.createEdgeAttributes(edge);
-				
-				GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-				graphLayoutCache.insert(edge);		
-				graphLayoutCache.setVisibleImpl(new Object[] {edge}, addToGraph);
-				
-				this.graph.getSelectionModel().clearSelection();
-				try {
-					CompoundCondition compoundCondition = 
-						new CompoundCondition(new TypicalCondition(
-							this.perspective.getCodename(), 
-							OperationSort.OPERATION_EQUALS,
-							ObjectEntities.LAYOUT_ITEM_CODE,
-							LayoutItemWrapper.COLUMN_LAYOUT_NAME),
-							CompoundConditionSort.AND,
-							new LinkedIdsCondition(
-								LoginManager.getUserId(),
-								ObjectEntities.LAYOUT_ITEM_CODE) {
-								@Override
-								public boolean isNeedMore(Set< ? extends Identifiable> storableObjects) {
-									return storableObjects.isEmpty();
-								}
-							});
-					
-					AbstractBean targetBean = targetPort.getBean();
-					AbstractBean sourceBean = sourcePort.getBean();
-					
-					TypicalCondition condition = new TypicalCondition(
-						sourceBean.getCodeName(), 
-						OperationSort.OPERATION_EQUALS,
-						ObjectEntities.LAYOUT_ITEM_CODE,
-						StorableObjectWrapper.COLUMN_NAME);
-					
-					compoundCondition.addCondition(condition);
-					
-					Set<LayoutItem> sourceItems = 
-						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-					
-					condition.setValue(targetBean.getCodeName());
-
-					Set<LayoutItem> targetItems = 
-						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-					
-					assert !sourceItems.isEmpty();
-					assert !targetItems.isEmpty();
-					
-					LayoutItem sourceItem = sourceItems.iterator().next();
-					LayoutItem targetItem = targetItems.iterator().next();
-					
-					sourceItem.setParentId(targetItem.getId());
-					
-				} catch (ApplicationException e) {
-					e.printStackTrace();
-					JOptionPane.showMessageDialog(this.graph, 
-						e.getMessage(), 
-						I18N.getString("Manager.Error"),
-						JOptionPane.ERROR_MESSAGE);
-				}
-				
-				return edge;
-			}
-		}
-
-		return null;
-	}
-	
-	
-	private void createEdgeAttributes(Edge edge) {
-		AttributeMap attributes = edge.getAttributes();
-		GraphConstants.setLineEnd(attributes, GraphConstants.ARROW_CLASSIC);
-		GraphConstants.setEditable(attributes, false);
-		GraphConstants.setEndFill(attributes, true);
-		GraphConstants.setLabelAlongEdge(attributes, true);
-	}
-
-	
-	public DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, Object object, double x,
-	         	             			double y, double w, double h, Icon image) {
-		DefaultGraphCell cell = this.createVertex(name, object, x, y, w, h, image);
- 		GraphLayoutCache cache = this.graph.getGraphLayoutCache();
-		cache.insert(cell);	
-
- 		if (parentCell != null) {
- 			DefaultEdge edge = this.createEdge(cell, parentCell);
- 			if (object instanceof AbstractBean) {
-				AbstractBean bean = (AbstractBean)object;
-				// XXX
-//				bean.updateEdgeAttributes(edge, (MPort) parentCell.getChildAt(0));
-			}
- 		}
- 		return cell;
-	}
-
-	public void valueChanged(GraphSelectionEvent e) {	
-		final JInternalFrame frame = 
-			(JInternalFrame) this.frames.get(PROPERTIES_FRAME);
-		frame.setTitle(I18N.getString(PROPERTIES_FRAME));
-		if (this.beanUI != null) {
-			this.beanUI.disposePropertyPanel();
-		}
-		this.propertyPanel.removeAll();		
-		if (e == null) {			
-			return;
-		}
-		
-		final Object cell = e.getCell();
-		final TreeSelectionModel selectionModel = this.tree.getSelectionModel();
-		final GraphModel model = this.graph.getModel();
-		
-		if (model.isEdge(cell)) {
-			if (e.isAddedCell()) {
-				Edge edge = (Edge)cell;
-				TreeNode sourceNode = (TreeNode) edge.getSource();
-				TreeNode targetNode = (TreeNode) edge.getSource();
-				if (sourceNode != null) {
-					this.tree.scrollPathToVisible(new TreePath(this.treeModel.getPathToRoot(sourceNode)));
-				}
-				if (targetNode != null) {
-					this.tree.scrollPathToVisible(new TreePath(this.treeModel.getPathToRoot(targetNode)));
-				}
-			} else {
-				selectionModel.clearSelection();
-			}
-		} else {				
-			if (e.isAddedCell()){
-				if (!model.isPort(cell) && !model.isEdge(cell)) {
-					TreeNode[] pathToRoot = this.treeModel.getPathToRoot((TreeNode) cell);
-					if (pathToRoot != null) {
-						TreePath path = new TreePath(pathToRoot);
-						selectionModel.setSelectionPath(path);
-					} else {
-						selectionModel.clearSelection();
-					}
-					
-				}
-				MPort port = (model.isPort(cell)) ? (MPort)cell : (MPort)((DefaultGraphCell)cell).getChildAt(0);				
-				Object userObject = port.getUserObject();
-				
-				if (userObject instanceof AbstractBean) {
-					final AbstractBean abstractBean = (AbstractBean)userObject;
-					this.beanUI = BeanUI.BeanUIFactory.getBeanUI(abstractBean.getUIClassID(), this);
-					JPanel propertyPanel2 = this.beanUI.getPropertyPanel(abstractBean);
-					if (propertyPanel2 != null) {
-						frame.setTitle(I18N.getString(PROPERTIES_FRAME)
-							+ " : "
-							+ ((AbstractBean)userObject).getName());
-						this.propertyPanel.add(propertyPanel2, this.gbc2);
-					}					
-				}				
-			} else {
-				selectionModel.clearSelection();
-			}
-		}
-
-		this.propertyPanel.revalidate();
-		this.propertyPanel.repaint();
-		
-		boolean enabled = !this.graph.isSelectionEmpty();
-		this.remove.setEnabled(enabled);
-	}
-
 	private void createTreeModel() {		
-		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel());
+		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel(), this.graphRoutines);
 		this.tree = new JTree(this.treeModel);
 		
 		this.tree.setRootVisible(true);
 		
-		this.graph.getSelectionModel().addGraphSelectionListener(this);
+		this.graph.getSelectionModel().addGraphSelectionListener(new ManagerGraphSelectionListener(this));
 		
 		this.tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
@@ -1488,75 +692,20 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			}
 		});
 	}
-
-	private DefaultGraphCell createVertex(	final String name,
-	                                      	final Object object,
-	                                      	final double x,
-											final double y,
-											final double w,
-											final double h,
-											final Icon image) {
-
-		// Create vertex with the given name
-		final DefaultGraphCell cell = new DefaultGraphCell(name);
-
-		// Set bounds
-		GraphConstants.setBounds(cell.getAttributes(),
-			new Rectangle2D.Double(x, y, w, h));
-
-		GraphConstants.setAutoSize(cell.getAttributes(), true);
-
-		
-		AttributeMap attributes = cell.getAttributes();
-		if (image != null) {
-			GraphConstants.setIcon(attributes, image);
-			attributes.remove(GraphConstants.BORDER);
-			attributes.remove(GraphConstants.BORDERCOLOR);
-		}
-
-		// Add a Port
-		MPort port = new MPort(object);
-		cell.add(port);
-		
-		if (object instanceof Bean) {
-			Bean bean = (Bean)object;
-			bean.addPropertyChangeListener(new PropertyChangeListener() {
-
-				public void propertyChange(PropertyChangeEvent evt) {
-					if (evt.getPropertyName().equals(KEY_NAME)) {
-						AttributeMap attributeMap = new AttributeMap();
-						GraphConstants.setValue(attributeMap, evt.getNewValue());
-						Map viewMap = new Hashtable();
-						viewMap.put(cell, attributeMap);
-						ManagerMainFrame.this.graph.getModel().edit(viewMap, null, null, null);
-					}
-					
-				}
-			});
-		}
-		
-		return cell;
-	}
-	
-	public final JGraph getGraph() {
-		return this.graph;
-	}
-
-	public Perspective getPerspective() {
-		return this.perspective;
-	}
 	
 	final void setPerspectiveTab(final Perspective perspective) {
-		try {
+		try {		
+			
+			final String codename = perspective.getCodename();			
 			int index = -1;
 			for(int i=0; i < this.tabbedPane.getTabCount(); i++) {
-				if (this.perspectiveMap.get(this.tabbedPane.getComponentAt(i))
-						== perspective) {
+				if (this.perspectiveMap.get(this.tabbedPane.getComponentAt(i)).getCodename().equals(codename)) {
 					index = i;
 					break;
 				}
-			}
-			if (index == -1) {				
+			}			
+			
+			if (index == -1) {
 				final JPanel panel = new JPanel(new GridBagLayout());
 				GridBagConstraints gbc = new GridBagConstraints();
 				gbc.fill = GridBagConstraints.BOTH;
@@ -1573,26 +722,28 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				this.perspectiveMap.put(panel, perspective);
 				this.tabbedPane.addTab(perspective.getName(), panel);
 				this.tabbedPane.setSelectedComponent(panel);
-			} else {
-				final JPanel panel = (JPanel) this.tabbedPane.getComponentAt(index);
-				panel.removeAll();
-				final GridBagLayout gridLayout = (GridBagLayout) panel.getLayout();
-				final GridBagConstraints gbc = gridLayout.getConstraints(panel);
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 1.0;
-				gbc.weighty = 1.0;
-				gbc.gridwidth = GridBagConstraints.REMAINDER;
-				gbc.gridheight = GridBagConstraints.REMAINDER;				
-				panel.add(this.pane, gbc);
-				this.tabbedPane.setSelectedIndex(index);
+				return;
 			}
 			
 			this.perspective = perspective;
-			this.entityToolBar.removeAll();
-			this.perspective.addEntities(this.entityToolBar);
-			this.entityToolBar.revalidate();
-			this.entityToolBar.repaint();
-			this.arrangeLayoutItems();		
+			
+			final JPanel panel = (JPanel) this.tabbedPane.getComponentAt(index);
+			panel.removeAll();
+			final GridBagLayout gridLayout = (GridBagLayout) panel.getLayout();
+			final GridBagConstraints gbc = gridLayout.getConstraints(panel);
+			gbc.fill = GridBagConstraints.BOTH;
+			gbc.weightx = 1.0;
+			gbc.weighty = 1.0;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			gbc.gridheight = GridBagConstraints.REMAINDER;				
+			panel.add(this.pane, gbc);
+			this.tabbedPane.setSelectedIndex(index);		
+			
+			this.perspective.createNecessaryItems();	
+			
+			// here items put into graphCache, when they can be used
+			this.graphRoutines.arrangeLayoutItems();
+			
 			this.perspective.perspectiveApplied();
 			final JInternalFrame frame = 
 				(JInternalFrame) this.frames.get(GRAPH_FRAME);
@@ -1600,6 +751,11 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				+ " : " 
 				+ this.perspective.getName());
 						
+			this.entityToolBar.removeAll();
+			this.perspective.addEntities(this.entityToolBar);
+			this.entityToolBar.revalidate();
+			this.entityToolBar.repaint();
+			
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -1609,6 +765,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	public boolean isPerspectiveValid() {
 		if (this.perspective != null) {
 			if (!this.perspective.isValid()) {
+				assert Log.debugMessage(this.perspective.getCodename() , Log.DEBUGLEVEL03);
 				JOptionPane.showMessageDialog(this.graph, 
 					I18N.getString("Manager.Error.LayoutIsInvalid"),
 					I18N.getString("Error"),
@@ -1619,19 +776,34 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		return true;
 	}
 	
+
+	public final JGraph getGraph() {
+		return this.graph;
+	}
+
+	public Perspective getPerspective() {
+		return this.perspective;
+	}
 	
 	public final void setPerspective(final Perspective perspective) {
 		assert perspective != null;		
 		if (!this.isPerspectiveValid()) {
 			return;
-//			throw new IllegalStateException(this.perspective.getName() + " isn't valid");
 		}
 		this.setPerspectiveTab(perspective);
+	}	
+
+	public final ManagerHandler getManagerHandler() {
+		return this.managerHandler;
 	}
 	
+	public final GraphRoutines getGraphRoutines() {
+		return this.graphRoutines;
+	}
+
+
 	
-	
-	public final Dispatcher getDispatcher() {
-		return this.dispatcher;
+	public final NonRootGraphTreeModel getTreeModel() {
+		return this.treeModel;
 	}
 }

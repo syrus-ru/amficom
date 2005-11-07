@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionBeanFactory.java,v 1.3 2005/10/18 15:10:39 bob Exp $
+* $Id: PermissionBeanFactory.java,v 1.4 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,33 +14,53 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class PermissionBeanFactory extends AbstractBeanFactory<PermissionBean> {
+public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionBean> {
 
 	private Validator validator;
 	
-	private static Map<Module, PermissionBeanFactory> instanceMap;
-
+	private Map<Module, PermissionBeanFactory> userInstanceMap;
+	
 	private final Module module;
 	
+	public PermissionBeanFactory(final ManagerMainFrame graphText) {
+		super(null, null);
+		super.graphText = graphText;
+		this.module = null;
+		this.userInstanceMap = new HashMap<Module, PermissionBeanFactory>();
+	}
+	
 	private PermissionBeanFactory(final ManagerMainFrame graphText, 
-	                              final Module module) {
+			final Module module) {
 		super(module.getDescription(), module.getDescription());
 		super.graphText = graphText;
 		this.module = module;
+	}
+	
+	public PermissionBeanFactory getUserInstance(final Module module) {
+		PermissionBeanFactory factory = 
+			this.userInstanceMap.get(module);
+		if (factory == null) {
+			factory = new PermissionBeanFactory(this.graphText, module);
+			this.userInstanceMap.put(module, factory);
+		}
+		return factory;
 	}
 	
 	@Override
@@ -53,41 +73,36 @@ public class PermissionBeanFactory extends AbstractBeanFactory<PermissionBean> {
 		return this.module.getDescription();
 	}
 	
-	public static final synchronized PermissionBeanFactory getInstance(final ManagerMainFrame graphText,
-			final Module module) {
-		if (instanceMap == null) {
-			instanceMap = new HashMap<Module, PermissionBeanFactory>();				
-		}
-		
-		PermissionBeanFactory factory = instanceMap.get(module);
-		if (factory == null) {
-			factory = new PermissionBeanFactory(graphText, module);
-			instanceMap.put(module, factory);
-		}
-		return factory;
-	}
-
-	
 	@Override
 	public PermissionBean createBean(final Perspective perspective) 
 	throws ApplicationException {
-		
-		final SystemUserPerpective userPerpective = (SystemUserPerpective) perspective;
+		if (perspective instanceof SystemUserPerpective) {		
+			final SystemUserPerpective userPerpective = (SystemUserPerpective) perspective;
+			
+			final PermissionAttributes permissionAttributes = 
+				PermissionAttributes.createInstance(LoginManager.getUserId(),
+					userPerpective.getDomainId(),
+					userPerpective.getUserId(),
+					this.module);
+			
+			return this.createBean(permissionAttributes.getId());
+		}
+
+		final RolePerpective rolePerpective = (RolePerpective) perspective;
 		
 		final PermissionAttributes permissionAttributes = 
 			PermissionAttributes.createInstance(LoginManager.getUserId(),
-				userPerpective.getDomainId(),
-				userPerpective.getUserId(),
+				Identifier.VOID_IDENTIFIER,
+				rolePerpective.getRoleId(),
 				this.module);
 		
 		return this.createBean(permissionAttributes.getId());
-
 	}
 	
 	@Override
 	public PermissionBean createBean(final String codename) 
 	throws ApplicationException {
-		return this.createBean(new Identifier(codename));
+		return this.createBean(new Identifier(codename.replaceFirst(ObjectEntities.SYSTEMUSER, "")));
 	}
 	
 	protected PermissionBean createBean(final Identifier identifier) 
@@ -95,22 +110,23 @@ public class PermissionBeanFactory extends AbstractBeanFactory<PermissionBean> {
 		
 		final PermissionAttributes permissionAttributes = 
 			StorableObjectPool.getStorableObject(identifier, true);
+		
 		final Module module2 = permissionAttributes.getModule();
 		if (module2 != this.module) {
-			final PermissionBeanFactory factory = 
-				instanceMap.get(module2);
+			final PermissionBeanFactory factory = this.getUserInstance(module2);	
 			return factory.createBean(identifier);
 		}
 				
 		final PermissionBean bean = new PermissionBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
-		bean.setCodeName(identifier.getIdentifierString());
+		bean.setId(ObjectEntities.PERMATTR + ObjectEntities.SYSTEMUSER + Identifier.SEPARATOR + identifier.getMinor());
 		bean.setValidator(this.getValidator());		
 
-		bean.setId(identifier);
-		
-		super.graphText.getDispatcher().firePropertyChange(
+		bean.setIdentifier(identifier);
+		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+		Dispatcher dispatcher = managerModel.getDispatcher();
+		dispatcher.firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.PERMATTR, null, bean));
 		
 		return bean;
@@ -118,23 +134,26 @@ public class PermissionBeanFactory extends AbstractBeanFactory<PermissionBean> {
 	
 	@Override
 	public String getCodename() {
-		return ObjectEntities.PERMATTR;
+		return this.module != null ? 
+				this.module.getCodename() + ObjectEntities.SYSTEMUSER :
+				ObjectEntities.PERMATTR + ObjectEntities.SYSTEMUSER;
 	}
 	
 	private Validator getValidator() {
 		if (this.validator == null) {
+			final String prefix = ObjectEntities.SYSTEMUSER;
 			this.validator = new Validator() {
 				
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
-					System.out.println("PermissionBeanFactory.Validator$1.isValid() | " 
-						+ sourceBean.getName() 
+					assert Log.debugMessage(sourceBean.getName() + sourceBean.getId()
 						+ " -> " 
-						+ targetBean.getName());
+						+ targetBean.getName() + targetBean.getId(), Log.DEBUGLEVEL10);
+					
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().startsWith(ObjectEntities.PERMATTR) &&
-						targetBean.getCodeName().startsWith(ObjectEntities.SYSTEMUSER);
+						sourceBean.getId().startsWith(ObjectEntities.PERMATTR + prefix) &&
+						targetBean.getId().startsWith(prefix);
 				}
 			};
 		}

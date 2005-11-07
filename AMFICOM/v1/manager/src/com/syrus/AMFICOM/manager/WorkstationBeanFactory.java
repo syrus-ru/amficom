@@ -1,5 +1,5 @@
 /*-
- * $Id: WorkstationBeanFactory.java,v 1.2 2005/10/18 15:10:38 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.3 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,37 +18,29 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean> {
+public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	
 	public static final String WORKSTATION_CODENAME = "Workstation";
 	
-	private static WorkstationBeanFactory instance;
-	
 	private Validator validator;
 	
-	private WorkstationBeanFactory(final ManagerMainFrame graphText) {
+	public WorkstationBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Workstation", 
 			"Manager.Entity.Workstation.acronym");
 		super.graphText = graphText;
 	}
 	
-	public static final synchronized WorkstationBeanFactory getInstance(final ManagerMainFrame graphText) {
-		if(instance == null) {
-			instance = new WorkstationBeanFactory(graphText);
-		}		
-		return instance;
-	}
-
 	@Override
 	public NonStorableBean createBean(Perspective perspective) throws ApplicationException {
 		return this.createBean(WORKSTATION_CODENAME + this.count);
@@ -59,10 +51,11 @@ public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean>
 	throws ApplicationException {
 		++super.count;
 		final WorkstationBean bean = new WorkstationBean();
+		bean.setName(this.getName());
 		bean.setGraphText(super.graphText);
 		bean.setValidator(this.getValidator());
-		bean.setCodeName(codename);
-		bean.setId(Identifier.VOID_IDENTIFIER);		
+		bean.setId(codename);
+		bean.setIdentifier(Identifier.VOID_IDENTIFIER);		
 		return bean;
 	}
 	
@@ -79,8 +72,8 @@ public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean>
 						Log.DEBUGLEVEL10);
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().startsWith(WORKSTATION_CODENAME) &&
-						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
+						sourceBean.getId().startsWith(WORKSTATION_CODENAME) &&
+						targetBean.getId().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
 		}
@@ -89,17 +82,10 @@ public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean>
 	
 	private class WorkstationBean extends NonStorableBean implements DomainNetworkItem {
 		
-		private static final String UI_CLASS_ID = "WorkstationBeanUI";
-		
-		@Override
-		public String getUIClassID() {
-			return UI_CLASS_ID;
-		}
-		
 		private Set<LayoutItem> getBeanChildrenLayoutItems() 
 		throws ApplicationException{
 			final TypicalCondition typicalCondition = 
-				new TypicalCondition(this.getCodeName(), 
+				new TypicalCondition(this.getId(), 
 					OperationSort.OPERATION_EQUALS, 
 					ObjectEntities.LAYOUT_ITEM_CODE, 
 					StorableObjectWrapper.COLUMN_NAME);
@@ -121,6 +107,7 @@ public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean>
 		
 		@Override
 		public void dispose() throws ApplicationException {			
+			final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {					
 					Log.debugMessage("WorkstationBean.dispose | "
@@ -129,7 +116,7 @@ public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean>
 						+ ", layoutName:" 
 						+ layoutItem.getLayoutName(), 
 					Log.DEBUGLEVEL10);			
-					AbstractBean childBean = this.graphText.getCell(layoutItem);
+					AbstractBean childBean = graphRoutines.getBean(layoutItem);
 					childBean.dispose();
 					childBean.disposeLayoutItem();
 				}					
@@ -137,10 +124,16 @@ public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean>
 			
 			super.disposeLayoutItem();
 		}
+
+		@Override
+		public String getCodename() {
+			return WorkstationBeanFactory.WORKSTATION_CODENAME;
+		}
 		
 		public void setDomainId(Identifier oldDomainId,
 								Identifier newDomainId) {
 			try {
+				final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
 				for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
 						final String layoutName = !newDomainId.isVoid() ? 
@@ -154,7 +147,7 @@ public class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean>
 						Log.DEBUGLEVEL10);						
 						layoutItem.setLayoutName(layoutName);
 						DomainNetworkItem portBean = 
-							(DomainNetworkItem) this.graphText.getCell(layoutItem);
+							(DomainNetworkItem) graphRoutines.getBean(layoutItem);
 						portBean.setDomainId(oldDomainId, newDomainId);
 					}					
 				}

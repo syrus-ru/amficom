@@ -1,5 +1,5 @@
 /*-
- * $Id: NonRootGraphTreeModel.java,v 1.5 2005/10/11 15:36:25 bob Exp $
+ * $Id: NonRootGraphTreeModel.java,v 1.6 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/11 15:36:25 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,29 +40,27 @@ public class NonRootGraphTreeModel implements TreeModel {
 
 	List<MPort>						firstLevel;
 
-	Set<String>						availableCodenames;
-
 	protected GraphModel			model;
 
 	protected TreeNode				generalRoot;
 
 	protected TreeNode				root;
 
-	public NonRootGraphTreeModel(final GraphModel model) {
+	private final GraphRoutines	graphRoutines;
+
+	public NonRootGraphTreeModel(final GraphModel model,
+			final GraphRoutines graphRoutines) {
 		this.model = model;
+		this.graphRoutines = graphRoutines;
 
 		this.generalRoot = new DefaultMutableTreeNode(".");
 		this.firstLevel = new ArrayList<MPort>();
 		
-		this.availableCodenames = new HashSet<String>();
-		
 		this.model.addGraphModelListener(new GraphModelListener() {
-			public void graphChanged(GraphModelEvent e) {
+			public void graphChanged(GraphModelEvent e) {				
 				e.getChange();
 				
-				NonRootGraphTreeModel.this.refreshFirstLevel();
-
-				
+				refreshFirstLevel();				
 			}
 		});
 	}
@@ -71,49 +68,45 @@ public class NonRootGraphTreeModel implements TreeModel {
 	void refreshFirstLevel() {
 		this.firstLevel.clear();
 		
+		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
+//		assert Log.debugMessage(layoutBeans, Log.DEBUGLEVEL03);
+
+		MPort rootPort = (MPort) (this.root != null ? this.root.getChildAt(0) : null); 
+//		assert Log.debugMessage(rootPort, Log.DEBUGLEVEL03);
+
 		for(int i=0;i<this.model.getRootCount();i++) {
 		TreeNode node = (TreeNode) this.model.getRootAt(i);
 		if (node.getChildCount() > 0) {
 			node = node.getChildAt(0);
 			if(this.model.isPort(node)) {
-				
 					MPort port = (MPort) node;
-					
-					MPort rootPort = (MPort) (this.root != null ? this.root.getChildAt(0) : null); 
-
-					AbstractBean bean = port.getBean();
-					if (bean == null) {
+					if (port == rootPort) {
 						continue;
 					}
 					
-					boolean found = false;
-					String beanCodeName = bean.getCodeName();
-					for(String codename : this.availableCodenames) {
-						if (beanCodeName.startsWith(codename)) {
-							found = true;
-							break;
-						}
-					}
-					if (!found) {
+					final AbstractBean bean = port.getBean();
+					if (bean == null || layoutBeans != null && !layoutBeans.contains(bean)) {
 						continue;
 					}
 					
-//					System.out.println(".refreshFirstLevel() | port:" + port);
+//					assert Log.debugMessage("port:" + port , Log.DEBUGLEVEL03);
 					
-					List<Port> sources = port.getTargets(); 
-					for (Port port2 : sources) {
+					final List<Port> targets = port.getTargets();
+//					assert Log.debugMessage(targets, Log.DEBUGLEVEL03);
+					for (Port port2 : targets) {
 						
-//						System.out.println(".refreshFirstLevel() | source:" + port2 + ", " + rootPort);
+//						System.out.println(".refreshFirstLevel() | target:" + port2 + ", " + rootPort);
 						
 						if (port2 == rootPort) {									
 							this.firstLevel.add(port);
-//							System.out.println(".refreshFirstLevel() | add:" + port);
+//							assert Log.debugMessage("add:" + port, Log.DEBUGLEVEL03);
 						}
 					}
 					
-					if (sources.isEmpty() 
+					if (targets.isEmpty() 
 //							&& this.root == null
 							) {
+//						assert Log.debugMessage("targets is empty" , Log.DEBUGLEVEL03);
 						this.firstLevel.add(port);
 //						System.out.println(".refreshFirstLevel() | sources empty, add:" + port);
 					}
@@ -121,6 +114,8 @@ public class NonRootGraphTreeModel implements TreeModel {
 				}
 			}
 		}
+		
+//		assert Log.debugMessage("firstLevel:" + this.firstLevel, Log.DEBUGLEVEL03);
 		
 		this.reload((TreeNode) this.getRoot());
 	}
@@ -146,10 +141,8 @@ public class NonRootGraphTreeModel implements TreeModel {
 
 	public Object getChild(	Object parent,
 							int index) {		
-//		System.out.println("NonRootGraphTreeModel.getChild() | parent:" + parent + ", index:" + index);
-		
 		TreeNode node = null;
-		
+		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
 		if (parent == this.getRoot()) {			
 			node = this.firstLevel.get(index).getParent();
 		} else {
@@ -162,18 +155,11 @@ public class NonRootGraphTreeModel implements TreeModel {
 				if (bean == null) {
 					continue;
 				}
-				
-				boolean found = false;
-				String beanCodeName = bean.getCodeName();
-				for(String codename : this.availableCodenames) {
-					if (beanCodeName.startsWith(codename)) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
+
+				if (layoutBeans != null && !layoutBeans.contains(bean)) {
 					continue;
 				}
+
 				if(count == index) {
 					node = mport2.getParent();
 					break;
@@ -187,40 +173,30 @@ public class NonRootGraphTreeModel implements TreeModel {
 	}
 
 	public int getChildCount(Object parent) {
-		
-//		System.out.println("NonRootGraphTreeModel.getChildCount() | parent:" + parent);
+//		assert Log.debugMessage("parent:" + parent, Log.DEBUGLEVEL03);
 		
 		int count = 0;
-
+		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
 		if (parent == this.getRoot()) {
 			count = this.firstLevel.size();
+//			assert Log.debugMessage("parent == root" , Log.DEBUGLEVEL10);
 		} else {
 			MPort port = (MPort) ((TreeNode)parent).getChildAt(0);
 			List<Port> targets = port.getSources();
 			for(Port port2: targets) {
-				MPort mport2 = (MPort)port2;
-				AbstractBean bean = mport2.getBean();
-				if (bean == null) {
+				final MPort mport2 = (MPort)port2;
+				final AbstractBean bean = mport2.getBean();
+
+				if (bean == null || layoutBeans != null && !layoutBeans.contains(bean)) {
 					continue;
 				}
-				
-				boolean found = false;
-				String beanCodeName = bean.getCodeName();
-				for(String codename : this.availableCodenames) {
-					if (beanCodeName.startsWith(codename)) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					continue;
-				}
+//				assert Log.debugMessage("bean:" + bean, Log.DEBUGLEVEL03);
 				count++;
 			}
 //			count = (this.direct ? port.getTargets() : port.getSources()).size();			
 		}
-
-//		System.out.println("NonRootGraphTreeModel.getChildCount() | parent:" + parent + ", count:" + count);
+		
+//		assert Log.debugMessage("parent:" + parent + ", count:" + count , Log.DEBUGLEVEL03);
 		
 		return count;
 	}
@@ -230,7 +206,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 		
 //		System.out.println("NonRootGraphTreeModel.getIndexOfChild() | parent:" + parent + '[' + parent.getClass().getName() + ']' 
 //				+", child:" + child + '[' + child.getClass().getName() + ']');
-		
+		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
 		TreeNode node = (TreeNode)child;
 		node = this.model.isPort(node) ? node : node.getChildAt(0);
 		int index = -1;
@@ -241,21 +217,10 @@ public class NonRootGraphTreeModel implements TreeModel {
 			MPort port = (MPort) (this.model.isPort(parent) ? parent : ((TreeNode)parent).getChildAt(0));
 			List<Port> targets = port.getSources();
 			for(Port port2: targets) {
-				MPort mport2 = (MPort)port2;
-				AbstractBean bean = mport2.getBean();
-				if (bean == null) {
-					continue;
-				}
-				
-				boolean found = false;
-				String beanCodeName = bean.getCodeName();
-				for(String codename : this.availableCodenames) {
-					if (beanCodeName.startsWith(codename)) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
+				final MPort mport2 = (MPort)port2;
+				final AbstractBean bean = mport2.getBean();
+
+				if (bean == null || layoutBeans != null && !layoutBeans.contains(bean)) {
 					continue;
 				}
 				if (port2 == child) {
@@ -273,8 +238,8 @@ public class NonRootGraphTreeModel implements TreeModel {
 		return this.root == null ? this.generalRoot : this.root;
 	}
 	
-	public final void setRoot(TreeNode root) {
-		this.root = root;
+	public final void setRoot(final TreeNode root) {
+		this.root = root;			
 		this.refreshFirstLevel();
 	}
 
@@ -282,19 +247,13 @@ public class NonRootGraphTreeModel implements TreeModel {
 		return this.getChildCount(node) == 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.swing.tree.TreeModel#valueForPathChanged(javax.swing.tree.TreePath,
-	 *      java.lang.Object)
-	 */
 	public void valueForPathChanged(TreePath path,
 									Object newValue) {
 		// TODO Auto-generated method stub
 
 	}
 	
-	public void reload(TreeNode node) {
+	public void reload(final TreeNode node) {
 		if (node != null) {
 			this.fireTreeStructureChanged(this, this.getPathToRoot(node), null, null);
 		}
@@ -360,26 +319,6 @@ public class NonRootGraphTreeModel implements TreeModel {
 		}		
 
 		return retNodes;
-	}
-	
-	/**
-	 * @param availableCodenames The availableCodename to set.
-	 */
-	public final void setAvailableCodenames(Set<String> availableCodenames) {
-		this.availableCodenames.clear();
-		if (availableCodenames != null) {
-			this.availableCodenames.addAll(availableCodenames);
-		}
-		this.refreshFirstLevel();
-	}
-	
-	public final void addAvailableCodename(String availableCodename) {
-		this.availableCodenames.add(availableCodename);
-		this.refreshFirstLevel();
-	}
-	
-	public final void removeAllAvailableCodenames() {
-		this.availableCodenames.clear();
-		this.refreshFirstLevel();
-	}
+	}	
+
 }

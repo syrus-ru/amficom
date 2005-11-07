@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.11 2005/10/18 15:10:38 bob Exp $
+ * $Id: RTUBean.java,v 1.12 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,13 @@ import java.beans.PropertyChangeEvent;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -31,18 +32,11 @@ import com.syrus.util.Log;
 public class RTUBean extends Bean implements DomainNetworkItem {
 	
 	private KIS kis;
-
-	private static final String UI_CLASS_ID = "KISBeanUI";
 	
 	@Override
-	public String getUIClassID() {
-		return UI_CLASS_ID;
-	}
-
-	@Override
-	protected void setId(Identifier storableObject) throws ApplicationException {
-		super.setId(storableObject);
-		this.kis = StorableObjectPool.getStorableObject(this.id, true);
+	protected void setIdentifier(Identifier storableObject) throws ApplicationException {
+		super.setIdentifier(storableObject);
+		this.kis = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
 	
 	@Override
@@ -127,13 +121,23 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 	
 	public void setDomainId(final Identifier oldDomainId,
 	                        final Identifier newDomainId) {
+		assert Log.debugMessage("oldDomainId:" 
+			+ oldDomainId
+			+ ", newDomainId:"
+			+ newDomainId, 
+		Log.DEBUGLEVEL09);		
 		this.kis.setDomainId(newDomainId);
 	}
 	
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("RTUBean.dispose | " + this.id, Log.DEBUGLEVEL10);
-		StorableObjectPool.delete(this.id);		
+		Log.debugMessage(this.identifier.getIdentifierString(), Log.DEBUGLEVEL10);
+		StorableObjectPool.delete(this.identifier);		
 		super.disposeLayoutItem();
+	}
+	
+	@Override
+	public String getCodename() {
+		return ObjectEntities.KIS;
 	}
 }

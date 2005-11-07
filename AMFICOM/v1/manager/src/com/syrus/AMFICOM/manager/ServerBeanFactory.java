@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.12 2005/10/18 15:10:38 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.13 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,38 +11,31 @@ package com.syrus.AMFICOM.manager;
 import java.beans.PropertyChangeEvent;
 
 import com.syrus.AMFICOM.administration.Server;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
 
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/10/18 15:10:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean> {
-	
-	private static ServerBeanFactory instance;
-	
-	private ServerBeanFactory(final ManagerMainFrame graphText) {
+public final class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean> {
+
+	public ServerBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Server", 
 			"Manager.Entity.Server");
 		super.graphText = graphText;
 	}
 	
-	public static final synchronized ServerBeanFactory getInstance(final ManagerMainFrame graphText) {
-		if(instance == null) {
-			instance = new ServerBeanFactory(graphText);
-		}		
-		return instance;
-	}
-
 	@Override
 	public ServerBean createBean(Perspective perspective) 
 	throws ApplicationException {
@@ -65,8 +58,8 @@ public class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean> {
 		final ServerBean bean = new ServerBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
-		bean.setId(identifier);
-		bean.setCodeName(identifier.getIdentifierString());
+		bean.setIdentifier(identifier);
+		bean.setId(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
 //		bean.table = super.getTable(bean, 
 //			ServerBeanWrapper.getInstance(),
@@ -76,7 +69,9 @@ public class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean> {
 //		bean.addPropertyChangeListener(this.listener);
 //		bean.setPropertyPanel(this.panel);
 		
-		super.graphText.getDispatcher().firePropertyChange(
+		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+		final Dispatcher dispatcher = managerModel.getDispatcher();
+		dispatcher.firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.SERVER, null, bean));
 		
 		return bean;
@@ -91,8 +86,8 @@ public class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean> {
 										AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().startsWith(ObjectEntities.SERVER) &&
-						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
+						sourceBean.getId().startsWith(ObjectEntities.SERVER) &&
+						targetBean.getId().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
 		}

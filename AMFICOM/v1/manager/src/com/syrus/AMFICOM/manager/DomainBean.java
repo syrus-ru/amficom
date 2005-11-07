@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.15 2005/10/18 15:10:39 bob Exp $
+ * $Id: DomainBean.java,v 1.16 2005/11/07 15:24:19 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,30 +16,24 @@ import java.beans.PropertyChangeEvent;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.16 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class DomainBean extends Bean {
 	
-	private static final String UI_CLASS_ID = "DomainBeanUI";
-	
 	Domain domain;
-	
+
 	@Override
-	public String getUIClassID() {
-		return UI_CLASS_ID;
-	}	
-	
-	@Override
-	protected void setId(Identifier storableObject) throws ApplicationException {
-		super.setId(storableObject);
-		this.domain = StorableObjectPool.getStorableObject(this.id, true);
+	protected void setIdentifier(Identifier storableObject) throws ApplicationException {
+		super.setIdentifier(storableObject);
+		this.domain = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
 	
 	public final String getDescription() {
@@ -75,7 +69,7 @@ public class DomainBean extends Bean {
 	public void applyTargetPort(MPort oldPort, MPort newPort) {
 		Identifier parentId = Identifier.VOID_IDENTIFIER;
 		if (newPort != null) {
-			parentId = ((DomainBean) newPort.getUserObject()).getId();
+			parentId = ((DomainBean) newPort.getUserObject()).getIdentifier();
 		}		
 		Log.debugMessage("DomainBean.applyTargetPort() | " 
 				+ this.domain.getId() 
@@ -87,8 +81,13 @@ public class DomainBean extends Bean {
 
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("DomainBean.dispose | " + this.id, Log.DEBUGLEVEL10);
-		StorableObjectPool.delete(this.id);		
+		Log.debugMessage("DomainBean.dispose | " + this.identifier, Log.DEBUGLEVEL10);
+		StorableObjectPool.delete(this.identifier);		
 		super.disposeLayoutItem();
+	}
+	
+	@Override
+	public final String getCodename() {
+		return ObjectEntities.DOMAIN;
 	}
 }

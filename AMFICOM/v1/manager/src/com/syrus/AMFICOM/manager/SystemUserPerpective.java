@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.3 2005/10/18 15:10:39 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.4 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,129 +8,95 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Icon;
-import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
-import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.Port;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
-import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class SystemUserPerpective extends AbstractPerspective {
 
-	private final UserBean userBean;
-	private Object	cell;
+	private final UserBean		userBean;
+	private DefaultGraphCell	cell;
+	private LayoutItem	userLayoutItem;
 	
 	public SystemUserPerpective(final ManagerMainFrame managerMainFrame,
 	                        final UserBean userBean,
-	                        final Object cell) {
+	                        final DefaultGraphCell cell) {
 		super(managerMainFrame);
 		this.userBean = userBean;
 		this.cell = cell;
 	}
 	
-	public final AbstractAction createAction(final AbstractBeanFactory<?> factory,
-	                                  final Module module) {
-		final String name = factory.getName();
-		final BeanUI beanUI = BeanUI.BeanUIFactory.getBeanUI(factory.getCodename() + "BeanUI", this.managerMainFrame);
-		Icon icon = beanUI.getIcon(factory);
-		FACTORY_MAP.put(factory.getCodename(), factory);
-		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
-			
-			public void actionPerformed(final ActionEvent e) {
-				try {
-					{
-						CompoundCondition compoundCondition = 
-							new CompoundCondition(
-								new TypicalCondition(managerMainFrame.getPerspective().getCodename(),
-									OperationSort.OPERATION_EQUALS,
-									ObjectEntities.LAYOUT_ITEM_CODE,
-									LayoutItemWrapper.COLUMN_LAYOUT_NAME), 
-								CompoundConditionSort.AND, 
-								new TypicalCondition(ObjectEntities.PERMATTR,
-									OperationSort.OPERATION_SUBSTRING,
-									ObjectEntities.LAYOUT_ITEM_CODE,
-									StorableObjectWrapper.COLUMN_NAME));
-						
-						final Set<LayoutItem> layoutItems = 
-							StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-						
-						assert Log.debugMessage(".actionPerformed | " + layoutItems,
-							Log.DEBUGLEVEL09);
-						
-						if (!layoutItems.isEmpty()) {
-							for (final LayoutItem item : layoutItems) {
-								final PermissionBean permissionBean = (PermissionBean) managerMainFrame.getCell(item);
-								if (permissionBean.getPermissionAttributes().getModule() == module) {
-									final GraphSelectionModel selectionModel = managerMainFrame.getGraph().getSelectionModel();
-									selectionModel.setSelectionCell(managerMainFrame.getDefaultGraphCell(item));
-									return;
-								}
-							}			
-						}
-					}
-					
-					final AbstractBean bean = factory.createBean(managerMainFrame.getPerspective());
-					managerMainFrame.createChild(null, 
-						factory.getShortName(), 
-						bean, 
-						20, 
-						20, 
-						0, 
-						0, 
-						beanUI.getImage(bean));
-				} catch (final ApplicationException ae) {
-					ae.printStackTrace();
-					JOptionPane.showMessageDialog(managerMainFrame.getGraph(), 
-						ae.getMessage(), 
-						I18N.getString("Manager.Error"),
-						JOptionPane.ERROR_MESSAGE);
-				}				
-			}
-		};		
-	
-		action.putValue(Action.SHORT_DESCRIPTION, name);
-		return action;
-	}
-	
 	public void addEntities(final JToolBar entityToolBar) {
+		final PermissionBeanFactory factory = 
+			(PermissionBeanFactory) this.managerMainFrame.
+				getManagerHandler().
+					getBeanFactory(ObjectEntities.PERMATTR + ObjectEntities.SYSTEMUSER);
+		
+		class ModuleCheckable implements Chechable {
+			
+			private final Module module;
+			
+			public ModuleCheckable(final Module module) {
+				this.module = module;
+			}
+			
+			public boolean isNeedIn(final AbstractBean bean) {
+				if (bean instanceof PermissionBean) {
+					final PermissionBean permissionBean = (PermissionBean) bean;				
+					return permissionBean.getPermissionAttributes().getModule() == this.module;
+				}
+				return false;
+			}
+			
+		}		
+		
 		for(final Module module : Module.getValueList()) {
 			if (!module.isEnable()) {
 				continue;
 			}
-			this.managerMainFrame.addAction(this.createAction(PermissionBeanFactory.getInstance(this.managerMainFrame, module), module));
+			
+			final ModuleCheckable moduleCheckable = new ModuleCheckable(module);
+			
+			this.managerMainFrame.addAction(
+				this.createGetTheSameOrCreateNewAction(factory.getUserInstance(module), 
+					moduleCheckable, 
+					this.cell));
 		}
 	}
 	
@@ -143,11 +109,11 @@ public class SystemUserPerpective extends AbstractPerspective {
 	}
 	
 	public final Identifier getDomainId() {
-		return this.userBean.getId();
+		return this.userBean.getIdentifier();
 	}
 	
 	public final Identifier getUserId() {
-		return this.userBean.getId();
+		return this.userBean.getIdentifier();
 	}
 	
 	public boolean isValid() {
@@ -165,7 +131,7 @@ public class SystemUserPerpective extends AbstractPerspective {
 				}
 
 				if (visibleTarget == 0 && 
-						!port.getBean().getCodeName().startsWith(ObjectEntities.SYSTEMUSER)) {
+						!port.getBean().getId().startsWith(ObjectEntities.SYSTEMUSER)) {
 					return false;
 				}
 				
@@ -176,13 +142,128 @@ public class SystemUserPerpective extends AbstractPerspective {
 	}
 
 	
-	public void perspectiveApplied() {
-		this.managerMainFrame.showOnlyDescendants((DefaultGraphCell) this.cell);
+	public void perspectiveApplied() throws ApplicationException {
+		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 		
-		this.managerMainFrame.showOnly(new String[] {ObjectEntities.SYSTEMUSER, 
-				ObjectEntities.PERMATTR});
+		graphRoutines.showLayerName(this.getCodename());
 		
+		final DefaultGraphCell userCell = 
+			graphRoutines.getDefaultGraphCell(this.userLayoutItem);
+		
+		this.managerMainFrame.getTreeModel().setRoot(userCell);	
 	}
 	
+	private LayoutItem getUserItem(final Identifier userId,
+		final LinkedIdsCondition currentUserCondition,
+		final TypicalCondition layoutCondition) 
+	throws ApplicationException {
+
+		final TypicalCondition userLayoutItemCondition = 
+			new TypicalCondition(userId.getIdentifierString(),
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.LAYOUT_ITEM_CODE,
+				StorableObjectWrapper.COLUMN_NAME);
+		
+		
+		final Set<StorableObjectCondition> conditions = 
+			new HashSet<StorableObjectCondition>();
+		
+		conditions.add(currentUserCondition);
+		conditions.add(layoutCondition);
+		conditions.add(userLayoutItemCondition);
+		
+		final Set<LayoutItem> userLayoutItems = 
+			StorableObjectPool.getStorableObjectsByCondition(
+				new CompoundCondition(conditions,
+					CompoundConditionSort.AND), 
+				true);
+		
+		final LayoutItem userItem;
+		if (userLayoutItems.isEmpty()) {
+			userItem = 
+				LayoutItem.createInstance(LoginManager.getUserId(), 
+					Identifier.VOID_IDENTIFIER, 
+					this.getCodename(), 
+					userId.getIdentifierString());
+			
+			assert Log.debugMessage("create layout item for " 
+					+ userId
+					+" as " 
+					+ userItem.getName()
+					+ '@'
+					+ userItem.getLayoutName(), 
+				Log.DEBUGLEVEL03);
+		} else {
+			assert userLayoutItems.size() == 1;			
+			userItem = userLayoutItems.iterator().next();			
+		}
+		
+		return userItem;
+	
+	}
+	
+	@Override
+	protected String getIdentifierString(Identifier memberId) {
+		return ObjectEntities.codeToString(memberId.getMajor())
+			+ ObjectEntities.SYSTEMUSER
+			+ Identifier.SEPARATOR
+			+ memberId.getMinor();
+	}
+
+	public void createNecessaryItems() throws ApplicationException {
+		final Identifier userId = this.getUserId();
+
+		assert Log.debugMessage(userId , Log.DEBUGLEVEL10);
+		
+		final LinkedIdsCondition currentUserCondition = 
+			new LinkedIdsCondition(LoginManager.getUserId(), ObjectEntities.LAYOUT_ITEM_CODE);
+		
+		final TypicalCondition layoutCondition = 
+			new TypicalCondition(this.getCodename(),
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.LAYOUT_ITEM_CODE,
+				LayoutItemWrapper.COLUMN_LAYOUT_NAME);
+		
+		final Set<LayoutItem> userLayoutItems = 
+			StorableObjectPool.getStorableObjectsByCondition(
+				new CompoundCondition(currentUserCondition,
+					CompoundConditionSort.AND,
+					layoutCondition), 
+				true);
+		
+		this.userLayoutItem = 
+			this.getUserItem(userId, 
+				currentUserCondition,
+				layoutCondition);
+		
+		final Identifier userLayoutItemId = this.userLayoutItem.getId();
+		
+		// acquire permission attributes
+		final LinkedIdsCondition domainCondition = 
+			new LinkedIdsCondition(this.getDomainId(), ObjectEntities.PERMATTR_CODE);
+		
+		final LinkedIdsCondition userCondition = 
+			new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE);
+		
+		final CompoundCondition compoundCondition 
+			= new CompoundCondition(
+				domainCondition, 
+				CompoundConditionSort.AND,
+				userCondition);
+		
+		final Set<PermissionAttributes> permissionAttributes = 
+			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		
+		final Map<Identifier, LayoutItem> existsNetworkLayoutItems = 
+			new HashMap<Identifier, LayoutItem>();
+
+		this.addItems(permissionAttributes, existsNetworkLayoutItems, userLayoutItems);
+		// create user items accorning to exist permission attributes		
+		for (final PermissionAttributes attributes : permissionAttributes) {
+			this.getLayoutItem(attributes.getId(), 
+				userLayoutItemId, 
+				existsNetworkLayoutItems);
+		}
+	}
 }
 

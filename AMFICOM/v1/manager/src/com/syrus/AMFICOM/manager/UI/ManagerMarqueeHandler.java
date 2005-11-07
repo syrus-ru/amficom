@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerMarqueeHandler.java,v 1.5 2005/10/18 15:10:39 bob Exp $
+* $Id: ManagerMarqueeHandler.java,v 1.6 2005/11/07 15:24:19 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.manager.viewers.BeanUI;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/07 15:24:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -71,6 +71,7 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 	}
 
 	// Display PopupMenu or Remember Start Location and First Port
+	@SuppressWarnings("unchecked")
 	@Override
 	public void mousePressed(final MouseEvent e) {
 		// If Right Mouse Button
@@ -86,7 +87,7 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 				Object userObject = port1.getUserObject();
 				if (userObject instanceof AbstractBean) {
 					AbstractBean bean = (AbstractBean)userObject;
-					BeanUI beanUI = BeanUI.BeanUIFactory.getBeanUI(bean.getUIClassID(), this.graphText);
+					BeanUI beanUI = this.graphText.getManagerHandler().getBeanUI(bean.getCodename());
 					JPopupMenu menu = beanUI.getPopupMenu(bean, cell);
 					if (menu != null) {
 						menu.show(this.graphText.graph, e.getX(), e.getY());
@@ -166,20 +167,20 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 			// connect((Port) firstPort.getCell(), (Port) port.getCell());
 			MPort sourcePort = (MPort) this.firstPort.getCell();
 			MPort targetPort = (MPort) this.port.getCell();
-			DefaultEdge edge = this.graphText.createEdge(
+			DefaultEdge edge = this.graphText.getGraphRoutines().createEdge(
 				(DefaultGraphCell)sourcePort.getParent(), 
 				(DefaultGraphCell)targetPort.getParent());
 			
 			
 			
 			if (edge != null) {
-				Object userObject = sourcePort.getUserObject();
-				if (userObject instanceof AbstractBean) {
-//					System.out.println("MyMarqueeHandler.mouseReleased()");
-					AbstractBean bean = (AbstractBean)userObject;
-					// XXX
-//					bean.updateEdgeAttributes(edge, targetPort);
-				}
+//				Object userObject = sourcePort.getUserObject();
+//				if (userObject instanceof AbstractBean) {
+////					System.out.println("MyMarqueeHandler.mouseReleased()");
+//					AbstractBean bean = (AbstractBean)userObject;
+//					// XXX
+////					bean.updateEdgeAttributes(edge, targetPort);
+//				}
 				GraphLayoutCache graphLayoutCache = this.graphText.graph.getGraphLayoutCache();
 				graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);
 			}
