@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.25 2005/11/07 15:24:19 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.26 2005/11/08 13:44:43 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.26 $, $Date: 2005/11/08 13:44:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -72,8 +72,10 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 				
 				for(final Iterator<LayoutItem> it = beanLayoutItems.iterator(); it.hasNext();) {
 					final LayoutItem layoutItem = it.next();
-					assert Log.debugMessage("" + layoutItem.getLayoutName() + ", " + layoutItem.getName(),
-						Log.DEBUGLEVEL04);
+					assert Log.debugMessage(layoutItem.getName() 
+							+ '@' 
+							+ layoutItem.getLayoutName(),
+						Log.DEBUGLEVEL10);
 					if (!layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
 						it.remove();
 					}
@@ -110,7 +112,7 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 						
 						final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
 						AbstractBean childBean = graphRoutines.getBean(layoutItem);
-						System.out.println(".dispose() | " + childBean);
+//						System.out.println(".dispose() | " + childBean);
 						childBean.dispose();
 						childBean.disposeLayoutItem();
 					}

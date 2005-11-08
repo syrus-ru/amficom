@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePerpective.java,v 1.2 2005/11/08 09:08:35 bob Exp $
+* $Id: RolePerpective.java,v 1.3 2005/11/08 13:45:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/08 09:08:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/08 13:45:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -67,8 +67,6 @@ public class RolePerpective extends AbstractPerspective {
 		
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 		final DefaultGraphCell parentCell = graphRoutines.getDefaultGraphCell(this.layoutItem);
-		
-		assert Log.debugMessage(parentCell , Log.DEBUGLEVEL03);
 		
 		class ModuleCheckable implements Chechable {
 			
