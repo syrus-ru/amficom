@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.78 2005/11/03 12:31:13 arseniy Exp $
+ * $Id: Transceiver.java,v 1.79 2005/11/08 14:59:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,10 +19,10 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -34,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/11/03 12:31:13 $
+ * @version $Revision: 1.79 $, $Date: 2005/11/08 14:59:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -124,10 +123,8 @@ final class Transceiver extends SleepButWorkThread {
 	public void run() {
 		while (this.running) {
 
-			this.cleanOldMeasurements();
-
 			synchronized (this) {
-				while (this.testProcessors.isEmpty() && this.kisReport == null) {
+				while (this.testProcessors.isEmpty()) {
 					try {
 						this.wait(10000);
 					} catch (InterruptedException ie) {
@@ -173,6 +170,9 @@ final class Transceiver extends SleepButWorkThread {
 							super.sleepCauseOfFall();
 						}
 					} else {// if (this.kisReport == null)
+						// Additional assert to prove, that measurements not leak
+						assert !this.testProcessors.isEmpty() :  ErrorMessages.NON_EMPTY_EXPECTED;
+
 						final Identifier measurementId = this.kisReport.getMeasurementId();
 						Log.debugMessage("Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 						Measurement measurement = null;
@@ -251,44 +251,6 @@ final class Transceiver extends SleepButWorkThread {
 			}// else if (this.kisConnection != null)
 
 		}// while
-	}
-
-	private void cleanOldMeasurements() {
-		synchronized (this.testProcessors) {
-			if (!this.testProcessors.isEmpty()) {
-				for (final Iterator<Identifier> it = this.testProcessors.keySet().iterator(); it.hasNext();) {
-					Identifier measurementId = it.next();
-					try {
-						final Measurement measurement = StorableObjectPool.getStorableObject(measurementId, true);
-						if (measurement == null) {
-							Log.errorMessage("Measurement for id '" + measurementId + "' not found; removing from test processors");
-							it.remove();
-							continue;
-						}
-
-						final Date measurementStartTime = measurement.getStartTime();
-						final long measurementDuration = measurement.getSetup().getMeasurementDuration();
-						if (System.currentTimeMillis() > measurementStartTime.getTime() + measurementDuration + TestProcessor.PAST_MEASUREMENT_TIMEOUT) {
-							Log.debugMessage("Measurement '" + measurementId + "' is too old; start time: " + measurementStartTime
-									+ ", duration: " + (measurementDuration / 1000) + " sec; removing", Log.DEBUGLEVEL07);
-							it.remove();
-							this.scheduledMeasurements.remove(measurement);
-							if (this.kisReport == null || !this.kisReport.getMeasurementId().equals(measurementId)) {
-								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
-							}
-						}
-					} catch (ApplicationException ae) {
-						Log.errorMessage(ae);
-					}
-				}
-
-				try {
-					StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, LoginManager.getUserId(), false);
-				} catch (ApplicationException ae) {
-					Log.errorMessage(ae);
-				}
-			}
-		}
 	}
 
 	@Override
