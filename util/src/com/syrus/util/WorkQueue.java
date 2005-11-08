@@ -1,5 +1,5 @@
 /*-
-* $Id: WorkQueue.java,v 1.1 2005/10/25 16:02:50 bob Exp $
+* $Id: WorkQueue.java,v 1.2 2005/11/08 08:10:25 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,27 +13,29 @@ import java.util.List;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/25 16:02:50 $
+ * WorkQueue from &laquo;Effective Java&raquo; by Josh Bloch
+ * 
+ * @version $Revision: 1.2 $, $Date: 2005/11/08 08:10:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module util
  */
-public abstract class WorkQueue {
-	final List<Runnable> queue = new LinkedList<Runnable>();
+public abstract class WorkQueue<T> {
+	final List<T> queue = new LinkedList<T>();
 	boolean stopped = false;
 	
 	protected WorkQueue() {
 		new WorkerThread().start();
 	}
 	
-	public final void enqueue(final Runnable workItem) {
+	public final void enqueue(final T workItem) {
 		synchronized (this.queue) {
 			this.queue.add(workItem);
 			this.queue.notify();
 		}
 	}
 	
-	protected abstract void processingItem(final Runnable workItem)
+	protected abstract void processingItem(final T workItem)
 	throws InterruptedException;
 	
 	private class WorkerThread extends Thread {
@@ -42,7 +44,7 @@ public abstract class WorkQueue {
 		public void run() {
 			// main loop
 			while (true) { 
-				Runnable workItem = null;
+				T workItem = null;
 				synchronized (WorkQueue.this.queue) {
 					try {
 						while (WorkQueue.this.queue.isEmpty() && !WorkQueue.this.stopped) {							
@@ -61,7 +63,7 @@ public abstract class WorkQueue {
 				
 				try {
 					processingItem(workItem);
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 					return;
 				}
 			}
