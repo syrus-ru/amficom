@@ -1,5 +1,5 @@
 /*-
-* $Id: DefaultPopupMessageReceiver.java,v 1.2 2005/11/08 08:15:31 bob Exp $
+* $Id: DefaultPopupMessageReceiver.java,v 1.3 2005/11/08 13:57:03 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,9 +8,12 @@
 
 package com.syrus.AMFICOM.client.UI.dialogs;
 
+import java.awt.Dimension;
+import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,7 +22,10 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.eventv2.Event;
@@ -27,7 +33,7 @@ import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/08 08:15:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/08 13:57:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -55,7 +61,7 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 	}
 	
 	void addMessage(final String message) {
-		this.model.addElement(message);
+		this.model.addElement(CommonUIUtilities.convertToHTMLString(message));
 		if (!this.dialog.isVisible()) {
 			this.dialog.setVisible(true);
 		}
@@ -67,7 +73,6 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 		this.dialog = new JDialog();
 		this.dialog.setTitle(
 			I18N.getString("Common.ClientServantManager.NotificationMessage"));
-		this.dialog.setLocationRelativeTo(this.dialog.getParent());
 		
 		final JPanel panel = new JPanel(new GridBagLayout());
 		final GridBagConstraints gbc = new GridBagConstraints();
@@ -76,7 +81,12 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 		gbc.weighty = 1.0;
 		gbc.insets = new Insets(10, 10, 10, 10);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		panel.add(list, gbc);
+		
+		final JScrollPane pane = new JScrollPane(list, 
+			ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
+			ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		
+		panel.add(pane, gbc);
 		
 		final JButton button = new JButton(I18N.getString("Common.Button.OK"));
 		button.addActionListener(new ActionListener() {
@@ -96,6 +106,14 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 		
 		this.dialog.getContentPane().add(panel);
 		this.dialog.pack();
+		final GraphicsEnvironment localGraphicsEnvironment = 
+			GraphicsEnvironment.getLocalGraphicsEnvironment();
+		final Rectangle maximumWindowBounds = 
+			localGraphicsEnvironment.getMaximumWindowBounds();
+		this.dialog.setSize(new Dimension(maximumWindowBounds.width / 3, 
+			maximumWindowBounds.height / 3));
+		
+		this.dialog.setLocationRelativeTo(this.dialog.getParent());
 	}
 }
 
