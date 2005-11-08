@@ -1,5 +1,5 @@
 /*-
-* $Id: ProcessingDialog.java,v 1.17 2005/10/31 12:30:01 bass Exp $
+* $Id: ProcessingDialog.java,v 1.18 2005/11/08 08:11:12 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.WorkQueue;
  * 
  * Using as blocking (modal) dialog processing task 
  * 
- * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/11/08 08:11:12 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -50,7 +50,7 @@ public final class ProcessingDialog {
 		runnableTaskNames.put(runnable, title);
 	}
 	
-	private static class RunnableQueue extends WorkQueue {
+	private static class RunnableQueue extends WorkQueue<Runnable> {
 		@Override
 		protected void processingItem(final Runnable workItem) 
 		throws InterruptedException {
@@ -62,7 +62,7 @@ public final class ProcessingDialog {
 		}
 	}
 	
-	private static class DisplayQueue extends WorkQueue {
+	private static class DisplayQueue extends WorkQueue<Runnable> {
 
 		final RunnableQueue runnableQueue;
 
