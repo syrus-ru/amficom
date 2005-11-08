@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.9 2005/11/07 15:24:19 bob Exp $
+* $Id: DomainPerpective.java,v 1.10 2005/11/08 09:08:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.10 $, $Date: 2005/11/08 09:08:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -130,6 +130,10 @@ public class DomainPerpective extends AbstractPerspective {
 		return true;
 	}
 
+	public boolean isDeletable(final AbstractBean abstractBean) {
+		return !abstractBean.getCodename().equals(NetBeanFactory.NET_CODENAME);
+	}
+	
 	public void insertBean(AbstractBean bean) {
 		Identifier beanId = bean.getIdentifier();
 		if (beanId != null) {

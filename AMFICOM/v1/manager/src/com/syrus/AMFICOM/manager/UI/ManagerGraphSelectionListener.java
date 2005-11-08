@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphSelectionListener.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: ManagerGraphSelectionListener.java,v 1.2 2005/11/08 09:08:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,10 +26,11 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
+import com.syrus.AMFICOM.manager.Perspective;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/08 09:08:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -63,6 +64,10 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		final GraphModel model = managerMainFrame.graph.getModel();
 		final NonRootGraphTreeModel treeModel = managerMainFrame.getTreeModel();
 		
+		final Perspective perspective = managerMainFrame.getPerspective();
+		
+		boolean deleteAllow = true;
+		
 		if (model.isEdge(cell)) {
 			if (e.isAddedCell()) {
 				Edge edge = (Edge)cell;
@@ -94,6 +99,8 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 				
 				if (userObject instanceof AbstractBean) {
 					final AbstractBean abstractBean = (AbstractBean)userObject;
+					deleteAllow &= perspective.isDeletable(abstractBean);
+
 					managerMainFrame.beanUI = managerMainFrame.managerHandler.getBeanUI(abstractBean.getCodename());
 //					SwingUtilities.invokeLater(new Runnable() {
 //						public void run() {
@@ -124,7 +131,8 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		panel.repaint();
 		
 		boolean enabled = !managerMainFrame.graph.isSelectionEmpty();
-		managerMainFrame.remove.setEnabled(enabled);	
+		
+		managerMainFrame.remove.setEnabled(enabled && deleteAllow);
 	}
 }
 

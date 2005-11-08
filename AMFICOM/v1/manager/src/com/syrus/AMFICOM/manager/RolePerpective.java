@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePerpective.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: RolePerpective.java,v 1.2 2005/11/08 09:08:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/08 09:08:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -143,6 +143,9 @@ public class RolePerpective extends AbstractPerspective {
 		return true;
 	}
 
+	public boolean isDeletable(final AbstractBean abstractBean) {
+		return !abstractBean.getCodename().equals(ObjectEntities.ROLE);
+	}
 	
 	@SuppressWarnings("unchecked")
 	public void perspectiveApplied() 

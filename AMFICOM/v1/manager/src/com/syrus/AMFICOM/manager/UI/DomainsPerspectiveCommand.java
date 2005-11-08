@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspectiveCommand.java,v 1.3 2005/11/07 15:24:19 bob Exp $
+* $Id: DomainsPerspectiveCommand.java,v 1.4 2005/11/08 09:08:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractPerspective;
 import com.syrus.AMFICOM.manager.MPort;
 import com.syrus.AMFICOM.manager.ManagerHandler;
@@ -53,7 +54,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/08 09:08:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -104,6 +105,10 @@ public class DomainsPerspectiveCommand extends AbstractCommand {
 				}
 				
 			}
+			return true;
+		}
+		
+		public boolean isDeletable(AbstractBean abstractBean) {
 			return true;
 		}
 		
