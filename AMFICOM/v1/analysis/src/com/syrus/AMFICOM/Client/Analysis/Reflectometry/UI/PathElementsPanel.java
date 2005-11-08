@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -156,17 +158,18 @@ public final class PathElementsPanel extends AnalysisPanel {
 			if (this.startPathElement == null || this.endPathElement == null)
 				this.setGraphBounds(this.start, this.end);
 
+			Set<SchemeElement> paintedSchemeElements = new HashSet<SchemeElement>();
 			try {
 				for (final PathElement pathElement : this.path.getPathMembers().tailSet(this.startPathElement)) {
 
-					if (pathElement == this.activePathElement) {
-						g.setColor(Color.RED);
-					} else if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK) {
-						g.setColor(Color.CYAN);
+					if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK) {
+						g.setColor(new Color(0.5f, 0.5f, 1f, 0.5f));
 					} else if (pathElement.getKind() == IdlKind.SCHEME_LINK) {
-						g.setColor(Color.BLUE);
+						g.setColor(new Color(0.5f, 1.0f, 0.5f, 0.5f));
+					} else if (pathElement == this.activePathElement) {
+						g.setColor(new Color(255, 0, 64));
 					} else {
-						g.setColor(Color.GREEN);
+						g.setColor(new Color(0, 160, 0));
 					}
 
 					final double d[] = this.path.getOpticalDistanceFromStart(pathElement);
@@ -174,7 +177,15 @@ public final class PathElementsPanel extends AnalysisPanel {
 					final int end1 = index2coord((int) Math.round(d[1] / this.deltaX));
 					Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
 					if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
-						final SchemeElement se = pathElement.getSchemeElement();
+						SchemeElement se = pathElement.getSchemeElement();
+						SchemeElement parent = se.getParentSchemeElement(); 
+						while (parent != null) {
+							se = parent;
+							parent = se.getParentSchemeElement();
+						}
+						
+						if (!paintedSchemeElements.contains(se)) {
+							paintedSchemeElements.add(se);
 						// if muff - paint only small box and dashed line
 
 						EquipmentType type;
@@ -207,10 +218,12 @@ public final class PathElementsPanel extends AnalysisPanel {
 							g2.drawString(text, start1 + width - 5, y1);
 							g2.setTransform(t);
 						}
+						}
 					} else {
-						g.drawLine(start1, 3, start1, 5);
-						g.drawLine(start1, 5, end1, 5);
-						g.drawLine(end1, 5, end1, 3);
+//						g.drawLine(start1, 3, start1, 5);
+						g.fillRect(start1, 5, end1 - start1, 9);
+//						g.drawLine(start1, 5, end1, 5);
+//						g.drawLine(end1, 5, end1, 3);
 					}
 				}
 			} catch (ApplicationException e) {
