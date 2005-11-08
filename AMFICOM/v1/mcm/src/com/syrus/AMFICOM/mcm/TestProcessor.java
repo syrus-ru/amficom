@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.85 2005/11/03 11:41:16 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.86 2005/11/08 15:05:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,13 +48,14 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/11/03 11:41:16 $
+ * @version $Revision: 1.86 $, $Date: 2005/11/08 15:05:09 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 abstract class TestProcessor extends SleepButWorkThread {
 	static final long PAST_MEASUREMENT_TIMEOUT = 30 * 1000; //msec
+	static final long PAST_TEST_TIMEOUT = PAST_MEASUREMENT_TIMEOUT * 2;
 	private static final String ABORT_REASON_DATABASE_ERROR = "Database error";
 
 	/*	Error codes for method processFall()	*/
@@ -215,9 +216,11 @@ abstract class TestProcessor extends SleepButWorkThread {
 	final void addMeasurementResult(final Result measurementResult) {
 		final ResultSort resultSort = measurementResult.getSort();
 		if (resultSort.value() == ResultSort._RESULT_SORT_MEASUREMENT) {
-			if (!this.measurementResults.contains(measurementResult)) {
-				this.measurementResults.add(measurementResult);
-				this.numberOfMResults++;
+			synchronized (this.measurementResults) {
+				if (!this.measurementResults.contains(measurementResult)) {
+					this.measurementResults.add(measurementResult);
+					this.numberOfMResults++;
+				}
 			}
 		} else {
 			Log.errorMessage("ERROR: Result '" + measurementResult.getId()
@@ -265,8 +268,10 @@ abstract class TestProcessor extends SleepButWorkThread {
 				}
 			}
 
-			this.processMeasurementResults();
-			this.checkIfOver();
+			synchronized (this.measurementResults) {
+				this.processMeasurementResults();
+				this.checkIfOver();
+			}
 
 			try {
 				sleep(super.initialTimeToSleep);
@@ -290,28 +295,26 @@ abstract class TestProcessor extends SleepButWorkThread {
 	private final void processMeasurementResults() {
 		final Set<Identifiable> objectsToFlush = new HashSet<Identifiable>();
 
-		synchronized (this.measurementResults) {
-			for (final Iterator<Result> it = this.measurementResults.iterator(); it.hasNext();) {
-				final Result measurementResult = it.next();
-				final Measurement measurement = (Measurement) measurementResult.getAction();
-				try {
-					final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
-					for (int i = 0; i < aeResults.length; i++) {
-						if (aeResults[i] != null) {
-							Log.debugMessage("Analysis result: '" + aeResults[i].getId() + "' of measurement '" + measurement.getId() + "'",
-									Log.DEBUGLEVEL07);
-							objectsToFlush.add(aeResults[i]);
-						}
+		for (final Iterator<Result> it = this.measurementResults.iterator(); it.hasNext();) {
+			final Result measurementResult = it.next();
+			final Measurement measurement = (Measurement) measurementResult.getAction();
+			try {
+				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+				for (int i = 0; i < aeResults.length; i++) {
+					if (aeResults[i] != null) {
+						Log.debugMessage("Analysis result: '" + aeResults[i].getId() + "' of measurement '" + measurement.getId() + "'",
+								Log.DEBUGLEVEL07);
+						objectsToFlush.add(aeResults[i]);
 					}
-				} catch (AnalysisException ae) {
-					Log.errorMessage(ae);
 				}
-
-				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
-				objectsToFlush.add(measurement);
-
-				it.remove();
+			} catch (AnalysisException ae) {
+				Log.errorMessage(ae);
 			}
+			
+			measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+			objectsToFlush.add(measurement);
+			
+			it.remove();
 		}
 
 		try {
@@ -351,7 +354,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		if (this.lastMeasurementAcquisition
 				&& (this.numberOfMResults >= numberOfMeasurements
-						|| System.currentTimeMillis() >= this.test.getEndTime().getTime() + this.measurementSetup.getMeasurementDuration())) {
+						|| System.currentTimeMillis() >= this.test.getEndTime().getTime() + this.measurementSetup.getMeasurementDuration() + PAST_TEST_TIMEOUT)) {
 			this.complete();
 		}
 	}
@@ -380,8 +383,10 @@ abstract class TestProcessor extends SleepButWorkThread {
 		return this.test.getId();
 	}
 
-	void complete() {
+	private void complete() {
 		Log.debugMessage("Test '" + this.test.getId() + "' is completed", Log.DEBUGLEVEL07);
+		this.transceiver.removeMeasurementsOfTestProcessor(this);
+
 		this.test.setStatus(TestStatus.TEST_STATUS_COMPLETED);
 		try {
 			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
