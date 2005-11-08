@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.43 2005/10/31 12:30:02 bass Exp $
+ * $Id: OpenSessionCommand.java,v 1.44 2005/11/08 08:10:47 bob Exp $
  *
  * Copyright ╘ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/10/31 12:30:02 $
+ * @author $Author: bob $
+ * @version $Revision: 1.44 $, $Date: 2005/11/08 08:10:47 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -166,10 +166,8 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	/**
-	 * @return "Да" если больше не надо предпринимать попыток входа в систему,
+	 * @return true если больше не надо предпринимать попыток входа в систему,
 	 * 				т. е., вход либо удался, либо отменён пользователем.
-	 * @throws CommunicationException
-	 * @throws LoginException
 	 */
 	protected boolean logging() {
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
@@ -317,8 +315,8 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	/**
-	 * "Да" - если пользователь всё выбрал правильно и нажал "да".
-	 * "Нет" - в остальных случаях, т. е. либо пользователь нажал "отменить", либо ввёл неправильные значения.
+	 * true - если пользователь всё выбрал правильно и нажал "да".
+	 * false - в остальных случаях, т. е. либо пользователь нажал "отменить", либо ввёл неправильные значения.
 	 * @param frame
 	 * @return true, if user provided correct values and pressed "yes".
 	 */
