@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.87 2005/11/08 15:06:44 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.88 2005/11/08 15:07:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,14 +48,14 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/11/08 15:06:44 $
+ * @version $Revision: 1.88 $, $Date: 2005/11/08 15:07:23 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 abstract class TestProcessor extends SleepButWorkThread {
 	static final long PAST_MEASUREMENT_TIMEOUT = 30 * 1000; //msec
-	static final long PAST_TEST_TIMEOUT = PAST_MEASUREMENT_TIMEOUT;
+	static final long PAST_TEST_TIMEOUT = PAST_MEASUREMENT_TIMEOUT * 2;
 	private static final String ABORT_REASON_DATABASE_ERROR = "Database error";
 
 	/*	Error codes for method processFall()	*/
