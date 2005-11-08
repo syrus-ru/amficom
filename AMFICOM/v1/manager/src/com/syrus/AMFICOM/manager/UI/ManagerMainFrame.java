@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.15 2005/11/07 15:24:19 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.16 2005/11/08 12:07:16 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.16 $, $Date: 2005/11/08 12:07:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -755,6 +755,8 @@ public class ManagerMainFrame extends AbstractMainFrame {
 			this.perspective.addEntities(this.entityToolBar);
 			this.entityToolBar.revalidate();
 			this.entityToolBar.repaint();
+			
+			this.graphRoutines.fixLayoutItemCharacteristics();
 			
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block

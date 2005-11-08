@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.1 2005/11/07 15:23:26 bob Exp $
+* $Id: GraphRoutines.java,v 1.2 2005/11/08 12:07:16 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge;
+import org.jgraph.graph.GraphCell;
 import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
@@ -61,7 +62,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:23:26 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/08 12:07:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -235,9 +236,10 @@ public final class GraphRoutines {
 
 				public void propertyChange(PropertyChangeEvent evt) {
 					if (evt.getPropertyName().equals(KEY_NAME)) {
-						AttributeMap attributeMap = new AttributeMap();
-						GraphConstants.setValue(attributeMap, evt.getNewValue());
-						Map viewMap = new Hashtable();
+						final AttributeMap attributeMap = cell.getAttributes();
+						GraphConstants.setValue(attributeMap, evt.getNewValue());						
+						final Map<GraphCell, AttributeMap> viewMap = 
+							new Hashtable<GraphCell, AttributeMap>();
 						viewMap.put(cell, attributeMap);
 						graph.getModel().edit(viewMap, null, null, null);
 					}
@@ -278,17 +280,52 @@ public final class GraphRoutines {
 					linkedIdsCondition), 
 				true);	
 		
+		boolean needAutoArrage = false;
+		
 		for(final LayoutItem layoutItem : layoutItems) {			
 			assert Log.debugMessage(layoutItem.getName() 
 					+ ", " 
 					+ layoutItem.getLayoutName() , 
 				Log.DEBUGLEVEL10);
-			this.arrangeCell(layoutItem, layoutName);
+			
+			// check is x,y characteristics exists
+			// otherwise item will be arrange
+			
+			boolean xFound = false;
+			boolean yFound = false;
+			
+			for(final Characteristic characteristic : layoutItem.getCharacteristics(false)) {
+				final String codename = characteristic.getType().getCodename();
+				if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
+					xFound = true;
+				} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_Y)) {
+					yFound = true;
+				}
+				if (xFound && yFound) {
+					break;
+				}
+			}
+			
+			assert Log.debugMessage(layoutItem.getName() 
+					+ '@'
+					+ layoutItem.getLayoutName()
+					+ ", xFound:" + xFound
+					+ ", yFound:" + yFound, 
+				Log.DEBUGLEVEL10);
+			
+			if (!xFound || !yFound) {
+				needAutoArrage = true;
+			}
+			
+			this.arrangeCell(layoutItem, layoutName);			
+		}
+
+		this.managerMainFrame.arranging = false;	
+		
+		if (needAutoArrage) {
+			this.arrangeAllVisibleParents();
 		}
 		
-		this.arrangeAllVisibleParents();
-		
-		this.managerMainFrame.arranging = false;	
 	}
 
 	@SuppressWarnings({"unchecked", "hiding"})
@@ -419,7 +456,7 @@ public final class GraphRoutines {
 		return itemCell;
 	}
 	
-	private void arrangeAllVisibleParents() {
+	private void arrangeAllVisibleParents(){		
 		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		final GraphModel model = this.graph.getModel();
 		
@@ -475,6 +512,21 @@ public final class GraphRoutines {
 		
 		final Rectangle2D visibleRectangle = this.getVisibleRectangle();
 		this.move(width - visibleRectangle.getX(), height - visibleRectangle.getY());
+	}
+	
+	public void fixLayoutItemCharacteristics() {
+		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+		final GraphModel model = this.graph.getModel();
+		final Map<GraphCell, AttributeMap> viewMap = new Hashtable<GraphCell, AttributeMap>();
+
+		for(int i = 0; i < model.getRootCount(); i++) {
+			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
+			if (!model.isEdge(cell) && !model.isPort(cell) && graphLayoutCache.isVisible(cell)) {				
+				viewMap.put(cell, cell.getAttributes());
+			}
+		}
+		
+		model.edit(viewMap, null, null, null);
 	}
 	
 	private void verticalSeparation(final DefaultGraphCell parentCell, final int deep) {
@@ -853,7 +905,7 @@ public final class GraphRoutines {
 				this.layoutBeans.add(this.getBean(layoutItem));
 			}		
 			
-			assert Log.debugMessage(this.layoutBeans, Log.DEBUGLEVEL03);
+			assert Log.debugMessage(this.layoutBeans, Log.DEBUGLEVEL10);
 		}
 	}
 	

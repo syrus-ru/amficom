@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.2 2005/11/08 12:07:16 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/08 12:07:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -76,14 +76,16 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			Object[] inserted = change.getInserted();
 			Object[] changed = change.getChanged();
 			Object[] removed = change.getRemoved();
-			
+
 			final NonRootGraphTreeModel treeModel = this.managerMainFrame.getTreeModel();
 			if (inserted != null) {
 				for(Object insertedObject : inserted) {
+					assert Log.debugMessage("insertedObject:" + insertedObject , Log.DEBUGLEVEL10);
 					if (model.isPort(insertedObject)) {
 						TreeNode[] pathToRoot = treeModel.getPathToRoot((TreeNode) insertedObject);
-						if (pathToRoot != null)
+						if (pathToRoot != null) {
 							this.managerMainFrame.tree.scrollPathToVisible(new TreePath(pathToRoot));
+						}
 					}
 				}
 			}
@@ -197,6 +199,13 @@ public class ManagerGraphModelListener implements GraphModelListener {
 									true,
 									true);
 								
+								assert Log.debugMessage("create characteristics" 
+										+ " for "
+										+ item.getName() 
+										+ '@'
+										+ item.getLayoutName(), 
+									Log.DEBUGLEVEL10);
+								
 								if (bean.getIdentifier().isVoid()) {
 									Characteristic.createInstance(LoginManager.getUserId(),
 										this.getNonStorableObjectNameType(),
@@ -215,8 +224,13 @@ public class ManagerGraphModelListener implements GraphModelListener {
 								boolean xFound = false;
 								boolean yFound = false;
 								boolean nameFound = false;
-								for(Characteristic characteristic : item.getCharacteristics(false)) {
-									String codename = characteristic.getType().getCodename();
+								assert Log.debugMessage(item.getName()
+										+ " characteristics "
+										+ item.getCharacteristics(false), 
+									Log.DEBUGLEVEL10);
+
+								for(final Characteristic characteristic : item.getCharacteristics(false)) {
+									final String codename = characteristic.getType().getCodename();
 									if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
 										xFound = true;
 									} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_Y)) {
@@ -239,6 +253,12 @@ public class ManagerGraphModelListener implements GraphModelListener {
 										item,
 										true,
 										true);
+									assert Log.debugMessage("create x characteristic" 
+										+ " for "
+										+ item.getName() 
+										+ '@'
+										+ item.getLayoutName(), 
+									Log.DEBUGLEVEL10);
 								}
 								
 								if (!yFound) {
@@ -250,6 +270,13 @@ public class ManagerGraphModelListener implements GraphModelListener {
 										item,
 										true,
 										true);
+									
+									assert Log.debugMessage("create y characteristic" 
+										+ " for "
+										+ item.getName() 
+										+ '@'
+										+ item.getLayoutName(), 
+									Log.DEBUGLEVEL10);
 								}
 								
 								if (!nameFound) {
@@ -357,7 +384,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			ObjectEntities.LAYOUT_ITEM_CODE,
 			StorableObjectWrapper.COLUMN_NAME));
 		
-		Set<LayoutItem> layoutItems = 
+		final Set<LayoutItem> layoutItems = 
 			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
 		
 		if (layoutItems.isEmpty()) {
