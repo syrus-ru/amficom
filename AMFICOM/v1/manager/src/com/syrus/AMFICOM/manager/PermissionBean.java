@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionBean.java,v 1.3 2005/11/07 15:24:19 bob Exp $
+ * $Id: PermissionBean.java,v 1.4 2005/11/08 13:44:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/08 13:44:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -42,7 +42,7 @@ public final class PermissionBean extends Bean implements UserItem {
 
 	private PermissionAttributes permissionAttributes;
 	private HashMap<PermissionCodename, Boolean>	rolePermissionMap;	
-
+	
 	@Override
 	protected void setIdentifier(Identifier id) throws ApplicationException {
 		super.setIdentifier(id);

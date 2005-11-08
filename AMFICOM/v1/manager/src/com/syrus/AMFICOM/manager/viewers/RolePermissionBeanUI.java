@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePermissionBeanUI.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: RolePermissionBeanUI.java,v 1.2 2005/11/08 13:44:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,16 +35,18 @@ import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
 import com.syrus.AMFICOM.manager.PermissionBeanWrapper;
 import com.syrus.AMFICOM.manager.RolePermissionBean;
 import com.syrus.AMFICOM.manager.RolePermissionBeanFactory;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.UI.ManagerModel;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/08 13:44:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -287,6 +289,13 @@ public class RolePermissionBeanUI extends AbstractBeanUI<RolePermissionBean> {
 			switch(columnIndex) {
 			case 1:
 				this.permissionAttributes.setPermissionEnable(permissionCode, b);
+				((ManagerModel)managerMainFrame.getModel()).
+					getDispatcher().
+						firePropertyChange(
+							new PropertyChangeEvent(this, 
+								ObjectEntities.ROLE, 
+								null, 
+								null));
 				break;
 			default:
 				break;

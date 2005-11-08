@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionBeanFactory.java,v 1.4 2005/11/07 15:24:19 bob Exp $
+* $Id: PermissionBeanFactory.java,v 1.5 2005/11/08 13:44:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.manager;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/08 13:44:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -128,6 +129,15 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 		Dispatcher dispatcher = managerModel.getDispatcher();
 		dispatcher.firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.PERMATTR, null, bean));
+		dispatcher.addPropertyChangeListener(ObjectEntities.ROLE, new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				try {
+					bean.updateRolePermissions();
+				} catch (ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}});
 		
 		return bean;
 	}
