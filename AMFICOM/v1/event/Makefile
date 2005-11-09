@@ -15,7 +15,6 @@ LIBNAME_GENERALXML=generalxml.jar
 
 DEPENDENCIES = \
 administration \
-configuration \
 general \
 util \
 reflectometry
