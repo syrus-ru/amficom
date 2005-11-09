@@ -21,3 +21,4 @@ logs
 docs
 .pmd
 .javadocs
+.refactorings
