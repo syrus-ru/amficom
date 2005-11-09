@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.126 2005/10/31 12:30:19 bass Exp $
+ * $Id: StorableObject.java,v 1.127 2005/11/09 10:58:59 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.126 $, $Date: 2005/10/31 12:30:19 $
+ * @version $Revision: 1.127 $, $Date: 2005/11/09 10:58:59 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -88,8 +88,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 			final Identifier modifierId,
 			final StorableObjectVersion version) {
 		this.id = id;
-		this.created = created;
-		this.modified = modified;
+		this.created = new Date(created.getTime());
+		this.modified = new Date(modified.getTime());
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
@@ -158,7 +158,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 
 	public final Date getCreated() {
-		return this.created;
+		return (Date) this.created.clone();
 	}
 
 	public final Identifier getCreatorId() {
@@ -194,7 +194,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 
 	public final Date getModified() {
-		return this.modified;
+		return (Date) this.modified.clone();
 	}
 
 	public final Identifier getModifierId() {
@@ -668,7 +668,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.126 $, $Date: 2005/10/31 12:30:19 $
+	 * @version $Revision: 1.127 $, $Date: 2005/11/09 10:58:59 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -793,7 +793,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.126 $, $Date: 2005/10/31 12:30:19 $
+	 * @version $Revision: 1.127 $, $Date: 2005/11/09 10:58:59 $
 	 * @module general
 	 */
 	@Retention(SOURCE)

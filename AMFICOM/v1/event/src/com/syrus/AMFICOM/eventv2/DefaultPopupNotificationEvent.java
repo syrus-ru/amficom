@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.8 2005/10/31 13:55:09 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.9 2005/11/09 10:58:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/10/31 13:55:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/11/09 10:58:59 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -88,7 +88,7 @@ public final class DefaultPopupNotificationEvent extends
 		this.resultId = lineMismatchEvent.getResultId();
 		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
 		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
-		this.mismatchCreated = (Date) lineMismatchEvent.getMismatchCreated().clone();
+		this.mismatchCreated = new Date(lineMismatchEvent.getMismatchCreated().getTime());
 	}
 
 	/**

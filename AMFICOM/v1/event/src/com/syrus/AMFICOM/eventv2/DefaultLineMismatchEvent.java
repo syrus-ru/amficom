@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.4 2005/10/19 11:51:41 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.5 2005/11/09 10:58:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/19 11:51:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/09 10:58:59 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -159,7 +159,7 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		this.resultId = resultId;
 		this.mismatchOpticalDistance = mismatchOpticalDistance;
 		this.mismatchPhysicalDistance = mismatchPhysicalDistance;
-		this.mismatchCreated = (Date) mismatchCreated.clone();
+		this.mismatchCreated = new Date(mismatchCreated.getTime());
 	}
 
 	/**
