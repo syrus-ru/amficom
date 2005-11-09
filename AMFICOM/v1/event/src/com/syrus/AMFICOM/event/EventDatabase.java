@@ -1,12 +1,14 @@
-/*
- * $Id: EventDatabase.java,v 1.49 2005/10/31 12:30:21 bass Exp $
+/*-
+ * $Id: EventDatabase.java,v 1.50 2005/11/09 11:35:12 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.event;
+
+import static com.syrus.AMFICOM.general.TableNames.EVENTSOURCELINK;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/10/31 12:30:21 $
+ * @version $Revision: 1.50 $, $Date: 2005/11/09 11:35:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -199,7 +201,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		}
 
 		final Map<Identifier, Set<Identifier>> eventSourceIdsMap = this.retrieveLinkedEntityIds(events,
-				ObjectEntities.EVENTSOURCELINK,
+				EVENTSOURCELINK,
 				EventWrapper.LINK_COLUMN_EVENT_ID,
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 
@@ -305,7 +307,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		}
 
 		super.updateLinkedEntityIds(eventSourceIdsMap,
-				ObjectEntities.EVENTSOURCELINK,
+				EVENTSOURCELINK,
 				EventWrapper.LINK_COLUMN_EVENT_ID,
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 	}

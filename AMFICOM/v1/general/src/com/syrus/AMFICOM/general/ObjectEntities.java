@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.91 2005/10/16 11:05:47 max Exp $
+ * $Id: ObjectEntities.java,v 1.92 2005/11/09 11:35:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/10/16 11:05:47 $
- * @author $Author: max $
+ * @version $Revision: 1.92 $, $Date: 2005/11/09 11:35:11 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -94,13 +94,9 @@ public final class ObjectEntities {
 
 	/*	Type */
 	public static final String EVENT_TYPE = "EventType";
-	public static final String EVENTTYPPARTYPLINK = "EventTypParTypLink";
-	public static final String EVENTTYPEUSERALERT = "EventTypeUserAlert";
-
 	/*	Object */
 	public static final String EVENTPARAMETER = "EventParameter";
 	public static final String EVENTSOURCE = "EventSource";
-	public static final String EVENTSOURCELINK = "EventSourceLink";
 	public static final String EVENT = "Event";
 
 

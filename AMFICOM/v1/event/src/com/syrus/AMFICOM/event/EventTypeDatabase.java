@@ -1,12 +1,15 @@
-/*
- * $Id: EventTypeDatabase.java,v 1.46 2005/10/31 12:30:21 bass Exp $
+/*-
+ * $Id: EventTypeDatabase.java,v 1.47 2005/11/09 11:35:12 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.event;
+
+import static com.syrus.AMFICOM.general.TableNames.EVENTTYPEUSERALERT;
+import static com.syrus.AMFICOM.general.TableNames.EVENTTYPPARTYPLINK;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/10/31 12:30:21 $
+ * @version $Revision: 1.47 $, $Date: 2005/11/09 11:35:12 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -149,7 +152,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
-				+ SQL_FROM + ObjectEntities.EVENTTYPEUSERALERT
+				+ SQL_FROM + EVENTTYPEUSERALERT
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(eventTypes, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 
@@ -366,7 +369,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			return;
 		}
 
-		final String sql = SQL_INSERT_INTO + ObjectEntities.EVENTTYPEUSERALERT + OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + EVENTTYPEUSERALERT + OPEN_BRACKET
 				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
@@ -427,7 +430,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			return;
 		}
 
-		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + ObjectEntities.EVENTTYPEUSERALERT
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + EVENTTYPEUSERALERT
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
 		for (final Identifier eventTypeId : deleteUserAlertKindsMap.keySet()) {
@@ -478,7 +481,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	@Override
 	public void delete(final Set<? extends Identifiable> objects) {
 		final StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
-				+ ObjectEntities.EVENTTYPPARTYPLINK
+				+ EVENTTYPPARTYPLINK
 				+ SQL_WHERE);
 		final StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENT_TYPE

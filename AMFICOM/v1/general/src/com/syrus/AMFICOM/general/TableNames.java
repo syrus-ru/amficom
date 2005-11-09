@@ -1,14 +1,15 @@
 /*-
- * $Id: TableNames.java,v 1.8 2005/10/30 14:26:52 bass Exp $
+ * $Id: TableNames.java,v 1.9 2005/11/09 11:35:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/30 14:26:52 $
+ * @version $Revision: 1.9 $, $Date: 2005/11/09 11:35:11 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -40,4 +41,11 @@ public final class TableNames {
 	public static final String EQUIPMENT_ME_LINK = "EquipmentMELink";
 	public static final String TRANSMISSIONPATH_ME_LINK = "TransmissionPathMELink";
 
+	public static final String EVENTTYPPARTYPLINK = "EventTypParTypLink";
+	public static final String EVENTTYPEUSERALERT = "EventTypeUserAlert";
+	public static final String EVENTSOURCELINK = "EventSourceLink";
+
+	private TableNames() {
+		assert false;
+	}
 }
