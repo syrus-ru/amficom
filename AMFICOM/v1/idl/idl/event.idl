@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.39 2005/10/31 12:01:27 bass Exp $
+ * $Id: event.idl,v 1.40 2005/11/09 15:16:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -106,6 +106,21 @@ module event {
 
 		typedef sequence<IdlEvent> IdlEventSeq;
 
+		valuetype IdlDeliveryAttributes : general::corba::IdlStorableObject {
+			public reflectometry::corba::IdlSeverity severity;
+			public general::corba::IdlIdentifierSeq roleIds;
+			public general::corba::IdlIdentifierSeq userIds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in reflectometry::corba::IdlSeverity severity,
+					in general::corba::IdlIdentifierSeq roleIds,
+					in general::corba::IdlIdentifierSeq userIds);
+		};
 	};
 };
 
@@ -296,7 +311,6 @@ module eventv2 {
 			//@todo this method must accept messages, not events
 			void receiveMessages(in IdlEvent event) raises (general::corba::AMFICOMRemoteException);
 		};
-
 	};
 };
 

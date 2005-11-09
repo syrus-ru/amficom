@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.13 2005/10/24 13:01:04 bass Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.14 2005/11/09 15:16:38 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.event;
 
+import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
+import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 
@@ -17,7 +19,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/24 13:01:04 $
+ * @version $Revision: 1.14 $, $Date: 2005/11/09 15:16:38 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
@@ -46,6 +48,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		switch (this.condition.getEntityCode().shortValue()) {
 		case EVENT_TYPE_CODE:
 			return key == COLUMN_CODENAME;
+		case DELIVERYATTRIBUTES_CODE:
+			return key == COLUMN_SEVERITY;
 		default:
 			return false;
 		}

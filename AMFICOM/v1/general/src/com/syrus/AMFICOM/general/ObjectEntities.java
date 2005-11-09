@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.92 2005/11/09 11:35:11 bass Exp $
+ * $Id: ObjectEntities.java,v 1.93 2005/11/09 15:16:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/11/09 11:35:11 $
+ * @version $Revision: 1.93 $, $Date: 2005/11/09 15:16:37 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -98,6 +98,7 @@ public final class ObjectEntities {
 	public static final String EVENTPARAMETER = "EventParameter";
 	public static final String EVENTSOURCE = "EventSource";
 	public static final String EVENT = "Event";
+	public static final String DELIVERYATTRIBUTES = "DeliveryAttributes";
 
 
 	/*	##################################### Scheme ##################################### */
@@ -201,6 +202,7 @@ public final class ObjectEntities {
 	public static final short EVENTPARAMETER_CODE = EVENT_MIN_CODE;
 	public static final short EVENTSOURCE_CODE = 0x0082;
 	public static final short EVENT_CODE = 0x0083;
+	public static final short DELIVERYATTRIBUTES_CODE = 0x0084;
 
 	public static final short EVENT_TYPE_CODE = 0x00C1;
 
@@ -374,7 +376,6 @@ public final class ObjectEntities {
 		registerEntity(CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_TYPE);
 
 		registerEntity(EVENT_TYPE_CODE, EVENT_TYPE);
-//		registerEntity(ALARM_TYPE_CODE, ALARM_TYPE);
 
 		registerEntity(PORT_TYPE_CODE, PORT_TYPE);
 		registerEntity(LINK_TYPE_CODE, LINK_TYPE);
@@ -391,7 +392,7 @@ public final class ObjectEntities {
 		registerEntity(EVENTPARAMETER_CODE, EVENTPARAMETER);
 		registerEntity(EVENTSOURCE_CODE, EVENTSOURCE);
 		registerEntity(EVENT_CODE, EVENT);
-//		registerEntity(ALARM_CODE, ALARM);
+		registerEntity(DELIVERYATTRIBUTES_CODE, DELIVERYATTRIBUTES);
 
 		registerEntity(SYSTEMUSER_CODE, SYSTEMUSER);
 		registerEntity(DOMAIN_CODE, DOMAIN);

@@ -8,3 +8,4 @@ EventStatus.java
 IdlEvent.java
 IdlEventSource.java
 IdlEventType.java
+IdlDeliveryAttributes.java
