@@ -66,8 +66,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/10/31 12:29:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2005/11/09 07:48:58 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -940,7 +940,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 		final String description = this.descriptionField.getText();
 		return description.trim().length() == 0 ?
-				I18N.getString("Scheduler.Text.Scheduler.CreatedByScheduler") + " /" + sdf.format(new Date()) + "/"
+//				commented according to bug 283
+//				I18N.getString("Scheduler.Text.Scheduler.CreatedByScheduler") + 
+				'/' + sdf.format(new Date()) + '/'
 				: description;
 	}
 	
