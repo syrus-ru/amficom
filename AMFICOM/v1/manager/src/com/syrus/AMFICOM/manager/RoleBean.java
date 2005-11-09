@@ -1,5 +1,5 @@
 /*-
- * $Id: RoleBean.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+ * $Id: RoleBean.java,v 1.2 2005/11/09 15:09:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -38,7 +38,6 @@ public class RoleBean extends Bean {
 
 	RoleBean() {
 		// nothing
-		
 	}
 	
 	@Override
@@ -49,7 +48,7 @@ public class RoleBean extends Bean {
 
 	@Override
 	public void dispose() throws ApplicationException {
-		assert Log.debugMessage("UserBean.dispose | " + this.identifier, Log.DEBUGLEVEL09);		
+		assert Log.debugMessage(this.identifier, Log.DEBUGLEVEL09);		
 		StorableObjectPool.delete(this.identifier);		
 		
 		final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
@@ -63,9 +62,9 @@ public class RoleBean extends Bean {
 	}
 	
 	@Override
-	protected void setIdentifier(Identifier storableObject) 
+	protected void setIdentifier(final Identifier identifier) 
 	throws ApplicationException {
-		super.setIdentifier(storableObject);
+		super.setIdentifier(identifier);
 		this.role = StorableObjectPool.getStorableObject(this.identifier, true);
 	}
 

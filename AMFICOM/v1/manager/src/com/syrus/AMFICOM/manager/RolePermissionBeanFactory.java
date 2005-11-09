@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePermissionBeanFactory.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: RolePermissionBeanFactory.java,v 1.2 2005/11/09 15:09:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -92,8 +92,7 @@ public final class RolePermissionBeanFactory extends AbstractBeanFactory<RolePer
 	@Override
 	public RolePermissionBean createBean(final String codename) 
 	throws ApplicationException {
-		final String identifier = codename.replaceFirst(ObjectEntities.ROLE, "");
-		return this.createBean(new Identifier(identifier));
+		return this.createBean(new Identifier(codename));
 	}
 	
 	protected RolePermissionBean createBean(final Identifier identifier) 
@@ -110,7 +109,7 @@ public final class RolePermissionBeanFactory extends AbstractBeanFactory<RolePer
 		final RolePermissionBean bean = new RolePermissionBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
-		bean.setId(ObjectEntities.PERMATTR + ObjectEntities.ROLE + Identifier.SEPARATOR + identifier.getMinor());
+		bean.setId(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());		
 
 		bean.setIdentifier(identifier);
@@ -124,7 +123,7 @@ public final class RolePermissionBeanFactory extends AbstractBeanFactory<RolePer
 	
 	@Override
 	public String getCodename() {
-		return (this.module != null ? this.module.getCodename() : ObjectEntities.PERMATTR) +  ObjectEntities.ROLE;
+		return (this.module != null ? this.module.getCodename() : ObjectEntities.PERMATTR);
 	}
 	
 	private Validator getValidator() {
@@ -139,7 +138,7 @@ public final class RolePermissionBeanFactory extends AbstractBeanFactory<RolePer
 						+ targetBean.getName() + targetBean.getId(), Log.DEBUGLEVEL10);
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getId().startsWith(ObjectEntities.PERMATTR + ObjectEntities.ROLE) &&
+						sourceBean.getId().startsWith(ObjectEntities.PERMATTR) &&
 						targetBean.getId().startsWith(ObjectEntities.ROLE);
 				}
 			};

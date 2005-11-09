@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.25 2005/11/08 12:07:58 bob Exp $
+ * $Id: UserBean.java,v 1.26 2005/11/09 15:09:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/11/08 12:07:58 $
+ * @version $Revision: 1.26 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -399,19 +399,18 @@ public class UserBean extends Bean implements WorkstationItem {
 	
 	public void setDomainId(final Identifier oldDomainId,
 	                        final Identifier newDomainId) {
-		assert Log.debugMessage("UserBean.setDomainId | was:" + oldDomainId
+		assert Log.debugMessage(oldDomainId
 				+ ", now:" + newDomainId, 
 			Log.DEBUGLEVEL09);
 		try {			
 			final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
-				assert Log.debugMessage("UserBean.setDomainId | 1 " + layoutItem.getName() 
-					+ ", " + layoutItem.getLayoutName(), 
+				assert Log.debugMessage(layoutItem.getName() 
+					+ '@' + layoutItem.getLayoutName(), 
 				Log.DEBUGLEVEL09);
-				Log.debugMessage("UserBean.setDomainId | 1 "
-					+ layoutItem.getId() + ", "
+				Log.debugMessage(layoutItem.getId() + ", "
 					+ layoutItem.getName() 
-					+ ", layoutName:" 
+					+ '@' 
 					+ layoutItem.getLayoutName()
 					+ ", this.codeName:" + this.id, 
 				Log.DEBUGLEVEL09);		
@@ -420,10 +419,9 @@ public class UserBean extends Bean implements WorkstationItem {
 					final String layoutName = !newDomainId.isVoid() ? 
 							newDomainId.getIdentifierString() : 
 							ObjectEntities.SYSTEMUSER;
-					Log.debugMessage("UserBean.setDomainId | "
-						+ layoutItem.getId() + ", "
+					Log.debugMessage(layoutItem.getId() + ", "
 						+ layoutItem.getName() 
-						+ ", layoutName:" 
+						+ '@' 
 						+ layoutName, 
 					Log.DEBUGLEVEL09);		
 					layoutItem.setLayoutName(layoutName);

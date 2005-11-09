@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.11 2005/11/08 12:07:58 bob Exp $
+* $Id: DomainPerpective.java,v 1.12 2005/11/09 15:09:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/11/08 12:07:58 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/09 15:09:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -66,29 +66,30 @@ public class DomainPerpective extends AbstractPerspective {
 		this.domainBean = domainBean;
 	}	
 	
-	public void addEntities(final JToolBar entityToolBar) {
-		final ManagerHandler managerHandler = this.managerMainFrame.getManagerHandler();
+	public void addEntities(final JToolBar entityToolBar) throws ApplicationException {
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+
+		final PerspectiveData perspectiveData = this.getPerspectiveData();
 		
 		final DefaultGraphCell networkCell = 
 			graphRoutines.getDefaultGraphCell(this.domainNetworkItem);
 		
 		this.managerMainFrame.addAction(
-			super.createAction(managerHandler.getBeanFactory(ObjectEntities.SYSTEMUSER)));
+			super.createAction(perspectiveData.getBeanFactory(ObjectEntities.SYSTEMUSER)));
 
 		this.managerMainFrame.addAction(
-			super.createAction(managerHandler.getBeanFactory(WorkstationBeanFactory.WORKSTATION_CODENAME), 
+			super.createAction(perspectiveData.getBeanFactory(WorkstationBeanFactory.WORKSTATION_CODENAME), 
 				networkCell));
 		
 		entityToolBar.addSeparator();
 		this.managerMainFrame.addAction(
-			super.createAction(managerHandler.getBeanFactory(ObjectEntities.KIS), 
+			super.createAction(perspectiveData.getBeanFactory(ObjectEntities.KIS), 
 				networkCell));
 		this.managerMainFrame.addAction(
-			super.createAction(managerHandler.getBeanFactory(ObjectEntities.SERVER), 
+			super.createAction(perspectiveData.getBeanFactory(ObjectEntities.SERVER), 
 				networkCell));
 		this.managerMainFrame.addAction(
-			super.createAction(managerHandler.getBeanFactory(ObjectEntities.MCM), 
+			super.createAction(perspectiveData.getBeanFactory(ObjectEntities.MCM), 
 				networkCell));
 		entityToolBar.addSeparator();		
 	}
@@ -168,11 +169,6 @@ public class DomainPerpective extends AbstractPerspective {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	@Override
-	protected String getIdentifierString(Identifier memberId) {
-		return memberId.getIdentifierString();
 	}
 	
 	private LayoutItem getDomainNetworkItem(final Identifier domainId,

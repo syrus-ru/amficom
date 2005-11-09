@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePerpective.java,v 1.3 2005/11/08 13:45:14 bob Exp $
+* $Id: RolePerpective.java,v 1.4 2005/11/09 15:09:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/08 13:45:14 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,7 +52,7 @@ public class RolePerpective extends AbstractPerspective {
 	
 	public RolePerpective(final ManagerMainFrame managerMainFrame,
 	                        final RoleBean roleBean) {
-		this(managerMainFrame, roleBean.getRole());
+		this(managerMainFrame, roleBean.getRole());		
 	}
 	
 	public RolePerpective(final ManagerMainFrame managerMainFrame,
@@ -61,9 +61,10 @@ public class RolePerpective extends AbstractPerspective {
 		this.role = role;
 	}
 	
-	public void addEntities(final JToolBar entityToolBar) {
+	public void addEntities(final JToolBar entityToolBar) 
+	throws ApplicationException {
 		final RolePermissionBeanFactory factory = 
-			(RolePermissionBeanFactory) this.managerMainFrame.getManagerHandler().getBeanFactory(ObjectEntities.PERMATTR + ObjectEntities.ROLE);
+			(RolePermissionBeanFactory) this.getPerspectiveData().getBeanFactory(ObjectEntities.PERMATTR);
 		
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 		final DefaultGraphCell parentCell = graphRoutines.getDefaultGraphCell(this.layoutItem);
@@ -141,10 +142,6 @@ public class RolePerpective extends AbstractPerspective {
 		return true;
 	}
 
-	public boolean isDeletable(final AbstractBean abstractBean) {
-		return !abstractBean.getCodename().equals(ObjectEntities.ROLE);
-	}
-	
 	@SuppressWarnings("unchecked")
 	public void perspectiveApplied() 
 	throws ApplicationException {
@@ -154,11 +151,6 @@ public class RolePerpective extends AbstractPerspective {
 			graphRoutines.getDefaultGraphCell(this.layoutItem);
 		
 		this.managerMainFrame.getTreeModel().setRoot(userCell);
-	}
-	
-	@Override
-	protected String getIdentifierString(final Identifier memberId) {
-		return memberId.getIdentifierString();
 	}
 
 	public void createNecessaryItems() throws ApplicationException {
@@ -206,10 +198,7 @@ public class RolePerpective extends AbstractPerspective {
 			true);
 		
 		for(final PermissionAttributes permissionAttribute : permissionAttributes) {
-			final String id = ObjectEntities.PERMATTR 
-					+ ObjectEntities.ROLE 
-					+ Identifier.SEPARATOR 
-					+ permissionAttribute.getId().getMinor();
+			final String id = permissionAttribute.getId().getIdentifierString();
 			
 			boolean found = false;
 			

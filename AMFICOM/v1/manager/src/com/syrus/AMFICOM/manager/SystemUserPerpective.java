@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.5 2005/11/08 09:08:35 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.6 2005/11/09 15:09:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/08 09:08:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -59,14 +59,14 @@ public class SystemUserPerpective extends AbstractPerspective {
 	                        final DefaultGraphCell cell) {
 		super(managerMainFrame);
 		this.userBean = userBean;
-		this.cell = cell;
+		this.cell = cell;		
 	}
 	
-	public void addEntities(final JToolBar entityToolBar) {
+	public void addEntities(final JToolBar entityToolBar) 
+	throws ApplicationException {
 		final PermissionBeanFactory factory = 
-			(PermissionBeanFactory) this.managerMainFrame.
-				getManagerHandler().
-					getBeanFactory(ObjectEntities.PERMATTR + ObjectEntities.SYSTEMUSER);
+			(PermissionBeanFactory) this.getPerspectiveData().
+					getBeanFactory(ObjectEntities.PERMATTR);
 		
 		class ModuleCheckable implements Chechable {
 			
@@ -141,10 +141,6 @@ public class SystemUserPerpective extends AbstractPerspective {
 		return true;
 	}
 
-	public boolean isDeletable(final AbstractBean abstractBean) {
-		return !abstractBean.getCodename().equals(ObjectEntities.SYSTEMUSER);
-	}
-	
 	public void perspectiveApplied() throws ApplicationException {
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 		
@@ -203,14 +199,6 @@ public class SystemUserPerpective extends AbstractPerspective {
 		
 		return userItem;
 	
-	}
-	
-	@Override
-	protected String getIdentifierString(Identifier memberId) {
-		return ObjectEntities.codeToString(memberId.getMajor())
-			+ ObjectEntities.SYSTEMUSER
-			+ Identifier.SEPARATOR
-			+ memberId.getMinor();
 	}
 
 	public void createNecessaryItems() throws ApplicationException {

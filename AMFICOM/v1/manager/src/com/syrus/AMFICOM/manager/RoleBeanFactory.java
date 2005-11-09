@@ -1,5 +1,5 @@
 /*-
-* $Id: RoleBeanFactory.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: RoleBeanFactory.java,v 1.2 2005/11/09 15:09:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,10 +18,11 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.UI.ManagerModel;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -86,14 +87,19 @@ public final class RoleBeanFactory extends AbstractBeanFactory<RoleBean> {
 				
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
-					System.out.println("PermissionBeanFactory.Validator$1.isValid() | " 
-						+ sourceBean.getName() 
-						+ " -> " 
-						+ targetBean.getName());
+					assert Log.debugMessage(sourceBean.getName() 
+							+ " -> " 
+							+ targetBean.getName(),
+						Log.DEBUGLEVEL10);
+					final String sourceId = sourceBean.getId();
+					final String targetId = targetBean.getId();
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getId().startsWith(ObjectEntities.PERMATTR + ObjectEntities.ROLE) &&
-						targetBean.getId().startsWith(ObjectEntities.ROLE);
+						(sourceId.startsWith(ObjectEntities.PERMATTR) &&
+						targetId.startsWith(ObjectEntities.ROLE)
+						||
+						sourceId.startsWith(ObjectEntities.ROLE) &&
+						targetId.startsWith(MessageBeanFactory.MESSAGE_CODENAME));
 				}
 			};
 		}

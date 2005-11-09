@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: ManagerHandler.java,v 1.2 2005/11/09 15:09:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.UIManager;
+import java.util.Set;
 
 import com.syrus.AMFICOM.extensions.AbstractExtensionHandler;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
@@ -22,12 +21,13 @@ import com.syrus.amficom.extensions.ExtensionPoint;
 import com.syrus.amficom.extensions.manager.BeanFactory;
 import com.syrus.amficom.extensions.manager.ManagerExtensions;
 import com.syrus.amficom.extensions.manager.ManagerResource;
+import com.syrus.amficom.extensions.manager.Perspective;
 import com.syrus.amficom.extensions.manager.UiHandler;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,8 +36,7 @@ public class ManagerHandler extends AbstractExtensionHandler {
 	
 	private final ManagerExtensions	managerExtensions;
 	private ManagerMainFrame	managerMainFrame;
-	private Map<String, AbstractBeanFactory> beanFactories;
-	private Pattern	pattern;
+	private final Map<String, PerspectiveData> perspectives;
 
 	public ManagerHandler(final ExtensionPoint extensionPoint) {
 		this((ManagerExtensions)extensionPoint);
@@ -45,7 +44,7 @@ public class ManagerHandler extends AbstractExtensionHandler {
 	
 	public ManagerHandler(final ManagerExtensions managerExtensions) {
 		this.managerExtensions = managerExtensions;
-		this.beanFactories = new HashMap<String, AbstractBeanFactory>();
+		this.perspectives = new HashMap<String, PerspectiveData>();
 	}
 	
 	public final void setManagerMainFrame(final ManagerMainFrame managerMainFrame) {
@@ -63,88 +62,69 @@ public class ManagerHandler extends AbstractExtensionHandler {
 			new Class[] {ManagerMainFrame.class}, 
 			new Object[] {this.managerMainFrame});
 	}
-	
-	public final AbstractBeanFactory getBeanFactory(final String name) {
-		assert Log.debugMessage("name:" + name, Log.DEBUGLEVEL10);
-		if (this.pattern == null) {
-			this.pattern = Pattern.compile("^([a-zA-Z]+)");
-		}
-		final Matcher matcher = this.pattern.matcher(name);
+
+	public final PerspectiveData getPerspectiveData(String perspectiveCodename) {
+		perspectiveCodename = perspectiveCodename.intern();
+		PerspectiveData perspectiveData = this.perspectives.get(perspectiveCodename);
 		
-		final String codename;
-		if (matcher.find()) {
-			// extract codename prefix from name 
-			codename = name.substring(matcher.start(1), matcher.end(1)).intern();
-		} else {
-			codename = name.intern();
-		}
-		
-		AbstractBeanFactory beanFactory = this.beanFactories.get(codename);
-		
-		if (beanFactory == null) { 
+		if (perspectiveData == null) { 
 			for (final ManagerResource managerResource : this.managerExtensions.getManagerResourceArray()) {
-				if (managerResource instanceof BeanFactory) {
-					final BeanFactory handler = (BeanFactory) managerResource;
-					final String id = handler.getId().intern();
-					if (id == codename) {
-						final String handlerClass = handler.getBeanFactoryClass();
-						beanFactory = this.loadAbstractBeanFactory(handlerClass);
-						assert Log.debugMessage("factory class " 
-								+ handlerClass
-								+ " for " 
-								+ id 
-								+ (beanFactory != null ? " registered successfully." : 
-									" register failed."),
+				if (managerResource instanceof Perspective) {
+					Perspective perspective = (Perspective) managerResource;
+					final String id = perspective.getId().intern();
+					
+					assert Log.debugMessage(id, Log.DEBUGLEVEL10);
+					
+					if (id == perspectiveCodename) {
+						
+						final Map<String, AbstractBeanFactory> factories = 
+							new HashMap<String, AbstractBeanFactory>();
+						final Map<String, BeanUI> beanUI = new HashMap<String, BeanUI>();
+						final Set<String> undeletable = new HashSet<String>();
+						
+						final BeanFactory[] beanFactoryArray = perspective.getBeanFactoryArray();
+						for (final BeanFactory factory : beanFactoryArray) {
+							final String beanFactoryClass = factory.getBeanFactoryClass();
+							final String factoryId = factory.getId();
+							final AbstractBeanFactory factoryInstance = this.loadAbstractBeanFactory(beanFactoryClass);
+							assert Log.debugMessage("factory for " 
+									+ factoryId
+									+ (factoryInstance != null ? " registered successfull" : 
+										" failed."), 
+								Log.DEBUGLEVEL10);
+							factories.put(factoryId, 
+								factoryInstance);
+						}
+						
+						final UiHandler[] uiHandlerArray = perspective.getUiHandlerArray();
+						for (final UiHandler handler : uiHandlerArray) {
+							beanUI.put(handler.getId(), this.loadBeanUI(handler.getUiHandlerClass()));
+						}
+						
+						undeletable.addAll(Arrays.asList(perspective.getUndeletableArray()));
+						
+						perspectiveData = new PerspectiveData(factories, 
+							beanUI,
+							undeletable);
+						
+						assert Log.debugMessage("perspective '" 
+								+ perspectiveCodename
+								+ "' registered successfully.",
 							Log.DEBUGLEVEL10);
-						this.beanFactories.put(id, beanFactory);
-						return beanFactory;
+						this.perspectives.put(perspectiveCodename, perspectiveData);
+						return perspectiveData;
 					}
 				}
 			}
-			final String msg = "factory for " 
-				+ codename 
-				+ " not found.";
-			Log.errorMessage(msg);
-			
-			throw new IllegalStateException(msg);
-		}
-		
-		return beanFactory;
-	}
-	
-	public final BeanUI getBeanUI(String beanUICodename) {
-		beanUICodename = beanUICodename.intern();
-		BeanUI beanUI = (BeanUI) UIManager.get(beanUICodename);
-		
-		if (beanUI == null) { 
-			for (final ManagerResource managerResource : this.managerExtensions.getManagerResourceArray()) {
-				if (managerResource instanceof UiHandler) {
-					final UiHandler handler = (UiHandler) managerResource;
-					final String id = handler.getId().intern();
-					if (id == beanUICodename) {
-						final String handlerClass = handler.getUiHandlerClass();
-						beanUI = loadBeanUI(handlerClass);
-						assert Log.debugMessage("handler class " 
-								+ handlerClass
-								+ " for " 
-								+ id 
-								+ (beanUI != null ? " registered successfully." : 
-									" register failed."),
-							Log.DEBUGLEVEL10);
-						UIManager.put(id, beanUI);
-						return beanUI;
-					}
-				}
-			}
-			final String msg = "handler for " 
-				+ beanUICodename 
+			final String msg = "perspective " 
+				+ perspectiveCodename 
 				+ " not found.";
 			Log.errorMessage(msg);
 			
 			throw new IllegalStateException(msg);			
 		}
 		
-		return beanUI;
+		return perspectiveData;
 	}
 }
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionBean.java,v 1.4 2005/11/08 13:44:09 bob Exp $
+ * $Id: PermissionBean.java,v 1.5 2005/11/09 15:09:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/08 13:44:09 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -160,6 +160,6 @@ public final class PermissionBean extends Bean implements UserItem {
 	
 	@Override
 	public String getCodename() {
-		return this.permissionAttributes.getModule().getCodename() + ObjectEntities.SYSTEMUSER;
+		return this.permissionAttributes.getModule().getCodename();
 	}
 }

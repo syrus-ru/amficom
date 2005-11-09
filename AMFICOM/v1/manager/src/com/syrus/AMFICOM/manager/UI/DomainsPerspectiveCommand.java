@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspectiveCommand.java,v 1.4 2005/11/08 09:08:35 bob Exp $
+* $Id: DomainsPerspectiveCommand.java,v 1.5 2005/11/09 15:09:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,9 +44,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractPerspective;
 import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.ManagerHandler;
 import com.syrus.AMFICOM.manager.NetBeanFactory;
 import com.syrus.AMFICOM.manager.Perspective;
+import com.syrus.AMFICOM.manager.PerspectiveData;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/08 09:08:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/09 15:09:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -62,7 +62,6 @@ import com.syrus.util.Log;
 public class DomainsPerspectiveCommand extends AbstractCommand {
 
 	private class DomainsPerspective extends AbstractPerspective {
-		
 		
 		public DomainsPerspective() {
 			super(DomainsPerspectiveCommand.this.graphText);
@@ -76,11 +75,12 @@ public class DomainsPerspectiveCommand extends AbstractCommand {
 			return I18N.getString("Manager.Label.DomainsLevel");
 		}
 		
-		public void addEntities(final JToolBar entityToolBar) {
-			final ManagerHandler managerHandler = this.managerMainFrame.getManagerHandler();
-			this.managerMainFrame.addAction(super.createAction(managerHandler.getBeanFactory(NetBeanFactory.NET_CODENAME)));
+		public void addEntities(final JToolBar entityToolBar) throws ApplicationException {
+			final PerspectiveData perspectiveData = this.getPerspectiveData();
+			
+			this.managerMainFrame.addAction(super.createAction(perspectiveData.getBeanFactory(NetBeanFactory.NET_CODENAME)));
 			entityToolBar.addSeparator();
-			this.managerMainFrame.addAction(super.createAction(managerHandler.getBeanFactory(ObjectEntities.DOMAIN)));
+			this.managerMainFrame.addAction(super.createAction(perspectiveData.getBeanFactory(ObjectEntities.DOMAIN)));
 		}
 		
 		public boolean isValid() {
@@ -176,10 +176,6 @@ public class DomainsPerspectiveCommand extends AbstractCommand {
  			return layoutItem;
  		}
 		
-		@Override
-		protected String getIdentifierString(final Identifier memberId) {
-			return memberId.getIdentifierString();
-		}
 		
 		public void createNecessaryItems() throws ApplicationException {
 			final Set<Domain> domains = StorableObjectPool.getStorableObjectsByCondition(

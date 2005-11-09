@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionBeanFactory.java,v 1.5 2005/11/08 13:44:09 bob Exp $
+* $Id: PermissionBeanFactory.java,v 1.6 2005/11/09 15:09:48 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/08 13:44:09 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -103,7 +103,7 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 	@Override
 	public PermissionBean createBean(final String codename) 
 	throws ApplicationException {
-		return this.createBean(new Identifier(codename.replaceFirst(ObjectEntities.SYSTEMUSER, "")));
+		return this.createBean(new Identifier(codename));
 	}
 	
 	protected PermissionBean createBean(final Identifier identifier) 
@@ -121,7 +121,7 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 		final PermissionBean bean = new PermissionBean();
 		++super.count;
 		bean.setGraphText(super.graphText);
-		bean.setId(ObjectEntities.PERMATTR + ObjectEntities.SYSTEMUSER + Identifier.SEPARATOR + identifier.getMinor());
+		bean.setId(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());		
 
 		bean.setIdentifier(identifier);
@@ -145,13 +145,12 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 	@Override
 	public String getCodename() {
 		return this.module != null ? 
-				this.module.getCodename() + ObjectEntities.SYSTEMUSER :
-				ObjectEntities.PERMATTR + ObjectEntities.SYSTEMUSER;
+				this.module.getCodename():
+				ObjectEntities.PERMATTR;
 	}
 	
 	private Validator getValidator() {
 		if (this.validator == null) {
-			final String prefix = ObjectEntities.SYSTEMUSER;
 			this.validator = new Validator() {
 				
 				public boolean isValid(	AbstractBean sourceBean,
@@ -162,8 +161,8 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 					
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getId().startsWith(ObjectEntities.PERMATTR + prefix) &&
-						targetBean.getId().startsWith(prefix);
+						sourceBean.getId().startsWith(ObjectEntities.PERMATTR) &&
+						targetBean.getId().startsWith(ObjectEntities.SYSTEMUSER);
 				}
 			};
 		}

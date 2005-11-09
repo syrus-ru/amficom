@@ -1,5 +1,5 @@
 /*-
- * $Id: WorkstationBeanFactory.java,v 1.3 2005/11/07 15:24:19 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.4 2005/11/09 15:09:48 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/09 15:09:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -65,8 +65,7 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 				
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
-					Log.debugMessage("ARMBeanFactory.Validator$1.isValid() | " 
-							+ sourceBean.getName() 
+					Log.debugMessage(sourceBean.getName() 
 							+ " -> " 
 							+ targetBean.getName(), 
 						Log.DEBUGLEVEL10);
@@ -110,8 +109,7 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 			final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {					
-					Log.debugMessage("WorkstationBean.dispose | "
-						+ layoutItem.getId() + ", "
+					Log.debugMessage(layoutItem.getId() + ", "
 						+ layoutItem.getName() 
 						+ ", layoutName:" 
 						+ layoutItem.getLayoutName(), 
@@ -139,8 +137,7 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 						final String layoutName = !newDomainId.isVoid() ? 
 								newDomainId.getIdentifierString() : 
 								ObjectEntities.DOMAIN;
-						Log.debugMessage("WorkstationBean.setDomainId | "
-							+ layoutItem.getId() + ", "
+						Log.debugMessage(layoutItem.getId() + ", "
 							+ layoutItem.getName() 
 							+ ", layoutName:" 
 							+ layoutName, 

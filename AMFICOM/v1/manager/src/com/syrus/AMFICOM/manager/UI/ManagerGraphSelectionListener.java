@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphSelectionListener.java,v 1.2 2005/11/08 09:08:35 bob Exp $
+* $Id: ManagerGraphSelectionListener.java,v 1.3 2005/11/09 15:09:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,13 +24,14 @@ import org.jgraph.graph.Edge;
 import org.jgraph.graph.GraphModel;
 
 import com.syrus.AMFICOM.client.resource.I18N;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
 import com.syrus.AMFICOM.manager.Perspective;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/08 09:08:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/09 15:09:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -101,25 +102,26 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 					final AbstractBean abstractBean = (AbstractBean)userObject;
 					deleteAllow &= perspective.isDeletable(abstractBean);
 
-					managerMainFrame.beanUI = managerMainFrame.managerHandler.getBeanUI(abstractBean.getCodename());
-//					SwingUtilities.invokeLater(new Runnable() {
-//						public void run() {
-							JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
-							if (propertyPanel2 != null) {
-								frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME)
-									+ " : "
-									+ ((AbstractBean)userObject).getName());
-								final GridBagLayout gridBagLayout = 
-									(GridBagLayout) panel.getLayout();
-								final GridBagConstraints gbc = gridBagLayout.getConstraints(panel);
-								gbc.fill = GridBagConstraints.BOTH;
-								gbc.weightx = 1.0;
-								gbc.weighty = 1.0;
-								gbc.gridwidth = GridBagConstraints.REMAINDER;
-								panel.add(propertyPanel2, gbc);
-							}
-//						}
-//					});
+					try {
+						managerMainFrame.beanUI = managerMainFrame.getPerspective().getBeanUI(abstractBean.getCodename());
+						JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
+						if (propertyPanel2 != null) {
+							frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME)
+								+ " : "
+								+ ((AbstractBean)userObject).getName());
+							final GridBagLayout gridBagLayout = 
+								(GridBagLayout) panel.getLayout();
+							final GridBagConstraints gbc = gridBagLayout.getConstraints(panel);
+							gbc.fill = GridBagConstraints.BOTH;
+							gbc.weightx = 1.0;
+							gbc.weighty = 1.0;
+							gbc.gridwidth = GridBagConstraints.REMAINDER;
+							panel.add(propertyPanel2, gbc);
+						}
+					} catch (ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 										
 				}				
 			} else {

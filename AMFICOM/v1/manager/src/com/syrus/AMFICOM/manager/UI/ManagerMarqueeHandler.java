@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerMarqueeHandler.java,v 1.6 2005/11/07 15:24:19 bob Exp $
+* $Id: ManagerMarqueeHandler.java,v 1.7 2005/11/09 15:09:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,13 +25,14 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.PortView;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/09 15:09:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -87,10 +88,15 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 				Object userObject = port1.getUserObject();
 				if (userObject instanceof AbstractBean) {
 					AbstractBean bean = (AbstractBean)userObject;
-					BeanUI beanUI = this.graphText.getManagerHandler().getBeanUI(bean.getCodename());
-					JPopupMenu menu = beanUI.getPopupMenu(bean, cell);
-					if (menu != null) {
-						menu.show(this.graphText.graph, e.getX(), e.getY());
+					try {
+						BeanUI beanUI = this.graphText.getPerspective().getBeanUI(bean.getCodename());
+						JPopupMenu menu = beanUI.getPopupMenu(bean, cell);
+						if (menu != null) {
+							menu.show(this.graphText.graph, e.getX(), e.getY());
+						}
+					} catch (final ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					} 
 				}
 			}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.16 2005/11/08 12:07:16 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.17 2005/11/09 15:09:49 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/11/08 12:07:16 $
+ * @version $Revision: 1.17 $, $Date: 2005/11/09 15:09:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -205,7 +205,23 @@ public class ManagerMainFrame extends AbstractMainFrame {
 			};			
 			enterDomains.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('D'));
 			enterDomains.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_D));
-			super.toolBar.add(enterDomains);
+			super.toolBar.add(enterDomains);			
+			
+			final AbstractAction enterMessages = new AbstractAction("M") {	
+				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
+				public void actionPerformed(ActionEvent e) {
+					final JButton button = (JButton) e.getSource();
+					button.setEnabled(false);
+					windowArranger.arrange();
+					ApplicationContext context = ManagerMainFrame.this.getContext();
+					ApplicationModel applicationModel = context.getApplicationModel();
+					Command command = applicationModel.getCommand(ManagerModel.MESSAGES_COMMAND);
+					command.execute();				
+				}
+			};			
+			enterMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('M'));
+			enterMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_M));
+			super.toolBar.add(enterMessages);
 		}
 		
 		
@@ -366,6 +382,7 @@ public class ManagerMainFrame extends AbstractMainFrame {
 		
 		final ApplicationModel applicationModel = this.aContext.getApplicationModel();
 		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspectiveCommand(this));
+		applicationModel.setCommand(ManagerModel.MESSAGES_COMMAND, new MessagesPerspectiveCommand(this));
 		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand(this));	
 		
 		applicationModel.setCommand(TREE_FRAME, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));
@@ -724,6 +741,8 @@ public class ManagerMainFrame extends AbstractMainFrame {
 				this.tabbedPane.setSelectedComponent(panel);
 				return;
 			}
+			
+			this.graphRoutines.addPerspective(perspective);
 			
 			this.perspective = perspective;
 			

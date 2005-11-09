@@ -1,5 +1,5 @@
 /*-
- * $Id: RolePermissionBean.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+ * $Id: RolePermissionBean.java,v 1.2 2005/11/09 15:09:49 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,11 @@ import java.beans.PropertyChangeEvent;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -80,6 +79,6 @@ public class RolePermissionBean extends Bean implements RoleItem {
 	
 	@Override
 	public String getCodename() {
-		return this.permissionAttributes.getModule().getCodename() + ObjectEntities.ROLE;
+		return this.permissionAttributes.getModule().getCodename();
 	}
 }
