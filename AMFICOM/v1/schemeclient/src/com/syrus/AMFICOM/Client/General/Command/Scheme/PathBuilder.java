@@ -394,7 +394,12 @@ public class PathBuilder {
 				}
 			}
 			else {
-				// TODO create without end port
+				// create with any port
+				newPE = PathElement.createInstance(LoginManager.getUserId(), path, null, port);
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						LangModelScheme.getString("Message.information.path_addnext"),
+						LangModelScheme.getString("Message.information"),
+						JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 		return newPE;
@@ -413,13 +418,13 @@ public class PathBuilder {
 							lastEndPort.equals(link.getTargetAbstractSchemePort())) {
 						return addLink(path, link);
 					}
-				} else { //в противном случае ищем по общему порту предыдущего эл-та и линка
-					for (SchemePort port : se.getSchemePortsRecursively(false)) {
-						if (port.equals(link.getSourceAbstractSchemePort()) ||
-								port.equals(link.getTargetAbstractSchemePort())) {
-							lastPE.setEndAbstractSchemePort(port);
-							return addLink(path, link);
-						}
+				} 
+				//если не нашли - пытаемся найти по общему порту предыдущего эл-та и линка
+				for (SchemePort port : se.getSchemePortsRecursively(false)) {
+					if (port.equals(link.getSourceAbstractSchemePort()) ||
+							port.equals(link.getTargetAbstractSchemePort())) {
+						lastPE.setEndAbstractSchemePort(port);
+						return addLink(path, link);
 					}
 				}
 			}
