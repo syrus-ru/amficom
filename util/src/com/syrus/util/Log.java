@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.18 2005/10/31 12:29:58 bass Exp $
+ * $Id: Log.java,v 1.19 2005/11/10 10:26:51 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/10/31 12:29:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/11/10 10:26:51 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -85,56 +85,56 @@ public class Log {
 	 * debugMessage(...) methods                                          *
 	 **********************************************************************/
 
-	public static void debugMessage(final Level debugLevel) {
-		debugMessage0("", debugLevel);
+	public static boolean debugMessage(final Level debugLevel) {
+		return debugMessage0("", debugLevel);
 	}
 
-	public static void debugMessage(final boolean b, final Level debugLevel) {
-		debugMessage0(Boolean.toString(b), debugLevel);
+	public static boolean debugMessage(final boolean b, final Level debugLevel) {
+		return debugMessage0(Boolean.toString(b), debugLevel);
 	}
 
-	public static void debugMessage(final byte b, final Level debugLevel) {
-		debugMessage0(Byte.toString(b), debugLevel);
+	public static boolean debugMessage(final byte b, final Level debugLevel) {
+		return debugMessage0(Byte.toString(b), debugLevel);
 	}
 
-	public static void debugMessage(final char c, final Level debugLevel) {
-		debugMessage0(Character.toString(c), debugLevel);
+	public static boolean debugMessage(final char c, final Level debugLevel) {
+		return debugMessage0(Character.toString(c), debugLevel);
 	}
 
-	public static void debugMessage(final short s, final Level debugLevel) {
-		debugMessage0(Short.toString(s), debugLevel);
+	public static boolean debugMessage(final short s, final Level debugLevel) {
+		return debugMessage0(Short.toString(s), debugLevel);
 	}
 
-	public static void debugMessage(final int i, final Level debugLevel) {
-		debugMessage0(Integer.toString(i), debugLevel);
+	public static boolean debugMessage(final int i, final Level debugLevel) {
+		return debugMessage0(Integer.toString(i), debugLevel);
 	}
 
-	public static void debugMessage(final long l, final Level debugLevel) {
-		debugMessage0(Long.toString(l), debugLevel);
+	public static boolean debugMessage(final long l, final Level debugLevel) {
+		return debugMessage0(Long.toString(l), debugLevel);
 	}
 
-	public static void debugMessage(final float f, final Level debugLevel) {
-		debugMessage0(Float.toString(f), debugLevel);
+	public static boolean debugMessage(final float f, final Level debugLevel) {
+		return debugMessage0(Float.toString(f), debugLevel);
 	}
 	
-	public static void debugMessage(final double d, final Level debugLevel) {
-		debugMessage0(Double.toString(d), debugLevel);
+	public static boolean debugMessage(final double d, final Level debugLevel) {
+		return debugMessage0(Double.toString(d), debugLevel);
 	}
 
-	public static void debugMessage(final char c[], final Level debugLevel) {
-		debugMessage0(String.valueOf(c), debugLevel);
+	public static boolean debugMessage(final char c[], final Level debugLevel) {
+		return debugMessage0(String.valueOf(c), debugLevel);
 	}
 
-	public static void debugMessage(final Object object, final Level debugLevel) {
-		debugMessage0(String.valueOf(object), debugLevel);
+	public static boolean debugMessage(final Object object, final Level debugLevel) {
+		return debugMessage0(String.valueOf(object), debugLevel);
 	}
 
-	public static void debugMessage(final String message, final Level debugLevel) {
-		debugMessage0(message, debugLevel);
+	public static boolean debugMessage(final String message, final Level debugLevel) {
+		return debugMessage0(message, debugLevel);
 	}
 
-	public static void debugMessage(final Throwable t, final Level debugLevel) {
-		debugMessage0(t, debugLevel);
+	public static boolean debugMessage(final Throwable t, final Level debugLevel) {
+		return debugMessage0(t, debugLevel);
 	}
 
 
@@ -144,11 +144,12 @@ public class Log {
 	 * @param message
 	 * @param debugLevel
 	 */
-	private static void debugMessage0(final String message, final Level debugLevel) {
+	private static boolean debugMessage0(final String message, final Level debugLevel) {
 		if (logger == null) {
 			setDefaultLogger();
 		}
 		logger.debugMessage(message, debugLevel);
+		return true;
 	}
 
 	/**
@@ -157,67 +158,68 @@ public class Log {
 	 * @param t
 	 * @param debugLevel
 	 */
-	private static void debugMessage0(final Throwable t, final Level debugLevel) {
+	private static boolean debugMessage0(final Throwable t, final Level debugLevel) {
 		if (logger == null) {
 			setDefaultLogger();
 		}
 		logger.debugException(t, debugLevel);
+		return true;
 	}
 
 	/*-********************************************************************
 	 * errorMessage(...) methods                                          *
 	 **********************************************************************/
 
-	public static void errorMessage() {
-		errorMessage0("");
+	public static boolean errorMessage() {
+		return errorMessage0("");
 	}
 
-	public static void errorMessage(final boolean b) {
-		errorMessage0(Boolean.toString(b));
+	public static boolean errorMessage(final boolean b) {
+		return errorMessage0(Boolean.toString(b));
 	}
 
-	public static void errorMessage(final byte b) {
-		errorMessage0(Byte.toString(b));
+	public static boolean errorMessage(final byte b) {
+		return errorMessage0(Byte.toString(b));
 	}
 
-	public static void errorMessage(final char c) {
-		errorMessage0(Character.toString(c));
+	public static boolean errorMessage(final char c) {
+		return errorMessage0(Character.toString(c));
 	}
 
-	public static void errorMessage(final short s) {
-		errorMessage0(Short.toString(s));
+	public static boolean errorMessage(final short s) {
+		return errorMessage0(Short.toString(s));
 	}
 
-	public static void errorMessage(final int i) {
-		errorMessage0(Integer.toString(i));
+	public static boolean errorMessage(final int i) {
+		return errorMessage0(Integer.toString(i));
 	}
 
-	public static void errorMessage(final long l) {
-		errorMessage0(Long.toString(l));
+	public static boolean errorMessage(final long l) {
+		return errorMessage0(Long.toString(l));
 	}
 
-	public static void errorMessage(final float f) {
-		errorMessage0(Float.toString(f));
+	public static boolean errorMessage(final float f) {
+		return errorMessage0(Float.toString(f));
 	}
 	
-	public static void errorMessage(final double d) {
-		errorMessage0(Double.toString(d));
+	public static boolean errorMessage(final double d) {
+		return errorMessage0(Double.toString(d));
 	}
 
-	public static void errorMessage(final char c[]) {
-		errorMessage0(String.valueOf(c));
+	public static boolean errorMessage(final char c[]) {
+		return errorMessage0(String.valueOf(c));
 	}
 
-	public static void errorMessage(final Object object) {
-		errorMessage0(String.valueOf(object));
+	public static boolean errorMessage(final Object object) {
+		return errorMessage0(String.valueOf(object));
 	}
 
-	public static void errorMessage(final String message) {
-		errorMessage0(message);
+	public static boolean errorMessage(final String message) {
+		return errorMessage0(message);
 	}
 
-	public static void errorMessage(final Throwable t) {
-		errorMessage0(t);
+	public static boolean errorMessage(final Throwable t) {
+		return errorMessage0(t);
 	}
 
 
@@ -226,11 +228,12 @@ public class Log {
 	 *
 	 * @param message
 	 */
-	private static void errorMessage0(final String message) {
+	private static boolean errorMessage0(final String message) {
 		if (logger == null) {
 			setDefaultLogger();
 		}
 		logger.errorMessage(message);
+		return true;
 	}
 
 	/**
@@ -238,11 +241,12 @@ public class Log {
 	 *
 	 * @param t
 	 */
-	private static void errorMessage0(final Throwable t) {
+	private static boolean errorMessage0(final Throwable t) {
 		if (logger == null) {
 			setDefaultLogger();
 		}
 		logger.errorException(t);
+		return true;
 	}
 
 	/*-********************************************************************
@@ -253,22 +257,22 @@ public class Log {
 	 * @deprecated
 	 */
 	@Deprecated
-	public static void debugException(final Throwable t, final Level level) {
-		debugMessage(t, level);
+	public static boolean debugException(final Throwable t, final Level level) {
+		return debugMessage(t, level);
 	}
 
 	/**
 	 * @deprecated
 	 */
 	@Deprecated
-	public static void errorException(final Throwable t) {
-		errorMessage(t);
+	public static boolean errorException(final Throwable t) {
+		return errorMessage(t);
 	}
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.18 $, $Date: 2005/10/31 12:29:58 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.19 $, $Date: 2005/11/10 10:26:51 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {
