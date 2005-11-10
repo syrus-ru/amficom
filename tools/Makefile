@@ -36,5 +36,6 @@ clean:
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile Makefile.java.inc.mk \
-		copyjars.sh
+		copyjars.sh \
+		amficomsrvrc
 
