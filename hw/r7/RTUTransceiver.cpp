@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.25 2005/11/10 11:21:08 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.26 2005/11/10 12:30:02 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.25 $, $Date: 2005/11/10 11:21:08 $
+// $Revision: 1.26 $, $Date: 2005/11/10 12:30:02 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -29,6 +29,10 @@ const char* RTUTransceiver::PARAMETER_NAME_SCANS = "ref_scans";
 const char* RTUTransceiver::PARAMETER_NAME_FLAG_GAIN_SPLICE_ON = "ref_flag_gain_splice_on";
 const char* RTUTransceiver::PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT = "ref_flag_life_fiber_detect";
 const char* RTUTransceiver::PARAMETER_NAME_REFLECTOGRAMMA = "reflectogramma";
+
+// debug
+#include <stdio.h>
+#include <assert.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -524,7 +528,7 @@ int RTUTransceiver::get_pulse_width_index(const short pulswd,
 
 int RTUTransceiver::ior_is_valid(const double ior, const WORD otdr_card, const float wave) {
 	float default_ior = QPOTDRGetDefaultIOR(otdr_card, wave);
-	return ((int)(ior * 10000) == (int)(default_ior * 10000)) ? 1 : 0;
+	return ((int)(ior * 10000 + 0.5) == (int)(default_ior * 10000 + 0.5)) ? 1 : 0;
 }
 
 int RTUTransceiver::get_averages_index(const double scans, const WORD otdr_card, const float wave) {
@@ -636,8 +640,16 @@ void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWavef
 	delete[] ds;
 	delete[] nppw;
 
-
 	int np = wave_form_header->NumPts - offset;
+	{
+		FILE *f = fopen("tranceiver.log","a");
+		if (f) {
+			fprintf(f, "fill_bellcore_structure: NumPts %d np %d\n",
+				(int)wave_form_header->NumPts,
+				np);
+			fclose(f);
+		}
+	}
 
 	int tndp = np;
 	short tsf = 1;
