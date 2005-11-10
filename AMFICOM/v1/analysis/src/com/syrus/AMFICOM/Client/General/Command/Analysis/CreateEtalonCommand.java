@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
 import java.util.Collection;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
@@ -18,6 +19,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.util.Log;
 
 /**
  *  оманда создани€ эталона.
@@ -81,6 +83,7 @@ public class CreateEtalonCommand extends AbstractCommand
 				pf = CoreAnalysisManager.getMostTypicalTrace(trColl);
 			} else { // если эталона еще нет
 				mtm = CoreAnalysisManager.makeEtalon(trColl, ap);
+				Log.debugMessage("created MTM: " + mtm, Level.FINEST);
 				pf = CoreAnalysisManager.getMostTypicalTrace(trColl);
 			}
 			String name = LangModelAnalyse.getString("etalon");

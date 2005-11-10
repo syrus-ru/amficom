@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.22 2005/09/27 13:38:20 saa Exp $
+ * $Id: ThreshDX.java,v 1.23 2005/11/10 13:16:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.22 $, $Date: 2005/09/27 13:38:20 $
+ * @version $Revision: 1.23 $, $Date: 2005/11/10 13:16:37 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -166,5 +166,16 @@ public class ThreshDX extends Thresh
 		} catch (CloneNotSupportedException e) {
 			throw new InternalError (e.toString());
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 37 * result + this.flags;
+		result = 37 * result + (this.rise ? 1 : 0);
+		for (int i = 0; i < this.dX.length; i++) {
+			result = 37 * result + this.dX[i];
+		}
+		return result;
 	}
 }

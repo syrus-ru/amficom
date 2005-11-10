@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.29 2005/10/31 12:30:19 bass Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.30 2005/11/10 13:16:37 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.io.SignatureMismatchException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/10/31 12:30:19 $
+ * @author $Author: saa $
+ * @version $Revision: 1.30 $, $Date: 2005/11/10 13:16:37 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -447,5 +447,13 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 			}
 		};
 		return dsReader;
+	}
+
+	@Override
+	public String toString() {
+		return "MTAEI(rse[" + rse.length + "],deltaX=" + deltaX
+			+ ",traceLength=" + traceLength
+			+ ",mf=" + mf.toString()
+			+ ",ci=?)"; // XXX: ComplexInfo object not expanded
 	}
 }

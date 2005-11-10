@@ -4,6 +4,7 @@
 #include "../BreakL/BreakL-enh.h"
 #include "makeThresh.h"
 #include "../common/prf.h"
+#include "../analyse/debug.h"
 
 /* Определяет коэффициент коррекции для данного Y-порога
  * по его весу.
@@ -169,16 +170,54 @@ static void extendTHX(THX *src, THX *dest, int N, int widthMin)
 }
 // если thYc == 0, то ничего не делает (иначе возможно 
 void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper,
-		double *yBase, int xMin, int xMax, double *yTgt, double dyFactor)
-{
-	if (thYc == 0)
-	{
+		double *yBase, int xMin, int xMax, double *yTgt, double dyFactor) {
+	if (thYc == 0) {
 		prf_b("extendThreshToCover: nothing to do");
 		return;
 	}
-	prf_b("extendThreshToCover: enter");
+
 	int len = xMax - xMin + 1;
 	int sign = isUpper ? 1 : -1;
+
+#ifdef DEBUG_MAKETHRESH_FILE
+	// open log only if it exists
+	FILE *extlog;
+	extlog = fopen(DEBUG_MAKETHRESH_FILE, "r");
+	if (extlog) {
+		fclose(extlog);
+		extlog = fopen(DEBUG_MAKETHRESH_FILE, "a");
+	}
+	if (extlog) {
+		fprintf(extlog, "\nenter:\n");
+		fprintf(extlog, "thXc %d thYc %d isUpper %d xMin %d xMax 5d dyFactor %g\n",
+			thXc, thYc, isUpper, xMin, xMax, dyFactor);
+		int i;
+		for (i = 0; i < thXc; i++) {
+			fprintf(extlog, "thXc[%d]: %d-%d; %d,%d; %d\n",
+				i, thXOrig[i].x0, thXOrig[i].x1, thXOrig[i].dxL, thXOrig[i].dxR, thXOrig[i].leftMode);
+		}
+		for (i = 0; i < thYc; i++) {
+			fprintf(extlog, "thYc[%d]: %d-%d %d %g\n",
+				i, thY[i].x0, thY[i].x1, thY[i].type, thY[i].dy);
+		}
+		for (i = 0; i < thYc; i++) {
+			fprintf(extlog, "thYc[%d].temp %g\n",
+				i, thY[i].temp);
+		}
+		fprintf(extlog, "yBase follows:\n");
+		for (i = 0; i < len; i++) {
+			fprintf(extlog, "%g ", yBase[i]);
+		}
+		fprintf(extlog, "\n");
+		fprintf(extlog, "yTgt follows:\n");
+		for (i = 0; i < len; i++) {
+			fprintf(extlog, "%g ", yTgt[i]);
+		}
+		fprintf(extlog, "\n");
+	}
+#endif
+
+	prf_b("extendThreshToCover: enter");
 
 	// *** сначала устанавливаем DX пороги "не менее 1"
 	/*
@@ -246,6 +285,15 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	int curDX;
 	for (curDX = maxDX - 1; curDX >= 0; curDX--)
 	{
+#ifdef DEBUG_MAKETHRESH_FILE
+		if (extlog) {
+			fprintf(extlog, "curDX %d\n", curDX);
+			fprintf(extlog, "yPrev follows:\n");
+			for (i = 0; i < len; i++) {
+				fprintf(extlog, "%g ", yPrev[i]);
+			}
+		}
+#endif
 		// устанавливаем пробные DX
 		for (i = 0; i < thXc; i++)
 			extendTHX(thXOrig[i], thXT[i], curDX);
@@ -272,6 +320,14 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 			if (ttdxMin[tid] > tid)
 				ttdxMin[tid] = tid;
 		}
+#ifdef DEBUG_MAKETHRESH_FILE
+		if (extlog) {
+			for (k = 0; k < thXc; k++) {
+				fprintf(extlog, "ttdxMin/ttdxMax[%d]: %d / %d\n",
+					k, (int)(ttdxMin[k]), (int)(ttdxMax[k]));
+			}
+		}
+#endif
 		for (k = 0; k < thXc; k++)
 		{
 			if (thXOrig[k].dxL > curDX && thXOrig[k].dxR > curDX)
@@ -308,6 +364,11 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 					accept ? "...accept" : "ignore...",
 					accept ? curDX - thXA[k] : 0
 					);*/
+#ifdef DEBUG_MAKETHRESH_FILE
+			if (extlog) {
+				fprintf(extlog, "curDX %d k %d S1 %g S2 %g, thXA[k] %d\n", curDX, k, S1, S2, thXA[k]);
+			}
+#endif
 			if (accept)
 				thXA[k] = curDX;
 		}
@@ -339,6 +400,37 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 
 	prf_b("extendThreshToCover: done");
 
+#ifdef DEBUG_MAKETHRESH_FILE
+	if (extlog) {
+		fprintf(extlog, "\n""exiting:\n");
+		fprintf(extlog, "thXc %d thYc %d isUpper %d xMin %d xMax 5d dyFactor %g\n",
+			thXc, thYc, isUpper, xMin, xMax, dyFactor);
+		int i;
+		for (i = 0; i < thXc; i++) {
+			fprintf(extlog, "thXc[%d]: %d-%d; %d,%d; %d\n",
+				thXOrig[i].x0, thXOrig[i].x1, thXOrig[i].dxL, thXOrig[i].dxR, thXOrig[i].leftMode);
+		}
+		for (i = 0; i < thYc; i++) {
+			fprintf(extlog, "thYc[%d]: %d-%d %d %g\n",
+				i, thY[i].x0, thY[i].x1, thY[i].type, thY[i].dy);
+		}
+		for (i = 0; i < thYc; i++) {
+			fprintf(extlog, "thYc[%d].temp %g\n",
+				i, thY[i].temp);
+		}
+		fprintf(extlog, "yBase follows:\n");
+		for (i = 0; i < len; i++) {
+			fprintf(extlog, "%g ", yBase[i]);
+		}
+		fprintf(extlog, "\n");
+		fprintf(extlog, "yTgt follows:\n");
+		for (i = 0; i < len; i++) {
+			fprintf(extlog, "%g ", yTgt[i]);
+		}
+		fprintf(extlog, "\n");
+	}
+#endif
+
 	delete[] thXA;
 	delete[] thXT;
 	delete[] yPrev;
@@ -348,4 +440,11 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 	delete[] ttdy;
 	delete[] ttdxMin;
 	delete[] ttdxMax;
+
+
+#ifdef DEBUG_MAKETHRESH_FILE
+	if (extlog) {
+		fclose(extlog);
+	}
+#endif
 }

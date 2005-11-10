@@ -11,6 +11,7 @@
 
 //#define DEBUG_INITIAL_ANALYSIS
 //#define DEBUG_INITIAL_ANALYSIS_STDERR
+#define DEBUG_MAKETHRESH_FILE "makethresh.log"
 #define DEBUG_INITIAL_WIN_LOGF "dadara-ia.log"
 //#define DEBUG_INITIAL_WIN_LOGF "c:\\log\\" "dadara-ia.log"
 

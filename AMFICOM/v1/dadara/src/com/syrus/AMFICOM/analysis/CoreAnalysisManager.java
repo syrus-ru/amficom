@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.133 2005/11/07 16:13:43 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.134 2005/11/10 13:16:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.133 $, $Date: 2005/11/07 16:13:43 $
+ * @version $Revision: 1.134 $, $Date: 2005/11/10 13:16:37 $
  * @module
  */
 
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
@@ -608,20 +609,38 @@ public class CoreAnalysisManager
 			AnalysisParameters ap)
 	throws IncompatibleTracesException
 	{
+		// FIXME: lot of debug output
+		Log.debugMessage("makeEtalon: trColl: " + trColl, Level.FINEST);
 		TracesAverages av = findTracesAverages(trColl, true, true, ap);
 		ModelTraceAndEventsImpl mtae = makeAnalysis(av.av, ap);
+		Log.debugMessage("makeEtalon: initial MTAE: " + mtae, Level.FINEST);
 		ModelTraceManager mtm = new ModelTraceManager(mtae);
+		Log.debugMessage("makeEtalon: initial MTM: " + mtm, Level.FINEST);
 		if (trColl.size() > 1) {
 			// extend to max dev of _mf_
+			Log.debugMessage("makeEtalon: av.maxYMF: " + av.maxYMF.length
+					+ ":" + getDoubleArrayHash(av.maxYMF), Level.FINEST);
+			Log.debugMessage("makeEtalon: av.minYMF: " + av.minYMF.length
+					+ ":" + getDoubleArrayHash(av.minYMF), Level.FINEST);
 			mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN,
-					MTM_DY_FACTOR_MF_BASED); 
+					MTM_DY_FACTOR_MF_BASED);
 		}
 		else {
 			// extend to a single curve: original (noisy) _trace_
 			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN,
 					MTM_DY_FACTOR_TR_BASED);
 		}
+		Log.debugMessage("makeEtalon: rslting MTM: " + mtm, Level.FINEST);
 		return mtm;
+	}
+
+	private static int getDoubleArrayHash(double[] arr) {
+		int result = 17;
+		for (int i = 0; i < arr.length; i++) {
+			long bits = Double.doubleToLongBits(arr[i]);
+			result = 37 * result + (int)(bits ^ (bits >>> 32));
+		}
+		return result;
 	}
 
 	/**

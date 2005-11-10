@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.35 $, $Date: 2005/10/31 12:30:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/11/10 13:16:37 $
+ * @author $Author: saa $
  * @author saa
  * @module dadara
  */
@@ -502,6 +502,24 @@ public class ModelFunction {
 			for (int i = 0; i < npars; i++)
 				this.pars[i] = dis.readDouble();
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		int result = 17;
+		result = 37 * result + shapeID;
+		for (int i = 0; i < pars.length; i++) {
+			long bits = Double.doubleToLongBits(pars[i]);
+			result = 37 * result + (int)(bits ^ (bits >>>32));
+		}
+		return result;
+	}
+
+	// XXX: currently does return string presentation of
+	// shapeID that is not available otherwise. This is bad, see EJ #9
+	@Override
+	public String toString() {
+		return "MF(" + shapeID + ":" + pars.length + ":" + hashCode() + ")";
 	}
 }
 

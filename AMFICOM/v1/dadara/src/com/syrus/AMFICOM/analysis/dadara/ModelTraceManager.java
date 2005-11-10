@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.105 2005/10/31 12:30:19 bass Exp $
+ * $Id: ModelTraceManager.java,v 1.106 2005/11/10 13:16:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
  * порогов к событиями (пока нет) и модельной кривой (есть),
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
- * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/10/31 12:30:19 $
+ * @author $Author: saa $
+ * @version $Revision: 1.106 $, $Date: 2005/11/10 13:16:37 $
  * @module
  */
 public class ModelTraceManager
@@ -1233,5 +1233,21 @@ implements DataStreamable, Cloneable
 			}
 		}
 		return ret;
+	}
+
+	@Override
+	public String toString() {
+		return "MTM(mtae=" + this.mtae.toString()
+			+ ",tDX[" + this.tDX.length + "]=" + getObjectArrayHash(this.tDX)
+			+ ",tDY[" + this.tDY.length + "]=" + getObjectArrayHash(this.tDY)
+			+ ")";
+	}
+
+	private static int getObjectArrayHash(Object[] arr) {
+		int result = 17;
+		for (int i = 0; i < arr.length; i++) {
+			result = 37 * result + arr[i].hashCode();
+		}
+		return result;
 	}
 }

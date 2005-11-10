@@ -1,5 +1,5 @@
 /*-
- * $Id: PFTrace.java,v 1.3 2005/09/26 12:31:01 saa Exp $
+ * $Id: PFTrace.java,v 1.4 2005/11/10 13:16:37 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.io.BellcoreStructure;
  * Данные о самой полученной рефлектограмме нужно брать через методы
  * доступа этого класса; дополнительные данные - через getBS()
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/09/26 12:31:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/10 13:16:37 $
  * @module
  */
 public class PFTrace {
@@ -126,5 +126,22 @@ public class PFTrace {
 	 */
 	public BellcoreStructure getBS() {
 		return this.bs;
+	}
+
+	@Override
+	public int hashCode() {
+		double[] y = getRawTrace();
+		int result = 17;
+		for (int i = 0; i < y.length; i++) {
+			long bits = Double.doubleToLongBits(y[i]);
+			result = 37 * result + (int)(bits ^ (bits >>> 32));
+		}
+		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "PFTrace(" + getRawTrace().length
+			+ ":" + hashCode() + ")";
 	}
 }
