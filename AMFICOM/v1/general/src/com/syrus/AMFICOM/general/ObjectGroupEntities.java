@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.39 2005/10/16 11:05:47 max Exp $
+ * $Id: ObjectGroupEntities.java,v 1.40 2005/11/10 13:25:58 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/10/16 11:05:47 $
- * @author $Author: max $
+ * @version $Revision: 1.40 $, $Date: 2005/11/10 13:25:58 $
+ * @author $Author: bob $
  * @author Selivanov Maksim Fedorovich
  * @module general
  */
@@ -66,7 +66,7 @@ public final class ObjectGroupEntities {
 
 	private static void registerGroups() {
 		registerGroup(GENERAL_GROUP_CODE, GENERAL_GROUP, new short[] { CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_CODE });
-		registerGroup(EVENT_GROUP_CODE, EVENT_GROUP, new short[] { EVENT_TYPE_CODE, EVENTSOURCE_CODE, EVENT_CODE });
+		registerGroup(EVENT_GROUP_CODE, EVENT_GROUP, new short[] { EVENT_TYPE_CODE, EVENTSOURCE_CODE, EVENT_CODE, DELIVERYATTRIBUTES_CODE });
 		registerGroup(ADMINISTRATION_GROUP_CODE, ADMINISTRATION_GROUP, new short[] { SYSTEMUSER_CODE,
 				DOMAIN_CODE,
 				SERVER_CODE,
