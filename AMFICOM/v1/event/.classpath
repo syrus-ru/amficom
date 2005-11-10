@@ -7,5 +7,7 @@
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/orai18n.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
+	<classpathentry kind="var" path="AMFICOM_LIB/generalxml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
