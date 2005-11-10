@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.94 2005/11/10 13:58:48 bass Exp $
+ * $Id: ObjectEntities.java,v 1.95 2005/11/10 15:41:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/11/10 13:58:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.95 $, $Date: 2005/11/10 15:41:56 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -486,11 +486,6 @@ public final class ObjectEntities {
 		return codeToString(code.shortValue());
 	}
 
-	/**
-	 * @param entityCode
-	 * @deprecated error checking is made at every conversion back and forth. 
-	 */
-	@Deprecated
 	public static boolean isEntityCodeValid(final short entityCode) {
 		try {
 			codeToString(entityCode);
