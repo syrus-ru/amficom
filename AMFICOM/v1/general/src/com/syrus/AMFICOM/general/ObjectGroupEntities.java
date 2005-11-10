@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.40 2005/11/10 13:25:58 bob Exp $
+ * $Id: ObjectGroupEntities.java,v 1.41 2005/11/10 13:58:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,23 +7,94 @@
  */
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.*;
-
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CRONTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENTSOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPVIEW_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MARK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETERSET_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTIMAGE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTEMPLATE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+import static java.util.logging.Level.SEVERE;
 import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.40 $, $Date: 2005/11/10 13:25:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2005/11/10 13:58:48 $
+ * @author $Author: bass $
  * @author Selivanov Maksim Fedorovich
  * @module general
  */
 public final class ObjectGroupEntities {
 	//  Group Types
-	/**
-	 * Never gets registered.
-	 */
-	public static final String UNKNOWN_GROUP = null;
 	public static final String GENERAL_GROUP = "GeneralGroup";
 	public static final String EVENT_GROUP = "EventGroup";
 	public static final String ADMINISTRATION_GROUP = "AdministrationGroup";
@@ -36,10 +107,6 @@ public final class ObjectGroupEntities {
 	public static final String REPORT_GROUP = "ReportGroup";
 
 	//  Group Codes
-	/**
-	 * Never gets registered.
-	 */
-	public static final short UNKNOWN_GROUP_CODE = 0x0000;
 	public static final short GENERAL_GROUP_CODE = 0x0001;
 	public static final short EVENT_GROUP_CODE = 0x0002;
 	public static final short ADMINISTRATION_GROUP_CODE = 0x0003;
@@ -148,12 +215,18 @@ public final class ObjectGroupEntities {
 
 	public static short stringToCode(final String group) {
 		final short returnValue = NAME_CODE_MAP.get(group);
-		return returnValue == 0 ? UNKNOWN_GROUP_CODE : returnValue;
+		if (returnValue == 0) {
+			throw new IllegalArgumentException(group);
+		}
+		return returnValue;
 	}
 
 	public static String codeToString(final short groupCode) {
 		final String returnValue = (String) CODE_NAME_MAP.get(groupCode);
-		return returnValue == null ? UNKNOWN_GROUP : returnValue;
+		if (returnValue == null) {
+			throw new IllegalArgumentException(String.valueOf(groupCode));
+		}
+		return returnValue;
 	}
 
 	/**
@@ -171,7 +244,6 @@ public final class ObjectGroupEntities {
 	 */
 
 	public static boolean isInGeneralGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.GENERAL_MIN_CODE && entityCode <= ObjectEntities.GENERAL_MAX_CODE;
 	}
 
@@ -180,7 +252,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInEventGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.EVENT_MIN_CODE && entityCode <= ObjectEntities.EVENT_MAX_CODE;
 	}
 
@@ -189,7 +260,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInAdministrationGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.ADMINISTRATION_MIN_CODE && entityCode <= ObjectEntities.ADMINISTRATION_MAX_CODE;
 	}
 
@@ -198,7 +268,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInConfigurationGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.CONFIGURATION_MIN_CODE && entityCode <= ObjectEntities.CONFIGURATION_MAX_CODE;
 	}
 
@@ -207,7 +276,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInMeasurementGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.MEASUREMENT_MIN_CODE && entityCode <= ObjectEntities.MEASUREMENT_MAX_CODE;
 	}
 
@@ -216,7 +284,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInSchemeGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.SCHEME_MIN_CODE && entityCode <= ObjectEntities.SCHEME_MAX_CODE;
 	}
 
@@ -225,7 +292,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInMapGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.MAP_MIN_CODE && entityCode <= ObjectEntities.MAP_MAX_CODE;
 	}
 
@@ -234,7 +300,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInResourceGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.RESOURCE_MIN_CODE && entityCode <= ObjectEntities.RESOURCE_MAX_CODE;
 	}
 
@@ -243,7 +308,6 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInMapViewGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.MAPVIEW_MIN_CODE && entityCode <= ObjectEntities.MAPVIEW_MAX_CODE;
 	}
 
@@ -252,7 +316,6 @@ public final class ObjectGroupEntities {
 	}
 	
 	public static boolean isInReportGroup(final short entityCode) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.REPORT_MIN_CODE && entityCode <= ObjectEntities.REPORT_MAX_CODE;
 	}
 	
@@ -267,35 +330,26 @@ public final class ObjectGroupEntities {
 	public static short getGroupCode(final short entityCode) {
 		if (isInGeneralGroup(entityCode)) {
 			return GENERAL_GROUP_CODE;
-		}
-		else if (isInEventGroup(entityCode)) {
+		} else if (isInEventGroup(entityCode)) {
 			return EVENT_GROUP_CODE;
-		}
-		else if (isInAdministrationGroup(entityCode)) {
+		} else if (isInAdministrationGroup(entityCode)) {
 			return ADMINISTRATION_GROUP_CODE;
-		}
-		else if(isInConfigurationGroup(entityCode)) {
+		} else if(isInConfigurationGroup(entityCode)) {
 			return CONFIGURATION_GROUP_CODE;
-		}
-		else if (isInMeasurementGroup(entityCode)) {
+		} else if (isInMeasurementGroup(entityCode)) {
 			return MEASUREMENT_GROUP_CODE;
-		}
-		else if (isInSchemeGroup(entityCode)) {
+		} else if (isInSchemeGroup(entityCode)) {
 			return SCHEME_GROUP_CODE;
-		}
-		else if (isInMapGroup(entityCode)) {
+		} else if (isInMapGroup(entityCode)) {
 			return MAP_GROUP_CODE;
-		}
-		else if (isInResourceGroup(entityCode)) {
+		} else if (isInResourceGroup(entityCode)) {
 			return RESOURCE_GROUP_CODE;
-		}
-		else if (isInMapViewGroup(entityCode)) {
+		} else if (isInMapViewGroup(entityCode)) {
 			return MAPVIEW_GROUP_CODE;
-		}
-		else if (isInReportGroup(entityCode)) {
+		} else if (isInReportGroup(entityCode)) {
 			return REPORT_GROUP_CODE;
 		}
-		return UNKNOWN_GROUP_CODE;
+		throw new IllegalArgumentException(String.valueOf(entityCode));
 	}
 
 	public static String getGroupName(final short entityCode) {
@@ -308,9 +362,16 @@ public final class ObjectGroupEntities {
 
 	/**
 	 * @param groupCode
-	 * @see ObjectEntities#isEntityCodeValid(short)
+	 * @deprecated error checking is made at every conversion back and forth. 
 	 */
+	@Deprecated
 	public static boolean isGroupCodeValid(final short groupCode) {
-		return codeToString(groupCode) != null;
+		try {
+			codeToString(groupCode);
+			return true;
+		} catch (final IllegalArgumentException iae) {
+			Log.debugMessage(iae, SEVERE);
+			return false;
+		}
 	}
 }

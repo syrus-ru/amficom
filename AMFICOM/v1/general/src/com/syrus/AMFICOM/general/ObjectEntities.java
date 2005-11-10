@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.93 2005/11/09 15:16:37 bass Exp $
+ * $Id: ObjectEntities.java,v 1.94 2005/11/10 13:58:48 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,20 @@
 
 package com.syrus.AMFICOM.general;
 
+
+import static java.util.logging.Level.SEVERE;
 import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.93 $, $Date: 2005/11/09 15:16:37 $
+ * @version $Revision: 1.94 $, $Date: 2005/11/10 13:58:48 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class ObjectEntities {
-	/**
-	 * Never gets registered.
-	 */
-	public static final String UNKNOWN = null;
-
-
-
-
-
 	/*	##################################### General ##################################### */
 
 	/*	Type */
@@ -170,12 +165,6 @@ public final class ObjectEntities {
 	 */
 	public static final String UPDIKE = "8========================D";
 
-
-
-	/**
-	 * Never gets registered.
-	 */
-	public static final short UNKNOWN_CODE = 0x0000;
 
 	/*
 	 * Здесь могла бы быть ваша реклама: 1-64 (0x0001-0x0040)
@@ -478,12 +467,18 @@ public final class ObjectEntities {
 
 	public static short stringToCode(final String entity) {
 		final short returnValue = NAME_CODE_MAP.get(entity);
-		return returnValue == 0 ? UNKNOWN_CODE : returnValue;
+		if (returnValue == 0) {
+			throw new IllegalArgumentException(entity);
+		}
+		return returnValue;
 	}
 
 	public static String codeToString(final short entityCode) {
 		final String returnValue = (String) CODE_NAME_MAP.get(entityCode);
-		return returnValue == null ? UNKNOWN : returnValue;
+		if (returnValue == null) {
+			throw new IllegalArgumentException(String.valueOf(entityCode));
+		}
+		return returnValue;
 	}
 
 	public static String codeToString(final Short code) {
@@ -493,9 +488,16 @@ public final class ObjectEntities {
 
 	/**
 	 * @param entityCode
-	 * @see ObjectGroupEntities#isGroupCodeValid(short)
+	 * @deprecated error checking is made at every conversion back and forth. 
 	 */
+	@Deprecated
 	public static boolean isEntityCodeValid(final short entityCode) {
-		return codeToString(entityCode) != null;
+		try {
+			codeToString(entityCode);
+			return true;
+		} catch (final IllegalArgumentException iae) {
+			Log.debugMessage(iae, SEVERE);
+			return false;
+		}
 	}
 }

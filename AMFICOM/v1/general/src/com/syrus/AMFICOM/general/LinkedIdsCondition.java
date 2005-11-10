@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.57 2005/10/31 12:30:18 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.58 2005/11/10 13:58:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/10/31 12:30:18 $
+ * @version $Revision: 1.58 $, $Date: 2005/11/10 13:58:48 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -194,13 +194,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	private LinkedIdsCondition(final Set<Identifier> linkedIds, final Short entityCode) {
-		short linkedCode;
-		try {
-			linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
-		} catch (final AssertionError ae) {
-			linkedCode = ObjectEntities.UNKNOWN_CODE;
-			Log.errorMessage(ae);
-		}
+		final short linkedCode = StorableObject.getEntityCodeOfIdentifiables(linkedIds);
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
 		try {

@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.89 2005/11/03 11:21:56 arseniy Exp $
+ * $Id: Identifier.java,v 1.90 2005/11/10 13:58:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_GENERATE_NEW_IF_ABSENT;
-import static com.syrus.AMFICOM.general.ObjectEntities.UNKNOWN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,8 +32,8 @@ import com.syrus.util.TransferableObject;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.89 $, $Date: 2005/11/03 11:21:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.90 $, $Date: 2005/11/10 13:58:48 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -432,7 +432,7 @@ public final class Identifier implements Comparable<Identifier>,
 				throw new IllegalArgumentException(
 						"MODE_GENERATE_NEW_IF_ABSENT is used internally and cannot be specified here");
 			}
-			return fromXmlTransferable(xmlId, UNKNOWN_CODE, importType, xmlConversionMode);
+			return fromXmlTransferable(xmlId, UPDIKE_CODE, importType, xmlConversionMode);
 		} catch (final IdentifierGenerationException ige) {
 			/*
 			 * Never.
@@ -462,7 +462,7 @@ public final class Identifier implements Comparable<Identifier>,
 			final Identifier id = LocalXmlIdentifierPool.get(xmlStringValue, importType);
 
 			assert !id.isVoid() : NON_VOID_EXPECTED;
-			assert entityCode == UNKNOWN_CODE || entityCode == id.getMajor();
+			assert entityCode == UPDIKE_CODE || entityCode == id.getMajor();
 
 			return id;
 		}
