@@ -1,5 +1,5 @@
 /*-
- * $Id: RoleBean.java,v 1.3 2005/11/10 13:59:02 bob Exp $
+ * $Id: RoleBean.java,v 1.4 2005/11/10 14:08:20 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/10 14:08:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -61,16 +61,16 @@ public class RoleBean extends Bean {
 
 	@Override
 	public void dispose() throws ApplicationException {
-		assert Log.debugMessage(this.identifier, Log.DEBUGLEVEL09);		
-		StorableObjectPool.delete(this.identifier);		
-		
-		final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
-		for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
-			Bean portBean = 
-				(Bean) graphRoutines.getBean(layoutItem);
-			portBean.dispose();
-		}
-
+//		assert Log.debugMessage(this.identifier, Log.DEBUGLEVEL09);		
+//		StorableObjectPool.delete(this.identifier);		
+//		
+//		final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+//		for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
+//			Bean portBean = 
+//				(Bean) graphRoutines.getBean(layoutItem);
+//			portBean.dispose();
+//		}
+//
 		super.disposeLayoutItem();
 	}
 	
