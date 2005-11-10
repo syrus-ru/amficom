@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesWrapper.java,v 1.2 2005/11/10 13:22:51 bob Exp $
+ * $Id: DeliveryAttributesWrapper.java,v 1.3 2005/11/10 14:05:45 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.event;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.PropertyChangeException;
@@ -18,7 +19,7 @@ import com.syrus.util.PropertyChangeException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/11/10 13:22:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/10 14:05:45 $
  * @module event
  */
 public final class DeliveryAttributesWrapper
@@ -66,6 +67,11 @@ public final class DeliveryAttributesWrapper
 		}
 		if (key.equals(COLUMN_SEVERITY)) {
 			return Integer.class;
+		}
+		
+		if (key.equals(LINKED_COLUMN_ROLE_IDS)
+				|| key.equals(LINKED_COLUMN_SYSTEM_USER_IDS)) {
+			return Set.class;
 		}
 		return null;
 	}
