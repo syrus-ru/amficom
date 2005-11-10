@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesWrapper.java,v 1.1 2005/11/09 15:16:38 bass Exp $
+ * $Id: DeliveryAttributesWrapper.java,v 1.2 2005/11/10 13:22:51 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,16 @@ import com.syrus.util.PropertyChangeException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/11/09 15:16:38 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/11/10 13:22:51 $
  * @module event
  */
 public final class DeliveryAttributesWrapper
 		extends StorableObjectWrapper<DeliveryAttributes> {
 	public static final String COLUMN_SEVERITY = "severity";
+	
+	public static final String LINKED_COLUMN_SYSTEM_USER_IDS = "system_user_ids";
+	public static final String LINKED_COLUMN_ROLE_IDS = "role_ids";
 
 	private static DeliveryAttributesWrapper instance;
 
@@ -31,7 +34,9 @@ public final class DeliveryAttributesWrapper
 
 	private DeliveryAttributesWrapper() {
 		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
-				COLUMN_SEVERITY}));
+				COLUMN_SEVERITY,
+				LINKED_COLUMN_SYSTEM_USER_IDS,
+				LINKED_COLUMN_ROLE_IDS}));
 	}
 
 	/**
@@ -100,6 +105,10 @@ public final class DeliveryAttributesWrapper
 		if (deliveryAttributes != null) {
 			if (key.equals(COLUMN_SEVERITY)) {
 				return Integer.valueOf(deliveryAttributes.getSeverity().ordinal());
+			} else if (key.equals(LINKED_COLUMN_SYSTEM_USER_IDS)) {
+				return deliveryAttributes.getSystemUserIds();
+			} else if (key.equals(LINKED_COLUMN_ROLE_IDS)) {
+				return deliveryAttributes.getRoleIds();
 			}
 		}
 		return null;
