@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.32 2005/11/10 11:30:43 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.33 2005/11/10 15:48:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ObjectGroupEntities.CONFIGURATION_GROUP_
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.MAP_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.RESOURCE_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.SCHEME_GROUP_CODE;
+import static java.util.logging.Level.OFF;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -53,7 +54,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/11/10 11:30:43 $
+ * @version $Revision: 1.33 $, $Date: 2005/11/10 15:48:13 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -111,6 +112,14 @@ public final class SchemePathTestCase extends TestCase {
 
 			public boolean isLoggable(final Level level) {
 				return false;
+			}
+
+			public Level getLevel() {
+				return OFF;
+			}
+
+			@SuppressWarnings("all")
+			public void setLevel(final Level newLevel) {
 			}
 		});
 		StorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);

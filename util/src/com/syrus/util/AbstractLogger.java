@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.11 2005/11/10 11:30:43 bass Exp $
+ * $Id: AbstractLogger.java,v 1.12 2005/11/10 15:47:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/11/10 11:30:43 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/10 15:47:46 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -322,9 +322,16 @@ abstract class AbstractLogger implements Logger {
 	}
 
 	/**
+	 * @see java.util.logging.Logger#getLevel()
+	 */
+	public final Level getLevel() {
+		return this.levelObject;
+	}
+
+	/**
 	 * @see java.util.logging.Logger#setLevel(Level)
 	 */
-	public void setLevel(final Level newLevel) {
+	public final void setLevel(final Level newLevel) {
 		this.levelObject = newLevel;
 		this.updateEffectiveLevel();
 	}
@@ -341,7 +348,7 @@ abstract class AbstractLogger implements Logger {
 	/**
 	 * @see java.util.logging.Logger#isLoggable(Level)
 	 */
-	public boolean isLoggable(final Level level) {
+	public final boolean isLoggable(final Level level) {
 		return this.levelValue != offValue && (this.thisLevelOnly
 				? level.intValue() == this.levelValue
 				: level.intValue() >= this.levelValue);
