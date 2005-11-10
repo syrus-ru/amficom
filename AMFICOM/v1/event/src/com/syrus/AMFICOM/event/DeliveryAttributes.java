@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.2 2005/11/10 07:42:55 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.3 2005/11/10 13:22:35 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/11/10 07:42:55 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/11/10 13:22:35 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -58,13 +58,11 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	private Set<Identifier> roleIds;
 
 	DeliveryAttributes(final Identifier id,
-			final Date created,
-			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId,
+			final Date created,
 			final StorableObjectVersion version,
 			final Severity severity) {
-		super(id, created, modified, creatorId, modifierId, version);
+		super(id, created, created, creatorId, creatorId, version);
 		this.severity = severity;
 	}
 
@@ -171,13 +169,10 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 						StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			final DeliveryAttributes deliveryAttributes;
 			if (deliveryAttributesSet.isEmpty()) {
-				final Date created = new Date();
 				deliveryAttributes = new DeliveryAttributes(
 						IdentifierPool.getGeneratedIdentifier(DELIVERYATTRIBUTES_CODE),
-						created,
-						created,
 						creatorId,
-						creatorId,
+						new Date(),
 						StorableObjectVersion.createInitial(),
 						severity);
 				deliveryAttributes.markAsChanged();
@@ -237,7 +232,7 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	/**
 	 * @param systemUserIds
 	 */
-	private void setSystemUserIds0(final Set<Identifier> systemUserIds) {
+	void setSystemUserIds0(final Set<Identifier> systemUserIds) {
 		final Set<Identifier> systemUserIds0 = this.getSystemUserIds0();
 		systemUserIds0.clear();
 		systemUserIds0.addAll(systemUserIds);
@@ -338,7 +333,7 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	/**
 	 * @param roleIds
 	 */
-	private void setRoleIds0(final Set<Identifier> roleIds) {
+	void setRoleIds0(final Set<Identifier> roleIds) {
 		final Set<Identifier> roleIds0 = this.getRoleIds0();
 		roleIds0.clear();
 		roleIds0.addAll(roleIds);
