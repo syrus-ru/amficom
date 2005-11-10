@@ -1,5 +1,5 @@
 /*
- * $Id: XMLPoolContext.java,v 1.8 2005/10/11 14:21:25 arseniy Exp $
+ * $Id: XMLPoolContext.java,v 1.9 2005/11/10 13:24:27 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,8 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/11 14:21:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/11/10 13:24:27 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public final class XMLPoolContext extends PoolContext {
@@ -34,7 +34,7 @@ public final class XMLPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, 1000);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, 1000);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, 1000);
-		//StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, 1000);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, 1000);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.RESOURCE_GROUP_CODE, 1000);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MAP_GROUP_CODE, 1000);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, 1000);
