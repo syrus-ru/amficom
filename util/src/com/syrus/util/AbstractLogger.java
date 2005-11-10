@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLogger.java,v 1.10 2005/11/03 14:38:41 arseniy Exp $
+ * $Id: AbstractLogger.java,v 1.11 2005/11/10 11:30:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.util;
 
 import static com.syrus.util.Log.DEBUG_LEVEL_MAP;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.OFF;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -19,8 +21,8 @@ import java.util.Date;
 import java.util.logging.Level;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/11/03 14:38:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/11/10 11:30:43 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -51,7 +53,22 @@ abstract class AbstractLogger implements Logger {
 	boolean echoDebug;
 	boolean echoError;
 	boolean thisLevelOnly;
-	private Level logDebugLevel;
+
+	/**
+	 * @see java.util.logging.Logger#levelObject
+	 */
+	private Level levelObject;
+
+	/**
+	 * @see java.util.logging.Logger#levelValue
+	 */
+	private volatile int levelValue;
+
+	/**
+	 * @see java.util.logging.Logger#offValue
+	 */
+	private static final int offValue = OFF.intValue();
+
 	String baseLogPath;
 	private Date logDate;
 	private String debugLogFileName;
@@ -107,8 +124,7 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void debugMessage(final String message, final Level debugLevel) {
 		this.checkLogRollover();
 		try {
-			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue())
-					|| debugLevel.intValue() == this.logDebugLevel.intValue()) {
+			if (this.isLoggable(debugLevel)) {
 				if (this.debugLog == null) {
 					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				}
@@ -127,8 +143,7 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void debugException(final Throwable t, final Level debugLevel) {
 		this.checkLogRollover();
 		try {
-			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue())
-					|| debugLevel.intValue() == this.logDebugLevel.intValue()) {
+			if (this.isLoggable(debugLevel)) {
 				if (this.debugLog == null) {
 					this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				}
@@ -289,9 +304,46 @@ abstract class AbstractLogger implements Logger {
 	}
 
 	/**
-	 * @param debugLevel AMFICOM-standard debug level, ranging from 1 to 10.
+	 * @param reverseIntValue AMFICOM-standard debug level, ranging from 1
+	 *        to 10. Higher <code>reverseIntValue</code>s mean more verbose
+	 *        output. This behaviour is opposite to that of
+	 *        {@link Level Level}<code>.</code>{@link Level#intValue() intValue()},
+	 *        that's the reason why parameter is named
+	 *        <code>reverseIntValue</code>.
+	 * @see #setLevel(Level)
+	 * @see java.util.logging.Logger#setLevel(Level)
 	 */
-	void setDebugLevel(final int debugLevel) {
-		this.logDebugLevel = DEBUG_LEVEL_MAP.get(new Integer(debugLevel));
+	public void setLevel(final int reverseIntValue) {
+		if (10 < reverseIntValue || reverseIntValue < 1) {
+			throw new IllegalArgumentException(String.valueOf(reverseIntValue));
+		}
+
+		this.setLevel(DEBUG_LEVEL_MAP.get(new Integer(reverseIntValue)));
+	}
+
+	/**
+	 * @see java.util.logging.Logger#setLevel(Level)
+	 */
+	public void setLevel(final Level newLevel) {
+		this.levelObject = newLevel;
+		this.updateEffectiveLevel();
+	}
+
+	/**
+	 * @see java.util.logging.Logger#updateEffectiveLevel()
+	 */
+	private void updateEffectiveLevel() {
+		this.levelValue = (this.levelObject == null)
+				? INFO.intValue()
+				: this.levelObject.intValue();
+	}
+
+	/**
+	 * @see java.util.logging.Logger#isLoggable(Level)
+	 */
+	public boolean isLoggable(final Level level) {
+		return this.levelValue != offValue && (this.thisLevelOnly
+				? level.intValue() == this.levelValue
+				: level.intValue() >= this.levelValue);
 	}
 }

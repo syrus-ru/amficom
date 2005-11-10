@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.31 2005/10/27 10:04:52 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.32 2005/11/10 11:30:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/10/27 10:04:52 $
+ * @version $Revision: 1.32 $, $Date: 2005/11/10 11:30:43 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -107,6 +107,10 @@ public final class SchemePathTestCase extends TestCase {
 
 			public void errorException(final Throwable t) {
 				t.printStackTrace();
+			}
+
+			public boolean isLoggable(final Level level) {
+				return false;
 			}
 		});
 		StorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);

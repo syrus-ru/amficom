@@ -1,5 +1,5 @@
 /*-
- * $Id: Log.java,v 1.19 2005/11/10 10:26:51 bob Exp $
+ * $Id: Log.java,v 1.20 2005/11/10 11:30:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/11/10 10:26:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/11/10 11:30:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
-public class Log {
+public final class Log {
 	public static final Level DEBUGLEVEL01 = new CustomLevel("DEBUGLEVEL01", Level.SEVERE.intValue());
 	public static final Level DEBUGLEVEL02 = new CustomLevel("DEBUGLEVEL02", Level.WARNING.intValue());
 	public static final Level DEBUGLEVEL03 = new CustomLevel("DEBUGLEVEL03", Level.INFO.intValue());
@@ -71,6 +71,10 @@ public class Log {
 				System.err.println(t);
 				t.printStackTrace(System.err);
 			}
+
+			public boolean isLoggable(final Level level) {
+				return true;
+			}
 		});
 	}
 
@@ -79,6 +83,16 @@ public class Log {
 			throw new NullPointerException();
 		}
 		Log.logger = logger;
+	}
+
+	/**
+	 * @see java.util.logging.Logger#isLoggable(Level)
+	 */
+	public static boolean isLoggable(final Level level) {
+		if (logger == null) {
+			setDefaultLogger();
+		}
+		return logger.isLoggable(level);
 	}
 
 	/*-********************************************************************
@@ -271,8 +285,8 @@ public class Log {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bob $
-	 * @version $Revision: 1.19 $, $Date: 2005/11/10 10:26:51 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.20 $, $Date: 2005/11/10 11:30:43 $
 	 * @module util
 	 */
 	private static class CustomLevel extends Level {

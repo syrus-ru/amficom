@@ -1,5 +1,5 @@
 /*-
- * $Id: Logger.java,v 1.5 2005/09/14 18:28:26 arseniy Exp $
+ * $Id: Logger.java,v 1.6 2005/11/10 11:30:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.util;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 18:28:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/11/10 11:30:43 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -24,4 +24,6 @@ public interface Logger {
 	void errorMessage(final String message);
 
 	void errorException(final Throwable t);
+
+	boolean isLoggable(final Level level);
 }
