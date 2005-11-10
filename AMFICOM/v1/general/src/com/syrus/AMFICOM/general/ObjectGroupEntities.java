@@ -1,96 +1,25 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.43 2005/11/10 15:41:56 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.44 2005/11/10 15:47:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.ATTACHEDTEXT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CRONTEMPORALPATTERN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVENTSOURCE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVENT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.INTERVALSTEMPORALPATTERN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MAPVIEW_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MARK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETERSET_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PERMATTR_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PIPEBLOCK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTDATA_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTIMAGE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTEMPLATE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SERVERPROCESS_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import gnu.trove.TObjectShortHashMap;
+import gnu.trove.TShortHashSet;
 import gnu.trove.TShortObjectHashMap;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/11/10 15:41:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/11/10 15:47:05 $
+ * @author $Author: bass $
  * @author Selivanov Maksim Fedorovich
  * @module general
  */
@@ -123,95 +52,72 @@ public final class ObjectGroupEntities {
 	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
 	private static final TShortObjectHashMap GROUP_CODES_MAP = new TShortObjectHashMap();
 
+	private static volatile boolean groupsRegistered = false;
+
 	private ObjectGroupEntities() {
 		// singleton constructor
 		assert false;
 	}
 
 	static {
+		Log.debugMessage(FINEST);
+		ObjectEntities.registerEntities();
 		registerGroups();
 	}
 
-	private static void registerGroups() {
-		registerGroup(GENERAL_GROUP_CODE, GENERAL_GROUP, new short[] { CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_CODE });
-		registerGroup(EVENT_GROUP_CODE, EVENT_GROUP, new short[] { EVENT_TYPE_CODE, EVENTSOURCE_CODE, EVENT_CODE, DELIVERYATTRIBUTES_CODE });
-		registerGroup(ADMINISTRATION_GROUP_CODE, ADMINISTRATION_GROUP, new short[] { SYSTEMUSER_CODE,
-				DOMAIN_CODE,
-				SERVER_CODE,
-				MCM_CODE,
-				SERVERPROCESS_CODE,
-				PERMATTR_CODE,
-				ROLE_CODE});
-		registerGroup(CONFIGURATION_GROUP_CODE, CONFIGURATION_GROUP, new short[] { PORT_TYPE_CODE,
-				TRANSPATH_TYPE_CODE,
-				LINK_TYPE_CODE,
-				CABLELINK_TYPE_CODE,
-				CABLETHREAD_TYPE_CODE,
-				PROTOEQUIPMENT_CODE,
-				EQUIPMENT_CODE,
-				PORT_CODE,
-				TRANSMISSIONPATH_CODE,
-				LINK_CODE,
-				CABLELINK_CODE,
-				CABLETHREAD_CODE });
-		registerGroup(MEASUREMENT_GROUP_CODE, MEASUREMENT_GROUP, new short[] { MEASUREMENT_CODE,
-				ANALYSIS_CODE,
-				MODELING_CODE,
-				MEASUREMENTSETUP_CODE,
-				RESULT_CODE,
-				PARAMETERSET_CODE,
-				TEST_CODE,
-				CRONTEMPORALPATTERN_CODE,
-				INTERVALSTEMPORALPATTERN_CODE,
-				PERIODICALTEMPORALPATTERN_CODE,
-				MEASUREMENTPORT_TYPE_CODE,
-				MEASUREMENTPORT_CODE,
-				KIS_CODE,
-				MONITOREDELEMENT_CODE });
-		registerGroup(SCHEME_GROUP_CODE, SCHEME_GROUP, new short[] { CABLECHANNELINGITEM_CODE,
-				PATHELEMENT_CODE,
-				SCHEME_CODE,
-				SCHEMECABLELINK_CODE,
-				SCHEMECABLEPORT_CODE,
-				SCHEMECABLETHREAD_CODE,
-				SCHEMEDEVICE_CODE,
-				SCHEMEELEMENT_CODE,
-				SCHEMELINK_CODE,
-				SCHEMEMONITORINGSOLUTION_CODE,
-				SCHEMEOPTIMIZEINFO_CODE,
-				SCHEMEOPTIMIZEINFOSWITCH_CODE,
-				SCHEMEOPTIMIZEINFORTU_CODE,
-				SCHEMEPATH_CODE,
-				SCHEMEPORT_CODE,
-				SCHEMEPROTOELEMENT_CODE,
-				SCHEMEPROTOGROUP_CODE });
-		registerGroup(MAP_GROUP_CODE, MAP_GROUP, new short[] { SITENODE_TYPE_CODE,
-				PHYSICALLINK_TYPE_CODE,
-				SITENODE_CODE,
-				TOPOLOGICALNODE_CODE,
-				NODELINK_CODE,
-				MARK_CODE,
-				PHYSICALLINK_CODE,
-				COLLECTOR_CODE,
-				MAP_CODE,
-				MAPLIBRARY_CODE,
-				PIPEBLOCK_CODE });
-		registerGroup(RESOURCE_GROUP_CODE, RESOURCE_GROUP, new short[] { IMAGERESOURCE_CODE, LAYOUT_ITEM_CODE });
-		registerGroup(MAPVIEW_GROUP_CODE, MAPVIEW_GROUP, new short[] { MAPVIEW_CODE });
-		registerGroup(REPORT_GROUP_CODE, REPORT_GROUP, new short[] { ATTACHEDTEXT_CODE,
-				REPORTIMAGE_CODE,
-				REPORTDATA_CODE,
-				REPORTTABLEDATA_CODE,
-				REPORTTEMPLATE_CODE });
+	/**
+	 * @see ObjectEntities#getCodes()
+	 */
+	static short[] getCodes() {
+		if (!groupsRegistered) {
+			throw new IllegalStateException();
+		}
+
+		return CODE_NAME_MAP.keys();
 	}
 
-	private static void registerGroup(final short groupCode, final String group, final short[] entityCodes) {
+	/**
+	 * This method is <em>not</em> thread safe.
+	 */
+	private static void registerGroups() {
+		Log.debugMessage(FINEST);
+		if (groupsRegistered) {
+			return;
+		}
+
+		registerGroup(GENERAL_GROUP_CODE, GENERAL_GROUP);
+		registerGroup(EVENT_GROUP_CODE, EVENT_GROUP);
+		registerGroup(ADMINISTRATION_GROUP_CODE, ADMINISTRATION_GROUP);
+		registerGroup(CONFIGURATION_GROUP_CODE, CONFIGURATION_GROUP);
+		registerGroup(MEASUREMENT_GROUP_CODE, MEASUREMENT_GROUP);
+		registerGroup(SCHEME_GROUP_CODE, SCHEME_GROUP);
+		registerGroup(MAP_GROUP_CODE, MAP_GROUP);
+		registerGroup(RESOURCE_GROUP_CODE, RESOURCE_GROUP);
+		registerGroup(MAPVIEW_GROUP_CODE, MAPVIEW_GROUP);
+		registerGroup(REPORT_GROUP_CODE, REPORT_GROUP);
+
+		for (final short entityCode : ObjectEntities.getCodes()) {
+			if (entityCode == UPDIKE_CODE) {
+				continue;
+			}
+
+			final short groupCode = getGroupCode(entityCode);
+			TShortHashSet entityCodes = (TShortHashSet) GROUP_CODES_MAP.get(groupCode);
+			if (entityCodes == null) {
+				entityCodes = new TShortHashSet();
+				GROUP_CODES_MAP.put(groupCode, entityCodes);
+			}
+			entityCodes.add(entityCode);
+		}
+
+		groupsRegistered = true;
+	}
+
+	private static void registerGroup(final short groupCode, final String group) {
 		assert CODE_NAME_MAP.get(groupCode) == null;
 		CODE_NAME_MAP.put(groupCode, group);
 		assert NAME_CODE_MAP.get(group) == 0;
 		NAME_CODE_MAP.put(group, groupCode);
-		assert GROUP_CODES_MAP.get(groupCode) == null;
-		GROUP_CODES_MAP.put(groupCode, entityCodes);
 	}
 
 	public static short stringToCode(final String group) {
@@ -233,9 +139,11 @@ public final class ObjectGroupEntities {
 	/**
 	 * @param groupCode
 	 */
-	public static short[] getEntityCodes(final short groupCode) {
-		short[] enityCodes = (short[]) GROUP_CODES_MAP.get(groupCode);
-		assert enityCodes != null : ErrorMessages.ILLEGAL_GROUP_CODE + ": " + groupCode;
+	static TShortHashSet getEntityCodes(final short groupCode) {
+		final TShortHashSet enityCodes = (TShortHashSet) GROUP_CODES_MAP.get(groupCode);
+		if (enityCodes == null || enityCodes.isEmpty()) {
+			throw new IllegalArgumentException(String.valueOf(groupCode));
+		}
 		return enityCodes;
 	}
 

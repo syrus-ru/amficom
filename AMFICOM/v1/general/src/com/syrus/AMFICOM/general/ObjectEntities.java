@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.95 2005/11/10 15:41:56 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.96 2005/11/10 15:47:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
-
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
@@ -16,8 +16,8 @@ import gnu.trove.TShortObjectHashMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/11/10 15:41:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.96 $, $Date: 2005/11/10 15:47:05 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -352,16 +352,35 @@ public final class ObjectEntities {
 
 	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
 
+	private static volatile boolean entitiesRegistered = false;
+
 	private ObjectEntities() {
 		// empty singleton constructor
 		assert false;
 	}
 
 	static {
-		registerEntities();
+		Log.debugMessage(FINEST);
+		try {
+			Class.forName(ObjectGroupEntities.class.getName());
+		} catch (final ClassNotFoundException cnfe) {
+			Log.debugMessage(cnfe, SEVERE);
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
 	}
 
-	private static void registerEntities() {
+	/**
+	 * This method is <em>not</em> thread safe.
+	 */
+	static void registerEntities() {
+		Log.debugMessage(FINEST);
+		if (entitiesRegistered) {
+			return;
+		}
+
 		registerEntity(CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_TYPE);
 
 		registerEntity(EVENT_TYPE_CODE, EVENT_TYPE);
@@ -456,6 +475,22 @@ public final class ObjectEntities {
 		registerEntity(REPORTTEMPLATE_CODE, REPORTTEMPLATE);
 
 		registerEntity(UPDIKE_CODE, UPDIKE);
+
+		entitiesRegistered = true;
+	}
+
+	/**
+	 * <p>Should be invoked only <em>after</em> all entities get registered.</p>
+	 *
+	 * <p>It's ok for this method to return a (mutable) array, since a new
+	 * instance is created on every invocation.</p>
+	 */
+	static short[] getCodes() {
+		if (!entitiesRegistered) {
+			throw new IllegalStateException();
+		}
+
+		return CODE_NAME_MAP.keys();
 	}
 
 	private static void registerEntity(final short entityCode, final String entity) {
