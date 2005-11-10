@@ -1,5 +1,5 @@
 /*
- * $Id: Role.java,v 1.8 2005/10/31 12:30:00 bass Exp $
+ * $Id: Role.java,v 1.9 2005/11/10 14:06:13 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/10/31 12:30:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/11/10 14:06:13 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -111,17 +111,17 @@ public final class Role extends StorableObject<Role>
 			final String description) throws CreateObjectException {
 		try {
 			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.ROLE_CODE);
-			final Role user = new Role(generatedIdentifier,
+			final Role role = new Role(generatedIdentifier,
 					creatorId != null ? creatorId : generatedIdentifier,
 					StorableObjectVersion.createInitial(),
 					codename,
 					description);
 
-			assert user.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert role.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-			user.markAsChanged();
+			role.markAsChanged();
 
-			return user;
+			return role;
 		}
 		catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
