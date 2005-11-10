@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.1 2005/11/09 15:16:38 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.2 2005/11/10 07:42:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,13 +45,17 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/11/09 15:16:38 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/10 07:42:55 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
 	private static final long serialVersionUID = -8861427452530992582L;
 
 	private Severity severity;
+
+	private Set<Identifier> systemUserIds;
+
+	private Set<Identifier> roleIds;
 
 	DeliveryAttributes(final Identifier id,
 			final Date created,
@@ -198,8 +202,6 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	 * Children manipulation: systemUserIds.                              *
 	 **********************************************************************/
 
-	private Set<Identifier> systemUserIds;
-
 	public void addSystemUserId(final Identifier systemUserId) {
 		if (systemUserId == null) {
 			throw new NullPointerException();
@@ -296,11 +298,10 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 
 		this.setSystemUserIds(Identifier.createIdentifiers(systemUsers));
 	}
+
 	/*-********************************************************************
 	 * Children manipulation: roleIds.                                    *
 	 **********************************************************************/
-
-	private Set<Identifier> roleIds;
 
 	public void addRoleId(final Identifier roleId) {
 		if (roleId == null) {
