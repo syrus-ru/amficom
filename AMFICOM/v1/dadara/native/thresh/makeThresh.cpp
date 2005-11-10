@@ -408,7 +408,7 @@ void extendThreshToCover(THX *thXOrig, THY *thY, int thXc, int thYc, int isUpper
 		int i;
 		for (i = 0; i < thXc; i++) {
 			fprintf(extlog, "thXc[%d]: %d-%d; %d,%d; %d\n",
-				thXOrig[i].x0, thXOrig[i].x1, thXOrig[i].dxL, thXOrig[i].dxR, thXOrig[i].leftMode);
+				i, thXOrig[i].x0, thXOrig[i].x1, thXOrig[i].dxL, thXOrig[i].dxR, thXOrig[i].leftMode);
 		}
 		for (i = 0; i < thYc; i++) {
 			fprintf(extlog, "thYc[%d]: %d-%d %d %g\n",
