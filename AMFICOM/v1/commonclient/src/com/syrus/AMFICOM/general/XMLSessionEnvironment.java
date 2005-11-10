@@ -1,5 +1,5 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.10 2005/10/11 14:31:50 arseniy Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.11 2005/11/10 13:24:50 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,14 +15,15 @@ import com.syrus.AMFICOM.administration.PermissionAttributesXML;
 import com.syrus.AMFICOM.administration.RoleXML;
 import com.syrus.AMFICOM.administration.ServerXML;
 import com.syrus.AMFICOM.administration.SystemUserXML;
+import com.syrus.AMFICOM.event.DeliveryAttributesXML;
 import com.syrus.AMFICOM.measurement.KISXML;
 import com.syrus.AMFICOM.resource.LayoutItemXML;
 import com.syrus.util.ApplicationProperties;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/10/11 14:31:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/11/10 13:24:50 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public final class XMLSessionEnvironment {
@@ -56,6 +57,8 @@ public final class XMLSessionEnvironment {
 		XMLContext.registerXML(new RoleXML());
 //		XMLContext.registerXML(new ServerProcessXML());		
 
+		XMLContext.registerXML(new DeliveryAttributesXML());
+		
 //		XMLContext.registerXML(new EquipmentTypeXML());
 //		XMLContext.registerXML(new PortTypeXML());
 //		XMLContext.registerXML(new MeasurementPortTypeXML());
