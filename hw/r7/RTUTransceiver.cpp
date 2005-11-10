@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.24 2005/09/25 17:36:59 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.25 2005/11/10 11:21:08 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.24 $, $Date: 2005/09/25 17:36:59 $
+// $Revision: 1.25 $, $Date: 2005/11/10 11:21:08 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -524,7 +524,7 @@ int RTUTransceiver::get_pulse_width_index(const short pulswd,
 
 int RTUTransceiver::ior_is_valid(const double ior, const WORD otdr_card, const float wave) {
 	float default_ior = QPOTDRGetDefaultIOR(otdr_card, wave);
-	return (((int)ior * 10000) == ((int)default_ior * 10000)) ? 1 : 0;
+	return ((int)(ior * 10000) == (int)(default_ior * 10000)) ? 1 : 0;
 }
 
 int RTUTransceiver::get_averages_index(const double scans, const WORD otdr_card, const float wave) {
