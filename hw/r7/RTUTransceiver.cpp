@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.26 2005/11/10 12:30:02 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.27 2005/11/10 14:43:21 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.26 $, $Date: 2005/11/10 12:30:02 $
+// $Revision: 1.27 $, $Date: 2005/11/10 14:43:21 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -29,10 +29,6 @@ const char* RTUTransceiver::PARAMETER_NAME_SCANS = "ref_scans";
 const char* RTUTransceiver::PARAMETER_NAME_FLAG_GAIN_SPLICE_ON = "ref_flag_gain_splice_on";
 const char* RTUTransceiver::PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT = "ref_flag_life_fiber_detect";
 const char* RTUTransceiver::PARAMETER_NAME_REFLECTOGRAMMA = "reflectogramma";
-
-// debug
-#include <stdio.h>
-#include <assert.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -422,10 +418,10 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	int set_params_ret = QPOTDRAcqSetParams(this->otdr_cards[otdr_card_index],
 								(WORD)(this->averages / this->plugin_data->dwFastScanCount),
 								wave_index,
-								(DWORD)(this->trace_length * 1000.f / this->resolution/*min (resolution, 4.0f)*/),//???
+								(DWORD)(this->trace_length * 1000.f / min(this->resolution, 4.0f)/*this->resolution*/),//???
 								point_spacing_index,
 								pulse_width_index,
-								3 + 1);//???
+								4); //4 times 128 averages each
 
     switch(set_params_ret) {
 		case 0:
@@ -567,7 +563,7 @@ void RTUTransceiver::retrieve_plugin_data(unsigned int otdr_card_index) {
 	QPOTDRDataCollectInfo(this->otdr_cards[otdr_card_index], this->plugin_data);
 }
 
-void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWaveformHeader* wave_form_header,QPOTDRWaveformData*  wave_form_data) const {
+void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWaveformHeader* wave_form_header, QPOTDRWaveformData*  wave_form_data) const {
 	int offset = wave_form_header->FPOffset >> 16;
 	int i;
 
@@ -640,16 +636,8 @@ void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWavef
 	delete[] ds;
 	delete[] nppw;
 
+
 	int np = wave_form_header->NumPts - offset;
-	{
-		FILE *f = fopen("tranceiver.log","a");
-		if (f) {
-			fprintf(f, "fill_bellcore_structure: NumPts %d np %d\n",
-				(int)wave_form_header->NumPts,
-				np);
-			fclose(f);
-		}
-	}
 
 	int tndp = np;
 	short tsf = 1;
