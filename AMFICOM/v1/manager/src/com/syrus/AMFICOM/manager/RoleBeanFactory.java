@@ -1,5 +1,5 @@
 /*-
-* $Id: RoleBeanFactory.java,v 1.2 2005/11/09 15:09:49 bob Exp $
+* $Id: RoleBeanFactory.java,v 1.3 2005/11/10 13:59:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,19 +18,16 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.UI.ManagerModel;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public final class RoleBeanFactory extends AbstractBeanFactory<RoleBean> {
 
-	private Validator validator;
-	
 	public RoleBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Role", 
 			"Manager.Entity.Role.acronym");
@@ -65,8 +62,6 @@ public final class RoleBeanFactory extends AbstractBeanFactory<RoleBean> {
 		bean.setGraphText(super.graphText);
 		bean.setId(identifier.getIdentifierString());
 		
-		bean.setValidator(this.getValidator());		
-
 		bean.setIdentifier(identifier);
 		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
 		Dispatcher dispatcher = managerModel.getDispatcher();
@@ -79,30 +74,5 @@ public final class RoleBeanFactory extends AbstractBeanFactory<RoleBean> {
 	@Override
 	public String getCodename() {
 		return ObjectEntities.ROLE;
-	}
-	
-	private Validator getValidator() {
-		if (this.validator == null) {
-			this.validator = new Validator() {
-				
-				public boolean isValid(	AbstractBean sourceBean,
-										AbstractBean targetBean) {
-					assert Log.debugMessage(sourceBean.getName() 
-							+ " -> " 
-							+ targetBean.getName(),
-						Log.DEBUGLEVEL10);
-					final String sourceId = sourceBean.getId();
-					final String targetId = targetBean.getId();
-					return sourceBean != null && 
-						targetBean != null && 
-						(sourceId.startsWith(ObjectEntities.PERMATTR) &&
-						targetId.startsWith(ObjectEntities.ROLE)
-						||
-						sourceId.startsWith(ObjectEntities.ROLE) &&
-						targetId.startsWith(MessageBeanFactory.MESSAGE_CODENAME));
-				}
-			};
-		}
-		return this.validator;
 	}
 }

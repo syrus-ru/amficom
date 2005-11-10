@@ -1,5 +1,5 @@
 /*-
-* $Id: Perspective.java,v 1.7 2005/11/09 15:09:48 bob Exp $
+* $Id: Perspective.java,v 1.8 2005/11/10 13:59:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.manager.viewers.BeanUI;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.8 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,5 +39,7 @@ public interface Perspective {
 	AbstractBean createBean(final String codename) throws ApplicationException;
 	
 	BeanUI getBeanUI(final String codename) throws ApplicationException;
+	
+	Validator getValidator();
 }
 

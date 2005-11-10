@@ -1,5 +1,5 @@
 /*-
- * $Id: WorkstationBeanFactory.java,v 1.4 2005/11/09 15:09:48 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.5 2005/11/10 13:59:01 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/10 13:59:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -32,8 +32,6 @@ import com.syrus.util.Log;
 public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	
 	public static final String WORKSTATION_CODENAME = "Workstation";
-	
-	private Validator validator;
 	
 	public WorkstationBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Workstation", 
@@ -53,31 +51,10 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 		final WorkstationBean bean = new WorkstationBean();
 		bean.setName(this.getName());
 		bean.setGraphText(super.graphText);
-		bean.setValidator(this.getValidator());
 		bean.setId(codename);
 		bean.setIdentifier(Identifier.VOID_IDENTIFIER);		
 		return bean;
 	}
-	
-	private Validator getValidator() {
-		if (this.validator == null) {
-			this.validator = new Validator() {
-				
-				public boolean isValid(	AbstractBean sourceBean,
-										AbstractBean targetBean) {
-					Log.debugMessage(sourceBean.getName() 
-							+ " -> " 
-							+ targetBean.getName(), 
-						Log.DEBUGLEVEL10);
-					return sourceBean != null && 
-						targetBean != null && 
-						sourceBean.getId().startsWith(WORKSTATION_CODENAME) &&
-						targetBean.getId().startsWith(NetBeanFactory.NET_CODENAME);
-				}
-			};
-		}
-		return this.validator;
-	}	
 	
 	private class WorkstationBean extends NonStorableBean implements DomainNetworkItem {
 		

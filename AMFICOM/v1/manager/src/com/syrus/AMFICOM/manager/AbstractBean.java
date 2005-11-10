@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.21 2005/11/07 15:24:19 bob Exp $
+ * $Id: AbstractBean.java,v 1.22 2005/11/10 13:59:01 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.22 $, $Date: 2005/11/10 13:59:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -35,8 +35,6 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 public abstract class AbstractBean {
 
 	protected Identifier	identifier;
-	
-	protected Validator		validator;
 
 	protected String		id;
 	
@@ -46,20 +44,14 @@ public abstract class AbstractBean {
 		// nothing
 	}
 
-	protected AbstractBean(final Identifier id,
-			final Validator validator) {
+	protected AbstractBean(final Identifier id) {
 		this.identifier = id;
-		this.validator = validator;
 	}
 
 	public final Identifier getIdentifier() {
 		return this.identifier;
 	}
 
-	public boolean isTargetValid(final AbstractBean targetBean) {
-		return this.validator.isValid(this, targetBean);
-	}
-	
 	public abstract void applyTargetPort(final MPort oldPort,
 	                                     final MPort newPort) 
 	throws ApplicationException;
@@ -101,10 +93,6 @@ public abstract class AbstractBean {
 		this.identifier = id;
 	}
 
-	protected final void setValidator(final Validator validator) {
-		this.validator = validator;
-	}
-	
 	public final String getId() {
 		return this.id;
 	}

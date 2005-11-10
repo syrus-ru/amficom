@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagesPerpective.java,v 1.1 2005/11/09 15:08:45 bob Exp $
+* $Id: MessagesPerpective.java,v 1.2 2005/11/10 13:59:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,10 +23,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/09 15:08:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -37,17 +39,28 @@ public class MessagesPerpective extends AbstractPerspective {
 		super(managerMainFrame);
 	}
 	
+	private void addSeverityAction(final Severity severity) throws ApplicationException {
+		final MessageBeanFactory messageBeanFactory = 
+			MessageBeanFactory.getInstance(this.managerMainFrame, severity);
+		
+		final AbstractAction action = 
+			this.createGetTheSameOrCreateNewAction(messageBeanFactory, 
+				new MessageCheckable(severity), 
+				null);
+		this.managerMainFrame.addAction(
+			action);
+	}
+	
 	public void addEntities(final JToolBar entityToolBar) 
 	throws ApplicationException {
 		
 		final PerspectiveData perspectiveData = this.getPerspectiveData();
-		final MessageBeanFactory messageBeanFactory = 
-			(MessageBeanFactory) perspectiveData.getBeanFactory(MessageBeanFactory.MESSAGE_CODENAME);
 		
-		this.managerMainFrame.addAction(
-			this.createGetTheSameOrCreateNewAction(messageBeanFactory, 
-				new MessageCheckable("Simple"), 
-				null));
+		
+		this.addSeverityAction(Severity.SEVERITY_SOFT);
+		this.addSeverityAction(Severity.SEVERITY_HARD);
+		
+		entityToolBar.addSeparator();
 		
 		final Set<Role> roles = StorableObjectPool.getStorableObjectsByCondition(
 			new EquivalentCondition(ObjectEntities.ROLE_CODE),
@@ -94,14 +107,22 @@ public class MessagesPerpective extends AbstractPerspective {
 	
 	private class MessageCheckable implements Chechable {
 		
-		private final String message;
+		private final Severity severity;
 		
-		public MessageCheckable(final String message) {
-			this.message = message;
+		public MessageCheckable(final Severity severity) {
+			this.severity = severity;
 		}
 		
 		public boolean isNeedIn(final AbstractBean bean) {
-			return bean.getName().equals(this.message);
+			if (bean instanceof MessageBean) {
+				MessageBean messageBean = (MessageBean)bean;
+				final Severity severity2 = messageBean.getSeverity();
+				assert Log.debugMessage(severity2 
+					+ ", expected: " + this.severity, Log.DEBUGLEVEL10);
+
+				return severity2 == this.severity; 
+			}
+			return false;
 		}			
 	}
 	

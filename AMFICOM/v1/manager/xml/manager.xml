@@ -5,6 +5,8 @@
       <man:beanFactory id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.NetBeanFactory"/>
       <man:uiHandler id="Domain" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.DomainBeanUI"/>
       <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
+      <man:validator source="Domain" target="Domain"/>
+      <man:validator source="Net" target="Domain"/>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="Domain">
       <man:beanFactory id="KIS" beanFactoryClass="com.syrus.AMFICOM.manager.RTUBeanFactory"/>
@@ -18,6 +20,11 @@
       <man:uiHandler id="MCM" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MCMBeanUI"/>
       <man:uiHandler id="Workstation" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI"/>
       <man:uiHandler id="SystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.SystemUserBeanUI"/>
+      <man:validator source="MCM" target="Net"/>
+      <man:validator source="KIS" target="Net"/>
+      <man:validator source="Server" target="Net"/>
+      <man:validator source="Workstation" target="Net"/>
+      <man:validator source="SystemUser" target="Workstation"/>
       <man:undeletable>Net</man:undeletable>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="SystemUser">
@@ -50,6 +57,20 @@
       <man:uiHandler id="observer" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
       <man:uiHandler id="prediction" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
       <man:uiHandler id="report" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+      <man:validator source="administration" target="SystemUser"/>
+      <man:validator source="scheme" target="SystemUser"/>
+      <man:validator source="elementsEditor" target="SystemUser"/>
+      <man:validator source="mapEditor" target="SystemUser"/>
+      <man:validator source="optimization" target="SystemUser"/>
+      <man:validator source="modeling" target="SystemUser"/>
+      <man:validator source="scheduler" target="SystemUser"/>
+      <man:validator source="analysis" target="SystemUser"/>
+      <man:validator source="research" target="SystemUser"/>
+      <man:validator source="evaluation" target="SystemUser"/>
+      <man:validator source="observer" target="SystemUser"/>
+      <man:validator source="prediction" target="SystemUser"/>
+      <man:validator source="report" target="SystemUser"/>
+      <man:validator source="PermissionAttributes" target="SystemUser"/>
       <man:undeletable>SystemUser</man:undeletable>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="Role">
@@ -83,13 +104,28 @@
       <man:uiHandler id="observer" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
       <man:uiHandler id="prediction" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
       <man:uiHandler id="report" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
+      <man:validator source="administration" target="Role"/>
+      <man:validator source="scheme" target="Role"/>
+      <man:validator source="elementsEditor" target="Role"/>
+      <man:validator source="mapEditor" target="Role"/>
+      <man:validator source="optimization" target="Role"/>
+      <man:validator source="modeling" target="Role"/>
+      <man:validator source="scheduler" target="Role"/>
+      <man:validator source="analysis" target="Role"/>
+      <man:validator source="research" target="Role"/>
+      <man:validator source="evaluation" target="Role"/>
+      <man:validator source="observer" target="Role"/>
+      <man:validator source="prediction" target="Role"/>
+      <man:validator source="report" target="Role"/>
+      <man:validator source="PermissionAttributes" target="Role"/>
       <man:undeletable>Role</man:undeletable>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="messages">
       <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.RoleBeanFactory"/>
-      <man:beanFactory id="Message" beanFactoryClass="com.syrus.AMFICOM.manager.MessageBeanFactory"/>
+      <man:beanFactory id="DeliveryAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.MessageBeanFactory"/>
       <man:uiHandler id="Role" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RoleBeanUI"/>
-      <man:uiHandler id="Message" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MessageBeanUI"/>
+      <man:uiHandler id="DeliveryAttributes" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MessageBeanUI"/>
+      <man:validator source="Role" target="DeliveryAttributes"/>
     </man:managerResource>
   </ext:extension>
 </ext:root>

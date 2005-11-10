@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanUI.java,v 1.1 2005/10/18 15:10:39 bob Exp $
+* $Id: AbstractBeanUI.java,v 1.2 2005/11/10 13:59:01 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/10/18 15:10:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/10 13:59:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,7 +47,7 @@ public abstract class AbstractBeanUI<T extends AbstractBean> implements BeanUI<T
 		if (resource != null) {
 			this.icon = new ImageIcon(resource);
 		} else {
-			assert Log.debugMessage("AbstractBeanUI.<init> | " + iconUrl + " not found ",
+			assert Log.debugMessage(iconUrl + " not found ",
 				Log.DEBUGLEVEL09);
 		}
 		
@@ -55,7 +55,7 @@ public abstract class AbstractBeanUI<T extends AbstractBean> implements BeanUI<T
 		if (resource != null) {
 			this.image = new ImageIcon(resource);
 		} else {
-			assert Log.debugMessage("AbstractBeanUI.<init> | " + imageUrl + " not found ",
+			assert Log.debugMessage(imageUrl + " not found ",
 				Log.DEBUGLEVEL09);
 		}
 	}

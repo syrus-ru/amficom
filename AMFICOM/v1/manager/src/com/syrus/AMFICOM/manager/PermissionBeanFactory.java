@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionBeanFactory.java,v 1.6 2005/11/09 15:09:48 bob Exp $
+* $Id: PermissionBeanFactory.java,v 1.7 2005/11/10 13:59:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,19 +23,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.UI.ManagerModel;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionBean> {
 
-	private Validator validator;
-	
 	private Map<Module, PermissionBeanFactory> userInstanceMap;
 	
 	private final Module module;
@@ -122,7 +119,6 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setId(identifier.getIdentifierString());
-		bean.setValidator(this.getValidator());		
 
 		bean.setIdentifier(identifier);
 		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
@@ -148,27 +144,7 @@ public final class PermissionBeanFactory extends AbstractBeanFactory<PermissionB
 				this.module.getCodename():
 				ObjectEntities.PERMATTR;
 	}
-	
-	private Validator getValidator() {
-		if (this.validator == null) {
-			this.validator = new Validator() {
-				
-				public boolean isValid(	AbstractBean sourceBean,
-										AbstractBean targetBean) {
-					assert Log.debugMessage(sourceBean.getName() + sourceBean.getId()
-						+ " -> " 
-						+ targetBean.getName() + targetBean.getId(), Log.DEBUGLEVEL10);
-					
-					return sourceBean != null && 
-						targetBean != null && 
-						sourceBean.getId().startsWith(ObjectEntities.PERMATTR) &&
-						targetBean.getId().startsWith(ObjectEntities.SYSTEMUSER);
-				}
-			};
-		}
-		return this.validator;
-	}
-	
+
 	public final Module getModule() {
 		return this.module;
 	}	

@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.3 2005/11/09 15:09:48 bob Exp $
+* $Id: AbstractPerspective.java,v 1.4 2005/11/10 13:59:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,7 +60,8 @@ public abstract class AbstractPerspective implements Perspective {
 				final DefaultGraphCell parentCell) 
 	throws ApplicationException {
    		final String name = factory.getName();
-   		final BeanUI beanUI = this.getBeanUI(factory.getCodename());
+   		final String codename = factory.getCodename();
+		final BeanUI beanUI = this.getBeanUI(codename);
    		Icon icon = beanUI.getIcon(factory);
    		FACTORY_MAP.put(factory.getCodename(), factory);
    		
@@ -269,7 +270,9 @@ public abstract class AbstractPerspective implements Perspective {
 		if (beanFactory != null) {
 			return beanFactory.createBean(codename);
 		}
-		throw new IllegalArgumentException(codename + " is not support by perspective " + codename);
+		throw new IllegalArgumentException(codename 
+			+ " is not support by perspective " 
+			+ this.getCodename());
 	}
 	
 	public BeanUI getBeanUI(final String codename) throws ApplicationException {		
@@ -279,13 +282,20 @@ public abstract class AbstractPerspective implements Perspective {
 		if (beanUI != null) {
 			return beanUI;
 		}
-		throw new IllegalArgumentException(codename + " is not support by perspective " + codename);		
+		throw new IllegalArgumentException(codename 
+			+ " is not support by perspective " 
+			+ this.getCodename());		
 	}
 	
 	public boolean isDeletable(final AbstractBean abstractBean) {
 		final PerspectiveData perspectiveData = this.getPerspectiveData();
 		final String codename = abstractBean.getCodename();
 		return !perspectiveData.isUndeletable(codename);
+	}
+	
+	public Validator getValidator() {
+		final PerspectiveData perspectiveData = this.getPerspectiveData();
+		return perspectiveData.getValidator();
 	}
 	
 	protected interface Chechable {

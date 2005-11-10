@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.2 2005/11/09 15:09:49 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.3 2005/11/10 13:59:37 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.manager.RolePermissionBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
 import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.amficom.extensions.ExtensionPoint;
 import com.syrus.amficom.extensions.RootDocument;
 import com.syrus.amficom.extensions.RootDocument.Root;
@@ -37,10 +38,11 @@ import com.syrus.amficom.extensions.manager.ManagerExtensions;
 import com.syrus.amficom.extensions.manager.ManagerResource;
 import com.syrus.amficom.extensions.manager.Perspective;
 import com.syrus.amficom.extensions.manager.UiHandler;
+import com.syrus.amficom.extensions.manager.Validator;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -89,6 +91,14 @@ public class ManagerResourcesCreator extends TestCase {
 			UiHandler networkUIHandler = perspective.addNewUiHandler();
 			networkUIHandler.setId(NetBeanFactory.NET_CODENAME);
 			networkUIHandler.setUiHandlerClass(NetBeanUI.class.getName());
+			
+			Validator domainValidator = perspective.addNewValidator();
+			domainValidator.setSource(ObjectEntities.DOMAIN);
+			domainValidator.setTarget(ObjectEntities.DOMAIN);
+			
+			Validator netDomainValidator = perspective.addNewValidator();
+			netDomainValidator.setSource(NetBeanFactory.NET_CODENAME);
+			netDomainValidator.setTarget(ObjectEntities.DOMAIN);
 	    }	
 		
 		// create domain perspective 
@@ -141,6 +151,26 @@ public class ManagerResourcesCreator extends TestCase {
 			userUIHandler.setId(ObjectEntities.SYSTEMUSER);
 			userUIHandler.setUiHandlerClass(SystemUserBeanUI.class.getName());
 			
+			Validator mcmNetValidator = perspective.addNewValidator();
+			mcmNetValidator.setSource(ObjectEntities.MCM);
+			mcmNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+			
+			Validator rtuNetValidator = perspective.addNewValidator();
+			rtuNetValidator.setSource( ObjectEntities.KIS);
+			rtuNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+			
+			Validator serverNetValidator = perspective.addNewValidator();
+			serverNetValidator.setSource(ObjectEntities.SERVER);
+			serverNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+			
+			Validator workstationNetValidator = perspective.addNewValidator();
+			workstationNetValidator.setSource(WorkstationBeanFactory.WORKSTATION_CODENAME);
+			workstationNetValidator.setTarget(NetBeanFactory.NET_CODENAME);
+			
+			Validator userWorkstationValidator = perspective.addNewValidator();
+			userWorkstationValidator.setSource(ObjectEntities.SYSTEMUSER);
+			userWorkstationValidator.setTarget(WorkstationBeanFactory.WORKSTATION_CODENAME);
+			
 			perspective.addUndeletable(NetBeanFactory.NET_CODENAME);
 	    }
 		
@@ -171,7 +201,15 @@ public class ManagerResourcesCreator extends TestCase {
 				UiHandler modulePermissionUIHandler = perspective.addNewUiHandler();
 				modulePermissionUIHandler.setId(codename);
 				modulePermissionUIHandler.setUiHandlerClass(UserPermissionBeanUI.class.getName());
+				
+				Validator permissionUserValidator = perspective.addNewValidator();
+				permissionUserValidator.setSource(codename);
+				permissionUserValidator.setTarget(ObjectEntities.SYSTEMUSER);
 			}
+			
+			Validator permissionUserValidator = perspective.addNewValidator();
+			permissionUserValidator.setSource(ObjectEntities.PERMATTR);
+			permissionUserValidator.setTarget(ObjectEntities.SYSTEMUSER);
 			
 			perspective.addUndeletable(ObjectEntities.SYSTEMUSER);
 	    }	
@@ -208,7 +246,15 @@ public class ManagerResourcesCreator extends TestCase {
 				UiHandler modulePermissionUIHandler = perspective.addNewUiHandler();
 				modulePermissionUIHandler.setId(codename);
 				modulePermissionUIHandler.setUiHandlerClass(RolePermissionBeanUI.class.getName());
+				
+				Validator permissionRoleValidator = perspective.addNewValidator();
+				permissionRoleValidator.setSource(codename);
+				permissionRoleValidator.setTarget(ObjectEntities.ROLE);
 			}
+			
+			Validator permissionRoleValidator = perspective.addNewValidator();
+			permissionRoleValidator.setSource(ObjectEntities.PERMATTR);
+			permissionRoleValidator.setTarget(ObjectEntities.ROLE);
 			
 			perspective.addUndeletable(ObjectEntities.ROLE);
 	    }
@@ -227,13 +273,19 @@ public class ManagerResourcesCreator extends TestCase {
 			roleUIHandler.setId(ObjectEntities.ROLE);
 			roleUIHandler.setUiHandlerClass(RoleBeanUI.class.getName());
 			
-			BeanFactory messageFactory = perspective.addNewBeanFactory();
-			messageFactory.setId(MessageBeanFactory.MESSAGE_CODENAME);
-			messageFactory.setBeanFactoryClass(MessageBeanFactory.class.getName());
+			BeanFactory severityMessageFactory = perspective.addNewBeanFactory();
+			severityMessageFactory.setId(ObjectEntities.DELIVERYATTRIBUTES);
+			severityMessageFactory.setBeanFactoryClass(MessageBeanFactory.class.getName());
 			
-			UiHandler messageUIHandler = perspective.addNewUiHandler();
-			messageUIHandler.setId(MessageBeanFactory.MESSAGE_CODENAME);
-			messageUIHandler.setUiHandlerClass(MessageBeanUI.class.getName());
+			UiHandler severityMessageUIHandler = perspective.addNewUiHandler();
+			severityMessageUIHandler.setId(ObjectEntities.DELIVERYATTRIBUTES);
+			severityMessageUIHandler.setUiHandlerClass(MessageBeanUI.class.getName());
+			
+			
+			Validator messageValidator = perspective.addNewValidator();
+			messageValidator.setSource(ObjectEntities.ROLE);
+			messageValidator.setTarget(ObjectEntities.DELIVERYATTRIBUTES);
+			
 	    }
 		
 		// Document contains two concrete resources and is valid

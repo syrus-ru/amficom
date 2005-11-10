@@ -1,5 +1,5 @@
 /*-
- * $Id: RoleBean.java,v 1.2 2005/11/09 15:09:48 bob Exp $
+ * $Id: RoleBean.java,v 1.3 2005/11/10 13:59:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,8 +41,21 @@ public class RoleBean extends Bean {
 	}
 	
 	@Override
-	public void applyTargetPort(MPort oldPort, MPort newPort) {
-		// TODO Auto-generated method stub
+	public void applyTargetPort(MPort oldPort, 
+		MPort newPort) {
+		assert Log.debugMessage("was:" + oldPort + ", now: "
+			+ newPort, Log.DEBUGLEVEL03);
+		AbstractBean oldPortBean = oldPort != null ? oldPort.getBean() : null;
+		AbstractBean newPortBean = newPort != null ? newPort.getBean() : null;
+		if (newPortBean instanceof MessageBean) {
+			MessageBean messageBean = (MessageBean) newPortBean;
+			messageBean.addRole(this.role);
+		}   
+		
+		if (newPortBean == null && oldPortBean instanceof MessageBean) {
+			MessageBean messageBean = (MessageBean) oldPortBean;
+			messageBean.removeRole(this.role);
+		}
 		
 	}	
 

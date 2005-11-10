@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.26 2005/11/08 13:44:43 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.27 2005/11/10 13:59:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/11/08 13:44:43 $
+ * @version $Revision: 1.27 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -35,8 +35,6 @@ import com.syrus.util.Log;
 public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	
 	public static final String NET_CODENAME = "Net";
-	
-	private Validator validator;
 	
 	public NetBeanFactory(final ManagerMainFrame graphText) {
 		super("Manager.Entity.Net", 
@@ -180,7 +178,6 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 		bean.setName(this.getName());
 		bean.setGraphText(super.graphText);
 		bean.setId(codename);
-		bean.setValidator(this.getValidator());
 		bean.setIdentifier(Identifier.VOID_IDENTIFIER);
 		return bean;
 	}
@@ -188,26 +185,5 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	@Override
 	public String getCodename() {
 		return NET_CODENAME;
-	}
-	
-	private final Validator getValidator() {
-		if (this.validator == null) {
-			 this.validator = new Validator() {
-					
-					public boolean isValid(	AbstractBean sourceBean,
-											AbstractBean targetBean) {
-						Log.debugMessage("NetBeanFactory.getValidator() | " 
-								+ sourceBean 
-								+ " > " 
-								+ targetBean,
-							Log.DEBUGLEVEL10);
-						return sourceBean != null && 
-							targetBean != null && 
-							sourceBean.getId().startsWith(NET_CODENAME) &&
-							targetBean.getId().startsWith(ObjectEntities.DOMAIN);
-					}
-				};
-		}
-		return this.validator;
 	}
 }

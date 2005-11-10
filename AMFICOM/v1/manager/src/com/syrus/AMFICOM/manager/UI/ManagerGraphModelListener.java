@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.2 2005/11/08 12:07:16 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.3 2005/11/10 13:59:01 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/08 12:07:16 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -355,12 +355,15 @@ public class ManagerGraphModelListener implements GraphModelListener {
 	
 	private LayoutItem getLayoutItem(final String codename) throws ApplicationException {
 		
-		assert Log.debugMessage(
-			this.managerMainFrame.perspective.getCodename(), Log.DEBUGLEVEL10);
+		final String perspectiveName = this.managerMainFrame.perspective.getCodename();
+		assert Log.debugMessage("perspectiveName:"
+			+ perspectiveName, Log.DEBUGLEVEL10);
+		
+		assert Log.debugMessage("codename:" + codename , Log.DEBUGLEVEL10);
 		
 		final CompoundCondition compoundCondition = 
 			new CompoundCondition(new TypicalCondition(
-				this.managerMainFrame.perspective.getCodename(), 
+				perspectiveName, 
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.LAYOUT_ITEM_CODE,
 				LayoutItemWrapper.COLUMN_LAYOUT_NAME),

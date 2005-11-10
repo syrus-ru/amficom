@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.17 2005/11/09 15:09:49 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.18 2005/11/10 13:59:01 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.18 $, $Date: 2005/11/10 13:59:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -396,7 +396,7 @@ public class ManagerMainFrame extends AbstractMainFrame {
 		this.managerHandler.setManagerMainFrame(this);
 		
 		// Construct Model and Graph
-		this.graphModel = new ManagerGraphModel();
+		this.graphModel = new ManagerGraphModel(this);
 		
 		this.graph = new JGraph(this.graphModel,
 			new GraphLayoutCache(this.graphModel,

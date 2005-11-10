@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.18 2005/11/07 15:24:19 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.19 2005/11/10 13:59:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.19 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -33,9 +33,9 @@ public final class RTUBeanFactory extends IdentifiableBeanFactory<RTUBean> {
 	public RTUBean createBean(Perspective perspective) 
 	throws ApplicationException {
 		
-		DomainPerpective domainPerpective = (DomainPerpective) perspective;
+		final DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
-		KIS kis = KIS.createInstance(LoginManager.getUserId(),
+		final KIS kis = KIS.createInstance(LoginManager.getUserId(),
 			domainPerpective.getDomainId(),
 			"",
 			"",
@@ -53,26 +53,9 @@ public final class RTUBeanFactory extends IdentifiableBeanFactory<RTUBean> {
 		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setId(identifier.getIdentifierString());
-		bean.setValidator(this.getValidator());
 		bean.setIdentifier(identifier);		
 
 		return bean;
-	}
-	
-	private Validator getValidator() {
-		if (this.validator == null) {
-			this.validator = new Validator() {
-				
-				public boolean isValid(	AbstractBean sourceBean,
-										AbstractBean targetBean) {
-					return sourceBean != null && 
-						targetBean != null && 
-						sourceBean.getId().startsWith(ObjectEntities.KIS) &&
-						targetBean.getId().startsWith(NetBeanFactory.NET_CODENAME);
-				}
-			};
-		}
-		return this.validator;
 	}
 	
 	@Override

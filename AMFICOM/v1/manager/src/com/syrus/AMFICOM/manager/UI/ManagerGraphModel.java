@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.12 2005/09/06 10:09:42 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.13 2005/11/10 13:59:01 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,16 +16,23 @@ import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
+import com.syrus.AMFICOM.manager.Validator;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/06 10:09:42 $
+ * @version $Revision: 1.13 $, $Date: 2005/11/10 13:59:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class ManagerGraphModel extends DefaultGraphModel {
+	
+	private final ManagerMainFrame managerMainFrame;
+	
+	ManagerGraphModel(final ManagerMainFrame managerMainFrame){
+		this.managerMainFrame = managerMainFrame;
+	}
 	
 	@Override
 	public boolean acceptsSource(	final Object edge,
@@ -101,7 +108,9 @@ public class ManagerGraphModel extends DefaultGraphModel {
 				+ target, 
 			Log.DEBUGLEVEL10);
 		if (sourceBean != null && targetBean != null) {
-			boolean result = sourceBean.isTargetValid(targetBean) && !this.isLooped(source, target);
+			final Validator validator = this.managerMainFrame.getPerspective().getValidator();
+			boolean result = validator.isValid(sourceBean.getCodename(), targetBean.getCodename()) && 
+				!this.isLooped(source, target);
 			Log.debugMessage("ManagerGraphModel.isTargetValid | " + result, 
 				Log.DEBUGLEVEL10);
 			return result;

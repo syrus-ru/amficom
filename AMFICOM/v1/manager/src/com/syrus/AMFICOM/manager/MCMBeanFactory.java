@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.15 2005/11/07 15:24:19 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.16 2005/11/10 13:59:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerModel;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.16 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,7 +60,6 @@ public final class MCMBeanFactory extends IdentifiableBeanFactory<MCMBean> {
 		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setId(identifier.getIdentifierString());
-		bean.setValidator(this.getValidator());
 		bean.setIdentifier(identifier);			
 		
 		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
@@ -97,22 +96,6 @@ public final class MCMBeanFactory extends IdentifiableBeanFactory<MCMBean> {
 			new PropertyChangeEvent(this, ObjectEntities.MCM, null, bean));
 		
 		return bean;
-	}
-	
-	private Validator getValidator() {
-		if (this.validator == null) {
-			this.validator = new Validator() {
-				
-				public boolean isValid(	AbstractBean sourceBean,
-										AbstractBean targetBean) {
-					return sourceBean != null && 
-						targetBean != null && 
-						sourceBean.getId().startsWith(ObjectEntities.MCM) &&
-						targetBean.getId().startsWith(NetBeanFactory.NET_CODENAME);
-				}
-			};
-		}
-		return this.validator;
 	}
 	
 	@Override

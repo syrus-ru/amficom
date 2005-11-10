@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.16 2005/11/07 15:24:19 bob Exp $
+ * $Id: DomainBean.java,v 1.17 2005/11/10 13:59:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.17 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -71,8 +71,7 @@ public class DomainBean extends Bean {
 		if (newPort != null) {
 			parentId = ((DomainBean) newPort.getUserObject()).getIdentifier();
 		}		
-		Log.debugMessage("DomainBean.applyTargetPort() | " 
-				+ this.domain.getId() 
+		assert Log.debugMessage(this.domain.getId() 
 				+ ", set parent " 
 				+ parentId,
 			Log.DEBUGLEVEL10); 

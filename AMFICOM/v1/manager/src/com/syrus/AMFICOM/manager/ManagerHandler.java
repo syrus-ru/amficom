@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.2 2005/11/09 15:09:48 bob Exp $
+* $Id: ManagerHandler.java,v 1.3 2005/11/10 13:59:01 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,11 +23,12 @@ import com.syrus.amficom.extensions.manager.ManagerExtensions;
 import com.syrus.amficom.extensions.manager.ManagerResource;
 import com.syrus.amficom.extensions.manager.Perspective;
 import com.syrus.amficom.extensions.manager.UiHandler;
+import com.syrus.amficom.extensions.manager.Validator;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -37,6 +38,9 @@ public class ManagerHandler extends AbstractExtensionHandler {
 	private final ManagerExtensions	managerExtensions;
 	private ManagerMainFrame	managerMainFrame;
 	private final Map<String, PerspectiveData> perspectives;
+	
+	private final Map<String, AbstractBeanFactory> factories;
+	private final Map<String, BeanUI> beanUIs;
 
 	public ManagerHandler(final ExtensionPoint extensionPoint) {
 		this((ManagerExtensions)extensionPoint);
@@ -45,6 +49,8 @@ public class ManagerHandler extends AbstractExtensionHandler {
 	public ManagerHandler(final ManagerExtensions managerExtensions) {
 		this.managerExtensions = managerExtensions;
 		this.perspectives = new HashMap<String, PerspectiveData>();
+		this.factories = new HashMap<String, AbstractBeanFactory>();
+		this.beanUIs = new HashMap<String, BeanUI>();
 	}
 	
 	public final void setManagerMainFrame(final ManagerMainFrame managerMainFrame) {
@@ -52,15 +58,37 @@ public class ManagerHandler extends AbstractExtensionHandler {
 	}
 	
 	private final BeanUI loadBeanUI(final String handlerClass) {
-		return (BeanUI) super.loadHandler(handlerClass, 
+		BeanUI beanUI = this.beanUIs.get(handlerClass);
+		if (beanUI == null) {
+			beanUI = (BeanUI) super.loadHandler(handlerClass, 
 			new Class[] {ManagerMainFrame.class}, 
 			new Object[] {this.managerMainFrame});
+
+			assert Log.debugMessage("beanUI " 
+				+ handlerClass
+				+ " loaded.", 
+			Log.DEBUGLEVEL10);
+			
+			this.beanUIs.put(handlerClass, beanUI);
+		}
+		return beanUI;
 	}
 	
 	private final AbstractBeanFactory loadAbstractBeanFactory(final String handlerClass) {
-		return (AbstractBeanFactory) super.loadHandler(handlerClass, 
+		AbstractBeanFactory factory = this.factories.get(handlerClass);
+		if (factory == null) {
+			factory = (AbstractBeanFactory) super.loadHandler(handlerClass, 
 			new Class[] {ManagerMainFrame.class}, 
 			new Object[] {this.managerMainFrame});
+			
+			assert Log.debugMessage("factory " 
+					+ handlerClass
+					+ " loaded.", 
+				Log.DEBUGLEVEL10);
+			
+			this.factories.put(handlerClass, factory);
+		}
+		return factory;
 	}
 
 	public final PerspectiveData getPerspectiveData(String perspectiveCodename) {
@@ -77,7 +105,7 @@ public class ManagerHandler extends AbstractExtensionHandler {
 					
 					if (id == perspectiveCodename) {
 						
-						final Map<String, AbstractBeanFactory> factories = 
+						final Map<String, AbstractBeanFactory> perpectiveFactories = 
 							new HashMap<String, AbstractBeanFactory>();
 						final Map<String, BeanUI> beanUI = new HashMap<String, BeanUI>();
 						final Set<String> undeletable = new HashSet<String>();
@@ -92,7 +120,7 @@ public class ManagerHandler extends AbstractExtensionHandler {
 									+ (factoryInstance != null ? " registered successfull" : 
 										" failed."), 
 								Log.DEBUGLEVEL10);
-							factories.put(factoryId, 
+							perpectiveFactories.put(factoryId, 
 								factoryInstance);
 						}
 						
@@ -103,9 +131,21 @@ public class ManagerHandler extends AbstractExtensionHandler {
 						
 						undeletable.addAll(Arrays.asList(perspective.getUndeletableArray()));
 						
-						perspectiveData = new PerspectiveData(factories, 
+						final Map<String, Set<String>> sourceTargetMap = new HashMap<String, Set<String>>();
+						for (final Validator validator : perspective.getValidatorArray()) {
+							final String source = validator.getSource();
+							Set<String> targets = sourceTargetMap.get(source);
+							if (targets == null) {
+								targets = new HashSet<String>();
+								sourceTargetMap.put(source,
+									targets);
+							}
+							targets.add(validator.getTarget());
+						}
+						perspectiveData = new PerspectiveData(perpectiveFactories, 
 							beanUI,
-							undeletable);
+							undeletable,
+							new PerspectiveValidator(sourceTargetMap));
 						
 						assert Log.debugMessage("perspective '" 
 								+ perspectiveCodename
@@ -125,6 +165,30 @@ public class ManagerHandler extends AbstractExtensionHandler {
 		}
 		
 		return perspectiveData;
+	}
+	
+	private class PerspectiveValidator implements  com.syrus.AMFICOM.manager.Validator {
+		
+		private final Map<String, Set<String>>	sourceTargetMap;
+
+		public PerspectiveValidator(final Map<String, Set<String>> sourceTargetMap) {
+			this.sourceTargetMap = sourceTargetMap;
+		}
+		
+		public boolean isValid(final String source,
+				final String target) {
+			final Set<String> targetKeys = this.sourceTargetMap.get(source);
+			
+			assert Log.debugMessage(source 
+				+ " -> "
+				+ target 
+				+ "(expected:"
+				+ targetKeys
+				+ ')', 
+			Log.DEBUGLEVEL10);
+			
+			return targetKeys != null ? targetKeys.contains(target) : false;
+		}
 	}
 }
 

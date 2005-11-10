@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.13 2005/11/07 15:24:19 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.14 2005/11/10 13:59:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerModel;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.14 $, $Date: 2005/11/10 13:59:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,15 +60,7 @@ public final class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean>
 		bean.setGraphText(super.graphText);
 		bean.setIdentifier(identifier);
 		bean.setId(identifier.getIdentifierString());
-		bean.setValidator(this.getValidator());
-//		bean.table = super.getTable(bean, 
-//			ServerBeanWrapper.getInstance(),
-//			new String[] { KEY_NAME, 
-//				KEY_DESCRIPTION, 
-//				KEY_HOSTNAME});
-//		bean.addPropertyChangeListener(this.listener);
-//		bean.setPropertyPanel(this.panel);
-		
+
 		final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
 		final Dispatcher dispatcher = managerModel.getDispatcher();
 		dispatcher.firePropertyChange(
@@ -77,23 +69,6 @@ public final class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean>
 		return bean;
 	}
 
-	
-	private Validator getValidator() {
-		if (this.validator == null) {
-			this.validator = new Validator() {
-				
-				public boolean isValid(	AbstractBean sourceBean,
-										AbstractBean targetBean) {
-					return sourceBean != null && 
-						targetBean != null && 
-						sourceBean.getId().startsWith(ObjectEntities.SERVER) &&
-						targetBean.getId().startsWith(NetBeanFactory.NET_CODENAME);
-				}
-			};
-		}
-		return this.validator;
-	}
-	
 	@Override
 	public String getCodename() {
 		return ObjectEntities.SERVER;

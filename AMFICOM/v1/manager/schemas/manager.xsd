@@ -27,12 +27,18 @@
 		</xs:complexContent>
 	</xs:complexType>	
 
+	<xs:complexType name="validator">
+		<xs:attribute name="source" type="xs:string"/>
+		<xs:attribute name="target" type="xs:string"/>
+	</xs:complexType>
+
 	<xs:complexType name="perspective">
 		<xs:complexContent>
 			<xs:extension base="f:managerResource">
 				<xs:sequence>
 					<xs:element name="beanFactory" type="f:beanFactory" maxOccurs="unbounded"/>
 					<xs:element name="uiHandler" type="f:uiHandler" maxOccurs="unbounded"/>
+					<xs:element name="validator" type="f:validator" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="undeletable" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
