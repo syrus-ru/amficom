@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.31 2005/11/03 17:12:11 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.32 2005/11/10 14:07:04 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/11/03 17:12:11 $
+ * @version $Revision: 1.32 $, $Date: 2005/11/10 14:07:04 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -40,11 +40,12 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private boolean checkDomain(final DomainMember domainMember) {
 		boolean condition = false;
 		try {
-			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			final Domain dmDomain = 
+				StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 				final Identifier id = (Identifier) it.next();
 				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
-					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
+					final Domain domain = StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.equals(domain) || dmDomain.isChild(domain))
 						condition = true;
 				}
