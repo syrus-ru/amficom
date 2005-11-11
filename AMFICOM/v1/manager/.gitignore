@@ -2,7 +2,6 @@ classes
 nbproject
 cache
 logs
-build.xml
 *.deploy
 *.jar
 *.jpr
