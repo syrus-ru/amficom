@@ -37,14 +37,14 @@
             classpathref="xmlbeans.classpath"/>
     </target>
 
-    <property name="abstract.jar" value="extension.jar"/>
+    <property name="abstract.jar" value="extensions.jar"/>
     <property name="resources.jar" value="resources.jar"/>
 
     <target name="build-run" depends="build,run"/>
 
     <target name="schemas.abstract.check">
         <uptodate property="schemas.abstract.notRequired" targetfile="build/${abstract.jar}">
-            <srcfiles dir="schemas" includes="extension.xsd"/>
+            <srcfiles dir="schemas" includes="extensions.xsd"/>
         </uptodate>
     </target>
 
@@ -56,7 +56,7 @@
 
     <target name="schemas.abstract" depends="init,schemas.abstract.check" unless="schemas.abstract.notRequired">
         <mkdir dir="build"/>
-        <scomp schema="schemas" destfile="build/${abstract.jar}" excludes="schemas/resource.xsd">
+        <scomp schema="schemas" destfile="build/${abstract.jar}" excludes="schemas/resources.xsd">
             <classpath>
                 <path refid="xmlbeans.classpath"/>
             </classpath>
@@ -64,7 +64,7 @@
     </target>
 
     <target name="build" depends="init,schemas.abstract,build.check" unless="build.notRequired">
-        <scomp schema="schemas" destfile="build/${resources.jar}" excludes="schemas/extension.xsd">
+        <scomp schema="schemas" destfile="build/${resources.jar}" excludes="schemas/extensions.xsd">
             <classpath>
                 <pathelement location="build/${abstract.jar}"/>
                 <path refid="xmlbeans.classpath"/>

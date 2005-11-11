@@ -38,7 +38,7 @@
 	    </target>
 
     <property name="managerext.jar" value="managerext.jar"/>
-    <property name="abstract.jar" value="../lib/extension.jar"/>
+    <property name="abstract.jar" value="../lib/extensions.jar"/>
 
 
     <target name="build-run" depends="build"/>

@@ -1,5 +1,5 @@
 /*-
-* $Id: InsetsResourceHandler.java,v 1.1 2005/11/11 11:14:30 bob Exp $
+* $Id: InsetsResourceHandler.java,v 1.2 2005/11/11 12:46:16 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.resources;
 
 import javax.swing.UIManager;
 
-import com.syrus.amficom.extensions.resources.Insets;
+import com.syrus.AMFICOM.extensions.resources.Insets;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 11:14:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/11/11 12:46:16 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module extensions
  */

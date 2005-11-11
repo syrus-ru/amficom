@@ -1,11 +1,24 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
 <xs:schema 
 	xmlns:xs = "http://www.w3.org/2001/XMLSchema"
 	xmlns:f = "http://syrus.com/AMFICOM/extensions/manager"
 	xmlns:e = "http://syrus.com/AMFICOM/extensions"
 	targetNamespace = "http://syrus.com/AMFICOM/extensions/manager"
 	elementFormDefault = "qualified">
-	
-	<xs:import namespace="http://syrus.com/AMFICOM/extensions" schemaLocation="extension.xsd"/>
+
+	<xs:annotation>
+		<xs:documentation xml:lang = "en">
+			$Id: manager.xsd,v 1.7 2005/11/11 12:46:15 bass Exp $
+
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:import
+		namespace = "http://syrus.com/AMFICOM/extensions"
+		schemaLocation = "../../extensions/schemas/extensions.xsd"/>
 	
 	<xs:complexType name="managerResource" abstract="true">
 		<xs:attribute name="id" type="xs:string"/>

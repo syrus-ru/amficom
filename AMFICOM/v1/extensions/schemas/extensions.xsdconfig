@@ -1,0 +1,13 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xb:config
+	xmlns:xb = "http://www.bea.com/2002/09/xbean/config"
+	xmlns:extensions = "http://syrus.com/AMFICOM/extensions"
+	xmlns:resources = "http://syrus.com/AMFICOM/extensions/resources">
+
+	<xb:namespace uri = "http://syrus.com/AMFICOM/extensions">
+		<xb:package>com.syrus.AMFICOM.extensions</xb:package>
+	</xb:namespace>
+	<xb:namespace uri = "http://syrus.com/AMFICOM/extensions/resources">
+		<xb:package>com.syrus.AMFICOM.extensions.resources</xb:package>
+	</xb:namespace>
+</xb:config>

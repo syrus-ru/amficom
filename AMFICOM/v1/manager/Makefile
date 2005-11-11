@@ -1,17 +1,37 @@
+#
+# $Id: Makefile,v 1.4 2005/11/11 12:46:15 bass Exp $
+#
+# vim:set ft=make:
+#
+
 MODULE_NAME := manager
+
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-HOST=mongol
-SERVICE_NAME=mongol
-
+XMLDIR = schemas
 include ../tools/Makefile.java.inc.mk
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
+$(call checkenve,SCOMP)
+$(call checkenve,SCOMPFLAGS)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar:$(LIBDIR)/resource.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/jgraph.jar
+LIBNAME_MANAGER_SCHEMAS = $(MODULE_NAME)_schemas.jar
 
-$(call checkenve,JAVA_HOME)
+DEPENDENCIES = \
+util \
+general \
+administration \
+configuration \
+measurement \
+event \
+filter \
+csbridge \
+commonclient \
+filterclient \
+resource
+
+EXTCLASSPATH := $(TROVE4JCLASSPATH):$(EXTLIBDIR)/jgraph.jar
 
 $(LIBNAME): .mach
 	mkdir -p $(CLASSDIR)/com/syrus/AMFICOM/manager/resources/icons
@@ -30,9 +50,39 @@ $(LIBNAME): .mach
 		$(shell find . -name *java)
 	touch $@
 
+.PHONY: xml
+xml: .xml
+
+.xml: $(LIBNAME_MANAGER_SCHEMAS)
+	touch $@
+
+.PHONY: xmlinstall
+xmlinstall: .xml $(LIBDIR)
+	install -m 0644 $(LIBNAME_MANAGER_SCHEMAS) $(LIBDIR)
+
+$(LIBNAME_MANAGER_SCHEMAS): 
+	$(SCOMP) $(SCOMPFLAGS) -out $@ \
+		$(XMLDIR)/$(MODULE_NAME).xsd \
+		$(XMLDIR)/$(MODULE_NAME).xsdconfig
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/impl
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions/impl
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/*.java
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions/*.class
+
+.PHONY: xmlclean
+xmlclean:
+	$(RM) $(LIBNAME_SCHEMEXML)
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/extensions && $(RM) -r `cat .cvsignore`; \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions; \
+	fi
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/extensions
+	$(RM) .xml
 
 .PHONY:	clean
-clean:	cleanmach
+clean:	cleanmach xmlclean
 	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
@@ -40,9 +90,7 @@ cleanmach:
 	$(RM) -r $(CLASSDIR)/com
 	$(RM) .mach
 
-
 #### Install ####
 .PHONY:	install
-install: $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBDIR) xmlinstall
 	$(CP) $^
-
