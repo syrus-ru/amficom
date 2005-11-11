@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspectiveCommand.java,v 1.6 2005/11/11 10:58:02 bob Exp $
+* $Id: DomainsPerspectiveCommand.java,v 1.7 2005/11/11 15:34:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/11 15:34:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -199,8 +199,12 @@ public class DomainsPerspectiveCommand extends AbstractCommand {
 			final Set<StorableObjectCondition> setOfConditions = new HashSet<StorableObjectCondition>(3);
 			setOfConditions.add(currentUserCondition);
 			setOfConditions.add(layoutCondition);
-			setOfConditions.add(new CompoundCondition(domainsTypicalConditions, 
-				CompoundConditionSort.OR));
+			if (domainsTypicalConditions.size() != 1) {
+				setOfConditions.add(new CompoundCondition(domainsTypicalConditions, 
+					CompoundConditionSort.OR));
+			} else {
+				setOfConditions.add(domainsTypicalConditions.iterator().next());
+			}
 			
 			final Set<LayoutItem> domainLayoutItems = 
 				StorableObjectPool.getStorableObjectsByCondition(
