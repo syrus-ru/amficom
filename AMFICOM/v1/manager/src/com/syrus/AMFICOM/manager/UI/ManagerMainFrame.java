@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.18 2005/11/10 13:59:01 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.19 2005/11/11 10:58:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/11/10 13:59:01 $
+ * @version $Revision: 1.19 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -744,6 +744,7 @@ public class ManagerMainFrame extends AbstractMainFrame {
 			
 			this.graphRoutines.addPerspective(perspective);
 			
+			perspective.setManagerMainFrame(this);
 			this.perspective = perspective;
 			
 			final JPanel panel = (JPanel) this.tabbedPane.getComponentAt(index);

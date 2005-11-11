@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanUI.java,v 1.2 2005/11/10 13:59:01 bob Exp $
+* $Id: AbstractBeanUI.java,v 1.3 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
@@ -22,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/10 13:59:01 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -58,12 +57,6 @@ public abstract class AbstractBeanUI<T extends AbstractBean> implements BeanUI<T
 			assert Log.debugMessage(imageUrl + " not found ",
 				Log.DEBUGLEVEL09);
 		}
-	}
-	
-	
-	public JPopupMenu getPopupMenu(	final T bean,
-	                               	final Object cell) {
-		return null;
 	}
 	
 	public JPanel getPropertyPanel(final T bean) {

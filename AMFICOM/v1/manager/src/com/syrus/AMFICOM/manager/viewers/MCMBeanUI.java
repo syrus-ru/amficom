@@ -1,5 +1,5 @@
 /*-
-* $Id: MCMBeanUI.java,v 1.2 2005/11/07 15:24:19 bob Exp $
+* $Id: MCMBeanUI.java,v 1.3 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerModel;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -66,12 +66,6 @@ public class MCMBeanUI extends TableBeanUI<MCMBean> {
 					table.updateModel();
 				}
 			});
-	}
-	
-	@Override
-	public JPopupMenu getPopupMenu(	final MCMBean bean,
-									final Object cell) {
-		return null;
 	}
 }
 

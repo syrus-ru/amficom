@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.6 2005/11/09 15:09:48 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.7 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,14 +36,13 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
-import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -54,10 +53,8 @@ public class SystemUserPerpective extends AbstractPerspective {
 	private DefaultGraphCell	cell;
 	private LayoutItem	userLayoutItem;
 	
-	public SystemUserPerpective(final ManagerMainFrame managerMainFrame,
-	                        final UserBean userBean,
+	public SystemUserPerpective(final UserBean userBean,
 	                        final DefaultGraphCell cell) {
-		super(managerMainFrame);
 		this.userBean = userBean;
 		this.cell = cell;		
 	}

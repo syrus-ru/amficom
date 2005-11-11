@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagesPerpective.java,v 1.2 2005/11/10 13:59:02 bob Exp $
+* $Id: MessagesPerpective.java,v 1.3 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,23 +22,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
-import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/10 13:59:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class MessagesPerpective extends AbstractPerspective {
 
-	public MessagesPerpective(final ManagerMainFrame managerMainFrame) {
-		super(managerMainFrame);
-	}
-	
 	private void addSeverityAction(final Severity severity) throws ApplicationException {
 		final MessageBeanFactory messageBeanFactory = 
 			MessageBeanFactory.getInstance(this.managerMainFrame, severity);

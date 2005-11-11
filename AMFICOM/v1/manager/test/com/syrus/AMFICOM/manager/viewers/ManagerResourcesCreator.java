@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.4 2005/11/11 08:04:06 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.5 2005/11/11 10:58:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,6 +29,9 @@ import com.syrus.AMFICOM.manager.RolePermissionBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
 import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
+import com.syrus.AMFICOM.manager.UI.DomainPopupMenu;
+import com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu;
+import com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu;
 import com.syrus.AMFICOM.extensions.ExtensionPoint;
 import com.syrus.AMFICOM.extensions.RootDocument;
 import com.syrus.AMFICOM.extensions.RootDocument.Root;
@@ -36,12 +39,13 @@ import com.syrus.AMFICOM.extensions.manager.BeanFactory;
 import com.syrus.AMFICOM.extensions.manager.ManagerExtensions;
 import com.syrus.AMFICOM.extensions.manager.ManagerResource;
 import com.syrus.AMFICOM.extensions.manager.Perspective;
+import com.syrus.AMFICOM.extensions.manager.PopupMenu;
 import com.syrus.AMFICOM.extensions.manager.UiHandler;
 import com.syrus.AMFICOM.extensions.manager.Validator;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/11 08:04:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/11 10:58:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -98,6 +102,10 @@ public class ManagerResourcesCreator extends TestCase {
 			Validator netDomainValidator = perspective.addNewValidator();
 			netDomainValidator.setSource(NetBeanFactory.NET_CODENAME);
 			netDomainValidator.setTarget(ObjectEntities.DOMAIN);
+			
+			PopupMenu menu = perspective.addNewPopupMenu();
+			menu.setId(ObjectEntities.DOMAIN);
+			menu.setPopupMenuHandler(DomainPopupMenu.class.getName());
 	    }	
 		
 		// create domain perspective 
@@ -170,6 +178,10 @@ public class ManagerResourcesCreator extends TestCase {
 			userWorkstationValidator.setSource(ObjectEntities.SYSTEMUSER);
 			userWorkstationValidator.setTarget(WorkstationBeanFactory.WORKSTATION_CODENAME);
 			
+			PopupMenu menu = perspective.addNewPopupMenu();
+			menu.setId(ObjectEntities.SYSTEMUSER);
+			menu.setPopupMenuHandler(SystemUserDomainPopupMenu.class.getName());
+			
 			perspective.addUndeletable(NetBeanFactory.NET_CODENAME);
 	    }
 		
@@ -209,6 +221,10 @@ public class ManagerResourcesCreator extends TestCase {
 			Validator permissionUserValidator = perspective.addNewValidator();
 			permissionUserValidator.setSource(ObjectEntities.PERMATTR);
 			permissionUserValidator.setTarget(ObjectEntities.SYSTEMUSER);
+			
+			PopupMenu menu = perspective.addNewPopupMenu();
+			menu.setId(ObjectEntities.SYSTEMUSER);
+			menu.setPopupMenuHandler(SystemUserPermissionPopupMenu.class.getName());
 			
 			perspective.addUndeletable(ObjectEntities.SYSTEMUSER);
 	    }	

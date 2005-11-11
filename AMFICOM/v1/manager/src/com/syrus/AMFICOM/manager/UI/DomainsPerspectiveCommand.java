@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspectiveCommand.java,v 1.5 2005/11/09 15:09:49 bob Exp $
+* $Id: DomainsPerspectiveCommand.java,v 1.6 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -62,11 +62,7 @@ import com.syrus.util.Log;
 public class DomainsPerspectiveCommand extends AbstractCommand {
 
 	private class DomainsPerspective extends AbstractPerspective {
-		
-		public DomainsPerspective() {
-			super(DomainsPerspectiveCommand.this.graphText);
-		}
-		
+
 		public String getCodename() {
 			return "domains";
 		}
@@ -107,11 +103,7 @@ public class DomainsPerspectiveCommand extends AbstractCommand {
 			}
 			return true;
 		}
-		
-		public boolean isDeletable(AbstractBean abstractBean) {
-			return true;
-		}
-		
+
 		public void perspectiveApplied() throws ApplicationException {
 			DomainsPerspectiveCommand.this.graphText.getTreeModel().setRoot(null);
 			final GraphRoutines graphRoutines = 

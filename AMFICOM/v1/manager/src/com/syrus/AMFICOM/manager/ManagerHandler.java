@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.4 2005/11/11 08:04:06 bob Exp $
+* $Id: ManagerHandler.java,v 1.5 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.extensions.AbstractExtensionHandler;
+import com.syrus.AMFICOM.manager.UI.AbstractItemPopupMenu;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.extensions.ExtensionPoint;
@@ -22,13 +23,14 @@ import com.syrus.AMFICOM.extensions.manager.BeanFactory;
 import com.syrus.AMFICOM.extensions.manager.ManagerExtensions;
 import com.syrus.AMFICOM.extensions.manager.ManagerResource;
 import com.syrus.AMFICOM.extensions.manager.Perspective;
+import com.syrus.AMFICOM.extensions.manager.PopupMenu;
 import com.syrus.AMFICOM.extensions.manager.UiHandler;
 import com.syrus.AMFICOM.extensions.manager.Validator;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/11 08:04:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,6 +42,7 @@ public class ManagerHandler extends AbstractExtensionHandler {
 	private final Map<String, PerspectiveData> perspectives;
 	
 	private final Map<String, AbstractBeanFactory> factories;
+	private final Map<String, AbstractItemPopupMenu> popupMenus;
 	private final Map<String, BeanUI> beanUIs;
 
 	public ManagerHandler(final ExtensionPoint extensionPoint) {
@@ -50,6 +53,7 @@ public class ManagerHandler extends AbstractExtensionHandler {
 		this.managerExtensions = managerExtensions;
 		this.perspectives = new HashMap<String, PerspectiveData>();
 		this.factories = new HashMap<String, AbstractBeanFactory>();
+		this.popupMenus = new HashMap<String, AbstractItemPopupMenu>();
 		this.beanUIs = new HashMap<String, BeanUI>();
 	}
 	
@@ -91,6 +95,23 @@ public class ManagerHandler extends AbstractExtensionHandler {
 		return factory;
 	}
 
+	private final AbstractItemPopupMenu loadPopupMenuHandler(final String handlerClass) {
+		AbstractItemPopupMenu popupMenu = this.popupMenus.get(handlerClass);
+		if (popupMenu == null) {
+			popupMenu = (AbstractItemPopupMenu) super.loadHandler(handlerClass, 
+			new Class[] {}, 
+			new Object[] {});
+			
+			assert Log.debugMessage("popup menu " 
+					+ handlerClass
+					+ " loaded.", 
+				Log.DEBUGLEVEL10);
+			
+			this.popupMenus.put(handlerClass, popupMenu);
+		}
+		return popupMenu;
+	}
+	
 	public final PerspectiveData getPerspectiveData(String perspectiveCodename) {
 		perspectiveCodename = perspectiveCodename.intern();
 		PerspectiveData perspectiveData = this.perspectives.get(perspectiveCodename);
@@ -142,8 +163,17 @@ public class ManagerHandler extends AbstractExtensionHandler {
 							}
 							targets.add(validator.getTarget());
 						}
+						
+						final Map<String, AbstractItemPopupMenu> popupMenus = new HashMap<String, AbstractItemPopupMenu>();
+						
+						PopupMenu[] popupMenuArray = perspective.getPopupMenuArray();
+						for (final PopupMenu menu : popupMenuArray) {
+							popupMenus.put(menu.getId(), this.loadPopupMenuHandler(menu.getPopupMenuHandler()));
+						}
+						
 						perspectiveData = new PerspectiveData(perpectiveFactories, 
 							beanUI,
+							popupMenus,
 							undeletable,
 							new PerspectiveValidator(sourceTargetMap));
 						

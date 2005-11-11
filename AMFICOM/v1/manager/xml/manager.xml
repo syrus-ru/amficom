@@ -1,5 +1,5 @@
-<ext:root xmlns:ext="http://syrus.com/AMFICOM/extensions/">
-  <ext:extension xsi:type="man:managerExtensions" id="com.syrus.AMFICOM.manager.ManagerHandler" xmlns:man="http://syrus.com/AMFICOM/extensions/manager/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ext:root xmlns:ext="http://syrus.com/AMFICOM/extensions">
+  <ext:extension xsi:type="man:managerExtensions" id="com.syrus.AMFICOM.manager.ManagerHandler" xmlns:man="http://syrus.com/AMFICOM/extensions/manager" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <man:managerResource xsi:type="man:perspective" id="domains">
       <man:beanFactory id="Domain" beanFactoryClass="com.syrus.AMFICOM.manager.DomainBeanFactory"/>
       <man:beanFactory id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.NetBeanFactory"/>
@@ -7,6 +7,7 @@
       <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
       <man:validator source="Domain" target="Domain"/>
       <man:validator source="Net" target="Domain"/>
+      <man:popupMenu id="Domain" popupMenuHandler="com.syrus.AMFICOM.manager.UI.DomainPopupMenu"/>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="Domain">
       <man:beanFactory id="KIS" beanFactoryClass="com.syrus.AMFICOM.manager.RTUBeanFactory"/>
@@ -25,6 +26,7 @@
       <man:validator source="Server" target="Net"/>
       <man:validator source="Workstation" target="Net"/>
       <man:validator source="SystemUser" target="Workstation"/>
+      <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu"/>
       <man:undeletable>Net</man:undeletable>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="SystemUser">
@@ -71,6 +73,7 @@
       <man:validator source="prediction" target="SystemUser"/>
       <man:validator source="report" target="SystemUser"/>
       <man:validator source="PermissionAttributes" target="SystemUser"/>
+      <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu"/>
       <man:undeletable>SystemUser</man:undeletable>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="Role">

@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.12 2005/11/09 15:09:49 bob Exp $
+* $Id: DomainPerpective.java,v 1.13 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
-import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.13 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,9 +59,7 @@ public class DomainPerpective extends AbstractPerspective {
 	private final DomainBean domainBean;
 	private LayoutItem	domainNetworkItem;
 	
-	public DomainPerpective(final ManagerMainFrame graphText,
-	                        final DomainBean domainBean) {
-		super(graphText);
+	public DomainPerpective(final DomainBean domainBean) {
 		this.domainBean = domainBean;
 	}	
 	
@@ -131,10 +128,6 @@ public class DomainPerpective extends AbstractPerspective {
 		return true;
 	}
 
-	public boolean isDeletable(final AbstractBean abstractBean) {
-		return !abstractBean.getCodename().equals(NetBeanFactory.NET_CODENAME);
-	}
-	
 	public void insertBean(AbstractBean bean) {
 		Identifier beanId = bean.getIdentifier();
 		if (beanId != null) {

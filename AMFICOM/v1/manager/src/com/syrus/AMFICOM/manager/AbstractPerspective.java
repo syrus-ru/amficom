@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.4 2005/11/10 13:59:02 bob Exp $
+* $Id: AbstractPerspective.java,v 1.5 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.manager.UI.AbstractItemPopupMenu;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
@@ -35,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/10 13:59:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,9 +45,9 @@ public abstract class AbstractPerspective implements Perspective {
 	
 	protected static Map<String, AbstractBeanFactory> FACTORY_MAP = new HashMap<String, AbstractBeanFactory>();
 	
-	protected final ManagerMainFrame managerMainFrame;
+	protected ManagerMainFrame managerMainFrame;
 	
-	public AbstractPerspective(final ManagerMainFrame managerMainFrame) {
+	public final void setManagerMainFrame(ManagerMainFrame managerMainFrame) {
 		this.managerMainFrame = managerMainFrame;
 	}
 
@@ -285,6 +286,11 @@ public abstract class AbstractPerspective implements Perspective {
 		throw new IllegalArgumentException(codename 
 			+ " is not support by perspective " 
 			+ this.getCodename());		
+	}
+	
+	public AbstractItemPopupMenu getPopupMenu(final String codename) {
+		final PerspectiveData perspectiveData = this.getPerspectiveData();
+		return perspectiveData.getPopupMenu(codename);
 	}
 	
 	public boolean isDeletable(final AbstractBean abstractBean) {

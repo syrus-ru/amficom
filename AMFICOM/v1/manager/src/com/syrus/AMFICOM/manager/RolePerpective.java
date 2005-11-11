@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePerpective.java,v 1.4 2005/11/09 15:09:48 bob Exp $
+* $Id: RolePerpective.java,v 1.5 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,13 +34,12 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
-import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/09 15:09:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,14 +49,11 @@ public class RolePerpective extends AbstractPerspective {
 	private Role	role;
 	private LayoutItem layoutItem;  
 	
-	public RolePerpective(final ManagerMainFrame managerMainFrame,
-	                        final RoleBean roleBean) {
-		this(managerMainFrame, roleBean.getRole());		
+	public RolePerpective(final RoleBean roleBean) {
+		this(roleBean.getRole());		
 	}
 	
-	public RolePerpective(final ManagerMainFrame managerMainFrame,
-	                        final Role role) {
-		super(managerMainFrame);
+	public RolePerpective(final Role role) {
 		this.role = role;
 	}
 	

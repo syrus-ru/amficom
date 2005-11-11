@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagesPerspectiveCommand.java,v 1.1 2005/11/09 15:08:45 bob Exp $
+* $Id: MessagesPerspectiveCommand.java,v 1.2 2005/11/11 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.manager.MessagesPerpective;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/09 15:08:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/11 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -27,7 +27,7 @@ public class MessagesPerspectiveCommand extends AbstractCommand {
 	
 	@Override
 	public void execute() {
-		this.graphText.setPerspective(new MessagesPerpective(this.graphText));
+		this.graphText.setPerspective(new MessagesPerpective());
 
 	}
 	
