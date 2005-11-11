@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.22 2005/10/31 12:30:19 bass Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.23 2005/11/11 09:15:16 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/10/31 12:30:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/11/11 09:15:16 $
+ * @author $Author: arseniy $
  * @module general
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {
@@ -59,6 +59,8 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 		return key;
 	}
 
+	protected abstract String getLinkedThisColumnName() throws IllegalObjectEntityException;
+
 	protected abstract String getLinkedColumnName() throws IllegalObjectEntityException;
 
 	protected abstract String getLinkedTableName() throws IllegalObjectEntityException;
@@ -68,7 +70,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 			case TypicalSort._TYPE_ENUM:
 				final Enum e = (Enum) this.condition.getValue();
 				return StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
-						+ SQL_SELECT + this.getColumnName()
+						+ SQL_SELECT + this.getLinkedThisColumnName()
 						+ SQL_FROM + this.getLinkedTableName()
 						+ SQL_WHERE + this.getLinkedColumnName() + EQUALS + EnumUtil.getCode(e)
 						+ CLOSE_BRACKET;

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.24 2005/10/31 08:13:43 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.25 2005/11/11 09:15:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/31 08:13:43 $
+ * @version $Revision: 1.25 $, $Date: 2005/11/11 09:15:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -35,6 +35,19 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		super(typicalCondition);
 	}
 
+	@Override
+	protected String getLinkedThisColumnName() throws IllegalObjectEntityException {
+		switch (super.condition.getEntityCode().shortValue()) {
+			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
+				return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
+			case ObjectEntities.MEASUREMENTSETUP_CODE:
+				return MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
+			default:
+				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		}
+	}
+	
 	@Override
 	protected String getLinkedColumnName() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
