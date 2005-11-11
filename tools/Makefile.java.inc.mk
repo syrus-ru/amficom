@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.java.inc.mk,v 1.9 2005/11/02 08:42:01 bass Exp $
+# $Id: Makefile.java.inc.mk,v 1.10 2005/11/11 12:50:27 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -117,7 +117,7 @@ XMLBEANSLIBDIR = $(XMLBEANS_HOME)/lib
 XMLBEANSCLASSPATH = $(XMLBEANSLIBDIR)/xbean.jar:$(XMLBEANSLIBDIR)/jsr173_api.jar
 endif
 
-XMLDIR = xml
+XMLDIR ?= xml
 ifeq ($(shell hostname -s),bass)
 XMLSRCDIR = $(SRCDIR)
 XMLCLASSDIR = $(CLASSDIR)
