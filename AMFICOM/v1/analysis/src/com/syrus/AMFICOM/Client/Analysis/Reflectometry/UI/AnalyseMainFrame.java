@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SavePathElementsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -411,7 +412,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
 //		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
 		
-//		aModel.setCommand("menuTraceSavePES", new SavePathElementsCommand(this.aContext));
+		aModel.setCommand("menuTraceSavePES", new SavePathElementsCommand(this.aContext));
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
@@ -482,7 +483,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setVisible("menuWindowThresholdsSelection", false);
 		aModel.setVisible("menuWindowThresholds", false);
 		
-//		aModel.setVisible("menuTraceSavePES", true);
+		aModel.setVisible("menuTraceSavePES", true);
 	}
 	
 	@Override
@@ -622,7 +623,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		aModel.setEnabled("menuTraceReference", false);
 //		aModel.setEnabled("menuTraceCurrent", false);
 //		aModel.setEnabled("menuAnalyseUpload", false);
-//		aModel.setEnabled("menuTraceSavePES", false);
+		aModel.setEnabled("menuTraceSavePES", false);
 
 		aModel.setEnabled("menuCreateTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetup", false);
@@ -679,7 +680,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			aModel.setEnabled("menuTraceAddCompare",
 					PermissionManager.isPermitted(Operation.LOAD_TRACE));
 //			aModel.setEnabled("menuAnalyseUpload", true);
-//			aModel.setEnabled("menuTraceSavePES", true);
+			aModel.setEnabled("menuTraceSavePES", true);
 
 			aModel.setEnabled("menuCreateTestSetup",
 					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));

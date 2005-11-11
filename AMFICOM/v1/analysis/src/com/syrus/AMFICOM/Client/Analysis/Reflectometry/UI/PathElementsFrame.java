@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.PFTrace;
@@ -38,29 +39,33 @@ public class PathElementsFrame extends AnalysisFrame {
 
 		SchemePath path = null;
 		try {
+			Log.debugMessage("Start create PathElements panel", Level.FINEST);
 			MonitoredElement me = StorableObjectPool.getStorableObject(new Identifier(pf.getBS().monitoredElementId), true);
-
+			Log.debugMessage("Found MonitoredElement " + me.getName() + " ("+ me.getId() + ")", Level.FINEST);
 			if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
 				LinkedIdsCondition condition = new LinkedIdsCondition(me.getMeasurementPortId(), ObjectEntities.PATHELEMENT_CODE);
 				Set<PathElement> pathElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-				
+				Log.debugMessage("Found " + pathElements.size() + " PathElement(s)", Level.FINEST);	
 				if (!pathElements.isEmpty()) {
 					PathElement pe = pathElements.iterator().next();
 					path = pe.getParentPathOwner();
+					Log.debugMessage("Selected Path is " + path.getName() + " (" + path.getId() + ")", Level.FINEST);
 				}
+			} else {
+				Log.debugMessage("ME sort is " + me.getSort() + "; must be " + MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH, Level.FINEST);
 			}
 			setTitle(me.getName());
 		} catch (ApplicationException ex) {
 			Log.errorMessage(ex);
 			setTitle(LangModelAnalyse.getString("analysisTitle"));
 		} catch (Exception ex) {
+			Log.errorMessage("Exception occured while searching path: " + ex.getMessage());
 			setTitle(LangModelAnalyse.getString("analysisTitle"));
 		}
 
 		PathElementsPanel p = new PathElementsPanel((PathElementsLayeredPanel) this.panel, this.dispatcher, y, deltaX);
-		if (path != null) {
-			p.setPath(path);
-		}
+		p.setPath(path);
+
 		return p;
 	}
 }

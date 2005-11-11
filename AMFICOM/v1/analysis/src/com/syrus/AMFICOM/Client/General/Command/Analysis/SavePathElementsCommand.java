@@ -1,5 +1,5 @@
 /*-
- * $Id: SavePathElementsCommand.java.unused,v 1.1 2005/10/19 08:07:21 saa Exp $
+ * $Id: SavePathElementsCommand.java,v 1.5 2005/11/11 13:06:03 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
-//FIXME: unused
 public class SavePathElementsCommand  extends AbstractCommand {
 
 	public SavePathElementsCommand(ApplicationContext aContext) {
@@ -30,7 +29,7 @@ public class SavePathElementsCommand  extends AbstractCommand {
 			StorableObjectPool.flush(ObjectEntities.SCHEMECABLELINK_CODE, LoginManager.getUserId(), false);
 			StorableObjectPool.flush(ObjectEntities.SCHEMELINK_CODE, LoginManager.getUserId(), false);
 		} catch (ApplicationException e) {
-			Log.errorException(e);
+			Log.errorMessage(e);
 		}
 	}
 }

@@ -46,7 +46,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 //		add("menuTraceDownloadEtalon"); // нет
 //		add("menuTraceCloseEtalon"); // нет
 //		add("menuTraceReferenceClose"); // нет
-//		add("menuTraceSavePES"); // нет
+		add("menuTraceSavePES"); // да
 
 		add("menuTestSetup");
 		add("menuCreateTestSetup");

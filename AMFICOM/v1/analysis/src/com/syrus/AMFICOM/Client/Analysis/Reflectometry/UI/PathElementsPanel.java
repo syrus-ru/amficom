@@ -29,6 +29,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 	SchemePath path;
 	private PathElement startPathElement;
 	private PathElement endPathElement;
+	private SchemeElement activeSchemeElement;
 	private PathElement activePathElement;
 
 	public PathElementsPanel(final PathElementsLayeredPanel panel,
@@ -82,9 +83,9 @@ public final class PathElementsPanel extends AnalysisPanel {
 					if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT
 							&& Math.abs(distance - d[0]) < 3 / this.scaleX * this.deltaX
 							&& this.path.hasPreviousPathElement(this.activePathElement)) {
-						this.activePathElement = this.path.getPreviousPathElement(this.activePathElement);
+						activePathElement = this.path.getPreviousPathElement(this.activePathElement);
 						Log.debugMessage("Set previous pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
-								Level.FINER);
+								Level.FINEST);
 					} else if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT
 							&& Math.abs(distance - d[1]) < 3 / this.scaleX * this.deltaX
 							&& this.path.hasNextPathElement(this.activePathElement)) {
@@ -92,6 +93,8 @@ public final class PathElementsPanel extends AnalysisPanel {
 						Log.debugMessage("Set next pathElement : " + this.activePathElement.getName() + "(" + (3 / this.scaleX * this.deltaX) + ")",
 								Level.FINER);
 					}
+					
+					this.activeSchemeElement = getSchemeElement(this.activePathElement);
 				} catch (ApplicationException e1) {
 					Log.errorMessage(e1);
 				}
@@ -104,9 +107,9 @@ public final class PathElementsPanel extends AnalysisPanel {
 	@Override
 	protected void this_mouseDragged(final MouseEvent e) {
 		if (this.setting_active_pe) {
-			if (this.activePathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
+			if (this.activeSchemeElement != null) {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-				Log.debugMessage("PathElement " + this.activePathElement.getName()
+				Log.debugMessage("PathElement " + this.activeSchemeElement.getName()
 						+ " moved on " + ((this.currpos.x - this.startpos.x) / this.scaleX * this.deltaX) + " m", Level.FINER);
 				this.upd_currpos(e);
 				this.paintMovingPE(getGraphics().create());
@@ -120,10 +123,19 @@ public final class PathElementsPanel extends AnalysisPanel {
 	protected void this_mouseReleased(final MouseEvent e) {
 		if (this.setting_active_pe) {
 			final double d = ((this.currpos.x - this.startpos.x) / this.scaleX * this.deltaX);
-			if (Math.abs(d) > this.deltaX) {
+			if (this.activeSchemeElement != null && Math.abs(d) > this.deltaX) {
 				try {
 					PathElement lastNode = this.path.getPreviousNode(this.activePathElement);
 					PathElement nextNode = this.path.getNextNode(this.activePathElement);
+					
+					SchemeElement lastSE = getSchemeElement(lastNode);
+					SchemeElement nextSE = getSchemeElement(nextNode);
+					if (this.activeSchemeElement.equals(lastSE)) {
+						lastNode = this.path.getPreviousNode(lastNode);
+					}
+					if (this.activeSchemeElement.equals(nextSE)) {
+						nextNode = this.path.getNextNode(nextNode);
+					}
 
 					if (lastNode == null) {
 						lastNode = this.path.getPreviousPathElement(this.activePathElement);
@@ -131,10 +143,10 @@ public final class PathElementsPanel extends AnalysisPanel {
 					if (nextNode == null) {
 						nextNode = this.path.getNextPathElement(this.activePathElement);
 					}
-					if (lastNode != null) {
+					if (lastNode != null && !this.activePathElement.equals(lastNode)) {
 						this.path.changeOpticalLength(lastNode, this.activePathElement, d);
 					}
-					if (nextNode != null) {
+					if (nextNode != null && !this.activePathElement.equals(nextNode)) {
 						this.path.changeOpticalLength(this.activePathElement, nextNode, -d);
 					}
 				} catch (ApplicationException e1) {
@@ -162,26 +174,17 @@ public final class PathElementsPanel extends AnalysisPanel {
 			try {
 				for (final PathElement pathElement : this.path.getPathMembers().tailSet(this.startPathElement)) {
 
-					if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK) {
-						g.setColor(new Color(0.5f, 0.5f, 1f, 0.5f));
-					} else if (pathElement.getKind() == IdlKind.SCHEME_LINK) {
-						g.setColor(new Color(0.5f, 1.0f, 0.5f, 0.5f));
-					} else if (pathElement == this.activePathElement) {
-						g.setColor(new Color(255, 0, 64));
-					} else {
-						g.setColor(new Color(0, 160, 0));
-					}
-
 					final double d[] = this.path.getOpticalDistanceFromStart(pathElement);
 					final int start1 = index2coord((int) Math.round(d[0] / this.deltaX));
 					final int end1 = index2coord((int) Math.round(d[1] / this.deltaX));
 					Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
 					if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
-						SchemeElement se = pathElement.getSchemeElement();
-						SchemeElement parent = se.getParentSchemeElement(); 
-						while (parent != null) {
-							se = parent;
-							parent = se.getParentSchemeElement();
+						SchemeElement se = getSchemeElement(pathElement);
+
+						if (se.equals(this.activeSchemeElement)) {
+							g.setColor(new Color(255, 0, 64));
+						} else {
+							g.setColor(new Color(0, 160, 0));
 						}
 						
 						if (!paintedSchemeElements.contains(se)) {
@@ -205,8 +208,8 @@ public final class PathElementsPanel extends AnalysisPanel {
 							((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
 							g.drawLine(start1, 6, start1, getHeight());
 							((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-
-							final String text = pathElement.getName();
+						}
+							final String text = se.getName();
 							final FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
 							final int height = fm.stringWidth(text);
 							final int width = fm.getHeight();
@@ -218,18 +221,39 @@ public final class PathElementsPanel extends AnalysisPanel {
 							g2.drawString(text, start1 + width - 5, y1);
 							g2.setTransform(t);
 						}
-						}
 					} else {
+						if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK) {
+							g.setColor(new Color(0.5f, 0.5f, 1f, 0.5f));
+						} else if (pathElement.getKind() == IdlKind.SCHEME_LINK) {
+							g.setColor(new Color(0.5f, 1.0f, 0.5f, 0.5f));
+						}
 //						g.drawLine(start1, 3, start1, 5);
 						g.fillRect(start1, 5, end1 - start1, 9);
 //						g.drawLine(start1, 5, end1, 5);
 //						g.drawLine(end1, 5, end1, 3);
+					}
+					
+					if (pathElement.equals(this.endPathElement)) {
+						break;
 					}
 				}
 			} catch (ApplicationException e) {
 				Log.errorMessage(e);
 			}
 		}
+	}
+	
+	private SchemeElement getSchemeElement(PathElement pathElement) {
+		if (pathElement != null && pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
+			SchemeElement se = pathElement.getSchemeElement();
+			SchemeElement parentSE = se.getParentSchemeElement(); 
+			while (parentSE != null) {
+				se = parentSE;
+				parentSE = se.getParentSchemeElement();
+			}
+			return se;
+		}
+		return null;
 	}
 
 	void paintMovingPE(final Graphics g) {

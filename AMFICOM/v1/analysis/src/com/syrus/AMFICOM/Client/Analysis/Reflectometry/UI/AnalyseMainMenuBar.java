@@ -101,7 +101,7 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 //		final JMenuItem					menuTraceDownloadEtalon			= new JMenuItem();
 //		final JMenuItem					menuTraceCloseEtalon			= new JMenuItem();
 		final JMenuItem					menuTraceClose					= new JMenuItem();
-//		final JMenuItem					menuTraceSavePES				= new JMenuItem();
+		final JMenuItem					menuTraceSavePES				= new JMenuItem();
 
 		final JMenuItem					menuMakeCurrentTracePrimary		= new JMenuItem();
 
@@ -209,9 +209,9 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 //		menuTraceCloseEtalon.setText(LangModelAnalyse.getString("menuTraceCloseEtalon"));
 //		menuTraceCloseEtalon.setName("menuTraceCloseEtalon");
 //		menuTraceCloseEtalon.addActionListener(this.actionAdapter);
-//		menuTraceSavePES.setName("menuTraceSavePES");
-//		menuTraceSavePES.setText(LangModelAnalyse.getString("menuTraceSavePES"));
-//		menuTraceSavePES.addActionListener(this.actionAdapter);
+		menuTraceSavePES.setName("menuTraceSavePES");
+		menuTraceSavePES.setText(LangModelAnalyse.getString("menuTraceSavePES"));
+		menuTraceSavePES.addActionListener(this.actionAdapter);
 
 		menuTrace.add(menuTraceDownload);
 //		menuTrace.add(menuTraceDownloadEtalon);
@@ -224,7 +224,7 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 //		menuTrace.add(menuNetStudy);
 		menuTrace.addSeparator();
 		menuTrace.add(menuMakeCurrentTracePrimary);
-//		menuTrace.add(menuTraceSavePES);
+		menuTrace.add(menuTraceSavePES);
 
 		menuTestSetup.setText(LangModelAnalyse.getString("menuTestSetup"));
 		menuTestSetup.setName("menuTestSetup");
@@ -397,8 +397,8 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 				menuTraceClose.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceClose"));
 //				menuTraceCloseEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceCloseEtalon"));
 //				menuTraceCloseEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceCloseEtalon"));
-//				menuTraceSavePES.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceSavePES"));
-//				menuTraceSavePES.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceSavePES"));
+				menuTraceSavePES.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceSavePES"));
+				menuTraceSavePES.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceSavePES"));
 
 				menuTestSetup.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTestSetup"));
 				menuTestSetup.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTestSetup"));
