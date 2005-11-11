@@ -1,10 +1,24 @@
--- $Id: DROP.sql,v 1.2 2005/06/15 07:50:18 bass Exp $
+-- $Id: DROP.sql,v 1.3 2005/11/11 02:26:12 bass Exp $
 
-DROP TABLE eventparameter;
-DROP TABLE eventsourcelink;
-DROP TABLE eventsource;
-DROP TABLE event;
+-- 04. DeliveryAttributes
+PROMPT 04. Dropping table DeliveryAttributes...;
+DROP TABLE DeliveryAttributesUserLink;
+DROP TABLE DeliveryAttributesRoleLink;
+DROP TABLE DeliveryAttributes;
+DROP SEQUENCE DeliveryAttributes_Seq;
 
-DROP SEQUENCE EventParameter_seq;
-DROP SEQUENCE EventSource_seq;
-DROP SEQUENCE Event_seq;
+-- 03. EventParameter
+PROMPT 03. Dropping table EventParameter...;
+DROP TABLE EventParameter;
+DROP SEQUENCE EventParameter_Seq;
+
+-- 02. EventSource
+PROMPT 02. Dropping table EventSource...;
+DROP TABLE EventSourceLink;
+DROP TABLE EventSource;
+DROP SEQUENCE EventSource_Seq;
+
+-- 01. Event
+PROMPT 01. Dropping table Event...;
+DROP TABLE Event;
+DROP SEQUENCE Event_Seq;
