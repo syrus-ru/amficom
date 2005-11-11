@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.3 2005/11/10 13:59:01 bob Exp $
+* $Id: ManagerHandler.java,v 1.4 2005/11/11 08:04:06 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,18 +17,18 @@ import java.util.Set;
 import com.syrus.AMFICOM.extensions.AbstractExtensionHandler;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
-import com.syrus.amficom.extensions.ExtensionPoint;
-import com.syrus.amficom.extensions.manager.BeanFactory;
-import com.syrus.amficom.extensions.manager.ManagerExtensions;
-import com.syrus.amficom.extensions.manager.ManagerResource;
-import com.syrus.amficom.extensions.manager.Perspective;
-import com.syrus.amficom.extensions.manager.UiHandler;
-import com.syrus.amficom.extensions.manager.Validator;
+import com.syrus.AMFICOM.extensions.ExtensionPoint;
+import com.syrus.AMFICOM.extensions.manager.BeanFactory;
+import com.syrus.AMFICOM.extensions.manager.ManagerExtensions;
+import com.syrus.AMFICOM.extensions.manager.ManagerResource;
+import com.syrus.AMFICOM.extensions.manager.Perspective;
+import com.syrus.AMFICOM.extensions.manager.UiHandler;
+import com.syrus.AMFICOM.extensions.manager.Validator;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/11 08:04:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

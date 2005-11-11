@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.3 2005/11/10 13:59:37 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.4 2005/11/11 08:04:06 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,20 +29,19 @@ import com.syrus.AMFICOM.manager.RolePermissionBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
 import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
-import com.syrus.amficom.extensions.ExtensionPoint;
-import com.syrus.amficom.extensions.RootDocument;
-import com.syrus.amficom.extensions.RootDocument.Root;
-import com.syrus.amficom.extensions.manager.BeanFactory;
-import com.syrus.amficom.extensions.manager.ManagerExtensions;
-import com.syrus.amficom.extensions.manager.ManagerResource;
-import com.syrus.amficom.extensions.manager.Perspective;
-import com.syrus.amficom.extensions.manager.UiHandler;
-import com.syrus.amficom.extensions.manager.Validator;
+import com.syrus.AMFICOM.extensions.ExtensionPoint;
+import com.syrus.AMFICOM.extensions.RootDocument;
+import com.syrus.AMFICOM.extensions.RootDocument.Root;
+import com.syrus.AMFICOM.extensions.manager.BeanFactory;
+import com.syrus.AMFICOM.extensions.manager.ManagerExtensions;
+import com.syrus.AMFICOM.extensions.manager.ManagerResource;
+import com.syrus.AMFICOM.extensions.manager.Perspective;
+import com.syrus.AMFICOM.extensions.manager.UiHandler;
+import com.syrus.AMFICOM.extensions.manager.Validator;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:37 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/11 08:04:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
