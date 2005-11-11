@@ -1,5 +1,5 @@
 /*-
-* $Id: MessageBean.java,v 1.1 2005/11/10 13:58:48 bob Exp $
+* $Id: MessageBean.java,v 1.2 2005/11/11 13:46:25 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/10 13:58:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/11/11 13:46:25 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -52,7 +52,7 @@ public class MessageBean extends Bean {
 	
 	@Override
 	public String getName() {
-		return this.deliveryAttributes.getSeverity().locallizedName();
+		return this.deliveryAttributes.getSeverity().getLocalizedName();
 	}
 	
 	/* (non-Javadoc)

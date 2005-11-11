@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.14 2005/11/02 10:59:56 saa Exp $
+ * $Id: ReflectogramMismatch.java,v 1.15 2005/11/11 13:46:25 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.TransferableObject;
  * если был бы доступен только один якорь.
  * 
  * @author Old Wise Saa
- * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/11/02 10:59:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/11/11 13:46:25 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -80,8 +80,8 @@ public interface ReflectogramMismatch {
 	 * событие: будет ли создан аларм, или же будет предупреждение.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: saa $
-	 * @version $Revision: 1.14 $, $Date: 2005/11/02 10:59:56 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.15 $, $Date: 2005/11/11 13:46:25 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -114,12 +114,12 @@ public interface ReflectogramMismatch {
 			return IdlSeverity.from_int(this.ordinal());
 		}
 
-		public String locallizedName() {
+		public String getLocalizedName() {
 			return I18N.getString(this.key);
 		}
 
-		public String localizedDescription() {
-			return I18N.getString("ReflectogramMismatch.Severity") + ":\t" + this.locallizedName();
+		public String getLocalizedDescription() {
+			return I18N.getString("ReflectogramMismatch.Severity") + ":\t" + this.getLocalizedName();
 		}
 
 		/**
@@ -142,8 +142,8 @@ public interface ReflectogramMismatch {
 	/**
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: saa $
-	 * @version $Revision: 1.14 $, $Date: 2005/11/02 10:59:56 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.15 $, $Date: 2005/11/11 13:46:25 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
@@ -181,12 +181,12 @@ public interface ReflectogramMismatch {
 			return IdlAlarmType.from_int(this.ordinal());
 		}
 
-		public String locallizedName() {
+		public String getLocalizedName() {
 			return I18N.getString(this.key);
 		}
 
-		public String localizedDescription() {
-			return I18N.getString("ReflectogramMismatch.AlarmType") + ":\t" + this.locallizedName();
+		public String getLocalizedDescription() {
+			return I18N.getString("ReflectogramMismatch.AlarmType") + ":\t" + this.getLocalizedName();
 		}
 
 		/**

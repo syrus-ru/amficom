@@ -1,5 +1,5 @@
 /*-
- * $Id: MessageBeanFactory.java,v 1.2 2005/11/10 13:59:02 bob Exp $
+ * $Id: MessageBeanFactory.java,v 1.3 2005/11/11 13:46:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/10 13:59:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/11/11 13:46:25 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module manager
  */
@@ -38,8 +38,8 @@ public final class MessageBeanFactory extends AbstractBeanFactory<MessageBean> {
 	
 	private MessageBeanFactory(final ManagerMainFrame graphText,
 			final Severity severity) {
-		super(severity != null ? severity.locallizedName() : null, 
-			severity != null ? severity.locallizedName() : null);
+		super(severity != null ? severity.getLocalizedName() : null, 
+			severity != null ? severity.getLocalizedName() : null);
 		super.graphText = graphText;
 		this.severity = severity;
 	}
