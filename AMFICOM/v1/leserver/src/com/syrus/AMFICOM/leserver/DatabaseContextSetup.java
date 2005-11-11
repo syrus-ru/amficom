@@ -1,9 +1,9 @@
-/*
- * $Id: DatabaseContextSetup.java,v 1.13 2005/10/22 20:39:41 arseniy Exp $
+/*-
+ * $Id: DatabaseContextSetup.java,v 1.14 2005/11/11 05:19:19 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.leserver;
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
+import com.syrus.AMFICOM.event.DeliveryAttributesDatabase;
 import com.syrus.AMFICOM.event.EventDatabase;
 import com.syrus.AMFICOM.event.EventSourceDatabase;
 import com.syrus.AMFICOM.event.EventTypeDatabase;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.scheme.SchemeLinkDatabase;
 import com.syrus.AMFICOM.scheme.SchemePathDatabase;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/22 20:39:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/11/11 05:19:19 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -66,6 +67,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new EventTypeDatabase());
 		DatabaseContext.registerDatabase(new EventDatabase());
 		DatabaseContext.registerDatabase(new EventSourceDatabase());
+		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
 
 		DatabaseContext.registerDatabase(new SchemeLinkDatabase());
 		DatabaseContext.registerDatabase(new SchemeCableLinkDatabase());

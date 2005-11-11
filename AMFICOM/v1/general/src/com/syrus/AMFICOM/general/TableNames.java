@@ -1,5 +1,5 @@
 /*-
- * $Id: TableNames.java,v 1.9 2005/11/09 11:35:11 bass Exp $
+ * $Id: TableNames.java,v 1.10 2005/11/11 05:19:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/11/09 11:35:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/11/11 05:19:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -44,6 +44,9 @@ public final class TableNames {
 	public static final String EVENTTYPPARTYPLINK = "EventTypParTypLink";
 	public static final String EVENTTYPEUSERALERT = "EventTypeUserAlert";
 	public static final String EVENTSOURCELINK = "EventSourceLink";
+
+	public static final String DELIVERY_ATTRIBUTES_ROLE_LINK = "DeliveryAttributesRoleLink";
+	public static final String DELIVERY_ATTRIBUTES_SYSTEM_USER_LINK = "DeliveryAttributesUserLink";
 
 	private TableNames() {
 		assert false;
