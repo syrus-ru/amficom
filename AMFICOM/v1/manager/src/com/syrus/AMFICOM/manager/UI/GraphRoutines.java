@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.3 2005/11/09 15:09:49 bob Exp $
+* $Id: GraphRoutines.java,v 1.4 2005/11/11 14:31:29 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/11 14:31:29 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -894,6 +894,10 @@ public final class GraphRoutines {
 	
 	public void addLayoutBean(final AbstractBean bean) {
 		this.layoutBeans.add(bean);
+	}
+	
+	public void removeLayoutBean(final AbstractBean bean) {
+		this.layoutBeans.remove(bean);
 	}
 	
 	public void setLayerName(final String layerName) 

@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.3 2005/11/10 13:59:01 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.4 2005/11/11 14:31:29 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/11 14:31:29 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -72,6 +72,8 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			GraphModelChange change = e.getChange();
 			
 			GraphModel model = this.managerMainFrame.graph.getModel();
+			
+			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 			
 			Object[] inserted = change.getInserted();
 			Object[] changed = change.getChanged();
@@ -217,7 +219,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 										true);
 								}
 								
-								final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+								
 								graphRoutines.addLayoutBean(bean);
 								
 							} else {
@@ -341,6 +343,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 						 MPort source = (MPort) removedObject;
 						 AbstractBean bean = source.getUserObject();
 						 bean.dispose();
+						 graphRoutines.removeLayoutBean(bean);
 					 }
 				}
 			}				
