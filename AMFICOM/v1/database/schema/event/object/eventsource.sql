@@ -1,4 +1,4 @@
--- $Id: eventsource.sql,v 1.7 2005/06/15 17:03:09 bass Exp $
+-- $Id: eventsource.sql,v 1.8 2005/11/11 02:25:48 bass Exp $
 
 CREATE TABLE EventSource (
  id NUMBER(19),
@@ -56,4 +56,19 @@ CREATE TABLE EventSource (
  )
 );
 
-CREATE SEQUENCE EventSource_seq ORDER;
+COMMENT ON TABLE EventSource IS '$Id: eventsource.sql,v 1.8 2005/11/11 02:25:48 bass Exp $';
+
+CREATE TABLE EventSourceLink (
+ event_id NOT NULL,
+ source_id NOT NULL,
+--
+ CONSTRAINT evsrclnk_uniq UNIQUE (event_id, source_id),
+ CONSTRAINT evsrclnk_event_fk FOREIGN KEY (event_id)
+  REFERENCES Event (id) ON DELETE CASCADE,
+ CONSTRAINT evsrclnk_evsrc_fk FOREIGN KEY (source_id)
+  REFERENCES EventSource (id) ON DELETE CASCADE
+);
+
+COMMENT ON TABLE EventSourceLink IS '$Id: eventsource.sql,v 1.8 2005/11/11 02:25:48 bass Exp $';
+
+CREATE SEQUENCE EventSource_Seq ORDER;
