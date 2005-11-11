@@ -78,6 +78,7 @@ AMFICOM_v1	&tools\
 		&bugs \
 		&reflectometry \
 		&observer \
+		&extensions \
 		&manager \
 		&манагер
 
@@ -268,6 +269,8 @@ reflectometry		AMFICOM/v1/reflectometry
 observer		AMFICOM/v1/observer
 #M	oldobserver
 oldobserver		observer
+#M	extensions
+extensions		AMFICOM/v1/extensions
 #M	manager
 manager			AMFICOM/v1/manager
 #M	манагер
