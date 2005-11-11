@@ -1,5 +1,5 @@
 /*-
-* $Id: MCMBeanUI.java,v 1.3 2005/11/11 10:58:02 bob Exp $
+* $Id: MCMBeanUI.java,v 1.4 2005/11/11 13:47:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,8 +17,6 @@ import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_USER_ID;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JPopupMenu;
-
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.manager.MCMBean;
 import com.syrus.AMFICOM.manager.MCMBeanWrapper;
@@ -27,7 +25,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerModel;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/11 13:47:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

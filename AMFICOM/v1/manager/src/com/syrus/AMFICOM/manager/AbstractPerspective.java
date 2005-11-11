@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.5 2005/11/11 10:58:02 bob Exp $
+* $Id: AbstractPerspective.java,v 1.6 2005/11/11 13:47:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/11 13:47:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -237,13 +237,18 @@ public abstract class AbstractPerspective implements Perspective {
 	
 	protected final void addItems(final Set<? extends Identifiable> storableObjects,
 			final Map<Identifier, LayoutItem> existsNetworkLayoutItems,
-			final Set<LayoutItem> domainLayoutItems) {
+			final Set<LayoutItem> layoutItems) {
+		
+		assert Log.debugMessage(storableObjects, Log.DEBUGLEVEL03);
+		
 		for (final Identifiable identifiable : storableObjects) {
 			final Identifier id = identifiable.getId();
 			final String identifierString = 
 				this.getIdentifierString(id);
-			for (final LayoutItem item : domainLayoutItems) {
+			for (final LayoutItem item : layoutItems) {
+				assert Log.debugMessage(item.getName() + '@' + item.getLayoutName(), Log.DEBUGLEVEL03);
 				if (item.getName().equals(identifierString)) {
+					assert Log.debugMessage("add " + id + " as " + item , Log.DEBUGLEVEL03);
 					existsNetworkLayoutItems.put(id, item);
 					break;
 				}

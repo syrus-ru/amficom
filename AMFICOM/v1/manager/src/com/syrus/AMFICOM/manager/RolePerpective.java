@@ -1,5 +1,5 @@
 /*-
-* $Id: RolePerpective.java,v 1.5 2005/11/11 10:58:02 bob Exp $
+* $Id: RolePerpective.java,v 1.6 2005/11/11 13:47:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/11 13:47:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -150,10 +150,10 @@ public class RolePerpective extends AbstractPerspective {
 	}
 
 	public void createNecessaryItems() throws ApplicationException {
-		final String identifierString = this.role.getId().getIdentifierString();
+		final String codename = this.getCodename();
 		final Set<LayoutItem> parentItems = StorableObjectPool.getStorableObjectsByCondition(
 			new CompoundCondition(
-				new TypicalCondition(identifierString,
+				new TypicalCondition(codename,
 					OperationSort.OPERATION_EQUALS,					
 					ObjectEntities.LAYOUT_ITEM_CODE,
 					StorableObjectWrapper.COLUMN_NAME),
@@ -165,8 +165,8 @@ public class RolePerpective extends AbstractPerspective {
 			this.layoutItem = 
 				LayoutItem.createInstance(LoginManager.getUserId(), 
 					Identifier.VOID_IDENTIFIER, 
-					identifierString, 
-					identifierString);
+					codename, 
+					this.role.getId().getIdentifierString());
 			assert Log.debugMessage("create layout item for " 
 					+ this.role
 					+ " as "
