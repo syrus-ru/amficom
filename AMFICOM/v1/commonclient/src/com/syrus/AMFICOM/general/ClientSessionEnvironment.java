@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.36 2005/10/31 12:30:02 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.37 2005/11/11 15:17:10 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,25 +17,20 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/10/31 12:30:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/11/11 15:17:10 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	public enum SessionKind {
-		UNKNOWN, MEASUREMENT, MAPSCHEME;
+		UNKNOWN, MEASUREMENT, MAPSCHEME, ALL;
+
+		private static SessionKind[] values = values();
 
 		public static SessionKind valueOf(final int value) {
-			switch (value) {
-				case 1:
-					return MEASUREMENT;
-				case 2:
-					return MAPSCHEME;
-				default:
-					return UNKNOWN;
-			}
+			return values[value];
 		}
 	}
 
@@ -73,6 +68,9 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				break;
 			case MAPSCHEME:
 				createMapSchemeSession(loginRestorer);
+				break;
+			case ALL:
+				createAllSession(loginRestorer);
 				break;
 			default:
 				final String msg = I18N.getString("Error.UnknownSessionKind") + " -- " + sessionKind;
@@ -124,6 +122,48 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE,
 				mClientServantManager,
 				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.RESOURCE_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAP_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.SCHEME_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAPVIEW_GROUP_CODE,
+				mscharClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.REPORT_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+
+		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
+
+		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
+	}
+	
+	private static void createAllSession(final LoginRestorer loginRestorer) throws CommunicationException {
+		final MClientServantManager mClientServantManager = MClientServantManager.create();
+		final MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
+		final ClientCORBAActionProcessor clientCORBAActionProcessor = new ClientCORBAActionProcessor();
+
+		final MultiServantCORBAObjectLoader objectLoader = new MultiServantCORBAObjectLoader();
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE,
+				mClientServantManager,
+				clientCORBAActionProcessor);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.EVENT_GROUP_CODE,
+			mClientServantManager,
+			clientCORBAActionProcessor);
 		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE,
 				mClientServantManager,
 				clientCORBAActionProcessor);
