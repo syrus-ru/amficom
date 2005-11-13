@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.13 2005/10/22 20:39:41 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.14 2005/11/13 06:34:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/22 20:39:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/11/13 06:34:54 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
@@ -41,7 +41,7 @@ final class LEServerPoolContext extends PoolContext {
 
 	@Override
 	public void init() {
-		final Class lruMapClass = StorableObjectResizableLRUMap.class;
+		final Class<StorableObjectResizableLRUMap> lruMapClass = StorableObjectResizableLRUMap.class;
 
 		final int generalPoolSize = ApplicationProperties.getInt(KEY_GENERAL_POOL_SIZE, GENERAL_POOL_SIZE);
 		final int administrationPoolSize = ApplicationProperties.getInt(KEY_ADMINISTRATION_POOL_SIZE, ADMINISTRATION_POOL_SIZE);

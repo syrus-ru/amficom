@@ -1,17 +1,17 @@
-/*
- * $Id: UserEventNotifier.java,v 1.11 2005/10/31 10:49:45 arseniy Exp $
+/*-
+ * $Id: UserEventNotifier.java,v 1.12 2005/11/13 06:34:54 bass Exp $
  * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.leserver;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.event.Event;
 import com.syrus.AMFICOM.event.EventType;
@@ -22,8 +22,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/31 10:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/11/13 06:34:54 $
+ * @author $Author: bass $
  * @module leserver
  */
 final class UserEventNotifier extends SleepButWorkThread {
@@ -54,10 +54,8 @@ final class UserEventNotifier extends SleepButWorkThread {
 			for (final Iterator<Event> it1 = this.eventQueue.iterator(); it1.hasNext();) {
 				final Event event = it1.next();
 				final EventType eventType = event.getType();
-				final Set userAlertKinds = eventType.getUserAlertKinds(this.userId);
 				boolean delivered = false;
-				for (final Iterator it2 = userAlertKinds.iterator(); it2.hasNext();) {
-					final AlertKind alertKind = (AlertKind) it2.next();
+				for (AlertKind alertKind : eventType.getUserAlertKinds(this.userId)) {
 					final Alerter alerter = Alerter.getAlerter(AlertKind.ALERT_KIND_EMAIL);
 					if (alerter != null) {
 						try {
