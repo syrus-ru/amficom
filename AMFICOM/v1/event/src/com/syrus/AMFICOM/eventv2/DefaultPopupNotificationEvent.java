@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.10 2005/11/11 13:46:25 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.11 2005/11/13 11:47:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,40 @@ import com.syrus.AMFICOM.general.Identifier;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/11/11 13:46:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/11/13 11:47:42 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
 		AbstractPopupNotificationEvent {
 	private static final long serialVersionUID = 3901755454384903933L;
+
+
+	private static final char NEWLINE = '\n';
+
+	private static final char SPACE = ' ';
+
+	private static final String COLON_TAB = ":\t";
+
+	private static final String PHYSICAL_DISTANCE_TO = I18N.getString("NotificationEvent.PhysicalDistanceTo");
+
+	private static final String METERS = I18N.getString("NotificationEvent.Meters");
+
+	private static final String END_OF = I18N.getString("NotificationEvent.EndOf");
+
+	private static final String START_OF = I18N.getString("NotificationEvent.StartOf");
+
+	private static final String PATH_ELEMENT_GENITIVE = I18N.getString("NotificationEvent.PathElementGenitive");
+
+	private static final String PATH_ELEMENT = I18N.getString("NotificationEvent.PathElement");
+
+	private static final String AFFECTED = I18N.getString("NotificationEvent.Affected");
+
+	private static final String MISMATCH_LEVEL = I18N.getString("NotificationEvent.MismatchLevel");
+
+	private static final String MAXIMUM = I18N.getString("NotificationEvent.Maximum");
+
+	private static final String MINIMUM = I18N.getString("NotificationEvent.Minimum");
+
 
 	/**
 	 * @serial include 
@@ -74,16 +102,16 @@ public final class DefaultPopupNotificationEvent extends
 			final LineMismatchEvent lineMismatchEvent,
 			final Identifier targetUserId) {
 		this.targetUserId = targetUserId;
-		this.message = lineMismatchEvent.getAlarmType().getLocalizedDescription() + '\n'
-				+ lineMismatchEvent.getSeverity().getLocalizedDescription() + '\n'
+		this.message = lineMismatchEvent.getAlarmType().getLocalizedDescription() + NEWLINE
+				+ lineMismatchEvent.getSeverity().getLocalizedDescription() + NEWLINE
 				+ (lineMismatchEvent.hasMismatch()
-						? "Minimum Mismatch Level:\t" + lineMismatchEvent.getMinMismatch() + '\n'
-						+ "Maximum Mismatch Level:\t" + lineMismatchEvent.getMaxMismatch() + '\n'
+						? MINIMUM + SPACE + MISMATCH_LEVEL + COLON_TAB + lineMismatchEvent.getMinMismatch() + NEWLINE
+						+ MAXIMUM + SPACE + MISMATCH_LEVEL + COLON_TAB + lineMismatchEvent.getMaxMismatch() + NEWLINE
 						: "")
-				+ "Affected Path Element:\t" + lineMismatchEvent.getAffectedPathElementId() + '\n'
+				+ AFFECTED + SPACE + PATH_ELEMENT + COLON_TAB + lineMismatchEvent.getAffectedPathElementId() + NEWLINE
 				+ (lineMismatchEvent.isAffectedPathElementSpacious()
-						? "Physical Distance To Path Element Start:\t" + lineMismatchEvent.getPhysicalDistanceToStart() + " meter(s)" + '\n'
-						+ "Physical Distance To Path Element End:\t" + lineMismatchEvent.getPhysicalDistanceToStart() + " meter(s)" + '\n'
+						? PHYSICAL_DISTANCE_TO + SPACE + START_OF + SPACE + PATH_ELEMENT_GENITIVE + COLON_TAB + ((int) lineMismatchEvent.getPhysicalDistanceToStart()) + SPACE + METERS + NEWLINE
+						+ PHYSICAL_DISTANCE_TO + SPACE + END_OF + SPACE + PATH_ELEMENT_GENITIVE + COLON_TAB + ((int) lineMismatchEvent.getPhysicalDistanceToEnd()) + SPACE + METERS + NEWLINE
 						: "");
 		this.resultId = lineMismatchEvent.getResultId();
 		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
