@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.4 2005/11/13 06:11:55 bass Exp $
+ * $Id: SimpleMailer.java,v 1.5 2005/11/13 06:29:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.mail.EmailAddressRegexp;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/11/13 06:11:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/13 06:29:01 $
  * @module leserver
  */
 public final class SimpleMailer {
@@ -311,36 +311,24 @@ public final class SimpleMailer {
 	 * @param address
 	 * @param subject
 	 * @param body
+	 * @throws MessagingException
 	 */
-	public static void sendMail(final String address, final String subject, final String body) {
+	public static void sendMail(final String address, final String subject, final String body)
+	throws MessagingException {
 		if (body == null || body.length() == 0) {
 			throw new IllegalArgumentException("Message body cannot be empty.");
 		}
 
-		try {
-			final MimeMessage mimeMessage = new MimeMessage(session);
-			mimeMessage.setFrom(from);
-			mimeMessage.setRecipients(RecipientType.TO, new InternetAddress[]{getInternetAddress(address, false)});
-			mimeMessage.setSubject(subject, CHARSET);
-			mimeMessage.setSentDate(new Date());
-			mimeMessage.setContent(body, "text/plain; charset=" + CHARSET);
-			if (NOTIFY_SENDER) {
-				mimeMessage.setHeader("Disposition-Notification-To", from.toString());
-			}
-			Transport.send(mimeMessage);
-		} catch (MessagingException me) {
-			while (me != null) {
-				Log.debugMessage(me, SEVERE);
-				final Exception nextException = me.getNextException();
-				if (nextException instanceof MessagingException
-						|| nextException == null) {
-					me = (MessagingException) nextException;
-					continue;
-				}
-				Log.debugMessage(nextException, SEVERE);
-				break;
-			}
+		final MimeMessage mimeMessage = new MimeMessage(session);
+		mimeMessage.setFrom(from);
+		mimeMessage.setRecipients(RecipientType.TO, new InternetAddress[]{getInternetAddress(address, false)});
+		mimeMessage.setSubject(subject, CHARSET);
+		mimeMessage.setSentDate(new Date());
+		mimeMessage.setContent(body, "text/plain; charset=" + CHARSET);
+		if (NOTIFY_SENDER) {
+			mimeMessage.setHeader("Disposition-Notification-To", from.toString());
 		}
+		Transport.send(mimeMessage);
 	}
 
 	/**

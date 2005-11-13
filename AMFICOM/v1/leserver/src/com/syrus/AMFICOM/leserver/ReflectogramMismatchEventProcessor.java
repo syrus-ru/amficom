@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatchEventProcessor.java,v 1.9 2005/10/31 10:49:45 arseniy Exp $
+ * $Id: ReflectogramMismatchEventProcessor.java,v 1.10 2005/11/13 06:29:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author Old Wise Saa
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/10/31 10:49:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/11/13 06:29:01 $
  * @module leserver
  */
 final class ReflectogramMismatchEventProcessor implements
@@ -54,7 +54,8 @@ final class ReflectogramMismatchEventProcessor implements
 	 * @throws EventProcessingException
 	 * @see EventProcessor#processEvent(Event)
 	 */
-	public void processEvent(final Event event) throws EventProcessingException {
+	public void processEvent(final Event<?> event) throws EventProcessingException {
+		@SuppressWarnings("unchecked")
 		final ReflectogramMismatchEvent reflectogramMismatchEvent = (ReflectogramMismatchEvent) event;
 		Log.debugMessage("ReflectogramMismatchEvent: "
 				+ reflectogramMismatchEvent + " started being processed",
