@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.2 2005/11/03 11:54:31 bass Exp $
+ * $Id: SimpleMailer.java,v 1.3 2005/11/13 00:51:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.mail.EmailAddressRegexp;
@@ -42,7 +43,7 @@ import com.syrus.util.mail.EmailAddressRegexp;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/11/03 11:54:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/13 00:51:51 $
  * @module leserver
  */
 public final class SimpleMailer {
@@ -59,6 +60,12 @@ public final class SimpleMailer {
 	private static final String KEY_SMTP_USERNAME = "SmtpUsername";
 
 	private static final String KEY_SMTP_PASSWORD = "SmtpPassword";
+
+	private static final String KEY_OVERRIDE_FROM_ADDRESS = "OverrideFromAddress";
+
+	private static final String KEY_OVERRIDE_FROM_PERSONAL = "OverrideFromPersonal";
+
+	private static final String KEY_NOTIFY_SENDER = "NotifySender";
 
 	private static final String KEY_MAIL_DEBUG = "MailDebug";
 
@@ -86,6 +93,12 @@ public final class SimpleMailer {
 
 	private static final String DEFAULT_SMTP_PASSWORD = "";
 
+	private static final String DEFAULT_OVERRIDE_FROM_ADDRESS = null;
+
+	private static final String DEFAULT_OVERRIDE_FROM_PERSONAL = null;
+
+	private static final boolean DEFAULT_NOTIFY_SENDER = false;
+
 	private static final String DEFAULT_MAIL_DEBUG = MAIL_DEBUG_NONE;
 
 
@@ -96,6 +109,8 @@ public final class SimpleMailer {
 	private static final Pattern PASSWD_RECORD_PATTERN = Pattern.compile("^([^:]*):([^:]*):([^:]*):([^:]*):([^:]*):([^:]*):([^:]*)$");
 
 	private static final Pattern DESCRIPTION_PATTERN = Pattern.compile("([^,]*)(,[^,]*){0,3}");
+
+	private static final boolean NOTIFY_SENDER = ApplicationProperties.getBoolean(KEY_NOTIFY_SENDER, DEFAULT_NOTIFY_SENDER);
 
 	private static Session session;
 
@@ -176,6 +191,13 @@ public final class SimpleMailer {
 		properties.put("mail.smtp.port", Integer.toString(smtpPort));
 		properties.put("mail.smtp.auth", Boolean.toString(useAuth));
 		properties.put("mail.smtp.allow8bitmime", "true");
+		properties.put("mail.smtp.quitwait", "true");
+
+		if (NOTIFY_SENDER) {
+			properties.put("mail.smtp.dsn.ret", "FULL"); // "FULL"|"HDRS"
+			properties.put("mail.smtp.dsn.notify", "SUCCESS,FAILURE,DELAY"); // "NEVER|SUCCESS|FAILURE|DELAY"
+		}
+
 		session = Session.getDefaultInstance(properties, authenticator);
 
 		if (debug) {
@@ -183,7 +205,7 @@ public final class SimpleMailer {
 		}
 		session.setDebug(debug);
 
-		from = getInternetAddress(smtpUsername + '@' + smtpHost);
+		from = getInternetAddress(smtpUsername + '@' + smtpHost, true);
 	}
 
 	/**
@@ -299,10 +321,13 @@ public final class SimpleMailer {
 		try {
 			final MimeMessage mimeMessage = new MimeMessage(session);
 			mimeMessage.setFrom(from);
-			mimeMessage.setRecipients(RecipientType.TO, new InternetAddress[]{getInternetAddress(address)});
+			mimeMessage.setRecipients(RecipientType.TO, new InternetAddress[]{getInternetAddress(address, false)});
 			mimeMessage.setSubject(subject, CHARSET);
 			mimeMessage.setSentDate(new Date());
 			mimeMessage.setContent(body, "text/plain; charset=" + CHARSET);
+			if (NOTIFY_SENDER) {
+				mimeMessage.setHeader("Disposition-Notification-To", from.toString());
+			}
 			Transport.send(mimeMessage);
 		} catch (MessagingException me) {
 			while (me != null) {
@@ -321,26 +346,45 @@ public final class SimpleMailer {
 
 	/**
 	 * @param address
+	 * @param overrideAddress
 	 */
-	private static InternetAddress getInternetAddress(final String address) {
+	private static InternetAddress getInternetAddress(final String address, final boolean overrideAddress) {
 		if (address == null) {
 			throw new NullPointerException("e-mail address is null");
 		} else if (!EMAIL_ADDRESS_PATTERN.matcher(address).matches()) {
 			throw new IllegalArgumentException("e-mail address: ``" + address + "'' is invalid");
 		}
 
+		final String overriddenAddress = overrideAddress
+				? ApplicationProperties.getString(
+						KEY_OVERRIDE_FROM_ADDRESS,
+						DEFAULT_OVERRIDE_FROM_ADDRESS)
+				: null;
+		final String effectiveAddress = (overriddenAddress != null && overriddenAddress.length() != 0)
+				? overriddenAddress
+				: address;
+		final boolean overridePersonal = (overriddenAddress != null && overriddenAddress.length() != 0);
+
 		try {
-			return new InternetAddress(address, getPersonal(address), CHARSET);
+			final String personal = overridePersonal
+					? ApplicationProperties.getString(
+							KEY_OVERRIDE_FROM_PERSONAL,
+							DEFAULT_OVERRIDE_FROM_PERSONAL)
+					: getPersonal(effectiveAddress);
+			final String effectivePersonal = (personal != null && personal.length() != 0)
+					? personal
+					: null;
+			return new InternetAddress(effectiveAddress, effectivePersonal, CHARSET);
 		} catch (final UnsupportedEncodingException uee) {
 			/*
 			 * Almost never.
 			 */
 			try {
-				return new InternetAddress(address, true);
+				return new InternetAddress(effectiveAddress, true);
 			} catch (final AddressException ae) {
 				Log.debugMessage(ae, SEVERE);
 				try {
-					return new InternetAddress(address, false);
+					return new InternetAddress(effectiveAddress, false);
 				} catch (final AddressException ae2) {
 					/*
 					 * Never.
