@@ -20,3 +20,7 @@ work
 common.properties
 .mach
 .pmd
+cache
+images
+logs
+*.so

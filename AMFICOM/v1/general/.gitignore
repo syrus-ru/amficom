@@ -31,3 +31,4 @@ build.xml
 .pmd
 .xml
 .javadocs
+common.properties
