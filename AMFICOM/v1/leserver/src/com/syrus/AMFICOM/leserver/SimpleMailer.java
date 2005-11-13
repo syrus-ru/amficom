@@ -1,5 +1,5 @@
 /*-
- * $Id: SimpleMailer.java,v 1.3 2005/11/13 00:51:51 bass Exp $
+ * $Id: SimpleMailer.java,v 1.4 2005/11/13 06:11:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.mail.EmailAddressRegexp;
@@ -43,7 +42,7 @@ import com.syrus.util.mail.EmailAddressRegexp;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/11/13 00:51:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/13 06:11:55 $
  * @module leserver
  */
 public final class SimpleMailer {
