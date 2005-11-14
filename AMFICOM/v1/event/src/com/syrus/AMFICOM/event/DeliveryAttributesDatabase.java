@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.1 2005/11/11 05:19:19 bass Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.2 2005/11/14 15:13:51 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,24 +8,43 @@
 
 package com.syrus.AMFICOM.event;
 
+import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
+import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_ROLE_ID;
+import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.LINKED_COLUMN_SYSTEM_USER_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
+import static com.syrus.AMFICOM.general.TableNames.DELIVERY_ATTRIBUTES_ROLE_LINK;
+import static com.syrus.AMFICOM.general.TableNames.DELIVERY_ATTRIBUTES_SYSTEM_USER_LINK;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.Set;
 
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/11/11 05:19:19 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/11/14 15:13:51 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
 		StorableObjectDatabase<DeliveryAttributes> {
+	
+	private static final String LINK_DELIVERY_ATTRIBUTES_ID = "delivery_attributes_id";
+	
+	private static String columns;
+	private static String updateMultipleSQLValues;	
+	
 	/**
 	 * @see StorableObjectDatabase#getEntityCode()
 	 */
@@ -39,7 +58,10 @@ public final class DeliveryAttributesDatabase extends
 	 */
 	@Override
 	protected String getColumnsTmpl() {
-		throw new UnsupportedOperationException();
+		if (columns == null) {
+			columns = COLUMN_SEVERITY;
+		}
+		return columns;
 	}
 
 	/**
@@ -47,19 +69,22 @@ public final class DeliveryAttributesDatabase extends
 	 */
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		throw new UnsupportedOperationException();
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues =  QUESTION;
+		}
+		return updateMultipleSQLValues;
 	}
 
 	/**
-	 * @param storableObject
+	 * @param deliveryAttributes
 	 * @throws IllegalDataException
 	 * @see StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			final DeliveryAttributes storableObject)
+			final DeliveryAttributes deliveryAttributes)
 	throws IllegalDataException {
-		throw new UnsupportedOperationException();
+		return Integer.toString(deliveryAttributes.getSeverity().ordinal());
 	}
 
 	/**
@@ -74,9 +99,10 @@ public final class DeliveryAttributesDatabase extends
 	protected int setEntityForPreparedStatementTmpl(
 			final DeliveryAttributes deliveryAttributes,
 			final PreparedStatement preparedStatement,
-			final int startParameterNumber)
+			int startParameterNumber)
 	throws IllegalDataException, SQLException {
-		throw new UnsupportedOperationException();
+		preparedStatement.setInt(++startParameterNumber, deliveryAttributes.getSeverity().ordinal());
+		return startParameterNumber;
 	}
 
 	/**
@@ -92,6 +118,56 @@ public final class DeliveryAttributesDatabase extends
 			final DeliveryAttributes deliveryAttributes,
 			final ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		throw new UnsupportedOperationException();
+		final DeliveryAttributes deliveryAttributes2 = (deliveryAttributes == null)
+			? new DeliveryAttributes(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+					null,
+					null,
+					StorableObjectVersion.ILLEGAL_VERSION,
+					Severity.SEVERITY_NONE)
+				: deliveryAttributes;
+		deliveryAttributes2.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				Severity.valueOf(resultSet.getInt(COLUMN_SEVERITY)));
+		return deliveryAttributes2;
+	}
+	
+	private void retrieveLinksByOneQuery(final Set<DeliveryAttributes> deliveryAttributes) throws RetrieveObjectException {
+		if ((deliveryAttributes == null) || (deliveryAttributes.isEmpty())) {
+			return;
+		}
+
+		final Map<Identifier, Set<Identifier>> roleIdsMap = this.retrieveLinkedEntityIds(deliveryAttributes,
+				DELIVERY_ATTRIBUTES_ROLE_LINK,
+				LINK_DELIVERY_ATTRIBUTES_ID,
+				LINKED_COLUMN_ROLE_ID);
+
+		final Map<Identifier, Set<Identifier>> userIdsMap = this.retrieveLinkedEntityIds(deliveryAttributes,
+			DELIVERY_ATTRIBUTES_SYSTEM_USER_LINK,
+			LINK_DELIVERY_ATTRIBUTES_ID,
+			LINKED_COLUMN_SYSTEM_USER_ID);
+		
+		for (final DeliveryAttributes attributes : deliveryAttributes) {
+			final Identifier attributeId = attributes.getId();
+			
+			final Set<Identifier> roleIds = roleIdsMap.get(attributeId);			
+			attributes.setRoleIds0(roleIds);
+			
+			final Set<Identifier> userIds = userIdsMap.get(attributeId);
+			attributes.setSystemUserIds0(userIds);
+
+		}
+	}
+	
+	@Override
+	protected Set<DeliveryAttributes> retrieveByCondition(final String conditionQuery) 
+	throws RetrieveObjectException, IllegalDataException {
+		final Set<DeliveryAttributes> deliveryAttributes = super.retrieveByCondition(conditionQuery);
+		
+		this.retrieveLinksByOneQuery(deliveryAttributes);
+		
+		return deliveryAttributes;
 	}
 }
