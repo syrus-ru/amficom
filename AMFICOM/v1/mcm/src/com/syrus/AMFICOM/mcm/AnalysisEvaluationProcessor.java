@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.53 2005/11/14 13:50:21 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.54 2005/11/14 14:22:45 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -36,8 +35,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/11/14 13:50:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/11/14 14:22:45 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -57,6 +56,7 @@ final class AnalysisEvaluationProcessor {
 	}
 
 	public static Result[] analyseEvaluate(final Result measurementResult) throws AnalysisException {
+		@SuppressWarnings("unchecked")
 		final Measurement measurement = (Measurement) measurementResult.getAction();
 		Test test = null;
 		try {
@@ -105,7 +105,7 @@ final class AnalysisEvaluationProcessor {
 			final Analysis analysis,
 			final ParameterSet etalon) throws AnalysisException {
 		String className = null;
-		Constructor constructor = null;
+		Constructor<?> constructor = null;
 
 		if (analysisCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
 			className = "com.syrus.AMFICOM.mcm." + CLASS_NAME_ANALYSIS_MANAGER_DADARA;
@@ -151,8 +151,7 @@ final class AnalysisEvaluationProcessor {
 	
 			final Parameter[] arParameters = analysisManager.analyse();
 			final Identifier resultId = measurementResult.getId();
-			final Action<?> action = measurementResult.getAction();
-			final Identifier monitoredElementId = action.getMonitoredElementId();
+			final Identifier monitoredElementId = measurementResult.getAction().getMonitoredElementId();
 
 			int dadaraAlarmsOccurenceCount = 0;
 			for (final Parameter parameter : arParameters) {
