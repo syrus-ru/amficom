@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.83 2005/10/31 12:30:15 bass Exp $
+ * $Id: Result.java,v 1.84 2005/11/14 14:22:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/10/31 12:30:15 $
+ * @version $Revision: 1.84 $, $Date: 2005/11/14 14:22:24 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -45,7 +45,7 @@ public final class Result extends StorableObject<Result> {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3256999964965286967L;
-	private Action action;
+	private Action<?> action;
 	private int sort;
 	private Parameter[] parameters;
 
@@ -66,7 +66,7 @@ public final class Result extends StorableObject<Result> {
 	Result(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
-			final Action action,
+			final Action<?> action,
 			final int sort,
 			final Parameter[] parameters) {
 		super(id,
@@ -172,11 +172,11 @@ public final class Result extends StorableObject<Result> {
 		return ObjectEntities.RESULT_CODE;
 	}
 
-	public Action getAction() {
+	public Action<?> getAction() {
 		return this.action;
 	}
 	
-	public void setAction(final Action action) {
+	public void setAction(final Action<?> action) {
 		this.action = action;
 		super.markAsChanged();
 	}
@@ -202,7 +202,7 @@ public final class Result extends StorableObject<Result> {
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final Action action,
+			final Action<?> action,
 			final int sort) {
 		super.setAttributes(created,
 			modified,
@@ -217,7 +217,7 @@ public final class Result extends StorableObject<Result> {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected static Result createInstance(final Identifier creatorId,
-			final Action action,
+			final Action<?> action,
 			final ResultSort sort,
 			final Parameter[] parameters) throws CreateObjectException {
 		try {
