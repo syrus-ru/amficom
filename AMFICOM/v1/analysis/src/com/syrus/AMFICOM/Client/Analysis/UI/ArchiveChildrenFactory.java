@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.24 2005/10/31 12:30:22 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.25 2005/11/14 15:15:38 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.PopulatableItem;
+import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
@@ -49,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:22 $
+ * @version $Revision: 1.25 $, $Date: 2005/11/14 15:15:38 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -318,7 +319,9 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 							IconPopulatableItem item2 = new IconPopulatableItem();
 							item2.setObject(result);
 							item2.setCanHaveChildren(false);
-							item2.setName(((Measurement) result.getAction()).getName());
+							@SuppressWarnings("unchecked")
+							final Action action = result.getAction();
+							item2.setName(((Measurement) action).getName());
 							item2.setChildrenFactory(this);
 							item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_RESULT));
 							item.addChild(item2);

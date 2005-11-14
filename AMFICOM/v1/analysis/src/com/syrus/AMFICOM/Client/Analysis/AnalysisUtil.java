@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -65,7 +66,9 @@ public class AnalysisUtil
 	 * {@link #hasMeasurementByResult(Result)}
 	 */
 	public static Measurement getMeasurementByResult(Result result) {
-		return (Measurement)result.getAction();
+		@SuppressWarnings("unchecked")
+		final Action action = result.getAction();
+		return (Measurement) action;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.88 2005/11/08 15:07:23 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.89 2005/11/14 15:15:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -48,8 +49,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/11/08 15:07:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2005/11/14 15:15:38 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -297,7 +298,9 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		for (final Iterator<Result> it = this.measurementResults.iterator(); it.hasNext();) {
 			final Result measurementResult = it.next();
-			final Measurement measurement = (Measurement) measurementResult.getAction();
+			@SuppressWarnings("unchecked")
+			final Action action = measurementResult.getAction();
+			final Measurement measurement = (Measurement) action;
 			try {
 				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
 				for (int i = 0; i < aeResults.length; i++) {
