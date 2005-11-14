@@ -1,5 +1,5 @@
 /*
- * $Id: TestConditionWrapper.java,v 1.14 2005/11/14 15:03:27 max Exp $
+ * $Id: TestConditionWrapper.java,v 1.15 2005/11/14 15:31:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.newFilter.ConditionKey;
 import com.syrus.AMFICOM.newFilter.LangModelFilter;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/11/14 15:03:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/11/14 15:31:41 $
  * @author $Author: max $
  * @module filterclient
  */
@@ -30,9 +30,9 @@ public class TestConditionWrapper implements ConditionWrapper {
 	private static final String END_TIME = LangModelFilter.getString("filter.criteria.endtime");
 	private static final String NAME = LangModelFilter.getString("filter.criteria.entityname");
 			
-	private static ConditionKey START_TIME_CONDITION_KEY = new ConditionKey(TestWrapper.COLUMN_START_TIME, START_TIME, ConditionWrapper.DATE);
-	private static ConditionKey END_TIME_CONDITION_KEY = new ConditionKey(TestWrapper.COLUMN_END_TIME, END_TIME, ConditionWrapper.DATE);
-	private static ConditionKey NAME_CONDITION_KEY = new ConditionKey(StorableObjectWrapper.COLUMN_DESCRIPTION, NAME, ConditionWrapper.STRING);
+	public static ConditionKey START_TIME_CONDITION_KEY = new ConditionKey(TestWrapper.COLUMN_START_TIME, START_TIME, ConditionWrapper.DATE);
+	public static ConditionKey END_TIME_CONDITION_KEY = new ConditionKey(TestWrapper.COLUMN_END_TIME, END_TIME, ConditionWrapper.DATE);
+	public static ConditionKey NAME_CONDITION_KEY = new ConditionKey(StorableObjectWrapper.COLUMN_DESCRIPTION, NAME, ConditionWrapper.STRING);
 	
 	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
 	
