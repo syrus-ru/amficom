@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesWrapper.java,v 1.4 2005/11/14 09:07:15 bob Exp $
+ * $Id: DeliveryAttributesWrapper.java,v 1.5 2005/11/14 15:14:01 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.PropertyChangeException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/11/14 09:07:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/14 15:14:01 $
  * @module event
  */
 public final class DeliveryAttributesWrapper
@@ -29,6 +29,9 @@ public final class DeliveryAttributesWrapper
 	public static final String LINKED_COLUMN_SYSTEM_USER_IDS = "system_user_ids";
 	public static final String LINKED_COLUMN_ROLE_IDS = "role_ids";
 
+	public static final String LINKED_COLUMN_SYSTEM_USER_ID = "system_user_id";
+	public static final String LINKED_COLUMN_ROLE_ID = "role_id";
+	
 	private static DeliveryAttributesWrapper instance;
 
 	private final List<String> keys;
@@ -66,7 +69,7 @@ public final class DeliveryAttributesWrapper
 			return clazz;
 		}
 		if (key.equals(COLUMN_SEVERITY)) {
-			return Integer.class;
+			return Enum.class;
 		}
 		
 		if (key.equals(LINKED_COLUMN_ROLE_IDS)

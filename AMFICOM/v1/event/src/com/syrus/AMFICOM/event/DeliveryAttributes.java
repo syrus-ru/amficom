@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.3 2005/11/10 13:22:35 bob Exp $
+ * $Id: DeliveryAttributes.java,v 1.4 2005/11/14 15:14:01 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/11/10 13:22:35 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/14 15:14:01 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -144,13 +144,9 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final Severity severity,
-			final Set<Identifier> roleIds,
-			final Set<Identifier> systemUserIds) {
+			final Severity severity) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.severity = severity;
-		this.setRoleIds0(roleIds);
-		this.setSystemUserIds0(systemUserIds);
 	}
 
 	public static DeliveryAttributes createInstance(final Identifier creatorId,

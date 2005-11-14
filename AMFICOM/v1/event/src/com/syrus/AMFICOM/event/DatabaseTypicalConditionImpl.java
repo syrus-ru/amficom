@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.15 2005/11/11 09:15:21 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.16 2005/11/14 15:14:01 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/11 09:15:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/11/14 15:14:01 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -51,6 +51,7 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 
 	@Override
 	protected boolean isKeySupported(final String key) {
+		assert key != null && key == key.intern();
 		switch (this.condition.getEntityCode().shortValue()) {
 		case EVENT_TYPE_CODE:
 			return key == COLUMN_CODENAME;
