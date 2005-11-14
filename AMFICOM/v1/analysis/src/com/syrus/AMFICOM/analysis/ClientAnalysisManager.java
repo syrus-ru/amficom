@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.24 2005/10/31 12:30:22 bass Exp $
+ * $Id: ClientAnalysisManager.java,v 1.25 2005/11/14 14:31:16 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/10/31 12:30:22 $
+ * @author $Author: saa $
+ * @version $Revision: 1.25 $, $Date: 2005/11/14 14:31:16 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -79,6 +79,10 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(PROPERTIES_FILE_NAME));
+		} catch (IOException ex) {
+			// FIXME: exceptions: add an IOException handler
+		}
+		try {
 			properties.setProperty("parameters", ap.toString());
 			properties.store(new FileOutputStream(PROPERTIES_FILE_NAME), null);
 		} catch (IOException ex) {
