@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.25 2005/11/11 09:15:17 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.26 2005/11/14 11:05:38 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/11/11 09:15:17 $
+ * @version $Revision: 1.26 $, $Date: 2005/11/14 11:05:38 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -90,7 +90,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 			return key == StorableObjectWrapper.COLUMN_CODENAME
 						|| key == MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
 		case MEASUREMENTSETUP_CODE:
-			return key == MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
+			return key == MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE
+						|| key == StorableObjectWrapper.COLUMN_DESCRIPTION;
 		default:
 			return false;
 		}
