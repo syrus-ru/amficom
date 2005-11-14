@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.5 2005/11/11 10:58:22 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.6 2005/11/14 10:03:52 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,15 +42,15 @@ import com.syrus.AMFICOM.extensions.manager.Perspective;
 import com.syrus.AMFICOM.extensions.manager.PopupMenu;
 import com.syrus.AMFICOM.extensions.manager.UiHandler;
 import com.syrus.AMFICOM.extensions.manager.Validator;
-
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/11 10:58:22 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/14 10:03:52 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ManagerResourcesCreator extends TestCase {
+public final class ManagerResourcesCreator extends TestCase {
 
 	public void testCreateUIResourceDocument() throws Exception {
 		final boolean enableOutput = true;
@@ -274,32 +274,35 @@ public class ManagerResourcesCreator extends TestCase {
 			perspective.addUndeletable(ObjectEntities.ROLE);
 	    }
 		
-		// create role perspective 
+		// create severity message perspective 
 		{			
-			final ManagerResource resource = managerExtensions.addNewManagerResource();
-			final Perspective perspective = (Perspective) resource.changeType(Perspective.type);
-			perspective.setId("messages");
-			
-			BeanFactory roleFactory = perspective.addNewBeanFactory();
-			roleFactory.setId(ObjectEntities.ROLE);
-			roleFactory.setBeanFactoryClass(RoleBeanFactory.class.getName());
-			
-			UiHandler roleUIHandler = perspective.addNewUiHandler();
-			roleUIHandler.setId(ObjectEntities.ROLE);
-			roleUIHandler.setUiHandlerClass(RoleBeanUI.class.getName());
-			
-			BeanFactory severityMessageFactory = perspective.addNewBeanFactory();
-			severityMessageFactory.setId(ObjectEntities.DELIVERYATTRIBUTES);
-			severityMessageFactory.setBeanFactoryClass(MessageBeanFactory.class.getName());
-			
-			UiHandler severityMessageUIHandler = perspective.addNewUiHandler();
-			severityMessageUIHandler.setId(ObjectEntities.DELIVERYATTRIBUTES);
-			severityMessageUIHandler.setUiHandlerClass(MessageBeanUI.class.getName());
-			
-			
-			Validator messageValidator = perspective.addNewValidator();
-			messageValidator.setSource(ObjectEntities.ROLE);
-			messageValidator.setTarget(ObjectEntities.DELIVERYATTRIBUTES);
+			final Severity[] severities = new Severity[] {Severity.SEVERITY_SOFT, Severity.SEVERITY_HARD};
+			for (final Severity severity : severities) {
+				final ManagerResource resource = managerExtensions.addNewManagerResource();
+				final Perspective perspective = (Perspective) resource.changeType(Perspective.type);
+				perspective.setId(severity.name().replaceAll("_", ""));
+				
+				BeanFactory roleFactory = perspective.addNewBeanFactory();
+				roleFactory.setId(ObjectEntities.ROLE);
+				roleFactory.setBeanFactoryClass(RoleBeanFactory.class.getName());
+				
+				UiHandler roleUIHandler = perspective.addNewUiHandler();
+				roleUIHandler.setId(ObjectEntities.ROLE);
+				roleUIHandler.setUiHandlerClass(RoleBeanUI.class.getName());
+				
+				BeanFactory severityMessageFactory = perspective.addNewBeanFactory();
+				severityMessageFactory.setId(ObjectEntities.DELIVERYATTRIBUTES);
+				severityMessageFactory.setBeanFactoryClass(MessageBeanFactory.class.getName());
+				
+				UiHandler severityMessageUIHandler = perspective.addNewUiHandler();
+				severityMessageUIHandler.setId(ObjectEntities.DELIVERYATTRIBUTES);
+				severityMessageUIHandler.setUiHandlerClass(MessageBeanUI.class.getName());
+				
+				
+				Validator messageValidator = perspective.addNewValidator();
+				messageValidator.setSource(ObjectEntities.ROLE);
+				messageValidator.setTarget(ObjectEntities.DELIVERYATTRIBUTES);
+			}
 			
 	    }
 		

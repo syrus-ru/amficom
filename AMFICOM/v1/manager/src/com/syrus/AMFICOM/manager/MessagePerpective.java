@@ -1,5 +1,5 @@
 /*-
-* $Id: MessagesPerpective.java,v 1.4 2005/11/11 13:47:08 bob Exp $
+* $Id: MessagePerpective.java,v 1.1 2005/11/14 10:02:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,11 @@
 
 package com.syrus.AMFICOM.manager;
 
+import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
+import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
+import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort.OPERATION_EQUALS;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -16,8 +21,9 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JToolBar;
 
+import org.jgraph.graph.DefaultGraphCell;
+
 import com.syrus.AMFICOM.administration.Role;
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.event.DeliveryAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -26,49 +32,49 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
-import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/11 13:47:08 $
+ * @version $Revision: 1.1 $, $Date: 2005/11/14 10:02:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class MessagesPerpective extends AbstractPerspective {
+public abstract class MessagePerpective extends AbstractPerspective {
 
-	private void addSeverityAction(final Severity severity) throws ApplicationException {
-		final MessageBeanFactory messageBeanFactory = 
-			MessageBeanFactory.getInstance(this.managerMainFrame, severity);
-		
-		final AbstractAction action = 
-			this.createGetTheSameOrCreateNewAction(messageBeanFactory, 
-				new MessageCheckable(severity), 
-				null);
-		this.managerMainFrame.addAction(
-			action);
-	}
+	private LayoutItem layoutItem;  
+	
+	protected abstract Severity getSeverity();
+	
+//	private void addSeverityAction(final Severity severity) throws ApplicationException {
+//		final MessageBeanFactory messageBeanFactory = 
+//			MessageBeanFactory.getInstance(this.managerMainFrame, severity);
+//		
+//		final AbstractAction action = 
+//			this.createGetTheSameOrCreateNewAction(messageBeanFactory, 
+//				new MessageCheckable(severity), 
+//				null);
+//		this.managerMainFrame.addAction(
+//			action);
+//	}
 	
 	public void addEntities(final JToolBar entityToolBar) 
 	throws ApplicationException {
 		
 		final PerspectiveData perspectiveData = this.getPerspectiveData();
 		
-		
-		this.addSeverityAction(Severity.SEVERITY_SOFT);
-		this.addSeverityAction(Severity.SEVERITY_HARD);
-		
-		entityToolBar.addSeparator();
+//		this.addSeverityAction(this.getSeverity());
+//		
+//		entityToolBar.addSeparator();
 		
 		final Set<Role> roles = StorableObjectPool.getStorableObjectsByCondition(
 			new EquivalentCondition(ObjectEntities.ROLE_CODE),
@@ -77,11 +83,15 @@ public class MessagesPerpective extends AbstractPerspective {
 		final RoleBeanFactory roleBeanFactory = 
 			(RoleBeanFactory) perspectiveData.getBeanFactory(ObjectEntities.ROLE);
 		
+		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+		
+		final DefaultGraphCell parentCell = graphRoutines.getDefaultGraphCell(this.layoutItem);
+		
 		for (final Role role : roles) {
 			final Identifier id = role.getId();
 			final AbstractAction action = this.createGetTheSameOrCreateNewAction(roleBeanFactory, 
 					new RoleCheckable(id), 
-					null,
+					parentCell,
 					this.getIdentifierString(id));
 			action.putValue(Action.SHORT_DESCRIPTION, role.getName());
 			this.managerMainFrame.addAction(
@@ -90,11 +100,11 @@ public class MessagesPerpective extends AbstractPerspective {
 	}
 	
 	public String getCodename() {
-		return "messages";
+		return this.getSeverity().name().replaceAll("_", "");
 	}
 	
 	public String getName() {		
-		return I18N.getString("Manager.Entity.Messages");
+		return this.getSeverity().getLocalizedName();
 	}
 	
 	public boolean isValid() {
@@ -110,10 +120,23 @@ public class MessagesPerpective extends AbstractPerspective {
 	}
 
 	public void createNecessaryItems() throws ApplicationException {
-		final Set<DeliveryAttributes> deliveryAttributes = 
+		Set<DeliveryAttributes> deliveryAttributes = 
 			StorableObjectPool.getStorableObjectsByCondition(
-				new EquivalentCondition(ObjectEntities.DELIVERYATTRIBUTES_CODE), 
+				new TypicalCondition(
+					this.getSeverity(),
+					OPERATION_EQUALS,
+					DELIVERYATTRIBUTES_CODE,
+					COLUMN_SEVERITY), 
 				true);
+		
+		assert Log.debugMessage(deliveryAttributes.size(), Log.DEBUGLEVEL03);
+		assert deliveryAttributes.size() <= 1;
+		
+		if (deliveryAttributes.isEmpty()) {
+			final DeliveryAttributes attributes = 
+				DeliveryAttributes.createInstance(LoginManager.getUserId(), this.getSeverity());
+			deliveryAttributes = Collections.singleton(attributes);
+		}
 		
 		final String codename = this.getCodename();
 		final Set<LayoutItem> items = StorableObjectPool.getStorableObjectsByCondition(
@@ -136,6 +159,9 @@ public class MessagesPerpective extends AbstractPerspective {
 			final LayoutItem item = this.getLayoutItem(attributes.getId(), 
 				Identifier.VOID_IDENTIFIER, 
 				existsNetworkLayoutItems);
+			if (this.layoutItem == null) {
+				this.layoutItem = item;
+			}
 			final Identifier itemId = item.getId();
 			final Set<Identifier> roleIds = attributes.getRoleIds();			
 			for (final Identifier identifier : roleIds) {
