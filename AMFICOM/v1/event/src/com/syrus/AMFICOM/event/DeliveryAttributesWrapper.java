@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesWrapper.java,v 1.3 2005/11/10 14:05:45 bob Exp $
+ * $Id: DeliveryAttributesWrapper.java,v 1.4 2005/11/14 09:07:15 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.PropertyChangeException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/11/10 14:05:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/14 09:07:15 $
  * @module event
  */
 public final class DeliveryAttributesWrapper
@@ -110,7 +110,7 @@ public final class DeliveryAttributesWrapper
 		}
 		if (deliveryAttributes != null) {
 			if (key.equals(COLUMN_SEVERITY)) {
-				return Integer.valueOf(deliveryAttributes.getSeverity().ordinal());
+				return deliveryAttributes.getSeverity();
 			} else if (key.equals(LINKED_COLUMN_SYSTEM_USER_IDS)) {
 				return deliveryAttributes.getSystemUserIds();
 			} else if (key.equals(LINKED_COLUMN_ROLE_IDS)) {
