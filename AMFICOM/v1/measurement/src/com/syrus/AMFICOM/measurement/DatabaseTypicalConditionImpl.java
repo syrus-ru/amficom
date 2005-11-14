@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.26 2005/11/14 11:05:38 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.27 2005/11/14 12:23:37 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/11/14 11:05:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/11/14 12:23:37 $
+ * @author $Author: max $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -79,7 +79,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		switch (this.condition.getEntityCode().shortValue()) {
 		case MEASUREMENT_CODE:
 			return key == MeasurementWrapper.COLUMN_STATUS
-					|| key == MeasurementWrapper.COLUMN_START_TIME;
+					|| key == MeasurementWrapper.COLUMN_START_TIME
+					|| key == StorableObjectWrapper.COLUMN_NAME;
 		case TEST_CODE:
 			return key == TestWrapper.COLUMN_START_TIME
 					|| key == TestWrapper.COLUMN_END_TIME
