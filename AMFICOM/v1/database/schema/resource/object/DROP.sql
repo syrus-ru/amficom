@@ -1,6 +1,8 @@
--- $Id: DROP.sql,v 1.4 2005/08/16 09:25:48 arseniy Exp $
+-- $Id: DROP.sql,v 1.5 2005/11/14 11:00:39 bob Exp $
 
 DROP TABLE ImportUIDMap;
 DROP TABLE ImageResource;
+DROP TABLE LayoutItem;
 
 DROP SEQUENCE ImageResource_Seq;
+DROP SEQUENCE LayoutItem_Seq;
