@@ -44,7 +44,7 @@
     <target name="build-run" depends="build"/>
 
     <target name="build" depends="init" unless="build.notRequired">
-        <scomp schema="schemas/manager.xsd" destfile="./${managerext.jar}">
+        <scomp schema="schemas" destfile="./${managerext.jar}">
             <classpath>
                 <pathelement location="${abstract.jar}"/>
                 <path refid="xmlbeans.classpath"/>
