@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.51 2005/10/31 10:47:23 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.52 2005/11/14 13:24:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/10/31 10:47:23 $
+ * @version $Revision: 1.52 $, $Date: 2005/11/14 13:24:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -71,6 +71,8 @@ final class AnalysisEvaluationProcessor {
 			Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement, measurementSetup.getCriteriaSet());
 			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
 		}
+
+		Log.errorMessage("UNKNOWN AnalysisType for test '" + test.getId() + "'");
 		return new Result[0];
 	}
 
