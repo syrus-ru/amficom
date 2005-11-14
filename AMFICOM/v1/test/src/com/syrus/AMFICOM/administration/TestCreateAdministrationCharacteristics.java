@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateAdministrationCharacteristics.java,v 1.1 2005/11/14 11:16:40 bob Exp $
+ * $Id: TestCreateAdministrationCharacteristics.java,v 1.2 2005/11/14 11:32:12 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,12 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.resource.LayoutItem;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/14 11:16:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/14 11:32:12 $
  * @author $Author: bob $
  * @module test
  */
@@ -41,6 +42,16 @@ public class TestCreateAdministrationCharacteristics extends TestCase {
 	public void testCreateRoles() throws ApplicationException {
 		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
 		Identifier userId = sysUser.getId();
+		{
+			CharacteristicType.createInstance(userId, 
+				LayoutItem.CHARACTERISCTIC_TYPE_NAME, 
+				"name", 
+				"name", 
+				DataType.STRING, 
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
+			
+		}
+		
 		{
 			CharacteristicType.createInstance(userId, 
 				LayoutItem.CHARACTERISCTIC_TYPE_X, 
