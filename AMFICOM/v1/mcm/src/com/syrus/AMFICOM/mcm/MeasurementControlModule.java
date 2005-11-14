@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.142 2005/11/03 13:51:29 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.143 2005/11/14 15:52:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -53,7 +52,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.142 $, $Date: 2005/11/03 13:51:29 $
+ * @version $Revision: 1.143 $, $Date: 2005/11/14 15:52:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -307,8 +306,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
 			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
-			sortTestsByStartTime(tests);
-			testList.addAll(tests);
+
+			final List<Test> testsL = new LinkedList<Test>(tests);
+			sortTestsByStartTime(testsL);
+			testList.addAll(testsL);
+
 			scheduledTestIds.addAll(Identifier.createIdentifiers(tests));
 		} catch (ApplicationException ae) {
 			Log.errorMessage(ae);
@@ -387,14 +389,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static void sortTestsByStartTime(final Collection<Test> tests) {
-		List<Test> testsL;
-		if (tests instanceof List) {
-			testsL = (List<Test>) tests;
-		} else {
-			testsL = new LinkedList<Test>(tests);
-		}
-		Collections.sort(testsL, new TestStartTimeComparator());
+	private static void sortTestsByStartTime(final List<Test> tests) {
+		Collections.sort(tests, new TestStartTimeComparator());
 	}
 
 	static void addTests(final List<Test> newTests) {
