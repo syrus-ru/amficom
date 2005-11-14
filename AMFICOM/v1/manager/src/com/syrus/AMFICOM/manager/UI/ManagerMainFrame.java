@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.19 2005/11/11 10:58:02 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.20 2005/11/14 10:02:49 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,12 +73,12 @@ import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.20 $, $Date: 2005/11/14 10:02:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ManagerMainFrame extends AbstractMainFrame {	
+public final class ManagerMainFrame extends AbstractMainFrame {	
 	
 	JGraph						graph;
 
@@ -207,7 +207,7 @@ public class ManagerMainFrame extends AbstractMainFrame {
 			enterDomains.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_D));
 			super.toolBar.add(enterDomains);			
 			
-			final AbstractAction enterMessages = new AbstractAction("M") {	
+			final AbstractAction enterSoftMessages = new AbstractAction("S") {	
 				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
 				public void actionPerformed(ActionEvent e) {
 					final JButton button = (JButton) e.getSource();
@@ -215,13 +215,29 @@ public class ManagerMainFrame extends AbstractMainFrame {
 					windowArranger.arrange();
 					ApplicationContext context = ManagerMainFrame.this.getContext();
 					ApplicationModel applicationModel = context.getApplicationModel();
-					Command command = applicationModel.getCommand(ManagerModel.MESSAGES_COMMAND);
+					Command command = applicationModel.getCommand(ManagerModel.SOFT_MESSAGE_COMMAND);
 					command.execute();				
 				}
 			};			
-			enterMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('M'));
-			enterMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_M));
-			super.toolBar.add(enterMessages);
+			enterSoftMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('S'));
+			enterSoftMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_S));
+			super.toolBar.add(enterSoftMessages);
+			
+			final AbstractAction enterHardMessages = new AbstractAction("H") {	
+				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
+				public void actionPerformed(ActionEvent e) {
+					final JButton button = (JButton) e.getSource();
+					button.setEnabled(false);
+					windowArranger.arrange();
+					ApplicationContext context = ManagerMainFrame.this.getContext();
+					ApplicationModel applicationModel = context.getApplicationModel();
+					Command command = applicationModel.getCommand(ManagerModel.HARD_MESSAGE_COMMAND);
+					command.execute();				
+				}
+			};			
+			enterHardMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('H'));
+			enterHardMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_H));
+			super.toolBar.add(enterHardMessages);
 		}
 		
 		
@@ -382,7 +398,8 @@ public class ManagerMainFrame extends AbstractMainFrame {
 		
 		final ApplicationModel applicationModel = this.aContext.getApplicationModel();
 		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspectiveCommand(this));
-		applicationModel.setCommand(ManagerModel.MESSAGES_COMMAND, new MessagesPerspectiveCommand(this));
+		applicationModel.setCommand(ManagerModel.SOFT_MESSAGE_COMMAND, new SoftSeverityMessagePerspectiveCommand(this));
+		applicationModel.setCommand(ManagerModel.HARD_MESSAGE_COMMAND, new HardSeverityMessagePerspectiveCommand(this));
 		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand(this));	
 		
 		applicationModel.setCommand(TREE_FRAME, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));

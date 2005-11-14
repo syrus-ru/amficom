@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.6 2005/11/11 13:47:08 bob Exp $
+* $Id: AbstractPerspective.java,v 1.7 2005/11/14 10:03:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/11 13:47:08 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/14 10:03:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -128,14 +128,16 @@ public abstract class AbstractPerspective implements Perspective {
     				try {
     					
     					for(final AbstractBean abstractBean : graphRoutines.getLayoutBeans()) {
- 						if (chechable.isNeedIn(abstractBean)) {
- 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
- 							selectionModel.setSelectionCell(graphRoutines.getDefaultGraphCell(abstractBean));
- 							return;
- 						}
+	    					assert Log.debugMessage(abstractBean, Log.DEBUGLEVEL03);
+	 						if (chechable.isNeedIn(abstractBean)) {
+	 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
+	 							selectionModel.setSelectionCell(graphRoutines.getDefaultGraphCell(abstractBean));
+	 							return;
+	 						}
     					}
     					
     					final AbstractBean bean = factory.createBean(codename);
+    					
     					
     					graphRoutines.createChild(parentCell, 
     						bean.getName(), 
@@ -145,6 +147,9 @@ public abstract class AbstractPerspective implements Perspective {
     						0, 
     						0, 
     						beanUI.getImage(bean));
+    					
+    					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL03);
+
     				} catch (final ApplicationException ae) {
     					ae.printStackTrace();
     					JOptionPane.showMessageDialog(graph, 
@@ -239,16 +244,16 @@ public abstract class AbstractPerspective implements Perspective {
 			final Map<Identifier, LayoutItem> existsNetworkLayoutItems,
 			final Set<LayoutItem> layoutItems) {
 		
-		assert Log.debugMessage(storableObjects, Log.DEBUGLEVEL03);
+		assert Log.debugMessage(storableObjects, Log.DEBUGLEVEL10);
 		
 		for (final Identifiable identifiable : storableObjects) {
 			final Identifier id = identifiable.getId();
 			final String identifierString = 
 				this.getIdentifierString(id);
 			for (final LayoutItem item : layoutItems) {
-				assert Log.debugMessage(item.getName() + '@' + item.getLayoutName(), Log.DEBUGLEVEL03);
+				assert Log.debugMessage(item.getName() + '@' + item.getLayoutName(), Log.DEBUGLEVEL10);
 				if (item.getName().equals(identifierString)) {
-					assert Log.debugMessage("add " + id + " as " + item , Log.DEBUGLEVEL03);
+					assert Log.debugMessage("add " + id + " as " + item , Log.DEBUGLEVEL10);
 					existsNetworkLayoutItems.put(id, item);
 					break;
 				}

@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerModel.java,v 1.5 2005/11/09 15:09:49 bob Exp $
+* $Id: ManagerModel.java,v 1.6 2005/11/14 10:02:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/14 10:02:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -23,9 +23,10 @@ public class ManagerModel extends ApplicationModel {
 
 	Dispatcher					dispatcher;
 	
-	public static final String DOMAINS_COMMAND = "DomainsCommand";
-	public static final String FLUSH_COMMAND = "FlushCommand";
-	public static final String MESSAGES_COMMAND = "MessagesCommand";
+	public static final String	DOMAINS_COMMAND			= "DomainsCommand";
+	public static final String	FLUSH_COMMAND			= "FlushCommand";
+	public static final String	SOFT_MESSAGE_COMMAND	= "SoftMessageCommand";
+	public static final String	HARD_MESSAGE_COMMAND	= "HardMessageCommand";
 	
 	public ManagerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
@@ -49,8 +50,12 @@ public class ManagerModel extends ApplicationModel {
 		this.add(FLUSH_COMMAND);
 		this.setEnabled(FLUSH_COMMAND, true);
 
-		this.add(MESSAGES_COMMAND);
-		this.setEnabled(MESSAGES_COMMAND, true);
+		this.add(SOFT_MESSAGE_COMMAND);
+		this.setEnabled(SOFT_MESSAGE_COMMAND, true);
+
+		this.add(HARD_MESSAGE_COMMAND);
+		this.setEnabled(HARD_MESSAGE_COMMAND, true);
+
 		
 		this.add(MENU_HELP);
 		this.add(MENU_HELP_ABOUT);

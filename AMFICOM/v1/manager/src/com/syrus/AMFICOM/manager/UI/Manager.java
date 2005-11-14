@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.15 2005/11/11 13:47:08 bob Exp $
+* $Id: Manager.java,v 1.16 2005/11/14 10:02:49 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,15 +27,16 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/11/11 13:47:08 $
+ * @version $Revision: 1.16 $, $Date: 2005/11/14 10:02:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class Manager extends AbstractApplication {
-	private static final String APPLICATION_NAME = "manager";
+	private static final String APPLICATION_NAME = "administration";
 
 	
 	public Manager() {
@@ -45,35 +46,36 @@ public class Manager extends AbstractApplication {
 	
 	@Override
 	protected void init() {
-		
-		
 		final ExtensionLauncher extensionLauncher = ExtensionLauncher.getInstance();
 		extensionLauncher.addExtensions("xml/manager.xml");	
 		super.aContext.setApplicationModel(new ManagerModel(super.aContext));
-		
-		try {
-			TypicalCondition tc = new TypicalCondition("sys", 
-				OperationSort.OPERATION_EQUALS, 
-				ObjectEntities.SYSTEMUSER_CODE, 
-				SystemUserWrapper.COLUMN_LOGIN);
-			Set<SystemUser> systemUserWithLoginSys = 
-				StorableObjectPool.getStorableObjectsByCondition(tc, true);
 
-			assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
-			
-			LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
-			
-			createDeliveryAttributes();
-			
+		try {
+			this.initUser();
+			this.createDeliveryAttributes();
 		} catch (ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
+			System.exit(-1);
+		}		
+		
 		super.startMainFrame(new ManagerMainFrame(super.aContext), 
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif"));
 	}
 
+	private void initUser() throws ApplicationException {
+		final Set<SystemUser> systemUserWithLoginSys = 
+			StorableObjectPool.getStorableObjectsByCondition(
+				new TypicalCondition("sys", 
+				OperationSort.OPERATION_EQUALS, 
+				ObjectEntities.SYSTEMUSER_CODE, 
+				SystemUserWrapper.COLUMN_LOGIN), true);
+
+		assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
+		
+		LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
+	}
+	
 	public static void main(String[] args) {
 		Launcher.launchApplicationClass(Manager.class);
 	}
@@ -87,6 +89,9 @@ public class Manager extends AbstractApplication {
 			true);
 		
 		attributes.setRoles(roles);
+		
+		
+		assert Log.debugMessage("Created " + attributes , Log.DEBUGLEVEL03);
 	}
 	
 	
