@@ -23,9 +23,11 @@ $LIB/general.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
+$LIB/event.jar:\
 $LIB/resource.jar:\
 $LIB/report.jar:\
 $LIB/csbridge.jar:\
+$LIB/reflectometry.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/mserver_interface.jar:\
 $LIB/util.jar

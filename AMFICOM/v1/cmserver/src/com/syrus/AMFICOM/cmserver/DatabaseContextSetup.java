@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.42 2005/10/11 12:57:00 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.43 2005/11/14 12:09:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,10 @@ import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.ProtoEquipmentDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
+import com.syrus.AMFICOM.event.DeliveryAttributesDatabase;
+import com.syrus.AMFICOM.event.EventDatabase;
+import com.syrus.AMFICOM.event.EventSourceDatabase;
+import com.syrus.AMFICOM.event.EventTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -50,8 +54,8 @@ import com.syrus.AMFICOM.report.ReportTemplateDatabase;
 import com.syrus.AMFICOM.report.TableDataDatabase;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/10/11 12:57:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.43 $, $Date: 2005/11/14 12:09:12 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
@@ -99,6 +103,11 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 		DatabaseContext.registerDatabase(new KISDatabase());
 		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+
+		DatabaseContext.registerDatabase(new EventTypeDatabase());
+		DatabaseContext.registerDatabase(new EventDatabase());
+		DatabaseContext.registerDatabase(new EventSourceDatabase());
+		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
 
 		DatabaseContext.registerDatabase(new AttachedTextDatabase());
 		DatabaseContext.registerDatabase(new DataDatabase());

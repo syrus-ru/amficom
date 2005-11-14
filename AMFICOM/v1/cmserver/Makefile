@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.40 2005/10/15 14:29:59 arseniy Exp $
+# $Id: Makefile,v 1.41 2005/11/14 12:09:12 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -23,6 +23,7 @@ general \
 administration \
 configuration \
 measurement \
+event \
 report \
 csbridge \
 leserver_interface \
