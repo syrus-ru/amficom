@@ -15,7 +15,8 @@ logs
 .settings
 .idl
 .#*
+.xml
 images
 common.properties
-manager.properties
+administration.properties
 Application.properties
