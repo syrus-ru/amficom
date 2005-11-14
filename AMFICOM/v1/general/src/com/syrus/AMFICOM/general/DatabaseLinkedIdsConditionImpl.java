@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.16 2005/09/29 06:08:43 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.17 2005/11/14 11:22:02 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MARK_CODE;
@@ -28,6 +28,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PROTOEQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
@@ -46,7 +47,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/29 06:08:43 $
+ * @version $Revision: 1.17 $, $Date: 2005/11/14 11:22:02 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -94,6 +95,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					case SCHEMEDEVICE_CODE:
 					case SCHEMEPATH_CODE:
 					case SCHEMEPROTOELEMENT_CODE:
+
+					/* Resource */
+					case LAYOUT_ITEM_CODE:
 
 					/* Map */
 					case COLLECTOR_CODE:
