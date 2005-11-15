@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.27 2005/11/14 12:23:37 max Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.28 2005/11/15 10:49:29 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/11/14 12:23:37 $
+ * @version $Revision: 1.28 $, $Date: 2005/11/15 10:49:29 $
  * @author $Author: max $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -84,7 +85,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		case TEST_CODE:
 			return key == TestWrapper.COLUMN_START_TIME
 					|| key == TestWrapper.COLUMN_END_TIME
-					|| key == TestWrapper.COLUMN_STATUS;
+					|| key == TestWrapper.COLUMN_STATUS
+					|| key == StorableObjectWrapper.COLUMN_DESCRIPTION;
 		case PERIODICALTEMPORALPATTERN_CODE:
 			return key == PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 		case MEASUREMENTPORT_TYPE_CODE:
@@ -93,6 +95,8 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		case MEASUREMENTSETUP_CODE:
 			return key == MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE
 						|| key == StorableObjectWrapper.COLUMN_DESCRIPTION;
+		case MONITOREDELEMENT_CODE:
+			return key == StorableObjectWrapper.COLUMN_NAME;
 		default:
 			return false;
 		}
