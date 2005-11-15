@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.24 2005/10/31 10:49:45 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.25 2005/11/15 10:00:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/10/31 10:49:45 $
+ * @version $Revision: 1.25 $, $Date: 2005/11/15 10:00:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -177,7 +177,6 @@ final class LoginProcessor extends SleepButWorkThread {
 		} catch (final UpdateObjectException uoe) {
 			Log.errorMessage(uoe);
 		}
-		printUserLogins();
 	}
 
 	static UserLogin getUserLogin(final SessionKey sessionKey) {
