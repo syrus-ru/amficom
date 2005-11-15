@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
@@ -209,7 +210,12 @@ public final class PathElementsPanel extends AnalysisPanel {
 							g.drawLine(start1, 6, start1, getHeight());
 							((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
 						}
-							final String text = se.getName();
+							String text = se.getName();
+							Scheme parentScheme = se.getParentScheme();
+							if (parentScheme != null) {
+								text = text + "(" + parentScheme.getName() + ")";
+							}
+							
 							final FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
 							final int height = fm.stringWidth(text);
 							final int width = fm.getHeight();
