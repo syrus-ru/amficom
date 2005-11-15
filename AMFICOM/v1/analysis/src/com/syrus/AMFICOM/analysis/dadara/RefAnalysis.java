@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 public class RefAnalysis {
 	public double[] noise; // hope nobody will change it
-	public double[] filtered; // hope nobody will change it
 	public TraceEvent overallStats; // hope nobody will change it
+	private double[] filtered; // hope nobody will change it
 
 	private PFTrace pfTrace;
 	private AnalysisResult ar;
