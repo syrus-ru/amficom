@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.9 2005/10/20 14:09:56 arseniy Exp $
+ * $Id: UserLogin.java,v 1.10 2005/11/16 10:23:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,17 +7,23 @@
  */
 package com.syrus.AMFICOM.security;
 
+import static com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort._USER_SORT_REGULAR;
+import static com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort._USER_SORT_SYSADMIN;
+
 import java.util.Date;
 
+import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/10/20 14:09:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/11/16 10:23:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
-public final class UserLogin {
+public class UserLogin {
 	private SessionKey sessionKey;
 	private Identifier userId;
 	private Identifier domainId;
@@ -25,7 +31,7 @@ public final class UserLogin {
 	private Date loginDate;
 	private Date lastActivityDate;
 
-	protected UserLogin(final SessionKey sessionKey,
+	UserLogin(final SessionKey sessionKey,
 			final Identifier userId,
 			final Identifier domainId,
 			final String userHostName,
@@ -39,14 +45,25 @@ public final class UserLogin {
 		this.lastActivityDate = lastActivityDate;
 	}
 
-	public static UserLogin createInstance(final Identifier userId, final Identifier domainId, final String userHostName) {
+	public static UserLogin createInstance(final Identifier userId, final Identifier domainId, final String userHostName)
+			throws ApplicationException {
+		final SessionKey sessionKey = SessionKeyGenerator.generateSessionKey(userId);
 		final Date date = new Date(System.currentTimeMillis());
-		return new UserLogin(SessionKeyGenerator.generateSessionKey(userId),
-				userId,
-				domainId,
-				userHostName,
-				date,
-				date);
+		return valueOf(sessionKey, userId, domainId, userHostName, date, date);
+	}
+
+	static UserLogin valueOf(final SessionKey sessionKey,
+			final Identifier userId,
+			final Identifier domainId,
+			final String userHostName,
+			final Date loginDate,
+			final Date lastActivityDate) throws ApplicationException {
+		final SystemUser user = StorableObjectPool.getStorableObject(userId, true);
+		final int userSort = user.getSort().value();
+		if (userSort == _USER_SORT_REGULAR || userSort == _USER_SORT_SYSADMIN) {
+			return new ClientUserLogin(sessionKey, userId, domainId, userHostName, loginDate, lastActivityDate);
+		}
+		return new UserLogin(sessionKey, userId, domainId, userHostName, loginDate, lastActivityDate);
 	}
 
 	public SessionKey getSessionKey() {
@@ -76,5 +93,4 @@ public final class UserLogin {
 	public void updateLastActivityDate() {
 		this.lastActivityDate = new Date(System.currentTimeMillis());
 	}
-
 }

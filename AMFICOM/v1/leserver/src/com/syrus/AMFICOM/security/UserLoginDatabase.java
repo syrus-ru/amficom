@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.15 2005/10/31 10:49:45 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.16 2005/11/16 10:23:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/10/31 10:49:45 $
+ * @version $Revision: 1.16 $, $Date: 2005/11/16 10:23:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -57,7 +58,7 @@ public final class UserLoginDatabase {
 
 	private StringBuffer singleWhereClause(final SessionKey sessionKey) {
 		return new StringBuffer(COLUMN_SESSION_KEY + EQUALS
-				+ APOSTROPHE + DatabaseString.toQuerySubString(sessionKey.toString(), SIZE_COLUMN_SESSION_KEY) + APOSTROPHE);
+				+ APOSTROPHE + DatabaseString.toQuerySubString(sessionKey.stringValue(), SIZE_COLUMN_SESSION_KEY) + APOSTROPHE);
 	}
 
 	private StringBuffer retrieveQuery(final StringBuffer condition) {
@@ -104,13 +105,17 @@ public final class UserLoginDatabase {
 			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
-				final UserLogin userLogin = new UserLogin(new SessionKey(DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SESSION_KEY))),
-						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
-						DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
-						DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_USER_HOST_NAME)),
-						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LOGIN_DATE),
-						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LAST_ACTIVITY_DATE));
-				objects.add(userLogin);
+				try {
+					final UserLogin userLogin = UserLogin.valueOf(new SessionKey(DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SESSION_KEY))),
+							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
+							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
+							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_USER_HOST_NAME)),
+							DatabaseDate.fromQuerySubString(resultSet, COLUMN_LOGIN_DATE),
+							DatabaseDate.fromQuerySubString(resultSet, COLUMN_LAST_ACTIVITY_DATE));
+					objects.add(userLogin);
+				} catch (ApplicationException ae) {
+					Log.errorMessage(ae);
+				}
 			}
 		} catch (SQLException sqle) {
 			final String mesg = "Cannot retrieve user login" + sqle.getMessage();
@@ -153,7 +158,7 @@ public final class UserLoginDatabase {
 				+ COLUMN_LOGIN_DATE + COMMA
 				+ COLUMN_LAST_ACTIVITY_DATE
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-				+ APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getSessionKey().toString(), SIZE_COLUMN_SESSION_KEY) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getSessionKey().stringValue(), SIZE_COLUMN_SESSION_KEY) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(userLogin.getUserId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(userLogin.getDomainId()) + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getUserHostName(), SIZE_COLUMN_USER_HOST_NAME) + APOSTROPHE + COMMA
