@@ -1,6 +1,11 @@
 classes
+docs
+images
+logs
 .settings
 .classpath
 .project
 .xml
 *.jar
+Application.properties
+administration.properties
