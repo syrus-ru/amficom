@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.32 2005/11/16 18:28:11 max Exp $
+ * $Id: SchemeTreeUI.java,v 1.33 2005/11/16 19:10:38 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -27,6 +28,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.ProtoEquipment;
@@ -52,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.32 $, $Date: 2005/11/16 18:28:11 $
+ * @version $Revision: 1.33 $, $Date: 2005/11/16 19:10:38 $
  * @module schemeclient
  */
 
