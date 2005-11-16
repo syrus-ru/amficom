@@ -1,5 +1,5 @@
 /*
- * $Id: ContextNameFactory.java,v 1.6 2005/09/21 13:25:12 bob Exp $
+ * $Id: ContextNameFactory.java,v 1.7 2005/11/16 10:20:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/21 13:25:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/11/16 10:20:45 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -23,7 +23,7 @@ public final class ContextNameFactory {
 		assert false;
 	}
 
-	public static String generateContextName(String hostName) throws CommunicationException {
+	public static String generateContextName(final String hostName) throws CommunicationException {
 		try {
 			return InetAddress.getByName(hostName).getCanonicalHostName().replaceAll("\\.", "_");
 		}
