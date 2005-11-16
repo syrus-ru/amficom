@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/11/16 13:19:37 bass Exp $
+# $Id: Makefile,v 1.7 2005/11/16 15:12:56 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -16,6 +16,7 @@ $(call checkenve,XMLBEANSCLASSPATH)
 $(call checkenve,SCOMP)
 $(call checkenve,SCOMPFLAGS)
 
+LIBNAME_EXTENSIONS_SCHEMAS = $(AMFICOM_HOME)/lib/extensions_schemas.jar
 LIBNAME_MANAGER_SCHEMAS = $(MODULE_NAME)_schemas.jar
 
 DEPENDENCIES = \
@@ -60,9 +61,14 @@ xml: .xml
 xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_MANAGER_SCHEMAS) $(LIBDIR)
 
-$(LIBNAME_MANAGER_SCHEMAS):
+$(LIBNAME_EXTENSIONS_SCHEMAS):
+	$(error $(LOGNAME), you forgot to build $@)
+
+$(LIBNAME_MANAGER_SCHEMAS): $(LIBNAME_EXTENSIONS_SCHEMAS)
 	$(RM) -r $(XMLCLASSDIR)/*
-	$(SCOMP) $(SCOMPFLAGS) -out $@ \
+	$(SCOMP) $(SCOMPFLAGS) \
+		-cp $(XMLBEANSCLASSPATH):$(LIBNAME_EXTENSIONS_SCHEMAS) \
+		-out $@ \
 		$(XMLDIR)/$(MODULE_NAME).xsd \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/impl
