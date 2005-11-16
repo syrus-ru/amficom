@@ -1,5 +1,5 @@
 /*
- * $Id: ReportLayout.java,v 1.8 2005/10/14 07:32:16 peskovsky Exp $
+ * $Id: ReportLayout.java,v 1.9 2005/11/16 18:53:17 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
-import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.report.StorableElement;
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.report.TextAttachingType;
  * Класс проводит раскладку визульных компонентов с реализованными
  * элементами отчёта так, чтобы расстояния между компонентами были
  * равны расстоянию между компонентами на схеме шаблона отчёта.
- * @author $Author: peskovsky $
- * @version $Revision: 1.8 $, $Date: 2005/10/14 07:32:16 $
+ * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/11/16 18:53:17 $
  * @module reportclient
  */
 public class ReportLayout {
@@ -95,8 +95,8 @@ public class ReportLayout {
 	 * Выбрасывается при вычислении Y координаты для элемента отображения, 
 	 * в том случае, когда элементы, находящиеся выше на схеме, ещё не
 	 * реализованы.
-	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.8 $, $Date: 2005/10/14 07:32:16 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.9 $, $Date: 2005/11/16 18:53:17 $
 	 * @module reportclient
 	 */
 	private class NonImplementedElementFoundException extends Exception
@@ -123,10 +123,10 @@ public class ReportLayout {
 		int elemMinX = element.getX();
 		int elemMaxX = element.getX() + element.getWidth();
 		int elementMinY = element.getY();
-		if (element instanceof DataStorableElement) {
+		if (element instanceof AbstractDataStorableElement) {
 			//Смотрим: принадлежит ли точка кластеру - области, в которую
 			//вписаны элемент отображения данных и прявязанные к нему надписи
-			DataStorableElement dsElement =	(DataStorableElement) element;
+			AbstractDataStorableElement dsElement =	(AbstractDataStorableElement) element;
 			Rectangle bounds = this.reportTemplate.getElementClasterBounds(dsElement);
 			elementMinY = bounds.y;
 		}
@@ -241,9 +241,9 @@ public class ReportLayout {
 				xs.add(new Integer(element.getX() + element.getWidth()));
 				ys.add(new Integer(element.getY() + element.getHeight()));
 			}
-			else if (element instanceof DataStorableElement) {
+			else if (element instanceof AbstractDataStorableElement) {
 				Rectangle borders = this.reportTemplate.getElementClasterBounds(
-						(DataStorableElement)element);
+						(AbstractDataStorableElement)element);
 				
 				xs.add(new Integer(borders.x));
 				ys.add(new Integer(borders.y));
@@ -287,10 +287,10 @@ public class ReportLayout {
 				if (element.hasPoint(x,y))
 					return component;
 			}
-			else if (element instanceof DataStorableElement) {
+			else if (element instanceof AbstractDataStorableElement) {
 				//Смотрим: принадлежит ли точка кластеру - области, в которую
 				//вписаны элемент отображения данных и прявязанные к нему надписи
-				DataStorableElement dsElement =	(DataStorableElement) element;
+				AbstractDataStorableElement dsElement =	(AbstractDataStorableElement) element;
 				if (this.reportTemplate.clasterContainsPoint(dsElement,x,y))
 					return component;
 			}
@@ -311,7 +311,7 @@ public class ReportLayout {
 	 */
 	private Rectangle getDataComponentsClasterBounds(DataRenderingComponent component) throws ApplicationException {
 		Rectangle bounds = this.reportTemplate.getElementClasterBounds(
-				(DataStorableElement)component.getElement());
+				(AbstractDataStorableElement)component.getElement());
 		
 		bounds.x = component.getX();
 		bounds.y = component.getY();

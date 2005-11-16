@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.14 2005/10/14 12:43:59 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.15 2005/11/16 18:53:17 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
-import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.report.StorableElement;
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
- * @author $Author: peskovsky $
- * @version $Revision: 1.14 $, $Date: 2005/10/14 12:43:59 $
+ * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2005/11/16 18:53:17 $
  * @module reportclient
  */
 public class ReportRenderer extends JPanel {
@@ -74,8 +74,8 @@ public class ReportRenderer extends JPanel {
 		
 		this.checkForIntersections();
 		
-		Set<DataStorableElement> dataStorableElements = this.reportTemplate.getDataStorableElements();
-		for (DataStorableElement dataElement : dataStorableElements) {
+		Set<AbstractDataStorableElement> dataStorableElements = this.reportTemplate.getDataStorableElements();
+		for (AbstractDataStorableElement<?> dataElement : dataStorableElements) {
 			String modelName = dataElement.getModelClassName();
 			ReportModel model = ReportModelPool.getModel(modelName);
 
@@ -201,8 +201,8 @@ public class ReportRenderer extends JPanel {
 	}
 	
 	private boolean elementsIntersect(
-			StorableElement element1,
-			StorableElement element2) {
+			StorableElement<?> element1,
+			StorableElement<?> element2) {
 		int e1w = element1.getWidth();
 		int e1h = element1.getHeight();
 		int e2w = element2.getWidth();

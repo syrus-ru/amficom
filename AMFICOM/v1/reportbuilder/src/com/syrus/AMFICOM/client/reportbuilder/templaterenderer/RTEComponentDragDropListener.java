@@ -1,5 +1,5 @@
 /*
- * $Id: RTEComponentDragDropListener.java,v 1.2 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: RTEComponentDragDropListener.java,v 1.3 2005/11/16 18:51:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.util.Log;
 
 public class RTEComponentDragDropListener implements DropTargetListener {
@@ -65,8 +65,8 @@ public class RTEComponentDragDropListener implements DropTargetListener {
 						ReportDataChecker.REPORT_NAME);
 				String modelClassName = reportObjectProperties.get(
 						ReportDataChecker.MODEL_CLASS_NAME);
-				DataStorableElement dsElement =
-					(DataStorableElement) this.renderingComponent.getElement();
+				AbstractDataStorableElement<?> dsElement =
+					(AbstractDataStorableElement) this.renderingComponent.getElement();
 				
 				if (	!reportName.equals(dsElement.getReportName())
 					||	!modelClassName.equals(dsElement.getModelClassName())) {
@@ -85,8 +85,8 @@ public class RTEComponentDragDropListener implements DropTargetListener {
 				
 				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 				dtde.getDropTargetContext().dropComplete(true);
-				DataStorableElement storableElement = 
-					(DataStorableElement)this.renderingComponent.getElement();
+				AbstractDataStorableElement<?> storableElement = 
+					(AbstractDataStorableElement)this.renderingComponent.getElement();
 				storableElement.setReportObjectId(additionalData);
 				
 				try {

@@ -1,5 +1,5 @@
 /*
- * $Id: SchedulerReportModel.java,v 1.4 2005/10/13 06:21:41 peskovsky Exp $
+ * $Id: SchedulerReportModel.java,v 1.5 2005/11/16 18:55:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 
@@ -55,7 +55,7 @@ public class SchedulerReportModel extends ReportModel {
 	
 	@Override
 	public RenderingComponent createReport(
-			DataStorableElement element,
+			AbstractDataStorableElement<?> element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
 		RenderingComponent result = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: RTEDataRenderingComponent.java,v 1.3 2005/10/10 05:48:40 peskovsky Exp $
+ * $Id: RTEDataRenderingComponent.java,v 1.4 2005/11/16 18:51:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 
 public class RTEDataRenderingComponent extends
 		DataRenderingComponent {
@@ -49,7 +49,7 @@ public class RTEDataRenderingComponent extends
 
 	private ApplicationContext applicationContext = null;	
 	
-	public RTEDataRenderingComponent (DataStorableElement dre){
+	public RTEDataRenderingComponent (AbstractDataStorableElement dre){
 		super(dre);
 	}
 	
@@ -82,7 +82,7 @@ public class RTEDataRenderingComponent extends
 			this.reportNameLocation.x,
 			this.reportNameLocation.y);
 
-		DataStorableElement dsElement = (DataStorableElement)this.getElement();
+		AbstractDataStorableElement<?> dsElement = (AbstractDataStorableElement)this.getElement();
 		if (dsElement.getReportObjectId() != null)	
 			g.drawString(
 					this.objectName,
@@ -96,7 +96,7 @@ public class RTEDataRenderingComponent extends
 	 * Метод вызывается при изменении габаритов элемента отображения.
 	 */
 	private void refreshPositions() {
-		DataStorableElement dsElement = (DataStorableElement)this.getElement();
+		AbstractDataStorableElement<?> dsElement = (AbstractDataStorableElement)this.getElement();
 
 		if (dsElement.getReportObjectId() == null) {		
 			this.modelNameLocation.y = (int) (this.getHeight() / 3.D);
@@ -148,7 +148,7 @@ public class RTEDataRenderingComponent extends
 	 * @throws ApplicationException 
 	 */
 	public void refreshLabels()  throws CreateModelException, ApplicationException{
-		DataStorableElement dsElement = (DataStorableElement)this.getElement();
+		AbstractDataStorableElement<?> dsElement = (AbstractDataStorableElement)this.getElement();
 		ReportModel reportModel = ReportModelPool.getModel(
 				dsElement.getModelClassName());
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: ObserveReportModel.java,v 1.6 2005/10/13 15:19:59 peskovsky Exp $
+ * $Id: ObserveReportModel.java,v 1.7 2005/11/16 18:55:25 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 public class ObserveReportModel extends ReportModel {
@@ -35,7 +35,7 @@ public class ObserveReportModel extends ReportModel {
 	public static String ALARMS_LIST = "alarmsList";
 
 	@Override
-	public RenderingComponent createReport(DataStorableElement element, Object data, ApplicationContext aContext)
+	public RenderingComponent createReport(AbstractDataStorableElement<?> element, Object data, ApplicationContext aContext)
 		throws CreateReportException, CreateModelException {
 		RenderingComponent result = null;
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.18 2005/10/14 12:44:35 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.19 2005/11/16 18:51:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,6 +54,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
@@ -230,8 +231,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				if (eventComponent instanceof DataRenderingComponent){
 					AttachedTextStorableElement textElement =
 						(AttachedTextStorableElement)this.labelToBeAttached.getElement();
-					DataStorableElement dataElement =
-						(DataStorableElement)eventComponent.getElement();
+					AbstractDataStorableElement dataElement =
+						(AbstractDataStorableElement)eventComponent.getElement();
 					textElement.setAttachment(
 							dataElement,
 							this.labelAttachingType);
@@ -319,7 +320,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.template = template;
 		this.refreshTemplateBounds();
 		
-		for (DataStorableElement dataElement : this.template.getDataStorableElements())
+		for (AbstractDataStorableElement dataElement : this.template.getDataStorableElements())
 			this.createReportTemplateDataRenderingComponent(dataElement);
 
 		for (AttachedTextStorableElement textElement : this.template.getAttachedTextStorableElements())
@@ -542,7 +543,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	
 	
 	public RTEDataRenderingComponent createReportTemplateDataRenderingComponent(
-			DataStorableElement storableElement) throws CreateModelException, ApplicationException {
+			AbstractDataStorableElement<?> storableElement) throws CreateModelException, ApplicationException {
 		RTEDataRenderingComponent component =
 			new RTEDataRenderingComponent(storableElement);
 		
@@ -571,7 +572,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		ReportType reportType = reportModel.getReportKind(reportName);
 		
 		IntPoint intLocation = new IntPoint(location.x,location.y);		
-		DataStorableElement storableElement = null;
+		AbstractDataStorableElement storableElement = null;
 		if (reportType.equals(ReportType.TABLE))
 			storableElement = TableDataStorableElement.createInstance(
 					LoginManager.getUserId(),
@@ -638,8 +639,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				reportObjectId,
 				location,
 				size);
-		DataStorableElement dataElement =
-			(DataStorableElement)dataComponent.getElement();
+		AbstractDataStorableElement dataElement =
+			(AbstractDataStorableElement)dataComponent.getElement();
 	
 		//Заголовок для элемента шаблона
 		AttachedTextComponent headerTextComponent =

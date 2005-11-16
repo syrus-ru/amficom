@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 
 /**
@@ -32,7 +32,7 @@ public abstract class ReportModel
 	 * @throws CreateModelException 
 */
 	public abstract RenderingComponent createReport(
-		DataStorableElement element,
+		AbstractDataStorableElement<?> element,
 		Object data,
 		ApplicationContext aContext)
 		throws CreateReportException, CreateModelException;
