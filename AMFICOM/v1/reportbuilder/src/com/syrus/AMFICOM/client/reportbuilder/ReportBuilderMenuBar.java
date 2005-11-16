@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMenuBar.java,v 1.5 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: ReportBuilderMenuBar.java,v 1.6 2005/11/16 18:46:51 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,13 @@ public class ReportBuilderMenuBar extends AbstractMainMenuBar {
 		super(aModel);
 	}
 	
+	@Override
 	protected void addMenuItems() {
 		final JMenu menuTemplate = new JMenu();
+		final JMenuItem menuTemplateNew = new JMenuItem();
+		final JMenuItem menuTemplateLoad = new JMenuItem();
+		final JMenuItem menuTemplateSave = new JMenuItem();
+		final JMenuItem menuTemplateSaveAs = new JMenuItem();
 		final JMenuItem menuTemplateParameters = new JMenuItem();
 
 		final JMenu menuWindow = new JMenu();
@@ -34,12 +39,33 @@ public class ReportBuilderMenuBar extends AbstractMainMenuBar {
 		menuTemplate.setText(I18N.getString("report.UI.Menubar.menuTemplate"));
 		menuTemplate.setName(ReportBuilderApplicationModel.MENU_TEMPLATE);
 		
+		menuTemplateNew.setText(I18N.getString("report.UI.Menubar.menuTemplateNew"));
+		menuTemplateNew.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW);
+		menuTemplateNew.addActionListener(this.actionAdapter);
+		
+		menuTemplateLoad.setText(I18N.getString("report.UI.Menubar.menuTemplateLoad"));
+		menuTemplateLoad.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD);
+		menuTemplateLoad.addActionListener(this.actionAdapter);
+		
+		menuTemplateSave.setText(I18N.getString("report.UI.Menubar.menuTemplateSave"));
+		menuTemplateSave.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE);
+		menuTemplateSave.addActionListener(this.actionAdapter);
+		
+		menuTemplateSaveAs.setText(I18N.getString("report.UI.Menubar.menuTemplateSaveAs"));
+		menuTemplateSaveAs.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS);
+		menuTemplateSaveAs.addActionListener(this.actionAdapter);
+		
 		menuTemplateParameters.setText(I18N.getString("report.UI.Menubar.menuTemplateParameters"));
 		menuTemplateParameters.setName(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS);
 		menuTemplateParameters.addActionListener(this.actionAdapter);
 		
-		menuTemplate.add(menuTemplateParameters);		
-		
+		menuTemplate.add(menuTemplateNew);
+		menuTemplate.add(menuTemplateLoad);
+		menuTemplate.add(menuTemplateSave);
+		menuTemplate.add(menuTemplateSaveAs);
+		menuTemplate.addSeparator();
+		menuTemplate.add(menuTemplateParameters);
+				
 		menuWindow.setText(I18N.getString("report.UI.Menubar.menuWindow"));
 		menuWindow.setName(ReportBuilderApplicationModel.MENU_WINDOW);
 		
@@ -74,6 +100,14 @@ public class ReportBuilderMenuBar extends AbstractMainMenuBar {
 				menuTemplate.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE));
 				menuTemplateParameters.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS));
 				menuTemplateParameters.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS));
+				menuTemplateNew.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW));
+				menuTemplateNew.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW));
+				menuTemplateSave.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE));
+				menuTemplateSave.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE));
+				menuTemplateSaveAs.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS));
+				menuTemplateSaveAs.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS));
+				menuTemplateLoad.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
+				menuTemplateLoad.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
 				
 				menuWindow.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_WINDOW));
 				menuWindow.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_WINDOW));

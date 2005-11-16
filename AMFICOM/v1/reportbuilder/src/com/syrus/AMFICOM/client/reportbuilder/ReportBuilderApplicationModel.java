@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.9 2005/10/13 06:23:07 peskovsky Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.10 2005/11/16 18:46:00 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,14 +26,11 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 	public static final String	MENU_WINDOW_TEMPLATE_SCHEME		= "menuWindowTemplateScheme";
 
 	public static final String	MENU_TEMPLATE					= "menuTemplate";
-	public static final String	MENU_TEMPLATE_PARAMETERS		= "menuTemplateParameters";
-	
 	public static final String	MENU_REPORT_TEMPLATE_NEW		= "menuReportTemplateNew";
 	public static final String	MENU_REPORT_TEMPLATE_SAVE		= "menuReportTemplateSave";
 	public static final String	MENU_REPORT_TEMPLATE_SAVE_AS	= "menuReportTemplateSaveAs";	
 	public static final String	MENU_REPORT_TEMPLATE_LOAD		= "menuReportTemplateLoad";
-	public static final String	MENU_REPORT_TEMPLATE_EXPORT		= "menuReportTemplateExport";
-	public static final String	MENU_REPORT_TEMPLATE_IMPORT		= "menuReportTemplateImport";	
+	public static final String	MENU_TEMPLATE_PARAMETERS		= "menuTemplateParameters";
 	
 	public static final String	MENU_INSERT_LABEL				= "menuInsertLabel";
 	public static final String	MENU_INSERT_IMAGE				= "menuInsertImage";
@@ -49,8 +46,10 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		add(ApplicationModel.MENU_SESSION_CLOSE);
 		add(ApplicationModel.MENU_SESSION_OPTIONS);
 		add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
-		add(ApplicationModel.MENU_SESSION_DOMAIN);
 		add(ApplicationModel.MENU_EXIT);
+		
+		add(ApplicationModel.MENU_HELP);
+		add(ApplicationModel.MENU_HELP_ABOUT);
 
 		add(MENU_TEMPLATE);
 		add(MENU_TEMPLATE_PARAMETERS);
@@ -63,9 +62,7 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		add(MENU_REPORT_TEMPLATE_SAVE);
 		add(MENU_REPORT_TEMPLATE_SAVE_AS);		
 		add(MENU_REPORT_TEMPLATE_LOAD);
-		add(MENU_REPORT_TEMPLATE_EXPORT);
-		add(MENU_REPORT_TEMPLATE_IMPORT);
-
+		
 		//Доступность кнопки
 		add(MENU_INSERT_LABEL);
 		//Имя +START и +CANCEL - для команды нажатия/отжатия ToggleButton
