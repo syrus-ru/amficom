@@ -1,5 +1,5 @@
 /*-
- * $Id: report.idl,v 1.9 2005/09/30 10:22:40 max Exp $
+ * $Id: report.idl,v 1.10 2005/11/16 18:13:08 max Exp $
  *
  * Copyright © 2004-${year} Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,11 +91,16 @@ module report {
 					in general::corba::IdlIdentifier bitmapImageResource);
 		
 		};
-		/////////////////////// Data extends AbstractReportElement ///
-		valuetype IdlData : IdlAbstractReportElement {
+		
+		/////////////////////// AbstractData extends AbstractElement /
+		
+		valuetype IdlAbstractData : IdlAbstractReportElement {
 			public general::corba::WString128 reportName;
 			public general::corba::WString128 modelClassName;
-			
+		};
+		
+		/////////////////////// Data extends AbstractData ////////////
+		valuetype IdlData : IdlAbstractData {		
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
@@ -111,8 +116,8 @@ module report {
 					in general::corba::WString128 modelClassName);
 		};
 		
-		/////////////////////// TableData extends Data ///////////////
-		valuetype IdlTableData : IdlData {
+		/////////////////////// TableData extends AbstractData ///////////////
+		valuetype IdlTableData : IdlAbstractData {
 			public long verticalDivisionCount;
 			
 			factory init(in general::corba::IdlIdentifier id,
