@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.23 2005/10/31 12:30:14 bass Exp $
+ * $Id: ReportTemplate.java,v 1.24 2005/11/16 18:36:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,12 +57,12 @@ import com.syrus.util.Log;
  * <p>Тип шаблона характеризует из какого модуля по нему можно построить
  * отчёт </p>
  * 
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/10/31 12:30:14 $
+ * @author $Author: max $
+ * @version $Revision: 1.24 $, $Date: 2005/11/16 18:36:13 $
  * @module report
  */
 public class ReportTemplate extends StorableObject<ReportTemplate>
-		implements Namable, Describable, ReverseDependencyContainer {
+		implements Namable, Describable, ReverseDependencyContainer, Cloneable {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
 	public enum Orientation {PORTRAIT,LANDSCAPE}
@@ -95,14 +95,14 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 	 */
 	private String destinationModule;
 	
-	private Set<StorableElement> storableElementsToRemove;
+	private transient Set<StorableElement> storableElementsToRemove;
 	
-	private boolean isNew = false;
+	private transient boolean isNew = false;
 
-	private LinkedIdsCondition	attTextCondition;
-	private LinkedIdsCondition	imageCondition;
-	private LinkedIdsCondition	dataCondition;
-	private LinkedIdsCondition	tableDataCondition;
+	private transient LinkedIdsCondition	attTextCondition;
+	private transient LinkedIdsCondition	imageCondition;
+	private transient LinkedIdsCondition	dataCondition;
+	private transient LinkedIdsCondition	tableDataCondition;
 
 	//Приходится хранить элементы в разных списках, несмотря на то, что они
 	//все наследуют StorableElement, поскольку при загрузке (импорте) важно,
@@ -229,34 +229,34 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 	 * @param rteName искомое имя
 	 * @return элемент шаблона, отображающий искомый отчёт
 	 */
-	public DataStorableElement findStorableElementForName (String rteName) {
+	public AbstractDataStorableElement findStorableElementForName (String rteName) {
 		TypicalCondition typicalCondition = new TypicalCondition(rteName, OperationSort.OPERATION_EQUALS, ObjectEntities.REPORTDATA_CODE, StorableObjectWrapper.COLUMN_NAME);
 		LinkedIdsCondition linkedCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
 		CompoundCondition condition = new CompoundCondition(typicalCondition, CompoundConditionSort.AND, linkedCondition);
-		Set<DataStorableElement> dataElements = null;
+		Set<AbstractDataStorableElement> abstractDataElements = null;
 		try {
-			dataElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			abstractDataElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 			return null;
 		}
-		if (dataElements.size() > 1) {
+		if (abstractDataElements.size() > 1) {
 			Log.errorMessage("Error: to many of dataStorableElements");
 		}
-		if (!dataElements.isEmpty()) {
-			return dataElements.iterator().next();
+		if (!abstractDataElements.isEmpty()) {
+			return abstractDataElements.iterator().next();
 		}
 		return null;
 	}
 
 	/**
-	 * @param dataStorableElement Объект отображения данных
+	 * @param abstractDataStorableElement Объект отображения данных
 	 * @return Список надписей, привязанных к данному объекту отображения
 	 */
-	public Set<AttachedTextStorableElement> getAttachedTextStorableElements (DataStorableElement dataStorableElement)
+	public Set<AttachedTextStorableElement> getAttachedTextStorableElements (AbstractDataStorableElement abstractDataStorableElement)
 	{
 		LinkedIdsCondition condition1 = new LinkedIdsCondition(this.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
-		LinkedIdsCondition condition2 = new LinkedIdsCondition(dataStorableElement.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
+		LinkedIdsCondition condition2 = new LinkedIdsCondition(abstractDataStorableElement.getId(), ObjectEntities.ATTACHEDTEXT_CODE);
 		CompoundCondition condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -272,15 +272,15 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 	 * привязанные к нему надписи.
 	 * @throws ApplicationException 
 	 */
-	public Rectangle getElementClasterBounds(DataStorableElement dataStorableElement) throws ApplicationException
+	public Rectangle getElementClasterBounds(AbstractDataStorableElement abstractDataStorableElement) throws ApplicationException
 	{
-		if (dataStorableElement == null)
+		if (abstractDataStorableElement == null)
 			throw new AssertionError("The claster bounds can't be calculated for the null element!");
 		
-		int x1 = dataStorableElement.getLocation().x;
-		int x2 = x1 + dataStorableElement.getWidth();		
-		int y1 = dataStorableElement.getLocation().y;
-		int y2 = y1 + dataStorableElement.getHeight();
+		int x1 = abstractDataStorableElement.getLocation().x;
+		int x2 = x1 + abstractDataStorableElement.getWidth();		
+		int y1 = abstractDataStorableElement.getLocation().y;
+		int y2 = y1 + abstractDataStorableElement.getHeight();
 
 		Set<AttachedTextStorableElement> textStorableElements = getAttachedTextStorableElements();
 		if (textStorableElements.isEmpty()) {
@@ -288,12 +288,12 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 		}
 		
 		for (AttachedTextStorableElement textStorableElement : textStorableElements) {
-			DataStorableElement vertAttacher = textStorableElement.getVerticalAttacher();
-			DataStorableElement horizAttacher = textStorableElement.getHorizontalAttacher();			
+			AbstractDataStorableElement vertAttacher = textStorableElement.getVerticalAttacher();
+			AbstractDataStorableElement horizAttacher = textStorableElement.getHorizontalAttacher();			
 			if (!		(	(vertAttacher != null)
-						&&	vertAttacher.equals(dataStorableElement)
+						&&	vertAttacher.equals(abstractDataStorableElement)
 					||	(horizAttacher != null)
-						&&	horizAttacher.equals(dataStorableElement)))
+						&&	horizAttacher.equals(abstractDataStorableElement)))
 				continue;
 
 			int labelX = textStorableElement.getLocation().x;
@@ -325,13 +325,13 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 	 * @return true если точка, принадлежит кластеру
 	 * @throws ApplicationException 
 	 */
-	public boolean clasterContainsPoint (DataStorableElement dataStorableElement,int x, int y) throws ApplicationException
+	public boolean clasterContainsPoint (AbstractDataStorableElement dataStorableElement,int x, int y) throws ApplicationException
 	{
 		Rectangle bounds = this.getElementClasterBounds(dataStorableElement);
 		return bounds.contains(x,y);
 	}
 	
-	public DataStorableElement getDataRElement(Identifier dreId)
+	public AbstractDataStorableElement getDataRElement(Identifier dreId)
 	{
 		try {
 			return StorableObjectPool.getStorableObject(dreId, true);
@@ -350,18 +350,18 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 		super.markAsChanged();
 	}
 
-	public Set<DataStorableElement> getDataStorableElements() throws ApplicationException {
+	public Set<AbstractDataStorableElement> getDataStorableElements() throws ApplicationException {
 		return this.getDataStorableElements(true);
 	}
 	
-	public Set<DataStorableElement> getDataStorableElements(boolean usePool) throws ApplicationException {
+	public Set<AbstractDataStorableElement> getDataStorableElements(boolean usePool) throws ApplicationException {
 		if(this.dataCondition == null) {
 			this.dataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTDATA_CODE);
 		}
 		if(this.tableDataCondition == null) {
 			this.tableDataCondition = new LinkedIdsCondition(this.getId(), ObjectEntities.REPORTTABLEDATA_CODE);
 		}
-		Set<DataStorableElement> dataSet = new HashSet<DataStorableElement>();
+		Set<AbstractDataStorableElement> dataSet = new HashSet<AbstractDataStorableElement>();
 		dataSet.addAll(StorableObjectPool.<DataStorableElement>getStorableObjectsByCondition(this.dataCondition, usePool));
 		dataSet.addAll(StorableObjectPool.<TableDataStorableElement>getStorableObjectsByCondition(this.tableDataCondition, usePool));
 		return dataSet;
@@ -488,5 +488,59 @@ public class ReportTemplate extends StorableObject<ReportTemplate>
 	@Override
 	protected ReportTemplateWrapper getWrapper() {
 		return ReportTemplateWrapper.getInstance();
+	}
+	
+	@Override
+	public ReportTemplate clone() throws CloneNotSupportedException {
+		ReportTemplate clone = super.clone();
+		clone.name = this.name; 
+		clone.description = this.description;
+		clone.sheetSize = this.sheetSize;
+		clone.orientation = this.orientation;
+		clone.marginSize = this.marginSize;
+		clone.destinationModule = this.destinationModule;
+		
+		clone.storableElementsToRemove = null;
+		
+		clone.isNew = false;
+
+		clone.attTextCondition = null;
+		clone.imageCondition = null;
+		clone.dataCondition = null;
+		clone.tableDataCondition = null;
+		
+		try {
+			Set<AttachedTextStorableElement> attText = this.getAttachedTextStorableElements(false);
+			for (AttachedTextStorableElement attTextElement : attText) {
+				AttachedTextStorableElement clonedAttText = attTextElement.clone();
+				clone.addElement(clonedAttText);
+				AbstractDataStorableElement horizontalData = clonedAttText.getHorizontalAttacher();
+				if (horizontalData != null) {
+					clone.addElement(horizontalData);
+				}
+				
+				AbstractDataStorableElement verticalData = clonedAttText.getVerticalAttacher();
+				if (verticalData != null) {
+					clone.addElement(verticalData);
+				}
+			}
+			
+			Set<ImageStorableElement> images = this.getImageStorableElements(false);
+			for (ImageStorableElement imageElement : images) {
+				clone.addElement(imageElement.clone());
+			}
+			
+			Set<AttachedTextStorableElement> qwe1 = this.getAttachedTextStorableElements();
+			Set<AttachedTextStorableElement> qwe2 = clone.getAttachedTextStorableElements();
+			System.out.println(qwe1);
+			System.out.println(qwe2);
+			
+		} catch (ApplicationException e) {
+			CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(e);
+			throw cnse;
+		}
+		
+		return clone;
 	}
 }

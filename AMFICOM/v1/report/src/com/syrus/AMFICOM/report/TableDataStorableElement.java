@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.14 2005/10/25 19:53:08 bass Exp $
+ * $Id: TableDataStorableElement.java,v 1.15 2005/11/16 18:37:17 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,15 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.REPORTTABLEDATA_CODE;
 
 import java.awt.Font;
-import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -30,11 +33,11 @@ import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/10/25 19:53:08 $
+ * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2005/11/16 18:37:17 $
  * @module report
  */
-public final class TableDataStorableElement extends DataStorableElement implements Serializable {
+public final class TableDataStorableElement extends AbstractDataStorableElement<TableDataStorableElement> {
 	private static final long serialVersionUID = -2699698026579054587L;
 	
 	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.PLAIN,12);	
@@ -62,7 +65,7 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 		this.verticalDivisionsCount = verticalDivisionsCount;
 	}
 	
-	public static DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, int verticalDivisionsCount, IntPoint location) throws CreateObjectException {
+	public static TableDataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, int verticalDivisionsCount, IntPoint location) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert reportName != null : NON_NULL_EXPECTED;
 		assert modelClassName != null: NON_NULL_EXPECTED;
@@ -91,14 +94,24 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 	}
 	
 	public TableDataStorableElement(IdlTableData transferable) {
-		super(transferable);		
+		fromTransferable(transferable);		
 	}
 	
 	@Override
 	protected synchronized void fromTransferable(IdlStorableObject transferable) {
-		IdlTableData tdt = (IdlTableData) transferable;
-		super.fromTransferable(tdt);
-		this.verticalDivisionsCount = tdt.verticalDivisionCount;
+		IdlTableData idlTableData = (IdlTableData) transferable;
+		try {
+			super.fromTransferable(idlTableData);
+		} catch (ApplicationException e) {
+			// Never can happen
+			assert false;
+		}
+		this.verticalDivisionsCount = idlTableData.verticalDivisionCount;
+	}
+	
+	@Override
+	public Set<Identifiable> getDependencies() {
+		return Collections.emptySet();
 	}
 	
 	synchronized void setAttributes(Date created, 
@@ -156,14 +169,15 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 		super.markAsChanged();
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.report.DataStorableElement#getWrapper()
-	 * @todo create a common abstract supertype for Data and TableData.
-	 */
 	@Override
-//	protected TableDataWrapper getWrapper() {
-	protected DataWrapper getWrapper() {
-//		return TableDataWrapper.getInstance();
-		throw new UnsupportedOperationException();
+	protected TableDataWrapper getWrapper() {
+		return TableDataWrapper.getInstance();
+	}
+	
+	@Override
+	protected TableDataStorableElement clone() throws CloneNotSupportedException {
+		TableDataStorableElement clone = super.clone();
+		clone.verticalDivisionsCount = this.verticalDivisionsCount;
+		return clone;
 	}
 }
