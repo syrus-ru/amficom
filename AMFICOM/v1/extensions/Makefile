@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.4 2005/11/16 13:17:55 bass Exp $
+# $Id: Makefile,v 1.5 2005/11/16 13:27:47 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -22,7 +22,7 @@ LIBNAME_RESOURCES_SCHEMAS = resources_schemas.jar
 .PHONY: xml
 xml: .xml
 
-.xml: $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBNAME_RESOURCES_SCHEMAS)
+.xml: $(LIBNAME_RESOURCES_SCHEMAS) $(LIBNAME_EXTENSIONS_SCHEMAS)
 	touch $@
 
 .PHONY: xmlinstall
