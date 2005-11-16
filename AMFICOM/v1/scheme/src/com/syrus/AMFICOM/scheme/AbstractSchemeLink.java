@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.47 2005/10/31 12:29:54 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.48 2005/11/16 15:53:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.48 $, $Date: 2005/11/16 15:53:28 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
@@ -127,10 +127,10 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 			final String description,
 			final double physicalLength,
 			final double opticalLength,
-			final AbstractLinkType abstractLinkType,
-			final AbstractLink abstractLink,
-			final AbstractSchemePort sourceAbstractSchemePort,
-			final AbstractSchemePort targetAbstractSchemePort,
+			final AbstractLinkType<?> abstractLinkType,
+			final AbstractLink<?> abstractLink,
+			final AbstractSchemePort<?> sourceAbstractSchemePort,
+			final AbstractSchemePort<?> targetAbstractSchemePort,
 			final Scheme parentScheme) {
 		super(id, created, modified, creatorId, modifierId, version, name, description, parentScheme);
 		this.physicalLength = physicalLength;
@@ -204,10 +204,10 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	 *
 	 * Overridden by descendants to add extra checks.
 	 */
-	public AbstractLinkType getAbstractLinkType() {
+	public AbstractLinkType<?> getAbstractLinkType() {
 		try {
 			return this.getAbstractLinkId().isVoid()
-					? StorableObjectPool.<AbstractLinkType>getStorableObject(this.getAbstractLinkTypeId(), true)
+					? StorableObjectPool.<AbstractLinkType<?>>getStorableObject(this.getAbstractLinkTypeId(), true)
 					: this.getAbstractLink().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugMessage(ae, SEVERE);
@@ -246,7 +246,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	 *
 	 * Overridden by descendants to add extra checks.
 	 */
-	public AbstractSchemePort getSourceAbstractSchemePort() {
+	public AbstractSchemePort<?> getSourceAbstractSchemePort() {
 		try {
 			return StorableObjectPool.getStorableObject(this.getSourceAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
@@ -268,7 +268,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	 *
 	 * Overridden by descendants to add extra checks.
 	 */
-	public AbstractSchemePort getTargetAbstractSchemePort() {
+	public AbstractSchemePort<?> getTargetAbstractSchemePort() {
 		try {
 			return StorableObjectPool.getStorableObject(this.getTargetAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
@@ -282,7 +282,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	 *
 	 * @param abstractLink
 	 */
-	public void setAbstractLink(final AbstractLink abstractLink) {
+	public void setAbstractLink(final AbstractLink<?> abstractLink) {
 		assert this.assertAbstractLinkTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newLinkId = Identifier.possiblyVoid(abstractLink);
@@ -315,7 +315,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	 *
 	 * @param abstractLinkType
 	 */
-	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
+	public void setAbstractLinkType(final AbstractLinkType<?> abstractLinkType) {
 		assert this.assertAbstractLinkTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 		assert abstractLinkType != null: NON_NULL_EXPECTED;
 
@@ -400,7 +400,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	 *
 	 * @param sourceAbstractSchemePort
 	 */
-	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
+	public void setSourceAbstractSchemePort(final AbstractSchemePort<?> sourceAbstractSchemePort) {
 		this.setSourceAbstractSchemePortId(Identifier.possiblyVoid(sourceAbstractSchemePort));
 	}
 
@@ -434,7 +434,7 @@ public abstract class AbstractSchemeLink<T extends AbstractSchemeLink<T>>
 	 *
 	 * @param targetAbstractSchemePort
 	 */
-	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
+	public void setTargetAbstractSchemePort(final AbstractSchemePort<?> targetAbstractSchemePort) {
 		this.setTargetAbstractSchemePortId(Identifier.possiblyVoid(targetAbstractSchemePort));
 	}
 
