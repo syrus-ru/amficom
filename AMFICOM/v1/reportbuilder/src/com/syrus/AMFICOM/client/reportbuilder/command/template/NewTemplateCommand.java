@@ -1,5 +1,5 @@
 /*
- * $Id: NewTemplateCommand.java,v 1.6 2005/10/14 12:44:35 peskovsky Exp $
+ * $Id: NewTemplateCommand.java,v 1.7 2005/11/16 18:49:45 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
+import com.syrus.AMFICOM.client.reportbuilder.TemplateTypeChooser;
 import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -85,11 +86,16 @@ public class NewTemplateCommand extends AbstractCommand {
 				}
 			}
 			
+			String reportModelName = TemplateTypeChooser.chooseModule();
+			if(reportModelName == null) {
+				return;
+			}
+			
 			ReportTemplate reportTemplate = ReportTemplate.createInstance(
 					LoginManager.getUserId(),
 					I18N.getString(NEW_TEMPLATE_NAME),
 					"",
-					DestinationModules.UNKNOWN_MODULE);
+					reportModelName);
 			reportTemplate.setNew(true);
 			
 			ApplicationModel aModel = this.aContext.getApplicationModel(); 
