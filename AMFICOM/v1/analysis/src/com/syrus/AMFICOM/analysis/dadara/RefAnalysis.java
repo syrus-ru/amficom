@@ -50,7 +50,7 @@ public class RefAnalysis {
 	}
 
 	private void decode() {
-		if (true) { // FIXME: just a debug code
+		if (false) { // FIXME: just a debug code
 			final SimpleReflectogramEvent[] se = getMTAE().getSimpleEvents();
 			System.out.println("NEvents=" + se.length);
 			System.out.println("EVENTS");
