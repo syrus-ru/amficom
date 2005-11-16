@@ -1,5 +1,5 @@
 /*-
- * $Id: TreeFilterUI.java,v 1.4 2005/09/21 14:25:11 max Exp $
+ * $Id: TreeFilterUI.java,v 1.5 2005/11/16 18:18:06 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.newFilter.LangModelFilter;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/09/21 14:25:11 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/16 18:18:06 $
  * @module filterclient
  */
 
@@ -40,6 +40,8 @@ public class TreeFilterUI {
 	FilterPanel		filterUI;
 	JPanel			mainPanel;
 	Filter			filter;
+	
+	JToggleButton showFilterButton;
 
 	public TreeFilterUI(IconedTreeUI treeUI, FilterPanel filterUI) {
 		this.treeUI = treeUI;
@@ -72,21 +74,21 @@ public class TreeFilterUI {
 					.getImage("images/filter.gif"));
 			String title = LangModelFilter.getString("filter");
 
-			final JToggleButton showFilterButton = new JToggleButton();
-			showFilterButton.setIcon(icon);
-			showFilterButton.setToolTipText(title);
-			showFilterButton.setMargin(UIManager
+			this.showFilterButton = new JToggleButton();
+			this.showFilterButton.setIcon(icon);
+			this.showFilterButton.setToolTipText(title);
+			this.showFilterButton.setMargin(UIManager
 					.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			showFilterButton.addActionListener(new ActionListener() {
+			this.showFilterButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					TreeFilterUI.this.filterUI.setVisible(showFilterButton
+					TreeFilterUI.this.filterUI.setVisible(TreeFilterUI.this.showFilterButton
 							.isSelected());
 					TreeFilterUI.this.mainPanel.updateUI();
 				}
 			});
 			JToolBar toolBar = this.treeUI.getToolBar();
 			toolBar.addSeparator();
-			toolBar.add(showFilterButton);
+			toolBar.add(this.showFilterButton);
 
 			this.mainPanel = new JPanel(new BorderLayout());
 			this.mainPanel.add(toolBar, BorderLayout.NORTH);
@@ -95,5 +97,9 @@ public class TreeFilterUI {
 			this.filterUI.setVisible(false);
 		}
 		return this.mainPanel;
+	}
+	
+	public JToggleButton getShowFilterButton() {
+		return this.showFilterButton;
 	}
 }
