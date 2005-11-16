@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.19 2005/11/16 18:22:45 max Exp $
+ * $Id: MapReportModel.java,v 1.20 2005/11/16 19:28:59 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,6 +59,7 @@ public class MapReportModel extends ReportModel {
 	public static String MAPFRAME_SIZE = "size";	
 	
 	public MapReportModel(){
+		//empty
 	}
 
 	@Override
@@ -75,6 +76,7 @@ public class MapReportModel extends ReportModel {
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
 		RenderingComponent result = null;
+		final AbstractDataStorableElement rawElement = element;
 		String reportName = element.getReportName();
 		String modelClassName = element.getModelClassName();		
 		try {
@@ -134,7 +136,7 @@ public class MapReportModel extends ReportModel {
 					if (objectID.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 						SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(objectID,true);
 						result = CableLayoutReport.createReport(
-								(TableDataStorableElement)element,
+								(TableDataStorableElement) rawElement,
 								schemeCableLink);
 					}
 				}
@@ -143,21 +145,21 @@ public class MapReportModel extends ReportModel {
 						PhysicalLink physicalLink =
 							StorableObjectPool.getStorableObject(objectID,true);
 						result = TunnelCableListReport.createReport(
-								(TableDataStorableElement)element,
+								(TableDataStorableElement) rawElement,
 								physicalLink);
 					}
 					else if (objectID.getMajor() == ObjectEntities.COLLECTOR_CODE) {
 						Collector collector =
 							StorableObjectPool.getStorableObject(objectID,true);
 						result = CollectorInfoReport.createReport(
-								(TableDataStorableElement)element,
+								(TableDataStorableElement) rawElement,
 								collector);
 					}
 					else if (objectID.getMajor() == ObjectEntities.SITENODE_CODE) {
 						SiteNode siteNode =
 							StorableObjectPool.getStorableObject(objectID,true);
 						result = SiteNodeReport.createReport(
-								(TableDataStorableElement)element,
+								(TableDataStorableElement) rawElement,
 								siteNode);
 					}
 				}

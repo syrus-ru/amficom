@@ -69,6 +69,7 @@ public abstract class AESMPReportModel extends ReportModel
 			AbstractDataStorableElement<?> element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
+		final AbstractDataStorableElement rawElement = element;
 		String reportName = element.getReportName();
 		String modelClassName = element.getModelClassName();		
 		
@@ -77,7 +78,7 @@ public abstract class AESMPReportModel extends ReportModel
 		if (data instanceof AbstractTableModel) {
 			result = TableModelVerticalDivider.createReport(
 					(AbstractTableModel)data,
-					(TableDataStorableElement)element);
+					(TableDataStorableElement) rawElement);
 		}
 		else if (data instanceof ScaledGraphPanel) {
 			ScaledGraphPanel sgPanel = (ScaledGraphPanel)data;
