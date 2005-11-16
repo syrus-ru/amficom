@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventProcessor.java,v 1.6 2005/11/13 06:29:01 bass Exp $
+ * $Id: PopupNotificationEventProcessor.java,v 1.7 2005/11/16 10:27:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,22 +12,13 @@ import static com.syrus.AMFICOM.eventv2.EventType.NOTIFICATION;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.omg.CORBA.COMM_FAILURE;
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.Object;
 import org.omg.CORBA.SystemException;
-import org.omg.CORBA.UserException;
-import org.omg.CosNaming.Binding;
-import org.omg.CosNaming.BindingIteratorHolder;
-import org.omg.CosNaming.BindingListHolder;
-import org.omg.CosNaming.BindingType;
-import org.omg.CosNaming.NameComponent;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
 
 import com.syrus.AMFICOM.eventv2.Event;
 import com.syrus.AMFICOM.eventv2.EventType;
@@ -35,15 +26,19 @@ import com.syrus.AMFICOM.eventv2.NotificationEvent;
 import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 import com.syrus.AMFICOM.eventv2.corba.MessageReceiver;
 import com.syrus.AMFICOM.eventv2.corba.MessageReceiverHelper;
+import com.syrus.AMFICOM.general.CORBAServer;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.leserver.corba.MessageReceiverExt;
 import com.syrus.AMFICOM.leserver.corba.MessageReceiverExtHelper;
+import com.syrus.AMFICOM.security.ClientUserLogin;
+import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/11/13 06:29:01 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/11/16 10:27:02 $
  * @module leserver
  */
 final class PopupNotificationEventProcessor implements EventProcessor {
@@ -77,9 +72,8 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 			final ORB orb = LEServerSessionEnvironment.getInstance()
 					.getLEServerServantManager()
 					.getCORBAServer().getOrb();
-			final NamingContextExt namingCtx = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
 
-			for (final Object object : getObjects(namingCtx)) {
+			for (final Object object : getObjects()) {
 				try {
 					if (!object._is_a(MessageReceiverExtHelper.id())) {
 						Log.debugMessage("Object: " + object
@@ -125,42 +119,26 @@ final class PopupNotificationEventProcessor implements EventProcessor {
 		}
 	}
 
-	private static List<Object> getObjects(final NamingContextExt namingCtx) throws UserException {
-		List<Object> objects = null;
+	private static List<Object> getObjects() {
+		final List<Object> objects = new LinkedList<Object>();
 
-		final BindingListHolder bindingList = new BindingListHolder();
-		namingCtx.list(Integer.MAX_VALUE, bindingList, new BindingIteratorHolder());
-		for (final Binding binding : bindingList.value) {
-			if (objects == null) {
-				objects = new LinkedList<Object>();
-			}
-
-			final NameComponent[] path = binding.binding_name;
-			final String string = namingCtx.to_string(path);
-			final Object object = namingCtx.resolve(path);
-			try {
-				if (object._non_existent()) {
-					Log.debugMessage("Object: "
-							+ string + " is non-existent; skipping",
-							FINEST);
-					continue;
+		final Collection<UserLogin> userLogins = LoginProcessor.getUserLogins();
+		for (final UserLogin userLogin : userLogins) {
+			if (userLogin instanceof ClientUserLogin) {
+				try {
+					final ClientUserLogin clientUserLogin = (ClientUserLogin) userLogin;
+					final String servantName = clientUserLogin.getServantName();
+					final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
+					final Object object = corbaServer.resolveReference(servantName);
+					objects.add(object);
+					Log.debugMessage("Added object for servant '" + servantName + "'", SEVERE);
+				} catch (CommunicationException ce) {
+					Log.errorMessage(ce);
 				}
-			} catch (final COMM_FAILURE cf) {
-				Log.debugMessage("Object: "
-						+ string + " is non-existent; skipping",
-						FINEST);
-				continue;
-			}
-
-			if (binding.binding_type == BindingType.ncontext) {
-				Log.debugMessage("Traversing into context: " + string, FINEST);
-				objects.addAll(getObjects(NamingContextExtHelper.narrow(object)));
-			} else {
-				Log.debugMessage("Object found: " + string, FINEST);
-				objects.add(object);
 			}
 		}
 
-		return objects == null ? Collections.<Object>emptyList() : objects;
+		return objects;
 	}
+
 }
