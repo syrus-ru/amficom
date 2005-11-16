@@ -9,7 +9,9 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -240,7 +242,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	 * @param attachmentType тип привязки
 	 */
 	public void setAttachment(
-			DataStorableElement attacher,
+			AbstractDataStorableElement<?> attacher,
 			TextAttachingType attachmentType) {
 		if (	attachmentType.equals(TextAttachingType.TO_FIELDS_LEFT)		
 			||	attachmentType.equals(TextAttachingType.TO_LEFT)
@@ -290,7 +292,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 		return this.horizontalAttacherId;
 	}
 	
-	public DataStorableElement getHorizontalAttacher() throws ApplicationException {
+	public AbstractDataStorableElement getHorizontalAttacher() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.horizontalAttacherId, true);
 	}
 
@@ -302,7 +304,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 		return this.verticalAttacherId;
 	}
 	
-	public DataStorableElement getVerticalAttacher() throws ApplicationException {
+	public AbstractDataStorableElement getVerticalAttacher() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.verticalAttacherId, true);
 	}
 
@@ -330,7 +332,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	public void suiteAttachingDistances(Rectangle templateBounds) throws ApplicationException {
 		int newX = 0;
 		int newY = 0;
-		DataStorableElement horizontalAttacher = this.getHorizontalAttacher();
+		AbstractDataStorableElement<?> horizontalAttacher = this.getHorizontalAttacher();
 		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
 			newX = this.getX();
 		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
@@ -385,7 +387,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 //			}
 		}
 		
-		DataStorableElement verticalAttacher = this.getVerticalAttacher();
+		AbstractDataStorableElement<?> verticalAttacher = this.getVerticalAttacher();
 		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
 			newY = this.getY();
 		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
@@ -444,7 +446,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	 */
 	public void refreshAttachingDistances() throws ApplicationException {
 		if (!this.horizontalAttacherId.equals(Identifier.VOID_IDENTIFIER)) {
-			DataStorableElement horizontalAttacher = this.getHorizontalAttacher();			
+			AbstractDataStorableElement<?> horizontalAttacher = this.getHorizontalAttacher();			
 			if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT)) {
 				this.distanceX = this.getX();
 			} else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
@@ -459,7 +461,7 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 		}
 		
 		if (!this.verticalAttacherId.equals(Identifier.VOID_IDENTIFIER)) {		
-			DataStorableElement verticalAttacher = this.getVerticalAttacher();
+			AbstractDataStorableElement<?> verticalAttacher = this.getVerticalAttacher();
 			if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP)) {
 				this.distanceY = this.getY();
 			} else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
@@ -485,5 +487,50 @@ public final class AttachedTextStorableElement extends StorableElement<AttachedT
 	@Override
 	protected AttachedTextWrapper getWrapper() {
 		return AttachedTextWrapper.getInstance();
+	}
+	
+	@Override
+	protected AttachedTextStorableElement clone() throws CloneNotSupportedException {
+		Map clonedIdIdMap = new HashMap();
+		AttachedTextStorableElement clone = super.clone();
+		clone.text = this.text;
+		clone.distanceX = this.distanceX;
+		clone.distanceY = this.distanceY;
+		clone.font = new Font(this.font.getName(), this.font.getStyle(), this.font.getSize());
+		clone.verticalAttachType = this.verticalAttachType;
+		clone.horizontalAttachType = this.horizontalAttachType;
+		
+		clone.horizontalAttacherId = VOID_IDENTIFIER;
+		clone.verticalAttacherId = VOID_IDENTIFIER;
+		
+		//TODO: fix warnings. Do not use Map. Use simple if
+		try {
+			AbstractDataStorableElement<?> verticalDataElement = this.getVerticalAttacher();
+			if (verticalDataElement != null) {
+				AbstractDataStorableElement<?> clonedDataElement = (AbstractDataStorableElement) clonedIdIdMap.get(verticalDataElement);
+				if (clonedDataElement == null) {
+					clonedDataElement = verticalDataElement.clone();
+					clonedIdIdMap.put(verticalDataElement, clonedDataElement);
+				}
+				clone.verticalAttacherId = clonedDataElement.getId();
+				clonedDataElement.setReportTemplateId(clone.reportTemplateId);
+			}
+			
+			AbstractDataStorableElement<?> horizontalDataElement = this.getHorizontalAttacher();
+			if (horizontalDataElement != null) {
+				AbstractDataStorableElement clonedDataElement = (AbstractDataStorableElement) clonedIdIdMap.get(verticalDataElement);
+				if (clonedDataElement == null) {
+					clonedDataElement = verticalDataElement.clone();
+				}
+				clone.horizontalAttacherId = clonedDataElement.getId();
+				clonedDataElement.setReportTemplateId(clone.reportTemplateId);
+			}
+		} catch (ApplicationException e) {
+			CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(e);
+			throw cnse;
+		}
+		
+		return clone;
 	}
 }

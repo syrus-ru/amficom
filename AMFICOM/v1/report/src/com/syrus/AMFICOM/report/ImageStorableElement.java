@@ -213,4 +213,21 @@ public final class ImageStorableElement
 	protected ImageWrapper getWrapper() {
 		return ImageWrapper.getInstance();
 	}
+	
+	@Override
+	protected ImageStorableElement clone() throws CloneNotSupportedException {
+		ImageStorableElement clone = super.clone();
+		try {
+			BitmapImageResource image = this.getBitmapImageResource();
+			BitmapImageResource imageClone = image.clone();
+			clone.bitmapImageResourceId = imageClone.getId();
+		} catch (ApplicationException e) {
+			CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(e);
+			throw cnse;
+		}	
+		
+		return clone;
+		
+	}
 }
