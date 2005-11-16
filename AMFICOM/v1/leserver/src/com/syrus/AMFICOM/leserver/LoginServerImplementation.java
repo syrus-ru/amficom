@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.37 2005/10/31 10:49:45 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.38 2005/11/16 10:25:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/10/31 10:49:45 $
+ * @version $Revision: 1.38 $, $Date: 2005/11/16 10:25:57 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -127,9 +127,13 @@ final class LoginServerImplementation extends LoginServerPOA {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ACCESS_VALIDATION, IdlCompletionStatus.COMPLETED_YES, "Access to domain denied");
 		}
 
-		idlSessionKeyHolder.value = LoginProcessor.addUserLogin(userId, domainId, userHostName).getTransferable();
-		userIdTH.value = userId.getTransferable();
-		return;
+		try {
+			idlSessionKeyHolder.value = LoginProcessor.addUserLogin(userId, domainId, userHostName).getTransferable();
+			userIdTH.value = userId.getTransferable();
+			return;
+		} catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_UNKNOWN, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
 	}
 
 	/**
