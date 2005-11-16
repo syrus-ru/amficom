@@ -35,22 +35,9 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * @module report
  */
 
-public class DataStorableElement extends StorableElement<DataStorableElement> {
+public class DataStorableElement extends AbstractDataStorableElement<DataStorableElement> {
 	private static final long	serialVersionUID	= 3501681877580290043L;
 
-	/**
-	 * Название отображаемого отчёта.
-	 * По этому имени он будет отображаться Renderer'ом с помощью ReportModel.
-	 */
-	protected String reportName;
-
-	/**
-	 * Полное имя класса модели, которая "знает" как строить этот отчёт.
-	 */
-	protected String modelClassName;
-	
-	protected Identifier reportObjectId = Identifier.VOID_IDENTIFIER;
-	
 	DataStorableElement(final Identifier id,
 			final Date created,
 			final Date modified,
@@ -62,9 +49,7 @@ public class DataStorableElement extends StorableElement<DataStorableElement> {
 			final Identifier reportTemplateId,
 			final String reportName,
 			final String modelClassName) {
-		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId);
-		this.reportName = reportName;
-		this.modelClassName = modelClassName;
+		super(id, created, modified, creatorId, modifierId, version, location, size, reportTemplateId, reportName, modelClassName);
 	}
 	
 	public static DataStorableElement createInstance (Identifier creatorId, String reportName, String modelClassName, IntPoint location) throws CreateObjectException {
@@ -107,10 +92,9 @@ public class DataStorableElement extends StorableElement<DataStorableElement> {
 			// Never can happen
 			assert false;
 		}
-		this.reportName = idlData.reportName;
-		this.modelClassName = idlData.modelClassName;		
 	}
 	
+	@Override
 	synchronized void setAttributes(Date created, 
 			Date modified, 
 			Identifier creatorId, 
@@ -124,9 +108,8 @@ public class DataStorableElement extends StorableElement<DataStorableElement> {
 			final String reportName,
 			final String moduleClassName) {
 		super.setAttributes(created, modified, creatorId, modifierId, version,
-				locationX, locationY, width, height, reportTemplateId);
-		this.reportName = reportName;
-		this.modelClassName = moduleClassName;
+				locationX, locationY, width, height, reportTemplateId, reportName, moduleClassName);
+		
 	}
 	
 	@Override
@@ -152,28 +135,15 @@ public class DataStorableElement extends StorableElement<DataStorableElement> {
 		return Collections.emptySet();
 	}
 	
-	public String getReportName() {
-		return this.reportName;
-	}
-
-	public String getModelClassName() {
-		return this.modelClassName;
-	}
-
-	public Identifier getReportObjectId() {
-		return this.reportObjectId;
-	}
-
-	public void setReportObjectId(Identifier reportObjectId) {
-		this.reportObjectId = reportObjectId;
-		super.markAsChanged();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getWrapper()
-	 */
+	
 	@Override
 	protected DataWrapper getWrapper() {
 		return DataWrapper.getInstance();
+	}
+	
+	@Override
+	protected DataStorableElement clone() throws CloneNotSupportedException {
+		DataStorableElement clone = super.clone();
+		return clone;
 	}
 }
