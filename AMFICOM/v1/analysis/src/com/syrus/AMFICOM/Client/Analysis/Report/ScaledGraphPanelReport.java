@@ -1,5 +1,5 @@
 /*
- * $Id: ScaledGraphPanelReport.java,v 1.3 2005/10/17 14:20:09 saa Exp $
+ * $Id: ScaledGraphPanelReport.java,v 1.4 2005/11/16 18:13:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,11 @@ import java.awt.image.BufferedImage;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 
 public class ScaledGraphPanelReport {
 	public static ImageRenderingComponent createReport(
-			DataStorableElement element,
+			AbstractDataStorableElement<?> element,
 			ScaledGraphPanel sgPanel) {
 		int elementWidth = element.getWidth();
 		int elementHeight = element.getHeight();

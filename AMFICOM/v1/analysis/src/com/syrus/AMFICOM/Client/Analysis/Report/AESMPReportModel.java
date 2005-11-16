@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.io.BellcoreStructure;
@@ -66,7 +66,7 @@ public abstract class AESMPReportModel extends ReportModel
 	
 	@Override
 	public RenderingComponent createReport(
-			DataStorableElement element,
+			AbstractDataStorableElement<?> element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
 		String reportName = element.getReportName();
