@@ -1,11 +1,13 @@
 /*
- * $Id: OpenTemplateCommand.java,v 1.6 2005/10/14 07:31:44 peskovsky Exp $
+ * $Id: OpenTemplateCommand.java,v 1.7 2005/11/16 18:50:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.client.reportbuilder.command.template;
+
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -16,11 +18,15 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
 import com.syrus.AMFICOM.client.reportbuilder.TemplateOpenSaveDialog;
+import com.syrus.AMFICOM.client.reportbuilder.TemplateTypeChooser;
 import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
+import com.syrus.AMFICOM.report.AttachedTextStorableElement;
+import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 
@@ -38,8 +44,7 @@ public class OpenTemplateCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
-		if (	currentTemplate != null
-			&&	currentTemplate.isChanged()) {
+		if (isChanged()) {
 			int saveChanges = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
 					I18N.getString("report.Command.SaveTemplate.saveConfirmText"),
@@ -60,7 +65,9 @@ public class OpenTemplateCommand extends AbstractCommand {
 					} catch (ApplicationException e) {
 						Log.errorException(e);
 					}
-				}					
+				} else {
+					StorableObjectPool.clean();
+				}
 			}
 			else if (saveChanges == JOptionPane.CANCEL_OPTION)
 				return;
@@ -71,6 +78,8 @@ public class OpenTemplateCommand extends AbstractCommand {
 			this.result = RESULT_NO;			
 			return;
 		}
+		
+		TemplateTypeChooser.setType(templateToOpen.getDestinationModule());
 
 		ApplicationModel aModel = this.aContext.getApplicationModel(); 
 		aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME).execute();
@@ -80,5 +89,40 @@ public class OpenTemplateCommand extends AbstractCommand {
 		
 		this.aContext.getDispatcher().firePropertyChange(new UseTemplateEvent(this,templateToOpen));
 		this.result = RESULT_OK;
+	}
+	
+	private boolean isChanged() {
+		ReportTemplate template = this.mainFrame.getTemplateRenderer().getTemplate();
+		if (template == null) {
+			return false;
+		}
+		if (template.isChanged()) {
+			return true;
+		}
+		try {
+			Set<AttachedTextStorableElement> attTexts = template.getAttachedTextStorableElements(false);
+			Set<AbstractDataStorableElement> dataElements = template.getDataStorableElements(false);
+			Set<ImageStorableElement> images = template.getImageStorableElements(false);
+			
+			for (AttachedTextStorableElement element : attTexts) {
+				if (element.isChanged()) {
+					return true;
+				}
+			}
+			for (AbstractDataStorableElement element : dataElements) {
+				if (element.isChanged()) {
+					return true;
+				}
+			}
+			for (ImageStorableElement element : images) {
+				if (element.isChanged()) {
+					return true;
+				}
+			}
+		} catch (ApplicationException e) {
+			//Never can happen
+			Log.errorMessage(e);
+		}
+		return false;
 	}
 }

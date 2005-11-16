@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateRendererInnerToolbar.java,v 1.4 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: TemplateRendererInnerToolbar.java,v 1.5 2005/11/16 18:49:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,10 +123,10 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 		this.addSeparator();
 		this.add(this.deleteObjectButton);
 		this.addSeparator();
+		this.add(this.changeViewButton);
+		this.addSeparator();
 		this.add(this.saveReportButton);
 		this.add(this.printReportButton);
-		this.addSeparator();
-		this.add(this.changeViewButton);
 
 		this.addApplicationModelListener(new ApplicationModelListener() {
 
@@ -143,8 +143,8 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 				TemplateRendererInnerToolbar.this.insertImageButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE));				
 				TemplateRendererInnerToolbar.this.deleteObjectButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_DELETE_OBJECT));
 				TemplateRendererInnerToolbar.this.deleteObjectButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT));				
-				TemplateRendererInnerToolbar.this.changeViewButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));
-				TemplateRendererInnerToolbar.this.changeViewButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));				
+//				TemplateRendererInnerToolbar.this.changeViewButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));
+//				TemplateRendererInnerToolbar.this.changeViewButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW));				
 				TemplateRendererInnerToolbar.this.saveReportButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_SAVE_REPORT));
 				TemplateRendererInnerToolbar.this.saveReportButton.setEnabled(model.isEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT));				
 				TemplateRendererInnerToolbar.this.printReportButton.setVisible(model.isVisible(ReportBuilderApplicationModel.MENU_PRINT_REPORT));
@@ -215,6 +215,10 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 			this.insertImageButton.setSelected(false);
 			this.insertLabelButton.setSelected(false);			
 		}
+	}
+	
+	public JButton getChangeViewButton() {
+		return this.changeViewButton;
 	}
 }
 

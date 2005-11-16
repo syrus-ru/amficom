@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderToolBar.java,v 1.6 2005/10/12 13:29:11 peskovsky Exp $
+ * $Id: ReportBuilderToolBar.java,v 1.7 2005/11/16 18:47:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,29 +53,12 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 		loadTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD);
 		loadTemplateButton.addActionListener(super.actionListener);
 
-		final JButton importTemplateButton = new JButton();
-		importTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_IMPORT_TEMPLATES));
-		importTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		importTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.importTemplates"));
-		importTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT);
-		importTemplateButton.addActionListener(super.actionListener);
-
-		final JButton exportTemplateButton = new JButton();
-		exportTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_EXPORT_TEMPLATES));
-		exportTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		exportTemplateButton.setToolTipText(I18N.getString("report.UI.Toolbar.exportTemplates"));
-		exportTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT);
-		exportTemplateButton.addActionListener(super.actionListener);
-		
 		addSeparator();
 		add(newTemplateButton);
 		add(loadTemplateButton);
 		add(saveTemplateButton);
 		add(saveAsTemplateButton);		
 		addSeparator();
-		add(importTemplateButton);
-		add(exportTemplateButton);
-
 		
 		addApplicationModelListener(new ApplicationModelListener() {
 			public void modelChanged(String e) {
@@ -93,11 +76,6 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 				saveAsTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS));
 				loadTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
 				loadTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
-				exportTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT));
-				exportTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT));
-				importTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT));
-				importTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT));
-				
 			}
 		});
 	}

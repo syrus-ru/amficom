@@ -9,6 +9,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,16 +26,21 @@ import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.ReportTemplateWrapper;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 /**
@@ -50,23 +56,7 @@ import com.syrus.util.Log;
 
 public class TemplateOpenSaveDialog extends JDialog {
 	public static final String ALL_TEMPLATES = "report.Modules.allTemplates";
-	/**
-	 * Список всех модулей
-	 */
-	public static final String[] MODULES_ARRAY = new String[] {
-		DestinationModules.ANALYSIS,
-		DestinationModules.EVALUATION,
-		DestinationModules.MAP,
-		DestinationModules.MODELING,
-		DestinationModules.OBSERVE,
-		DestinationModules.OPTIMIZATION,
-		DestinationModules.PREDICTION,
-		DestinationModules.SCHEDULER,
-		DestinationModules.SCHEME,
-		DestinationModules.SURVEY,
-		DestinationModules.COMBINED,		
-		ALL_TEMPLATES};		
-	
+
 	/**
 	 * Режим сохранения шаблона
 	 */
@@ -94,7 +84,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 
 	private JTextField selectedTemplateNameField = new JTextField();
 
-	private ReportTemplate templateProcessed = null;
+	static private ReportTemplate templateProcessed = null;
 
 	public static ReportTemplate openTemplate() {
 		TemplateOpenSaveDialog dialog = new TemplateOpenSaveDialog(TemplateOpenSaveDialog.OPEN);
@@ -114,10 +104,11 @@ public class TemplateOpenSaveDialog extends JDialog {
 
 		this.mode = mode;
 		try	{
-			this.jbInit();
+			jbInit();
 			
-			this.setComboBoxData();
-			this.setListData();
+			setComboBoxData();
+			setListData();
+			enableSelectedTemplateNameField();
 
 			this.pack();
 		}
@@ -130,8 +121,8 @@ public class TemplateOpenSaveDialog extends JDialog {
 	private void jbInit() throws Exception{
 		this.templatesList = new WrapperedList<ReportTemplate>(
 				ReportTemplateWrapper.getInstance(),
-				ReportTemplateWrapper.COLUMN_NAME,
-				ReportTemplateWrapper.COLUMN_NAME);
+				StorableObjectWrapper.COLUMN_NAME,
+				StorableObjectWrapper.COLUMN_NAME);
 		
 		if (this.mode == TemplateOpenSaveDialog.OPEN)
 			this.setTitle(I18N.getString("report.UI.TemplateSaveOpenDialog.openTemplate"));
@@ -198,6 +189,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 		});
 
 		this.selectedTemplateNameField.addKeyListener(new java.awt.event.KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				selectedTemplateNameField_keyPressed(e);
 			}
@@ -266,14 +258,34 @@ public class TemplateOpenSaveDialog extends JDialog {
 		if (this.allReportTemplates == null)
 			return;
 
-		String moduleSelected = MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()];
+		int index = this.moduleNamesComboBox.getSelectedIndex();
+		if (index == 0 && this.mode == OPEN) {
+			this.templatesList.addElements(this.allReportTemplates);
+			return;
+		}
+		int modelIndex;
+		if (this.mode == OPEN) {
+			modelIndex = index-1;
+		} else {
+			modelIndex = index;
+		}
 		Set<ReportTemplate> reportTemplatesForModule = new HashSet<ReportTemplate>();
+		String selectedModelName = ReportModels.values()[modelIndex].getName(); 
 		for (ReportTemplate reportTemplate : this.allReportTemplates) {
-			if (	reportTemplate.getDestinationModule().equals(moduleSelected)
-				||	moduleSelected.equals(ALL_TEMPLATES))
+			if (	reportTemplate.getDestinationModule().equals(selectedModelName)) {
 				reportTemplatesForModule.add(reportTemplate);
+			}
+				
 		}
 		this.templatesList.addElements(reportTemplatesForModule);
+	}
+	
+	private void enableSelectedTemplateNameField() {
+		if(this.mode == OPEN) {
+			this.selectedTemplateNameField.setVisible(false);
+		} else {
+			this.selectedTemplateNameField.setVisible(true);
+		}
 	}
 
 	private void getReportTemplatesFromPool() throws ApplicationException {
@@ -283,15 +295,23 @@ public class TemplateOpenSaveDialog extends JDialog {
 	}
 	
 	private void setComboBoxData() {
-		for (int i = 0; i < MODULES_ARRAY.length; i++)
-			this.moduleNamesComboBox.addItem(
-					I18N.getString(MODULES_ARRAY[i]));
-		if (this.mode == OPEN)
-			this.moduleNamesComboBox.setSelectedItem(
-					I18N.getString(ALL_TEMPLATES));
-		else
-			this.moduleNamesComboBox.setSelectedItem(
-					I18N.getString(DestinationModules.COMBINED));
+		if (this.mode == OPEN) {
+			this.moduleNamesComboBox.addItem(I18N.getString(ALL_TEMPLATES));
+			for (int i = 0; i < ReportModels.values().length; i++) {
+				this.moduleNamesComboBox.addItem(
+						I18N.getString(ReportModels.values()[i].getName()));
+			}
+			this.moduleNamesComboBox.setEnabled(true);
+		} else {
+			for (int i = 0; i < ReportModels.values().length; i++) {
+				this.moduleNamesComboBox.addItem(
+						I18N.getString(ReportModels.values()[i].getName()));
+			}
+			int modelIndex = TemplateTypeChooser.getSelectedModuleIndex();
+			this.moduleNamesComboBox.setSelectedIndex(modelIndex);
+			this.moduleNamesComboBox.setEnabled(false);
+		}
+		
 	}
 
 	protected void openSaveButton_actionPerformed() throws ApplicationException {
@@ -322,18 +342,22 @@ public class TemplateOpenSaveDialog extends JDialog {
 						JOptionPane.YES_NO_OPTION);
 				if (replace == JOptionPane.NO_OPTION)
 					return;
-
-				Set<Identifiable> dependencies = selectedTemplate.getReverseDependencies(false);
-				StorableObjectPool.delete(selectedTemplate.getId());
-				StorableObjectPool.delete(dependencies);
-				StorableObjectPool.flush(selectedTemplate,LoginManager.getUserId(),true);
-				StorableObjectPool.flush(dependencies,LoginManager.getUserId(),true);				
+			} else {
+				if (!this.templateProcessed.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+					try {
+						ReportTemplate oldTemplate = this.templateProcessed;
+						this.templateProcessed = this.templateProcessed.clone();
+						StorableObjectPool.cleanChangedStorableObjects(oldTemplate.getReverseDependencies(false));
+					} catch (CloneNotSupportedException e) {
+						Log.errorMessage(e);
+					}
+					
+				}
+					
 			}
-			
+						
 			this.templateProcessed.setName(this.selectedTemplateNameField.getText());
-			this.templateProcessed.setDestinationModule(
-					MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()]);
-
+			
 			StorableObjectPool.flush(this.templateProcessed,LoginManager.getUserId(),true);
 			StorableObjectPool.flush(
 					this.templateProcessed.getReverseDependencies(false),
@@ -375,9 +399,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 			this.selectedTemplateNameField.setText(
 					((ReportTemplate)this.templatesList.getSelectedValue()).getName());
 
-			if (!	(	(this.mode == TemplateOpenSaveDialog.SAVE)
-					&&	(MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()].equals(ALL_TEMPLATES))))
-				this.openSaveButton.setEnabled(true);
+			this.openSaveButton.setEnabled(true);
 
 			this.removeButton.setEnabled(true);
 		}
@@ -388,14 +410,11 @@ public class TemplateOpenSaveDialog extends JDialog {
 	}
 
 	private ReportTemplate templateForName (String name) {
-		String moduleSelected = MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()];
 		for (ReportTemplate reportTemplate : this.allReportTemplates) {
-			if (	reportTemplate.getName().equals(name)
-				&&	(	reportTemplate.getDestinationModule().equals(moduleSelected)
-					||	(this.mode == OPEN) && moduleSelected.equals(ALL_TEMPLATES)))
+			if (reportTemplate.getName().equals(name)) {
 				return reportTemplate;
+			}
 		}
-
 		return null;
 	}
 
@@ -408,10 +427,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 
 		int textLength = textToProcess.length();
 		
-		this.openSaveButton.setEnabled(textLength > 0);
-		if ((	(this.mode == TemplateOpenSaveDialog.SAVE)
-			&&	(MODULES_ARRAY[this.moduleNamesComboBox.getSelectedIndex()].equals(ALL_TEMPLATES))))
-			this.openSaveButton.setEnabled(false);
+		this.openSaveButton.setEnabled(textLength > 0);		
 	}
 
 	protected void templateTypesComboBox_actionPerformed() throws ApplicationException{
@@ -420,10 +436,14 @@ public class TemplateOpenSaveDialog extends JDialog {
 	}
 
 	public ReportTemplate getTemplateProcessed() {
-		return this.templateProcessed;
+		return templateProcessed;
 	}
 
 	public void setTemplateProcessed(ReportTemplate templateProcessed) {
-		this.templateProcessed = templateProcessed;
+		TemplateOpenSaveDialog.templateProcessed = templateProcessed;
+	}
+	
+	public static ReportTemplate getReportTemplate() {
+		return templateProcessed;
 	}
 }

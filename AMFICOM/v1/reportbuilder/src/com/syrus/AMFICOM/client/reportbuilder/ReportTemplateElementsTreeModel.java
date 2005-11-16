@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.13 2005/10/14 12:44:35 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.14 2005/11/16 18:48:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,42 +10,28 @@ package com.syrus.AMFICOM.client.reportbuilder;
 import java.util.Collection;
 
 import javax.swing.Icon;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.Client.Analysis.UI.ResultChildrenFactory;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
-import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.map.ui.MapTreeModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.observe.report.ObserveReportModel;
-import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.ReportModel;
-import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTreeItem;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
-import com.syrus.AMFICOM.client_.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
-import com.syrus.util.Log;
 
 public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualManagerFactory {
-	private static final String TREE_ROOT = "report.Tree.rootTemplates";
-	protected static final String REPORT_DATA_ROOT = "report.Tree.reportData";
-	protected static final String TEMPLATE_ELEMENTS_ROOT = "report.Tree.templateElements";
-	protected static final String AVAILABLE_TEMPLATES = "report.Tree.availableTemplates";	
 	
+	protected static final String REPORT_DATA_ROOT = "report.Tree.reportData";
+		
 	private static final String ICON_CATALOG = "icon.catalog";
 
 	ApplicationContext aContext;
@@ -61,149 +47,29 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 	}
 	
 	public void populate(Item node) {
-		if (node.getObject() instanceof String) {
-			String s = (String) node.getObject();
-			if (s.equals(TREE_ROOT)) {
-				createRootItems(node);
-			}
-			else if (s.equals(AVAILABLE_TEMPLATES)) {
-			}
-			else if (s.equals(REPORT_DATA_ROOT)) {
-				createReportElementsModels(node);
-			}
-			else if (s.equals(TEMPLATE_ELEMENTS_ROOT)) {
-				try {
-					createTemplateElementsModels(node);
-				} catch (CreateModelException e) {
-					Log.errorMessage("ReportTemplateElementsTreeModel.populate | " + e.getMessage());
-					Log.errorException(e);			
-					JOptionPane.showMessageDialog(
-							Environment.getActiveWindow(),
-							e.getMessage(),
-							I18N.getString("report.Exception.error"),
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		} 
-		else {
-			if (node.getObject() instanceof ReportModel) {
-				createReportModelItems(node);
-			}
-		}
+		//nothing to do
 	}
 	
-	public static final Object getRootObject() {
-		return ReportTemplateElementsTreeModel.TREE_ROOT;
-	}
-	
-	public Item getRoot() {
-		if (this.root == null) {
+	public Item createRoot(ReportModel reportModel) {
+		if(reportModel == null) {
 			this.root = new PopulatableIconedNode(
-				this,
-				ReportTemplateElementsTreeModel.TREE_ROOT,
-				I18N.getString(ReportTemplateElementsTreeModel.TREE_ROOT),
-				UIManager.getIcon(ICON_CATALOG));
+					this,
+					ReportTemplateElementsTreeModel.REPORT_DATA_ROOT,
+					I18N.getString(ReportTemplateElementsTreeModel.REPORT_DATA_ROOT),
+					UIManager.getIcon(ICON_CATALOG));
+			createReportElementsModels(this.root);
+			return this.root;
 		}
+			
+		this.root = new PopulatableIconedNode(
+				this,
+				reportModel,
+				reportModel.getLocalizedName(),
+				UIManager.getIcon(ICON_CATALOG));
+		createReportModelItems(this.root);			
 		return this.root;
 	}
 	
-	private void createRootItems(Item node) {
-		node.addChild(new PopulatableIconedNode(
-				this,
-				ReportTemplateElementsTreeModel.REPORT_DATA_ROOT,
-				I18N.getString(ReportTemplateElementsTreeModel.REPORT_DATA_ROOT),
-				UIManager.getIcon(ICON_CATALOG)));
-				
-		node.addChild(new PopulatableIconedNode(
-				this,
-				ReportTemplateElementsTreeModel.TEMPLATE_ELEMENTS_ROOT,
-				I18N.getString(ReportTemplateElementsTreeModel.TEMPLATE_ELEMENTS_ROOT),
-				UIManager.getIcon(ICON_CATALOG)));
-	}
-	
-	private void createTemplateElementsModels(Item node) throws CreateModelException {
-		//Модель для модуля "Карта"
-		ReportModel mapReportModel =
-			ReportModelPool.getModel(MapReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				mapReportModel,
-				mapReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
-
-		//Модель для модуля "Схема"
-		ReportModel schemeReportModel =
-			ReportModelPool.getModel(SchemeReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				schemeReportModel,
-				schemeReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
-		
-		//Модель для модуля "Анализ"
-		ReportModel analysisReportModel =
-			ReportModelPool.getModel(AnalysisReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				analysisReportModel,
-				analysisReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
-
-		//Модель для модуля "Измерения"
-		ReportModel evaluationReportModel =
-			ReportModelPool.getModel(EvaluationReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				evaluationReportModel,
-				evaluationReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
-
-		//Модель для модуля "Исследование"
-		ReportModel surveyReportModel =
-			ReportModelPool.getModel(SurveyReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				surveyReportModel,
-				surveyReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
-
-		//Модель для модуля "Наблюдение"
-		ReportModel observeReportModel =
-			ReportModelPool.getModel(ObserveReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				observeReportModel,
-				observeReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
-
-		//Модель для модуля "Планирование тестов"
-		ReportModel schedulerReportModel =
-			ReportModelPool.getModel(SchedulerReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				schedulerReportModel,
-				schedulerReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
-		
-//		//Модель для модуля "Моделирование"
-//		ReportModel modellingReportModel =
-//			ReportModelPool.getModel(ModelingReportModel.class.getName());
-//		node.addChild(new PopulatableIconedNode(
-//				this,
-//				modellingReportModel,
-//				modellingReportModel.getLocalizedName(),
-//				UIManager.getIcon(ICON_CATALOG)));
-//
-//		//Модель для модуля "Прогнозирование"
-//		ReportModel predictionReportModel =
-//			ReportModelPool.getModel(PredictionReportModel.class.getName());
-//		node.addChild(new PopulatableIconedNode(
-//				this,
-//				predictionReportModel,
-//				predictionReportModel.getLocalizedName(),
-//				UIManager.getIcon(ICON_CATALOG)));
-	}
-
 	private void createReportElementsModels(Item node) {
 		PopulatableIconedNode schemeRoot = (PopulatableIconedNode)(new SchemeTreeModel(this.aContext)).getRoot();
 		schemeRoot.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME));
@@ -221,10 +87,8 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		ReportModel reportModel = (ReportModel) node.getObject();
 		
 		Collection<String> itemsToAdd = null;
-		String parentItem = (String)node.getParent().getObject();
-		
-		if (parentItem.equals(TEMPLATE_ELEMENTS_ROOT))
-			itemsToAdd = reportModel.getTemplateElementNames();
+				
+		itemsToAdd = reportModel.getTemplateElementNames();
 				
 		if (itemsToAdd == null)
 			throw new AssertionError("Trying to create report element items in wrong branch!");
