@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKey.java,v 1.11 2005/10/20 13:17:14 arseniy Exp $
+ * $Id: SessionKey.java,v 1.12 2005/11/16 10:19:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/10/20 13:17:14 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/16 10:19:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -59,6 +59,10 @@ public final class SessionKey implements TransferableObject<IdlSessionKey> {
 		return false;
 	}
 
+	public final String stringValue() {
+		return this.sessionCode;
+	}
+
 	@Override
 	public int hashCode() {
 		return this.sessionCode.hashCode();
@@ -66,6 +70,6 @@ public final class SessionKey implements TransferableObject<IdlSessionKey> {
 
 	@Override
 	public String toString() {
-		return this.sessionCode;
+		return this.stringValue();
 	}
 }
