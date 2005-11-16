@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.25 2005/11/15 10:00:28 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.26 2005/11/16 10:25:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.leserver;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,16 +16,15 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
-import com.syrus.AMFICOM.general.ContextNameFactory;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.security.ClientUserLogin;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.AMFICOM.security.UserLoginDatabase;
@@ -32,7 +32,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/11/15 10:00:28 $
+ * @version $Revision: 1.26 $, $Date: 2005/11/16 10:25:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -116,12 +116,9 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	private void deactivateUserServant(final UserLogin userLogin) {
 		try {
-			final SystemUser user = StorableObjectPool.getStorableObject(userLogin.getUserId(), true);
-			final int userSort = user.getSort().value();
-			if (userSort == SystemUserSort._USER_SORT_REGULAR || userSort == SystemUserSort._USER_SORT_SYSADMIN) {
-				final String servantName = userLogin.getSessionKey().toString()
-						+ Identifier.SEPARATOR
-						+ ContextNameFactory.generateContextName(userLogin.getUserHostName());
+			if (userLogin instanceof ClientUserLogin) {
+				final ClientUserLogin clientUserLogin = (ClientUserLogin) userLogin;
+				final String servantName = clientUserLogin.getServantName();
 				final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
 				corbaServer.deactivateServant(servantName, false);
 			}
@@ -140,7 +137,8 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 	}
 
-	static SessionKey addUserLogin(final Identifier userId, final Identifier domainId, final String userHostName) {
+	static SessionKey addUserLogin(final Identifier userId, final Identifier domainId, final String userHostName)
+			throws ApplicationException {
 		Log.debugMessage("Adding login for user '" + userId + "' to domain '" + domainId + "'", Log.DEBUGLEVEL08);
 		final UserLogin userLogin = UserLogin.createInstance(userId, domainId, userHostName);
 		loginMap.put(userLogin.getSessionKey(), userLogin);
@@ -185,6 +183,14 @@ final class LoginProcessor extends SleepButWorkThread {
 		return loginMap.get(sessionKey);
 	}
 
+	/**
+	 * Get all available user logins
+	 * @return Unmodifiable collection of user logins
+	 */
+	static Collection<UserLogin> getUserLogins() {
+		return Collections.unmodifiableCollection(loginMap.values());
+	}
+
 	private static void printUserLogins() {
 		final StringBuffer stringBuffer = new StringBuffer("\n\t\t LoginProcessor.printUserLogins | Logged in:\n");
 		int i = 0;
@@ -210,6 +216,9 @@ final class LoginProcessor extends SleepButWorkThread {
 				stringBuffer.append("'\n");
 				stringBuffer.append("\t Login: '");
 				stringBuffer.append((systemUser != null) ? systemUser.getLogin() : "NULL");
+				stringBuffer.append("'\n");
+				stringBuffer.append("\t Is client: '");
+				stringBuffer.append(userLogin instanceof ClientUserLogin);
 				stringBuffer.append("'\n");
 				stringBuffer.append("\t Domain id: '");
 				stringBuffer.append(userLogin.getDomainId());
