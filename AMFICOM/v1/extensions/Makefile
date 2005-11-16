@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/11/16 12:24:34 bass Exp $
+# $Id: Makefile,v 1.4 2005/11/16 13:17:55 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -30,12 +30,14 @@ xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBDIR)
 	install -m 0644 $(LIBNAME_RESOURCES_SCHEMAS) $(LIBDIR)
 
-$(LIBNAME_EXTENSIONS_SCHEMAS): 
+$(LIBNAME_EXTENSIONS_SCHEMAS):
+	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/$(MODULE_NAME).xsd \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
 $(LIBNAME_RESOURCES_SCHEMAS): 
+	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/resources.xsd \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/11/16 12:23:37 bass Exp $
+# $Id: Makefile,v 1.6 2005/11/16 13:19:37 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -60,7 +60,8 @@ xml: .xml
 xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_MANAGER_SCHEMAS) $(LIBDIR)
 
-$(LIBNAME_MANAGER_SCHEMAS): 
+$(LIBNAME_MANAGER_SCHEMAS):
+	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/$(MODULE_NAME).xsd \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
