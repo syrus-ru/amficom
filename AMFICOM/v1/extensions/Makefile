@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2005/11/16 12:22:15 bass Exp $
+# $Id: Makefile,v 1.3 2005/11/16 12:24:34 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -42,6 +42,7 @@ $(LIBNAME_RESOURCES_SCHEMAS):
 
 .PHONY: xmlclean
 xmlclean:
+	$(RM) $(LIBNAME_EXTENSIONS_SCHEMAS)
 	$(RM) $(LIBNAME_RESOURCES_SCHEMAS)
 	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/extensions/.cvsignore ]; \
 	then \
