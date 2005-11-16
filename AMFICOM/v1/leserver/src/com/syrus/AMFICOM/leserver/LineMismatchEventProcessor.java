@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.7 2005/11/13 06:29:00 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.8 2005/11/16 10:21:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/11/13 06:29:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/11/16 10:21:46 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -80,6 +80,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 			final LEServerServantManager servantManager = LEServerSessionEnvironment.getInstance().getLEServerServantManager();
 			final ORB orb = servantManager.getCORBAServer().getOrb();
 
+			/*@todo Instead of load all client users make real check of delivery attributes*/
 			final Set<SystemUser> systemUsers =
 					StorableObjectPool.getStorableObjectsByCondition(CONDITION, true);
 			final IdlEvent popupNotificationEvents[] = new IdlEvent[systemUsers.size()];
