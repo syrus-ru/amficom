@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.37 2005/11/11 15:17:10 bob Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.38 2005/11/16 10:28:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/11/11 15:17:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2005/11/16 10:28:24 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -218,9 +218,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	void activateServant() throws CommunicationException {
-		final String servantName = LoginManager.getSessionKey().toString()
-				+ Identifier.SEPARATOR
-				+ ContextNameFactory.generateContextName();
+		final String servantName = ClientServantNameFactory.generateServantName(LoginManager.getSessionKey());// А нахрена его кэшировать?
 		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
 		this.corbaClientImpl = new CORBAClientImpl();
 		if (this.receiver == null) {
@@ -232,9 +230,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	private void deactivateServant() throws CommunicationException {
-		final String servantName = LoginManager.getSessionKey().toString()
-				+ Identifier.SEPARATOR
-				+ ContextNameFactory.generateContextName();
+		final String servantName = ClientServantNameFactory.generateServantName(LoginManager.getSessionKey());// А нахрена его кэшировать?
 		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
 		corbaServer.deactivateServant(servantName, true);
 		this.corbaClientImpl.removePopupMessageReceiver(this.receiver);
