@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.10 2005/10/21 15:47:34 bob Exp $
+ * $Id: IconedTreeUI.java,v 1.11 2005/11/16 18:15:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.Populatable;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.10 $, $Date: 2005/10/21 15:47:34 $
+ * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/11/16 18:15:41 $
  * @module commonclient
  */
 
@@ -41,7 +41,10 @@ public class IconedTreeUI {
 	JScrollPane scrollPane;
 	private JToolBar toolBar;
 	protected boolean linkObjects = false;
-		
+	
+	private JButton refreshButton;
+	private JToggleButton syncButton;
+	
 	public IconedTreeUI(final Item rootItem) {
 //		this(rootItem, true);
 		
@@ -95,11 +98,11 @@ public class IconedTreeUI {
 	public JToolBar getToolBar() {
 		if (this.toolBar == null) {
 			this.toolBar = new JToolBar(SwingConstants.HORIZONTAL);
-			final JButton refreshButton = new JButton();
-			refreshButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_REFRESH));
-			refreshButton.setToolTipText(I18N.getString("Common.IconedTree.Refresh"));
-			refreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			refreshButton.addActionListener(new ActionListener() {
+			this.refreshButton = new JButton();
+			this.refreshButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_REFRESH));
+			this.refreshButton.setToolTipText(I18N.getString("Common.IconedTree.Refresh"));
+			this.refreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			this.refreshButton.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
 					final JTree tree = IconedTreeUI.this.treeUI.getTree();
 					final TreePath selectedPath = 
@@ -110,20 +113,28 @@ public class IconedTreeUI {
 					updateRecursively(itemToRefresh);
 				}
 			});
-			this.toolBar.add(refreshButton);
+			this.toolBar.add(this.refreshButton);
 			
-			final JToggleButton	syncButton = new JToggleButton();
-			syncButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_SYNCHRONIZE));
-			syncButton.setToolTipText(I18N.getString("Common.IconedTree.Synchronize"));
-			syncButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			syncButton.addActionListener(new ActionListener() {
+			this.syncButton = new JToggleButton();
+			this.syncButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_SYNCHRONIZE));
+			this.syncButton.setToolTipText(I18N.getString("Common.IconedTree.Synchronize"));
+			this.syncButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			this.syncButton.addActionListener(new ActionListener() {
 				public void actionPerformed(final ActionEvent e) {
 					IconedTreeUI.this.linkObjects = ((JToggleButton)e.getSource()).isSelected();
 				}
 			});
-			this.toolBar.add(syncButton);
+			this.toolBar.add(this.syncButton);
 		}
 		return this.toolBar;
+	}
+	
+	public JButton getRefreshButton() {
+		return this.refreshButton;
+	}
+	
+	public JToggleButton getSyncButton() {
+		return this.syncButton;
 	}
 	
 	public Item findNode(Item item, Object object, boolean usePopulate) {
