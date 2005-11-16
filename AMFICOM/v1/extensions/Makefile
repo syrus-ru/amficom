@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/11/16 13:27:47 bass Exp $
+# $Id: Makefile,v 1.6 2005/11/16 14:25:48 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -22,7 +22,7 @@ LIBNAME_RESOURCES_SCHEMAS = resources_schemas.jar
 .PHONY: xml
 xml: .xml
 
-.xml: $(LIBNAME_RESOURCES_SCHEMAS) $(LIBNAME_EXTENSIONS_SCHEMAS)
+.xml: $(LIBNAME_EXTENSIONS_SCHEMAS) $(LIBNAME_RESOURCES_SCHEMAS)
 	touch $@
 
 .PHONY: xmlinstall
@@ -32,13 +32,17 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_EXTENSIONS_SCHEMAS):
 	$(RM) -r $(XMLCLASSDIR)/*
-	$(SCOMP) $(SCOMPFLAGS) -out $@ \
+	$(SCOMP) $(SCOMPFLAGS) \
+		-cp $(XMLBEANSCLASSPATH) \
+		-out $@ \
 		$(XMLDIR)/$(MODULE_NAME).xsd \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
-$(LIBNAME_RESOURCES_SCHEMAS): 
+$(LIBNAME_RESOURCES_SCHEMAS): $(LIBNAME_EXTENSIONS_SCHEMAS)
 	$(RM) -r $(XMLCLASSDIR)/*
-	$(SCOMP) $(SCOMPFLAGS) -out $@ \
+	$(SCOMP) $(SCOMPFLAGS) \
+		-cp $(XMLBEANSCLASSPATH):$(LIBNAME_EXTENSIONS_SCHEMAS) \
+		-out $@ \
 		$(XMLDIR)/resources.xsd \
 		$(XMLDIR)/$(MODULE_NAME).xsdconfig
 
