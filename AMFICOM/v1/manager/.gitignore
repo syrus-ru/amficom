@@ -9,3 +9,4 @@ logs
 *.jar
 Application.properties
 administration.properties
+common.properties
