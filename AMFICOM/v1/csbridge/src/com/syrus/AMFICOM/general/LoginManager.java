@@ -1,13 +1,16 @@
-/*
- * $Id: LoginManager.java,v 1.29 2005/10/22 14:08:22 arseniy Exp $
+/*-
+ * $Id: LoginManager.java,v 1.30 2005/11/16 15:50:04 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -26,8 +29,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/22 14:08:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/11/16 15:50:04 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -174,16 +177,25 @@ public final class LoginManager {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public static void setUserId(final Identifier userId1) {
-		userId = userId1;
+	public static void setUserId(final Identifier userId) {
+		if (userId == null) {
+			throw new NullPointerException();
+		} else if (userId.getMajor() != SYSTEMUSER_CODE || userId.isVoid()) {
+			throw new IllegalArgumentException(userId.toString());
+		}
+
+		LoginManager.userId = userId;
 	}
-	
+
 	public static Identifier getUserId() {
+		assert userId != null : NON_NULL_EXPECTED;
+		assert userId.getMajor() == SYSTEMUSER_CODE && !userId.isVoid() : userId;
 		return userId;
 	}
 
 	public static Identifier getDomainId() {
+		assert domainId != null : NON_NULL_EXPECTED;
+		assert domainId.getMajor() == DOMAIN_CODE && !domainId.isVoid() : domainId;
 		return domainId;
 	}
-
 }
