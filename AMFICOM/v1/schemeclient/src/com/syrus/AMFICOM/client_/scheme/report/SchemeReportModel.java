@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.3 2005/10/13 11:06:57 stas Exp $
+ * $Id: SchemeReportModel.java,v 1.4 2005/11/16 18:27:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
@@ -66,7 +66,7 @@ public class SchemeReportModel extends ReportModel
 	
 	@Override
 	public RenderingComponent createReport(
-			DataStorableElement element,
+			AbstractDataStorableElement<?> element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
 		RenderingComponent result = null;
