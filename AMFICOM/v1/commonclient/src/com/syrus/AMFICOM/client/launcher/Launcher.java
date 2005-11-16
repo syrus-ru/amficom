@@ -1,5 +1,5 @@
 /*-
-* $Id: Launcher.java,v 1.9 2005/10/31 12:30:01 bass Exp $
+* $Id: Launcher.java,v 1.10 2005/11/16 15:15:13 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
 
 /**
  * local implementation of Винтилйатар
- * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/11/16 15:15:13 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -127,8 +127,6 @@ public final class Launcher {
 		}
 		
 		public void handle(final Throwable thrown) {
-			thrown.printStackTrace();
-			
 			final String msg = "AMFICOMAWTHandler.handle | unhandled exception " 
 				+ thrown.getClass().getName() + ", exit";
 			
