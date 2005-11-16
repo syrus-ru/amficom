@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.PFTrace;
@@ -29,6 +30,17 @@ public class RefAnalysis {
 	public RefAnalysis(final RefAnalysis that, final ModelTraceAndEventsImpl mtae) {
 		this.pfTrace = that.pfTrace;
 		this.ar = new AnalysisResult(that.ar.getDataLength(), that.ar.getTraceLength(), mtae);
+		this.decode();
+	}
+
+	/**
+	 * Конструктор по trace.
+	 * При необходимости, проводит анализ средствами trace. 
+	 * @param trace
+	 */
+	public RefAnalysis(final Trace trace) {
+		this.pfTrace = trace.getPFTrace();
+		this.ar = trace.getAR();
 		this.decode();
 	}
 

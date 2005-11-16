@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.124 2005/10/31 12:30:22 bass Exp $
+ * $Id: Heap.java,v 1.125 2005/11/16 15:54:04 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -99,8 +99,8 @@ import com.syrus.util.Log;
  * 
  * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
  * 
- * @author $Author: bass $
- * @version $Revision: 1.124 $, $Date: 2005/10/31 12:30:22 $
+ * @author $Author: saa $
+ * @version $Revision: 1.125 $, $Date: 2005/11/16 15:54:04 $
  * @module analysis
  */
 public class Heap
@@ -261,7 +261,7 @@ public class Heap
 	 * рассылает все необходимые оповещения.
 	 * <p>
 	 * На данный момент метод используется в модуле survey.
-	 * @todo перейти на пользование этим методом и в analysis.
+	 * @todo быть может, перейти на пользование этим методом и в analysis.
 	 * </p>
 	 * @param result результат измерения, содержащий рефлектограмму
 	 * @throws SimpleApplicationException,
@@ -288,6 +288,18 @@ public class Heap
 				getMinuitAnalysisParams()));
 	}
 
+	/**
+	 * Открывает набор рефлектограмм.
+	 * Выбирает одну наиболее типичную р/г среди входного набора,
+	 * и открывает ее как первичную
+	 * (с предварительным закрытием всех открытых).
+	 * Затем открывает все остальные входные р/г как вторичные.
+	 * Note: Объект RefAnalysis пока не создается, и caller должен
+	 * сделать это самостоятельно с помощью
+	 * последовательности { setRefAnalysisPrimary(); primaryTraceOpened(); }
+	 * либо makePrimaryAnalysis(). 
+	 * @param traceColl
+	 */
 	public static void openManyTraces(Collection<Trace> traceColl) {
 		// Создаем {@link Trace} и Bellcore по каждому входному результату
 		Collection<PFTrace> pfColl = new ArrayList<PFTrace>(traceColl.size());
@@ -1147,6 +1159,20 @@ public class Heap
 	 * Other methods
 	 * ===============================================================
 	 */
+
+	/**
+	 * Создает RefAnalysis по загруженной primaryTrace.
+	 * XXX: API: API избыточно - см. makeAnalysis, makePrimaryAnalysis()
+	 */
+	public static void updatePrimaryAnalysis() {
+		Trace trace = getPrimaryTrace();
+		if (trace != null)
+		{
+			RefAnalysis a = new RefAnalysis(trace);
+			setRefAnalysisPrimary(a);
+		}
+		primaryTraceOpened();
+	}
 
 	public static void makePrimaryAnalysis() {
 		makeAnalysis();

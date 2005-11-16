@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.13 2005/10/17 14:20:09 saa Exp $
+ * $Id: Trace.java,v 1.14 2005/11/16 15:54:04 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.Client.Analysis;
 
+import java.util.logging.Level;
+
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
@@ -15,9 +17,11 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.DataFormatException;
+import com.syrus.util.Log;
 
 /**
  * Представляет загруженную рефлектограмму.
@@ -37,12 +41,12 @@ import com.syrus.io.DataFormatException;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/10/17 14:20:09 $
+ * @version $Revision: 1.14 $, $Date: 2005/11/16 15:54:04 $
  * @module
  */
 public class Trace {
 	private PFTrace pfTrace;
-	private AnalysisParameters ap; // может использоваться для построения mtae
+	private AnalysisParameters ap; // может использоваться для построения ar
 	private String key;
 	private Result result; // may be null
 
@@ -52,6 +56,9 @@ public class Trace {
 	private boolean analysisLoaded; // true если результат анализа задан извне
 
 	public Trace(BellcoreStructure bs, String key, AnalysisParameters ap) {
+		assert(bs != null);
+		assert(ap != null);
+		assert(key != null);
 		this.pfTrace = new PFTrace(bs);
 		this.ap = ap;
 		this.key = key;
@@ -60,6 +67,9 @@ public class Trace {
 	}
 
 	public Trace(PFTrace trace, String key, AnalysisParameters ap) {
+		assert(trace != null);
+		assert(ap != null);
+		assert(key != null);
 		this.pfTrace = trace;
 		this.ap = ap;
 		this.key = key;
@@ -72,6 +82,8 @@ public class Trace {
 	private Trace(Result result,
 			AnalysisParameters ap, AnalysisResult ar)
 	throws SimpleApplicationException {
+		assert(result != null);
+		assert(ap != null || ar != null);
 		this.pfTrace = new PFTrace(
 				AnalysisUtil.getBellcoreStructureFromResult(result));
 		this.ap = ap;
@@ -80,6 +92,7 @@ public class Trace {
 		this.ar = ar;
 		this.analysisLoaded = ar != null;
 	}
+
 	/**
 	 * Открывает рефлектограмму без предварительно полученных результатов анализа
 	 * XXX try to use getTraceWithARIfPossible instead
@@ -92,6 +105,7 @@ public class Trace {
 	throws SimpleApplicationException {
 		this(result, ap, null);
 	}
+
 	/**
 	 * Открывает рефлектограмму с предварительно полученными результатами анализа
 	 * XXX try to use getTraceWithARIfPossible instead
@@ -108,12 +122,17 @@ public class Trace {
 	/**
 	 * Создает {@link Trace} на основе результата измерения.
 	 * <p>
-	 * Определяет, есть ли у измерения, создавшего данный результат,
+	 * Сначала определяет, есть ли у измерения, создавшего данный результат,
 	 * результат анализа.
 	 * <ul>
 	 * <li> Если результат анализа есть, то создает {@link Trace} c этим результатом.
-	 * <li> Если результата анализа нет, то создает {@link Trace} с проведением анализа
-	 *      и использованием указанных AnalysisParameters.
+	 * <li> Если результата анализа нет, но у соответствующего
+	 * шаблона измерения есть параметры анализа,
+	 * то загружает эти параметры анализа и создает {@link Trace}
+	 * с анализом по загруженным параметрам.
+	 * <li> Если нет ни результата анализа, ни параметров анализа,
+	 * то загружает эти параметры анализа и создает {@link Trace}
+	 * с анализом по данным на входе параметрам.
 	 * </ul>
 	 * @param result результат измерения, содержащий загружаемую рефлектограмму
 	 * @param ap параметры анализа, которые будут использованы в случае,
@@ -124,17 +143,36 @@ public class Trace {
 	 * @throws SimpleApplicationException попытались открыть
 	 *   результат, не содержащий рефлектограмму
 	 */
-	public static Trace getTraceWithARIfPossible(Result result,
-			AnalysisParameters ap)
+	public static Trace getTraceWithARIfPossible(final Result result,
+			final AnalysisParameters ap)
 	throws DataFormatException, ApplicationException, SimpleApplicationException {
-		AnalysisResult ar =
+		final AnalysisResult ar =
 			AnalysisUtil.getAnalysisResultForResultIfPresent(result);
-		if (ar != null)
+		if (ar != null) {
+			Log.debugMessage("Created Trace() on result and loaded analysisResult", Level.FINER);
 			return new Trace(result, ar);
-		else
+		} else {
+			if (AnalysisUtil.hasMeasurementByResult(result)) {
+				final Measurement m = AnalysisUtil.getMeasurementByResult(result);
+				final AnalysisParameters criteriaSet =
+					AnalysisUtil.getCriteriaSetByMeasurementSetup(m.getSetup());
+				if (criteriaSet != null) {
+					Log.debugMessage("Created Trace() on result and loaded criteriaSet", Level.FINER);
+					return new Trace(result, criteriaSet);
+				}
+			}
+			Log.debugMessage("Created Trace() on result and default ap", Level.FINER);
 			return new Trace(result, ap);
+		}
 	}
 
+	/**
+	 * Возвращает результат анализа.
+	 * Если анализ уже был загружен либо проведен, то возвращает его результат.
+	 * Если анализа еще не было, то выполняет анализ с параметрами,
+	 * определенными при создании this.
+	 * @return результат анализа.
+	 */
 	public AnalysisResult getAR() {
 		if (this.ar == null) {
 			this.ar = CoreAnalysisManager.performAnalysis(this.pfTrace, this.ap);

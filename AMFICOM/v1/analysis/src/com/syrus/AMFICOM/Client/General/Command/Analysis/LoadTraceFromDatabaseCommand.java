@@ -69,6 +69,9 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			return;
 
 		// преобразуем выбранный набор результатов в набор рефлектограмм
+		// Рефлектограммы загружаются по возможности вместе с результатами
+		// анализа. Если нет результатов анализа, то по возможности
+		// загружает параметры анализа.
 		// XXX: performance: 40-80% time, because of waiting for empty set of analysis for each measurement
 		Collection<Trace> traces;
 		try {
@@ -81,9 +84,13 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			GUIUtil.processApplicationException(e);
 			return;
 		}
-		// открываем выбранный набор рефлектограмм
+		// открываем выбранный набор рефлектограмм - самую типичную как
+		// primary, остальные как secondary.
+		// Объект RefAnalysis пока не создаем.
 		// XXX: performance: 20-50% time?
 		Heap.openManyTraces(traces);
+		// Создаем RefAnalysis; XXX: объединить openManyTraces и updatePrimaryAnalysis
+		Heap.updatePrimaryAnalysis();
 
 		// если результат выбранного primaryTrace получен в результате измерения,
 		// то устанавливаем ms и, если есть, эталон
@@ -114,11 +121,9 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 
 			try {
 				// пытаемся загрузить параметры анализа
+				// (в принципе, если они были, то они уже были загружены
+				// во время загрузки primary trace)
 				AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
-				// первичная р/г анализируется безусловно - чтобы получить RefAnalysis, который не сохраняется на БД
-				// считаем, что результат будет тем же самым, т.к. параметры анализа загружены те же самые
-				// XXX: вообще, неплохо бы сохранять и RefAnalysis или какую-то его замену - тогда не надо будет проводить повторный анализ.
-				Heap.makePrimaryAnalysis();
 				// пытаемся загрузить эталон
 				if (ms.getEtalon() != null &&
 						PermissionManager.isPermitted(PermissionManager.Operation.LOAD_ETALON)) {

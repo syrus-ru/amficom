@@ -48,6 +48,11 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 	/**
 	 * ѕолучает набор Traces по набору результатов измерений.
 	 * ¬ыводит все необходимые сообщени€ об ошибках.
+	 * ѕо возможности, загружает результаты анализа.
+	 * ≈сли нет результатов анализа, пытаетс€ загрузить и использовать
+	 * параметры анализа.
+	 * ≈сли нет ни результатов, ни параметров анализа, использует
+	 * текущие параметры анализа из Heap.
 	 * @param results
 	 * @return набор Traces, возможно, пустой
 	 * (если пуст исходный набор результатов либо не удалось загрузить ни одну
@@ -63,7 +68,8 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 		for (Result result1: results) {
 			totalCounter++;
 			try {
-				//traces.add(new Trace(result1, Heap.getMinuitAnalysisParams()));
+				// параметры анализа из Heap используютс€ только в случае,
+				// если не удалось загрузить готовые результаты анализа.
 				traces.add(Trace.getTraceWithARIfPossible(result1,
 						Heap.getMinuitAnalysisParams()));
 			} catch (SimpleApplicationException e) {

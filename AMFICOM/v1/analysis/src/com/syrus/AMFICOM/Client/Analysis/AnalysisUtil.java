@@ -178,10 +178,27 @@ public class AnalysisUtil
 	 * @throws DataFormatException неверный формат данных
 	 * хранящихся в шаблоне критериев анализа
 	 */
-
 	public static void loadCriteriaSet(Identifier userId, MeasurementSetup ms)
-	throws DataFormatException
-	{
+	throws DataFormatException {
+		AnalysisParameters analysisParams = getCriteriaSetByMeasurementSetup(ms);
+		if (analysisParams != null) {
+			Heap.setMinuitAnalysisParams(analysisParams);
+			Heap.setMinuitInitialParamsFromCurrentAP();
+			Heap.notifyAnalysisParametersUpdated();
+		}
+	}
+
+	/**
+	 * Возвращает критерии анализа данного MeasurementSetup либо
+	 * null, если такового нет.
+	 * @param ms MeasurementSetup
+	 * @return критерии анализа данного MeasurementSetup либо
+	 * null, если такового нет
+	 * @throws DataFormatException при ошибках формата данных
+	 */
+	public static AnalysisParameters getCriteriaSetByMeasurementSetup(
+			MeasurementSetup ms)
+	throws DataFormatException {
 		ReflectometryAnalysisCriteria ac =
 				new ReflectometryMeasurementSetup(ms).getAnalysisCriteria();
 		if (ac != null) {
@@ -193,15 +210,9 @@ public class AnalysisUtil
 				throw new DataFormatException(
 						"No" + ParameterType.DADARA_CRITERIA.getCodename());
 			}
-			Heap.setMinuitAnalysisParams(analysisParams);
-			Heap.setMinuitInitialParamsFromCurrentAP();
-			Heap.notifyAnalysisParametersUpdated();
+			return analysisParams;
 		}
-//      else
-//      {
-//          criteriaSet = createCriteriaSetFromParams(userId, ms.getMonitoredElementIds());
-//          ms.setCriteriaSet(criteriaSet);
-//      }
+		return null;
 	}
 
 	/**
