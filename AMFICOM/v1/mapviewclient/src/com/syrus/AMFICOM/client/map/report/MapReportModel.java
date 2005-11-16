@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.18 2005/10/31 12:30:08 bass Exp $
+ * $Id: MapReportModel.java,v 1.19 2005/11/16 18:22:45 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
+
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.AbstractDataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -70,7 +71,7 @@ public class MapReportModel extends ReportModel {
 	
 	@Override
 	public RenderingComponent createReport(
-			DataStorableElement element,
+			AbstractDataStorableElement<?> element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
 		RenderingComponent result = null;
