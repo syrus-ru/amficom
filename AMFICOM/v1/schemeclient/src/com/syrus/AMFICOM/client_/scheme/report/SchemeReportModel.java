@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.4 2005/11/16 18:27:48 max Exp $
+ * $Id: SchemeReportModel.java,v 1.5 2005/11/16 19:25:59 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,6 +53,7 @@ public class SchemeReportModel extends ReportModel
 	 */
 	public static String SELECTED_OBJECT_CHARS = "selectedObjectChars";
 	public SchemeReportModel(){
+		//empty
 	}
 
 	@Override
@@ -69,6 +70,8 @@ public class SchemeReportModel extends ReportModel
 			AbstractDataStorableElement<?> element,
 			Object data,
 			ApplicationContext aContext) throws CreateReportException{
+		final AbstractDataStorableElement rawElement = element;
+
 		RenderingComponent result = null;
 		
 		String reportName = element.getReportName();
@@ -142,27 +145,27 @@ public class SchemeReportModel extends ReportModel
 					SchemeElement schemeElement = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeElementReport.createReport(
 							schemeElement,
-							(TableDataStorableElement)element);
+							(TableDataStorableElement) rawElement);
 				}
 				else if (	(objectId.getMajor() == ObjectEntities.SCHEMEPORT_CODE)
 						||	(objectId.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE)) {
 					AbstractSchemePort schemePort = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemePortReport.createReport(
 							schemePort,
-							(TableDataStorableElement)element);
+							(TableDataStorableElement) rawElement);
 				}
 				else if (	(objectId.getMajor() == ObjectEntities.SCHEMELINK_CODE)
 						||	(objectId.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE)) {
 					AbstractSchemeLink schemeLink = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeLinkReport.createReport(
 							schemeLink,
-							(TableDataStorableElement)element);
+							(TableDataStorableElement) rawElement);
 				}
 				else if (objectId.getMajor() == ObjectEntities.SCHEMEPATH_CODE) {
 					SchemePath schemePath = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemePathReport.createReport(
 							schemePath,
-							(TableDataStorableElement)element);
+							(TableDataStorableElement) rawElement);
 				}
 			}
 		} catch (ApplicationException e) {
