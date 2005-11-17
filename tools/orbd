@@ -1,0 +1,95 @@
+#!/bin/sh
+
+ORBD=/bin/orbd
+GREP=/usr/xpg4/bin/grep
+SED=/usr/xpg4/bin/sed
+if [ ! -x ${ORBD} ]
+then
+	echo "orbd is missing or is not executable; exiting..."
+	exit 1
+fi
+
+ORBD_DIR=/tmp/.orb.db
+PIDFILE=${ORBD_DIR}/orbd.pid
+
+killprocess() {
+	pid=$1
+	psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+	if [ ! -z "${psline}" ]
+	then
+		args=`echo ${psline} | ${SED} "s/^\ *${pid}\ *//g"`
+		echo "${args}"
+
+		kill -9 ${pid}
+		sleep 10
+		killprocess ${pid}
+	fi
+}
+
+
+case "$1" in
+	start)
+		if [ -f "${PIDFILE}" ]
+		then
+			pid=`cat ${PIDFILE}`
+			psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+			if [ -z "${psline}" ]
+			then
+				echo "orbd is dead but subsys locked"
+			else
+				echo "orbd (pid ${pid}) is already running"
+			fi
+		else
+			echo "\033[1;33;42m> Starting orbd...\033[0m"
+			${ORBD} -defaultdb ${ORBD_DIR} -ORBInitialPort 1050 &
+			while [ ! -d ${ORBD_DIR} ]
+			do
+				sleep 10
+			done
+			echo $! > ${PIDFILE}
+		fi
+		;;
+	stop)
+		if [ -f ${PIDFILE} ]
+		then
+			pid=`cat ${PIDFILE}`
+			psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+			if [ -z "${psline}" ]
+			then
+				echo "orbd is dead but subsys is locked"
+			else
+				echo "\033[1;33;42m> Stopping orbd...\033[0m"
+				kill -15 ${pid}
+				sleep 10
+				killprocess ${pid}
+				rm "${PIDFILE}"
+			fi
+		else
+			echo "orbd is already stopped"
+		fi
+		;;
+	status)
+		if [ -f ${PIDFILE} ]
+		then
+			pid=`cat ${PIDFILE}`
+			psline=`ps -eo "pid,args" | ${GREP} -E "^\ *${pid}\ *"`
+			if [ -z "${psline}" ]
+			then
+				echo "orbd is dead but subsys is locked"
+			else
+				echo "orbd (pid ${pid}) is running"
+			fi
+		else
+			echo "orbd is stopped"
+		fi
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 1
+		;;
+esac
+

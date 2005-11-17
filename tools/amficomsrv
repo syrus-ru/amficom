@@ -1,0 +1,62 @@
+#!/bin/sh
+
+AMFICOM_OWNER=amficom
+AMFICOM_HOME=`grep "${AMFICOM_OWNER}" /etc/passwd | cut -d: -f6`
+if [ -z "${AMFICOM_HOME}" ]
+then
+	echo "User ${AMFICOM_OWNER} not found; exiting..."
+	exit 1
+fi
+AMFICOM_RUN=${AMFICOM_HOME}/run
+
+LESERVER=${AMFICOM_RUN}/leserver.sh
+MSERVER=${AMFICOM_RUN}/mserver.sh
+CMSERVER=${AMFICOM_RUN}/cmserver.sh
+MSCHARSERVER=${AMFICOM_RUN}/mscharserver.sh
+ALL_SERVERS="${LESERVER} ${MSERVER} ${CMSERVER} ${MSCHARSERVER}"
+ALL_SERVERS_REV="${MSCHARSERVER} ${CMSERVER} ${MSERVER} ${LESERVER}"
+for prog in ${ALL_SERVERS}
+do
+	if [ ! -x ${prog} ]
+	then
+		echo "${prog} is missing or is not executable; exiting..."
+		exit 1
+	fi
+done
+
+case "$1" in
+	start)
+		for prog in ${ALL_SERVERS}
+		do
+			echo "\033[1;33;42m> Starting ${prog}...\033[0m"
+			su - ${AMFICOM_OWNER} -c "${prog} start"
+			sleep 20
+		done
+		;;
+	stop)
+		for prog in ${ALL_SERVERS_REV}
+		do
+			echo "\033[1;33;42m> Stopping ${prog}...\033[0m"
+			su - ${AMFICOM_OWNER} -c "${prog} stop"
+			sleep 5
+		done
+		;;
+	status)
+		for prog in ${ALL_SERVERS}
+		do
+			echo "\033[1;33;42m> ${prog} status...\033[0m"
+			su - ${AMFICOM_OWNER} -c "${prog} status"
+		done
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 1
+		;;
+esac
+
+unset AMFICOM_HOME AMFICOM_OWNER AMFICOM_RUN LESERVER MSERVER CMSERVER MSCHARSERVER ALL_SERVERS
+

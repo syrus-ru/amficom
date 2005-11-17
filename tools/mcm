@@ -1,0 +1,42 @@
+#!/bin/sh
+
+AMFICOM_OWNER=amficom
+AMFICOM_HOME=`grep "${AMFICOM_OWNER}" /etc/passwd | cut -d: -f6`
+if [ -z "${AMFICOM_HOME}" ]
+then
+	echo "User ${AMFICOM_OWNER} not found; exiting..."
+	exit 1
+fi
+AMFICOM_RUN=${AMFICOM_HOME}/run
+MCM=${AMFICOM_RUN}/mcm.sh
+if [ ! -x ${MCM} ]
+then
+	echo "${MCM} is missing or is not executable; exiting..."
+	exit 1
+fi
+
+case "$1" in
+	start)
+		echo "\033[1;33;42m> Starting MCM...\033[0m"
+		su - ${AMFICOM_OWNER} -c "${MCM} start"
+		;;
+	stop)
+		echo "\033[1;33;42m> Stopping MCM...\033[0m"
+		su - ${AMFICOM_OWNER} -c "${MCM} stop"
+		;;
+	status)
+		echo "\033[1;33;42m> MCM status...\033[0m"
+		su - ${AMFICOM_OWNER} -c "${MCM} status"
+		;;
+	restart)
+		$0 stop
+		$0 start
+		;;
+	*)
+		echo "Usage: $0 {start|stop|restart|status}"
+		exit 1
+		;;
+esac
+
+unset AMFICOM_HOME AMFICOM_OWNER AMFICOM_RUN MCM
+
