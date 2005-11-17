@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.58 2005/11/10 13:58:48 bass Exp $
+ * $Id: LinkedIdsCondition.java,v 1.59 2005/11/17 16:19:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/11/10 13:58:48 $
+ * @version $Revision: 1.59 $, $Date: 2005/11/17 16:19:10 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -123,7 +123,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(code.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
 		try {
-			Constructor ctor;
+			Constructor<?> ctor;
 			ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
 			ctor.setAccessible(true);
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkIds, new Short(linkedCode), code});
@@ -198,7 +198,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".LinkedIdsConditionImpl";
 		try {
-			Constructor ctor;
+			Constructor<?> ctor;
 			ctor = Class.forName(className).getDeclaredConstructor(new Class[] {Set.class, Short.class, Short.class});
 			ctor.setAccessible(true);
 			this.delegate = (LinkedIdsCondition) ctor.newInstance(new Object[] {linkedIds, new Short(linkedCode), entityCode});
@@ -302,7 +302,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			private static final long serialVersionUID = 4447852496352966852L;
 
 			@Override
-			public boolean isConditionTrue(final StorableObject storableObject) {
+			public boolean isConditionTrue(final StorableObject<?> storableObject) {
 				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 						+ "Object: " + storableObject.toString() + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
@@ -329,7 +329,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * @throws IllegalObjectEntityException
 	 * @see StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
-	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject<?> storableObject) throws IllegalObjectEntityException {
 		return this.delegate.isConditionTrue(storableObject);
 	}
 

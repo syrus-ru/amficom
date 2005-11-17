@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.21 2005/10/07 10:04:20 bass Exp $
+ * $Id: StorableObjectCondition.java,v 1.22 2005/11/17 16:19:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,13 +16,13 @@ import com.syrus.util.TransferableObject;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/10/07 10:04:20 $
+ * @version $Revision: 1.22 $, $Date: 2005/11/17 16:19:10 $
  * @author $Author: bass $
  * @module general
  */
 public interface StorableObjectCondition
 		extends TransferableObject<IdlStorableObjectCondition> {
-	boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException;
+	boolean isConditionTrue(final StorableObject<?> storableObject) throws IllegalObjectEntityException;
 
 	/**
 	 * Returns false if all objects that match this condition are already present
