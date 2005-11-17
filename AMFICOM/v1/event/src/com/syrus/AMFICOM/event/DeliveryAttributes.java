@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.4 2005/11/14 15:14:01 bob Exp $
+ * $Id: DeliveryAttributes.java,v 1.5 2005/11/17 16:14:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/11/14 15:14:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/11/17 16:14:25 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -149,7 +149,18 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 		this.severity = severity;
 	}
 
-	public static DeliveryAttributes createInstance(final Identifier creatorId,
+	/**
+	 * This method either returns an object previously saved in a database,
+	 * if one found, or creates a new one otherwise, invoking
+	 * {@link StorableObjectPool#flush(Identifiable, Identifier, boolean)}
+	 * on it. Thus, a {@code StorableObject} returned by this method is
+	 * always unchanged.
+	 *
+	 * @param creatorId
+	 * @param severity
+	 * @throws CreateObjectException
+	 */
+	public static DeliveryAttributes getInstance(final Identifier creatorId,
 			final Severity severity)
 	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
@@ -172,6 +183,7 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 						StorableObjectVersion.createInitial(),
 						severity);
 				deliveryAttributes.markAsChanged();
+				StorableObjectPool.flush(deliveryAttributes, creatorId, false);
 			} else {
 				final int size = deliveryAttributesSet.size();
 				assert size == 1 : size;
@@ -389,5 +401,24 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 		}
 
 		this.setRoleIds(Identifier.createIdentifiers(roles));
+	}
+
+	/*-********************************************************************
+	 * Non-model members.                                                 *
+	 **********************************************************************/
+
+	/**
+	 * @return a full {@link Set} of {@link SystemUser}s associated with
+	 *         this {@link DeliveryAttributes}, either indirectly via
+	 *         associated {@link Role}s, or directly.
+	 * @throws ApplicationException
+	 */
+	public Set<SystemUser> getSystemUsersRecursively() throws ApplicationException {
+		final Set<SystemUser> systemUsers = new HashSet<SystemUser>();
+		systemUsers.addAll(this.getSystemUsers0());
+		for (final Role role : this.getRoles0()) {
+			systemUsers.addAll(role.getSystemUsers());
+		}
+		return Collections.unmodifiableSet(systemUsers);
 	}
 }
