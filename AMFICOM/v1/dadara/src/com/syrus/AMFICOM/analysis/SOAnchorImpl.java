@@ -1,5 +1,5 @@
 /*-
- * $Id: SOAnchorImpl.java,v 1.4 2005/11/17 14:03:13 saa Exp $
+ * $Id: SOAnchorImpl.java,v 1.5 2005/11/17 15:19:47 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.io.SignatureMismatchException;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/11/17 14:03:13 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/17 15:19:47 $
  * @module
  */
 public final class SOAnchorImpl implements SOAnchor {
@@ -48,7 +48,7 @@ public final class SOAnchorImpl implements SOAnchor {
 	}
 
 	public boolean isVoid() {
-		return this.value != SOAnchorImpl.VOID_ANCHOR.value;
+		return this.value == SOAnchorImpl.VOID_ANCHOR.value;
 	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {
