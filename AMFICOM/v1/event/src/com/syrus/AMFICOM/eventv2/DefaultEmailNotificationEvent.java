@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultEmailNotificationEvent.java,v 1.1 2005/10/11 08:58:25 bass Exp $
+ * $Id: DefaultEmailNotificationEvent.java,v 1.2 2005/11/17 16:22:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.eventv2;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
 import org.omg.CORBA.ORB;
 
@@ -16,7 +19,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEmailNotificationEventHelper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/11 08:58:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 16:22:31 $
  * @module event
  */
 public final class DefaultEmailNotificationEvent extends
@@ -45,6 +48,17 @@ public final class DefaultEmailNotificationEvent extends
 		this.message = emailNotificationEvent.getMessage();
 	}
 
+	private DefaultEmailNotificationEvent(
+			final LineMismatchEvent lineMismatchEvent,
+			final String address) {
+		assert address != null : NON_NULL_EXPECTED;
+		assert address.length() != 0 : NON_EMPTY_EXPECTED;
+
+		this.email = address;
+		this.subject = lineMismatchEvent.getSeverity().getLocalizedName();
+		this.message = lineMismatchEvent.getMessage();
+	}
+
 	/**
 	 * @param orb
 	 * @see com.syrus.util.TransferableObject#getTransferable(ORB)
@@ -57,6 +71,12 @@ public final class DefaultEmailNotificationEvent extends
 	public static EmailNotificationEvent valueOf(
 			final IdlEmailNotificationEvent emailNotificationEvent) {
 		return new DefaultEmailNotificationEvent(emailNotificationEvent);
+	}
+
+	public static EmailNotificationEvent valueOf(
+			final LineMismatchEvent lineMismatchEvent,
+			final String address) {
+		return new DefaultEmailNotificationEvent(lineMismatchEvent, address);
 	}
 
 	/**
