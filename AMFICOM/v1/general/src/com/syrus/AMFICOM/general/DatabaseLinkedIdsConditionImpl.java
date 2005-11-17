@@ -1,5 +1,5 @@
-/*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.17 2005/11/14 11:22:02 arseniy Exp $
+/*-
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.18 2005/11/17 16:17:13 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,12 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
@@ -45,10 +47,11 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_TYPE_ID;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/11/14 11:22:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/11/17 16:17:13 $
+ * @author $Author: bass $
  * @module general
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -109,15 +112,14 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					case SITENODE_TYPE_CODE:
 					case TOPOLOGICALNODE_CODE:
 
-						return super.getQuery(CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID);
-//					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
-//						return super.getQuery(StorableObjectWrapper.COLUMN_TYPE_ID);
+						return this.getQuery(COLUMN_CHARACTERIZABLE_ID);
+					case CHARACTERISTIC_TYPE_CODE:
+						return this.getQuery(COLUMN_TYPE_ID);
 					default:
-						throw super.newExceptionLinkedEntityIllegal();
+						throw this.newExceptionLinkedEntityIllegal();
 				}
 			default:
-				throw super.newExceptionEntityIllegal();
+				throw this.newExceptionEntityIllegal();
 		}
 	}
-
 }

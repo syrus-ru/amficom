@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/09/29 06:08:43 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/11/17 16:17:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/29 06:08:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/11/17 16:17:13 $
+ * @author $Author: bass $
  * @module general
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -76,11 +76,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         </ul>
 	 */
 	@Override
-	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject<?> storableObject) throws IllegalObjectEntityException {
+		@SuppressWarnings("unchecked")
+		final StorableObject rawStorableObject = storableObject;
+
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case CHARACTERISTIC_CODE:
-				final Characteristic characteristic = (Characteristic) storableObject;
+				final Characteristic characteristic = (Characteristic) rawStorableObject;
 				switch (this.linkedEntityCode) {
 
 					/* Administration */
@@ -131,9 +134,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 						condition = super.conditionTest(characteristic.getParentCharacterizableId());
 						break;
-//					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
-//						condition = super.conditionTest(characteristic.getType().getId());
-//						break;
+					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
+						condition = super.conditionTest(characteristic.getTypeId());
+						break;
 					default:
 						throw newExceptionLinkedEntityIllegal();
 				}
