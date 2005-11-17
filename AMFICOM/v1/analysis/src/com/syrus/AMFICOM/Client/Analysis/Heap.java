@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.125 2005/11/16 15:54:04 saa Exp $
+ * $Id: Heap.java,v 1.126 2005/11/17 14:52:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -100,7 +100,7 @@ import com.syrus.util.Log;
  * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
  * 
  * @author $Author: saa $
- * @version $Revision: 1.125 $, $Date: 2005/11/16 15:54:04 $
+ * @version $Revision: 1.126 $, $Date: 2005/11/17 14:52:00 $
  * @module analysis
  */
 public class Heap
@@ -541,11 +541,33 @@ public class Heap
 				Heap.getAnchorer());
 	}
 
+	/**
+	 * Возвращает текущий привязчик EventAnchorer либо null, если такового нет.
+	 */
 	public static EventAnchorer getAnchorer() {
 		return anchorer;
 	}
+	/**
+	 * Устанавливает привязчик EventAnchorer
+	 * @param anchorer устанавливаемый привязчик, may be null
+	 */
 	public static void setAnchorer(EventAnchorer anchorer) {
 		Heap.anchorer = anchorer;
+	}
+	/**
+	 * Возвращает non-null привязчик EventAnchorer, создавая его, если его еще нет.
+	 * @return non-null привязчик EventAnchorer, создавая его, если его еще нет
+	 * @throw IllegalStateException если эталона нет.
+	 */
+	public static EventAnchorer obtainAnchorer() {
+		if (!hasEtalon()) {
+			throw new IllegalStateException("no etalon");
+		}
+		if (anchorer == null) {
+			anchorer = new EventAnchorer(
+					getMTMEtalon().getMTAE().getNEvents());
+		}
+		return anchorer;
 	}
 
 	private static void removeAllBS() {
@@ -898,13 +920,19 @@ public class Heap
 	}
 
 	/**
+	 * Устанавливает эталонный MTM.
 	 * Если устанавливается ненулевой MTM, к этому моменту уже должна
 	 * быть установлена рефлектограмма эталона, иначе возможны проблемы
 	 * в окне анализа, которое пока что полагается на то, что у отображенного
 	 * эталона непременно будет BS.
+	 * Безусловно удаляет etalonComparison.
+	 * Если устанавливается новый MTM (ссылка указывает не на тот MTM,
+	 * который установлен к моменту данного вызова), то также удаляет anchorer.
 	 * @param mtm may be null
 	 */
 	public static void setMTMEtalon(ModelTraceManager mtm) {
+		if (etalonMTM != mtm)
+			setAnchorer(null);
 		etalonMTM = mtm;
 		fixEventList();
 		setMTMBackupEtalon(mtm);
@@ -942,10 +970,11 @@ public class Heap
 	 * closes all BS traces, primary RefAnalysis&MTAE and etalon MTM 
 	 */
 	public static void closeAll() {
-		// close Etalon MTM
+		// close Etalon MTM & anchorer
 		etalonMTM = null;
 		backupEtalonMTM = null;
 		etalonName = null;
+		anchorer = null;
 		fixEventList();
 		notifyEtalonMTMRemoved();
 
@@ -1249,7 +1278,7 @@ public class Heap
 	}
 
 	// сбрасывает результат сравнения - вызывается при каждом
-	// измерении эталона
+	// изменении эталона
 	private static void removeEtalonComparison() {
 		if (getEtalonComparison() != null) {
 			setEtalonComparison(null);
