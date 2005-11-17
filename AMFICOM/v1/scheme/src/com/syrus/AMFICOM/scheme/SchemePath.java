@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.111 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemePath.java,v 1.112 2005/11/17 17:49:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.112 $, $Date: 2005/11/17 17:49:38 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject<SchemePath>
@@ -771,9 +771,11 @@ public final class SchemePath extends StorableObject<SchemePath>
 		
 		while (pathElementIterator.hasNext()) {
 			final PathElement pathElement1 = pathElementIterator.next();
-			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT
-					&& pathElement1.getSchemeElement().getProtoEquipment().getType() != MUFF) {
-				return pathElement1;
+			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT) {
+				final SchemeElement parentSchemeElement = pathElement1.getSchemeElement().getParentSchemeElement();
+				if (parentSchemeElement == null || parentSchemeElement.getProtoEquipment().getType() != MUFF) {
+					return pathElement1;
+				}
 			}
 		}
 		return null;
@@ -909,10 +911,17 @@ public final class SchemePath extends StorableObject<SchemePath>
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		PathElement previousNode = null;
-		for (final PathElement pathElement1 : getPathMembers().headSet(pathElement)) {
-			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT && 
-					pathElement1.getSchemeElement().getProtoEquipment().getType() != MUFF) {
-				previousNode = pathElement1;
+		
+		final SortedSet<PathElement> pathElements = getPathMembers().headSet(pathElement);
+		SortedSet<PathElement> pathElementsReversed = new TreeSet<PathElement>(
+				Collections.reverseOrder(pathElements.comparator()));
+		pathElementsReversed.addAll(pathElements);
+		for (final PathElement currentPathElement : pathElementsReversed) {
+			if (currentPathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
+				final SchemeElement parentSchemeElement = currentPathElement.getSchemeElement().getParentSchemeElement();
+				if (parentSchemeElement == null || parentSchemeElement.getProtoEquipment().getType() != MUFF) {
+					return currentPathElement;
+				}
 			}
 		}
 		return previousNode;
@@ -995,7 +1004,7 @@ public final class SchemePath extends StorableObject<SchemePath>
 		}
 
 		final double k = (oldOpticalLength + increment) / oldOpticalLength;
-		if (Math.abs(k - 1) >= .001) {
+		if (k > 0) {
 			for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 				pathElement.setOpticalLength(pathElement.getOpticalLength() * k);
 				if (pathElement.equals(endPathElement)) {
