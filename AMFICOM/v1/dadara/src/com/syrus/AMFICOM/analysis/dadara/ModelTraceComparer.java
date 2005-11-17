@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.42 2005/11/02 09:16:12 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.43 2005/11/17 15:31:42 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.42 $, $Date: 2005/11/02 09:16:12 $
+ * @version $Revision: 1.43 $, $Date: 2005/11/17 15:31:42 $
  * @module
  */
 public class ModelTraceComparer
@@ -417,21 +417,13 @@ public class ModelTraceComparer
 			for (int i = 0; i < len; i++) {
 				SOAnchorImpl ea = anc.getEventAnchor(i);
 				SimpleReflectogramEvent se = mtae.getSimpleEvent(i);
-	
+
 				// пропускаем события, по которым не может быть привязки
-	
-				// XXX: вынести проверку типа события во внешний код
-				switch (se.getEventType()) {
-				case SimpleReflectogramEvent.DEADZONE:   // fall through
-				case SimpleReflectogramEvent.ENDOFTRACE: // fall through
-				case SimpleReflectogramEvent.CONNECTOR:  // fall through
-				case SimpleReflectogramEvent.GAIN: // fall through
-				case SimpleReflectogramEvent.LOSS:
-					break; // break switch
-				default:
-					continue; // continue for
+
+				if (!ReflectogramMath.isEventAnchorable(se)) {
+					continue;
 				}
-	
+
 				// пропускаем события, для которых привязка не определена
 	
 				if (ea.getValue() == SOAnchorImpl.VOID_ANCHOR.getValue())

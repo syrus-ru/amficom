@@ -292,4 +292,22 @@ public class ReflectogramMath
 		}
 		return -mxy / mxx * (xEnd - xBeg);
 	}
+
+	/**
+	 * Определяет, возможна ли привязка по данному событию.
+	 * @param se событие
+	 * @return true, если по данному событию привязка возможна
+	 */
+	public static boolean isEventAnchorable(SimpleReflectogramEvent se) {
+		switch (se.getEventType()) {
+		case SimpleReflectogramEvent.DEADZONE:   // fall through
+		case SimpleReflectogramEvent.ENDOFTRACE: // fall through
+		case SimpleReflectogramEvent.CONNECTOR:  // fall through
+		case SimpleReflectogramEvent.GAIN: // fall through
+		case SimpleReflectogramEvent.LOSS:
+			return true;
+		default:
+			return false;
+		}
+	}
 }
