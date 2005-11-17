@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEvent.java,v 1.10 2005/10/19 11:51:41 bass Exp $
+ * $Id: LineMismatchEvent.java,v 1.11 2005/11/17 16:21:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlLineMismatchEvent;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
  * 
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/10/19 11:51:41 $
+ * @version $Revision: 1.11 $, $Date: 2005/11/17 16:21:38 $
  * @module event
  */
 public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
@@ -171,4 +172,11 @@ public interface LineMismatchEvent extends Event<IdlLineMismatchEvent> {
 	 * @see PopupNotificationEvent#getMismatchCreated()
 	 */
 	Date getMismatchCreated();
+
+	/**
+	 * @return a plain-text, human-readable, localized representaion of
+	 *         the {@link ReflectogramMismatch mismatch} that triggerred
+	 *         this event's generation.
+	 */
+	String getMessage();
 }
