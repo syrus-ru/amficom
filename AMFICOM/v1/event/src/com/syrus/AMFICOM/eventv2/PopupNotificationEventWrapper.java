@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEventWrapper.java,v 1.1 2005/10/28 12:28:12 bass Exp $
+ * $Id: PopupNotificationEventWrapper.java,v 1.2 2005/11/17 16:20:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,14 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/10/28 12:28:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 16:20:30 $
  * @module event
  */
 public final class PopupNotificationEventWrapper
@@ -33,6 +34,7 @@ public final class PopupNotificationEventWrapper
 	public static final String COLUMN_MISMATCH_OPTICAL_DISTANCE = "mismatch_optical_distance";
 	public static final String COLUMN_MISMATCH_PHYSICAL_DISTANCE = "mismatch_physical_distance";
 	public static final String COLUMN_MISMATCH_CREATED = "mismatch_created";
+	public static final String COLUMN_SEVERITY = "severity";
 
 	private static PopupNotificationEventWrapper instance;
 
@@ -47,7 +49,8 @@ public final class PopupNotificationEventWrapper
 				COLUMN_RESULT_ID,
 				COLUMN_MISMATCH_OPTICAL_DISTANCE,
 				COLUMN_MISMATCH_PHYSICAL_DISTANCE,
-				COLUMN_MISMATCH_CREATED}));
+				COLUMN_MISMATCH_CREATED,
+				COLUMN_SEVERITY}));
 	}
 
 	/**
@@ -69,7 +72,7 @@ public final class PopupNotificationEventWrapper
 	 * @param key
 	 * @see Wrapper#getPropertyClass(String)
 	 */
-	public Class getPropertyClass(final String key) {
+	public Class<?> getPropertyClass(final String key) {
 		final String internedKey = key.intern();
 		if (internedKey == COLUMN_TYPE) {
 			return EventType.class;
@@ -85,6 +88,8 @@ public final class PopupNotificationEventWrapper
 			return Double.class;
 		} else if (internedKey == COLUMN_MISMATCH_CREATED) {
 			return Date.class;
+		} else if (internedKey == COLUMN_SEVERITY) {
+			return Severity.class;
 		}
 		return null;
 	}
@@ -136,6 +141,8 @@ public final class PopupNotificationEventWrapper
 			return Double.valueOf(popupNotificationEvent.getMismatchPhysicalDistance());
 		} else if (internedKey == COLUMN_MISMATCH_CREATED) {
 			return popupNotificationEvent.getMismatchCreated();
+		} else if (internedKey == COLUMN_SEVERITY) {
+			return popupNotificationEvent.getSeverity();
 		}
 		return null;
 	}

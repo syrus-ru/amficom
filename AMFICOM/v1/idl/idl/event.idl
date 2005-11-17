@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.41 2005/11/09 15:28:40 bass Exp $
+ * $Id: event.idl,v 1.42 2005/11/17 16:20:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -289,19 +289,22 @@ module eventv2 {
 			private double mismatchOpticalDistance;
 			private double mismatchPhysicalDistance;
 			private long long mismatchCreated;
+			private reflectometry::corba::IdlSeverity severity;
 
 			general::corba::IdlIdentifier getTargetUserId();
 			general::corba::IdlIdentifier getResultId();
 			double getMismatchOpticalDistance();
 			double getMismatchPhysicalDistance();
 			long long getMismatchCreated();
+			reflectometry::corba::IdlSeverity getSeverity();
 
 			factory init(in general::corba::IdlIdentifier targetUserId,
 					in wstring message,
 					in general::corba::IdlIdentifier resultId,
 					in double mismatchOpticalDistance,
 					in double mismatchPhysicalDistance,
-					in long long mismatchCreated);
+					in long long mismatchCreated,
+					in reflectometry::corba::IdlSeverity severity);
 		};
 
 

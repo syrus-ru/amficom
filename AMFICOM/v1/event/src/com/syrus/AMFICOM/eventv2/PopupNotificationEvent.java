@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupNotificationEvent.java,v 1.4 2005/10/19 07:50:31 bass Exp $
+ * $Id: PopupNotificationEvent.java,v 1.5 2005/11/17 16:21:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,12 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.eventv2.corba.IdlPopupNotificationEvent;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/19 07:50:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/17 16:21:55 $
  * @module event
  */
 public interface PopupNotificationEvent extends NotificationEvent<IdlPopupNotificationEvent> {
@@ -41,4 +42,10 @@ public interface PopupNotificationEvent extends NotificationEvent<IdlPopupNotifi
 	 *         generation of this notification event. 
 	 */
 	Date getMismatchCreated();
+
+	/**
+	 * @return severity of mismatch event that triggerred generation of this
+	 *         notification event.
+	 */
+	Severity getSeverity();
 }
