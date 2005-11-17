@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.SavePathElementsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
@@ -58,7 +59,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 	ThresholdsFrame				thresholdsFrame;
 	MarkersInfoFrame			mInfoFrame;
 	AnalysisSelectionFrame		anaSelectFrame;
-	AnalysisFrame				analysisFrame;
+	PathElementsFrame				analysisFrame;
 
 	List<ReportTable>					tables;
 	List<SimpleResizableFrame>					graphs;
@@ -187,7 +188,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 		this.desktopPane.add(this.anaSelectFrame);
 		this.tables.add(this.anaSelectFrame);
 
-		this.analysisFrame = new AnalysisFrame(this.dispatcher);
+		this.analysisFrame = new PathElementsFrame(this.aContext, this.dispatcher);
 		this.desktopPane.add(this.analysisFrame);
 		this.graphs.add(this.analysisFrame);
 	}
@@ -236,6 +237,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
+		aModel.setCommand("menuTraceSavePES", new SavePathElementsCommand(this.aContext));
+		
 		// XXX temporary not allowed, uncomment after create frames like AnalyseMainFrame 
 		aModel.setVisible("menuReport", false);
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
@@ -286,6 +289,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 		aModel.setEnabled("commandCheckMismatch", false);
 		aModel.setVisible("commandCheckMismatch", true);
+		
+		aModel.setVisible("menuTraceSavePES", true);
 	}
 
 	@Override
@@ -372,6 +377,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 			aModel.setEnabled("menuTraceAddCompare",
 					PermissionManager.isPermitted(Operation.LOAD_TRACE));
 
+			aModel.setEnabled("menuTraceSavePES", true);
+			
 			final boolean saveMSPermitted =
 					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP);
 			aModel.setEnabled("menuCreateTestSetup", saveMSPermitted);
@@ -443,6 +450,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 //		aModel.setEnabled("menuTraceUpload", false);
 //		aModel.setEnabled("menuTraceReference", false);
 //		aModel.setEnabled("menuTraceCurrent", false);
+		aModel.setEnabled("menuTraceSavePES", false);
 
 		aModel.setEnabled("menuCreateTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetup", false);

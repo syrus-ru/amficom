@@ -311,7 +311,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
-				PathElementsFrame analysisFrame = new PathElementsFrame(aContext, AnalyseMainFrame.this.dispatcher)  {
+				AnalysisFrame analysisFrame = new AnalysisFrame(AnalyseMainFrame.this.dispatcher)  {
 					@Override
 					public String getReportTitle() {
 						return ANALYSIS_FRAME;
@@ -412,8 +412,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
 //		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
 		
-		aModel.setCommand("menuTraceSavePES", new SavePathElementsCommand(this.aContext));
-
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
@@ -482,8 +480,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		aModel.setVisible("menuSaveThresholds", false);
 		aModel.setVisible("menuWindowThresholdsSelection", false);
 		aModel.setVisible("menuWindowThresholds", false);
-		
-		aModel.setVisible("menuTraceSavePES", true);
 	}
 	
 	@Override
@@ -623,8 +619,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 //		aModel.setEnabled("menuTraceReference", false);
 //		aModel.setEnabled("menuTraceCurrent", false);
 //		aModel.setEnabled("menuAnalyseUpload", false);
-		aModel.setEnabled("menuTraceSavePES", false);
-
+		
 		aModel.setEnabled("menuCreateTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetupAs", false);
@@ -680,8 +675,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			aModel.setEnabled("menuTraceAddCompare",
 					PermissionManager.isPermitted(Operation.LOAD_TRACE));
 //			aModel.setEnabled("menuAnalyseUpload", true);
-			aModel.setEnabled("menuTraceSavePES", true);
-
+			
 			aModel.setEnabled("menuCreateTestSetup",
 					PermissionManager.isPermitted(Operation.SAVE_MEASUREMENT_SETUP));
 			aModel.setEnabled("menuSaveTestSetup",
