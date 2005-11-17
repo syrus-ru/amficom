@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.79 2005/10/31 12:30:18 bass Exp $
+ * $Id: Characteristic.java,v 1.80 2005/11/17 16:18:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/10/31 12:30:18 $
+ * @version $Revision: 1.80 $, $Date: 2005/11/17 16:18:40 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -324,10 +324,14 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		super.markAsChanged();
 	}
 
+	public Identifier getTypeId() {
+		return this.getType().getId();
+	}
+
 	public CharacteristicType getType() {
 		return this.type;
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -373,6 +377,10 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 		super.markAsChanged();
 	}
 
+	/**
+	 * This method returns the data this characteristic holds. It's in no
+	 * way connected with {@link StorableObject#getValue(String)}. 
+	 */
 	public String getValue() {
 		return this.value;
 	}
@@ -400,6 +408,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 	 * @todo add check whether parentCharacterizable is non-null.
 	 */
 	public Characterizable getParentCharacterizable() throws ApplicationException {
+		@SuppressWarnings("unchecked")
 		final StorableObject storableObject = StorableObjectPool.getStorableObject(this.getParentCharacterizableId(), true);
 		if (storableObject == null || storableObject instanceof Characterizable) {
 			return (Characterizable) storableObject;
@@ -432,6 +441,7 @@ public final class Characteristic extends AbstractCloneableStorableObject<Charac
 			return;
 		}
 
+		@SuppressWarnings("unchecked")
 		final StorableObject storableObject = StorableObjectPool.getStorableObject(parentCharacterizableId, true);
 		if (storableObject == null || storableObject instanceof Characterizable) {
 			this.setParentCharacterizable((Characterizable) storableObject, usePool);
