@@ -1,5 +1,5 @@
-/*
- * $Id: Role.java,v 1.9 2005/11/10 14:06:13 bob Exp $
+/*-
+ * $Id: Role.java,v 1.10 2005/11/17 16:12:38 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -24,22 +26,25 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/11/10 14:06:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/11/17 16:12:38 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module administration
  */
 
 public final class Role extends StorableObject<Role>
 		implements Describable {
-	
+	private static final long serialVersionUID = 1530119194975831896L;
+
 	public enum RoleCodename {
 		SUBSCRIBER("Subscriber"),
 		SYSTEM_ADMINISTATOR("SystemAdministator"),
@@ -228,7 +233,7 @@ public final class Role extends StorableObject<Role>
 
 		return Collections.emptySet();
 	}
-	
+
 	public void setCodename(final String codename) {
 		this.codename = codename;
 		super.markAsChanged();
@@ -240,5 +245,22 @@ public final class Role extends StorableObject<Role>
 	@Override
 	protected RoleWrapper getWrapper() {
 		return RoleWrapper.getInstance();
+	}
+
+
+	private Set<SystemUser> getSystemUsers0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(
+				new LinkedIdsCondition(this.id, SYSTEMUSER_CODE),
+				true);
+	}
+
+	/**
+	 * @return a {@link Set} of {@link SystemUser}s associated with this
+	 *         {@link Role}.
+	 * @throws ApplicationException
+	 * @todo caching
+	 */
+	public Set<SystemUser> getSystemUsers() throws ApplicationException {
+		return Collections.unmodifiableSet(this.getSystemUsers0());
 	}
 }
