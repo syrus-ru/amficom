@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.32 2005/11/16 18:24:54 max Exp $
+ * $Id: BitmapImageResource.java,v 1.33 2005/11/17 16:10:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.32 $, $Date: 2005/11/16 18:24:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/11/17 16:10:03 $
  * @module resource
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource implements Cloneable {
@@ -166,13 +166,13 @@ public final class BitmapImageResource extends AbstractBitmapImageResource imple
 		this.codename = bitmapImageResourceData.codename;
 		this.image = bitmapImageResourceData.image;
 	}
-	
+
 	@Override
 	public BitmapImageResource clone() throws CloneNotSupportedException {
 		BitmapImageResource clone = (BitmapImageResource) super.clone();
 		clone.codename = clone.id.toString();
-		clone.image = this.image;
-		
+		clone.image = this.image.clone();
+
 		return clone;
 	}
 }
