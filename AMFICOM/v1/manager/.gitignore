@@ -8,5 +8,5 @@ logs
 .xml
 *.jar
 Application.properties
-administration.properties
 common.properties
+cache
