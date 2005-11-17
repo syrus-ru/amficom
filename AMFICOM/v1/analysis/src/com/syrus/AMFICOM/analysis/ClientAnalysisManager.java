@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.25 2005/11/14 14:31:16 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.26 2005/11/17 12:20:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.25 $, $Date: 2005/11/14 14:31:16 $
+ * @version $Revision: 1.26 $, $Date: 2005/11/17 12:20:00 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -103,6 +103,10 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 			return;
 		double yMinAbs = ReflectogramMath.getArrayMin(pf.getFilteredTraceClone());
 		double[] yMT = mtae.getModelTrace().getYArray();
+		if (yMT.length == 0) {
+			Heap.setMinTraceLevel(yMinAbs);
+			return;
+		}
 		int maxIndex = ReflectogramMath.getArrayMaxIndex(yMT, 0, yMT.length - 1);
 		int rMinIndex = ReflectogramMath.getArrayMinIndex(yMT, maxIndex, yMT.length - 1);
 		double yMinMT = yMT[rMinIndex];
