@@ -1,5 +1,5 @@
 /*-
-* $Id: Creator.java,v 1.1 2005/11/14 10:04:09 bob Exp $
+* $Id: Creator.java,v 1.2 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.manager.viewers;
 
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.Role;
@@ -29,11 +31,9 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LayoutItem;
 
-import junit.framework.TestCase;
-
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/14 10:04:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

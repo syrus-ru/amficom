@@ -1,5 +1,5 @@
 /*-
-* $Id: WorkstationBeanUI.java,v 1.3 2005/11/10 13:59:01 bob Exp $
+* $Id: WorkstationBeanUI.java,v 1.4 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.manager.viewers;
 
-import com.syrus.AMFICOM.manager.NonStorableBean;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.beans.NonStorableBean;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/10 13:59:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

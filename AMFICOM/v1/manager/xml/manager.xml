@@ -1,97 +1,98 @@
 <ext:root xmlns:ext="http://syrus.com/AMFICOM/extensions">
   <ext:extension xsi:type="man:managerExtensions" id="com.syrus.AMFICOM.manager.ManagerHandler" xmlns:man="http://syrus.com/AMFICOM/extensions/manager" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <man:managerResource xsi:type="man:perspective" id="domains">
-      <man:beanFactory id="Domain" beanFactoryClass="com.syrus.AMFICOM.manager.DomainBeanFactory"/>
-      <man:beanFactory id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.NetBeanFactory"/>
+      <man:handler>com.syrus.AMFICOM.manager.perspective.DomainsPerspective</man:handler>
+      <man:beanFactory id="Domain" beanFactoryClass="com.syrus.AMFICOM.manager.beans.DomainBeanFactory"/>
+      <man:beanFactory id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.beans.NetBeanFactory"/>
       <man:uiHandler id="Domain" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.DomainBeanUI"/>
       <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
       <man:validator source="Domain" target="Domain"/>
       <man:validator source="Net" target="Domain"/>
       <man:popupMenu id="Domain" popupMenuHandler="com.syrus.AMFICOM.manager.UI.DomainPopupMenu"/>
-    </man:managerResource>
-    <man:managerResource xsi:type="man:perspective" id="Domain">
-      <man:beanFactory id="KIS" beanFactoryClass="com.syrus.AMFICOM.manager.RTUBeanFactory"/>
-      <man:beanFactory id="Server" beanFactoryClass="com.syrus.AMFICOM.manager.ServerBeanFactory"/>
-      <man:beanFactory id="MCM" beanFactoryClass="com.syrus.AMFICOM.manager.MCMBeanFactory"/>
-      <man:beanFactory id="Workstation" beanFactoryClass="com.syrus.AMFICOM.manager.WorkstationBeanFactory"/>
-      <man:beanFactory id="SystemUser" beanFactoryClass="com.syrus.AMFICOM.manager.UserBeanFactory"/>
-      <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
-      <man:uiHandler id="KIS" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.KISBeanUI"/>
-      <man:uiHandler id="Server" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.ServerBeanUI"/>
-      <man:uiHandler id="MCM" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MCMBeanUI"/>
-      <man:uiHandler id="Workstation" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI"/>
-      <man:uiHandler id="SystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.SystemUserBeanUI"/>
-      <man:validator source="MCM" target="Net"/>
-      <man:validator source="KIS" target="Net"/>
-      <man:validator source="Server" target="Net"/>
-      <man:validator source="Workstation" target="Net"/>
-      <man:validator source="SystemUser" target="Workstation"/>
-      <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu"/>
-      <man:undeletable>Net</man:undeletable>
-    </man:managerResource>
-    <man:managerResource xsi:type="man:perspective" id="SystemUser">
-      <man:beanFactory id="PermissionAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="administration" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="scheme" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="elementsEditor" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="mapEditor" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="optimization" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="modeling" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="scheduler" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="analysis" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="research" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="evaluation" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="observer" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="prediction" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:beanFactory id="report" beanFactoryClass="com.syrus.AMFICOM.manager.PermissionBeanFactory"/>
-      <man:uiHandler id="SystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.SystemUserBeanUI"/>
-      <man:uiHandler id="PermissionAttributes" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="administration" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="scheme" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="elementsEditor" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="mapEditor" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="optimization" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="modeling" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="scheduler" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="analysis" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="research" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="evaluation" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="observer" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="prediction" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:uiHandler id="report" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
-      <man:validator source="administration" target="SystemUser"/>
-      <man:validator source="scheme" target="SystemUser"/>
-      <man:validator source="elementsEditor" target="SystemUser"/>
-      <man:validator source="mapEditor" target="SystemUser"/>
-      <man:validator source="optimization" target="SystemUser"/>
-      <man:validator source="modeling" target="SystemUser"/>
-      <man:validator source="scheduler" target="SystemUser"/>
-      <man:validator source="analysis" target="SystemUser"/>
-      <man:validator source="research" target="SystemUser"/>
-      <man:validator source="evaluation" target="SystemUser"/>
-      <man:validator source="observer" target="SystemUser"/>
-      <man:validator source="prediction" target="SystemUser"/>
-      <man:validator source="report" target="SystemUser"/>
-      <man:validator source="PermissionAttributes" target="SystemUser"/>
-      <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu"/>
-      <man:undeletable>SystemUser</man:undeletable>
+      <man:perspective id="Domain">
+        <man:beanFactory id="KIS" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RTUBeanFactory"/>
+        <man:beanFactory id="Server" beanFactoryClass="com.syrus.AMFICOM.manager.beans.ServerBeanFactory"/>
+        <man:beanFactory id="MCM" beanFactoryClass="com.syrus.AMFICOM.manager.beans.MCMBeanFactory"/>
+        <man:beanFactory id="Workstation" beanFactoryClass="com.syrus.AMFICOM.manager.beans.WorkstationBeanFactory"/>
+        <man:beanFactory id="SystemUser" beanFactoryClass="com.syrus.AMFICOM.manager.beans.UserBeanFactory"/>
+        <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
+        <man:uiHandler id="KIS" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.KISBeanUI"/>
+        <man:uiHandler id="Server" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.ServerBeanUI"/>
+        <man:uiHandler id="MCM" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MCMBeanUI"/>
+        <man:uiHandler id="Workstation" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI"/>
+        <man:uiHandler id="SystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.SystemUserBeanUI"/>
+        <man:validator source="MCM" target="Net"/>
+        <man:validator source="KIS" target="Net"/>
+        <man:validator source="Server" target="Net"/>
+        <man:validator source="Workstation" target="Net"/>
+        <man:validator source="SystemUser" target="Workstation"/>
+        <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu"/>
+        <man:undeletable>Net</man:undeletable>
+        <man:perspective id="SystemUser">
+          <man:beanFactory id="PermissionAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="administration" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="scheme" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="elementsEditor" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="mapEditor" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="optimization" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="modeling" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="scheduler" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="analysis" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="research" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="evaluation" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="observer" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="prediction" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:beanFactory id="report" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
+          <man:uiHandler id="SystemUser" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.SystemUserBeanUI"/>
+          <man:uiHandler id="PermissionAttributes" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="administration" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="scheme" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="elementsEditor" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="mapEditor" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="optimization" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="modeling" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="scheduler" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="analysis" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="research" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="evaluation" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="observer" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="prediction" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:uiHandler id="report" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.UserPermissionBeanUI"/>
+          <man:validator source="administration" target="SystemUser"/>
+          <man:validator source="scheme" target="SystemUser"/>
+          <man:validator source="elementsEditor" target="SystemUser"/>
+          <man:validator source="mapEditor" target="SystemUser"/>
+          <man:validator source="optimization" target="SystemUser"/>
+          <man:validator source="modeling" target="SystemUser"/>
+          <man:validator source="scheduler" target="SystemUser"/>
+          <man:validator source="analysis" target="SystemUser"/>
+          <man:validator source="research" target="SystemUser"/>
+          <man:validator source="evaluation" target="SystemUser"/>
+          <man:validator source="observer" target="SystemUser"/>
+          <man:validator source="prediction" target="SystemUser"/>
+          <man:validator source="report" target="SystemUser"/>
+          <man:validator source="PermissionAttributes" target="SystemUser"/>
+          <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu"/>
+          <man:undeletable>SystemUser</man:undeletable>
+        </man:perspective>
+      </man:perspective>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="Role">
-      <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.RoleBeanFactory"/>
-      <man:beanFactory id="PermissionAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="administration" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="scheme" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="elementsEditor" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="mapEditor" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="optimization" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="modeling" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="scheduler" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="analysis" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="research" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="evaluation" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="observer" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="prediction" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
-      <man:beanFactory id="report" beanFactoryClass="com.syrus.AMFICOM.manager.RolePermissionBeanFactory"/>
+      <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RoleBeanFactory"/>
+      <man:beanFactory id="PermissionAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="administration" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="scheme" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="elementsEditor" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="mapEditor" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="optimization" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="modeling" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="scheduler" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="analysis" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="research" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="evaluation" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="observer" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="prediction" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
+      <man:beanFactory id="report" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory"/>
       <man:uiHandler id="Role" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RoleBeanUI"/>
       <man:uiHandler id="PermissionAttributes" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
       <man:uiHandler id="administration" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RolePermissionBeanUI"/>
@@ -123,9 +124,16 @@
       <man:validator source="PermissionAttributes" target="Role"/>
       <man:undeletable>Role</man:undeletable>
     </man:managerResource>
-    <man:managerResource xsi:type="man:perspective" id="messages">
-      <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.RoleBeanFactory"/>
-      <man:beanFactory id="DeliveryAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.MessageBeanFactory"/>
+    <man:managerResource xsi:type="man:perspective" id="SEVERITYSOFT">
+      <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RoleBeanFactory"/>
+      <man:beanFactory id="DeliveryAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.MessageBeanFactory"/>
+      <man:uiHandler id="Role" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RoleBeanUI"/>
+      <man:uiHandler id="DeliveryAttributes" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MessageBeanUI"/>
+      <man:validator source="Role" target="DeliveryAttributes"/>
+    </man:managerResource>
+    <man:managerResource xsi:type="man:perspective" id="SEVERITYHARD">
+      <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RoleBeanFactory"/>
+      <man:beanFactory id="DeliveryAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.MessageBeanFactory"/>
       <man:uiHandler id="Role" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RoleBeanUI"/>
       <man:uiHandler id="DeliveryAttributes" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.MessageBeanUI"/>
       <man:validator source="Role" target="DeliveryAttributes"/>

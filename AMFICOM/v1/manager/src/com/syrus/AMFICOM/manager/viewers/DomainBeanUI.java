@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainBeanUI.java,v 1.3 2005/11/11 10:58:02 bob Exp $
+* $Id: DomainBeanUI.java,v 1.4 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.manager.viewers;
 
-import com.syrus.AMFICOM.manager.DomainBean;
-import com.syrus.AMFICOM.manager.DomainBeanWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.beans.DomainBean;
+import com.syrus.AMFICOM.manager.beans.DomainBeanWrapper;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

@@ -1,5 +1,5 @@
 /*-
- * $Id: NonRootGraphTreeModel.java,v 1.6 2005/11/07 15:24:19 bob Exp $
+ * $Id: NonRootGraphTreeModel.java,v 1.7 2005/11/17 09:00:35 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,12 @@ import org.jgraph.event.GraphModelListener;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.MPort;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -46,12 +47,11 @@ public class NonRootGraphTreeModel implements TreeModel {
 
 	protected TreeNode				root;
 
-	private final GraphRoutines	graphRoutines;
+	private final ManagerMainFrame	managerMainFrame;
 
-	public NonRootGraphTreeModel(final GraphModel model,
-			final GraphRoutines graphRoutines) {
-		this.model = model;
-		this.graphRoutines = graphRoutines;
+	public NonRootGraphTreeModel(final ManagerMainFrame managerMainFrame) {
+		this.managerMainFrame = managerMainFrame;
+		this.model = managerMainFrame.graphModel;
 
 		this.generalRoot = new DefaultMutableTreeNode(".");
 		this.firstLevel = new ArrayList<MPort>();
@@ -68,7 +68,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 	void refreshFirstLevel() {
 		this.firstLevel.clear();
 		
-		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
+		final Set<AbstractBean> layoutBeans = this.getLayoutBeans();
 //		assert Log.debugMessage(layoutBeans, Log.DEBUGLEVEL03);
 
 		MPort rootPort = (MPort) (this.root != null ? this.root.getChildAt(0) : null); 
@@ -142,7 +142,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 	public Object getChild(	Object parent,
 							int index) {		
 		TreeNode node = null;
-		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
+		final Set<AbstractBean> layoutBeans = this.getLayoutBeans();
 		if (parent == this.getRoot()) {			
 			node = this.firstLevel.get(index).getParent();
 		} else {
@@ -176,7 +176,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 //		assert Log.debugMessage("parent:" + parent, Log.DEBUGLEVEL03);
 		
 		int count = 0;
-		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
+		final Set<AbstractBean> layoutBeans = this.getLayoutBeans();
 		if (parent == this.getRoot()) {
 			count = this.firstLevel.size();
 //			assert Log.debugMessage("parent == root" , Log.DEBUGLEVEL10);
@@ -201,12 +201,17 @@ public class NonRootGraphTreeModel implements TreeModel {
 		return count;
 	}
 
+	private Set<AbstractBean> getLayoutBeans() {
+		final Perspective perspective = this.managerMainFrame.perspective;
+		return perspective != null ? perspective.getLayoutBeans() : null;
+	}
+
 	public int getIndexOfChild(	Object parent,
 								Object child) {
 		
 //		System.out.println("NonRootGraphTreeModel.getIndexOfChild() | parent:" + parent + '[' + parent.getClass().getName() + ']' 
 //				+", child:" + child + '[' + child.getClass().getName() + ']');
-		final Set<AbstractBean> layoutBeans = this.graphRoutines.getLayoutBeans();
+		final Set<AbstractBean> layoutBeans = this.getLayoutBeans();
 		TreeNode node = (TreeNode)child;
 		node = this.model.isPort(node) ? node : node.getChildAt(0);
 		int index = -1;

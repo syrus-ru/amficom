@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.20 2005/11/14 10:02:49 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.21 2005/11/17 09:00:35 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +55,7 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.client.UI.WindowArranger;
+import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
@@ -68,12 +68,13 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.ManagerHandler;
-import com.syrus.AMFICOM.manager.Perspective;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
-
 /**
- * @version $Revision: 1.20 $, $Date: 2005/11/14 10:02:49 $
+ * @version $Revision: 1.21 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -119,6 +120,12 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	ManagerHandler	managerHandler;
 
 	private GraphRoutines	graphRoutines;
+
+	private JButton	domainButton;
+
+	private JButton	softMessageActionButton;
+
+	private JButton	hardMessageActionButton;
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
 		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
@@ -187,11 +194,12 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		final JDesktopPane desktopPane1 = this.desktopPane;
 		
 		
-		final boolean localDomainAccess = Boolean.parseBoolean(System.getProperty("manager.localdomain.access"));
-		if (localDomainAccess){
+//		final boolean localDomainAccess = Boolean.parseBoolean(System.getProperty("manager.localdomain.access"));
+//		if (localDomainAccess)
+		{
 			// XXX testing bypass
 			super.toolBar.addSeparator();
-			final AbstractAction enterDomains = new AbstractAction("D") {	
+			final AbstractAction enterDomains = new AbstractAction(I18N.getString("Manager.Action.Domains")) {	
 				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
 				public void actionPerformed(ActionEvent e) {
 					final JButton button = (JButton) e.getSource();
@@ -205,9 +213,9 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			};			
 			enterDomains.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('D'));
 			enterDomains.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_D));
-			super.toolBar.add(enterDomains);			
+			this.domainButton = super.toolBar.add(enterDomains);		
 			
-			final AbstractAction enterSoftMessages = new AbstractAction("S") {	
+			final AbstractAction enterSoftMessages = new AbstractAction(Severity.SEVERITY_SOFT.getLocalizedName()) {	
 				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
 				public void actionPerformed(ActionEvent e) {
 					final JButton button = (JButton) e.getSource();
@@ -221,9 +229,9 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			};			
 			enterSoftMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('S'));
 			enterSoftMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_S));
-			super.toolBar.add(enterSoftMessages);
+			this.softMessageActionButton = super.toolBar.add(enterSoftMessages);
 			
-			final AbstractAction enterHardMessages = new AbstractAction("H") {	
+			final AbstractAction enterHardMessages = new AbstractAction(Severity.SEVERITY_HARD.getLocalizedName()) {	
 				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
 				public void actionPerformed(ActionEvent e) {
 					final JButton button = (JButton) e.getSource();
@@ -236,8 +244,10 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 				}
 			};			
 			enterHardMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('H'));
-			enterHardMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_H));
-			super.toolBar.add(enterHardMessages);
+			enterHardMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_H));			
+			this.hardMessageActionButton = super.toolBar.add(enterHardMessages);
+			
+			this.updateButtons();
 		}
 		
 		
@@ -253,26 +263,32 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 
 				int width = w / 5;
 
-				JInternalFrame treeFrame = ((JInternalFrame) f.frames.get(TREE_FRAME));
-				JInternalFrame graphFrame = ((JInternalFrame) f.frames.get(GRAPH_FRAME));
-				JInternalFrame propertiesFrame = ((JInternalFrame) f.frames.get(PROPERTIES_FRAME));
-
-				normalize(treeFrame);
-				normalize(graphFrame);
-				normalize(propertiesFrame);
+				final ApplicationModel model = f.getModel();
 				
-				treeFrame.setSize(width, h/2);
-				graphFrame.setSize(w - width, h);
-				propertiesFrame.setSize(width, h/2);				
-				
-				treeFrame.setLocation(0, 0);
-				propertiesFrame.setLocation(0, treeFrame.getY() + treeFrame.getHeight());
-				graphFrame.setLocation(treeFrame.getWidth(), 0);
-				
-				
-				treeFrame.setVisible(true);
-				graphFrame.setVisible(true);
-				propertiesFrame.setVisible(true);				
+				if (model.isVisible(TREE_FRAME) && 
+						model.isVisible(GRAPH_FRAME) && 
+						model.isVisible(PROPERTIES_FRAME)) {
+					JInternalFrame treeFrame = ((JInternalFrame) f.frames.get(TREE_FRAME));
+					JInternalFrame graphFrame = ((JInternalFrame) f.frames.get(GRAPH_FRAME));
+					JInternalFrame propertiesFrame = ((JInternalFrame) f.frames.get(PROPERTIES_FRAME));
+	
+					normalize(treeFrame);
+					normalize(graphFrame);
+					normalize(propertiesFrame);
+					
+					treeFrame.setSize(width, h/2);
+					graphFrame.setSize(w - width, h);
+					propertiesFrame.setSize(width, h/2);				
+					
+					treeFrame.setLocation(0, 0);
+					propertiesFrame.setLocation(0, treeFrame.getY() + treeFrame.getHeight());
+					graphFrame.setLocation(treeFrame.getWidth(), 0);
+					
+					
+					treeFrame.setVisible(true);
+					graphFrame.setVisible(true);
+				propertiesFrame.setVisible(true);
+				}
 			}
 		});
 
@@ -410,7 +426,13 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.managerHandler = 
 			extensionLauncher.getExtensionHandler("com.syrus.AMFICOM.manager.ManagerHandler");
 		
-		this.managerHandler.setManagerMainFrame(this);
+		try {
+			this.managerHandler.setManagerMainFrame(this);
+		} catch (ApplicationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			System.exit(0);
+		}
 		
 		// Construct Model and Graph
 		this.graphModel = new ManagerGraphModel(this);
@@ -418,14 +440,16 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.graph = new JGraph(this.graphModel,
 			new GraphLayoutCache(this.graphModel,
 					new DefaultCellViewFactory(),
-					true)) {
-			@Override
-			public String getToolTipText(MouseEvent e) {
-				return e.getX() + " x " + e.getY();
-			}
-		};
+					true)) 
+//		{
+//			@Override
+//			public String getToolTipText(MouseEvent e) {
+//				return e.getX() + " x " + e.getY();
+//			}
+//		}
+		;
 		
-		this.graph.setToolTipText("");
+//		this.graph.setToolTipText("");
 		
 		this.graphRoutines = new GraphRoutines(this);
 		
@@ -462,33 +486,47 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 
 	@Override
 	public void loggedIn() {
-		// TODO Auto-generated method stub
-		
+		final ApplicationModel model = this.getModel();
+		model.setEnabled(ManagerModel.DOMAINS_COMMAND, true);
+		model.setEnabled(ManagerModel.SOFT_MESSAGE_COMMAND, true);
+		model.setEnabled(ManagerModel.HARD_MESSAGE_COMMAND, true);
+		this.updateButtons();
 	}
 	
 	@Override
 	public void loggedOut() {
-		// TODO Auto-generated method stub
-		
+		final ApplicationModel model = this.getModel();
+		model.setEnabled(ManagerModel.DOMAINS_COMMAND, false);
+		model.setEnabled(ManagerModel.SOFT_MESSAGE_COMMAND, false);
+		model.setEnabled(ManagerModel.HARD_MESSAGE_COMMAND, false);
+		this.updateButtons();		
+	}
+	
+	private void updateButtons() {
+		final ApplicationModel model = this.getModel();
+		boolean xmlSession = ApplicationProperties.getBoolean(AbstractApplication.XMLSESSION_KEY, false);
+		final boolean enabled2 = xmlSession | model.isEnabled(ManagerModel.HARD_MESSAGE_COMMAND);
+		this.hardMessageActionButton.setEnabled(enabled2);
+		this.domainButton.setEnabled(xmlSession | model.isEnabled(ManagerModel.DOMAINS_COMMAND));
+		this.softMessageActionButton.setEnabled(xmlSession | model.isEnabled(ManagerModel.SOFT_MESSAGE_COMMAND));
 	}
 	
 	@Override
-	protected void setDefaultModel(ApplicationModel aModel) {
-		super.setDefaultModel(aModel);		
-		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
-		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
-		aModel.setEnabled(TREE_FRAME, true);
-		aModel.setEnabled(GRAPH_FRAME, true);
-		aModel.setEnabled(PROPERTIES_FRAME, true);
+	protected void setDefaultModel(ApplicationModel model) {
+		super.setDefaultModel(model);		
+		model.setEnabled(ApplicationModel.MENU_VIEW, true);
+		model.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
+		model.setEnabled(TREE_FRAME, true);
+		model.setEnabled(GRAPH_FRAME, true);
+		model.setEnabled(PROPERTIES_FRAME, true);
 
+		model.setVisible(ApplicationModel.MENU_VIEW, true);
+		model.setVisible(ApplicationModel.MENU_VIEW_ARRANGE, true);
+		model.setVisible(TREE_FRAME, true);
+		model.setVisible(GRAPH_FRAME, true);
+		model.setVisible(PROPERTIES_FRAME, true);
 		
-		aModel.setVisible(ApplicationModel.MENU_VIEW, true);
-		aModel.setVisible(ApplicationModel.MENU_VIEW_ARRANGE, true);
-		aModel.setVisible(TREE_FRAME, true);
-		aModel.setVisible(GRAPH_FRAME, true);
-		aModel.setVisible(PROPERTIES_FRAME, true);
-		
-		aModel.fireModelChanged();
+		model.fireModelChanged();
 	}
 	
 	private void createModelListener() {
@@ -709,7 +747,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	}	
 
 	private void createTreeModel() {		
-		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel(), this.graphRoutines);
+		this.treeModel = new NonRootGraphTreeModel(this);
 		this.tree = new JTree(this.treeModel);
 		
 		this.tree.setRootVisible(true);
@@ -730,7 +768,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	final void setPerspectiveTab(final Perspective perspective) {
 		try {		
 			
-			final String codename = perspective.getCodename();			
+			final String codename = perspective.getCodename();
 			int index = -1;
 			for(int i=0; i < this.tabbedPane.getTabCount(); i++) {
 				if (this.perspectiveMap.get(this.tabbedPane.getComponentAt(i)).getCodename().equals(codename)) {
@@ -759,11 +797,6 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 				return;
 			}
 			
-			this.graphRoutines.addPerspective(perspective);
-			
-			perspective.setManagerMainFrame(this);
-			this.perspective = perspective;
-			
 			final JPanel panel = (JPanel) this.tabbedPane.getComponentAt(index);
 			panel.removeAll();
 			final GridBagLayout gridLayout = (GridBagLayout) panel.getLayout();
@@ -775,13 +808,15 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			gbc.gridheight = GridBagConstraints.REMAINDER;				
 			panel.add(this.pane, gbc);
 			this.tabbedPane.setSelectedIndex(index);		
+	
+			this.perspective = perspective;
+			this.putPerspective(perspective);
+//			this.perspective.createNecessaryItems();	
 			
-			this.perspective.createNecessaryItems();	
+////			 here items put into graphCache, when they can be used
+//			this.graphRoutines.arrangeLayoutItems();
 			
-			// here items put into graphCache, when they can be used
-			this.graphRoutines.arrangeLayoutItems();
-			
-			this.perspective.perspectiveApplied();
+//			this.perspective.perspectiveApplied();
 			final JInternalFrame frame = 
 				(JInternalFrame) this.frames.get(GRAPH_FRAME);
 			frame.setTitle(I18N.getString(GRAPH_FRAME) 
@@ -792,13 +827,22 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			this.perspective.addEntities(this.entityToolBar);
 			this.entityToolBar.revalidate();
 			this.entityToolBar.repaint();
-			
-			this.graphRoutines.fixLayoutItemCharacteristics();
+//			this.graphRoutines.fixLayoutItemCharacteristics();
+			this.graphRoutines.arrangeLayoutItems(perspective);
+			this.graphRoutines.showLayerName(perspective.getCodename());
 			
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public final void putPerspective(final Perspective perspective) 
+	throws ApplicationException {
+//		 here items put into graphCache, when they can be used
+		this.graphRoutines.arrangeLayoutItems(perspective);
+		perspective.perspectiveApplied();
+		this.graphRoutines.fixLayoutItemCharacteristics();
 	}
 	
 	public boolean isPerspectiveValid() {

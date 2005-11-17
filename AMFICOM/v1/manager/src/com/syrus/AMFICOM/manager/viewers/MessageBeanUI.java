@@ -1,5 +1,5 @@
 /*-
-* $Id: MessageBeanUI.java,v 1.2 2005/11/10 13:59:01 bob Exp $
+* $Id: MessageBeanUI.java,v 1.3 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,16 +15,16 @@ import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.manager.AbstractBeanFactory;
-import com.syrus.AMFICOM.manager.MessageBean;
-import com.syrus.AMFICOM.manager.MessageBeanFactory;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.beans.AbstractBeanFactory;
+import com.syrus.AMFICOM.manager.beans.MessageBean;
+import com.syrus.AMFICOM.manager.beans.MessageBeanFactory;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/10 13:59:01 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

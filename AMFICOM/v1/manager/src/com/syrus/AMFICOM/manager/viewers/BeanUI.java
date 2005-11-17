@@ -1,5 +1,5 @@
 /*-
-* $Id: BeanUI.java,v 1.3 2005/11/11 10:58:02 bob Exp $
+* $Id: BeanUI.java,v 1.4 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.manager.viewers;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.AbstractBeanFactory;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.beans.AbstractBeanFactory;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

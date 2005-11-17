@@ -8,7 +8,7 @@
 
 	<xs:annotation>
 		<xs:documentation xml:lang = "en">
-			$Id: manager.xsd,v 1.7 2005/11/11 12:46:15 bass Exp $
+			$Id: manager.xsd,v 1.8 2005/11/17 09:00:35 bob Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,7 +19,7 @@
 	<xs:import
 		namespace = "http://syrus.com/AMFICOM/extensions"
 		schemaLocation = "../../extensions/schemas/extensions.xsd"/>
-	
+
 	<xs:complexType name="managerResource" abstract="true">
 		<xs:attribute name="id" type="xs:string"/>
 	</xs:complexType>
@@ -53,15 +53,18 @@
 		<xs:attribute name="target" type="xs:string"/>
 	</xs:complexType>
 
+
 	<xs:complexType name="perspective">
 		<xs:complexContent>
 			<xs:extension base="f:managerResource">
 				<xs:sequence>
+					<xs:element name="handler" type="xs:string" minOccurs="0"/>
 					<xs:element name="beanFactory" type="f:beanFactory" maxOccurs="unbounded"/>
 					<xs:element name="uiHandler" type="f:uiHandler" maxOccurs="unbounded"/>
 					<xs:element name="validator" type="f:validator" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="popupMenu" type="f:popupMenu" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="undeletable" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+					<xs:element name="perspective" type="f:perspective" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>

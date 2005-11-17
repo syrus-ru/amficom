@@ -1,5 +1,5 @@
 /*-
-* $Id: HardSeverityMessagePerspectiveCommand.java,v 1.1 2005/11/14 10:02:10 bob Exp $
+* $Id: HardSeverityMessagePerspectiveCommand.java,v 1.2 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,12 +9,12 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.manager.HardSeverityMessagePerpective;
+import com.syrus.AMFICOM.manager.perspective.HardSeverityMessagePerpective;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/14 10:02:10 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

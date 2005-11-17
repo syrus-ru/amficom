@@ -1,5 +1,5 @@
 /*-
-* $Id: NetBeanUI.java,v 1.2 2005/11/07 15:24:19 bob Exp $
+* $Id: NetBeanUI.java,v 1.3 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.manager.viewers;
 
-import com.syrus.AMFICOM.manager.NonStorableBean;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.beans.NonStorableBean;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

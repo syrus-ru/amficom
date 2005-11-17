@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPermissionPopupMenu.java,v 1.1 2005/11/11 10:58:02 bob Exp $
+* $Id: SystemUserPermissionPopupMenu.java,v 1.2 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,26 +31,27 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.RoleBean;
-import com.syrus.AMFICOM.manager.RolePerpective;
-import com.syrus.AMFICOM.manager.UserBean;
+import com.syrus.AMFICOM.manager.beans.RoleBean;
+import com.syrus.AMFICOM.manager.beans.UserBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.RolePerpective;
+import com.syrus.AMFICOM.manager.perspective.SystemUserPerpective;
 import com.syrus.AMFICOM.manager.viewers.TableBeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class SystemUserPermissionPopupMenu extends AbstractItemPopupMenu {	
+public class SystemUserPermissionPopupMenu extends AbstractItemPopupMenu<SystemUserPerpective> {	
 	
 	@Override
 	public JPopupMenu getPopupMenu(final DefaultGraphCell cell,
-			final ManagerMainFrame managerMainFrame) {
+			final SystemUserPerpective perpective) {
 		
 		final MPort port = (MPort) cell.getChildAt(0);
 		final UserBean userBean = (UserBean) port.getBean();
@@ -60,6 +61,8 @@ public class SystemUserPermissionPopupMenu extends AbstractItemPopupMenu {
 
 		final Icon enterIcon = UIManager.getIcon(TableBeanUI.ENTER_ICON);
 
+		final ManagerMainFrame managerMainFrame = perpective.getManagerMainFrame();
+		
 		final GraphRoutines graphRoutines = 
 			managerMainFrame.getGraphRoutines();
 		popupMenu.addSeparator();
@@ -101,8 +104,7 @@ public class SystemUserPermissionPopupMenu extends AbstractItemPopupMenu {
 						} else {
 							final LayoutItem layoutItem = layoutItems.iterator().next();
 							final RoleBean roleBean = (RoleBean) graphRoutines.getBean(layoutItem);
-							managerMainFrame.setPerspective(
-								new RolePerpective(roleBean));
+							managerMainFrame.setPerspective(new RolePerpective(roleBean));
 						}
 						
 						

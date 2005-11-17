@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.4 2005/11/11 14:31:29 bob Exp $
+* $Id: GraphRoutines.java,v 1.5 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.manager.UI;
 
-import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
+import static com.syrus.AMFICOM.manager.beans.DomainBeanWrapper.KEY_NAME;
 
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
@@ -16,7 +16,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -52,10 +51,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.Bean;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.Perspective;
+import com.syrus.AMFICOM.manager.ManagerHandler;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.beans.Bean;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/11 14:31:29 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -73,18 +73,18 @@ public final class GraphRoutines {
 	private final JGraph	graph;
 	private ManagerGraphModel	graphModel;
 	private final ManagerMainFrame	managerMainFrame;
-	private String	layerName;
-	private Set<AbstractBean>	layoutBeans;
+//	private String	layerName;
+//	private Set<AbstractBean>	layoutBeans;
 	private VerticalPortComparator	comparator;
 	
-	private Map<String, Perspective> perspectives;
+//	private Map<String, Perspective> perspectives;
 	
 	public GraphRoutines(final ManagerMainFrame managerMainFrame) {
 		this.managerMainFrame = managerMainFrame;
 		this.graph = managerMainFrame.getGraph();
 		this.graphModel = managerMainFrame.graphModel;
 		this.comparator = new VerticalPortComparator();
-		this.perspectives = new HashMap<String, Perspective>();
+//		this.perspectives = new HashMap<String, Perspective>();
 	}
 	
 	private void createEdgeAttributes(final Edge edge) {
@@ -256,8 +256,12 @@ public final class GraphRoutines {
 	}
 	
 	void arrangeLayoutItems() throws ApplicationException {
+		this.arrangeLayoutItems(this.managerMainFrame.getPerspective());
+	}
+	
+	void arrangeLayoutItems(final Perspective perspective) throws ApplicationException {
 		this.managerMainFrame.arranging = true;
-		final String layoutName = this.managerMainFrame.getPerspective().getCodename();
+		final String layoutName = perspective.getCodename();
 		assert Log.debugMessage("Perspective codename:" 
 				+ layoutName, 
 			Log.DEBUGLEVEL10);
@@ -373,7 +377,7 @@ public final class GraphRoutines {
 			AbstractBean bean = this.getBean(item);
 			
 //			final BeanUI beanUI = this.managerMainFrame.managerHandler.getBeanUI(bean.getCodename());
-			final Perspective perspective = this.getPerspective(item.getLayoutName());
+			final Perspective perspective = this.managerMainFrame.managerHandler.getPerspective(item.getLayoutName());
 //			assert Log.debugMessage("perspective is " + perspective , Log.DEBUGLEVEL03);
 			final BeanUI beanUI = perspective.getBeanUI(bean.getCodename());
 			
@@ -874,55 +878,34 @@ public final class GraphRoutines {
 			return port.getBean();
 		}
 
-		final Perspective perspective = this.perspectives.get(layoutItem.getLayoutName());
+		final ManagerHandler managerHandler = this.managerMainFrame.getManagerHandler();
+		final Perspective perspective = managerHandler.getPerspective(layoutItem.getLayoutName());
 		return perspective.createBean(layoutItem.getName());
 	}	
 	
-	public void addPerspective(final Perspective perspective) {
-		final String codename = perspective.getCodename();
-		assert Log.debugMessage("Add '" 
-				+ codename
-				+ "' perspective.", 
-			Log.DEBUGLEVEL10);
-		this.perspectives.put(codename, perspective);
-	}
-	
-	private Perspective getPerspective(final String perspectiveName) {
-		assert Log.debugMessage("request " + perspectiveName , Log.DEBUGLEVEL10);
-		return this.perspectives.get(perspectiveName);
-	}
-	
-	public void addLayoutBean(final AbstractBean bean) {
-		this.layoutBeans.add(bean);
-	}
-	
-	public void removeLayoutBean(final AbstractBean bean) {
-		this.layoutBeans.remove(bean);
-	}
-	
-	public void setLayerName(final String layerName) 
+	private Set<AbstractBean> getLayoutBeans(final String layerName) 
 	throws ApplicationException {
-		assert Log.debugMessage(layerName, Log.DEBUGLEVEL10);
-		if (!layerName.equals(this.layerName)) {
-			this.layerName = layerName;
+		final ManagerHandler managerHandler = this.managerMainFrame.getManagerHandler();
+		final Perspective perspective = managerHandler.getPerspective(layerName);
+		
+		Set<AbstractBean> layoutBeans = perspective.getLayoutBeans();
+		
+		if (layoutBeans == null) {
 			final Set<LayoutItem> layoutItems = StorableObjectPool.getStorableObjectsByCondition(
 				new TypicalCondition(layerName, 
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.LAYOUT_ITEM_CODE,
 					LayoutItemWrapper.COLUMN_LAYOUT_NAME), 
 				true);
+
+			layoutBeans = new HashSet<AbstractBean>(layoutItems.size());
+			perspective.setLayoutBeans(layoutBeans);
 			
-			if (this.layoutBeans == null) {			
-				this.layoutBeans = new HashSet<AbstractBean>(layoutItems.size());
-			} else {
-				this.layoutBeans.clear();
-			}
 			for (final LayoutItem layoutItem : layoutItems) {
-				this.layoutBeans.add(this.getBean(layoutItem));
+				layoutBeans.add(this.getBean(layoutItem));
 			}		
-			
-			assert Log.debugMessage(this.layoutBeans, Log.DEBUGLEVEL10);
 		}
+		return layoutBeans;
 	}
 	
 	
@@ -930,7 +913,7 @@ public final class GraphRoutines {
 	public void showLayerName(final String layerName) 
 	throws ApplicationException {		
 		
-		this.setLayerName(layerName);		
+		final Set<AbstractBean> layoutBeans = this.getLayoutBeans(layerName);
 		
 		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		final GraphModel model = this.graph.getModel();
@@ -940,7 +923,7 @@ public final class GraphRoutines {
 			if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
 				MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
 				AbstractBean bean = port.getBean();				
-				boolean visible = this.layoutBeans.contains(bean);
+				boolean visible = layoutBeans.contains(bean);
 				
 				assert Log.debugMessage("port:" + port + (visible ? " visible" : " hide"), 
 					Log.DEBUGLEVEL10);
@@ -952,11 +935,6 @@ public final class GraphRoutines {
 		this.managerMainFrame.undoManager.discardAllEdits();
 		this.managerMainFrame.updateHistoryButtons();
 	}
-	
-	public final Set<AbstractBean> getLayoutBeans() {
-		return this.layoutBeans;
-	}
-	
 	
 	private class VerticalPortComparator implements Comparator<DefaultGraphCell>{
 

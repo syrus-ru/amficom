@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserDomainPopupMenu.java,v 1.1 2005/11/11 10:58:02 bob Exp $
+* $Id: SystemUserDomainPopupMenu.java,v 1.2 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,28 +22,31 @@ import org.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.SystemUserPerpective;
-import com.syrus.AMFICOM.manager.UserBean;
+import com.syrus.AMFICOM.manager.beans.UserBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.DomainPerpective;
+import com.syrus.AMFICOM.manager.perspective.SystemUserPerpective;
 import com.syrus.AMFICOM.manager.viewers.TableBeanUI;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu {	
+public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu<DomainPerpective> {	
 	
 	@Override
 	public JPopupMenu getPopupMenu(final DefaultGraphCell cell,
-			final ManagerMainFrame managerMainFrame) {
+			final DomainPerpective perpective) {
 		
 		final MPort port = (MPort) cell.getChildAt(0);
 		final UserBean userBean = (UserBean) port.getBean();
 		
 		final JPopupMenu popupMenu = new JPopupMenu();
+		
+		final ManagerMainFrame managerMainFrame = perpective.getManagerMainFrame();
 		
 		for(final Role role : userBean.getRoles()) {
 
@@ -79,10 +82,10 @@ public class SystemUserDomainPopupMenu extends AbstractItemPopupMenu {
 		
 		final AbstractAction enterAction = new AbstractAction(I18N.getString("Manager.Dialog.GotoUserPermissions")) {
 
-			public void actionPerformed(ActionEvent e) {					
-				managerMainFrame.setPerspective(
-					new SystemUserPerpective(userBean, 
-						cell));
+			public void actionPerformed(ActionEvent e) {
+				final SystemUserPerpective systemUserPerpective = 
+					perpective.getSystemUserPerspective(userBean);
+				managerMainFrame.setPerspective(systemUserPerpective);
 			}
 		};
 		

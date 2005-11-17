@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.4 2005/11/11 14:31:29 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.5 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -39,15 +39,15 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.MPort;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/11 14:31:29 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -72,8 +72,6 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			GraphModelChange change = e.getChange();
 			
 			GraphModel model = this.managerMainFrame.graph.getModel();
-			
-			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 			
 			Object[] inserted = change.getInserted();
 			Object[] changed = change.getChanged();
@@ -219,8 +217,9 @@ public class ManagerGraphModelListener implements GraphModelListener {
 										true);
 								}
 								
-								
-								graphRoutines.addLayoutBean(bean);
+								if (this.managerMainFrame.perspective.isSupported(bean)) {
+									this.managerMainFrame.perspective.addLayoutBean(bean);
+								}
 								
 							} else {
 								boolean xFound = false;
@@ -343,7 +342,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 						 MPort source = (MPort) removedObject;
 						 AbstractBean bean = source.getUserObject();
 						 bean.dispose();
-						 graphRoutines.removeLayoutBean(bean);
+						 this.managerMainFrame.perspective.removeLayoutBean(bean);
 					 }
 				}
 			}				

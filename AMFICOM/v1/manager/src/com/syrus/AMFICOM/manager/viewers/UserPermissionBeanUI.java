@@ -1,5 +1,5 @@
 /*-
-* $Id: UserPermissionBeanUI.java,v 1.1 2005/11/07 15:21:45 bob Exp $
+* $Id: UserPermissionBeanUI.java,v 1.2 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,16 +36,16 @@ import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.manager.AbstractBeanFactory;
-import com.syrus.AMFICOM.manager.PermissionBean;
-import com.syrus.AMFICOM.manager.PermissionBeanFactory;
-import com.syrus.AMFICOM.manager.PermissionBeanWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.beans.AbstractBeanFactory;
+import com.syrus.AMFICOM.manager.beans.PermissionBean;
+import com.syrus.AMFICOM.manager.beans.PermissionBeanFactory;
+import com.syrus.AMFICOM.manager.beans.PermissionBeanWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/07 15:21:45 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

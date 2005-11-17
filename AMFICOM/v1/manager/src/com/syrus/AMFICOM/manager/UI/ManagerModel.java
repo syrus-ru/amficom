@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerModel.java,v 1.6 2005/11/14 10:02:49 bob Exp $
+* $Id: ManagerModel.java,v 1.7 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,12 +9,14 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.util.ApplicationProperties;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/14 10:02:49 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,17 +46,19 @@ public class ManagerModel extends ApplicationModel {
 		this.add(ManagerMainFrame.PROPERTIES_FRAME);
 		this.add(MENU_VIEW_ARRANGE);
 
+		boolean xmlSession = ApplicationProperties.getBoolean(AbstractApplication.XMLSESSION_KEY, false);
+		
 		this.add(DOMAINS_COMMAND);
-		this.setEnabled(DOMAINS_COMMAND, true);
+		this.setEnabled(DOMAINS_COMMAND, xmlSession);
 
 		this.add(FLUSH_COMMAND);
 		this.setEnabled(FLUSH_COMMAND, true);
 
 		this.add(SOFT_MESSAGE_COMMAND);
-		this.setEnabled(SOFT_MESSAGE_COMMAND, true);
+		this.setEnabled(SOFT_MESSAGE_COMMAND, xmlSession);
 
 		this.add(HARD_MESSAGE_COMMAND);
-		this.setEnabled(HARD_MESSAGE_COMMAND, true);
+		this.setEnabled(HARD_MESSAGE_COMMAND, xmlSession);
 
 		
 		this.add(MENU_HELP);

@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.13 2005/11/10 13:59:01 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.14 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,14 +14,14 @@ import org.jgraph.graph.DefaultGraphModel;
 import org.jgraph.graph.Edge;
 import org.jgraph.graph.Port;
 
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.Validator;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.Validator;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/11/10 13:59:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

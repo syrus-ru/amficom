@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.6 2005/11/14 10:03:52 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.7 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,22 +16,6 @@ import junit.framework.TestCase;
 import org.apache.xmlbeans.XmlOptions;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes.Module;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.manager.DomainBeanFactory;
-import com.syrus.AMFICOM.manager.MCMBeanFactory;
-import com.syrus.AMFICOM.manager.ManagerHandler;
-import com.syrus.AMFICOM.manager.MessageBeanFactory;
-import com.syrus.AMFICOM.manager.NetBeanFactory;
-import com.syrus.AMFICOM.manager.PermissionBeanFactory;
-import com.syrus.AMFICOM.manager.RTUBeanFactory;
-import com.syrus.AMFICOM.manager.RoleBeanFactory;
-import com.syrus.AMFICOM.manager.RolePermissionBeanFactory;
-import com.syrus.AMFICOM.manager.ServerBeanFactory;
-import com.syrus.AMFICOM.manager.UserBeanFactory;
-import com.syrus.AMFICOM.manager.WorkstationBeanFactory;
-import com.syrus.AMFICOM.manager.UI.DomainPopupMenu;
-import com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu;
-import com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu;
 import com.syrus.AMFICOM.extensions.ExtensionPoint;
 import com.syrus.AMFICOM.extensions.RootDocument;
 import com.syrus.AMFICOM.extensions.RootDocument.Root;
@@ -42,10 +26,26 @@ import com.syrus.AMFICOM.extensions.manager.Perspective;
 import com.syrus.AMFICOM.extensions.manager.PopupMenu;
 import com.syrus.AMFICOM.extensions.manager.UiHandler;
 import com.syrus.AMFICOM.extensions.manager.Validator;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.manager.ManagerHandler;
+import com.syrus.AMFICOM.manager.UI.DomainPopupMenu;
+import com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu;
+import com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu;
+import com.syrus.AMFICOM.manager.beans.DomainBeanFactory;
+import com.syrus.AMFICOM.manager.beans.MCMBeanFactory;
+import com.syrus.AMFICOM.manager.beans.MessageBeanFactory;
+import com.syrus.AMFICOM.manager.beans.NetBeanFactory;
+import com.syrus.AMFICOM.manager.beans.PermissionBeanFactory;
+import com.syrus.AMFICOM.manager.beans.RTUBeanFactory;
+import com.syrus.AMFICOM.manager.beans.RoleBeanFactory;
+import com.syrus.AMFICOM.manager.beans.RolePermissionBeanFactory;
+import com.syrus.AMFICOM.manager.beans.ServerBeanFactory;
+import com.syrus.AMFICOM.manager.beans.UserBeanFactory;
+import com.syrus.AMFICOM.manager.beans.WorkstationBeanFactory;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/11/14 10:03:52 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

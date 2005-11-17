@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerMarqueeHandler.java,v 1.8 2005/11/11 10:58:02 bob Exp $
+* $Id: ManagerMarqueeHandler.java,v 1.9 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,13 +25,13 @@ import org.jgraph.graph.GraphConstants;
 import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.PortView;
 
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.Perspective;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.9 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -91,7 +91,7 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 					final String codename = bean.getCodename();
 					final AbstractItemPopupMenu popupMenu = perspective.getPopupMenu(codename);					
 					if (popupMenu != null) {
-						JPopupMenu menu = popupMenu.getPopupMenu(cell, this.graphText);
+						JPopupMenu menu = popupMenu.getPopupMenu(cell, perspective);
 						menu.show(this.graphText.graph, e.getX(), e.getY());
 					} 
 				}

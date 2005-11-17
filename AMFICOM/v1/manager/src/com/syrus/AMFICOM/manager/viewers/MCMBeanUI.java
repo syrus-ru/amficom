@@ -1,5 +1,5 @@
 /*-
-* $Id: MCMBeanUI.java,v 1.4 2005/11/11 13:47:08 bob Exp $
+* $Id: MCMBeanUI.java,v 1.5 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,24 +8,24 @@
 
 package com.syrus.AMFICOM.manager.viewers;
 
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_DESCRIPTION;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_HOSTNAME;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_NAME;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_SERVER_ID;
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_USER_ID;
+import static com.syrus.AMFICOM.manager.beans.MCMBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.beans.MCMBeanWrapper.KEY_HOSTNAME;
+import static com.syrus.AMFICOM.manager.beans.MCMBeanWrapper.KEY_NAME;
+import static com.syrus.AMFICOM.manager.beans.MCMBeanWrapper.KEY_SERVER_ID;
+import static com.syrus.AMFICOM.manager.beans.MCMBeanWrapper.KEY_USER_ID;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.manager.MCMBean;
-import com.syrus.AMFICOM.manager.MCMBeanWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.UI.ManagerModel;
+import com.syrus.AMFICOM.manager.beans.MCMBean;
+import com.syrus.AMFICOM.manager.beans.MCMBeanWrapper;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/11 13:47:08 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

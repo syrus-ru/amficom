@@ -1,5 +1,5 @@
 /*-
-* $Id: ServerBeanUI.java,v 1.2 2005/11/07 15:24:19 bob Exp $
+* $Id: ServerBeanUI.java,v 1.3 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,17 +8,17 @@
 
 package com.syrus.AMFICOM.manager.viewers;
 
-import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_DESCRIPTION;
-import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_HOSTNAME;
-import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_NAME;
+import static com.syrus.AMFICOM.manager.beans.ServerBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.beans.ServerBeanWrapper.KEY_HOSTNAME;
+import static com.syrus.AMFICOM.manager.beans.ServerBeanWrapper.KEY_NAME;
 
-import com.syrus.AMFICOM.manager.ServerBean;
-import com.syrus.AMFICOM.manager.ServerBeanWrapper;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.beans.ServerBean;
+import com.syrus.AMFICOM.manager.beans.ServerBeanWrapper;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/07 15:24:19 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

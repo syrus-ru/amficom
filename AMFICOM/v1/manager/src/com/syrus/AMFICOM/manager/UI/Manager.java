@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.16 2005/11/14 10:02:49 bob Exp $
+* $Id: Manager.java,v 1.17 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,10 +27,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/11/14 10:02:49 $
+ * @version $Revision: 1.17 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,14 +51,18 @@ public class Manager extends AbstractApplication {
 		extensionLauncher.addExtensions("xml/manager.xml");	
 		super.aContext.setApplicationModel(new ManagerModel(super.aContext));
 
-		try {
-			this.initUser();
-			this.createDeliveryAttributes();
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(-1);
-		}		
+		
+		if (ApplicationProperties.getBoolean(XMLSESSION_KEY, false)) {
+			assert Log.debugMessage("XML session" , Log.DEBUGLEVEL03);
+			try {
+				this.initUser();
+				this.createDeliveryAttributes();
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.exit(-1);
+			}		
+		}
 		
 		super.startMainFrame(new ManagerMainFrame(super.aContext), 
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif"));

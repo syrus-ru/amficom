@@ -1,5 +1,5 @@
 /*-
-* $Id: TableBeanUI.java,v 1.3 2005/11/11 10:58:02 bob Exp $
+* $Id: TableBeanUI.java,v 1.4 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,13 +21,13 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
-import com.syrus.AMFICOM.manager.Bean;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
+import com.syrus.AMFICOM.manager.beans.Bean;
 import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

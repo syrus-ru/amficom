@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphSelectionListener.java,v 1.3 2005/11/09 15:09:49 bob Exp $
+* $Id: ManagerGraphSelectionListener.java,v 1.4 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,13 +25,14 @@ import org.jgraph.graph.GraphModel;
 
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.Perspective;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
+import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/09 15:09:49 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -46,8 +47,7 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 	}
 	
 	@SuppressWarnings({"unqualified-field-access","unchecked"})
-	public void valueChanged(GraphSelectionEvent e) {
-		
+	public void valueChanged(GraphSelectionEvent e) {		
 		final JInternalFrame frame = 
 			(JInternalFrame) managerMainFrame.frames.get(ManagerMainFrame.PROPERTIES_FRAME);
 		frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME));
@@ -100,27 +100,29 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 				
 				if (userObject instanceof AbstractBean) {
 					final AbstractBean abstractBean = (AbstractBean)userObject;
-					deleteAllow &= perspective.isDeletable(abstractBean);
-
-					try {
-						managerMainFrame.beanUI = managerMainFrame.getPerspective().getBeanUI(abstractBean.getCodename());
-						JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
-						if (propertyPanel2 != null) {
-							frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME)
-								+ " : "
-								+ ((AbstractBean)userObject).getName());
-							final GridBagLayout gridBagLayout = 
-								(GridBagLayout) panel.getLayout();
-							final GridBagConstraints gbc = gridBagLayout.getConstraints(panel);
-							gbc.fill = GridBagConstraints.BOTH;
-							gbc.weightx = 1.0;
-							gbc.weighty = 1.0;
-							gbc.gridwidth = GridBagConstraints.REMAINDER;
-							panel.add(propertyPanel2, gbc);
+					if (perspective.isSupported(abstractBean)) {
+						deleteAllow &= perspective.isDeletable(abstractBean);
+	
+						try {
+							managerMainFrame.beanUI = perspective.getBeanUI(abstractBean.getCodename());
+							JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
+							if (propertyPanel2 != null) {
+								frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME)
+									+ " : "
+									+ ((AbstractBean)userObject).getName());
+								final GridBagLayout gridBagLayout = 
+									(GridBagLayout) panel.getLayout();
+								final GridBagConstraints gbc = gridBagLayout.getConstraints(panel);
+								gbc.fill = GridBagConstraints.BOTH;
+								gbc.weightx = 1.0;
+								gbc.weighty = 1.0;
+								gbc.gridwidth = GridBagConstraints.REMAINDER;
+								panel.add(propertyPanel2, gbc);
+							}
+						} catch (ApplicationException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
-					} catch (ApplicationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
 					}
 										
 				}				

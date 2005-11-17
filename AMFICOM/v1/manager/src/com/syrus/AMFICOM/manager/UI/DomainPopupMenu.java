@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPopupMenu.java,v 1.1 2005/11/11 10:58:02 bob Exp $
+* $Id: DomainPopupMenu.java,v 1.2 2005/11/17 09:00:35 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,26 +22,27 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.DomainBean;
-import com.syrus.AMFICOM.manager.DomainPerpective;
-import com.syrus.AMFICOM.manager.MPort;
-import com.syrus.AMFICOM.manager.NetBeanFactory;
+import com.syrus.AMFICOM.manager.beans.AbstractBean;
+import com.syrus.AMFICOM.manager.beans.DomainBean;
+import com.syrus.AMFICOM.manager.beans.NetBeanFactory;
+import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.DomainPerpective;
+import com.syrus.AMFICOM.manager.perspective.DomainsPerspective;
 import com.syrus.AMFICOM.manager.viewers.TableBeanUI;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/11 10:58:02 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainPopupMenu extends AbstractItemPopupMenu {	
+public class DomainPopupMenu extends AbstractItemPopupMenu<DomainsPerspective> {	
 	
 	@Override
 	public JPopupMenu getPopupMenu(final DefaultGraphCell cell,
-			final ManagerMainFrame managerMainFrame) {
+			final DomainsPerspective perspective) {
 
 		if (cell != null) {
 			final JPopupMenu popupMenu = new JPopupMenu();			
@@ -78,8 +79,11 @@ public class DomainPopupMenu extends AbstractItemPopupMenu {
 						}
 					}
 					
-					managerMainFrame.setPerspective(new DomainPerpective((DomainBean) port.getBean()));				
+					final ManagerMainFrame managerMainFrame = perspective.getManagerMainFrame();
+					final DomainPerpective domainPerspective = 
+						perspective.getDomainPerspective((DomainBean) port.getBean());
 					
+					managerMainFrame.setPerspective(domainPerspective);
 					
 					
 				}
