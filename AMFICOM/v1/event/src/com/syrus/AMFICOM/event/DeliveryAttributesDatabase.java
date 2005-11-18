@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.2 2005/11/14 15:13:51 bob Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.3 2005/11/18 15:10:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.TableNames.DELIVERY_ATTRIBUTES_SYSTEM_US
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/11/14 15:13:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/11/18 15:10:29 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
@@ -106,7 +107,7 @@ public final class DeliveryAttributesDatabase extends
 	}
 
 	/**
-	 * @param deliveryAttributes
+	 * @param storableObject
 	 * @param resultSet
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
@@ -114,24 +115,23 @@ public final class DeliveryAttributesDatabase extends
 	 * @see StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, ResultSet)
 	 */
 	@Override
-	protected DeliveryAttributes updateEntityFromResultSet(
-			final DeliveryAttributes deliveryAttributes,
-			final ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		final DeliveryAttributes deliveryAttributes2 = (deliveryAttributes == null)
+	protected DeliveryAttributes updateEntityFromResultSet(final DeliveryAttributes storableObject, final ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		final Date created = new Date();
+		final DeliveryAttributes deliveryAttributes = (storableObject == null)
 			? new DeliveryAttributes(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 					null,
-					null,
+					created,
 					StorableObjectVersion.ILLEGAL_VERSION,
 					Severity.SEVERITY_NONE)
-				: deliveryAttributes;
-		deliveryAttributes2.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				: storableObject;
+		deliveryAttributes.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				Severity.valueOf(resultSet.getInt(COLUMN_SEVERITY)));
-		return deliveryAttributes2;
+		return deliveryAttributes;
 	}
 	
 	private void retrieveLinksByOneQuery(final Set<DeliveryAttributes> deliveryAttributes) throws RetrieveObjectException {
