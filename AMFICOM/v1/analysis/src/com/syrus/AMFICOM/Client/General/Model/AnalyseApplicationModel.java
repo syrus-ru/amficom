@@ -179,6 +179,8 @@ public class AnalyseApplicationModel extends ApplicationModel {
 				.getImage("images/end.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_BREAK, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/break.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANCHORED, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/opt_start.gif"))); // XXX: use own anchor icon (maybe use opt_start colored with red)
 
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 

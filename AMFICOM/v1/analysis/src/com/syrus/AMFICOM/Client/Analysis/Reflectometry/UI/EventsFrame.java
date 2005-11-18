@@ -26,6 +26,7 @@ import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.CompositeEventList;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.AnchorerListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
@@ -49,7 +50,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class EventsFrame extends JInternalFrame
 implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
-		CurrentEventChangeListener, PropertyChangeListener, RefMismatchListener {
+		CurrentEventChangeListener, PropertyChangeListener,
+		RefMismatchListener, AnchorerListener {
 	private static final long serialVersionUID = 6768761574582221386L;
 
 	private ApplicationContext aContext;
@@ -193,6 +195,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		Heap.addCurrentEventChangeListener(this);
 		Heap.addPrimaryRefAnalysisListener(this);
 		Heap.addRefMismatchListener(this);
+		Heap.addAnchorerListener(this);
 	}
 
 	public String getReportTitle() {
@@ -203,33 +206,80 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		return this.table.getModel();
 	}
 
+	private static final String[] keys0 = new String[] {
+		DetailedEventWrapper.KEY_N,
+		DetailedEventWrapper.KEY_IMAGE,
+		DetailedEventWrapper.KEY_TYPE_DETAILED,
+		DetailedEventWrapper.KEY_DISTANCE,
+		DetailedEventWrapper.KEY_LENGTH,
+		DetailedEventWrapper.KEY_REFLECTANCE,
+		DetailedEventWrapper.KEY_LOSS,
+		DetailedEventWrapper.KEY_ATTENUATION
+	};
+	private static final String[] keys1 = new String[] {
+		DetailedEventWrapper.KEY_N,
+		DetailedEventWrapper.KEY_IMAGE,
+		DetailedEventWrapper.KEY_TYPE_DETAILED,
+		DetailedEventWrapper.KEY_DISTANCE,
+		DetailedEventWrapper.KEY_LENGTH,
+		DetailedEventWrapper.KEY_REFLECTANCE,
+		DetailedEventWrapper.KEY_LOSS,
+		DetailedEventWrapper.KEY_ATTENUATION,
+		// DetailedEventWrapper.KEY_QUALITY_QI,
+		DetailedEventWrapper.KEY_QUALITY_KI
+	};
+	private static final String[] keys2 = new String[] {
+		DetailedEventWrapper.KEY_N,
+		DetailedEventWrapper.KEY_ANCHOR_IMAGE,
+		DetailedEventWrapper.KEY_IMAGE,
+		DetailedEventWrapper.KEY_TYPE_DETAILED,
+		DetailedEventWrapper.KEY_DISTANCE,
+		DetailedEventWrapper.KEY_LENGTH,
+		DetailedEventWrapper.KEY_REFLECTANCE,
+		DetailedEventWrapper.KEY_LOSS,
+		DetailedEventWrapper.KEY_ATTENUATION
+	};
+	private static final String[] keys3 = new String[] {
+		DetailedEventWrapper.KEY_N,
+		DetailedEventWrapper.KEY_ANCHOR_IMAGE,
+		DetailedEventWrapper.KEY_IMAGE,
+		DetailedEventWrapper.KEY_TYPE_DETAILED,
+		DetailedEventWrapper.KEY_DISTANCE,
+		DetailedEventWrapper.KEY_LENGTH,
+		DetailedEventWrapper.KEY_REFLECTANCE,
+		DetailedEventWrapper.KEY_LOSS,
+		DetailedEventWrapper.KEY_ATTENUATION,
+		// DetailedEventWrapper.KEY_QUALITY_QI,
+		DetailedEventWrapper.KEY_QUALITY_KI
+	};
+
+	// текущий набор ключей, установленный в модель таблицы
+	private String[] currentKeys = null; // will be one of keys0 .. keys3
+
+	// выбрать надлежащий набор ключей
+	private String[] selectKeys() {
+		return Heap.getAnchorer() == null
+			? this.showComparison == false ? keys0 : keys1
+			: this.showComparison == false ? keys2 : keys3;
+	}
+
+	/**
+	 * Корректирует набор ключей в модели таблицы согласно selectKeys()
+	 */
+	private void updateModelKeys() {
+		final String[] keys = selectKeys();
+		if (this.currentKeys != keys) {
+			this.currentKeys = keys;
+			this.table.getModel().setKeys(keys);
+		}
+	}
+
 	private void init() {
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		final String[] keys = this.showComparison
-			? new String[] {
-					DetailedEventWrapper.KEY_N,
-					DetailedEventWrapper.KEY_IMAGE,
-					DetailedEventWrapper.KEY_TYPE_DETAILED,
-					DetailedEventWrapper.KEY_DISTANCE,
-					DetailedEventWrapper.KEY_LENGTH,
-					DetailedEventWrapper.KEY_REFLECTANCE,
-					DetailedEventWrapper.KEY_LOSS,
-					DetailedEventWrapper.KEY_ATTENUATION,
-					// DetailedEventWrapper.KEY_QUALITY_QI,
-					DetailedEventWrapper.KEY_QUALITY_KI
-					}
-			: new String[] {
-					DetailedEventWrapper.KEY_N,
-					DetailedEventWrapper.KEY_IMAGE,
-					DetailedEventWrapper.KEY_TYPE_DETAILED,
-					DetailedEventWrapper.KEY_DISTANCE,
-					DetailedEventWrapper.KEY_LENGTH,
-					DetailedEventWrapper.KEY_REFLECTANCE,
-					DetailedEventWrapper.KEY_LOSS,
-					DetailedEventWrapper.KEY_ATTENUATION
-					};
+		final String[] keys = selectKeys();
+
 		this.table = new WrapperedTable<DetailedEventResource>(
 				new WrapperedTableModel<DetailedEventResource>(
 					DetailedEventWrapper.getInstance(),
@@ -430,6 +480,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 		final WrapperedTableModel<DetailedEventResource> model =
 				this.table.getModel();
+
+		updateModelKeys();
+
 		model.clear();
 
 		for (int row = 0; row < nRows; row++, this.view.toNextRow(w)) {
@@ -449,7 +502,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 							Heap.getMTMEtalon().getMTAE().getModelTrace(),
 							resMt,
 							Heap.getEvaluationPerEventResult(),
-							nPri);
+							nPri, nEt, Heap.getAnchorer());
 				}
 			}
 			model.addObject(res);
@@ -582,6 +635,10 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	}
 
 	public void refMismatchRemoved() {
+		this.updateEventsModel();
+	}
+
+	public void anchorerChanged() {
 		this.updateEventsModel();
 	}
 }

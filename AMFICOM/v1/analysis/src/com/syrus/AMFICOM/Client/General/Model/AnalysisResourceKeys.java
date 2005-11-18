@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.24 2005/08/31 11:26:22 stas Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.25 2005/11/18 12:54:17 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/08/31 11:26:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.25 $, $Date: 2005/11/18 12:54:17 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -97,6 +97,7 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_END						= "com.syrus.AMFICOM.icon.analisys.end";
 	String	ICON_ANALYSIS_DEADZONE					= "com.syrus.AMFICOM.icon.analisys.deadzone";
 	String	ICON_ANALYSIS_BREAK					= "com.syrus.AMFICOM.icon.analisys.break";
+	String	ICON_ANCHORED						= "com.syrus.AMFICOM.icon.anchored";
 
 	String	TEXT_KM									= "km";
 	String	TEXT_DB									= "dB";

@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventWrapper.java,v 1.7 2005/11/02 08:15:09 saa Exp $
+ * $Id: DetailedEventWrapper.java,v 1.8 2005/11/18 12:54:17 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/11/02 08:15:09 $
+ * @version $Revision: 1.8 $, $Date: 2005/11/18 12:54:17 $
  * @module analysis
  */
 
@@ -56,6 +56,9 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 	public static final String KEY_QUALITY_QI = "qi";
 	public static final String KEY_QUALITY_KI = "ki";
 
+	public static final String KEY_ANCHOR_IMAGE = "anchorImage";
+	public static final String KEY_ANCHORED = "anchor";
+
 	private static DetailedEventWrapper instance;
 
 	private List<String> keys;
@@ -74,7 +77,7 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 				KEY_EXTENSION, KEY_ETALON_TYPE_GENERAL, KEY_ETALON_MAX_DEVIATION,
 				KEY_ETALON_MEAN_DEVIATION, KEY_LOSS_DIFFERENCE,
 				KEY_LOCATION_DIFFERENCE, KEY_LENGTH_DIFFERENCE, KEY_IMAGE,
-				KEY_QUALITY_QI, KEY_QUALITY_KI
+				KEY_QUALITY_QI, KEY_QUALITY_KI, KEY_ANCHORED, KEY_ANCHOR_IMAGE
 		};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -99,7 +102,7 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 	}
 
 	public Class getPropertyClass(final String key) {
-		if (key.equals(KEY_IMAGE)) {
+		if (key.equals(KEY_IMAGE) || key.equals(KEY_ANCHOR_IMAGE)) {
 			return Icon.class;
 		} else if (this.keys.contains(key)) {
 			return String.class; 
@@ -168,6 +171,10 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 			return ev.getQi();
 		} else if (key.equals(KEY_QUALITY_KI)) {
 			return ev.getKi();
+		} else if (key.equals(KEY_ANCHORED)) {
+			return Boolean.valueOf(ev.isAnchored());
+		} else if (key.equals(KEY_ANCHOR_IMAGE)) {
+			return ev.getAnchorImage();
 		}
 		return null;
 	}
@@ -234,6 +241,8 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 			ev.setQi((String) value);
 		} else if (key.equals(KEY_QUALITY_KI)) {
 			ev.setKi((String) value);
+		} else if (key.equals(KEY_ANCHORED)) {
+			ev.setAnchored(((Boolean)value).booleanValue());
 		}
 	}
 }

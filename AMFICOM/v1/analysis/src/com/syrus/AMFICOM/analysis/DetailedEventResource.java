@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.21 2005/11/06 11:38:33 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.22 2005/11/18 12:54:17 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.21 $, $Date: 2005/11/06 11:38:33 $
+ * @version $Revision: 1.22 $, $Date: 2005/11/18 12:54:17 $
  * @module analysis
  */
 
@@ -50,7 +50,8 @@ public class DetailedEventResource {
 	private static final Icon ICON_DEADZONE = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_DEADZONE);
 	private static final Icon ICON_END = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_END);
 //	private static final Icon ICON_BREAK = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_BREAK);
-	
+	private static final Icon ICON_ANCHORED = (Icon) UIManager.get(AnalysisResourceKeys.ICON_ANCHORED);
+
 	// Basic details
 	private String number = DASH;
 	private String typeGeneral = DEFAULT_TYPE;
@@ -84,6 +85,8 @@ public class DetailedEventResource {
 	// extended comparison results
 	private String qi = DASH;
 	private String ki = DASH;
+
+	private boolean anchored = false;
 
 	private DetailedEvent event;
 	
@@ -173,13 +176,16 @@ public class DetailedEventResource {
 			break;
 		}			
 	}
-	
+
+	// anchorer may be null
 	public void initComparative(DetailedEvent dataEvent,
 			DetailedEvent etalonEvent,
 			ModelTrace etalonMT,
 			double deltaX,
 			EvaluationPerEventResult perEvent,
-			int perEventId) {
+			int perEventId,
+			int etalonId,
+			EventAnchorer anchorer) {
 		this.event = dataEvent;
 		setTypeGeneral(dataEvent != null ? AnalysisUtil.getSimpleEventNameByType(dataEvent.getEventType()) : DEFAULT_TYPE);
 		setEtalonType(etalonEvent != null ? AnalysisUtil.getSimpleEventNameByType(etalonEvent.getEventType()) : DEFAULT_TYPE);
@@ -253,6 +259,11 @@ public class DetailedEventResource {
 			setQi(DASH);
 			setKi(DASH);
 		}
+		anchored = false;
+		if (anchorer != null && etalonId >= 0) {
+			if (!anchorer.getEventAnchor(etalonId).isVoid())
+				anchored = true;
+		}
 	}
 	
 	public String getAttenuation() {
@@ -312,7 +323,11 @@ public class DetailedEventResource {
 		default: return null;
 		}
 	}
-	
+
+	public Object getAnchorImage() {
+		return anchored ? ICON_ANCHORED : "";
+	}
+
 	public void setNumber(String number) {
 		this.number = number;
 	}
@@ -485,5 +500,14 @@ public class DetailedEventResource {
 
 	public void setQi(String qi) {
 		this.qi = qi;
+	}
+
+	public boolean isAnchored() {
+		return this.anchored;
+	}
+
+	// XXX: are such setters really needed?
+	public void setAnchored(boolean b) {
+		this.anchored = b;
 	}
 }
