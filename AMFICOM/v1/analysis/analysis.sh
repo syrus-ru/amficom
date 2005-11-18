@@ -18,6 +18,7 @@ $LIB/configuration.jar:\
 $LIB/measurement.jar:\
 $LIB/event.jar:\
 $LIB/resource.jar:\
+$LIB/report.jar:\
 $LIB/map.jar:\
 $LIB/scheme.jar:\
 $LIB/mapview.jar:\
@@ -32,5 +33,6 @@ $LIB/mapclient.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/util.jar
 
+#JAVA="$JAVA -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n"
 $JAVA -Xmx256m -client -ea -classpath $APPCLASSPATH:${XMLCLASSPATH}:$EXTCLASSPATH -Djava.library.path=$LIB com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt
 
