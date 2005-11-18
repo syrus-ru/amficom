@@ -5,22 +5,19 @@ import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.SOAnchorImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
-import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.reflectometry.SOAnchor;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -34,6 +31,10 @@ public final class PathElementsPanel extends AnalysisPanel {
 	protected boolean paint_path_elements = false;
 	private boolean setting_active_pe = false;
 
+	private int dockedX;
+	private int dockedEvent;
+	private static final int DOCK_RANGE = 15;
+	
 	SchemePath path;
 	private PathElement startPathElement;
 	private PathElement endPathElement;
@@ -118,8 +119,31 @@ public final class PathElementsPanel extends AnalysisPanel {
 				this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 				Log.debugMessage("PathElement " + this.activePathElement.getName()
 						+ " moved on " + ((this.currpos.x - this.startpos.x) / this.scaleX * this.deltaX) + " m", Level.FINER);
+	
+				super.parent.repaint(this.startpos.x - 1, 0, 20, super.parent.getHeight());
+				
+				int prev_pos = this.currpos.x;
+				
+				SchemeElement se = getSchemeElement(this.activePathElement);
+				Graphics g = getGraphics().create();
+				g.setXORMode(new Color(0, 255, 191));
+				
+//				super.parent.repaint(prev_pos - 1, 0, 20, super.parent.getHeight());
+				paintPathElement(g, this.currpos.x, se);
+				
 				this.upd_currpos(e);
-				this.paintMovingPE(getGraphics().create());
+				updateDock();
+				
+				this.currpos = new Point(index2coord(this.dockedX), this.currpos.y);
+				
+				
+				
+//				super.parent.repaint(this.currpos.x - 1, 0, 20, super.parent.getHeight());
+				
+				paintPathElement(g, this.currpos.x, se);
+
+				
+//				this.paintMovingPE(getGraphics().create());
 			}
 			return;
 		}
@@ -166,7 +190,7 @@ public final class PathElementsPanel extends AnalysisPanel {
 				if (Heap.hasEtalon()) {
 					ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
 					
-					// определяем привязщика
+					// определяем привязчика
 					EventAnchorer ea = Heap.obtainAnchorer();
 					
 					// отвязываем от старого события
@@ -225,42 +249,8 @@ public final class PathElementsPanel extends AnalysisPanel {
 							}
 							
 							SchemeElement se = getSchemeElement(pathElement);
-							// if muff - paint only small box and dashed line
-							
-							EquipmentType type;
-							try {
-								type = se.getProtoEquipment().getType();
-							} catch (ApplicationException e) {
-								Log.errorMessage(e);
-								type = EquipmentType.OTHER;
-							}
-							if (type.equals(EquipmentType.MUFF)) {
-								g.fill3DRect(start1 - 1, 6, 2, 8, true);
-								((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-								g.drawLine(start1, 6, start1, getHeight());
-								((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-							} else { // paint large box, dashed line and name of SE
-								g.fill3DRect(start1 - 4, 6, 8, 8, true);
-								((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-								g.drawLine(start1, 6, start1, getHeight());
-								((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-							}
-							String text = se.getName();
-							Scheme parentScheme = se.getParentScheme();
-							if (parentScheme != null) {
-								text = text + "(" + parentScheme.getName() + ")";
-							}
-							
-							final FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
-							final int height = fm.stringWidth(text);
-							final int width = fm.getHeight();
-							final int y1 = 6;
-							final Graphics2D g2 = (Graphics2D) g;
-							final AffineTransform t = g2.getTransform();
-							g2.translate(0, height + 10);
-							g2.rotate(Math.toRadians(270), start1 + width - 5, y1);
-							g2.drawString(text, start1 + width - 5, y1);
-							g2.setTransform(t);
+							paintPathElement(g, start1, se);
+
 						} else {
 							if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK) {
 								g.setColor(new Color(0.5f, 0.5f, 1f, 0.5f));
@@ -284,6 +274,44 @@ public final class PathElementsPanel extends AnalysisPanel {
 		}
 	}
 	
+	void paintPathElement(Graphics g, int coord, SchemeElement se) {
+		EquipmentType type;
+		try {
+			type = se.getProtoEquipment().getType();
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+			type = EquipmentType.OTHER;
+		}
+		// if muff - paint small box and dashed line
+		if (type.equals(EquipmentType.MUFF)) {
+			g.fill3DRect(coord - 1, 6, 2, 8, true);
+			((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+			g.drawLine(coord, 6, coord, getHeight());
+			((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+		} else { // paint large box, dashed line and name of SE
+			g.fill3DRect(coord - 4, 6, 8, 8, true);
+			((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+			g.drawLine(coord, 6, coord, getHeight());
+			((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+		}
+		String text = se.getName();
+		Scheme parentScheme = se.getParentScheme();
+		if (parentScheme != null) {
+			text = text + "(" + parentScheme.getName() + ")";
+		}
+		
+		final FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
+		final int height = fm.stringWidth(text);
+		final int width = fm.getHeight();
+		final int y1 = 6;
+		final Graphics2D g2 = (Graphics2D) g;
+		final AffineTransform t = g2.getTransform();
+		g2.translate(0, height + 10);
+		g2.rotate(Math.toRadians(270), coord + width - 5, y1);
+		g2.drawString(text, coord + width - 5, y1);
+		g2.setTransform(t);
+	}
+	
 	/**
 	 * need paint if: 
 	 * 1. First element
@@ -303,6 +331,44 @@ public final class PathElementsPanel extends AnalysisPanel {
 		return true;
 	}
 	
+	void updateDock() {
+		ModelTraceAndEvents mtae;
+		if (Heap.hasEtalon()) {
+			mtae = Heap.getMTMEtalon().getMTAE();
+		} else {
+			mtae = Heap.getMTAEPrimary();
+		}
+
+		int nEvent = mtae.getEventByCoord(coord2index(this.currpos.x));
+		
+		if (nEvent != -1 ) {
+			SimpleReflectogramEvent event = mtae.getSimpleEvent(nEvent);
+			
+			// get current event
+			if (event.getEventType() == SimpleReflectogramEvent.LINEAR || 
+					event.getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED) { // may not be anchored
+				int currCoord = coord2index(this.currpos.x);
+				if (currCoord - event.getBegin() < DOCK_RANGE) {
+					this.dockedEvent = nEvent - 1;
+					this.dockedX = event.getBegin() - 1;
+					
+				} else if (event.getEnd() - currCoord < DOCK_RANGE) {
+					this.dockedEvent = nEvent + 1;
+					this.dockedX = event.getEnd() + 1;
+				} else {
+					this.dockedEvent = -1;
+					this.dockedX = coord2index(this.currpos.x);
+				}
+			} else { // may be anchored
+				this.dockedEvent = nEvent;
+				this.dockedX = coord2index(this.currpos.x);
+			}
+		} else {
+			this.dockedEvent = -1;
+			this.dockedX = coord2index(this.currpos.x);
+		}
+	}
+	
 	private SchemeElement getSchemeElement(PathElement pathElement) {
 		if (pathElement != null && pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 			SchemeElement se = pathElement.getSchemeElement();
@@ -316,13 +382,13 @@ public final class PathElementsPanel extends AnalysisPanel {
 		return null;
 	}
 
-	void paintMovingPE(final Graphics g) {
-		g.setXORMode(Color.CYAN);
-		g.drawRect(this.currpos.x - 4, 6, 8, 8);
-		g.drawRect(this.tmppos.x - 4, 6, 8, 8);
-		((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-		g.drawLine(this.currpos.x, 16, this.currpos.x, getHeight());
-		g.drawLine(this.tmppos.x, 16, this.tmppos.x, getHeight());
-		((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-	}
+//	void paintMovingPE(final Graphics g) {
+//
+//		g.drawRect(this.currpos.x - 4, 6, 8, 8);
+//		g.drawRect(this.tmppos.x - 4, 6, 8, 8);
+//		((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+//		g.drawLine(this.currpos.x, 16, this.currpos.x, getHeight());
+//		g.drawLine(this.tmppos.x, 16, this.tmppos.x, getHeight());
+//		((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+//	}
 }
