@@ -41,6 +41,9 @@ public final class PathElementsPanel extends AnalysisPanel {
 //	private SchemeElement activeSchemeElement;
 	private PathElement activePathElement;
 
+	private int textWidth;
+	private int textHeight;
+	
 	public PathElementsPanel(final PathElementsLayeredPanel panel,
 			final Dispatcher dispatcher,
 			final double y[],
@@ -120,7 +123,8 @@ public final class PathElementsPanel extends AnalysisPanel {
 				Log.debugMessage("PathElement " + this.activePathElement.getName()
 						+ " moved on " + ((this.currpos.x - this.startpos.x) / this.scaleX * this.deltaX) + " m", Level.FINER);
 	
-				super.parent.repaint(this.startpos.x - 1, 0, 20, super.parent.getHeight());
+				super.parent.repaint(this.startpos.x - 1, 0, 1, super.parent.getHeight());
+				super.parent.repaint(this.startpos.x + 1, 0, this.textWidth, this.textHeight);
 				
 				SchemeElement se = getSchemeElement(this.activePathElement);
 				Graphics g = getGraphics().create();
@@ -143,9 +147,12 @@ public final class PathElementsPanel extends AnalysisPanel {
 	@Override
 	protected void this_mouseReleased(final MouseEvent e) {
 		if (this.setting_active_pe) {
-			final double d = ((this.currpos.x - this.startpos.x) / this.scaleX * this.deltaX);
-			if (this.activePathElement != null && Math.abs(d) > this.deltaX) {
+			final int change = (this.dockedX - coord2index(this.startpos.x));
+			if (this.activePathElement != null && Math.abs(change) > 0) {
 				try {
+					double[] initial = this.path.getOpticalDistanceFromStart(this.activePathElement);
+					double d = this.dockedX * this.deltaX - initial[0]; 
+					
 					PathElement lastNode = this.path.getPreviousNode(this.activePathElement);
 					PathElement nextNode = this.path.getNextNode(this.activePathElement);
 					
@@ -303,14 +310,14 @@ public final class PathElementsPanel extends AnalysisPanel {
 		}
 		
 		final FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
-		final int height = fm.stringWidth(text);
-		final int width = fm.getHeight();
+		this.textHeight = fm.stringWidth(text);
+		this.textWidth = fm.getHeight();
 		final int y1 = 6;
 		final Graphics2D g2 = (Graphics2D) g;
 		final AffineTransform t = g2.getTransform();
-		g2.translate(0, height + 10);
-		g2.rotate(Math.toRadians(270), coord + width - 5, y1);
-		g2.drawString(text, coord + width - 5, y1);
+		g2.translate(0, this.textHeight + 10);
+		g2.rotate(Math.toRadians(270), coord + this.textWidth - 5, y1);
+		g2.drawString(text, coord + this.textWidth - 5, y1);
 		g2.setTransform(t);
 	}
 	
@@ -345,30 +352,29 @@ public final class PathElementsPanel extends AnalysisPanel {
 		
 		if (nEvent != -1 ) {
 			SimpleReflectogramEvent event = mtae.getSimpleEvent(nEvent);
-			
+			int currCoord = coord2index(this.currpos.x);			
 			// get current event
 			if (event.getEventType() == SimpleReflectogramEvent.LINEAR || 
 					event.getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED) { // may not be anchored
-				int currCoord = coord2index(this.currpos.x);
-				if (currCoord - event.getBegin() < DOCK_RANGE) {
+				SimpleReflectogramEvent prevEvent = mtae.getSimpleEvent(nEvent - 1);
+				if (currCoord - prevEvent.getBegin() < DOCK_RANGE) {
 					this.dockedEvent = nEvent - 1;
-					this.dockedX = event.getBegin() - 1;
-					
-				} else if (event.getEnd() - currCoord < DOCK_RANGE) {
+					this.dockedX = event.getBegin();
+					return;
+				} 
+				if (event.getEnd() - currCoord < DOCK_RANGE) {
 					this.dockedEvent = nEvent + 1;
-					this.dockedX = event.getEnd() + 1;
-				} else {
-					this.dockedEvent = -1;
-					this.dockedX = coord2index(this.currpos.x);
-				}
-			} else { // may be anchored
+					this.dockedX = event.getEnd();
+					return;
+				} 
+			} else if (currCoord - event.getBegin() < DOCK_RANGE) { // may be anchored
 				this.dockedEvent = nEvent;
-				this.dockedX = coord2index(this.currpos.x);
+				this.dockedX = event.getBegin();
+				return;
 			}
-		} else {
-			this.dockedEvent = -1;
-			this.dockedX = coord2index(this.currpos.x);
 		}
+		this.dockedEvent = -1;
+		this.dockedX = coord2index(this.currpos.x);
 	}
 	
 	private SchemeElement getSchemeElement(PathElement pathElement) {
