@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.12 2005/10/31 12:30:22 bass Exp $
+ * $Id: TraceLoadDialog.java,v 1.13 2005/11/18 14:37:42 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/10/31 12:30:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.13 $, $Date: 2005/11/18 14:37:42 $
  * @module analysis
  */
 
@@ -72,6 +72,7 @@ public class TraceLoadDialog {
 			treeUI = new IconedTreeUI(root);
 			treeUI.getTree().expandPath(new TreePath(root));
 			treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+			treeUI.getTreeUI().getTreeModel().setAllwaysSort(false);
 			
 			FilterPanel filterPanel = new FilterPanel();
 			treeFilterUI = new TreeFilterUI(treeUI, filterPanel);

@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.17 2005/10/31 12:30:22 bass Exp $
+ * $Id: ResultChildrenFactory.java,v 1.18 2005/11/18 14:37:42 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/10/31 12:30:22 $
+ * @author $Author: stas $
+ * @version $Revision: 1.18 $, $Date: 2005/11/18 14:37:42 $
  * @module analysis
  */
 
@@ -387,7 +387,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 				for (Item child : toRemove) {
 					child.setParent(null);
 				}
-				Collections.sort(toAdd, new WrapperComparator(MeasurementWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+				Collections.sort(toAdd, new WrapperComparator(MeasurementWrapper.getInstance(), MeasurementWrapper.COLUMN_START_TIME));
 				
 				for (Iterator<StorableObject> iter = toAdd.iterator(); iter.hasNext();) {
 					Measurement measurement = (Measurement)iter.next();
