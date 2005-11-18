@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.5 2005/11/17 16:14:25 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.6 2005/11/18 15:07:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.event;
 import static com.syrus.AMFICOM.event.DeliveryAttributesWrapper.COLUMN_SEVERITY;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DELIVERYATTRIBUTES_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ROLE_CODE;
@@ -44,8 +43,8 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/11/17 16:14:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/11/18 15:07:41 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -86,11 +85,9 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.roleIds != null
-				&& this.systemUserIds != null : OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.addAll(this.roleIds);
-		dependencies.addAll(this.systemUserIds);
+		dependencies.addAll(this.getRoleIds0());
+		dependencies.addAll(this.getSystemUserIds0());
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
@@ -243,7 +240,9 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	void setSystemUserIds0(final Set<Identifier> systemUserIds) {
 		final Set<Identifier> systemUserIds0 = this.getSystemUserIds0();
 		systemUserIds0.clear();
-		systemUserIds0.addAll(systemUserIds);
+		if (systemUserIds != null) {
+			systemUserIds0.addAll(systemUserIds);
+		}
 	}
 
 	public void setSystemUserIds(final Set<Identifier> systemUserIds) {
@@ -344,7 +343,9 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 	void setRoleIds0(final Set<Identifier> roleIds) {
 		final Set<Identifier> roleIds0 = this.getRoleIds0();
 		roleIds0.clear();
-		roleIds0.addAll(roleIds);
+		if (roleIds != null) {
+			roleIds0.addAll(roleIds);
+		}
 	}
 
 	public void setRoleIds(final Set<Identifier> roleIds) {
