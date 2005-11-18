@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.128 2005/11/18 10:34:23 saa Exp $
+ * $Id: Heap.java,v 1.129 2005/11/18 14:41:26 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,7 +103,7 @@ import com.syrus.util.Log;
  * 3. anchorer не может существовать без эталона
  * 
  * @author $Author: saa $
- * @version $Revision: 1.128 $, $Date: 2005/11/18 10:34:23 $
+ * @version $Revision: 1.129 $, $Date: 2005/11/18 14:41:26 $
  * @module analysis
  */
 public class Heap
@@ -1263,8 +1263,8 @@ public class Heap
 			Etalon etalonObj, String etalonName) {
 		setEtalonTraceFromPFTrace(pf, etalonName);
 		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
-		Heap.setAnchorer(etalonObj.getAnc());
 		Heap.setMTMEtalon(etalonObj.getMTM());
+		Heap.setAnchorer(etalonObj.getAnc());
 	}
 
 	public static boolean isTraceSecondary(String key) {
