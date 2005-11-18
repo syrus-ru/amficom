@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.127 2005/11/18 10:28:38 saa Exp $
+ * $Id: Heap.java,v 1.128 2005/11/18 10:34:23 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,7 +103,7 @@ import com.syrus.util.Log;
  * 3. anchorer не может существовать без эталона
  * 
  * @author $Author: saa $
- * @version $Revision: 1.127 $, $Date: 2005/11/18 10:28:38 $
+ * @version $Revision: 1.128 $, $Date: 2005/11/18 10:34:23 $
  * @module analysis
  */
 public class Heap
@@ -574,11 +574,11 @@ public class Heap
 		if (!hasEtalon()) {
 			throw new IllegalStateException("no etalon");
 		}
-		if (anchorer == null) {
+		if (getAnchorer() == null) {
 			setAnchorer(new EventAnchorer(
 					getMTMEtalon().getMTAE().getNEvents()));
 		}
-		return anchorer;
+		return getAnchorer();
 	}
 
 	private static void removeAllBS() {
