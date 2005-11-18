@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.126 2005/11/17 14:52:00 saa Exp $
+ * $Id: Heap.java,v 1.127 2005/11/18 10:28:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
 import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
 import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
+import com.syrus.AMFICOM.Client.General.Event.AnchorerListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
@@ -97,10 +98,12 @@ import com.syrus.util.Log;
  * 1. перед установкой эталона (setEtalonPair(?), setMTMEtalon)
  * должен устанавливаться setBSEtalonTrace
  * 
- * 2. любое изменение эталона сбрасывает etalonComparison (и refMismatch)
+ * 2. замена/удаление эталона сбрасывает etalonComparison (и refMismatch)
+ * 
+ * 3. anchorer не может существовать без эталона
  * 
  * @author $Author: saa $
- * @version $Revision: 1.126 $, $Date: 2005/11/17 14:52:00 $
+ * @version $Revision: 1.127 $, $Date: 2005/11/18 10:28:38 $
  * @module analysis
  */
 public class Heap
@@ -154,6 +157,7 @@ public class Heap
 	private static LinkedList<AnalysisParametersListener> analysisParametersListeners = new LinkedList<AnalysisParametersListener>();
 	private static LinkedList<RefMismatchListener> refMismatchListeners = new LinkedList<RefMismatchListener>();
 	private static LinkedList<EtalonComparisonListener> etalonComparisonListeners = new LinkedList<EtalonComparisonListener>();
+	private static LinkedList<AnchorerListener> anchorerListeners = new LinkedList<AnchorerListener>();
 
 	// constructor is not available
 	private Heap() {
@@ -547,12 +551,19 @@ public class Heap
 	public static EventAnchorer getAnchorer() {
 		return anchorer;
 	}
+
 	/**
-	 * Устанавливает привязчик EventAnchorer
+	 * Устанавливает привязчик EventAnchorer.
+	 * Рассылает уведомления об изменении anchorer.
 	 * @param anchorer устанавливаемый привязчик, may be null
+	 * @throws IllegalStateException запрошена установка ненулевого anchorer
+	 *   при отсутствии эталона.
 	 */
 	public static void setAnchorer(EventAnchorer anchorer) {
+		if (anchorer != null && !hasEtalon())
+			throw new IllegalStateException("no etalon");
 		Heap.anchorer = anchorer;
+		notifyAnchorerChanged();
 	}
 	/**
 	 * Возвращает non-null привязчик EventAnchorer, создавая его, если его еще нет.
@@ -564,8 +575,8 @@ public class Heap
 			throw new IllegalStateException("no etalon");
 		}
 		if (anchorer == null) {
-			anchorer = new EventAnchorer(
-					getMTMEtalon().getMTAE().getNEvents());
+			setAnchorer(new EventAnchorer(
+					getMTMEtalon().getMTAE().getNEvents()));
 		}
 		return anchorer;
 	}
@@ -729,6 +740,18 @@ public class Heap
 			listener.currentEventChanged();
 	}
 
+	/**
+	 * Уведомляет подписчиков об появлении/изменении/удалении объекта anchorer.
+	 * Клиент должен вызывать этот метод только при изменении anchorer,
+	 * т.к. при создании/замене/удалении (setAchorer) таки уведомления
+	 * генерируются самим классом {@link Heap}
+	 */
+	public static void notifyAnchorerChanged() {
+		Log.debugMessage(Level.FINEST);
+		for (AnchorerListener listener: anchorerListeners)
+			listener.anchorerChanged();
+	}
+
 	private static <T> void addListener(Collection<T> c, T listener) {
 		if (!c.contains(listener))
 			c.add(listener);
@@ -827,6 +850,16 @@ public class Heap
 	public static void addEtalonComparisonListener(
 			EtalonComparisonListener listener) {
 		addListener(etalonComparisonListeners, listener);
+	}
+
+	public static void addAnchorerListener(
+			AnchorerListener listener) {
+		addListener(anchorerListeners, listener);
+	}
+
+	public static void removeAnchorerListener(
+			AnchorerListener listener) {
+		removeListener(anchorerListeners, listener);
 	}
 
 	/**
@@ -970,11 +1003,14 @@ public class Heap
 	 * closes all BS traces, primary RefAnalysis&MTAE and etalon MTM 
 	 */
 	public static void closeAll() {
+		// remove anchorer
+		if (anchorer != null)
+			setAnchorer(null);
+
 		// close Etalon MTM & anchorer
 		etalonMTM = null;
 		backupEtalonMTM = null;
 		etalonName = null;
-		anchorer = null;
 		fixEventList();
 		notifyEtalonMTMRemoved();
 
