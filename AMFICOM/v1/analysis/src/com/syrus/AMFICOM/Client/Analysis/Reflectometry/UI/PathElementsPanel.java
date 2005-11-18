@@ -122,28 +122,18 @@ public final class PathElementsPanel extends AnalysisPanel {
 	
 				super.parent.repaint(this.startpos.x - 1, 0, 20, super.parent.getHeight());
 				
-				int prev_pos = this.currpos.x;
-				
 				SchemeElement se = getSchemeElement(this.activePathElement);
 				Graphics g = getGraphics().create();
 				g.setXORMode(new Color(0, 255, 191));
-				
-//				super.parent.repaint(prev_pos - 1, 0, 20, super.parent.getHeight());
+
 				paintPathElement(g, this.currpos.x, se);
-				
+
 				this.upd_currpos(e);
 				updateDock();
 				
 				this.currpos = new Point(index2coord(this.dockedX), this.currpos.y);
 				
-				
-				
-//				super.parent.repaint(this.currpos.x - 1, 0, 20, super.parent.getHeight());
-				
 				paintPathElement(g, this.currpos.x, se);
-
-				
-//				this.paintMovingPE(getGraphics().create());
 			}
 			return;
 		}
@@ -185,40 +175,9 @@ public final class PathElementsPanel extends AnalysisPanel {
 					Log.errorMessage(e1);
 				}
 				
-				long id = this.activePathElement.getId().getIdentifierCode();
-				// create link to Etalon
 				if (Heap.hasEtalon()) {
 					ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
-					
-					// определяем привязчика
-					EventAnchorer ea = Heap.obtainAnchorer();
-
-					boolean anchorerUpdated = false;
-
-					// отвязываем от старого события
-					for (int i = 0; i < mtae.getNEvents(); i++) {
-						SOAnchorImpl soAnchor = ea.getEventAnchor(i);
-						if (soAnchor.getValue() == id) {
-							ea.setEventAnchor(i, SOAnchorImpl.VOID_ANCHOR);
-							anchorerUpdated = true;
-							Log.debugMessage("Removed anchor for event " + i, Level.FINER);
-							break;
-						}
-					}
-					
-					// привязываем к новому событию в случае, если к нему не привязан кто-то другой
-					int nEvent = mtae.getEventByCoord(coord2index(this.currpos.x));
-					SOAnchorImpl soAnchor = ea.getEventAnchor(nEvent);
-					if (soAnchor.isVoid()) {
-						ea.setEventAnchor(nEvent, new SOAnchorImpl(id));
-						anchorerUpdated = true;
-						Log.debugMessage("Create new anchor for event " + nEvent, Level.FINER);
-					} else {
-						Log.debugMessage("Already created anchor for event " + nEvent, Level.FINER);
-					}
-
-					if (anchorerUpdated)
-						Heap.notifyAnchorerChanged();
+					updateAnchor(this.activePathElement, mtae);
 				}
 			}
 
@@ -228,6 +187,42 @@ public final class PathElementsPanel extends AnalysisPanel {
 			return;
 		}
 		super.this_mouseReleased(e);
+	}
+	
+	void updateAnchor(PathElement pe, ModelTraceAndEvents mtae) {
+		long id = pe.getId().getIdentifierCode();
+		// create link to Etalon
+		// определяем привязчика
+		EventAnchorer ea = Heap.obtainAnchorer();
+		
+		boolean anchorerUpdated = false;
+		
+		// отвязываем от старого события
+		for (int i = 0; i < mtae.getNEvents(); i++) {
+			SOAnchorImpl soAnchor = ea.getEventAnchor(i);
+			if (soAnchor.getValue() == id) {
+				ea.setEventAnchor(i, SOAnchorImpl.VOID_ANCHOR);
+				anchorerUpdated = true;
+				Log.debugMessage("Removed anchor for event " + i, Level.FINER);
+				break;
+			}
+		}
+		
+		// привязываем к новому событию в случае, если к нему не привязан кто-то другой
+		int nEvent = this.dockedEvent;
+		if (this.dockedEvent != -1) {
+			SOAnchorImpl soAnchor = ea.getEventAnchor(nEvent);
+			if (soAnchor.isVoid()) {
+				ea.setEventAnchor(nEvent, new SOAnchorImpl(id));
+				anchorerUpdated = true;
+				Log.debugMessage("Create new anchor for event " + nEvent, Level.FINER);
+			} else {
+				Log.debugMessage("Already created anchor for event " + nEvent, Level.FINER);
+			}
+		}
+		
+		if (anchorerUpdated)
+			Heap.notifyAnchorerChanged();
 	}
 
 	@Override
@@ -388,14 +383,4 @@ public final class PathElementsPanel extends AnalysisPanel {
 		}
 		return null;
 	}
-
-//	void paintMovingPE(final Graphics g) {
-//
-//		g.drawRect(this.currpos.x - 4, 6, 8, 8);
-//		g.drawRect(this.tmppos.x - 4, 6, 8, 8);
-//		((Graphics2D) g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-//		g.drawLine(this.currpos.x, 16, this.currpos.x, getHeight());
-//		g.drawLine(this.tmppos.x, 16, this.tmppos.x, getHeight());
-//		((Graphics2D) g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-//	}
 }
