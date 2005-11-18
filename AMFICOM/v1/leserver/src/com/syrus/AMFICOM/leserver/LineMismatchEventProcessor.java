@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.9 2005/11/17 16:23:28 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.10 2005/11/18 15:13:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/11/17 16:23:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/11/18 15:13:49 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -131,14 +131,18 @@ final class LineMismatchEventProcessor implements EventProcessor {
 	}
 
 	private Set<String> getAddresses(final Set<Identifier> systemUserIds) throws ApplicationException {
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(
-				new CompoundCondition(
-						getCondition(),
-						AND,
-						new LinkedIdsCondition(
-								systemUserIds,
-								CHARACTERISTIC_CODE)),
-				true);
+		final StorableObjectCondition characteristicCondition;
+		if (systemUserIds.isEmpty()) {
+			characteristicCondition = getCondition();
+		} else {
+			characteristicCondition = new CompoundCondition(
+					getCondition(),
+					AND,
+					new LinkedIdsCondition(
+							systemUserIds,
+							CHARACTERISTIC_CODE));
+		}
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(characteristicCondition, true);
 		final Set<String> addresses = new HashSet<String>();
 		for (final Characteristic characteristic : characteristics) {
 			addresses.add(characteristic.getValue());
