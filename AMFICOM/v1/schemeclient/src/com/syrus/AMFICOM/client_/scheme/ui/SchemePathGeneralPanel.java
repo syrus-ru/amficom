@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.13 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.14 2005/11/18 10:31:08 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -358,6 +359,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 							if (!mes.isEmpty()) {
 								MonitoredElement me = mes.iterator().next();
 								me.setName(this.tfNameText.getText());
+								StorableObjectPool.flush(me, LoginManager.getUserId(), false);
 								Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
 								if (!tpathIds.isEmpty()) {
 									Set<TransmissionPath> tPaths = StorableObjectPool.getStorableObjects(tpathIds, true);
