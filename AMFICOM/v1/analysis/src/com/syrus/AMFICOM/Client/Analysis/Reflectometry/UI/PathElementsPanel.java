@@ -192,12 +192,15 @@ public final class PathElementsPanel extends AnalysisPanel {
 					
 					// определяем привязчика
 					EventAnchorer ea = Heap.obtainAnchorer();
-					
+
+					boolean anchorerUpdated = false;
+
 					// отвязываем от старого события
 					for (int i = 0; i < mtae.getNEvents(); i++) {
 						SOAnchorImpl soAnchor = ea.getEventAnchor(i);
 						if (soAnchor.getValue() == id) {
 							ea.setEventAnchor(i, SOAnchorImpl.VOID_ANCHOR);
+							anchorerUpdated = true;
 							Log.debugMessage("Removed anchor for event " + i, Level.FINER);
 							break;
 						}
@@ -208,10 +211,14 @@ public final class PathElementsPanel extends AnalysisPanel {
 					SOAnchorImpl soAnchor = ea.getEventAnchor(nEvent);
 					if (soAnchor.isVoid()) {
 						ea.setEventAnchor(nEvent, new SOAnchorImpl(id));
+						anchorerUpdated = true;
 						Log.debugMessage("Create new anchor for event " + nEvent, Level.FINER);
 					} else {
 						Log.debugMessage("Already created anchor for event " + nEvent, Level.FINER);
 					}
+
+					if (anchorerUpdated)
+						Heap.notifyAnchorerChanged();
 				}
 			}
 
