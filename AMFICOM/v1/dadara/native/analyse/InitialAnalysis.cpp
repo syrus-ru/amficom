@@ -372,7 +372,7 @@ return;}
 	int eotByFall = -1;
 	{
 		int i;
-		for (i = 0; i < lastPoint + scaleEOT && i < data_length; i++) {
+		for (i = scaleEOT; i < lastPoint + scaleEOT && i < data_length; i++) {
 			if (eotByFall < 0 || TEMP[i] < TEMP[eotByFall])
 				eotByFall = i;
 		}
