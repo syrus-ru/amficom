@@ -1160,6 +1160,22 @@ T=8 B=12361 E=12369 N=0 L=0 # begin=49444.31151077177
 .
 }
 
+FILE: rg0205.sor
+ORIGIN: EXTERNAL:our,2005.11.18/16:30:00 # note: analysed with noise factor 2.0, this seemes better here
+RESULTS {
+EVENTS
+T=7 B=0 E=65 N=0 L=0 # begin=0.0
+T=1 B=65 E=6190 N=1 L=2 # begin=260.0016380713668 # N=1: just to lower the weight of 'new events' problem caused by noisefactor
+T=5 B=6190 E=6219 N=0 L=0 # begin=24760.155994796314
+T=1 B=6219 E=12519 N=1 L=2 # begin=24876.156725628156
+T=3 B=12519 E=12649 N=0 L=0 # begin=50076.31549254525
+T=1 B=12649 E=18853 N=1 L=2 # begin=50596.318768687976
+T=5 B=18853 E=18909 N=0 L=1 # begin=75412.47511629967
+T=1 B=18909 E=25164 N=1 L=2 # begin=75636.47652756114
+T=8 B=25164 E=25481 N=0 L=0 # begin=100656.63416042883
+.
+}
+
 FILE: rg0301.sor
 ORIGIN: EXTERNAL:CB:cli-2005-08/1-1.sor
 RESULTS {
