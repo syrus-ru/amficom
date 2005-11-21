@@ -1,5 +1,5 @@
 /*-
- * $Id: PFTrace.java,v 1.4 2005/11/10 13:16:37 saa Exp $
+ * $Id: PFTrace.java,v 1.5 2005/11/21 13:22:19 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,14 @@ import com.syrus.io.BellcoreStructure;
  * Данные о самой полученной рефлектограмме нужно брать через методы
  * доступа этого класса; дополнительные данные - через getBS()
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/11/10 13:16:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/21 13:22:19 $
  * @module
  */
 public class PFTrace {
 	private static final double FILTER_DECAY = 0.5; // dB/m (0.4 .. 0.7)
 	private BellcoreStructure bs;
-	double[] rawTrace; // lazy значение исходной рефлектограммы
-	double[] filteredTrace; // lazy пред-обработанная рефлектограмма
+	private double[] rawTrace; // lazy значение исходной рефлектограммы
+	private double[] filteredTrace; // lazy пред-обработанная рефлектограмма
 
 	public PFTrace(BellcoreStructure bs) {
 		assert bs != null;
@@ -40,7 +40,11 @@ public class PFTrace {
 	 * извне: для доступа к пред-фильтрованной р/г используйте
 	 * {@link #getFilteredTraceClone()}.
 	 * Если же доступ к этому методу все же необходим, его, в принципе,
-	 * можно открыть. 
+	 * можно открыть.
+	 * </p>
+	 * <p>
+	 * На данный момент этот метод не используется.
+	 * </p>
 	 * @return массив точек. Клиент может изменять полученный массив.
 	 */
 	protected double[] getRawTraceClone() {
