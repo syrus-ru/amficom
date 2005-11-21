@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.52 2005/11/05 13:43:20 stas Exp $
+ * $Id: SchemeActions.java,v 1.53 2005/11/21 15:24:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
+import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import static java.util.logging.Level.FINER;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,10 +32,12 @@ import java.util.logging.Level;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.tree.TreeNode;
 
 import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.Edge;
 import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
@@ -100,7 +102,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.52 $, $Date: 2005/11/05 13:43:20 $
+ * @version $Revision: 1.53 $, $Date: 2005/11/21 15:24:46 $
  * @module schemeclient
  */
 
@@ -183,8 +185,7 @@ public class SchemeActions {
 	public static void generateTopLevelScheme(SchemeGraph graph)
 	{
 		Map<DeviceGroup, TopLevelElement> oldToNewMap = new HashMap<DeviceGroup, TopLevelElement>();
-		Map<DeviceGroup, TopLevelElement> map2 = new HashMap<DeviceGroup, TopLevelElement>();
-		Map<DeviceGroup, DeviceGroup> map3 = new HashMap<DeviceGroup, DeviceGroup>();
+		Map<DeviceGroup, DeviceGroup> groupToGroupMap = new HashMap<DeviceGroup, DeviceGroup>();
 		Object[] cells = graph.getRoots();
 		
 		boolean tmp = graph.isMakeNotifications();
@@ -209,82 +210,85 @@ public class SchemeActions {
 			}
 		}
 		
-		for (int i = 0; i < cells.length; i++) {
-			if (cells[i] instanceof DefaultCableLink) {
-				DefaultCableLink link = (DefaultCableLink)cells[i];
-				DeviceGroup start = null;
-				DeviceGroup end = null;
-				if (link.getSource() instanceof DefaultPort &&
-						((DefaultPort)link.getSource()).getParent().getParent() instanceof DeviceGroup)
-					start = (DeviceGroup)((DefaultPort)link.getSource()).getParent().getParent();
-				if (link.getTarget() instanceof DefaultPort &&
-						((DefaultPort)link.getTarget()).getParent().getParent() instanceof DeviceGroup)
-					end = (DeviceGroup)((DefaultPort)link.getTarget()).getParent().getParent();
-
-				boolean b1 = start == null ? false : isSchemesGroup(start);
-				boolean b2 = end == null ? false : isSchemesGroup(end);
-				if (b1 && b2) {
-					TopLevelElement newStart = oldToNewMap.get(start);
-					TopLevelElement newEnd = oldToNewMap.get(end);
-					createTopLevelCableLink(graph,
-							(Port)newStart.getFirstChild(),
-							(Port)newEnd.getFirstChild(),
-							graph.getCellBounds(newStart).getLocation(),
-							graph.getCellBounds(newEnd).getLocation());
-				} else if (b1) {
-					TopLevelElement newStart = oldToNewMap.get(start);
-					TopLevelElement newEnd = map2.get(end);
-					if (newEnd == null) {
-						DeviceGroup start2 = map3.get(end);
-						if (start2 != null)
-							newEnd = map2.get(start2);
+		try {
+			for (DeviceGroup group : oldToNewMap.keySet()) {
+				Set<Edge> edges = new HashSet<Edge>();
+				GraphActions.findAllVertexLinks(edges, group);
+				System.out.println(edges.size());
+				
+				Set<DeviceGroup> groups = new HashSet<DeviceGroup>();
+				for (Edge edge : edges) {
+					DeviceGroup opposite = getOppositeSchemeNode(edge, groups);
+					if (opposite != null) {
+					System.out.println(group.getScheme() + " to " + opposite.getScheme());
+					Scheme scheme1 = group.getScheme();
+					Scheme scheme2 = opposite.getScheme();
+					if (!scheme1.equals(scheme2)) {
+						TopLevelElement top1 = oldToNewMap.get(group);
+						TopLevelElement top2 = oldToNewMap.get(opposite);
+						createTopLevelCableLink(graph, (Port)top1.getChildren().iterator().next(), (Port)top2.getChildren().iterator().next(), null, null);						
 					}
-					
-					if (newEnd == null)
-						map2.put(start, newStart);
-					else
-						createTopLevelCableLink(graph,
-							(Port)newStart.getFirstChild(),
-							(Port)newEnd.getFirstChild(),
-							graph.getCellBounds(newStart).getLocation(),
-							graph.getCellBounds(newEnd).getLocation());
-				} else if (b2) {
-					TopLevelElement newEnd = oldToNewMap.get(end);
-					TopLevelElement newStart = map2.get(start);
-					if (newStart == null) {
-						DeviceGroup end2 = map3.get(start);
-						if (end2 != null)
-							newEnd = map2.get(end2);
-					}
-					
-					if (newStart == null)
-						map2.put(end, newEnd);
-					else
-						createTopLevelCableLink(graph,
-							(Port)newStart.getFirstChild(),
-							(Port)newEnd.getFirstChild(),
-							graph.getCellBounds(newStart).getLocation(),
-							graph.getCellBounds(newEnd).getLocation());
-				} else if (start != null && end != null) {
-					TopLevelElement newStart = map2.get(start);
-					if (newStart != null) {
-						map2.put(end, newStart);
-					}
-					TopLevelElement newEnd = map2.get(end);
-					if (newEnd != null) {
-						map2.put(start, newStart);
-					}
-					if (newStart == null && newEnd == null) {
-						map3.put(start, end);
-						map3.put(end, start);
 					}
 				}
 			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
+
 		graph.getModel().remove(graph.getDescendants(cells));
 		
 		graph.setGraphChanged(false);
 		graph.setMakeNotifications(tmp);
+	}
+	
+
+	static DeviceGroup getOppositeSchemeNode(Edge edge, Set<DeviceGroup> groups) throws ApplicationException {
+		if (edge.getSource() instanceof DefaultPort) {
+			DefaultPort p = (DefaultPort)edge.getSource();
+			TreeNode parent = p.getRoot();
+			if (parent instanceof DeviceGroup) {
+				DeviceGroup group = (DeviceGroup)parent;
+				if (!groups.contains(group)) {
+					if (group.getType() == DeviceGroup.SCHEME || 
+							(group.getType() == DeviceGroup.SCHEME_ELEMENT && 
+									group.getSchemeElement().getKind() == IdlSchemeElementKind.SCHEME_CONTAINER)) {
+						return group;
+					}
+					groups.add(group);
+					Set<Edge> edges = new HashSet<Edge>();
+					GraphActions.findAllVertexLinks(edges, group);
+					for (Edge edge1 : edges) {
+						if (!edge1.equals(edge)) {
+							return getOppositeSchemeNode(edge1, groups);
+						}
+					}
+				}
+			}
+		}
+		
+		if (edge.getTarget() instanceof DefaultPort) {
+			DefaultPort p = (DefaultPort)edge.getTarget();
+			TreeNode parent = p.getRoot();
+			if (parent instanceof DeviceGroup) {
+				DeviceGroup group = (DeviceGroup)parent;
+				if (!groups.contains(group)) {
+					if (group.getType() == DeviceGroup.SCHEME || 
+							(group.getType() == DeviceGroup.SCHEME_ELEMENT && 
+									group.getSchemeElement().getKind() == IdlSchemeElementKind.SCHEME_CONTAINER)) {
+						return group;
+					}
+					groups.add(group);
+					Set<Edge> edges = new HashSet<Edge>();
+					GraphActions.findAllVertexLinks(edges, group);
+					for (Edge edge1 : edges) {
+						if (!edge1.equals(edge)) {
+							return getOppositeSchemeNode(edge1, groups);
+						}
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	static boolean isSchemesGroup(DeviceGroup group) {

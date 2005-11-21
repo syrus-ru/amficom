@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.21 2005/10/22 10:17:30 stas Exp $
+ * $Id: GraphActions.java,v 1.22 2005/11/21 15:24:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/10/22 10:17:30 $
+ * @version $Revision: 1.22 $, $Date: 2005/11/21 15:24:46 $
  * @module schemeclient
  */
 
@@ -593,6 +593,23 @@ public class GraphActions {
 			}
 		}
 		return edges.toArray(new Edge[edges.size()]);
+	}
+	
+	public static void findAllVertexLinks(Set<Edge> edges, DefaultGraphCell cell) {
+		for (Enumeration enumeration = cell.children(); enumeration.hasMoreElements();) {
+			Object obj = enumeration.nextElement();
+			if (obj instanceof Port) {
+				Port p = (Port) obj;
+				for (Iterator j = p.edges(); j.hasNext();) {
+					Edge edge = (Edge)j.next();
+					if (edge instanceof DefaultLink || edge instanceof DefaultCableLink) {
+						edges.add(edge);
+					}
+				}
+			} else if (obj instanceof DefaultGraphCell) {
+				findAllVertexLinks(edges, (DefaultGraphCell)obj);
+			}
+		}
 	}
 
 	public static BlockPortCell[] findTopLevelPorts(SchemeGraph graph, DeviceGroup group) {
