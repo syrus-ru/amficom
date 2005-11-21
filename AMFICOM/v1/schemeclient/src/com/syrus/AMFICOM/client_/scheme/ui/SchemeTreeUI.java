@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.33 2005/11/16 19:10:38 max Exp $
+ * $Id: SchemeTreeUI.java,v 1.34 2005/11/21 15:20:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.33 $, $Date: 2005/11/16 19:10:38 $
+ * @author $Author: stas $
+ * @version $Revision: 1.34 $, $Date: 2005/11/21 15:20:58 $
  * @module schemeclient
  */
 
@@ -91,7 +91,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								LangModelScheme.getString("Message.confirmation.sure_delete"),  //$NON-NLS-1$ //$NON-NLS-2$
 								LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
 								JOptionPane.OK_CANCEL_OPTION);
-						if (res == JOptionPane.NO_OPTION) {
+						if (res == JOptionPane.CANCEL_OPTION) {
 							return;
 						}
 					}
