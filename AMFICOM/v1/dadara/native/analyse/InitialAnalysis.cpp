@@ -335,7 +335,7 @@ return;}
 #ifdef DEBUG_INITIAL_ANALYSIS_STDERR
 		{
 			int i;
-			fprintf(stderr, "accSpl acter removedMaskedSplashes: Total %d splices\n", accSpl.getLength());
+			fprintf(stderr, "accSpl after removedMaskedSplashes: Total %d splices\n", accSpl.getLength());
 			for (i = 0; i < accSpl.getLength(); i++) {
 				fprintf(stderr, "spl[%d]: %d - %d  s %+d @ %d -- ampl %g\n",
 					i,
@@ -354,6 +354,17 @@ return;}
 	// èñïîëüçóåì ArrList è åãî îáúåêòû
 	accSpl.disposeAll(); // î÷èùàåì ìàññèâ ArrList
 	// ====== ÏßÒÛÉ ÝÒÀÏ ÀÍÀËÈÇÀ - ÎÁÐÀÁÎÒÊÀ ÑÎÁÛÒÈÉ =======
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+	{
+		int i;
+		for (i = 0; i < events->getLength(); i++) {
+			fprintf(stderr, "event[%d]: type %d location %d - %d\n", i,
+				((EventParams*)(*events)[i])->type,
+				((EventParams*)(*events)[i])->begin,
+				((EventParams*)(*events)[i])->end);
+		}
+	}
+#endif
 #ifdef SEARCH_EOT_BY_WLET
 	int scaleEOT = scaleB * 10;
 	wavelet.transform(scaleEOT, data, data_length, 0, data_length - 1, TEMP + 0, getWLetNorma(scaleEOT));
@@ -373,8 +384,15 @@ return;}
 		for (i = iFrom; i < eotByFall; i++)
 			if (TEMP[i] > 0)
 				changeSign = true;
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+		fprintf(stderr, "data_lenth %d lastPoint %d eotByFall %d iFrom %d changeSign %d ",
+			data_length, lastPoint, eotByFall, iFrom, changeSign);
+#endif
 		if (changeSign)
 			eotByFall -= scaleEOT;
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
+		fprintf(stderr, " new_eotByFall\n", eotByFall);
+#endif
 	}
 	if (eotByFall > lastPoint)
 		eotByFall = lastPoint;
