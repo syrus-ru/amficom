@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.27 2005/10/31 12:30:00 bass Exp $
+* $Id: PermissionAttributes.java,v 1.28 2005/11/21 08:30:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/10/31 12:30:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/11/21 08:30:22 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
@@ -52,7 +52,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		ELEMENTS_EDITOR(true),
 		MAP_EDITOR(true),
 		OPTIMIZATION(false),
-		MODELING(false),
+		MODELING(true),
 		SCHEDULER(true),
 		ANALYSIS(true),
 		RESEARCH(true),
