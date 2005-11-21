@@ -1,5 +1,5 @@
 /*
- * $Id: TestRoleAttributtes.java,v 1.3 2005/10/27 10:42:46 bob Exp $
+ * $Id: TestRoleAttributtes.java,v 1.4 2005/11/21 08:35:12 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/10/27 10:42:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/21 08:35:12 $
  * @author $Author: bob $
  * @module test
  */
@@ -41,7 +41,7 @@ public class TestRoleAttributtes extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateRoles() throws ApplicationException {
+	public void _testCreateRoles() throws ApplicationException {
 		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
 		final Identifier userId = sysUser.getId();
 
@@ -677,6 +677,153 @@ public class TestRoleAttributtes extends TestCase {
 				attributes.setPermissionEnable(PermissionCodename.REPORT_SAVE_TEMPLATE, true);
 			}
 		
+		}
+		
+		StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, userId, true);
+		StorableObjectPool.flush(ObjectEntities.ROLE_CODE, userId, true);
+	
+	
+		
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, userId, true);
+	}
+	
+	public void testCreateModelingPermissionForRoles() throws ApplicationException {
+		final SystemUser sysUser = DatabaseCommonTest.getSysUser();
+		final Identifier userId = sysUser.getId();
+
+		
+		{
+			// Media Monitoring Administator
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.MEDIA_MONITORING_ADMINISTATOR.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role mediaMonitoringAdministator = roles.iterator().next();
+		
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						mediaMonitoringAdministator.getId(), 
+						Module.MODELING);
+				
+				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+			}
+			
+		}
+		
+		{
+			// Analyst
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.ANALYST.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role analyst = roles.iterator().next();
+			
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						analyst.getId(), 
+						Module.MODELING);
+				
+				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
+			}
+
+		}
+		
+		{
+			// Operator
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.OPERATOR.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role operator = roles.iterator().next();
+			
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						operator.getId(), 
+						Module.MODELING);
+				
+				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+			}
+			
+		}
+		
+		{
+
+			// Planner
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.PLANNER.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role planner = roles.iterator().next();			
+
+
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						planner.getId(), 
+						Module.MODELING);
+				
+				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+			}
+			
+		}
+		
+		{
+
+			// Specialist
+			final Set<Role> roles = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(RoleCodename.SPECIALIST.getCodename(),
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.ROLE_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME), 
+					true);
+			
+			final Role specialist = roles.iterator().next();
+
+			{
+				final PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(userId, 
+						Identifier.VOID_IDENTIFIER, 
+						specialist.getId(), 
+						Module.MODELING);
+				
+				attributes.setPermissionEnable(PermissionCodename.MODELING_ENTER, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_MAP, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_OPEN_SCHEME, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_SAVE_REFLECTOGRAM_MODEL, true);
+				attributes.setPermissionEnable(PermissionCodename.MODELING_SET_MODELING_OPTIONS, true);
+			}
+			
 		}
 		
 		StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, userId, true);
