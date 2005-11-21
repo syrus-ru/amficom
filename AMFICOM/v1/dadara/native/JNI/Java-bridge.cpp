@@ -876,48 +876,55 @@ jobjectArray ReliabilityEvent_C2J_arr(JNIEnv *env, ReliabilityEvent *re, int num
 	return oa;
 }
 
-jdoubleArray calcNoiseArrayInt
-  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length, bool absMode)
-{
+/*
+ * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
+ * Method:    nCalcNoiseArrayPair
+ * Signature: ([DI)[[D
+ */
+JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoiseArrayPair
+(JNIEnv *env, jclass cls, jdoubleArray inArr, jint length) {
 	// get input J array, create output J array, get output J array
 	double *yy;
-	double *noise;
+	double *noiseAbs;
+	double *noiseRel;
 	int size = get_arr(env, inArr, &yy);
 	if (size == 0)
 	{
 		release_arr(env, inArr, yy);
 		return 0;
 	}
-	prf_b("JNI: nCalcNoiseArray");
-	jdoubleArray outArr = env->NewDoubleArray((jsize )size);
-	assert(outArr);
-	get_arr(env, outArr, &noise);
+	prf_b("JNI: nCalcNoiseArrayPair");
+
+	jdoubleArray outArrAbs = env->NewDoubleArray((jsize )size);
+	assert(outArrAbs);
+	get_arr(env, outArrAbs, &noiseAbs);
+
+	jdoubleArray outArrRel = env->NewDoubleArray((jsize )size);
+	assert(outArrRel);
+	get_arr(env, outArrRel, &noiseRel);
 
 	if (length <= 0 || length > size)
 		length = size;
 
 	// process
-	if (absMode)
-		findAbsNoiseArray(yy, noise, size, length);
-	else
-		findNoiseArray(yy, noise, size, length);
+	findBothNoiseArrays(yy, size, length, noiseAbs, noiseRel);
 
 	// release arrays
 	release_arr(env, inArr, yy);
-	release_arr(env, outArr, noise);
+	release_arr(env, outArrAbs, noiseAbs);
+	release_arr(env, outArrRel, noiseRel);
+
+	// create & fill double[][] array
+	jclass doubleArrayClass = env->FindClass("[D");
+	assert(doubleArrayClass);
+	jobjectArray outObjArr = env->NewObjectArray(2, doubleArrayClass, 0);
+	assert(outObjArr);
+	env->SetObjectArrayElement(outObjArr, 0, outArrAbs);
+	env->SetObjectArrayElement(outObjArr, 1, outArrRel);
+
 	prf_e();
 
-	return outArr;
-}
-
-JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcAbsNoiseArray
-  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length) {
-	return calcNoiseArrayInt(env, cls, inArr, length, true);
-}
-
-JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoiseArray
-  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length) {
-	return calcNoiseArrayInt(env, cls, inArr, length, false);
+	return outObjArr;
 }
 
 JNIEXPORT jdoubleArray JNICALL

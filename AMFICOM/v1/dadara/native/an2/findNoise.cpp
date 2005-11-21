@@ -284,3 +284,19 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2) {
 
 	prf_b("findNoiseArray: done");
 }
+
+void findBothNoiseArrays(double *data, int size, int len2, double *outNoiseAbs, double *outNoiseRel) {
+	findAbsNoiseArray(data, outNoiseAbs, size, len2);
+
+	prf_b("findBothNoiseArrays: init exp");
+	init_exp();
+
+	prf_b("findNoiseArray: dB2dy");
+
+	// преобразуем выходной массив
+	int i;
+	for (i = 0; i < len2; i++)
+		outNoiseRel[i] = rdB2dy(data[i], outNoiseAbs[i]);
+
+	prf_b("findBothNoiseArrays: done");
+}

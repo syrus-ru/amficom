@@ -49,4 +49,6 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2);
  */
 void findAbsNoiseArray(double *data, double *outNoise, int size, int len2);
 
+void findBothNoiseArrays(double *data, int size, int len2, double *outNoiseAbs, double *outNoiseRel);
+
 #endif

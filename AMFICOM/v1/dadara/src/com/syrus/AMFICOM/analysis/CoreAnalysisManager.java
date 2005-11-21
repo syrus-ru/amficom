@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.135 2005/11/21 13:23:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.136 2005/11/21 14:46:40 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.135 $, $Date: 2005/11/21 13:23:34 $
+ * @version $Revision: 1.136 $, $Date: 2005/11/21 14:46:40 $
  * @module
  */
 
@@ -118,23 +118,20 @@ public class CoreAnalysisManager
 			double scaleFactor);
 
 	/**
-	 * Вычисляет уровень шума в виде "ожидаемая амплитуда флуктуаций по
-	 * уровню 1 сигма". 
+	 * Вычисляет уровень шума в двух представлениях.
 	 * @param y входная рефлектограмма
-	 * @param lenght длина, на которой пользователя интересует
+	 * @param length длина, на которой пользователя интересует
 	 * уровень шума, или 0, если шум нужен на всей y.length
-	 * @return массив [length > 0 ? length : y.length]
+	 * @return массив из двух элементов:
+	 * <ul>
+	 * <li> массив double[length > 0 ? length : y.length]
+	 *    абсолютного уровня шума в дБ
+	 * <li> массив double[length > 0 ? length : y.length]
+	 *    относительного уровня шума по уровню 1 сигма
+	 * </ul>
 	 */
-	private static native double[] nCalcNoiseArray(double[] y, int lenght);
-
-	/**
-	 * Вычисляет абсолютный уровень шума в дБ.
-	 * @param y входная рефлектограмма
-	 * @param lenght длина, на которой пользователя интересует
-	 * уровень шума, или 0, если шум нужен на всей y.length
-	 * @return массив [length > 0 ? length : y.length]
-	 */
-	private static native double[] nCalcAbsNoiseArray(double[] y, int lenght);
+	private static native double[][] nCalcNoiseArrayPair(
+			double[] y, int length);
 
 	/**
 	 * Метод определяет длину рефлектограммы "до конца волокна".
@@ -175,6 +172,29 @@ public class CoreAnalysisManager
 			double dyFactor);
 
 	/**
+	 * Вычисляет уровень шума в двух представлениях - абсолютном и относительном.
+	 * Фактически, лишь преобразует результат nCalcNoiseArrayPair:
+	 * переводит относительный уровень шума из сигма в 3 сигма.
+	 * @param y входная рефлектограмма
+	 * @param length длина, на которой пользователя интересует
+	 * уровень шума, или 0, если шум нужен на всей y.length
+	 * @return массив из двух элементов:
+	 * <ul>
+	 * <li> массив double[length > 0 ? length : y.length]
+	 *    абсолютного уровня шума в дБ
+	 * <li> массив double[length > 0 ? length : y.length]
+	 *    относительного уровня шума по уровню 1 сигма
+	 * </ul>
+	 */
+	protected static double[][]calcNoiseArrayPair(double[] y, int length) {
+		double[][] ret = nCalcNoiseArrayPair(y, length);
+		double[] rel = ret[1];
+		for (int i = 0; i < rel.length; i++)
+			rel[i] *= 3.0;
+		return ret;
+	}
+
+	/**
 	 * Оценка уровня шума по кривой рефлектограммы.
 	 * @param y Входная кривая рефлектограммы в дБ.
 	 * @param length Длина волокна, > 0
@@ -183,15 +203,12 @@ public class CoreAnalysisManager
 	 */
 	protected static double[] calcNoiseArray(double[] y, int length)
 	{
-		double[] ret = nCalcNoiseArray(y, length);
-		for (int i = 0; i < ret.length; i++)
-			ret[i] *= 3.0;
-		return ret;
+		return calcNoiseArrayPair(y, length)[1];
 	}
 
 	//@todo: performance: generata noise and AbsNoise together
 	protected static double[] calcAbsNoiseArray(double[] y, int length) {
-		return nCalcAbsNoiseArray(y, length);
+		return nCalcNoiseArrayPair(y, length)[0];
 	}
 
 	/**
@@ -339,8 +356,9 @@ public class CoreAnalysisManager
 		// данные пред-анализа
 		res.traceLength = calcTraceLength(yRaw);
 		if (needNoise) {
-			double[] noise = calcNoiseArray(yRaw, res.traceLength); // slow
-			double[] absNoise = calcAbsNoiseArray(yRaw, res.traceLength); // slow // FIXME: call one of them only
+			double[][] both = calcNoiseArrayPair(yRaw, res.traceLength);
+			double[] absNoise = both[0];
+			double[] noise = both[1];
 			res.setNoise(noise);
 			res.yCorr = calcYCorr(res.yTrace, absNoise, res.traceLength);
 		} else {
