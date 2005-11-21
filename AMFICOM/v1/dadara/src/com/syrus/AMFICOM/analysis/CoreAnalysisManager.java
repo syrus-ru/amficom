@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.136 2005/11/21 14:46:40 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.137 2005/11/21 17:55:44 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.136 $, $Date: 2005/11/21 14:46:40 $
+ * @version $Revision: 1.137 $, $Date: 2005/11/21 17:55:44 $
  * @module
  */
 
@@ -375,10 +375,10 @@ public class CoreAnalysisManager
 	// Это частичная компенсация нелинейности логарифмической шкалы.
 	// XXX: надо бы реализовать полноценный учет логарифмической шкалы.
 	private static double[] calcYCorr(double[]yRaw, double[]absNoise, int len) {
-		double[] yCorr = new double[len];
+		double[] yCorr = yRaw.clone(); // XXX: подпорка: за пределами len оставляем р/г как есть
 		final double DELTA = 0.0;
 		for (int i = 0; i < len; i++) {
-			yCorr[i] = yRaw[i];
+//			yCorr[i] = yRaw[i];
 			if (yCorr[i] < absNoise[i] + DELTA) {
 //				System.out.println("yCorr[" + i + "] changed from " + yCorr[i] + " to " + (absNoise[i] + DELTA)); // FIXME
 				yCorr[i] = absNoise[i] + DELTA;
