@@ -876,8 +876,8 @@ jobjectArray ReliabilityEvent_C2J_arr(JNIEnv *env, ReliabilityEvent *re, int num
 	return oa;
 }
 
-JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoiseArray
-  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length)
+jdoubleArray calcNoiseArrayInt
+  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length, bool absMode)
 {
 	// get input J array, create output J array, get output J array
 	double *yy;
@@ -897,7 +897,10 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 		length = size;
 
 	// process
-	findNoiseArray(yy, noise, size, length);
+	if (absMode)
+		findAbsNoiseArray(yy, noise, size, length);
+	else
+		findNoiseArray(yy, noise, size, length);
 
 	// release arrays
 	release_arr(env, inArr, yy);
@@ -905,6 +908,16 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 	prf_e();
 
 	return outArr;
+}
+
+JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcAbsNoiseArray
+  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length) {
+	return calcNoiseArrayInt(env, cls, inArr, length, true);
+}
+
+JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoiseArray
+  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length) {
+	return calcNoiseArrayInt(env, cls, inArr, length, false);
 }
 
 JNIEXPORT jdoubleArray JNICALL

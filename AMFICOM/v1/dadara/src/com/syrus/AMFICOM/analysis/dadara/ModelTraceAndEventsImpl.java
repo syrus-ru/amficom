@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.30 2005/11/10 13:16:37 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.31 2005/11/21 13:23:34 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.30 $, $Date: 2005/11/10 13:16:37 $
+ * @version $Revision: 1.31 $, $Date: 2005/11/21 13:23:34 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -73,6 +73,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		this.cinfo = new ComplexInfo(that.cinfo);
 	}
 
+	// FIXME: remove 'double[] y' arg; use internal one instead
 	public static ModelTraceAndEventsImpl replaceRSE(
 			ModelTraceAndEventsImpl that,
 			ReliabilitySimpleReflectogramEventImpl[] rse,

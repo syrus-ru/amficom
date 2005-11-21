@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.134 2005/11/10 13:16:37 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.135 2005/11/21 13:23:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,12 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.134 $, $Date: 2005/11/10 13:16:37 $
+ * @version $Revision: 1.135 $, $Date: 2005/11/21 13:23:34 $
  * @module
  */
 
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.AlarmType.TYPE_LINEBREAK;
 import static com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity.SEVERITY_HARD;
-
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 
@@ -129,6 +128,15 @@ public class CoreAnalysisManager
 	private static native double[] nCalcNoiseArray(double[] y, int lenght);
 
 	/**
+	 * Вычисляет абсолютный уровень шума в дБ.
+	 * @param y входная рефлектограмма
+	 * @param lenght длина, на которой пользователя интересует
+	 * уровень шума, или 0, если шум нужен на всей y.length
+	 * @return массив [length > 0 ? length : y.length]
+	 */
+	private static native double[] nCalcAbsNoiseArray(double[] y, int lenght);
+
+	/**
 	 * Метод определяет длину рефлектограммы "до конца волокна".
 	 * Алгоритм определения довольно прост, тип поиска "первого нуля",
 	 * но его все равно имеет смысл вынести в native-код.
@@ -179,6 +187,11 @@ public class CoreAnalysisManager
 		for (int i = 0; i < ret.length; i++)
 			ret[i] *= 3.0;
 		return ret;
+	}
+
+	//@todo: performance: generata noise and AbsNoise together
+	protected static double[] calcAbsNoiseArray(double[] y, int length) {
+		return nCalcAbsNoiseArray(y, length);
 	}
 
 	/**
@@ -319,7 +332,7 @@ public class CoreAnalysisManager
 		// данные рефлектограммы
 		double[] yRaw = trace.getRawTrace();
 		double[] yFilteredClone = trace.getFilteredTraceClone();
-		res.y = yFilteredClone;
+		res.yTrace = yFilteredClone;
 		res.deltaX = trace.getResolution();
 		res.ior = trace.getIOR();
 		res.pulseWidth = trace.getPulsewidth();
@@ -327,7 +340,9 @@ public class CoreAnalysisManager
 		res.traceLength = calcTraceLength(yRaw);
 		if (needNoise) {
 			double[] noise = calcNoiseArray(yRaw, res.traceLength); // slow
+			double[] absNoise = calcAbsNoiseArray(yRaw, res.traceLength); // slow // FIXME: call one of them only
 			res.setNoise(noise);
+			res.yCorr = calcYCorr(res.yTrace, absNoise, res.traceLength);
 		} else {
 			res.setNoise(null);
 		}
@@ -336,6 +351,22 @@ public class CoreAnalysisManager
 				+ " res.traceLength=" + res.traceLength, FINER);
 
 		return res;
+	}
+
+	// Корректируем рефлектограмму по уровню шума.
+	// Это частичная компенсация нелинейности логарифмической шкалы.
+	// XXX: надо бы реализовать полноценный учет логарифмической шкалы.
+	private static double[] calcYCorr(double[]yRaw, double[]absNoise, int len) {
+		double[] yCorr = new double[len];
+		final double DELTA = 0.0;
+		for (int i = 0; i < len; i++) {
+			yCorr[i] = yRaw[i];
+			if (yCorr[i] < absNoise[i] + DELTA) {
+//				System.out.println("yCorr[" + i + "] changed from " + yCorr[i] + " to " + (absNoise[i] + DELTA)); // FIXME
+				yCorr[i] = absNoise[i] + DELTA;
+			}
+		}
+		return yCorr;
 	}
 
 	/**
@@ -373,7 +404,7 @@ public class CoreAnalysisManager
 		// формирование событий по усредненной кривой
 
 		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
-				tpa.y,
+				tpa.yCorr,
 				tpa.deltaX,
 				ap.getEventTh(),
 				ap.getSpliceTh(),
@@ -400,7 +431,7 @@ public class CoreAnalysisManager
 			? rse[rse.length - 1].getEnd() + 1
 			: 0;
 
-		Log.debugMessage("y.length=" + tpa.y.length
+		Log.debugMessage("y.length=" + tpa.yTrace.length
 				+ " tpa.traceLength=" + tpa.traceLength
 				+ " rse.traceLength=" + traceLength, FINER);
 
@@ -408,7 +439,21 @@ public class CoreAnalysisManager
 
 		// фитируем
 
-		ModelFunction mf = fitTrace(tpa.y, traceLength, tpa.noiseAv, rse);
+		// Фитируем по yCorr, а не tpa.yTrace.
+
+		// --- размышления, которые удалим попозже ---
+		// Против этого были такие возражения, смысл которых я уже забыл:
+		// 1. создавать MTAEI желательно по той же р/г, что и фитировать.
+		// 2. MTAEI может создаваться не только здесь, но и в других местах,
+		// в которых про нашу yCorr ничего не знают (т.к. она зависит от шума).
+		// На них сейчас видятся такие ответы,
+		// 1. зачем?
+		// 2. больше нигде MTAEI создаваться не должен (реально он создается
+		// только здесь и при редактировании списка событий - но там
+		// а.к. не изменяется), а ComplexInfo вычисляется только
+		// при создании MTAEI
+
+		ModelFunction mf = fitTrace(tpa.yCorr, traceLength, tpa.noiseAv, rse);
 
 		long t3 = System.nanoTime();
 
@@ -418,7 +463,7 @@ public class CoreAnalysisManager
 		// многих р/г используются только для эталона, а у него maxDev/rmsDev
 		// не используются.
 		ModelTraceAndEventsImpl mtae =
-			new ModelTraceAndEventsImpl(rse, mf, tpa.y, tpa.deltaX);
+			new ModelTraceAndEventsImpl(rse, mf, tpa.yTrace, tpa.deltaX);
 
 		long t4 = System.nanoTime();
 
@@ -479,11 +524,11 @@ public class CoreAnalysisManager
 				makePreAnalysis(it.next(), needNoiseInfo);
 
 			if (isFirst) {
-				double[] y = tpa.y.clone(); // double[] array copying
-				res.av = new TracePreAnalysis(tpa, y);
+				res.av = new TracePreAnalysis(tpa);
 			} else {
 				res.av.setMinLength(tpa.traceLength);
-				addDoubleArray(res.av.y, tpa.y, res.av.traceLength);
+				addDoubleArray(res.av.yTrace, tpa.yTrace, res.av.traceLength);
+				addDoubleArray(res.av.yCorr, tpa.yCorr, res.av.traceLength);
 				res.av.checkTracesCompatibility(tpa);
 			}
 
@@ -515,7 +560,8 @@ public class CoreAnalysisManager
 
 		// convert sum to average for avY
 		for (int i = 0; i < res.av.traceLength; i++) {
-			res.av.y[i] /= N_TRACES;
+			res.av.yTrace[i] /= N_TRACES;
+			res.av.yCorr[i] /= N_TRACES;
 		}
 
 		if (needNoiseInfo) {
@@ -529,7 +575,7 @@ public class CoreAnalysisManager
 			// make noiseAv
 			res.av.noiseAv = N_TRACES == 1
 				? (double[])noiseAcc.clone() // XXX: нужно ли клонирование? если да, то, возможно, оно делается не везде где надо
-				: calcNoiseArray(res.av.y, res.av.traceLength);
+				: calcNoiseArray(res.av.yTrace, res.av.traceLength);
 		}
 
 		// XXX: в принципе, здесь бы неплохо провести усечение тех массивов
@@ -562,7 +608,7 @@ public class CoreAnalysisManager
 			AnalysisParameters ap) {
 		TracePreAnalysis tpa = makePreAnalysis(trace, true);
 		ModelTraceAndEventsImpl mtae = makeAnalysis(tpa, ap);
-		return new AnalysisResult(tpa.y.length, tpa.traceLength, mtae);
+		return new AnalysisResult(tpa.yTrace.length, tpa.traceLength, mtae);
 	}
 
 	/**
@@ -577,7 +623,7 @@ public class CoreAnalysisManager
 			AnalysisParameters ap) {
 		TracePreAnalysis tpa = makePreAnalysis(new PFTrace(bs), true);
 		ModelTraceAndEventsImpl mtae = makeAnalysis(tpa, ap);
-		return new AnalysisResult(tpa.y.length, tpa.traceLength, mtae);
+		return new AnalysisResult(tpa.yTrace.length, tpa.traceLength, mtae);
 	}
 
 	/**
@@ -627,7 +673,7 @@ public class CoreAnalysisManager
 		}
 		else {
 			// extend to a single curve: original (noisy) _trace_
-			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN,
+			mtm.updateThreshToContain(av.av.yCorr, av.av.yCorr, MTM_DY_MARGIN,
 					MTM_DY_FACTOR_TR_BASED);
 		}
 		Log.debugMessage("makeEtalon: rslting MTM: " + mtm, Level.FINEST);
@@ -689,7 +735,7 @@ public class CoreAnalysisManager
 		double bestDistance = 0;
 		for (PFTrace tr: trColl) {
 			double[] y = tr.getFilteredTrace();
-			double distance = ReflectogramComparer.getMaxDeviation(av.av.y,
+			double distance = ReflectogramComparer.getMaxDeviation(av.av.yCorr,
 					y,
 					av.av.traceLength);
 			if (nearest == null || distance < bestDistance) {
