@@ -1,5 +1,5 @@
 /*-
-* $Id: DefaultPopupMessageReceiver.java,v 1.3 2005/11/08 13:57:03 bob Exp $
+* $Id: DefaultPopupMessageReceiver.java,v 1.4 2005/11/22 11:27:16 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.eventv2.Event;
@@ -33,7 +32,7 @@ import com.syrus.AMFICOM.eventv2.PopupNotificationEvent;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/11/08 13:57:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/22 11:27:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -52,7 +51,7 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 		if (event instanceof PopupNotificationEvent) {
 			final PopupNotificationEvent popupNotificationEvent = 
 				(PopupNotificationEvent) event;			
-			this.addMessage(popupNotificationEvent.getMessage());
+			this.addMessage(popupNotificationEvent);
 		}		
 	}
 	
@@ -60,8 +59,8 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 		this.model.clear();		
 	}
 	
-	void addMessage(final String message) {
-		this.model.addElement(CommonUIUtilities.convertToHTMLString(message));
+	void addMessage(final PopupNotificationEvent notificationEvent) {
+		this.model.addElement(notificationEvent);
 		if (!this.dialog.isVisible()) {
 			this.dialog.setVisible(true);
 		}
@@ -70,6 +69,7 @@ public final class DefaultPopupMessageReceiver implements PopupMessageReceiver {
 	private void createUI() {
 		this.model = new DefaultListModel();
 		final JList list = new JList(this.model);
+		list.setCellRenderer(new PopupNotificationCellRenderer());
 		this.dialog = new JDialog();
 		this.dialog.setTitle(
 			I18N.getString("Common.ClientServantManager.NotificationMessage"));
