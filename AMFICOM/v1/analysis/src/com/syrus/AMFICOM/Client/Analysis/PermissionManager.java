@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.9 2005/10/31 12:30:22 bass Exp $
+ * $Id: PermissionManager.java,v 1.10 2005/11/22 11:17:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.Client.Analysis;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,9 +18,11 @@ import com.syrus.AMFICOM.general.Checker;
 import com.syrus.util.Log;
 
 /**
+ * Описывает права и обеспечивает их трансляцию в Checker.
+ * Позволяет использовать кэширование прав.
  * @author saa
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/10/31 12:30:22 $
+ * @author $Author: saa $
+ * @version $Revision: 1.10 $, $Date: 2005/11/22 11:17:31 $
  * @module analysis
  */
 public class PermissionManager {
@@ -38,15 +41,29 @@ public class PermissionManager {
 	private static Map<Operation, PermissionCodename> defaultTranslation;
 	private static Map<Operation, PermissionCodename> currentTranslation;
 
+	private static boolean cacheable = false;
+	private static Map<Operation, Boolean> cache = null;
+
 	public static boolean isPermitted(Operation op) {
+		// read cache
+		if (cacheable && cache != null && cache.containsKey(op))
+			return cache.get(op).booleanValue();
 		PermissionCodename code = currentTranslation.get(op);
 		if (code == null) {
 			// the functionality requested is not defined for this mode
 			return false;
 		}
 		try {
-//			System.err.println("Permission checked for " + op);
-			return Checker.isPermitted(code);
+			final long t0 = System.nanoTime();
+			final boolean permitted = Checker.isPermitted(code);
+			final long t1 = System.nanoTime();
+			Log.debugMessage("Permission checked for " + op + " in " + (t1 - t0) / 1e6 + " ms", Level.FINEST);
+			if (cacheable) {
+				if (cache == null)
+					cache = new HashMap<Operation, Boolean>();
+				cache.put(op, Boolean.valueOf(permitted));
+			}
+			return permitted;
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);
 			// XXX: if an ApplicationException happens, treat as 'disallow'
@@ -59,24 +76,45 @@ public class PermissionManager {
 	 */
 	public static void setAnalysisTranslation() {
 		currentTranslation = analysisTranslation;
+		resetCache();
 	}
 	/**
 	 * Sets Reseach permissions mode
 	 */
 	public static void setReseachTranslation() {
 		currentTranslation = researchTranslation;
+		resetCache();
 	}
 	/**
 	 * Sets Evaluation permissions mode
 	 */
 	public static void setEvaluationTranslation() {
 		currentTranslation = evaluationTranslation;
+		resetCache();
 	}
 	/**
 	 * Sets default permissions mode, nothing allowed
 	 */
 	public static void setDefaultTranslation() {
 		currentTranslation = defaultTranslation;
+		resetCache();
+	}
+
+	/**
+	 * Разрешает/запрещает кэширование прав
+	 * @param cacheable true для включения кэша прав
+	 */
+	public static void setCacheable(boolean cacheable) {
+		PermissionManager.cacheable = cacheable;
+		if (!cacheable)
+			resetCache();
+	}
+
+	/**
+	 * Сбрасывает кэшированные права
+	 */
+	public static void resetCache() {
+		cache = null;
 	}
 
 	static {

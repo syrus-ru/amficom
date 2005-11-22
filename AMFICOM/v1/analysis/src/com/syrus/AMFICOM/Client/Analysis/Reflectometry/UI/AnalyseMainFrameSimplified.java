@@ -162,6 +162,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	@Override
 	public void initModule() {
 		super.initModule();
+		PermissionManager.setCacheable(true);
 		initFrames();
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -237,6 +238,8 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	@Override
 	public void loggedIn() {
+		PermissionManager.resetCache();
+
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		final boolean readFilePermitted =
@@ -254,6 +257,8 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	@Override
 	public void loggedOut() {
+		PermissionManager.resetCache();
+
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen", false);

@@ -373,6 +373,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	@Override
 	public void initModule() {
 		super.initModule();
+		PermissionManager.setCacheable(true);
 		initFrames();
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -484,6 +485,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 	
 	@Override
 	public void loggedIn() {
+		PermissionManager.resetCache();
+
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		final boolean readFilePermitted =
@@ -501,6 +504,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 	@Override
 	public void loggedOut() {
+		PermissionManager.resetCache();
+
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen", false);

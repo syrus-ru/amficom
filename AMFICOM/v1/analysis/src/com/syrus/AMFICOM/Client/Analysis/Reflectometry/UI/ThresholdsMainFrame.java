@@ -200,6 +200,7 @@ implements BsHashChangeListener, EtalonMTMListener,
 	@Override
 	protected void initModule() {
 		super.initModule();
+		PermissionManager.setCacheable(true);
 		initFrames();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -295,6 +296,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 	@Override
 	public void loggedIn() {
+		PermissionManager.resetCache();
+
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		final boolean readFilePermitted =
 			PermissionManager.isPermitted(Operation.READ_TRACE_FILE);
@@ -311,6 +314,8 @@ implements BsHashChangeListener, EtalonMTMListener,
 
 	@Override
 	public void loggedOut() {
+		PermissionManager.resetCache();
+
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuFileOpen", false);
