@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultEmailNotificationEvent.java,v 1.2 2005/11/17 16:22:31 bass Exp $
+ * $Id: DefaultEmailNotificationEvent.java,v 1.3 2005/11/22 19:33:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.eventv2.corba.IdlEmailNotificationEventHelper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/11/17 16:22:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/22 19:33:13 $
  * @module event
  */
 public final class DefaultEmailNotificationEvent extends
@@ -50,13 +50,14 @@ public final class DefaultEmailNotificationEvent extends
 
 	private DefaultEmailNotificationEvent(
 			final LineMismatchEvent lineMismatchEvent,
-			final String address) {
+			final String address,
+			final String message) {
 		assert address != null : NON_NULL_EXPECTED;
 		assert address.length() != 0 : NON_EMPTY_EXPECTED;
 
 		this.email = address;
 		this.subject = lineMismatchEvent.getSeverity().getLocalizedName();
-		this.message = lineMismatchEvent.getMessage();
+		this.message = message;
 	}
 
 	/**
@@ -75,8 +76,9 @@ public final class DefaultEmailNotificationEvent extends
 
 	public static EmailNotificationEvent valueOf(
 			final LineMismatchEvent lineMismatchEvent,
-			final String address) {
-		return new DefaultEmailNotificationEvent(lineMismatchEvent, address);
+			final String address,
+			final String message) {
+		return new DefaultEmailNotificationEvent(lineMismatchEvent, address, message);
 	}
 
 	/**

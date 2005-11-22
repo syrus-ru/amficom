@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.11 2005/11/22 10:26:57 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.12 2005/11/22 19:33:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,25 +48,49 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.leserver.corba.EventServerPackage.IdlEventProcessingException;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
+import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/11/22 10:26:57 $
+ * @version $Revision: 1.12 $, $Date: 2005/11/22 19:33:13 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
+	private static final char NEWLINE = '\n';
+
+	private static final char SPACE = ' ';
+
+	private static final String COLON_TAB = ":\t";
+
+	private static final String RANGE = " .. ";
+
+	private static final String PHYSICAL_DISTANCE_TO = I18N.getString("NotificationEvent.PhysicalDistanceTo");
+
+	private static final String METERS = I18N.getString("NotificationEvent.Meters");
+
+	private static final String END_OF = I18N.getString("NotificationEvent.EndOf");
+
+	private static final String START_OF = I18N.getString("NotificationEvent.StartOf");
+
+	private static final String PATH_ELEMENT_GENITIVE = I18N.getString("NotificationEvent.PathElementGenitive");
+
+	private static final String PATH_ELEMENT = I18N.getString("NotificationEvent.PathElement");
+
+	private static final String AFFECTED = I18N.getString("NotificationEvent.Affected");
+
+	private static final String MISMATCH_LEVEL = I18N.getString("NotificationEvent.MismatchLevel");
+
+	private static final String MISMATCH_CREATED = I18N.getString("NotificationEvent.MismatchCreated");
+
+
 	private static Identifier creatorId = null;
 
 	private static Identifier characteristicTypeId = null;
 
 	private static StorableObjectCondition condition = null;
-
-
-
-
-	
 
 	/**
 	 * @see EventProcessor#getEventType()
@@ -104,6 +128,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 				final PopupNotificationEvent popupNotificationEvent =
 						DefaultPopupNotificationEvent.valueOf(
 								lineMismatchEvent,
+								createMessage(lineMismatchEvent),
 								systemUserId);
 				notificationEvents[i++] = popupNotificationEvent.getTransferable(orb);
 			}
@@ -111,6 +136,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 				final EmailNotificationEvent emailNotificationEvent =
 							DefaultEmailNotificationEvent.valueOf(
 									lineMismatchEvent,
+									createMessage(lineMismatchEvent),
 									address);
 				notificationEvents[i++] = emailNotificationEvent.getTransferable(orb);
 			}
@@ -130,7 +156,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 		}
 	}
 
-	private Set<String> getAddresses(final Set<Identifier> systemUserIds) throws ApplicationException {
+	private static Set<String> getAddresses(final Set<Identifier> systemUserIds) throws ApplicationException {
 		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(
 				new CompoundCondition(
 						getCondition(),
@@ -144,6 +170,28 @@ final class LineMismatchEventProcessor implements EventProcessor {
 			addresses.add(characteristic.getValue());
 		}
 		return addresses;
+	}
+
+	/**
+	 * @return a plain-text, human-readable, localized representaion of
+	 *         the {@link ReflectogramMismatch mismatch} that triggerred
+	 *         this event's generation.
+	 */
+	private static String createMessage(final LineMismatchEvent lineMismatchEvent) {
+		return MISMATCH_CREATED + COLON_TAB + EasyDateFormatter.formatDate(lineMismatchEvent.getMismatchCreated())
+				+ NEWLINE
+				+ lineMismatchEvent.getSeverity().getLocalizedDescription() + NEWLINE
+				+ lineMismatchEvent.getAlarmType().getLocalizedDescription() + NEWLINE
+				+ NEWLINE
+				+ AFFECTED + SPACE + PATH_ELEMENT + COLON_TAB + lineMismatchEvent.getAffectedPathElementId() + NEWLINE
+				+ (lineMismatchEvent.isAffectedPathElementSpacious()
+						? PHYSICAL_DISTANCE_TO + SPACE + START_OF + SPACE + PATH_ELEMENT_GENITIVE + COLON_TAB + ((int) lineMismatchEvent.getPhysicalDistanceToStart()) + SPACE + METERS + NEWLINE
+						+ PHYSICAL_DISTANCE_TO + SPACE + END_OF + SPACE + PATH_ELEMENT_GENITIVE + COLON_TAB + ((int) lineMismatchEvent.getPhysicalDistanceToEnd()) + SPACE + METERS + NEWLINE
+						: "")
+				+ NEWLINE
+				+ (lineMismatchEvent.hasMismatch()
+						? MISMATCH_LEVEL + COLON_TAB + lineMismatchEvent.getMinMismatch() + RANGE + lineMismatchEvent.getMaxMismatch() + NEWLINE
+						: "");
 	}
 
 	private static StorableObjectCondition getCondition() {

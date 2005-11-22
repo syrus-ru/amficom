@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultPopupNotificationEvent.java,v 1.12 2005/11/17 16:21:38 bass Exp $
+ * $Id: DefaultPopupNotificationEvent.java,v 1.13 2005/11/22 19:33:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/11/17 16:21:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/11/22 19:33:13 $
  * @module event
  */
 public final class DefaultPopupNotificationEvent extends
@@ -79,9 +79,10 @@ public final class DefaultPopupNotificationEvent extends
 
 	private DefaultPopupNotificationEvent(
 			final LineMismatchEvent lineMismatchEvent,
+			final String message,
 			final Identifier targetUserId) {
 		this.targetUserId = targetUserId;
-		this.message = lineMismatchEvent.getMessage();
+		this.message = message;
 		this.resultId = lineMismatchEvent.getResultId();
 		this.mismatchOpticalDistance = lineMismatchEvent.getMismatchOpticalDistance();
 		this.mismatchPhysicalDistance = lineMismatchEvent.getMismatchPhysicalDistance();
@@ -111,8 +112,10 @@ public final class DefaultPopupNotificationEvent extends
 
 	public static PopupNotificationEvent valueOf(
 			final LineMismatchEvent lineMismatchEvent,
+			final String message,
 			final Identifier targetUserId) {
 		return new DefaultPopupNotificationEvent(lineMismatchEvent,
+				message,
 				targetUserId);
 	}
 
