@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.127 2005/11/09 10:58:59 bass Exp $
+ * $Id: StorableObject.java,v 1.128 2005/11/22 09:50:14 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 import com.syrus.util.TransferableObject;
 
 /**
- * @version $Revision: 1.127 $, $Date: 2005/11/09 10:58:59 $
+ * @version $Revision: 1.128 $, $Date: 2005/11/22 09:50:14 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -72,14 +72,17 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	}
 
 	/**
-	 * Client-side constructor.
+	 * Constructor used by clients (via {@code createInstance(...)} methods)
+	 * or SQL database drivers (directly, see {@link
+	 * StorableObjectDatabase#updateEntityFromResultSet(StorableObject, java.sql.ResultSet)}).
 	 *
 	 * @param id
-	 * @param created
-	 * @param modified
+	 * @param created my be {@code null}. In this case, current date will be used.
+	 * @param modified my be {@code null}. In this case, current date will be used.
 	 * @param creatorId
 	 * @param modifierId
 	 * @param version
+	 * @see StorableObjectDatabase#updateEntityFromResultSet(StorableObject, java.sql.ResultSet)
 	 */
 	protected StorableObject(final Identifier id,
 			final Date created,
@@ -88,8 +91,8 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 			final Identifier modifierId,
 			final StorableObjectVersion version) {
 		this.id = id;
-		this.created = new Date(created.getTime());
-		this.modified = new Date(modified.getTime());
+		this.created = new Date(created == null ? System.currentTimeMillis() : created.getTime());
+		this.modified = new Date(modified == null ? System.currentTimeMillis() : modified.getTime());
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
@@ -668,7 +671,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.127 $, $Date: 2005/11/09 10:58:59 $
+	 * @version $Revision: 1.128 $, $Date: 2005/11/22 09:50:14 $
 	 * @module general
 	 */
 	@Crutch134(notes = "This class should be made final.")
@@ -793,7 +796,7 @@ public abstract class StorableObject<T extends StorableObject<T>> implements Ide
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.127 $, $Date: 2005/11/09 10:58:59 $
+	 * @version $Revision: 1.128 $, $Date: 2005/11/22 09:50:14 $
 	 * @module general
 	 */
 	@Retention(SOURCE)
