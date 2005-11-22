@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.137 2005/11/21 17:55:44 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.138 2005/11/22 11:15:09 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.137 $, $Date: 2005/11/21 17:55:44 $
+ * @version $Revision: 1.138 $, $Date: 2005/11/22 11:15:09 $
  * @module
  */
 
@@ -546,7 +546,8 @@ public class CoreAnalysisManager
 			} else {
 				res.av.setMinLength(tpa.traceLength);
 				addDoubleArray(res.av.yTrace, tpa.yTrace, res.av.traceLength);
-				addDoubleArray(res.av.yCorr, tpa.yCorr, res.av.traceLength);
+				if (needNoiseInfo)
+					addDoubleArray(res.av.yCorr, tpa.yCorr, res.av.traceLength);
 				res.av.checkTracesCompatibility(tpa);
 			}
 
@@ -579,10 +580,12 @@ public class CoreAnalysisManager
 		// convert sum to average for avY
 		for (int i = 0; i < res.av.traceLength; i++) {
 			res.av.yTrace[i] /= N_TRACES;
-			res.av.yCorr[i] /= N_TRACES;
 		}
 
 		if (needNoiseInfo) {
+			for (int i = 0; i < res.av.traceLength; i++) {
+				res.av.yCorr[i] /= N_TRACES;
+			}
 			// convert sum to average for avNoise
 			for (int i = 0; i < res.av.traceLength; i++) {
 				noiseAcc[i] /= N_TRACES;
@@ -743,7 +746,7 @@ public class CoreAnalysisManager
 	 * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
 	 * @param trColl непустая входная коллекция рефлектограмм
 	 * @param av заранее найденное значение по этой коллекции TracesAverages
-	 *   (в нем не нужны ни noiseInfo, ни MFInfo)
+	 *   (в нем не нужны ни noiseInfo, ни av.yCorr, ни MFInfo)
 	 * @return самую среднюю рефлектограмму среди входных
 	 */
 	protected static PFTrace getMostTypicalTrace(
@@ -753,7 +756,8 @@ public class CoreAnalysisManager
 		double bestDistance = 0;
 		for (PFTrace tr: trColl) {
 			double[] y = tr.getFilteredTrace();
-			double distance = ReflectogramComparer.getMaxDeviation(av.av.yCorr,
+			// NB; используем av.av.yTrace, а не av.av.yCorr, которая может быть не определена
+			double distance = ReflectogramComparer.getMaxDeviation(av.av.yTrace,
 					y,
 					av.av.traceLength);
 			if (nearest == null || distance < bestDistance) {
