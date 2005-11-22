@@ -1,10 +1,10 @@
 /*-
-* $Id: Checker.java,v 1.7 2005/10/24 09:09:34 bob Exp $
-*
-* Copyright ¿ 2005 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: Checker.java,v 1.8 2005/11/22 14:21:17 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.general;
 
@@ -19,13 +19,12 @@ import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
-
 /**
  * 
  * Permission checker for a user logged in 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/10/24 09:09:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/11/22 14:21:17 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module csbridge
  */
@@ -38,10 +37,15 @@ public abstract class Checker {
 	/**
 	 * @param codename permission codename
 	 * @return true if permission for login user is enable
-	 * @throws ApplicationException 
+	 * @throws ApplicationException
+	 * @throws IllegalStateException if not logged in. 
 	 */
 	public static boolean isPermitted(final PermissionCodename codename) 
 	throws ApplicationException {
+		if (!LoginManager.isLoggedIn()) {
+			throw new IllegalStateException();
+		}
+
 		final Identifier domainId = LoginManager.getDomainId();
 		final Identifier userId = LoginManager.getUserId();		
 
