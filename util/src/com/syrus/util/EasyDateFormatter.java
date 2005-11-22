@@ -1,5 +1,5 @@
 /*-
- * $Id: EasyDateFormatter.java,v 1.2 2005/08/17 10:22:29 saa Exp $
+ * $Id: EasyDateFormatter.java,v 1.3 2005/11/22 18:47:19 bass Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,41 +17,45 @@ import java.util.Date;
  * Обеспечивает отличие результирующих строк для разных исходных дат
  * при переходе с летнего времени на зимнее.
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/08/17 10:22:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/11/22 18:47:19 $
  * @module util
  */
-public class EasyDateFormatter {
-	private static SimpleDateFormat sdf =
+public final class EasyDateFormatter {
+	private static final SimpleDateFormat SDF =
 		new SimpleDateFormat("yyyy.MM.dd/HH:mm:ss");
-	private static SimpleDateFormat sdfFull =
+	private static final SimpleDateFormat SDF_FULL =
 		new SimpleDateFormat("yyyy.MM.dd/HH:mm:ss/z");
+
+	private EasyDateFormatter() {
+		assert false;
+	}
 
 	/**
 	 * Formats date with default mode of detection
 	 */
-	public static final String formatDate(Date date) {
+	public static String formatDate(final Date date) {
 		return formatDateCareful(date);
 	}
 
 	/**
 	 * Formats date in simple mode (without timezone)
 	 */
-	protected static final String formatDateSimple(Date date) {
-		return sdf.format(date);
+	protected static String formatDateSimple(final Date date) {
+		return SDF.format(date);
 	}
 
 	/**
 	 * Formats date in full mode (with timezone)
 	 */
-	protected static final String formatDateFull(Date date) {
-		return sdfFull.format(date);
+	protected static String formatDateFull(final Date date) {
+		return SDF_FULL.format(date);
 	}
 
 	/**
 	 * Formats date carefully: use full mode if needed, otherwise simple mode
 	 */
-	protected static final String formatDateCareful(Date date) {
+	protected static String formatDateCareful(final Date date) {
 		return needFullFormat(date)
 					? formatDateFull(date)
 					: formatDateSimple(date); 
@@ -63,14 +67,14 @@ public class EasyDateFormatter {
 	 * @param date date to be checked
 	 * @return true if timezone info is needed to get an unambiguous string
 	 */
-	protected static boolean needFullFormat(Date date){
-		Calendar cal = Calendar.getInstance();
+	protected static boolean needFullFormat(final Date date){
+		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
-		String base = formatDateSimple(cal.getTime());
+		final String base = formatDateSimple(cal.getTime());
 		cal.add(Calendar.HOUR, 1);
-		String val1 = formatDateSimple(cal.getTime());
+		final String val1 = formatDateSimple(cal.getTime());
 		cal.add(Calendar.HOUR, -2);
-		String val2  = formatDateSimple(cal.getTime());
+		final String val2  = formatDateSimple(cal.getTime());
 		return base.equals(val1) || base.equals(val2);
 	}
 }
