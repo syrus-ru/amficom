@@ -1,5 +1,5 @@
 /*-
- * $$Id: PhysicalLinkController.java,v 1.36 2005/10/26 14:17:34 krupenn Exp $$
+ * $$Id: PhysicalLinkController.java,v 1.37 2005/11/22 15:04:49 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
@@ -29,12 +30,13 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.util.Log;
 
 /**
  * Контроллер линейного элемента карты.
  * 
- * @version $Revision: 1.36 $, $Date: 2005/10/26 14:17:34 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.37 $, $Date: 2005/11/22 15:04:49 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -85,7 +87,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 					+ MapViewController.getMapElementReadableType(emne)
 					+ "]"; //$NON-NLS-1$
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage(e, Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return s1 + s2 + s3;
 	}

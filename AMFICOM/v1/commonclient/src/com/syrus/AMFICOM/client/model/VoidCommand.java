@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.3 2005/09/08 14:25:57 bob Exp $
+ * $Id: VoidCommand.java,v 1.4 2005/11/22 15:04:49 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,14 +11,18 @@
 
 package com.syrus.AMFICOM.client.model;
 
+import java.util.logging.Level;
+
+import com.syrus.util.Log;
+
 /**
  * Заглушка для команды (пустая команда)
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/09/08 14:25:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/11/22 15:04:49 $
  * @module commonclient
- * @author $Author: bob $
+ * @author $Author: bass $
  */
 public final class VoidCommand extends AbstractCommand {
 
@@ -47,7 +51,7 @@ public final class VoidCommand extends AbstractCommand {
 		try {
 			throw new Exception("Void command executed for " + this.source + " - ignored");
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
+			Log.debugMessage(e, Level.FINE);
 		}
 	}
 
@@ -59,38 +63,34 @@ public final class VoidCommand extends AbstractCommand {
 	// пустая команда не выполняет никаких действий
 	@Override
 	public void undo() {
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(),
-			"Void command undo() - ignored");
+		Log.debugMessage("method call", Level.FINER);
 
 	}
 
 	// пустая команда не выполняет никаких действий
 	@Override
 	public void redo() {
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(),
-			"Void command redo() - defaults to \'EXECUTE\'");
+		Log.debugMessage("method call", Level.FINER);
 		execute();
 	}
 
 	// пустая команда не выполняет никаких действий
 	@Override
 	public void commitExecute() {
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(),
-			"Void command execution commit() - ignored");
+		Log.debugMessage("method call", Level.FINER);
 	}
 
 	// пустая команда не выполняет никаких действий
 	@Override
 	public void commitUndo() {
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(),
-			"Void command undo commit() - ignored");
+		Log.debugMessage("method call", Level.FINER);
 	}
 
 	// у пустой команды нет источника
 	@Override
 	public Object getSource() {
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call for Void command, ret val " + this.source
-				+ " - ignored", getClass().getName(), "getSource()");
+		Log.debugMessage("method call for Void command, ret val " + this.source
+		+ " - ignored", Level.FINER);
 
 		return null;
 	}
@@ -103,7 +103,7 @@ public final class VoidCommand extends AbstractCommand {
 			throw new Exception("Set for Void command paramenter " + field + " to value " + value.toString()
 					+ " - ignored");
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
+			Log.debugMessage(e, Level.FINE);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $$Id: MeasurementPathController.java,v 1.45 2005/10/27 10:16:08 bass Exp $$
+ * $$Id: MeasurementPathController.java,v 1.46 2005/11/22 15:04:49 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -38,11 +39,12 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
+import com.syrus.util.Log;
 
 /**
  * Контроллер топологическиго пути.
  * 
- * @version $Revision: 1.45 $, $Date: 2005/10/27 10:16:08 $
+ * @version $Revision: 1.46 $, $Date: 2005/11/22 15:04:49 $
  * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
@@ -128,7 +130,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 					+ MapViewController.getMapElementReadableType(emne)
 					+ "]"; //$NON-NLS-1$
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage(e, Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return s1 + s2 + s3;
 	}

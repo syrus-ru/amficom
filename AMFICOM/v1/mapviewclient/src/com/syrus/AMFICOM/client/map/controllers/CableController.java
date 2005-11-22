@@ -1,5 +1,5 @@
 /*-
- * $$Id: CableController.java,v 1.41 2005/10/18 07:21:12 krupenn Exp $$
+ * $$Id: CableController.java,v 1.42 2005/11/22 15:04:49 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -38,12 +39,13 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.util.Log;
 
 /**
  * Контроллер кабеля.
  * 
- * @version $Revision: 1.41 $, $Date: 2005/10/18 07:21:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/11/22 15:04:49 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -146,7 +148,7 @@ public final class CableController extends AbstractLinkController {
 					+ MapViewController.getMapElementReadableType(emne)
 					+ "]"; //$NON-NLS-1$
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage(e, Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return s1 + s2 + s3;
 	}

@@ -6,15 +6,17 @@
 package com.syrus.AMFICOM.client.UI;
 
 import java.beans.PropertyVetoException;
+import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/08 14:25:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/11/22 15:04:49 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -71,7 +73,7 @@ public class WindowCommand implements Command {
 		try {
 			throw new Exception("dummy");
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
+			Log.debugMessage(e, Level.FINE);
 		}
 	}
 

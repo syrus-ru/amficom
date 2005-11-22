@@ -1,5 +1,5 @@
 /*-
- * $$Id: NodeLinkController.java,v 1.28 2005/10/11 08:52:25 krupenn Exp $$
+ * $$Id: NodeLinkController.java,v 1.29 2005/11/22 15:04:49 bass Exp $$
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
@@ -32,12 +33,13 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Контроллер фрагмента линии.
  * 
- * @version $Revision: 1.28 $, $Date: 2005/10/11 08:52:25 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2005/11/22 15:04:49 $
+ * @author $Author: bass $
  * @author Andrei Kroupennikov
  * @module mapviewclient
  */
@@ -101,7 +103,7 @@ public final class NodeLinkController extends AbstractLinkController {
 					+ MapViewController.getMapElementReadableType(emne)
 					+ "]"; //$NON-NLS-1$
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage(e, Level.FINER); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return s1 + s2 + s3;
 	}
