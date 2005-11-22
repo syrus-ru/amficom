@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.3 2005/11/18 15:10:29 arseniy Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.4 2005/11/22 09:58:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/11/18 15:10:29 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/11/22 09:58:18 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
@@ -117,13 +117,12 @@ public final class DeliveryAttributesDatabase extends
 	@Override
 	protected DeliveryAttributes updateEntityFromResultSet(final DeliveryAttributes storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		final Date created = new Date();
 		final DeliveryAttributes deliveryAttributes = (storableObject == null)
-			? new DeliveryAttributes(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					created,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					Severity.SEVERITY_NONE)
+				? new DeliveryAttributes(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						Severity.SEVERITY_NONE)
 				: storableObject;
 		deliveryAttributes.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
