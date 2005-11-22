@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenSessionCommand.java,v 1.44 2005/11/08 08:10:47 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.45 2005/11/22 14:21:47 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client.model;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.awt.FontMetrics;
 import java.awt.GridBagConstraints;
@@ -49,8 +51,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.44 $, $Date: 2005/11/08 08:10:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/11/22 14:21:47 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -93,7 +95,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		if (domainIdProperty != null) {
 			this.domainId = new Identifier(domainIdProperty);			
 		} else {
-			this.domainId = Environment.getDomainId();
+			this.domainId = VOID_IDENTIFIER;
 		}
 
 	}

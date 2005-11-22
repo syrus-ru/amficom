@@ -1,9 +1,9 @@
-/*
- * $Id: Environment.java,v 1.16 2005/10/31 12:30:01 bass Exp $
+/*-
+ * $Id: Environment.java,v 1.17 2005/11/22 14:21:47 bass Exp $
  *
- * Copyright © 2004-2005 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.model;
@@ -24,8 +24,6 @@ import java.util.logging.XMLFormatter;
 import javax.swing.JFrame;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.IniFile;
 import com.syrus.util.Log;
 
@@ -33,7 +31,7 @@ import com.syrus.util.Log;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/10/31 12:30:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/11/22 14:21:47 $
  * @module commonclient
  */
 public final class Environment {
@@ -50,11 +48,6 @@ public final class Environment {
 
 	@SuppressWarnings("unused")
 	private static final String	RUN_INSTALLED				= "installed";
-
-	/** Domain */
-	private static final String	FIELD_DOMAIN				= "domain";
-
-	private static Identifier	domainId;
 
 	/** Debug mode */
 	private static final String	FIELD_DEBUG					= "gubed";
@@ -111,12 +104,6 @@ public final class Environment {
 		try {
 			iniFile = new IniFile(iniFileName);
 
-			try {
-				domainId = new Identifier(iniFile.getValue(FIELD_DOMAIN));
-			} catch (Exception e) {
-				domainId = Identifier.VOID_IDENTIFIER;
-			}
-
 			String d_val = iniFile.getValue(FIELD_DEBUG);
 			debugMode = (d_val != null);
 
@@ -131,10 +118,6 @@ public final class Environment {
 
 	private Environment() {
 		assert false;
-	}
-
-	public static Identifier getDomainId() {
-		return domainId;
 	}
 
 	private static void initLog(String lh,
@@ -262,10 +245,6 @@ public final class Environment {
 	@SuppressWarnings("deprecation")
 	private static void saveProperties() {
 		try {
-			domainId = LoginManager.getDomainId();
-			if (domainId != null) {
-				iniFile.setValue(FIELD_DOMAIN, domainId);
-			}
 			iniFile.saveKeys();
 		} catch (Exception ex) {
 			ex.printStackTrace();
