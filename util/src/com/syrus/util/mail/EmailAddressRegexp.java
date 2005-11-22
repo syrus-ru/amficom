@@ -1,5 +1,5 @@
 /*-
- * $Id: EmailAddressRegexp.java,v 1.2 2005/11/03 11:54:31 bass Exp $
+ * $Id: EmailAddressRegexp.java,v 1.3 2005/11/22 11:46:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.util.mail;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/11/03 11:54:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/22 11:46:42 $
  * @module util
  */
 public enum EmailAddressRegexp {
@@ -24,7 +24,7 @@ public enum EmailAddressRegexp {
 	 * Regexp suitable for validation of fully qualified addresses. Courtesy
 	 * of Bugzilla.
 	 */
-	ADVANCED("^[^@]+@[^@]+\\.[^@]+$"),
+	ADVANCED("^[\\w\\.\\+\\-=]+@[\\w\\.\\-]+\\.[\\w\\-]+$"),
 	/**
 	 * <p>An alternative to Bugzilla's Advanced, courtesy of Vladimir ``Bob''
 	 * Dolzhenko.</p>
