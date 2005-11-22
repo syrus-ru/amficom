@@ -19,5 +19,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/filter"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/trove"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reflectometry"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
