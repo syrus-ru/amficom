@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.13 2005/10/31 12:30:11 bass Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.14 2005/11/22 14:23:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/10/31 12:30:11 $
+ * @version $Revision: 1.14 $, $Date: 2005/11/22 14:23:43 $
  * @author $Author: bass $
  * @module mapinfo
  */
@@ -70,7 +70,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 	 */
 	public void stopRendering() {
 		try {
-			this.connection.getMscharServer().stopRenderTopologicalImage(LoginManager.getSessionKey().getTransferable());
+			this.connection.getMscharServer().stopRenderTopologicalImage(LoginManager.getSessionKeyTransferable());
 		} catch (AMFICOMRemoteException e) {
 			Log.errorMessage("loading has been cancelled" + e.getMessage());
 		}
