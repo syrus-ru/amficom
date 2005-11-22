@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.5 2005/11/22 19:29:46 bass Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.6 2005/11/22 20:20:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.TableNames.DELIVERY_ATTRIBUTES_SYSTEM_US
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/11/22 19:29:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/22 20:20:55 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
@@ -151,14 +152,13 @@ public final class DeliveryAttributesDatabase extends
 			final Identifier attributeId = attributes.getId();
 			
 			final Set<Identifier> roleIds = roleIdsMap.get(attributeId);			
-			attributes.setRoleIds0(roleIds);
+			attributes.setRoleIds0(roleIds == null ? Collections.<Identifier>emptySet() : roleIds);
 			
 			final Set<Identifier> userIds = userIdsMap.get(attributeId);
-			attributes.setSystemUserIds0(userIds);
-
+			attributes.setSystemUserIds0(userIds == null ? Collections.<Identifier>emptySet() : userIds);
 		}
 	}
-	
+
 	@Override
 	protected Set<DeliveryAttributes> retrieveByCondition(final String conditionQuery) 
 	throws RetrieveObjectException, IllegalDataException {
