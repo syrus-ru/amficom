@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributesDatabase.java,v 1.4 2005/11/22 09:58:18 bass Exp $
+ * $Id: DeliveryAttributesDatabase.java,v 1.5 2005/11/22 19:29:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.general.TableNames.DELIVERY_ATTRIBUTES_SYSTEM_US
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/11/22 09:58:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/22 19:29:46 $
  * @module event
  */
 public final class DeliveryAttributesDatabase extends
