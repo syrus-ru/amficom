@@ -14,7 +14,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	}
     if (ul_reason_for_call == DLL_PROCESS_DETACH)
 	{
-		prf_print();
+//		prf_print();
 	}
 	return TRUE;
 }
