@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.30 2005/11/16 15:50:04 bass Exp $
+ * $Id: LoginManager.java,v 1.31 2005/11/22 14:20:47 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
@@ -29,24 +30,36 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/11/16 15:50:04 $
+ * @version $Revision: 1.31 $, $Date: 2005/11/22 14:20:47 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public final class LoginManager {
-	private static final IdlSessionKey EMPTY_SESSION_KEY_T = new IdlSessionKey("");
+	/*-********************************************************************
+	 * Constants.                                                         *
+	 **********************************************************************/
+
+	private static final IdlSessionKey EMPTY_IDL_SESSION_KEY = new IdlSessionKey("");
+	private static final SessionKey EMPTY_SESSION_KEY = new SessionKey(EMPTY_IDL_SESSION_KEY);
+
+	/*-********************************************************************
+	 * Static immutable data.                                             *
+	 **********************************************************************/
 
 	private static LoginServerConnectionManager loginServerConnectionManager;
 	private static LoginRestorer loginRestorer;
 
+	/*-********************************************************************
+	 * Stateful data.                                                     *
+	 **********************************************************************/
+
 	private static SessionKey sessionKey;
-	private static IdlSessionKey sessionKeyT;
+	private static IdlSessionKey idlSessionKey;
 	private static Identifier userId;
 	private static Identifier domainId;
 
-	public LoginManager() {
-		// singleton
+	private LoginManager() {
 		assert false;
 	}
 
@@ -54,9 +67,12 @@ public final class LoginManager {
 		resetSessionKey();
 	}
 
-	public static void init(final LoginServerConnectionManager loginServerConnectionManager1, final LoginRestorer loginRestorer1) {
-		loginServerConnectionManager = loginServerConnectionManager1;
-		loginRestorer = loginRestorer1;
+	@SuppressWarnings(value = {"hiding"})
+	public static void init(
+			final LoginServerConnectionManager loginServerConnectionManager,
+			final LoginRestorer loginRestorer) {
+		LoginManager.loginServerConnectionManager = loginServerConnectionManager;
+		LoginManager.loginRestorer = loginRestorer;
 	}
 
 
@@ -86,7 +102,7 @@ public final class LoginManager {
 		assert password != null : NON_NULL_EXPECTED;
 		assert loginDomainId != null : NON_NULL_EXPECTED;
 
-		if (sessionKeyT != EMPTY_SESSION_KEY_T) {
+		if (idlSessionKey != EMPTY_IDL_SESSION_KEY) {
 			throw new LoginException(I18N.getString("Error.AlreadyLoggedIn"), true);
 		}
 
@@ -97,8 +113,8 @@ public final class LoginManager {
 			final IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
 			loginServer.login(login, password, loginDomainId.getTransferable(), localHostName, idlSessionKeyHolder, userIdHolder);
 
-			sessionKeyT = idlSessionKeyHolder.value;
-			sessionKey = new SessionKey(sessionKeyT);
+			idlSessionKey = idlSessionKeyHolder.value;
+			sessionKey = new SessionKey(idlSessionKey);
 			userId = new Identifier(userIdHolder.value);
 			domainId = loginDomainId;
 		} catch (final AMFICOMRemoteException are) {
@@ -125,13 +141,13 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void logout() throws CommunicationException, LoginException {
-		if (sessionKeyT == EMPTY_SESSION_KEY_T) {
+		if (idlSessionKey == EMPTY_IDL_SESSION_KEY) {
 			throw new LoginException(I18N.getString("Error.AlreadyLoggedOut"));
 		}
 
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			loginServer.logout(sessionKeyT);
+			loginServer.logout(idlSessionKey);
 		} catch (AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
 				case IdlErrorCode._ERROR_NOT_LOGGED_IN:
@@ -145,8 +161,6 @@ public final class LoginManager {
 	}
 
 	/**
-	 *
-	 * @return 
 	 * @return true, only when LoginRestorer.restoreLogin() returned true,
 	 * i.e., when user or application decided to restore login
 	 * @throws LoginException
@@ -162,16 +176,30 @@ public final class LoginManager {
 	}
 
 	private static void resetSessionKey() {
-		sessionKeyT = EMPTY_SESSION_KEY_T;
-		sessionKey = new SessionKey(EMPTY_SESSION_KEY_T);
+		idlSessionKey = EMPTY_IDL_SESSION_KEY;
+		sessionKey = EMPTY_SESSION_KEY;
+		userId = VOID_IDENTIFIER;
+		domainId = VOID_IDENTIFIER;
 	}
 
+	/**
+	 * @throws IllegalStateException if not logged in.
+	 */
 	public static SessionKey getSessionKey() {
-		return sessionKey;
+		if (isLoggedIn()) {
+			return sessionKey;
+		}
+		throw new IllegalStateException();
 	}
 
+	/**
+	 * @throws IllegalStateException if not logged in.
+	 */
 	public static IdlSessionKey getSessionKeyTransferable() {
-		return sessionKeyT;
+		if (isLoggedIn()) {
+			return idlSessionKey;
+		}
+		throw new IllegalStateException();
 	}
 
 	/**
@@ -187,15 +215,31 @@ public final class LoginManager {
 		LoginManager.userId = userId;
 	}
 
+	/**
+	 * @throws IllegalStateException if not logged in.
+	 */
 	public static Identifier getUserId() {
-		assert userId != null : NON_NULL_EXPECTED;
-		assert userId.getMajor() == SYSTEMUSER_CODE && !userId.isVoid() : userId;
-		return userId;
+		if (isLoggedIn()) {
+			return userId;
+		}
+		throw new IllegalStateException();
 	}
 
+	/**
+	 * @throws IllegalStateException if not logged in.
+	 */
 	public static Identifier getDomainId() {
-		assert domainId != null : NON_NULL_EXPECTED;
-		assert domainId.getMajor() == DOMAIN_CODE && !domainId.isVoid() : domainId;
-		return domainId;
+		if (isLoggedIn()) {
+			return domainId;
+		}
+		throw new IllegalStateException();
+	}
+
+	public static boolean isLoggedIn() {
+		final boolean loggedIn = (idlSessionKey == EMPTY_IDL_SESSION_KEY);
+		assert loggedIn
+				? userId.getMajor() == SYSTEMUSER_CODE && domainId.getMajor() == DOMAIN_CODE
+				: userId.isVoid() && domainId.isVoid() : userId + "; " + domainId;
+		return loggedIn;
 	}
 }
