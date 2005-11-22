@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.14 2005/11/22 14:23:43 bass Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.15 2005/11/22 14:26:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/11/22 14:23:43 $
+ * @version $Revision: 1.15 $, $Date: 2005/11/22 14:26:56 $
  * @author $Author: bass $
  * @module mapinfo
  */
@@ -70,7 +70,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 	 */
 	public void stopRendering() {
 		try {
-			this.connection.getMscharServer().stopRenderTopologicalImage(LoginManager.getSessionKeyTransferable());
+			this.connection.getMscharServer().stopRenderTopologicalImage(LoginManager.getIdlSessionKey());
 		} catch (AMFICOMRemoteException e) {
 			Log.errorMessage("loading has been cancelled" + e.getMessage());
 		}
@@ -83,7 +83,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		long t0 = 0, t1 = 0, t2 = 0, t3 = 0, t4 = 0;
 		t0 = System.currentTimeMillis();
 		final IdlTopologicalImageQuery transf = query.getTransferable();
-		final IdlSessionKey keyt = LoginManager.getSessionKeyTransferable();
+		final IdlSessionKey keyt = LoginManager.getIdlSessionKey();
 		IdlRenderedImage rit;
 
 		try {
@@ -156,7 +156,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 	
 	public List<MapDescriptor> getMapDescriptors() {
 		final MscharServer serv = this.connection.getMscharServer();
-		final IdlSessionKey idlSessionKey = LoginManager.getSessionKeyTransferable();
+		final IdlSessionKey idlSessionKey = LoginManager.getIdlSessionKey();
 		final IdlMapDescriptor[] idlMapDescriptors;
 		try {
 			idlMapDescriptors = serv.getMapDescriptors(idlSessionKey);
@@ -181,7 +181,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 	
 	private List<LayerDescriptor> getLayerDescriptors(MapDescriptor mapDescriptor) {
 		final MscharServer serv = this.connection.getMscharServer();
-		final IdlSessionKey idlSessionKey = LoginManager.getSessionKeyTransferable();
+		final IdlSessionKey idlSessionKey = LoginManager.getIdlSessionKey();
 		final IdlLayerDescriptor[] idlLayerDescriptors;
 		try {
 			idlLayerDescriptors = serv.getLayerDescriptors(mapDescriptor.getTransferable(),idlSessionKey);
@@ -228,7 +228,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 	
 	private File loadFile(final File localFile, final MapFileDescriptor mapFileDescriptor) {
 		final MscharServer serv = this.connection.getMscharServer();
-		final IdlSessionKey idlSessionKey = LoginManager.getSessionKeyTransferable();
+		final IdlSessionKey idlSessionKey = LoginManager.getIdlSessionKey();
 		boolean eof = false;
 		long offset = 0;
 		File tempFile = new File(localFile.getPath() + ".swp");
