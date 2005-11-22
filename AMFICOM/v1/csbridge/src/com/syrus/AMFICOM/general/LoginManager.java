@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.31 2005/11/22 14:20:47 bass Exp $
+ * $Id: LoginManager.java,v 1.32 2005/11/22 14:26:25 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/11/22 14:20:47 $
+ * @version $Revision: 1.32 $, $Date: 2005/11/22 14:26:25 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -195,7 +195,7 @@ public final class LoginManager {
 	/**
 	 * @throws IllegalStateException if not logged in.
 	 */
-	public static IdlSessionKey getSessionKeyTransferable() {
+	public static IdlSessionKey getIdlSessionKey() {
 		if (isLoggedIn()) {
 			return idlSessionKey;
 		}
