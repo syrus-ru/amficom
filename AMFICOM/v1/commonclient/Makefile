@@ -21,6 +21,7 @@ map \
 mapview \
 scheme \
 csbridge \
+reflectometry \
 filter \
 leserver_interface \
 cmserver_interface \
