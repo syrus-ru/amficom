@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.129 2005/11/18 14:41:26 saa Exp $
+ * $Id: Heap.java,v 1.130 2005/11/23 12:08:24 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,7 +103,7 @@ import com.syrus.util.Log;
  * 3. anchorer не может существовать без эталона
  * 
  * @author $Author: saa $
- * @version $Revision: 1.129 $, $Date: 2005/11/18 14:41:26 $
+ * @version $Revision: 1.130 $, $Date: 2005/11/23 12:08:24 $
  * @module analysis
  */
 public class Heap
@@ -1175,7 +1175,6 @@ public class Heap
 		setRefAnalysisPrimary(new RefAnalysis(getRefAnalysisPrimary(), mtae));
 	}
 
-
 	/**
 	 * XXX: Возвращаемое значение null может означать как соответствие эталону,
 	 * так и то, что сравнение не проводилось. Надо переделать.
@@ -1200,10 +1199,21 @@ public class Heap
 			notifyEtalonComparisonRemoved();
 		else
 			notifyEtalonComparisonCUpdated();
-		if (getRefMismatch() == null)
+		final ReflectogramMismatchImpl refMismatch = getRefMismatch();
+		if (refMismatch == null)
 			notifyRefMismatchRemoved();
 		else
 			notifyRefMismatchCUpdated();
+
+		// перемещаем текущее событие на аларм
+		// поскольку дистанция аларма привязана к эталону,
+		// то и текущее событие определяется в представлении эталона
+		final ModelTraceManager etalon = getMTMEtalon();
+		if (refMismatch != null && etalon != null) { // в принципе, проверка etalon != null избыточна
+			int nEvent = etalon.getMTAE().getEventByCoord(refMismatch.getCoord());
+			if (nEvent >= 0)
+				setCurrentEtalonEvent(nEvent);
+		}
 	}
 
 	public static EtalonComparison getEtalonComparison() {
