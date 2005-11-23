@@ -1,5 +1,5 @@
 /*-
- * $Id: PermissionManager.java,v 1.10 2005/11/22 11:17:31 saa Exp $
+ * $Id: PermissionManager.java,v 1.11 2005/11/23 13:27:16 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Checker;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.util.Log;
 
 /**
@@ -22,7 +23,7 @@ import com.syrus.util.Log;
  * Позволяет использовать кэширование прав.
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/11/22 11:17:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/11/23 13:27:16 $
  * @module analysis
  */
 public class PermissionManager {
@@ -55,7 +56,9 @@ public class PermissionManager {
 		}
 		try {
 			final long t0 = System.nanoTime();
-			final boolean permitted = Checker.isPermitted(code);
+			final boolean permitted =
+				LoginManager.isLoggedIn()
+				&& Checker.isPermitted(code);
 			final long t1 = System.nanoTime();
 			Log.debugMessage("Permission checked for " + op + " in " + (t1 - t0) / 1e6 + " ms", Level.FINEST);
 			if (cacheable) {
