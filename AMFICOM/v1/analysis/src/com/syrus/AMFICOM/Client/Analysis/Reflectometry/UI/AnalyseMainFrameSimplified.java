@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
-import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -58,7 +58,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	public AnalyseMainFrameSimplified(ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("AnalyseTitle"), new AnalyseMainMenuBar(aContext
-				.getApplicationModel()), new AnalyseMainToolBar(false));
+				.getApplicationModel()), new AnalyseMainToolBar());
 
 		this.setWindowArranger(new WindowArranger(this) {
 
@@ -171,45 +171,38 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
 
-		aModel.setCommand("menuFileOpen", new FileOpenCommand(super.dispatcher, this.aContext));
-		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(super.dispatcher, this.aContext));
-		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(super.dispatcher, this.aContext));
-		aModel.setCommand("menuFileSave", new FileSaveCommand(this.aContext));
-		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(this.aContext));
-		aModel.setCommand("menuFileClose", new FileCloseCommand());
-		aModel.setCommand("menuFileAddCompare", new FileAddCommand(this.aContext));
-		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_OPEN, new FileOpenCommand(this.dispatcher, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_OPEN_BELLCORE, new FileOpenAsBellcoreCommand(this.dispatcher, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_OPEN_WAVETEK, new FileOpenAsWavetekCommand(this.dispatcher, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_SAVE, new FileSaveCommand(this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_SAVE_TEXT, new FileSaveAsTextCommand(this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_CLOSE, new FileCloseCommand());
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_ADD_COMPARE, new FileAddCommand(this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_FILE_REMOVE_COMPARE, new FileRemoveCommand(null, this.aContext));
 
-		//aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
-		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(super.dispatcher, this.aContext));
-//		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
-		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(this.aContext));
-		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(null, this.aContext));
-		aModel.setCommand("menuTraceClose", new FileCloseCommand());
-//		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand());
-//		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
-//		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
-//		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, new AddTraceFromDatabaseCommand(this.aContext));
+		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, new FileRemoveCommand(null, this.aContext));
 
-		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
+		aModel.setCommand(AnalyseApplicationModel.MENU_TRACE_CURRENT_MAKE_PRIMARY, new MakeCurrentTracePrimaryCommand());
 
 		// XXX temporary not allowed, uncomment after create frames like AnalyseMainFrame 
-		aModel.setVisible("menuReport", false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_REPORT, false);
+ 
 		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(this.aContext, 
 				DestinationModules.ANALYSIS);
 		rc.setParameter(CreateAnalysisReportCommand.TABLE, this.tables);
 		rc.setParameter(CreateAnalysisReportCommand.PANEL, this.graphs);
 		
-		aModel.setCommand("menuReportCreate", rc);
+		aModel.setCommand(AnalyseApplicationModel.MENU_REPORT_CREATE, rc);
 
-		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
-		aModel.setCommand("menuWindowTraceSelector", new ShowWindowCommand(this.selectFrame));
-		aModel.setCommand("menuWindowPrimaryParameters", new ShowWindowCommand(this.paramFrame));
-		aModel.setCommand("menuWindowOverallStats", new ShowWindowCommand(this.statsFrame));
-		aModel.setCommand("menuWindowEvents", new ShowWindowCommand(this.eventsFrame));
-		aModel.setCommand("menuWindowAnalysis", new ShowWindowCommand(this.analysisFrame));
-		aModel.setCommand("menuWindowMarkersInfo", new ShowWindowCommand(this.mInfoFrame));
-		aModel.setCommand("menuWindowAnalysisSelection", new ShowWindowCommand(this.anaSelectFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, new ShowWindowCommand(this.selectFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, new ShowWindowCommand(this.paramFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, new ShowWindowCommand(this.statsFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_EVENTS, new ShowWindowCommand(this.eventsFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, new ShowWindowCommand(this.analysisFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, new ShowWindowCommand(this.mInfoFrame));
+		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, new ShowWindowCommand(this.anaSelectFrame));
 
 		setDefaultModel(aModel);
 		aModel.fireModelChanged("");
@@ -218,22 +211,22 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
-		aModel.setEnabled("menuFile", true);
-		aModel.setEnabled("menuTrace", true);
-		aModel.setEnabled("menuHelp", true);
-		aModel.setEnabled("menuReport", true);
-		aModel.setEnabled("menuWindow", true);
 
-		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE, true);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE, true);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MEASUREMENTSETUP, true);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_REPORT, true);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
+		
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN, AnalyseMainFrameSimplified.DEBUG);
 
-		aModel.setVisible("menuTestSetup", false);
-//		aModel.setVisible("menuNetStudy", false);
-		aModel.setVisible("menuWindowThresholdsSelection", false);
-		aModel.setVisible("menuWindowThresholds", false);
-		aModel.setVisible("menuWindowNoiseFrame", false);
-		aModel.setVisible("menuWindowFilteredFrame", false);
-		aModel.setVisible("menuWindowDetailedEvents", false);
-		aModel.setVisible("menuWindowDerivHistoFrame", false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_MEASUREMENTSETUP, false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDSSELECTION, false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_THRESHOLDS, false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_NOISE, false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_FILTERED, false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_DETAILEDEVENTS, false);
+		aModel.setVisible(AnalyseApplicationModel.MENU_WINDOW_HISTOGRAMM, false);
 	}
 
 	@Override
@@ -244,15 +237,13 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 		final boolean readFilePermitted =
 			PermissionManager.isPermitted(Operation.READ_TRACE_FILE);
-		aModel.setEnabled("menuFileOpen", readFilePermitted);
-		aModel.setEnabled("menuFileOpenAs", readFilePermitted);
-		aModel.setEnabled("menuFileOpenAsBellcore", readFilePermitted);
-		aModel.setEnabled("menuFileOpenAsWavetek", readFilePermitted);
-		aModel.setEnabled("menuTraceDownload",
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN, readFilePermitted);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_AS, readFilePermitted);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_BELLCORE, readFilePermitted);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_WAVETEK, readFilePermitted);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD,
 				PermissionManager.isPermitted(Operation.LOAD_TRACE));
-		aModel.setEnabled("menuHelpAbout", true);
 		aModel.fireModelChanged("");
-
 	}
 
 	@Override
@@ -261,29 +252,23 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.setEnabled("menuFileOpen", false);
-		aModel.setEnabled("menuFileOpenAs", false);
-		aModel.setEnabled("menuFileOpenAsBellcore", false);
-		aModel.setEnabled("menuFileOpenAsWavetek", false);
-		aModel.setEnabled("menuFileAddCompare", false);
-		aModel.setEnabled("menuTraceDownload", false);
-		aModel.setEnabled("menuTraceAddCompare", false);
-//		aModel.setEnabled("menuTraceDownloadEtalon", false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_AS, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_BELLCORE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_OPEN_WAVETEK, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_ADD_COMPARE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_DOWNLOAD, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, false);
 
-//		aModel.setEnabled("menuAnalyseUpload", false);
-//		aModel.setEnabled("menuSaveEtalon", false);
-//		aModel.setEnabled("menuSaveThresholds", false);
-//		aModel.setEnabled("menuAnalyseSaveCriteria", false);
-		aModel.setEnabled("menuSaveTestSetup", false);
-		aModel.setEnabled("menuSaveTestSetupAs", false);
-		aModel.setEnabled("menuHelpAbout", false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_SAVE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_MEASUREMENTSETUP_SAVE_AS, false);
 		aModel.fireModelChanged("");		
 	}
 	
 	void setActiveRefId(String id) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.getCommand("menuFileRemoveCompare").setParameter("activeRefId", id);
-		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId", id);
+		aModel.getCommand(AnalyseApplicationModel.MENU_FILE_REMOVE_COMPARE).setParameter("activeRefId", id);
+		aModel.getCommand(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE).setParameter("activeRefId", id);
 	}
 
 	@Override
@@ -305,44 +290,37 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		String id = key;
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
 			final boolean saveFilePermitted =
-					PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE);
-			aModel.setEnabled("menuFileSave", saveFilePermitted);
-			aModel.setEnabled("menuFileSaveAll", saveFilePermitted);
-			aModel.setEnabled("menuFileSaveAs", saveFilePermitted);
-			aModel.setEnabled("menuFileSaveAsText", saveFilePermitted);
-			aModel.setEnabled("menuFileClose", true);
-			aModel.setEnabled("menuFileAddCompare",
+				PermissionManager.isPermitted(Operation.SAVE_TRACE_FILE);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE, saveFilePermitted);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE_ALL, saveFilePermitted);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE_AS, saveFilePermitted);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE_TEXT, saveFilePermitted);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_CLOSE, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_ADD_COMPARE,
 					PermissionManager.isPermitted(Operation.READ_TRACE_FILE));
 
-//			aModel.setEnabled("menuTraceDownloadEtalon", true);
-//			aModel.setEnabled("menuTraceUpload", true);
-			aModel.setEnabled("menuTraceClose", true);
-//			aModel.setEnabled("menuTraceCurrentMakeReference", true);
-//			aModel.setEnabled("menuTraceReference", true);
-//			aModel.setEnabled("menuTraceCurrent", true);
-			aModel.setEnabled("menuTraceAddCompare",
+			aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE,
 					PermissionManager.isPermitted(Operation.LOAD_TRACE));
-//			aModel.setEnabled("menuAnalyseUpload", true);
 
-			aModel.setEnabled("menuReportCreate", true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_REPORT_CREATE, true);
 
-			aModel.setEnabled("menuWindowArrange", true);
-			aModel.setEnabled("menuWindowTraceSelector", true);
-			aModel.setEnabled("menuWindowPrimaryParameters", true);
-			aModel.setEnabled("menuWindowOverallStats", true);
-			aModel.setEnabled("menuWindowEvents", true);
-			aModel.setEnabled("menuWindowAnalysis", true);
-			aModel.setEnabled("menuWindowMarkersInfo", true);
-			aModel.setEnabled("menuWindowAnalysisSelection", true);
+			aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_EVENTS, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, true);
 
 			aModel.fireModelChanged("");
 		} else if (id.equals(Heap.REFERENCE_TRACE_KEY)) {
-			aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
-			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent"});
+//			aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
+//			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent"});
 		} else {
-			aModel.setEnabled("menuTraceRemoveCompare", true);
-			aModel.setEnabled("menuFileRemoveCompare", true);
-			aModel.fireModelChanged(new String[] { "menuTraceRemoveCompare", "menuTraceRemoveCompare"});
+			aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_REMOVE_COMPARE, true);
+			aModel.fireModelChanged(new String[] { "" });
 		}
 	}
 
@@ -355,48 +333,39 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		String id = key;
 		if (id.equals(Heap.REFERENCE_TRACE_KEY)) {
-			aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
-			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent"});
+//			aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
+//			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent"});
 		}
 		if (!Heap.hasSecondaryBS()) {
-			aModel.setEnabled("menuFileRemoveCompare", false);
-			aModel.setEnabled("menuTraceRemoveCompare", false);
-			aModel.fireModelChanged(new String[] { "menuTraceRemoveCompare", "menuFileRemoveCompare"});
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_REMOVE_COMPARE, false);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, false);
+			aModel.fireModelChanged("");
 		}
 	}
 
 	public void bsHashRemovedAll() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled("menuFileSave", false);
-		aModel.setEnabled("menuFileSaveAll", false);
-		aModel.setEnabled("menuFileSaveAs", false);
-		aModel.setEnabled("menuFileSaveAsText", false);
-		aModel.setEnabled("menuFileClose", false);
-		aModel.setEnabled("menuFileAddCompare", false);
-		aModel.setEnabled("menuFileRemoveCompare", false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE_ALL, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE_AS, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_SAVE_TEXT, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_CLOSE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_ADD_COMPARE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_REMOVE_COMPARE, false);
 
-//		aModel.setEnabled("menuTraceDownloadEtalon", false);
-		aModel.setEnabled("menuTraceClose", false);
-//		aModel.setEnabled("menuTraceCloseEtalon", false);
-//		aModel.setEnabled("menuTraceCurrentMakeReference", false);
-		aModel.setEnabled("menuTraceAddCompare", false);
-		aModel.setEnabled("menuFileRemoveCompare", false);
-		aModel.setEnabled("menuTraceRemoveCompare", false);
-//		aModel.setEnabled("menuTraceUpload", false);
-//		aModel.setEnabled("menuTraceReference", false);
-//		aModel.setEnabled("menuTraceCurrent", false);
-//		aModel.setEnabled("menuAnalyseUpload", false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_ADD_COMPARE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, false);
 
-		aModel.setEnabled("menuReportCreate", false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_REPORT_CREATE, false);
 
-		aModel.setEnabled("menuWindowArrange", false);
-		aModel.setEnabled("menuWindowTraceSelector", false);
-		aModel.setEnabled("menuWindowPrimaryParameters", false);
-		aModel.setEnabled("menuWindowOverallStats", false);
-		aModel.setEnabled("menuWindowEvents", false);
-		aModel.setEnabled("menuWindowAnalysis", false);
-		aModel.setEnabled("menuWindowMarkersInfo", false);
-		aModel.setEnabled("menuWindowAnalysisSelection", false);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_OVERALLSTATS, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_EVENTS, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_MARKERSINFO, false);
+		aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSISSELECTION, false);
 
 		aModel.fireModelChanged("");
 	}
@@ -417,14 +386,14 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
-			aModel.setEnabled("menuFileRemoveCompare", false);
-			aModel.setEnabled("menuTraceRemoveCompare", false);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_REMOVE_COMPARE, false);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, false);
 		} else {
-			aModel.setEnabled("menuFileRemoveCompare", true);
-			aModel.setEnabled("menuTraceRemoveCompare", true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_FILE_REMOVE_COMPARE, true);
+			aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_REMOVE_COMPARE, true);
 			setActiveRefId(id);
 		}
-		aModel.setEnabled("menuMakeCurrentTracePrimary", Heap.isTraceSecondary(id));
-		aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare", "menuMakeCurrentTracePrimary"});
+		aModel.setEnabled(AnalyseApplicationModel.MENU_TRACE_CURRENT_MAKE_PRIMARY, Heap.isTraceSecondary(id));
+		aModel.fireModelChanged(new String[] { "" });
 	}
 }
