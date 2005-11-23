@@ -1,5 +1,5 @@
 /*-
- * $Id: AlarmReceiver.java,v 1.5 2005/11/06 14:37:32 stas Exp $
+ * $Id: AlarmReceiver.java,v 1.6 2005/11/23 12:19:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
@@ -62,7 +63,8 @@ public class AlarmReceiver implements PopupMessageReceiver {
 		try {
 			Result result = StorableObjectPool.getStorableObject(resultId, true);
 			if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-				Measurement m = (Measurement)result.getAction();
+				final Action action = result.getAction();
+				Measurement m = (Measurement) action;
 				
 				// notify about measurement
 				this.aContext.getDispatcher().firePropertyChange(

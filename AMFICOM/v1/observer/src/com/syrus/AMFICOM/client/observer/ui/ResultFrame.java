@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.4 2005/10/31 12:30:02 bass Exp $
+ * $Id: ResultFrame.java,v 1.5 2005/11/23 12:19:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -71,8 +72,8 @@ import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/10/31 12:30:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/11/23 12:19:10 $
  * @module surveyclient_v1
  */
 
@@ -199,7 +200,8 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 		this.outParamsTableModel.clear();
 		
 		if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-			Measurement m = (Measurement)result.getAction();
+			final Action action = result.getAction();
+			Measurement m = (Measurement) action;
 			this.meId = m.getMonitoredElementId();
 			MeasurementSetup ms = m.getSetup();
 			ParameterSet argumentSet = ms.getParameterSet();
@@ -276,7 +278,8 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			processParameters(parameters, argumentSet);
 
 		} else if (result.getSort().equals(ResultSort.RESULT_SORT_MODELING)) {
-			Modeling modeling = (Modeling)result.getAction();
+			final Action action = result.getAction();
+			Modeling modeling = (Modeling) action;
 			this.meId = modeling.getMonitoredElementId();
 			ParameterSet argumentSet = modeling.getArgumentSet();
 

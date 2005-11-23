@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
@@ -98,7 +99,8 @@ public class AlarmFrame extends JInternalFrame implements
 			try {
 				Result result = StorableObjectPool.getStorableObject(resultId, true);
 				if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-					Measurement m = (Measurement)result.getAction();
+					final Action action = result.getAction();
+					Measurement m = (Measurement) action;
 					
 					// notify about measurement
 					AlarmFrame.this.aContext.getDispatcher().firePropertyChange(
