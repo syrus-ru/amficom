@@ -90,7 +90,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 			}
 			this.dispatcher.firePropertyChange(mne);
 			this.dispatcher.firePropertyChange(new MarkerEvent(this,
-					MarkerEvent.MARKER_SELECTED_EVENT,
+					MarkerEvent.MARKER_CREATED_EVENT + MarkerEvent.MARKER_SELECTED_EVENT,
 					m.getId(), 
 					m.pos * this.deltaX, 
 					this.scheme_path_id, 
@@ -290,7 +290,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 						this,
 						MarkerEvent.MARKER_DELETED_EVENT,
 						m.getId(),
-						alarms[i].getCoord() * deltaX,
+						m.pos * deltaX,
 						scheme_path_id,
 						monitored_element_id);
 //				mne.setDescriptor("refevent");

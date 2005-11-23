@@ -62,7 +62,8 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 				if (panel instanceof MapMarkersPanel)
 				{
 					if(mne.getMarkerEventType() == MarkerEvent.MARKER_CREATED_EVENT) {
-						if ( (mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
+						if (((mne.getMeId() == null && mne.getSchemePathId() == null) || 
+								(mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id))) ||
 								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id))) {
 //							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.deltaX, 1);
 //							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.deltaX, "", d));
@@ -188,7 +189,6 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements P
 	{
 		((MapMarkersToolBar)toolbar).createMarkerTButton.setSelected(false);
 		((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
-		((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 	}
 }
 
@@ -202,7 +202,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 
 	protected static String[] buttons1 = new String[]
 	{
-		EX, DX, EY, DY, FIX, SEPARATOR, events, SEPARATOR, createMarker, deleteMarker
+		EX, DX, EY, DY, FIX, SEPARATOR, trace, modeled, events, SEPARATOR, createMarker, deleteMarker
 	};
 
 	public MapMarkersToolBar(MapMarkersLayeredPanel panel)
