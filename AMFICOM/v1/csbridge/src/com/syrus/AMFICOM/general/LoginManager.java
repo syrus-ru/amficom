@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.33 2005/11/23 10:19:59 arseniy Exp $
+ * $Id: LoginManager.java,v 1.34 2005/11/23 10:22:49 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/11/23 10:19:59 $
+ * @version $Revision: 1.34 $, $Date: 2005/11/23 10:22:49 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -236,7 +236,8 @@ public final class LoginManager {
 		final boolean loggedIn = (idlSessionKey != EMPTY_IDL_SESSION_KEY);
 		assert loggedIn
 				? userId.getMajor() == SYSTEMUSER_CODE && domainId.getMajor() == DOMAIN_CODE
-				: userId.isVoid() && domainId.isVoid() : userId + "; " + domainId + "; logged in: " + loggedIn;
+				: userId.isVoid() && domainId.isVoid()
+						: userId + "; " + domainId + "; logged in: " + loggedIn;
 		return loggedIn;
 	}
 }
