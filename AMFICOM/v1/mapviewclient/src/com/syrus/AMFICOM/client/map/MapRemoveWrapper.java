@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveWrapper.java,v 1.6 2005/11/23 13:57:30 stas Exp $
+ * $Id: MapRemoveWrapper.java,v 1.7 2005/11/23 16:20:32 stas Exp $
  *
  * Copyright 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.client.map;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -16,6 +17,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -24,6 +26,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 public class MapRemoveWrapper extends DefaultStorableObjectRemoveWrapper {
 
@@ -79,10 +82,16 @@ public class MapRemoveWrapper extends DefaultStorableObjectRemoveWrapper {
 			Set<Scheme> schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if(!schemes.isEmpty()) {
 				// отвязываем схемы
+				// и стираем все CableChannelingItems на отвязанных схемах
+				Set<Identifiable> toDelete = new HashSet<Identifiable>();
 				for (Scheme scheme : schemes) {
-					scheme.setMap(null);
-					StorableObjectPool.flush(scheme, LoginManager.getUserId(), false);
+					 for (SchemeCableLink scl : scheme.getSchemeCableLinks(false)) {
+						 toDelete.addAll(scl.getPathMembers());
+					 }
 				}
+				StorableObjectPool.delete(toDelete);
+				StorableObjectPool.flush(toDelete, LoginManager.getUserId(), false);
+				StorableObjectPool.flush(schemes, LoginManager.getUserId(), false);
 //				JOptionPane.showMessageDialog(
 //						Environment.getActiveWindow(), 
 //						I18N.getString(MapEditorResourceKeys.ERROR_LINKED_OBJECTS_EXIST_CANNOT_REMOVE) + " - " + schemes.iterator().next().getName(), 
