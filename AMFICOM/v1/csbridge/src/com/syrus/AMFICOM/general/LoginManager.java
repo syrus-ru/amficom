@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.32 2005/11/22 14:26:25 bass Exp $
+ * $Id: LoginManager.java,v 1.33 2005/11/23 10:19:59 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/11/22 14:26:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/11/23 10:19:59 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -67,12 +67,9 @@ public final class LoginManager {
 		resetSessionKey();
 	}
 
-	@SuppressWarnings(value = {"hiding"})
-	public static void init(
-			final LoginServerConnectionManager loginServerConnectionManager,
-			final LoginRestorer loginRestorer) {
-		LoginManager.loginServerConnectionManager = loginServerConnectionManager;
-		LoginManager.loginRestorer = loginRestorer;
+	public static void init(final LoginServerConnectionManager loginServerConnectionManager1, final LoginRestorer loginRestorer1) {
+		loginServerConnectionManager = loginServerConnectionManager1;
+		loginRestorer = loginRestorer1;
 	}
 
 
@@ -102,7 +99,7 @@ public final class LoginManager {
 		assert password != null : NON_NULL_EXPECTED;
 		assert loginDomainId != null : NON_NULL_EXPECTED;
 
-		if (idlSessionKey != EMPTY_IDL_SESSION_KEY) {
+		if (isLoggedIn()) {
 			throw new LoginException(I18N.getString("Error.AlreadyLoggedIn"), true);
 		}
 
@@ -141,7 +138,7 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void logout() throws CommunicationException, LoginException {
-		if (idlSessionKey == EMPTY_IDL_SESSION_KEY) {
+		if (!isLoggedIn()) {
 			throw new LoginException(I18N.getString("Error.AlreadyLoggedOut"));
 		}
 
@@ -205,14 +202,14 @@ public final class LoginManager {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	public static void setUserId(final Identifier userId) {
-		if (userId == null) {
+	public static void setUserId(final Identifier userId1) {
+		if (userId1 == null) {
 			throw new NullPointerException();
-		} else if (userId.getMajor() != SYSTEMUSER_CODE || userId.isVoid()) {
-			throw new IllegalArgumentException(userId.toString());
+		} else if (userId1.getMajor() != SYSTEMUSER_CODE || userId1.isVoid()) {
+			throw new IllegalArgumentException(userId1.toString());
 		}
 
-		LoginManager.userId = userId;
+		userId = userId1;
 	}
 
 	/**
@@ -236,10 +233,10 @@ public final class LoginManager {
 	}
 
 	public static boolean isLoggedIn() {
-		final boolean loggedIn = (idlSessionKey == EMPTY_IDL_SESSION_KEY);
+		final boolean loggedIn = (idlSessionKey != EMPTY_IDL_SESSION_KEY);
 		assert loggedIn
 				? userId.getMajor() == SYSTEMUSER_CODE && domainId.getMajor() == DOMAIN_CODE
-				: userId.isVoid() && domainId.isVoid() : userId + "; " + domainId;
+				: userId.isVoid() && domainId.isVoid() : userId + "; " + domainId + "; logged in: " + loggedIn;
 		return loggedIn;
 	}
 }
