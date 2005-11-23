@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.31 2005/11/21 13:23:34 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.32 2005/11/23 12:07:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.31 $, $Date: 2005/11/21 13:23:34 $
+ * @version $Revision: 1.32 $, $Date: 2005/11/23 12:07:10 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -378,7 +378,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	/**
 	 * Возвращает номер события, соответствующего данному
 	 * иксу. Если x попадает на границу двух событий,
-	 * то выбор левого или правого зависит от реализации.
+	 * то предпочтение отдается правому (x==right.begin).
 	 * Если x не попадает ни на одно событие,
 	 * то возвращает -1.
 	 * <p> Относительно медленный метод и не очень удобный. 
@@ -386,6 +386,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	public int getEventByCoord(int x)
 	{
 		int ret = -1;
+		// отдаем предпочтение правому событию
 		for (int i = 0; i < getRSE().length; i++)
 		{
 			if (x >= getRSE()[i].getBegin() && x <= getRSE()[i].getEnd())
