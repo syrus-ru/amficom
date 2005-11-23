@@ -1,5 +1,5 @@
 /*-
- * $Id: LineMismatchEventProcessor.java,v 1.12 2005/11/22 19:33:13 bass Exp $
+ * $Id: LineMismatchEventProcessor.java,v 1.13 2005/11/23 11:30:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import static com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,8 +55,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/11/22 19:33:13 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/11/23 11:30:34 $
  * @module leserver
  */
 final class LineMismatchEventProcessor implements EventProcessor {
@@ -136,8 +137,8 @@ final class LineMismatchEventProcessor implements EventProcessor {
 				final EmailNotificationEvent emailNotificationEvent =
 							DefaultEmailNotificationEvent.valueOf(
 									lineMismatchEvent,
-									createMessage(lineMismatchEvent),
-									address);
+									address,
+									createMessage(lineMismatchEvent));
 				notificationEvents[i++] = emailNotificationEvent.getTransferable(orb);
 			}
 
@@ -157,6 +158,10 @@ final class LineMismatchEventProcessor implements EventProcessor {
 	}
 
 	private static Set<String> getAddresses(final Set<Identifier> systemUserIds) throws ApplicationException {
+		if (systemUserIds.isEmpty()) {
+			return Collections.emptySet();
+		}
+
 		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(
 				new CompoundCondition(
 						getCondition(),
@@ -165,6 +170,7 @@ final class LineMismatchEventProcessor implements EventProcessor {
 								systemUserIds,
 								CHARACTERISTIC_CODE)),
 				true);
+
 		final Set<String> addresses = new HashSet<String>();
 		for (final Characteristic characteristic : characteristics) {
 			addresses.add(characteristic.getValue());
