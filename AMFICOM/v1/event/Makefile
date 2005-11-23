@@ -32,9 +32,6 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/eventv2
 
 .mach: .corba $(CLASSDIR) $(CLASSDIR)/com/syrus/AMFICOM/eventv2
-	$(CP) \
-		$(SRCDIR)/com/syrus/AMFICOM/eventv2/eventv2*.properties \
-		$(CLASSDIR)/com/syrus/AMFICOM/eventv2
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
