@@ -17,13 +17,17 @@ import com.syrus.AMFICOM.Client.Analysis.PermissionManager.Operation;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceRange;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceRangeImplMTRSubrange;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Thresh;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThresholdHandle;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
  * Отображает пороги
@@ -274,7 +278,11 @@ public class ThresholdsPanel extends MapMarkersPanel
 				paintAllThresholds(g, null);
 			else
 				paintOneThreshold(g, null);
-		} 
+		}
+
+		if (true) { // @todo: add a boolean flag to control this painting
+			paintTraceMismatch(g);
+		}
 	}
 
 	/**
@@ -393,5 +401,61 @@ public class ThresholdsPanel extends MapMarkersPanel
 	{
 		return parent instanceof ThresholdsLayeredPanel
 			&& ((ThresholdsLayeredPanel )parent).hasShowThresholdButtonSelected();
+	}
+
+	/**
+	 * Paints label of primary trace to etalon out-of-mask mismatch.
+	 * Note, does not perform any other comparison.
+	 * Note, does not care for Heap.etalonComparison object.
+	 * @param g graphics to paint on.
+	 */
+	private void paintTraceMismatch(Graphics g) {
+		// ищем выход из масок
+		final ModelTraceAndEventsImpl mtae = Heap.getPrimaryTrace().getMTAE();
+		if (mtae == null)
+			return;
+		final ModelTraceManager etalon = Heap.getMTMEtalon();
+		if (etalon == null)
+			return;
+
+		final ModelTrace mt = mtae.getModelTrace();
+		final ReflectogramMismatchImpl outofMaskPoint =
+			ModelTraceComparer.getOutOfMaskPoint(mt, etalon);
+
+		if (outofMaskPoint.getSeverity().equals(Severity.SEVERITY_NONE)) {
+			return; // no mismatch: nothing to plot
+		}
+
+		// определяем физическые (x,y) координаты точки выхода
+		int index = outofMaskPoint.getCoord();
+		double value = mt.getY(index);
+
+		// определяем экранные (x,y) координаты точки выхода
+		int xCoord = index2coord(index);
+		int yCoord = value2coord(value);
+
+		// параметры значка маркера
+		final int markerHeight = 10;
+		final int markerHaifWidth = markerHeight * 2 / 3;
+		final int markerMargin = markerHeight / 3;
+
+		// определяем, с какой стороны рисовать
+		boolean inverse = yCoord < markerMargin + markerHeight;
+		int sign = inverse ? 1 : -1;
+
+		// рисуем пометку в точке выхода
+		int sy0 = yCoord + sign * markerMargin;
+		int sy1 = sy0 + sign * markerHeight;
+		int sx0 = xCoord;
+		int sx1 = xCoord - markerHaifWidth;
+		int sx2 = xCoord + markerHaifWidth;
+
+		// set color; XXX: use ALARM color
+		g.setColor(UIManager.getColor(
+				AnalysisResourceKeys.COLOR_ALARM_THRESHOLD));
+
+		g.drawLine(sx0, sy0, sx1, sy1);
+		g.drawLine(sx0, sy0, sx2, sy1);
+		g.drawLine(sx2, sy1, sx1, sy1);
 	}
 }
