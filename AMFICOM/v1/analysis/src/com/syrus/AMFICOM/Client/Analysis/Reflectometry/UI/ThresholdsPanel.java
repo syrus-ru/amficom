@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.Analysis.PermissionManager;
 import com.syrus.AMFICOM.Client.Analysis.PermissionManager.Operation;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
@@ -449,8 +450,8 @@ public class ThresholdsPanel extends MapMarkersPanel
 			// параметры надписи
 		String textToDraw = null;
 		if (outofMaskPoint.hasMismatch()) {
-			textToDraw = "" + outofMaskPoint.getMinMismatch()
-				+ " .. " + outofMaskPoint.getMaxMismatch();
+			textToDraw = "" + MathRef.round_4((outofMaskPoint.getMinMismatch()
+					+ outofMaskPoint.getMaxMismatch()) / 2.0);
 			final FontMetrics fontMetrics = getFontMetrics(getFont());
 			textMargin = markerMargin;
 			textAscent = fontMetrics.getAscent();
