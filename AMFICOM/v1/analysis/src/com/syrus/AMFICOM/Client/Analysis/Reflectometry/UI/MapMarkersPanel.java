@@ -135,7 +135,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 			upd_currpos(e);
 
 			moveMarker (active_marker, coord2index(currpos.x));
-//			move_notify();
+			move_notify();
 			parent.repaint();
 			//long t1 = System.currentTimeMillis();
 			//System.out.println("MapMarkersPanel: tmD: mm dt " + (t1-t0));
