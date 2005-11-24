@@ -107,6 +107,7 @@ public class NewModelGenerator
 
 		// Noise = A*(exp(s*x)-1); // s = 1/2000;
 //		double maximalNoise = 125./pulsWidth;
+		double coeff = 0.13;
 		double maximalNoise = 50./pulsWidth;
 		double arg = 0.;
 		for(int i=0; i<modelArray.length; i++)
@@ -129,10 +130,10 @@ public class NewModelGenerator
 					{
 						arg *=0.3;
 					}
-					modelArray[i] += rnd(-arg, 0.05*arg)*
+					modelArray[i] += (rnd(-arg, 0.05*arg)*
 													 (1.+0.02*Math.sin(i*3.14/eventSize) +
-													 0.03*Math.cos(i*3.14/(eventSize*1.1)));
-					modelArray[i] += rnd(addNoise);
+													 0.03*Math.cos(i*3.14/(eventSize*1.1))) * coeff);
+					modelArray[i] += (rnd(addNoise) * coeff);
 				}
 			}
 
@@ -141,21 +142,21 @@ public class NewModelGenerator
 				if(rnd(0., 1.)>0.1)
 					modelArray[i] = 0.;
 				else
-					modelArray[i] -=rnd(0, dDynamicDiapazon*0.8);
+					modelArray[i] -= (rnd(0, dDynamicDiapazon*0.8) * coeff);
 			}
 			else if((modelArray[i]-dDynamicDiapazon)/dinamicDiapazon<0.1)
 			{
 				if(rnd(0., 1.)>0.6)
 					modelArray[i] = 0.;
 				else
-					modelArray[i] -=rnd(0, dDynamicDiapazon*0.9);
+					modelArray[i] -= (rnd(0, dDynamicDiapazon*0.9) * coeff);
 			}
 			else if((modelArray[i]-dDynamicDiapazon)/dinamicDiapazon<0.05)
 			{
 				if(rnd(0., 1.)>0.3)
 					modelArray[i] = 0.;
 				else
-					modelArray[i] -=rnd(0, dDynamicDiapazon);
+					modelArray[i] -= (rnd(0, dDynamicDiapazon) * coeff);
 			}
 		}
 		for(int i=0; i<modelArray.length; i++)

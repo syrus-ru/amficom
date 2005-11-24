@@ -1,152 +1,138 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.SortedSet;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StringFieldCondition;
-import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ModelingType;
-import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.corba.SetSort;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
+import com.syrus.util.Log;
 
-public class SaveModelingCommand extends VoidCommand
-{
-	private Dispatcher dispatcher;
+public class SaveModelingCommand extends AbstractCommand {
 	ApplicationContext aContext;
 	String traceid;
-	Checker checker;
 
-	public SaveModelingCommand()
-	{
-	}
-
-	public SaveModelingCommand(Dispatcher dispatcher, ApplicationContext aContext, String id)
-	{
-		this.dispatcher = dispatcher;
+	public SaveModelingCommand(ApplicationContext aContext, String id) {
 		this.aContext = aContext;
 		this.traceid = id;
 	}
 
-	public Object clone()
-	{
-		return new SaveModelingCommand(dispatcher, aContext, traceid);
-	}
-
-	public static ModelingType getModelingType(String codename)
-	{
-		StorableObjectCondition aTypeCondition = new StringFieldCondition(
-				codename,
-				ObjectEntities.MODELINGTYPE_ENTITY_CODE,
-				StringFieldSort.STRINGSORT_BASE);
-
-		try
-		{
-			Collection aTypes =
-				MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
-			for (Iterator it = aTypes.iterator(); it.hasNext();)
-			{
-				ModelingType type = (ModelingType )it.next();
-				if (type.getCodename().equals(codename))
-					return type;
+	@Override
+	public void execute() {
+		BellcoreStructure bs = Heap.getPFTracePrimary().getBS();
+		if(bs == null) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					"Ошибка при сохранении модели", 
+					"Ошибка", 
+					JOptionPane.OK_OPTION);
+			return;
+		}
+		
+		if(bs.monitoredElementId == null) {
+			if (bs.schemePathId != null) {
+				try {
+					SchemePath schemePath = StorableObjectPool.getStorableObject(new Identifier(bs.schemePathId), false);
+					
+					SortedSet<PathElement> pathMemebers = schemePath.getPathMembers();
+					if (!pathMemebers.isEmpty()) {
+						AbstractSchemePort startPort = pathMemebers.first().getEndAbstractSchemePort();
+						if (startPort != null) {
+							Identifier measurementPortId = startPort.getMeasurementPortId();
+							if (!measurementPortId.isVoid()) {
+								LinkedIdsCondition condition = new LinkedIdsCondition(measurementPortId, ObjectEntities.MONITOREDELEMENT_CODE);
+								Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+								if (!mes.isEmpty()) {
+									bs.monitoredElementId = mes.iterator().next().getId().getIdentifierString();
+								}
+							}
+						}
+					}
+//					TransmissionPath tPath = path.getTransmissionPath();
+//					if (tPath != null) {
+//						LinkedIdsCondition condition = new LinkedIdsCondition(tPath.getId(), 
+//								ObjectEntities.MONITOREDELEMENT_CODE);
+//						Set<MonitoredElement> mes = StorableObjectPool.getStorableObjectsByCondition(condition, true); 
+//						Set<Identifier> meIds = tPath.getMonitoredElementIds();
+//						if (!mes.isEmpty()) {
+//							bs.monitoredElementId = mes.iterator().next().getId().getIdentifierString();
+//						}
+//					}
+				}	catch (ApplicationException e) { 
+					Log.errorMessage(e);
+				}
 			}
 		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception searching ModelingType.");
-			ex.printStackTrace();
-		}
-
-		return null;
-	}
-
-	public void execute()
-	{
-		this.checker = new Checker(aContext.getDataSource());
-		if(!checker.checkCommand(checker.saveReflectoModeling))
-			return;
-
-		BellcoreStructure bs = (BellcoreStructure )Pool.get("bellcorestructure", traceid);
-		if(bs == null)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка при сохранении модели.", "Ошибка", JOptionPane.OK_OPTION);
+		
+		if(bs.monitoredElementId == null) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					"Нельзя сохранить модель, не связанную с измерительным устройством", 
+					"Ошибка", 
+					JOptionPane.OK_OPTION);
 			return;
 		}
 
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		Identifier userId = LoginManager.getUserId();
 
-		String name = "Модель маршрута <" + bs.monitoredElementId + ">";
-		List meIds = new ArrayList(1);
-		meIds.add(bs.monitoredElementId);
-
-		SetParameter[] parameters = new SetParameter[0];
-/*		ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
-		parameters[0] = new SetParameter(
-				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
-				ptype,
-				new BellcoreWriter().write(bs));*/
+		Set<Identifier> meIds = new HashSet<Identifier>();
+		meIds.add(new Identifier(bs.monitoredElementId));
 
 		try {
-			Set argumentSet = Set.createInstance(
+			Parameter[] parameters = new Parameter[1];
+			parameters[0] = Parameter.createInstance(
+					ParameterType.REFLECTOGRAMMA,
+					new BellcoreWriter().write(bs));
+			
+			ParameterSet argumentSet = ParameterSet.createInstance(
 					userId,
-					SetSort.SET_SORT_ANALYSIS_CRITERIA,
+					ParameterSetSort.SET_SORT_MODELING_PARAMETERS,
 					"",
 					parameters,
 					meIds);
-
+			
 			Modeling m = Modeling.createInstance(
 					userId,
-					getModelingType(ModelingType.CODENAME_DADARA),
+					ModelingType.DADARA_MODELING,
 					new Identifier(bs.monitoredElementId),
-					name,
+					bs.title,
 					argumentSet);
-
-			parameters = new SetParameter[1];
-			ParameterType ptype = AnalysisUtil.getParameterType(userId,
-					ParameterTypeCodenames.REFLECTOGRAMMA);
-			parameters[0] = SetParameter.createInstance(
-					ptype,
-					new BellcoreWriter().write(bs));
-
+			
 			m.createResult(
 					userId,
 					parameters);
-
-			MeasurementStorableObjectPool.putStorableObject(m);
-			MeasurementStorableObjectPool.flush(true);
-
-//		m.setTypeId("dadara");
-//		Pool.put("modeling", m.getId().getIdentifierString(), m);
-
+			
+			StorableObjectPool.putStorableObject(m);
+			StorableObjectPool.flush(m, userId, false);
+			
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"Модель сохранена под именем :" + name,
+					"Модель сохранена под именем :" + bs.title,
 					"Сообщение",
 					JOptionPane.INFORMATION_MESSAGE);
-		}
-		catch (ApplicationException ex) {
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
 	}
 }

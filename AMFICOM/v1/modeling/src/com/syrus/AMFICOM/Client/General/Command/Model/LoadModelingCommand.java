@@ -1,163 +1,76 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.InitialAnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainCondition;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Model.ModelLoadDialog;
+import com.syrus.AMFICOM.analysis.SimpleApplicationException;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Modeling;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
-import com.syrus.io.BellcoreReader;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.util.Log;
 
-public class LoadModelingCommand extends VoidCommand
-{
-	Dispatcher dispatcher;
+public class LoadModelingCommand extends AbstractCommand {
 	ApplicationContext aContext;
-	private Checker checker;
 
-	public LoadModelingCommand(Dispatcher dispatcher, ApplicationContext aContext)
-	{
-		this.dispatcher = dispatcher;
+	public LoadModelingCommand(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher)value);
-		else
-		if(field.equals("aContext"))
-			setApplicationContext((ApplicationContext )value);
-	}
+	@Override
+	public void execute() {
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
-	public void setApplicationContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-	}
-
-	public Object clone()
-	{
-		return new LoadModelingCommand(dispatcher, aContext);
-	}
-
-	public void execute()
-	{
-		try
-		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.loadReflectogrammFromDB))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
+		if(ModelLoadDialog.showDialog(Environment.getActiveWindow()) != JOptionPane.OK_OPTION) {
 			return;
 		}
 
-		ReflectogrammLoadDialog dialog;
-		JFrame parent = Environment.getActiveWindow();
-		if(Pool.get("dialog", parent.getName()) != null)
-		{
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", parent.getName());
-		}
-		else
-		{
-			dialog = new ReflectogrammLoadDialog (aContext);
-			Pool.put("dialog", parent.getName(), dialog);
-		}
+		Set<Result> results = ModelLoadDialog.getResults();
 
-		dialog.show();
-
-		if(dialog.ret_code == 0)
-			return;
-		if (!(dialog.getResult() instanceof Result))
-			return;
-
-		Result res = (Result)dialog.getResult();
-
-		if(res == null)
-		{
-			String error = "Ошибка при загрузке смоделированной рефлектограммы.";
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
+		if(results.isEmpty()) {
 			return;
 		}
 
-		BellcoreStructure bs = null;
-
-		SetParameter[] parameters =  res.getParameters();
-		for (int i = 0; i < parameters.length; i++)
-		{
-			SetParameter param = parameters[i];
-			ParameterType type = (ParameterType)param.getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
-				bs = new BellcoreReader().getData(param.getValue());
-		}
-		if (bs == null)
+		Result res = results.iterator().next();
+		BellcoreStructure bs;
+		try {
+			bs = AnalysisUtil.getBellcoreStructureFromResult(res);
+		} catch (SimpleApplicationException e) {
+			Log.errorMessage(e);
 			return;
-
-		if (res.getSort().equals(ResultSort.RESULT_SORT_MODELING))
-		{
+		} 
+		
+		if (res.getSort().equals(ResultSort.RESULT_SORT_MODELING)) {
 			Modeling m = (Modeling)res.getAction();
 			bs.title = m.getName();
 
 			try {
-				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.
-						getStorableObject(m.getMonitoredElementId(), true);
+				MonitoredElement me = StorableObjectPool.getStorableObject(m.getMonitoredElementId(), true);
 
 				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-					Collection tpathIds = me.getMonitoredDomainMemberIds();
-					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-							getAccessIdentifier().domain_id);
-					Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-							domain_id, true);
-					DomainCondition condition = new DomainCondition(domain,
-							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
-					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set<Identifier> tpathIds = me.getMonitoredDomainMemberIds();
 
-					for (Iterator it = paths.iterator(); it.hasNext(); ) {
-						SchemePath sp = (SchemePath)it.next();
-						if (tpathIds.contains(sp.pathImpl().getId()))
-						{
-							Pool.put("activecontext", "activepathid", sp.getId());
-							break;
-						}
+					LinkedIdsCondition condition = new LinkedIdsCondition(tpathIds, ObjectEntities.SCHEMEPATH_CODE);
+					Set<SchemePath> paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+					for (SchemePath path : paths) {
+						bs.schemePathId = path.getId().getIdentifierString();
+						break;
 					}
 				}
 			}
@@ -167,14 +80,9 @@ public class LoadModelingCommand extends VoidCommand
 		}
 		else
 			bs.title = ((Measurement )res.getAction()).getName();
-		Pool.put("bellcorestructure", "primarytrace", bs);
 
-		new InitialAnalysisCommand().execute();
-
-		dispatcher.notify(new RefChangeEvent("primarytrace", RefChangeEvent.CLOSE_EVENT));
-		dispatcher.notify(new RefChangeEvent("primarytrace",
-				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+		Heap.openPrimaryTraceFromBS(bs, Heap.PRIMARY_TRACE_KEY);
+		Heap.makePrimaryAnalysis();
 	}
 }
 

@@ -1,91 +1,160 @@
 package com.syrus.AMFICOM.Client.Model;
 
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Image;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.List;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ATableFrame;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Trace;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Model.ModelMath.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.Client.Model.ModelMath.ModelGenerator;
+import com.syrus.AMFICOM.Client.Model.ModelMath.ModelingEvent;
+import com.syrus.AMFICOM.Client.Model.ModelMath.NewModelGenerator;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.ATable;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePathWrapper;
+import com.syrus.io.BellcoreModelWriter;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.util.Log;
 
-public class RefModelParamsFrame extends ATableFrame
-{
-	ArrayList reflectoElements = new ArrayList();
+public class RefModelParamsFrame extends JInternalFrame 
+		implements PropertyChangeListener, ReportTable {
+	
+	private static final long serialVersionUID = 5115725103762876658L;
+
+	public static final String NAME = "RefModelParamsFrame";
+	
 	ApplicationContext aContext;
 
-	ObjectResourceComboBox pathIDsComboBox = new ObjectResourceComboBox();
+	WrapperedComboBox<SchemePath> pathComboBox = new WrapperedComboBox<SchemePath>(
+			SchemePathWrapper.getInstance(), 
+			StorableObjectWrapper.COLUMN_NAME, 
+			StorableObjectWrapper.COLUMN_ID);
+	
 	ATable table;
 	ParamTableModel tableModel;
 
-	SchemePath path;
-
-	public RefModelParamsFrame(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-
+	public RefModelParamsFrame(ApplicationContext aContext) {
 		try {
 			jbInit();
 		}
 		catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		setContext(aContext);
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		this.aContext = aContext;
+		aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		setTitle(LangModelModel.getString("ParamsTitle"));
 		setClosable(true);
-		setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		setIconifiable(true);
 		setResizable(true);
 		getContentPane().setLayout(new BorderLayout());
 
-		tableModel = new ParamTableModel();
-		table = new ATable(tableModel);
-		table.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(tableModel));
-		table.setDefaultEditor(Object.class, new ModelParamsTableEditor(tableModel));
-		table.getColumnModel().getColumn(0).setPreferredWidth(150);
-		table.getColumnModel().getColumn(1).setPreferredWidth(50);
+		this.tableModel = new ParamTableModel();
+		this.table = new ATable(this.tableModel);
+		this.table.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(this.tableModel));
+		this.table.setDefaultEditor(Object.class, new ModelParamsTableEditor(this.tableModel));
+		this.table.getColumnModel().getColumn(0).setPreferredWidth(150);
+		this.table.getColumnModel().getColumn(1).setPreferredWidth(50);
 
 		JScrollPane jScrollPane1 = new JScrollPane();
-		jScrollPane1.getViewport().add(table);
+		jScrollPane1.getViewport().add(this.table);
 
+		JButton doItButton = new JButton();
+		doItButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				doIt();
+			}
+		});
+		doItButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/perform_analysis.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		doItButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		doItButton.setToolTipText(LangModelModel.getString("menuViewPerformModeling"));
+		
+		JPanel north = new JPanel(new BorderLayout());
+		north.add(this.pathComboBox, BorderLayout.CENTER);
+		north.add(doItButton, BorderLayout.EAST);
 		JPanel basePanel = new JPanel(new BorderLayout());
-		basePanel.add(pathIDsComboBox, BorderLayout.NORTH);
+		basePanel.add(north, BorderLayout.NORTH);
 		basePanel.add(jScrollPane1, BorderLayout.CENTER);
 		getContentPane().add(basePanel, BorderLayout.CENTER);
 
 		jScrollPane1.getViewport().setBackground(SystemColor.window);
-
 		setDefaults();
-
-		pathIDsComboBox.setFontSize(AComboBox.SMALL_FONT);
+	}
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(SchemeEvent.TYPE)) {
+			SchemeEvent se = (SchemeEvent)evt;
+			if (se.isType(SchemeEvent.OPEN_SCHEME)) {
+				try {
+					Scheme scheme = (Scheme)se.getStorableObject();
+					if (scheme.getParentSchemeElement() != null || 
+							!scheme.getSchemePathsRecursively(false).isEmpty()) {
+						setModelingScheme(scheme);
+					}
+				} catch (ApplicationException e) {
+					Log.errorMessage(e);
+				}
+			}
+		}
 	}
 
-	public String getReportTitle()
-	{
+	public String getReportTitle() {
 		return LangModelModel.getString("ParamsTitle");
 	}
 
-	public TableModel getTableModel()
-	{
-		return tableModel;
+	public TableModel getTableModel() {
+		return this.tableModel;
 	}
 
-	public void doIt()
-	{
-		path = (SchemePath)pathIDsComboBox.getSelectedObjectResource();
+	public void doIt() {
+		SchemePath path = (SchemePath)this.pathComboBox.getSelectedItem();
 		if (path == null) {
 			String error = "Не задан маршрут моделирования.\n";
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка",
@@ -93,19 +162,22 @@ public class RefModelParamsFrame extends ATableFrame
 			return;
 		}
 
-		BellcoreStructure bs = getTrace();
+		BellcoreStructure bs = getTrace(path);
 		if (bs == null)
 			return;
-		bs.title = "Модель \"" + path.name() + "\"";
+		bs.title = "Модель \"" + path.getName() + "\"";
 		bs.schemePathId = path.getId().getIdentifierString();
-		Pool.put("bellcorestructure", "primarytrace", bs);
-		aContext.getDispatcher().notify(new RefChangeEvent("all", RefChangeEvent.CLOSE_EVENT));
-		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace", RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+		
+		Trace tr = new Trace(bs, Heap.MODELED_TRACE_KEY, Heap.getMinuitAnalysisParams());
+		Heap.openPrimaryTrace(tr);
+		Heap.setRefAnalysisPrimary(new RefAnalysis(tr.getPFTrace()));
+		Heap.primaryTraceOpened();
+//		Heap.sPRIMARY_TRACE_KEY
 	}
 
 	void setDefaults() // Default parameters of the modeling
 	{
-		tableModel.updateData(new Object[] {
+		this.tableModel.updateData(new Object[] {
 													new Integer(64),
 													new Double(4),
 													new Integer(1000),
@@ -119,42 +191,50 @@ public class RefModelParamsFrame extends ATableFrame
 													new Double(0.2)});
 	}
 
-	public void setModelingSchemes(List schemes)
-	{
-		pathIDsComboBox.removeAllItems();
-		for (Iterator sit = schemes.iterator(); sit.hasNext(); ) {
-			Scheme scheme = (Scheme)sit.next();
-			SchemePath[] paths = scheme.schemeMonitoringSolution().schemePaths();
-			for (int i = 0;  i < paths.length; i++) {
-				pathIDsComboBox.addItem(paths[i]);
+	public void setModelingSchemes(Collection<Scheme> schemes) {
+		this.pathComboBox.removeAllItems();
+		try {
+			for (Scheme scheme : schemes) {
+				for (SchemePath path : scheme.getSchemePathsRecursively(false)) {
+					this.pathComboBox.addItem(path);
+				}
 			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
 	}
 
-	public void setModelingScheme(Scheme scheme)
-	{
-		pathIDsComboBox.removeAllItems();
-		SchemePath[] paths = scheme.schemeMonitoringSolution().schemePaths();
-		for (int i = 0; i < paths.length; i++) {
-			pathIDsComboBox.addItem(paths[i]);
+	public void setModelingScheme(Scheme scheme) {
+		this.pathComboBox.removeAllItems();
+		try {
+			for (SchemePath path : scheme.getSchemePathsRecursively(false)) {
+				this.pathComboBox.addItem(path);
+			}
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
 		}
 	}
 
-	BellcoreStructure getTrace()
-	{
-		double length = ((Integer)tableModel.getValueAt(0, 1)).doubleValue() * 1000;
-		double resolution = ((Double)tableModel.getValueAt(1, 1)).doubleValue();
-		double pulsWidth = ((Integer)tableModel.getValueAt(2, 1)).doubleValue();
-		double wave_length = ((Integer)tableModel.getValueAt(3, 1)).doubleValue();
-		double dinam_area = ((Double)tableModel.getValueAt(4, 1)).doubleValue();
-		double addNoise = Math.abs(((Double)tableModel.getValueAt(5,1)).doubleValue());
-		double formFactor = ((Double)tableModel.getValueAt(6, 1)).doubleValue();
-		double weldAtt = ((Double)tableModel.getValueAt(7, 1)).doubleValue();
-		double connectorRef = ((Double)tableModel.getValueAt(8, 1)).doubleValue();
-		double connectorAtt = ((Double)tableModel.getValueAt(9, 1)).doubleValue();
-		double linearAtt = ((Double)tableModel.getValueAt(10, 1)).doubleValue();
-
-		reflectoElements = new ModelGenerator(path, (int)wave_length, connectorAtt, weldAtt, connectorRef, linearAtt).createModelingEvents();
+	private BellcoreStructure getTrace(SchemePath path) {
+		double length = ((Integer)this.tableModel.getValueAt(0, 1)).doubleValue() * 1000;
+		double resolution = ((Double)this.tableModel.getValueAt(1, 1)).doubleValue();
+		double pulsWidth = ((Integer)this.tableModel.getValueAt(2, 1)).doubleValue();
+		double wave_length = ((Integer)this.tableModel.getValueAt(3, 1)).doubleValue();
+		double dinam_area = ((Double)this.tableModel.getValueAt(4, 1)).doubleValue();
+		double addNoise = Math.abs(((Double)this.tableModel.getValueAt(5,1)).doubleValue());
+		double formFactor = ((Double)this.tableModel.getValueAt(6, 1)).doubleValue();
+		double weldAtt = ((Double)this.tableModel.getValueAt(7, 1)).doubleValue();
+		double connectorRef = ((Double)this.tableModel.getValueAt(8, 1)).doubleValue();
+		double connectorAtt = ((Double)this.tableModel.getValueAt(9, 1)).doubleValue();
+		double linearAtt = ((Double)this.tableModel.getValueAt(10, 1)).doubleValue();
+		
+		List reflectoElements;
+		try {
+			reflectoElements = new ModelGenerator(path, (int)wave_length, connectorAtt, weldAtt, connectorRef, linearAtt).createModelingEvents();
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+			return null;
+		}
 		//mode((int)wave_length, (int)pulsWidth, formFactor, resolution, connectorAtt, weldAtt, connectorRef, linearAtt);
 		if(reflectoElements == null)
 		{
@@ -163,43 +243,42 @@ public class RefModelParamsFrame extends ATableFrame
 			return null;
 		}
 		ModelingEvent []rmip = (ModelingEvent [])
-				reflectoElements.toArray(new ModelingEvent[reflectoElements.size()]);
+		reflectoElements.toArray(new ModelingEvent[reflectoElements.size()]);
 		if(rmip.length<2)
 		{
 			String error = "Ошибка при определении параметров маршрута.";
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
 			return null;
 		}
-
+		
 		NewModelGenerator mg = new NewModelGenerator(rmip,
-																					 resolution,
-																					 dinam_area,
-																					 pulsWidth,
-																					 length,
-																					 addNoise,
-																					 formFactor);
+				resolution,
+				dinam_area,
+				pulsWidth,
+				length,
+				addNoise,
+				formFactor);
 		double []y = mg.getModelArray();
 		//double[] y = ReflectogramMath.getReflectogrammFromEvents(re, 0);
-
-		return createBS (y, resolution/1000., wave_length, pulsWidth);
+		
+		return createBS (path, y, resolution/1000., wave_length, (int)pulsWidth);
 	}
 
-	BellcoreStructure createBS (double[] y, double delta_x, double wl, double pulseWidth)
+	BellcoreStructure createBS (SchemePath path, double[] y, double delta_x, double wl, int pw)
 	{
 		BellcoreStructure bs = new BellcoreStructure();
 
 		double groupindex = 1.46800;
-		double pulsewidth = pulseWidth;
-		double resolution = delta_x;
 
 		BellcoreModelWriter writer = new BellcoreModelWriter(bs);
 		writer.setWavelength((int)wl);
+		writer.setPulseWidth(pw);
 		writer.setTime(System.currentTimeMillis() / 1000);
 		writer.setOpticalModule("AMFICOM generated");
 		writer.setPathId(path.getId().getIdentifierString());
 		writer.setUnits("mt");
 		writer.setAverages(1);
-		writer.setRangeParameters(1.46800, delta_x, delta_x * y.length);
+		writer.setRangeParameters(groupindex, delta_x, delta_x * y.length);
 		writer.setData(y);
 		writer.finalizeChanges();
 
@@ -210,8 +289,7 @@ public class RefModelParamsFrame extends ATableFrame
 ////////////     Additional Necessary Class Definition     ////////////////////
 }
 
-class ParamTableModel extends AbstractTableModel
-{
+class ParamTableModel extends AbstractTableModel {
 	public static final Integer[] length = {
 		new Integer(4), new Integer(8), new Integer(16), new Integer(32),
 		new Integer(64), new Integer(128), new Integer(256)};
@@ -227,15 +305,14 @@ class ParamTableModel extends AbstractTableModel
 	public static final Integer[] waveLength = {
 		new Integer(850), new Integer(1310), new Integer(1550), new Integer(1625)};
 
-	AComboBox lengthComboBox = new AComboBox(AComboBox.SMALL_FONT);
-	AComboBox resolutionComboBox = new AComboBox(AComboBox.SMALL_FONT);
-	AComboBox pulsWidthComboBox = new AComboBox(AComboBox.SMALL_FONT);
-	AComboBox waveLengthComboBox = new AComboBox(AComboBox.SMALL_FONT);
+	AComboBox lengthComboBox = new AComboBox();
+	AComboBox resolutionComboBox = new AComboBox();
+	AComboBox pulsWidthComboBox = new AComboBox();
+	AComboBox waveLengthComboBox = new AComboBox();
 
 	String[] columnNames = {"", ""};
 
-	Object[][] data =
-	{
+	Object[][] data = {
 		{"Длина трассы, км", lengthComboBox},
 		{"Разрешение, м", resolutionComboBox},
 		{"Длительность импульса, нс", pulsWidthComboBox},
@@ -395,94 +472,84 @@ class ParamTableModel extends AbstractTableModel
 	}
 }
 
-class ModelParamsTableEditor extends DefaultCellEditor
-{
+class ModelParamsTableEditor extends DefaultCellEditor {
 	Object editor;
 	ParamTableModel model;
 
-	public ModelParamsTableEditor(ParamTableModel model)
-	{
+	public ModelParamsTableEditor(ParamTableModel model) {
 		super(new JTextField());
 		this.model = model;
 		setClickCountToStart(1);
 	}
 
+	@Override
 	public Component getTableCellEditorComponent(JTable table, Object value,
 			boolean isSelected,
-			int row, int column)
-	{
-		editor = value;
+			int row, int column) {
+		this.editor = value;
 		if (column == 1)
 		{
-			if(row == 0)
-			{
-				model.lengthComboBox.setBackground(SystemColor.window);
-				return (Component)model.lengthComboBox;
+			if(row == 0) {
+				this.model.lengthComboBox.setBackground(SystemColor.window);
+				return this.model.lengthComboBox;
 			}
-			if(row == 1)
-			{
-				model.resolutionComboBox.setBackground(SystemColor.window);
-				return (Component)model.resolutionComboBox;
+			if(row == 1) {
+				this.model.resolutionComboBox.setBackground(SystemColor.window);
+				return this.model.resolutionComboBox;
 			}
-			if(row == 2)
-			{
-				model.pulsWidthComboBox.setBackground(SystemColor.window);
-				return (Component)model.pulsWidthComboBox;
+			if(row == 2) {
+				this.model.pulsWidthComboBox.setBackground(SystemColor.window);
+				return this.model.pulsWidthComboBox;
 			}
-			if(row == 3)
-			{
-				model.waveLengthComboBox.setBackground(SystemColor.window);
-				return (Component)model.waveLengthComboBox;
+			if(row == 3) {
+				this.model.waveLengthComboBox.setBackground(SystemColor.window);
+				return this.model.waveLengthComboBox;
 			}
 		}
 		return super.getTableCellEditorComponent (table, value, isSelected, row,  column);
 	}
 
-	public Object getCellEditorValue()
-	{
-		if(editor instanceof JComboBox)
-			return editor;
+	@Override
+	public Object getCellEditorValue() {
+		if(this.editor instanceof JComboBox) {
+			return this.editor;
+		}
 		Object obj = super.getCellEditorValue();
-		if (obj instanceof String)
-		{
+		if (obj instanceof String) {
 			String str = (String)obj;
 			while (str.length() > 0)
 			{
-				try
-				{
+				try {
 					return Double.valueOf(str);
 				}
-				catch (NumberFormatException ex)
-				{
+				catch (NumberFormatException ex) {
 					str = str.substring(0, str.length() - 1);
 				}
 			}
 			return new Double (0);
 		}
-		else
-			return obj;
+		return obj;
 	}
 }
 
-class ModelParamsTableRenderer extends DefaultTableCellRenderer
-{
+class ModelParamsTableRenderer extends DefaultTableCellRenderer {
+	private static final long serialVersionUID = 6245907018616151050L;
 	ParamTableModel model;
-	public ModelParamsTableRenderer(ParamTableModel model)
-	{
+	public ModelParamsTableRenderer(ParamTableModel model) {
 		this.model = model;
 	}
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column)
-	{
+			boolean isSelected, boolean hasFocus, int row, int column) {
 		if(column == 1 && row == 0)
-			return model.lengthComboBox;
+			return this.model.lengthComboBox;
 		if(column == 1 && row == 1)
-			return model.resolutionComboBox;
+			return this.model.resolutionComboBox;
 		if(column == 1 && row == 2)
-			return model.pulsWidthComboBox;
+			return this.model.pulsWidthComboBox;
 		if(column == 1 && row == 3)
-			return model.waveLengthComboBox;
+			return this.model.waveLengthComboBox;
 		return  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}
 }

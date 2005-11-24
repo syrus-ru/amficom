@@ -1,21 +1,30 @@
 package com.syrus.AMFICOM.Client.Model.ModelMath;
 
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicType;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCableThread;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
+import com.syrus.util.Log;
 
-public class ModelGenerator
-{
+public class ModelGenerator {
 	SchemePath path;
 	ArrayList reflectoElements;
-	List pathelements;
+	List<PathElement> pathelements;
 
 	double defConnectorLoss;
 	double defWeldLoss;
@@ -37,7 +46,11 @@ public class ModelGenerator
 		this.defAttenuation = defAttenuation;
 		this.attenuationString = new StringBuffer("Attenuation_").append(waveLength).toString();
 
-		pathelements = Arrays.asList(path.links());
+		try {
+			this.pathelements = new ArrayList<PathElement>(path.getPathMembers());
+		} catch (ApplicationException e) {
+			Log.errorMessage(e);
+		}
 //		ObjectResourceSorter sorter = SchemePath.getSorter();
 //		sorter.setDataSet(pathelements);
 //		path.links = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
@@ -185,49 +198,36 @@ public class ModelGenerator
 		return meanAtt;
 	}
 
-	public ArrayList createModelingEvents()
+	public ArrayList createModelingEvents() throws ApplicationException
 	{
 		ArrayList reflectoElements = new ArrayList();
 
 		for(Iterator it = pathelements.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			if(pe.type().value() == Type._SCHEME_CABLE_LINK) // CABLE LINK
+			if(pe.getKind() == IdlKind.SCHEME_CABLE_LINK) // CABLE LINK
 			{
-				SchemeCableLink scl = (SchemeCableLink)pe.abstractSchemeElement();
-				SchemeCableThread thread = null;
-				for(int j = 0; j < scl.schemeCableThreads().length; j++)
-				{
-					SchemeCableThread sct = scl.schemeCableThreads()[j];
-					if(sct.equals(pe.schemeCableThread()))
-					{
-						thread = sct;
-						break;
-					}
-				}
-				if(thread == null)
-				{
-					System.out.println("SchemeCableThread " + pe.schemeCableThread().name() + " not found");
-					return null;
-				}
+				SchemeCableLink scl = pe.getSchemeCableLink();
+				SchemeCableThread thread = pe.getSchemeCableThread();
+
 				ModelingEvent event = addCableLink(scl, thread);
 				if (event == null) {
-					System.out.println("Fail creating modeling element from cable " + scl.name() + "(" +
+					System.out.println("Fail creating modeling element from cable " + scl.getName() + "(" +
 														 scl.getId().getIdentifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
 			}
-			else if (pe.type().value() == Type._SCHEME_LINK)
+			else if (pe.getKind() == IdlKind.SCHEME_LINK)
 			{
-				SchemeLink sl =	(SchemeLink)pe.abstractSchemeElement();
-				SchemePort sourcePort =	sl.sourceSchemePort();
+				SchemeLink sl =	pe.getSchemeLink();
+				SchemePort sourcePort =	sl.getSourceAbstractSchemePort();
 				if(sourcePort == null)
 					return null;
 
 				ModelingEvent event = addPort(sourcePort);
 				if (event == null) {
-					System.out.println("Fail creating modeling element from port " + sourcePort.name() + "(" +
+					System.out.println("Fail creating modeling element from port " + sourcePort.getName() + "(" +
 														 sourcePort.getId().getIdentifierString() + ")");
 					return null;
 				}
@@ -235,19 +235,19 @@ public class ModelGenerator
 
 				event = addLink(sl);
 				if (event == null) {
-					System.out.println("Fail creating modeling element from link " + sl.name() + "(" +
+					System.out.println("Fail creating modeling element from link " + sl.getName() + "(" +
 														 sl.getId().getIdentifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
 
-				SchemePort targetPort = sl.targetSchemePort();
+				SchemePort targetPort = sl.getTargetAbstractSchemePort();
 				if(targetPort == null)
 					return null;
 
 				event = addPort(targetPort);
 				if (event == null) {
-					System.out.println("Fail creating modeling element from port " + targetPort.name() +
+					System.out.println("Fail creating modeling element from port " + targetPort.getName() +
 														 "(" + targetPort.getId().getIdentifierString() + ")");
 					return null;
 				}
@@ -257,23 +257,23 @@ public class ModelGenerator
 		return reflectoElements;
 	}
 
-	private ModelingEvent addCableLink(SchemeCableLink scl, SchemeCableThread thread)
+	private ModelingEvent addCableLink(SchemeCableLink scl, SchemeCableThread thread) throws ApplicationException
 	{
-		List ht = null;
+		Set<Characteristic> ht = null;
 		Characteristic c;
 		double length;
 		double attenuation;
 
-		if (scl.link() != null)
-			ht = scl.linkImpl().getCharacteristics();
+		if (scl.getAbstractLink() != null)
+			ht = scl.getAbstractLink().getCharacteristics(false);
 
 		if (ht == null)
 		{
-			LinkType linkType =	thread.cableThreadTypeImpl().getLinkType();
+			LinkType linkType =	thread.getLinkType();
 			if(linkType == null)
 				return null;
 			else
-				ht = linkType.getCharacteristics();
+				ht = linkType.getCharacteristics(false);
 		}
 
 		c = getCharacteristic(ht, attenuationString);
@@ -285,7 +285,7 @@ public class ModelGenerator
 		{
 			attenuation = defAttenuation; //defauld dE/dx value
 		}
-		length = scl.opticalLength();
+		length = scl.getOpticalLength();
 		if(length < 0)
 			length = 0;
 
@@ -294,22 +294,22 @@ public class ModelGenerator
 		return event;
 	}
 
-	private ModelingEvent addPort(SchemePort sp)
+	private ModelingEvent addPort(SchemePort sp) throws ApplicationException
 	{
-		List ht;
+		Set<Characteristic> ht;
 		Characteristic c;
 		double reflectance;
 		double attenuation;
 
-		PortType portType = sp.portTypeImpl();
+		PortType portType = sp.getPortType();
 		if (portType == null) {
 			return null;
 		}
 
-		if (sp.port() != null)
-			ht = sp.portImpl().getCharacteristics();
+		if (sp.getPort() != null)
+			ht = sp.getPort().getCharacteristics(false);
 		else
-			ht = portType.getCharacteristics();
+			ht = portType.getCharacteristics(false);
 
 		ModelingEvent event = new ModelingEvent();
 		if(portType.getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL) // optical connector
@@ -350,22 +350,22 @@ public class ModelGenerator
 		return event;
 	}
 
-	private ModelingEvent addLink(SchemeLink sl)
+	private ModelingEvent addLink(SchemeLink sl) throws ApplicationException
 	{
-		List ht = null;
+		Set<Characteristic> ht = null;
 		Characteristic c;
 		double length;
 		double attenuation;
 
-		if (sl.link() != null)
-				ht = sl.linkImpl().getCharacteristics();
+		if (sl.getAbstractLink() != null)
+				ht = sl.getAbstractLink().getCharacteristics(false);
 		if (ht == null)
 		{
-			LinkType linkType =	sl.linkTypeImpl();
+			LinkType linkType =	sl.getAbstractLinkType();
 			if(linkType == null)
 				return null;
 			else
-				ht = linkType.getCharacteristics();
+				ht = linkType.getCharacteristics(false);
 		}
 
 		c = getCharacteristic(ht, attenuationString);
@@ -377,7 +377,7 @@ public class ModelGenerator
 		{
 			attenuation = defAttenuation;
 		}
-		length = sl.opticalLength();
+		length = sl.getOpticalLength();
 		if(length < 0)
 			length = 0;
 
@@ -386,12 +386,12 @@ public class ModelGenerator
 		return event;
 	}
 
-	private Characteristic getCharacteristic(List characteristics, String codename)
+	private Characteristic getCharacteristic(Set<Characteristic> characteristics, String codename)
 	{
 		for (Iterator it = characteristics.iterator(); it.hasNext();)
 		{
 			Characteristic ch = (Characteristic)it.next();
-			if (((CharacteristicType)ch.getType()).getCodename().equals(codename))
+			if (ch.getType().getCodename().equals(codename))
 				return ch;
 		}
 		return null;

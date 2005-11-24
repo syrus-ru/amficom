@@ -36,9 +36,6 @@
 
 package com.syrus.AMFICOM.Client.General.Lang;
 
-import java.util.ResourceBundle;
-import java.util.ListResourceBundle;
-import java.text.DateFormatSymbols;
 
 public class LangModelModel_ru extends LangModelModel
 {

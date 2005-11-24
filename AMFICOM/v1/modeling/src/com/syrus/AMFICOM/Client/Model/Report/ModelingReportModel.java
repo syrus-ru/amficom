@@ -1,9 +1,10 @@
 package com.syrus.AMFICOM.Client.Model.Report;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.syrus.AMFICOM.Client.Analysis.Report.ESAPEReportModel;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.Analysis.Report.AESMPReportModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 
 /**
  * <p>Title: </p>
@@ -14,24 +15,21 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
  * @version 1.0
  */
 
-public class ModelingReportModel extends ESAPEReportModel
-{
-	public ModelingReportModel()
-	{
-	}
-	public List getAvailableReports()
-	{
-		List result = new ArrayList(3);
+public class ModelingReportModel extends AESMPReportModel {
+	@Override
+	public List<String> getTemplateElementNames() {
+		List<String> result = new ArrayList<String>(3);
 
-		result.add(ESAPEReportModel.testParams);
-		result.add(ESAPEReportModel.model_params);
-		result.add(ESAPEReportModel.reflectogram);
+//		result.add(ESAPEReportModel.testParams);
+//		result.add(ESAPEReportModel.model_params);
+		result.add(AESMPReportModel.REFLECTOGRAMM);
 
 		return result;
 	}
-	public String getObjectsName()
-	{
-		return LangModelReport.getString("label_repModelingResults");
+	@Override
+	public String getName() {
+		return "";
+		//LangModelReport.getString("label_repModelingResults");
 	}
 
 	public String getLangForField(String field)
@@ -39,9 +37,9 @@ public class ModelingReportModel extends ESAPEReportModel
 		String strToReturn = "";
 		try
 		{
-			if (field.equals(ESAPEReportModel.model_params))
-				strToReturn = LangModelModel.getString(field);
-			else
+//			if (field.equals(ESAPEReportModel.model_params))
+//				strToReturn = LangModelModel.getString(field);
+//			else
 				strToReturn = LangModelAnalyse.getString(field);
 		}
 		catch(Exception exc)

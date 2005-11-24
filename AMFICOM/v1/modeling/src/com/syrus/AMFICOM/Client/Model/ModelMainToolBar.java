@@ -1,219 +1,132 @@
 package com.syrus.AMFICOM.Client.Model;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import javax.swing.*;
+import java.awt.Image;
+import java.awt.Toolkit;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.UIManager;
 
-public class ModelMainToolBar extends JToolBar implements ApplicationModelListener
-{
-	private ApplicationModel aModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
+import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-	JButton sessionOpen = new JButton();
-//  JButton sessionClose= new JButton();
+public class ModelMainToolBar extends AbstractMainToolBar {
+	private static final long serialVersionUID = -1939493412625726895L;
 
-	JButton menuViewMapViewOpen = new JButton();
-	JButton menuViewSchemeOpen = new JButton();
-	JButton menuViewModelLoad = new JButton();
-
-	JButton traceAddCompare = new JButton();
-	JButton traceRemoveCompare = new JButton();
-	JButton buttonFileOpen = new JButton();
-	JButton fileAdd = new JButton();
-	JButton fileRemove = new JButton();
-	JButton saveModel = new JButton();
-	JButton performModeling = new JButton();
-
-	public final static int img_siz = 16;
-	public final static int btn_siz = 24;
-
-	public ModelMainToolBar()
-	{
-
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+	public ModelMainToolBar() {
+		initItems();
 	}
 
-	private void jbInit() throws Exception
-	{
-		ModelMainToolBar_this_actionAdapter actionAdapter =
-				new ModelMainToolBar_this_actionAdapter(this);
-
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
-
-		this.sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.sessionOpen.setMaximumSize(buttonSize);
-		this.sessionOpen.setPreferredSize(buttonSize);
-		this.sessionOpen.setToolTipText(LangModelModel.getString("menuSessionOpen"));
-		this.sessionOpen.setName("menuSessionOpen");
-		this.sessionOpen.addActionListener(actionAdapter);
-
-//    this.sessionClose.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/close_session2.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-//    this.sessionClose.setMaximumSize(buttonSize);
-//    this.sessionClose.setPreferredSize(buttonSize);
-//    this.sessionClose.setToolTipText(LangModelModel.getString("menuSessionClose"));
-//    this.sessionClose.setName("menuSessionClose");
-//    this.sessionClose.addActionListener(actionAdapter);
-
-		this.menuViewMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")
+	private void initItems() {
+		final JButton menuViewMapViewOpen = new JButton();
+		menuViewMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")
 				.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.menuViewMapViewOpen.setMaximumSize(buttonSize);
-		this.menuViewMapViewOpen.setPreferredSize(buttonSize);
-		this.menuViewMapViewOpen.setToolTipText(LangModelModel.getString("menuViewMapViewOpen"));
-		this.menuViewMapViewOpen.setName("menuViewMapViewOpen");
-		this.menuViewMapViewOpen.addActionListener(actionAdapter);
+		menuViewMapViewOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewMapViewOpen.setToolTipText(LangModelModel.getString("menuViewMapViewOpen"));
+		menuViewMapViewOpen.setName("menuViewMapViewOpen");
+		menuViewMapViewOpen.addActionListener(super.actionListener);
 
-		this.menuViewModelLoad.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_model.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.menuViewModelLoad.setMaximumSize(buttonSize);
-		this.menuViewModelLoad.setPreferredSize(buttonSize);
-		this.menuViewModelLoad.setToolTipText(LangModelModel.getString("menuViewModelLoad"));
-		this.menuViewModelLoad.setName("menuViewModelLoad");
-		this.menuViewModelLoad.addActionListener(actionAdapter);
+		final JButton menuViewModelLoad = new JButton();
+		menuViewModelLoad.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_model.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		menuViewModelLoad.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewModelLoad.setToolTipText(LangModelModel.getString("menuViewModelLoad"));
+		menuViewModelLoad.setName("menuViewModelLoad");
+		menuViewModelLoad.addActionListener(super.actionListener);
 
-		this.menuViewSchemeOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.menuViewSchemeOpen.setMaximumSize(buttonSize);
-		this.menuViewSchemeOpen.setPreferredSize(buttonSize);
-		this.menuViewSchemeOpen.setToolTipText(LangModelModel.getString("menuViewSchemeOpen"));
-		this.menuViewSchemeOpen.setName("menuViewSchemeOpen");
-		this.menuViewSchemeOpen.addActionListener(actionAdapter);
+		final JButton menuViewSchemeOpen = new JButton();
+		menuViewSchemeOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		menuViewSchemeOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewSchemeOpen.setToolTipText(LangModelModel.getString("menuViewSchemeOpen"));
+		menuViewSchemeOpen.setName("menuViewSchemeOpen");
+		menuViewSchemeOpen.addActionListener(super.actionListener);
 
-		this.traceAddCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_add.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.traceAddCompare.setMaximumSize(buttonSize);
-		this.traceAddCompare.setPreferredSize(buttonSize);
-		this.traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
-		this.traceAddCompare.setName("menuTraceAddCompare");
-		this.traceAddCompare.addActionListener(actionAdapter);
+		final JButton traceAddCompare = new JButton();
+		traceAddCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_add.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		traceAddCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
+		traceAddCompare.setName("menuTraceAddCompare");
+		traceAddCompare.addActionListener(super.actionListener);
 
-		this.traceRemoveCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_remove.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.traceRemoveCompare.setMaximumSize(buttonSize);
-		this.traceRemoveCompare.setPreferredSize(buttonSize);
-		this.traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
-		this.traceRemoveCompare.setName("menuTraceRemoveCompare");
-		this.traceRemoveCompare.addActionListener(actionAdapter);
+		final JButton traceRemoveCompare = new JButton();
+		traceRemoveCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_remove.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		traceRemoveCompare.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
+		traceRemoveCompare.setName("menuTraceRemoveCompare");
+		traceRemoveCompare.addActionListener(super.actionListener);
 
-		this.buttonFileOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.buttonFileOpen.setMaximumSize(buttonSize);
-		this.buttonFileOpen.setPreferredSize(buttonSize);
-		this.buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
-		this.buttonFileOpen.setName("menuFileOpen");
-		this.buttonFileOpen.addActionListener(actionAdapter);
+		final JButton buttonFileOpen = new JButton();
+		buttonFileOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		buttonFileOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
+		buttonFileOpen.setName("menuFileOpen");
+		buttonFileOpen.addActionListener(super.actionListener);
 
-		this.fileAdd.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.fileAdd.setMaximumSize(buttonSize);
-		this.fileAdd.setPreferredSize(buttonSize);
-		this.fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
-		this.fileAdd.setName("menuFileAddCompare");
-		this.fileAdd.addActionListener(actionAdapter);
+		final JButton fileAdd = new JButton();
+		fileAdd.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		fileAdd.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
+		fileAdd.setName("menuFileAddCompare");
+		fileAdd.addActionListener(super.actionListener);
 
-		this.fileRemove.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.fileRemove.setMaximumSize(buttonSize);
-		this.fileRemove.setPreferredSize(buttonSize);
-		this.fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
-		this.fileRemove.setName("menuFileRemoveCompare");
-		this.fileRemove.addActionListener(actionAdapter);
+		final JButton fileRemove = new JButton();
+		fileRemove.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		fileRemove.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
+		fileRemove.setName("menuFileRemoveCompare");
+		fileRemove.addActionListener(super.actionListener);
 
-		this.saveModel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.saveModel.setMaximumSize(buttonSize);
-		this.saveModel.setPreferredSize(buttonSize);
-		this.saveModel.setToolTipText(LangModelModel.getString("menuViewModelSave"));
-		this.saveModel.setName("menuViewModelSave");
-		this.saveModel.addActionListener(actionAdapter);
+		final JButton saveModel = new JButton();
+		saveModel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		saveModel.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		saveModel.setToolTipText(LangModelModel.getString("menuViewModelSave"));
+		saveModel.setName("menuViewModelSave");
+		saveModel.addActionListener(super.actionListener);
 
-		this.performModeling.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/perform_analysis.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		this.performModeling.setMaximumSize(buttonSize);
-		this.performModeling.setPreferredSize(buttonSize);
-		this.performModeling.setToolTipText(LangModelModel.getString("menuViewPerformModeling"));
-		this.performModeling.setName("menuViewPerformModeling");
-		this.performModeling.addActionListener(actionAdapter);
-
-		add(this.sessionOpen);
-//    add(this.sessionClose);
 		addSeparator();
-		add(this.menuViewMapViewOpen);
-		add(this.menuViewSchemeOpen);
+		add(menuViewMapViewOpen);
+		add(menuViewSchemeOpen);
 		addSeparator();
-		add(this.buttonFileOpen);
-		add(this.fileAdd);
-		add(this.fileRemove);
+		add(buttonFileOpen);
+		add(fileAdd);
+		add(fileRemove);
 		addSeparator();
-		add(this.menuViewModelLoad);
-		add(this.traceAddCompare);
-		add(this.traceRemoveCompare);
+		add(menuViewModelLoad);
+		add(traceAddCompare);
+		add(traceRemoveCompare);
 		addSeparator();
-		add(this.performModeling);
-		add(this.saveModel);
+		add(saveModel);
 
-	}
-
-	public void setModel(ApplicationModel a)
-	{
-		this.aModel = a;
-	}
-
-	public ApplicationModel getModel()
-	{
-		return this.aModel;
-	}
-
-	public void modelChanged(String e[])
-	{
-		this.sessionOpen.setVisible(this.aModel.isVisible("menuSessionOpen"));
-		this.sessionOpen.setEnabled(this.aModel.isEnabled("menuSessionOpen"));
-//    this.sessionClose.setVisible(this.aModel.isVisible("menuSessionClose"));
-//    this.sessionClose.setEnabled(this.aModel.isEnabled("menuSessionClose"));
-		this.menuViewMapViewOpen.setVisible(this.aModel.isVisible("menuViewMapViewOpen"));
-		this.menuViewMapViewOpen.setEnabled(this.aModel.isEnabled("menuViewMapViewOpen"));
-		this.menuViewSchemeOpen.setVisible(this.aModel.isVisible("menuViewSchemeOpen"));
-		this.menuViewSchemeOpen.setEnabled(this.aModel.isEnabled("menuViewSchemeOpen"));
-		this.menuViewModelLoad.setVisible(this.aModel.isVisible("menuViewModelLoad"));
-		this.menuViewModelLoad.setEnabled(this.aModel.isEnabled("menuViewModelLoad"));
-		this.traceAddCompare.setVisible(this.aModel.isVisible("menuTraceAddCompare"));
-		this.traceAddCompare.setEnabled(this.aModel.isEnabled("menuTraceAddCompare"));
-		this.traceRemoveCompare.setVisible(this.aModel.isVisible("menuTraceRemoveCompare"));
-		this.traceRemoveCompare.setEnabled(this.aModel.isEnabled("menuTraceRemoveCompare"));
-		this.buttonFileOpen.setVisible(this.aModel.isVisible("menuFileOpen"));
-		this.buttonFileOpen.setEnabled(this.aModel.isEnabled("menuFileOpen"));
-		this.fileAdd.setEnabled(this.aModel.isEnabled("menuFileAddCompare"));
-		this.fileAdd.setVisible(this.aModel.isVisible("menuFileAddCompare"));
-		this.fileRemove.setEnabled(this.aModel.isEnabled("menuFileRemoveCompare"));
-		this.fileRemove.setVisible(this.aModel.isVisible("menuFileRemoveCompare"));
-		this.saveModel.setVisible(this.aModel.isVisible("menuViewModelSave"));
-		this.saveModel.setEnabled(this.aModel.isEnabled("menuViewModelSave"));
-		this.performModeling.setVisible(this.aModel.isVisible("menuViewPerformModeling"));
-		this.performModeling.setEnabled(this.aModel.isEnabled("menuViewPerformModeling"));
-	}
-
-	public void this_actionPerformed(ActionEvent e)
-	{
-		if(this.aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = this.aModel.getCommand(s);
-		command.execute();
-	}
-}
-
-class ModelMainToolBar_this_actionAdapter implements java.awt.event.ActionListener
-{
-	ModelMainToolBar adaptee;
-
-	ModelMainToolBar_this_actionAdapter(ModelMainToolBar adaptee)
-	{
-		this.adaptee = adaptee;
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		this.adaptee.this_actionPerformed(e);
+		addApplicationModelListener(new ApplicationModelListener() {
+			public void modelChanged(String e) {
+				modelChanged(new String[] { e });
+			}
+			
+			public void modelChanged(String e[]) {
+				ApplicationModel aModel = ModelMainToolBar.this.getApplicationModel();
+				
+				menuViewMapViewOpen.setVisible(aModel.isVisible("menuViewMapViewOpen"));
+				menuViewMapViewOpen.setEnabled(aModel.isEnabled("menuViewMapViewOpen"));
+				menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
+				menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
+				menuViewModelLoad.setVisible(aModel.isVisible("menuViewModelLoad"));
+				menuViewModelLoad.setEnabled(aModel.isEnabled("menuViewModelLoad"));
+				traceAddCompare.setVisible(aModel.isVisible("menuTraceAddCompare"));
+				traceAddCompare.setEnabled(aModel.isEnabled("menuTraceAddCompare"));
+				traceRemoveCompare.setVisible(aModel.isVisible("menuTraceRemoveCompare"));
+				traceRemoveCompare.setEnabled(aModel.isEnabled("menuTraceRemoveCompare"));
+				buttonFileOpen.setVisible(aModel.isVisible("menuFileOpen"));
+				buttonFileOpen.setEnabled(aModel.isEnabled("menuFileOpen"));
+				fileAdd.setEnabled(aModel.isEnabled("menuFileAddCompare"));
+				fileAdd.setVisible(aModel.isVisible("menuFileAddCompare"));
+				fileRemove.setEnabled(aModel.isEnabled("menuFileRemoveCompare"));
+				fileRemove.setVisible(aModel.isVisible("menuFileRemoveCompare"));
+				saveModel.setVisible(aModel.isVisible("menuViewModelSave"));
+				saveModel.setEnabled(aModel.isEnabled("menuViewModelSave"));
+			}
+		});
 	}
 }

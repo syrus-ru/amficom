@@ -1,11 +1,20 @@
 package com.syrus.AMFICOM.Client.Model;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ItemEvent;
-import javax.swing.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.ATable;
 
 public class TransData extends JInternalFrame {
 
@@ -13,8 +22,8 @@ public class TransData extends JInternalFrame {
 	JScrollPane jScrollPane1 = new JScrollPane();
 	ATable jTable1 = new ATable();
 	JPanel jPanel1 = new JPanel(new GridLayout(2, 2));
-	AComboBox jComboBox1 = new AComboBox(AComboBox.SMALL_FONT);
-	AComboBox jComboBox2 = new AComboBox(AComboBox.SMALL_FONT);
+	AComboBox jComboBox1 = new AComboBox();
+	AComboBox jComboBox2 = new AComboBox();
 	JLabel jLabel1 = new JLabel();
 	JLabel jLabel2 = new JLabel();
 
