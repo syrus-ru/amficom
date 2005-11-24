@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.106 2005/11/10 13:16:37 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.107 2005/11/24 15:30:12 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.106 $, $Date: 2005/11/10 13:16:37 $
+ * @version $Revision: 1.107 $, $Date: 2005/11/24 15:30:12 $
  * @module
  */
 public class ModelTraceManager
@@ -428,6 +428,7 @@ implements DataStreamable, Cloneable
 	 * @return запрошенная модельная кривая
 	 */
 	private ModelTrace getThresholdMTByLevel(boolean isUpper, double level) {
+
 		// создаем набор порогов
 		ThreshDX[] effX = new ThreshDX[this.tDX.length];
 		for (int i = 0; i < this.tDX.length; i++)
@@ -435,11 +436,15 @@ implements DataStreamable, Cloneable
 		ThreshDY[] effY = new ThreshDY[this.tDY.length];
 		for (int i = 0; i < this.tDY.length; i++)
 			effY[i] = this.tDY[i].makeWeightedThresholds(level);
+
 		// генерируем пороговую кривую
 		ModelFunction tmp = getMF().copy();
+
+		// timing: this call takes 60% CPU time of the whole method CPU time
 		tmp.changeByThresh(effX,
 				effY,
 				isUpper ? Thresh.SOFT_UP : Thresh.SOFT_DOWN);
+
 		return new ModelTraceImplMF(tmp, getTraceLength());
 	}
 
