@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.29 2005/10/31 12:30:01 bass Exp $
+ * $Id: AbstractApplication.java,v 1.30 2005/11/24 08:04:15 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/10/31 12:30:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/11/24 08:04:15 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -112,10 +112,10 @@ public abstract class AbstractApplication {
 				this.init();
 			} catch (final ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(null, e);
-				Environment.checkForExit();
+				AbstractMainFrame.checkForExit();
 			}
 		} else {
-			Environment.checkForExit();
+			AbstractMainFrame.checkForExit();
 		}
 	}	
 

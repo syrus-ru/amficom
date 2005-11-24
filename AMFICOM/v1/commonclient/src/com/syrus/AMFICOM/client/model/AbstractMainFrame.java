@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.33 2005/11/24 07:53:06 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.34 2005/11/24 08:04:15 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/11/24 07:53:06 $
+ * @version $Revision: 1.34 $, $Date: 2005/11/24 08:04:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -138,7 +138,7 @@ implements PropertyChangeListener {
 		this.setContext(aContext);
 	}
 
-	private static void checkForExit() {
+	public final static void checkForExit() {
 		if (windows.isEmpty()) {
 			System.exit(0);
 		}
@@ -389,6 +389,10 @@ implements PropertyChangeListener {
 		}
 	}
 	
+	public static final void disposeMainFrame(final AbstractMainFrame mainFrame) {
+		windows.remove(mainFrame);
+	}
+	
 	protected void disposeModule() {
 		this.statusBar.removeDispatcher(this.dispatcher);
 		this.statusBar.removeDispatcher(theDispatcher);
@@ -397,7 +401,7 @@ implements PropertyChangeListener {
 		final ApplicationModel model = this.aContext.getApplicationModel();
 		final Command exitCommand = model.getCommand(ApplicationModel.MENU_EXIT);
 		exitCommand.execute();
-		windows.remove(this);
+		disposeMainFrame(this);
 		this.dispose();
 		checkForExit();
 	}

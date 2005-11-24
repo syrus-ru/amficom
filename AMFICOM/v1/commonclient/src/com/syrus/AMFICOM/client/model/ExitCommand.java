@@ -1,5 +1,5 @@
 /*
- * $Id: ExitCommand.java,v 1.4 2005/10/25 15:33:34 bob Exp $
+ * $Id: ExitCommand.java,v 1.5 2005/11/24 08:04:15 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,24 +8,22 @@
 
 package com.syrus.AMFICOM.client.model;
 
-import java.awt.Window;
-
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 
 /**
  * 
- * @version $Revision: 1.4 $, $Date: 2005/10/25 15:33:34 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/24 08:04:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public class ExitCommand extends AbstractCommand {
 
-	private Window	window; // Окно, из которого вызвана команда
+	private AbstractMainFrame	window; // Окно, из которого вызвана команда
 	private final Dispatcher	dispatcher;
 
-	public ExitCommand(final Window window,
+	public ExitCommand(final AbstractMainFrame window,
 			final Dispatcher dispatcher) {
 		this.window = window;
 		this.dispatcher = dispatcher;		
@@ -36,8 +34,7 @@ public class ExitCommand extends AbstractCommand {
 		final ContextChangeEvent logOutEvent = 
 			new ContextChangeEvent(this, ContextChangeEvent.LOGGED_OUT_EVENT);
 		this.dispatcher.firePropertyChange(logOutEvent);
-		System.out.println("exit window " + this.window.getName());
-		Environment.disposeWindow(this.window); // Реально удаление окна
+		AbstractMainFrame.disposeMainFrame(this.window); // Реально удаление окна
 		// производит
 		// только класс окружения Environment
 	}
@@ -46,11 +43,11 @@ public class ExitCommand extends AbstractCommand {
 	public void setParameter(	String field,
 								Object value) {
 		if (field.equals("window")) {
-			setWindow((Window) value);
+			setWindow((AbstractMainFrame) value);
 		}
 	}
 
-	public void setWindow(Window window) {
+	public void setWindow(AbstractMainFrame window) {
 		this.window = window;
 	}
 
