@@ -258,6 +258,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 
 		buttons2.putAll(super.createGraphButtons());
 		deleteMarkerButton.setEnabled(false);
+		traceTButton.doClick();
 		return buttons2;
 	}
 
