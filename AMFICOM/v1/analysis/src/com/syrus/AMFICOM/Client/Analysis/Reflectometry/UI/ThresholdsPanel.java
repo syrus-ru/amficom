@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.AWTException;
 import java.awt.Cursor;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -439,8 +440,28 @@ public class ThresholdsPanel extends MapMarkersPanel
 		final int markerHaifWidth = markerHeight * 2 / 3;
 		final int markerMargin = markerHeight / 3;
 
+		int textMargin = 0;
+		int textHeight = 0;
+		int textAscent = 0;
+		int textDescent = 0;
+		int textWidth = 0;
+
+			// параметры надписи
+		String textToDraw = null;
+		if (outofMaskPoint.hasMismatch()) {
+			textToDraw = "" + outofMaskPoint.getMinMismatch()
+				+ " .. " + outofMaskPoint.getMaxMismatch();
+			final FontMetrics fontMetrics = getFontMetrics(getFont());
+			textMargin = markerMargin;
+			textAscent = fontMetrics.getAscent();
+			textDescent = fontMetrics.getDescent();
+			textHeight = textAscent + textDescent;
+			textWidth = fontMetrics.stringWidth(textToDraw);
+		}
+
 		// определяем, с какой стороны рисовать
-		boolean inverse = yCoord < markerMargin + markerHeight;
+		boolean inverse = yCoord <
+				markerMargin + markerHeight + textMargin + textHeight;
 		int sign = inverse ? 1 : -1;
 
 		// рисуем пометку в точке выхода
@@ -449,6 +470,9 @@ public class ThresholdsPanel extends MapMarkersPanel
 		int sx0 = xCoord;
 		int sx1 = xCoord - markerHaifWidth;
 		int sx2 = xCoord + markerHaifWidth;
+		int syText = sy1 + sign * markerMargin
+			+ sign * (inverse ? textAscent : textDescent);
+		int sxText = xCoord - textWidth / 2;
 
 		// set color; XXX: use ALARM color
 		g.setColor(UIManager.getColor(
@@ -457,5 +481,9 @@ public class ThresholdsPanel extends MapMarkersPanel
 		g.drawLine(sx0, sy0, sx1, sy1);
 		g.drawLine(sx0, sy0, sx2, sy1);
 		g.drawLine(sx2, sy1, sx1, sy1);
+
+		// делаем надпись
+		if (textToDraw != null)
+			g.drawString(textToDraw, sxText, syText);
 	}
 }
