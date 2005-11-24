@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.44 2005/11/24 08:35:51 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.45 2005/11/24 09:59:24 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.44 $, $Date: 2005/11/24 08:35:51 $
+ * @version $Revision: 1.45 $, $Date: 2005/11/24 09:59:24 $
  * @module
  */
 public class ModelTraceComparer
@@ -259,9 +259,13 @@ public class ModelTraceComparer
 	}
 
 	/**
-	 * @return ReflectogramMismatchImpl, may be null
+	 * Определяет точку выхода за пороги.
+	 * Это еще не дистанция аларма, т.к. её ещё надо будет привязать
+	 * к началу события, а также скорректировать его конечную точку.
+	 * @return ReflectogramMismatchImpl, not null; возможно, с SEVERITY_NONE,
+	 *  с заполненными severity, coord, endCoord, alarmType, deltaX.
 	 */
-	public static ReflectogramMismatchImpl compareTraceToMTM(ModelTrace mt,
+	public static ReflectogramMismatchImpl getOutOfMaskPoint(ModelTrace mt,
 			ModelTraceManager mtm) {
 		// create initial 'no alarm' alarm 
 		ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
@@ -301,13 +305,23 @@ public class ModelTraceComparer
 				}
 			}
 		}
+		return alarm;
+	}
+
+	/**
+	 * @return ReflectogramMismatchImpl, may be null
+	 */
+	public static ReflectogramMismatchImpl compareTraceToMTM(ModelTrace mt,
+			ModelTraceManager mtm) {
+		ReflectogramMismatchImpl alarm = getOutOfMaskPoint(mt, mtm);
+
 		if (alarm.getSeverity().compareTo(SEVERITY_NONE) > 0) {
 			// привязываем к началу события
 			alarm.setCoord(mtm.fixAlarmPos(alarm.getCoord(), true));
 			if (alarm.getEndCoord() < alarm.getCoord())
 				alarm.setEndCoord(alarm.getCoord());
 
-			fillAlarmMismatch(y, mtm, alarm);
+			fillAlarmMismatch(mt.getYArray(), mtm, alarm);
 			Log.debugMessage("level " + alarm.getSeverity()
 					+ " mismatch "
 					+ (alarm.hasMismatch()
@@ -336,8 +350,7 @@ public class ModelTraceComparer
 	 *   Значение меньше нуля.
 	 * @return дистанция обрыва либо -1
 	 */
-	public static int compareToMinLevel(ModelTrace mt, double th)
-	{
+	public static int compareToMinLevel(ModelTrace mt, double th) {
 		double[] y = mt.getYArray();
 		int i;
 		// XXX: проводим выравнивание, которое, вероятно, более не нужно
