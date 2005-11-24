@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.46 2005/11/24 11:58:37 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.47 2005/11/24 13:37:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.46 $, $Date: 2005/11/24 11:58:37 $
+ * @version $Revision: 1.47 $, $Date: 2005/11/24 13:37:31 $
  * @module
  */
 public class ModelTraceComparer
@@ -262,8 +262,13 @@ public class ModelTraceComparer
 	 * Определяет точку выхода за пороги.
 	 * Это еще не дистанция аларма, т.к. её ещё надо будет привязать
 	 * к началу события, а также скорректировать его конечную точку.
-	 * @return ReflectogramMismatchImpl, not null; возможно, с SEVERITY_NONE,
-	 *  с заполненными severity, coord, endCoord, alarmType, deltaX.
+	 * @return ReflectogramMismatchImpl, not null.
+	 * <ul>
+	 * <li> если выход за пороги есть, то severity != SEVERITY_NONE
+	 *   и определены поля coord, endCoord, alarmType, deltaX, mismatch.
+	 * <li> если выхода за пороги нет, то severity == SEVERITY_NONE,
+	 *   а остальные поля не определены.
+	 * </ul>
 	 */
 	public static ReflectogramMismatchImpl getOutOfMaskPoint(ModelTrace mt,
 			ModelTraceManager mtm) {
@@ -315,6 +320,8 @@ public class ModelTraceComparer
 			alarm.setEndCoord(resEnd);
 			alarm.setAlarmType(TYPE_OUTOFMASK);
 			alarm.setDeltaX(mtm.getMTAE().getDeltaX());
+			// рассчитываем уровень несоответствия
+			fillAlarmMismatch(y, mtm, alarm);
 		}
 		return alarm;
 	}
@@ -327,12 +334,12 @@ public class ModelTraceComparer
 		ReflectogramMismatchImpl alarm = getOutOfMaskPoint(mt, mtm);
 
 		if (alarm.getSeverity().compareTo(SEVERITY_NONE) > 0) {
+			// несоответствие есть
 			// привязываем к началу события
 			alarm.setCoord(mtm.fixAlarmPos(alarm.getCoord(), true));
 			if (alarm.getEndCoord() < alarm.getCoord())
 				alarm.setEndCoord(alarm.getCoord());
 
-			fillAlarmMismatch(mt.getYArray(), mtm, alarm);
 			Log.debugMessage("level " + alarm.getSeverity()
 					+ " mismatch "
 					+ (alarm.hasMismatch()
@@ -341,6 +348,7 @@ public class ModelTraceComparer
 					Level.FINEST);
 			return alarm;
 		}
+		// несоответствия нет
 		return null;
 	}
 
