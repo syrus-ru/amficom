@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.32 2005/10/31 12:30:02 bass Exp $
+ * $Id: AbstractMainFrame.java,v 1.33 2005/11/24 07:53:06 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,12 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.SystemColor;
+import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -52,14 +54,18 @@ import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/10/31 12:30:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/11/24 07:53:06 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public abstract class AbstractMainFrame extends JFrame 
 implements PropertyChangeListener {
 
+	private static List<Window> windows = new ArrayList<Window>();
+	private static Dispatcher theDispatcher = new Dispatcher();
+	private static AbstractMainFrame activeWindow = null;
+	
 	protected ApplicationContext		aContext;
 	protected JDesktopPane				desktopPane;
 
@@ -127,11 +133,18 @@ implements PropertyChangeListener {
 			maximumWindowBounds.height));
 		this.setLocation(maximumWindowBounds.x, maximumWindowBounds.y);
 
-		Environment.addWindow(this);
+		windows.add(this);
 		this.initModule();
 		this.setContext(aContext);
 	}
 
+	private static void checkForExit() {
+		if (windows.isEmpty()) {
+			System.exit(0);
+		}
+	}
+
+	
 	public ApplicationContext getContext() {
 		return this.aContext;
 	}
@@ -263,12 +276,12 @@ implements PropertyChangeListener {
 		aModel.fireModelChanged();
 	}
 
-	private void addListeners(final ApplicationModel aModel,
+	private void addListeners(final ApplicationModel model,
 			final List<ApplicationModelListener> applicationModelListeners) {
 		if (applicationModelListeners != null && 
 				!applicationModelListeners.isEmpty()) {
 			for (final ApplicationModelListener listener : applicationModelListeners) {
-				aModel.addListener(listener);
+				model.addListener(listener);
 			}
 		}
 	}
@@ -279,7 +292,7 @@ implements PropertyChangeListener {
 		int id = e.getID();
 		switch(id) {
 			case WindowEvent.WINDOW_ACTIVATED:
-				Environment.setActiveWindow(this);
+				setActiveMainFrame(this);
 				break;
 			case WindowEvent.WINDOW_CLOSING:
 				this.disposeModule();
@@ -296,7 +309,7 @@ implements PropertyChangeListener {
 	}
 
 	public static void showErrorMessage(final String errorMessage) {
-		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+		JOptionPane.showMessageDialog(getActiveMainFrame(), 
 			CommonUIUtilities.convertToHTMLString(errorMessage),
 			I18N.getString("Error.ErrorOccur"),
 			JOptionPane.ERROR_MESSAGE);
@@ -315,7 +328,7 @@ implements PropertyChangeListener {
 	}
 
 	protected void initModule() {
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+		ApplicationModel model = this.aContext.getApplicationModel();
 
 		this.statusBar.setWidth(StatusBar.FIELD_STATUS, 300);
 		this.statusBar.setWidth(StatusBar.FIELD_SERVER, 250);
@@ -339,73 +352,85 @@ implements PropertyChangeListener {
 		this.aContext.setDispatcher(this.dispatcher);
 
 		this.dispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
-		Dispatcher theDispatcher = Environment.getDispatcher();
-		
+
 		this.statusBar.addDispatcher(theDispatcher);
 		
 		theDispatcher.addPropertyChangeListener(ContextChangeEvent.TYPE, this);
 
-		aModel.setCommand(ApplicationModel.MENU_SESSION_NEW, 
+		model.setCommand(ApplicationModel.MENU_SESSION_NEW, 
 				new OpenSessionCommand(theDispatcher));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_CLOSE, 
+		model.setCommand(ApplicationModel.MENU_SESSION_CLOSE, 
 				new SessionCloseCommand(theDispatcher));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_OPTIONS, 
+		model.setCommand(ApplicationModel.MENU_SESSION_OPTIONS, 
 				new SessionOptionsCommand(this.aContext));
-		aModel.setCommand(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD,
+		model.setCommand(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD,
 				new SessionChangePasswordCommand(theDispatcher, this.aContext));
 //		aModel.setCommand(ApplicationModel.MENU_SESSION_DOMAIN, 
 //				new SessionDomainCommand(theDispatcher));
-		aModel.setCommand(ApplicationModel.MENU_EXIT, new ExitCommand(this, this.dispatcher));
+		model.setCommand(ApplicationModel.MENU_EXIT, new ExitCommand(this, this.dispatcher));
 
 		// this.setWindowArranger(this.windowArranger);
 		// if (this.windowArranger != null) {
 		// aModel.setCommand(AbstractMainMenuBar.MENU_VIEW_ARRANGE, new
 		// ArrangeWindowCommand(this.windowArranger));
 		// }
-		aModel.setCommand(ApplicationModel.MENU_HELP_ABOUT, 
+		model.setCommand(ApplicationModel.MENU_HELP_ABOUT, 
 				new HelpAboutCommand(this));
 
-		setDefaultModel(aModel);
+		setDefaultModel(model);
 
-		aModel.fireModelChanged();
+		model.fireModelChanged();
 
 	}
 	
-	protected void setFramesVisible(boolean b) {
+	protected void setFramesVisible(boolean visible) {
 		for (Component component : this.desktopPane.getComponents()) {
-			component.setVisible(b);
+			component.setVisible(visible);
 		}
 	}
 	
 	protected void disposeModule() {
 		this.statusBar.removeDispatcher(this.dispatcher);
-		this.statusBar.removeDispatcher(Environment.getDispatcher());
-		this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, 
-				this);
-		Environment.getDispatcher().removePropertyChangeListener(
-				ContextChangeEvent.TYPE, this);
-		this.aContext.getApplicationModel().getCommand(
-			ApplicationModel.MENU_EXIT).execute();
-		Environment.disposeWindow(this);
+		this.statusBar.removeDispatcher(theDispatcher);
+		this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE,this);
+		theDispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+		final ApplicationModel model = this.aContext.getApplicationModel();
+		final Command exitCommand = model.getCommand(ApplicationModel.MENU_EXIT);
+		exitCommand.execute();
+		windows.remove(this);
+		this.dispose();
+		checkForExit();
 	}
 
-	protected void setDefaultModel(ApplicationModel aModel) {
-		aModel.setAllItemsEnabled(false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
-		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
-		aModel.setEnabled(ApplicationModel.MENU_EXIT, true);
+	protected void setDefaultModel(final ApplicationModel model) {
+		model.setAllItemsEnabled(false);
+		model.setEnabled(ApplicationModel.MENU_SESSION, true);
+		model.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
+		model.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, false);
+		model.setEnabled(ApplicationModel.MENU_EXIT, true);
 
-		aModel.setEnabled(ApplicationModel.MENU_HELP, true);
-		aModel.setEnabled(ApplicationModel.MENU_HELP_ABOUT, true);
+		model.setEnabled(ApplicationModel.MENU_HELP, true);
+		model.setEnabled(ApplicationModel.MENU_HELP_ABOUT, true);
 	}
 
-	public void setWindowArranger(WindowArranger windowArranger) {
+	public void setWindowArranger(final WindowArranger windowArranger) {
 		if (windowArranger != null) {
-			ApplicationModel aModel = this.aContext.getApplicationModel();
+			final ApplicationModel aModel = this.aContext.getApplicationModel();
 			aModel.setCommand(ApplicationModel.MENU_VIEW_ARRANGE, 
 				new ArrangeWindowCommand(windowArranger));
 			this.windowArranger = windowArranger;
 		}
+	}
+	
+	public static Dispatcher getGlobalDispatcher() {
+		return theDispatcher;
+	}
+
+	public static void setActiveMainFrame(final AbstractMainFrame frame) {
+		activeWindow = frame;
+	}
+
+	public static AbstractMainFrame getActiveMainFrame() {
+		return activeWindow;
 	}
 }
