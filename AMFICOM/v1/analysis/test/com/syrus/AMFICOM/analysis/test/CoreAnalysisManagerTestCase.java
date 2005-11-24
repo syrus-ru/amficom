@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.13 2005/11/07 16:16:17 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.14 2005/11/24 11:59:12 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatchImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch;
+import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 import com.syrus.io.BellcoreCreator;
 import com.syrus.io.DataFormatException;
 import com.syrus.io.SignatureMismatchException;
@@ -429,5 +430,14 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		res = getFirstMismatch(
 				CoreAnalysisManager.compareAndMakeAlarms(arRest, etRest));
 		assertTrue(res != null); // должен быть обнаружен аларм
+	}
+
+	public final void testSeverity() {
+		Severity none = Severity.SEVERITY_NONE;
+		Severity soft = Severity.SEVERITY_SOFT;
+		Severity hard = Severity.SEVERITY_HARD;
+
+		assertTrue(soft.compareTo(none) > 0);
+		assertTrue(soft.compareTo(hard) < 0);
 	}
 }
