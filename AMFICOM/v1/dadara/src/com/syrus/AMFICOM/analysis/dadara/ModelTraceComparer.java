@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.43 2005/11/17 15:31:42 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.44 2005/11/24 08:35:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.43 $, $Date: 2005/11/17 15:31:42 $
+ * @version $Revision: 1.44 $, $Date: 2005/11/24 08:35:51 $
  * @module
  */
 public class ModelTraceComparer
@@ -258,11 +258,14 @@ public class ModelTraceComparer
 		}
 	}
 
+	/**
+	 * @return ReflectogramMismatchImpl, may be null
+	 */
 	public static ReflectogramMismatchImpl compareTraceToMTM(ModelTrace mt,
-			ModelTraceManager mtm)
-	{
-		// create initial 'no alarm' alarm
+			ModelTraceManager mtm) {
+		// create initial 'no alarm' alarm 
 		ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
+		// определяем точку выхода за пороги (еще без привязки)
 		double[] y = mt.getYArray();
 		for (int key = 0; key < 4; key++)
 		{
@@ -285,18 +288,13 @@ public class ModelTraceComparer
 			int alarmEnd = i;
 			if (alarmStart < len)
 			{
-				// привязываем к началу события
-				int alarmCoord = mtm.fixAlarmPos(alarmStart, true);
-				if (alarmEnd < alarmCoord)
-					alarmEnd = alarmCoord;
 				Severity level = Thresh.IS_KEY_HARD[key]
 					? ALARM_LEVEL_FOR_HARD_MASKS
 					: ALARM_LEVEL_FOR_SOFT_MASKS;
-				if (level == alarm.getSeverity() && alarmCoord < alarm.getCoord()
-						|| level.compareTo(alarm.getSeverity()) > 0)
-				{
+				if (level == alarm.getSeverity() && alarmStart < alarm.getCoord()
+						|| level.compareTo(alarm.getSeverity()) > 0) {
 					alarm.setSeverity(level);
-					alarm.setCoord(alarmCoord);
+					alarm.setCoord(alarmStart);
 					alarm.setEndCoord(alarmEnd);
 					alarm.setAlarmType(TYPE_OUTOFMASK);
 					alarm.setDeltaX(mtm.getMTAE().getDeltaX());
@@ -304,6 +302,11 @@ public class ModelTraceComparer
 			}
 		}
 		if (alarm.getSeverity().compareTo(SEVERITY_NONE) > 0) {
+			// привязываем к началу события
+			alarm.setCoord(mtm.fixAlarmPos(alarm.getCoord(), true));
+			if (alarm.getEndCoord() < alarm.getCoord())
+				alarm.setEndCoord(alarm.getCoord());
+
 			fillAlarmMismatch(y, mtm, alarm);
 			Log.debugMessage("level " + alarm.getSeverity()
 					+ " mismatch "
