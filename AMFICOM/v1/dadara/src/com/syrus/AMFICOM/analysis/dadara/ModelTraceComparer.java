@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.48 2005/11/24 15:15:03 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.49 2005/11/24 15:24:14 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.48 $, $Date: 2005/11/24 15:15:03 $
+ * @version $Revision: 1.49 $, $Date: 2005/11/24 15:24:14 $
  * @module
  */
 public class ModelTraceComparer
@@ -183,13 +183,16 @@ public class ModelTraceComparer
 	 *   false, если превышения порогов заданного уровня нет.
 	 */
 	private static boolean compareTraceToMTMAtLevel(double[] yProbe,
-			ModelTraceManager mtm, double level, ReflectogramMismatchImpl alarm)
-	{
+			ModelTraceManager mtm,
+			double level,
+			ReflectogramMismatchImpl alarm) {
+		// generate upper/lower MT (90% CPU time)
 		ModelTrace thMTU = mtm.getThresholdMTUpperByLevel(level);
 		ModelTrace thMTL = mtm.getThresholdMTLowerByLevel(level);
+
 		int alarmBegin = -1;
 		int alarmEnd = -1;
-		// compare to upper MT
+		// compare to upper MT (10% CPU time)
 		{
 			double[] yTh = thMTU.getYArray();
 			final int sign = 1;
@@ -269,7 +272,7 @@ public class ModelTraceComparer
 			}
 		}
 		long t1 = System.nanoTime();
-		System.err.println("binary search of mismatch: " + (t1 - t0) / 1e6 + " ms");
+//		System.err.println("binary search of mismatch: " + (t1 - t0) / 1e6 + " ms");
 		if (iMax > 0) {
 			if (iMax > N)
 				iMax = N;
