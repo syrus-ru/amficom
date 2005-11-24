@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.45 2005/11/24 09:59:24 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.46 2005/11/24 11:58:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.45 $, $Date: 2005/11/24 09:59:24 $
+ * @version $Revision: 1.46 $, $Date: 2005/11/24 11:58:37 $
  * @module
  */
 public class ModelTraceComparer
@@ -267,9 +267,12 @@ public class ModelTraceComparer
 	 */
 	public static ReflectogramMismatchImpl getOutOfMaskPoint(ModelTrace mt,
 			ModelTraceManager mtm) {
-		// create initial 'no alarm' alarm 
-		ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
+		int resStart = 0;
+		int resEnd = 0;
+		int resLevel = 0;
 		// определ€ем точку выхода за пороги (еще без прив€зки)
+		// предпочтение отдаем точке пересечению Hard-порогов,
+		// вне зависимости от соответстви€ уровн€м Severity
 		double[] y = mt.getYArray();
 		for (int key = 0; key < 4; key++)
 		{
@@ -292,18 +295,26 @@ public class ModelTraceComparer
 			int alarmEnd = i;
 			if (alarmStart < len)
 			{
-				Severity level = Thresh.IS_KEY_HARD[key]
-					? ALARM_LEVEL_FOR_HARD_MASKS
-					: ALARM_LEVEL_FOR_SOFT_MASKS;
-				if (level == alarm.getSeverity() && alarmStart < alarm.getCoord()
-						|| level.compareTo(alarm.getSeverity()) > 0) {
-					alarm.setSeverity(level);
-					alarm.setCoord(alarmStart);
-					alarm.setEndCoord(alarmEnd);
-					alarm.setAlarmType(TYPE_OUTOFMASK);
-					alarm.setDeltaX(mtm.getMTAE().getDeltaX());
+				int level = Thresh.IS_KEY_HARD[key] ? 2 : 1;
+				if (level == resLevel && alarmStart < resStart
+						|| level > resLevel) {
+					resLevel = level;
+					resStart = alarmStart;
+					resEnd = alarmEnd;
 				}
 			}
+		}
+		// create resulting alarm
+		ReflectogramMismatchImpl alarm = new ReflectogramMismatchImpl();
+		if (resLevel > 0) {
+			Severity level = resLevel > 1
+					? ALARM_LEVEL_FOR_HARD_MASKS
+					: ALARM_LEVEL_FOR_SOFT_MASKS;
+			alarm.setSeverity(level);
+			alarm.setCoord(resStart);
+			alarm.setEndCoord(resEnd);
+			alarm.setAlarmType(TYPE_OUTOFMASK);
+			alarm.setDeltaX(mtm.getMTAE().getDeltaX());
 		}
 		return alarm;
 	}
