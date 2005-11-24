@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.34 2005/11/24 08:04:15 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.35 2005/11/24 14:05:17 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Application;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/11/24 08:04:15 $
+ * @version $Revision: 1.35 $, $Date: 2005/11/24 14:05:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -391,6 +391,7 @@ implements PropertyChangeListener {
 	
 	public static final void disposeMainFrame(final AbstractMainFrame mainFrame) {
 		windows.remove(mainFrame);
+		checkForExit();
 	}
 	
 	protected void disposeModule() {
