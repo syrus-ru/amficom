@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.45 2005/11/25 09:07:22 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.46 2005/11/25 09:33:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.45 $, $Date: 2005/11/25 09:07:22 $
+ * @version $Revision: 1.46 $, $Date: 2005/11/25 09:33:27 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -242,7 +242,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					return super.getQuery(PathElementWrapper.COLUMN_SCHEME_LINK_ID);
 				case SCHEMEELEMENT_CODE:
 					//TODO: simplify this thing
-					StringBuffer buffer = new StringBuffer();
+					final StringBuffer buffer = new StringBuffer();
 					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
 					buffer.append(StorableObjectDatabase.SQL_IN);
 					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
@@ -336,9 +336,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					return buffer.toString();
 				case SCHEMECABLELINK_CODE:
-					return super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, StorableObjectWrapper.COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID,ObjectEntities.SCHEMECABLELINK);
+					return super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, StorableObjectWrapper.COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID, ObjectEntities.SCHEMECABLETHREAD);
 				case MEASUREMENTPORT_CODE:
-					StringBuffer buffer3 = new StringBuffer();
+					final StringBuffer buffer3 = new StringBuffer();
 					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMECABLEPORT));
 					buffer3.append(StorableObjectDatabase.SQL_OR);
 					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMEPORT));
