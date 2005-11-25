@@ -96,7 +96,7 @@ InitialAnalysis::InitialAnalysis(
 	}
 	else
 	{	int i;
-		for (i = 0; i < lastPoint; i++)
+		for (i = 0; i <= lastPoint; i++)
 		{	noise[i] = externalNoise[i] * noiseFactor;
         }
 	}
