@@ -140,6 +140,11 @@ public class ReflectogramMath
 	{
 		if (pulsewidth <= 0)
 			return 50; // XXX: default wavelet width when pulsewidth is unknown
+		// XXX: считаем, что полоса пропускания цепей рефлектометра соответствует разрешению импульсом ок. 400 нс
+		// довольно грубая оценка, основанная на тестах по testDB
+		final double minEffectivePulseWidth = 400;
+		if (pulsewidth < minEffectivePulseWidth)
+			pulsewidth = minEffectivePulseWidth;
 		double eventSize = 150d / refraction * pulsewidth / 1000d / resolution;
 		// ширина вейвлета меньше 2 не допустимо быть в принципе
 		// значения меньше 5 не рекомендуются как приводящие к неустойчивому анализу
