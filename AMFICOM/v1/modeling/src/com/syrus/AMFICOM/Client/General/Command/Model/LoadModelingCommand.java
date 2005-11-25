@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
@@ -56,7 +57,8 @@ public class LoadModelingCommand extends AbstractCommand {
 		} 
 		
 		if (res.getSort().equals(ResultSort.RESULT_SORT_MODELING)) {
-			Modeling m = (Modeling)res.getAction();
+			final Action action = res.getAction();
+			Measurement m = (Measurement) action;
 			bs.title = m.getName();
 
 			try {
@@ -78,8 +80,11 @@ public class LoadModelingCommand extends AbstractCommand {
 				ex.printStackTrace();
 			}
 		}
-		else
-			bs.title = ((Measurement )res.getAction()).getName();
+		else {
+			final Action action = res.getAction();
+			Measurement m = (Measurement) action;
+			bs.title = m.getName();
+		}
 
 		Heap.openPrimaryTraceFromBS(bs, Heap.PRIMARY_TRACE_KEY);
 		Heap.makePrimaryAnalysis();
