@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.27 2005/11/23 10:23:37 arseniy Exp $
+# $Id: Makefile,v 1.28 2005/11/25 08:06:27 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -25,14 +25,14 @@ LIBNAME_GENERALXML = generalxml.jar
 DEPENDENCIES = \
 general \
 administration \
-event \
-csbridge \
-util \
-reflectometry \
 configuration \
 measurement \
+event \
 map \
-scheme
+scheme \
+csbridge \
+reflectometry \
+util
 
 EXTCLASSPATH := $(TROVE4JCLASSPATH):$(JAFCLASSPATH):$(JAVAMAILCLASSPATH)
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
