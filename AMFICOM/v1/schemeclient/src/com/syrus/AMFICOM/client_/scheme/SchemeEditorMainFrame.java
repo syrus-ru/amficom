@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.32 2005/10/31 12:30:28 bass Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.33 2005/11/25 14:10:47 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/10/31 12:30:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.33 $, $Date: 2005/11/25 14:10:47 $
  * @module schemeclient
  */
 
@@ -407,7 +407,13 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				aModel.getCommand("menuSchemeNew").execute();
+				aModel.getCommand("menuWindowScheme").execute();
+				aModel.getCommand("menuWindowTree").execute();
+				aModel.getCommand("menuWindowUgo").execute();
+				aModel.getCommand("menuWindowProps").execute();
+				aModel.getCommand("menuWindowList").execute();
+				
+				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 			}
 		});
 	}

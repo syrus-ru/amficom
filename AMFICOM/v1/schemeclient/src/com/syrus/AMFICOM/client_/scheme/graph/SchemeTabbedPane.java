@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.34 2005/10/31 12:30:29 bass Exp $
+ * $Id: SchemeTabbedPane.java,v 1.35 2005/11/25 14:10:47 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/10/31 12:30:29 $
+ * @author $Author: stas $
+ * @version $Revision: 1.35 $, $Date: 2005/11/25 14:10:47 $
  * @module schemeclient
  */
 
@@ -77,6 +77,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	private static final long serialVersionUID = 2083767734784404078L;
 	JTabbedPane tabs;
 	Map<JScrollPane, ElementsPanel> graphPanelsMap;
+	
+	private static ElementsPanel stubPanel;
 
 	public SchemeTabbedPane(ApplicationContext aContext) {
 		super(aContext);
@@ -88,6 +90,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 		super.setContext(aContext);
+		stubPanel.setContext(aContext);
 		if (aContext != null) {
 			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
@@ -127,9 +130,17 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			}
 		});
 		setLayout(new BorderLayout());
-		add(this.tabs, BorderLayout.CENTER);
+		
+		stubPanel = new ElementsPanel(this.aContext);
+		SchemeGraph graph = stubPanel.getGraph();
+		graph.setEditable(false);
+		graph.setGridVisible(false);
+		graph.setActualSize(Constants.A4);
+				
+		super.panel = stubPanel;
+//		add(this.tabs, BorderLayout.CENTER);
 //		addPanel(new SchemePanel(aContext));
-		return this.tabs;
+		return stubPanel.getGraph();
 	}
 	
 	@Override
@@ -152,13 +163,18 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	public ElementsPanel getCurrentPanel() {
 		if (this.tabs.getSelectedIndex() != -1)
 			return this.graphPanelsMap.get(this.tabs.getComponentAt(this.tabs.getSelectedIndex()));
-		return null;
+		return (ElementsPanel)this.panel;
 //		SchemePanel newPanel = new SchemePanel(aContext);
 //		addPanel(newPanel);
 //		return newPanel;
 	}
 	
 	public void addPanel(ElementsPanel p) {
+		if (this.tabs.getParent() == null) {
+			remove(stubPanel.getGraph());
+			add(this.tabs, BorderLayout.CENTER);
+		}
+		
 		SchemeGraph graph = p.getGraph();
 		graph.setMarqueeHandler(this.marqueeHandler);
 		graph.addKeyListener(this.keyListener);
@@ -470,8 +486,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							if (scheme.equals(p.getSchemeResource().getScheme())) {
 								this.tabs.remove(i);
 								if (this.tabs.getTabCount() == 0) {
-									ApplicationModel aModel = this.aContext.getApplicationModel(); 
-									aModel.getCommand("menuSchemeNew").execute();
+									if (this.tabs.getParent() != null) {
+										remove(this.tabs);
+										add(stubPanel.getGraph(), BorderLayout.CENTER);
+									}
+//									ApplicationModel aModel = this.aContext.getApplicationModel();
+//									aModel.getCommand("menuSchemeNew").execute();
 								}
 								break;
 							}							

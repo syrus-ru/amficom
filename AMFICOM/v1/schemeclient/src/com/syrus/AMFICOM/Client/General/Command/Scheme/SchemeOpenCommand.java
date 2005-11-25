@@ -6,12 +6,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.ui.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -19,9 +18,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.util.Log;
@@ -65,13 +61,14 @@ public class SchemeOpenCommand extends AbstractCommand {
 					I18N.getString(MapEditorResourceKeys.TITLE_MAP_VIEW),
 					schemes,
 					SchemeWrapper.getInstance(),
-					new String[] {StorableObjectWrapper.COLUMN_NAME,
-							StorableObjectWrapper.COLUMN_CREATED,
-							StorableObjectWrapper.COLUMN_CREATOR_ID},
+					new String[] {StorableObjectWrapper.COLUMN_NAME},
+//							StorableObjectWrapper.COLUMN_CREATED,
+//							StorableObjectWrapper.COLUMN_CREATOR_ID},
 					false);
 			
 			if (scheme != null) {
-				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));				
+				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
+				setResult(Command.RESULT_OK);
 			}
 		} catch (ApplicationException e) {
 			Log.errorMessage(e);

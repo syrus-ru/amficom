@@ -21,15 +21,6 @@ public class SchemeNewCommand extends AbstractCommand {
 		try {
 			Scheme scheme = SchemeObjectsFactory.createScheme();
 			
-			ApplicationModel aModel = this.aContext.getApplicationModel(); 
-			aModel.getCommand("menuWindowScheme").execute();
-			aModel.getCommand("menuWindowTree").execute();
-			aModel.getCommand("menuWindowUgo").execute();
-			aModel.getCommand("menuWindowProps").execute();
-			aModel.getCommand("menuWindowList").execute();
-			
-			aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
-			
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
 			this.result = RESULT_OK;
 		} 
