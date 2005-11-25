@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.14 2005/10/31 12:29:53 bass Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.15 2005/11/25 12:21:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/10/31 12:29:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/11/25 12:21:10 $
+ * @author $Author: arseniy $
  * @author Voffka
  * @module csbridge
  */
@@ -71,10 +71,6 @@ public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, 
 			transferables[i] = this.getGeneratedIdentifier(entity);
 		}
 		return transferables;
-	}
-
-	public void verify(final byte i) {
-		throw new UnsupportedOperationException("It is dumb to call this method -- " + i);
 	}
 
 	public IdentifierGeneratorServer getIGSReference() {

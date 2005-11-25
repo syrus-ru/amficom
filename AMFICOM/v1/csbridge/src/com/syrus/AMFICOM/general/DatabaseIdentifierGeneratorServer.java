@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifierGeneratorServer.java,v 1.9 2005/09/14 18:21:32 arseniy Exp $
+ * $Id: DatabaseIdentifierGeneratorServer.java,v 1.10 2005/11/25 12:21:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/14 18:21:32 $
+ * @version $Revision: 1.10 $, $Date: 2005/11/25 12:21:24 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -49,10 +49,6 @@ public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorSer
 		catch (IdentifierGenerationException e) {
 			throw new AMFICOMRemoteException();
 		}
-	}
-
-	public void verify(final byte i) {
-		assert false : "It is dumb to call this method -- " + i;
 	}
 
 	public IdentifierGeneratorServer getIGSReference() {
