@@ -766,6 +766,7 @@ int InitialAnalysis::processDeadZone(ArrList& splashes, int maxDist)
 	 * правильно отрабатывает р/г от —таса.
 	 * –/г добавлена в testDB как rg0401.
 	 */
+	/*
 	// способ 1. ищем абс. макс. до спада на DY2
 	int dzMaxBeg = i;
 	int dzMaxEnd = i;
