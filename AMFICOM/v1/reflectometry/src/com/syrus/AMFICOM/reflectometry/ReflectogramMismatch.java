@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramMismatch.java,v 1.15 2005/11/11 13:46:25 bass Exp $
+ * $Id: ReflectogramMismatch.java,v 1.16 2005/11/25 08:23:48 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.TransferableObject;
  * если был бы доступен только один якорь.
  * 
  * @author Old Wise Saa
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/11/11 13:46:25 $
+ * @author $Author: saa $
+ * @version $Revision: 1.16 $, $Date: 2005/11/25 08:23:48 $
  * @module reflectometry
  */
 public interface ReflectogramMismatch {
@@ -80,8 +80,8 @@ public interface ReflectogramMismatch {
 	 * событие: будет ли создан аларм, или же будет предупреждение.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.15 $, $Date: 2005/11/11 13:46:25 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.16 $, $Date: 2005/11/25 08:23:48 $
 	 * @module reflectometry
 	 */
 	enum Severity implements TransferableObject<IdlSeverity> {
@@ -142,14 +142,14 @@ public interface ReflectogramMismatch {
 	/**
 	 * Тип отклонения.
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.15 $, $Date: 2005/11/11 13:46:25 $
+	 * @author $Author: saa $
+	 * @version $Revision: 1.16 $, $Date: 2005/11/25 08:23:48 $
 	 * @module reflectometry
 	 */
 	enum AlarmType implements TransferableObject<IdlAlarmType> {
 		/**
-		 * не определено
-		 * XXX: не должен использоваться
+		 * тип не определен
+		 * XXX: используется только вместе с SEVERITY_NONE
 		 */
 		TYPE_UNDEFINED("ReflectogramMismatch.AlarmType.Undefined"),
 		/**
@@ -157,7 +157,7 @@ public interface ReflectogramMismatch {
 		 */
 		TYPE_LINEBREAK("ReflectogramMismatch.AlarmType.LineBreak"),
 		/**
-		 * выход за маски
+		 * отклонение (выход за маски)
 		 */
 		TYPE_OUTOFMASK("ReflectogramMismatch.AlarmType.OutOfMask"),
 		/**
