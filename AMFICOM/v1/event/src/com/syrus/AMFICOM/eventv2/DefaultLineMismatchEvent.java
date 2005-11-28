@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultLineMismatchEvent.java,v 1.5 2005/11/09 10:58:59 bass Exp $
+ * $Id: DefaultLineMismatchEvent.java,v 1.6 2005/11/28 14:59:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/11/09 10:58:59 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/28 14:59:59 $
  * @module event
  */
 public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
@@ -116,6 +116,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		if (!!(this.affectedPathElementSpatious = lineMismatchEvent.isAffectedPathElementSpatious())) {
 			this.physicalDistanceToStart = lineMismatchEvent.getPhysicalDistanceToStart();
 			this.physicalDistanceToEnd = lineMismatchEvent.getPhysicalDistanceToEnd();
+
+			if (this.physicalDistanceToStart < 0) {
+				throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToStart));
+			} else if (this.physicalDistanceToEnd < 0) {
+				throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToEnd));
+			}
 		}
 
 		this.resultId = Identifier.valueOf(lineMismatchEvent.getResultId());
@@ -154,6 +160,12 @@ public final class DefaultLineMismatchEvent extends AbstractLineMismatchEvent {
 		if (!!(this.affectedPathElementSpatious = affectedPathElementSpatious)) {
 			this.physicalDistanceToStart = physicalDistanceToStart;
 			this.physicalDistanceToEnd = physicalDistanceToEnd;
+
+			if (this.physicalDistanceToStart < 0) {
+				throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToStart));
+			} else if (this.physicalDistanceToEnd < 0) {
+				throw new IllegalArgumentException(String.valueOf(this.physicalDistanceToEnd));
+			}
 		}
 
 		this.resultId = resultId;
