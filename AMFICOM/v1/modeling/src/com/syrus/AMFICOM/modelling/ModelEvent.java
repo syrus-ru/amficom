@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelEvent.java,v 1.5 2005/11/28 11:30:05 saa Exp $
+ * $Id: ModelEvent.java,v 1.6 2005/11/28 15:06:40 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,15 @@
 package com.syrus.AMFICOM.modelling;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.syrus.util.Log;
+
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/11/28 11:30:05 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/28 15:06:40 $
  * @module
  */
 public class ModelEvent {
@@ -45,15 +48,20 @@ public class ModelEvent {
 	}
 
 	public static ModelEvent createLinear(double length, double attenuation) {
+		Log.debugMessage("createLinear (length=" + length
+				+ ", attenuation=" + attenuation + ")", Level.FINEST);
 		return new ModelEvent(LINEAR, length, attenuation, 0.0, 0.0);
 	}
 
 	// FIXME: rename createSlice to createSplice
 	public static ModelEvent createSlice(double loss) {
+		Log.debugMessage("createSlice (loss=" + loss + ")", Level.FINEST);
 		return new ModelEvent(SPLICE, 0.0, 0.0, loss, 0.0);
 	}
 
 	public static ModelEvent createReflective(double loss, double reflection) {
+		Log.debugMessage("createReflective (loss=" + loss
+				+ ", reflection=" + reflection + ")", Level.FINEST);
 		return new ModelEvent(REFLECTIVE, 0.0, 0.0, loss, reflection);
 	}
 
