@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.23 2005/10/31 12:30:11 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.24 2005/11/28 12:47:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,16 +34,15 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/31 12:30:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/11/28 12:47:46 $
+ * @author $Author: arseniy $
  * @module mscharserver
  */
 final class MscharServerImpl extends IdentifierGeneratorServerCore implements MscharServerOperations {
 	private static final long serialVersionUID = 3762810480783274295L;
 
-	MscharServerImpl() {
-		super(MscharServerSessionEnvironment.getInstance().getConnectionManager(), 
-				MscharServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
+	MscharServerImpl(final MscharServerServantManager mscharServerServantManager) {
+		super(mscharServerServantManager, mscharServerServantManager.getCORBAServer().getOrb());
 	}
 
 	public IdlRenderedImage transmitTopologicalImage(final IdlTopologicalImageQuery topologicalImageQueryT,

@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.6 2005/10/21 12:04:23 arseniy Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.7 2005/11/28 12:47:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,19 @@
 package com.syrus.AMFICOM.mscharserver;
 
 import com.syrus.AMFICOM.general.BaseSessionEnvironment;
+import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ObjectLoader;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServerPOA;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServerPOATie;
 import com.syrus.util.ApplicationProperties;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/10/21 12:04:23 $
+ * @version $Revision: 1.7 $, $Date: 2005/11/28 12:47:46 $
  * @module mscharserver
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
@@ -30,9 +34,11 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	private static MscharServerSessionEnvironment instance;
 
 	private MscharServerSessionEnvironment(final MscharServerServantManager mscharServerServantManager,
-			final MscharServerPoolContext mscharServerPoolContext) {
+			final MscharServerPoolContext mscharServerPoolContext,
+			final MscharServer mscharServer) {
 		super(mscharServerServantManager,
 				mscharServerPoolContext,
+				mscharServer,
 				new MapSchemeAdministrationResourceServer.MscharServerLoginRestorer());
 	}
 
@@ -40,7 +46,7 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 		return (MscharServerServantManager) super.baseConnectionManager;
 	}
 
-	public static void createInstance(final String serverHostName) throws CommunicationException {
+	public static void createInstance(final String serverHostName, final String servantName) throws CommunicationException {
 		final MscharServerServantManager mscharServerServantManager = MscharServerServantManager.createAndStart(serverHostName);
 
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY,
@@ -52,9 +58,17 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 		} else {
 			objectLoader = new DatabaseObjectLoader();
 		}
+
 		final MscharServerPoolContext mscharServerPoolContext = new MscharServerPoolContext(objectLoader);
 
-		instance = new MscharServerSessionEnvironment(mscharServerServantManager, mscharServerPoolContext);
+		final CORBAServer corbaServer = mscharServerServantManager.getCORBAServer();
+		final MscharServerPOA servant = new MscharServerPOATie(new MscharServerImpl(mscharServerServantManager), corbaServer.getPoa());
+		corbaServer.activateServant(servant, servantName);
+		corbaServer.printNamingContext();
+
+		instance = new MscharServerSessionEnvironment(mscharServerServantManager,
+				mscharServerPoolContext,
+				servant._this(corbaServer.getOrb()));
 	}
 
 	public static MscharServerSessionEnvironment getInstance() {

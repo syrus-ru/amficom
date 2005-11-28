@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.23 2005/10/31 12:30:11 bass Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.24 2005/11/28 12:47:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,22 +16,20 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
-import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.mscharserver.corba.MscharServerPOATie;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/10/31 12:30:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/11/28 12:47:46 $
+ * @author $Author: arseniy $
  * @module mscharserver
  */
 final class MapSchemeAdministrationResourceServer {
@@ -149,7 +147,7 @@ final class MapSchemeAdministrationResourceServer {
 			/*
 			 * Create session environment.
 			 */
-			MscharServerSessionEnvironment.createInstance(server.getHostName());
+			MscharServerSessionEnvironment.createInstance(server.getHostName(), processCodename);
 
 			/*
 			 * Login.
@@ -160,13 +158,6 @@ final class MapSchemeAdministrationResourceServer {
 			} catch (final LoginException le) {
 				Log.errorMessage(le);
 			}
-
-			/*
-			 * Activate the servant.
-			 */
-			final CORBAServer corbaServer = sessionEnvironment.getMscharServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new MscharServerPOATie(new MscharServerImpl(), corbaServer.getPoa()), processCodename);
-			corbaServer.printNamingContext();
 		} catch (final Exception e) {
 			Log.debugMessage(e, Level.SEVERE);
 			System.exit(0);
