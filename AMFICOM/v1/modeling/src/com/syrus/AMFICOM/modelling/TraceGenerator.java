@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.10 2005/11/28 11:31:23 saa Exp $
+ * $Id: TraceGenerator.java,v 1.11 2005/11/28 11:42:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.io.BellcoreWriter;
  * </p>
  * @author saa
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/11/28 11:31:23 $
+ * @version $Revision: 1.11 $, $Date: 2005/11/28 11:42:25 $
  * @module modeling
  */
 public class TraceGenerator {
@@ -134,12 +134,12 @@ public class TraceGenerator {
 	 * @param events Модельный список объектов
 	 */
 	public TraceGenerator(Parameters pars, ModelEvent[] events) {
-		long t0 = System.nanoTime();
+//		long t0 = System.nanoTime();
 		this.pars = pars.copy(); // делаем копию, т.к. pars modifiable
 		this.events = events.clone(); // копируем только массив, т.к. events unmodifiable
-		long t1 = System.nanoTime();
+//		long t1 = System.nanoTime();
 		double[] linTrace = generate();
-		long t2 = System.nanoTime();
+//		long t2 = System.nanoTime();
 		// накладываем шум и переводим к дБ
 		this.traceData = new double[linTrace.length];
 		double absNoise = log2lin(this.pars.noiseLevel);
@@ -156,15 +156,15 @@ public class TraceGenerator {
 				}
 			}
 		}
-		long t3 = System.nanoTime();
-		long tpct = (t3 - t0) / 100;
-		if (tpct == 0)
-			tpct = 1;
+//		long t3 = System.nanoTime();
+//		long tpct = (t3 - t0) / 100;
+//		if (tpct == 0)
+//			tpct = 1;
 
-		System.err.println("TraceGenerator():"
-				+ " copy "  + (t1-t0)/1e6 + " ms (" + (t1-t0)/tpct + "%)"
-				+ " gen "   + (t2-t1)/1e6 + " ms (" + (t2-t1)/tpct + "%)"
-				+ " noise " + (t3-t2)/1e6 + " ms (" + (t3-t2)/tpct + "%)");
+//		System.err.println("TraceGenerator():"
+//				+ " copy "  + (t1-t0)/1e6 + " ms (" + (t1-t0)/tpct + "%)"
+//				+ " gen "   + (t2-t1)/1e6 + " ms (" + (t2-t1)/tpct + "%)"
+//				+ " noise " + (t3-t2)/1e6 + " ms (" + (t3-t2)/tpct + "%)");
 	}
 
 	/**
@@ -215,7 +215,7 @@ public class TraceGenerator {
 		// усредняем и переводим в лог. масштаб
 		double acc = tmp[0];
 		double wei = 1.0 - Math.exp(-1.0 / tau);
-		System.err.println("wei = " + wei);
+//		System.err.println("wei = " + wei);
 		for (int i = 0; i < tmp.length; i++) {
 			acc = acc * (1.0 - wei) + tmp[i] * wei;
 			this.traceData[i] = lin2log(acc);
@@ -273,6 +273,11 @@ public class TraceGenerator {
 		return Math.sqrt(-2 * log(r1)) * Math.sin(2 * Math.PI * r2);
 	}
 
+	private static double calcConnectorHeightInt(double refl, Parameters pars) {
+		double sigma = MathRef.calcSigma(pars.wavelength, pars.pulseWidth);
+		return MathRef.calcPeakByReflectance(sigma, refl);
+	}
+
 	/**
 	 * Определяет амплитуду коннектора на рефлектограмме
 	 *   по его отражению и параметрам измерения.
@@ -282,8 +287,7 @@ public class TraceGenerator {
 	 */
 	private static double getConnectorHeight(ModelEvent ev, Parameters pars) {
 		double refl = ev.getReflection(); // уровень отражения
-		double sigma = MathRef.calcSigma(pars.wavelength, pars.pulseWidth);
-		return MathRef.calcPeakByReflectance(sigma, refl);
+		return calcConnectorHeightInt(refl, pars);
 	}
 
 	/**
@@ -294,8 +298,7 @@ public class TraceGenerator {
 	 * @return амплитуда коннектора, дБ с масштабом 5
 	 */
 	private static double getMaxConnectorHeight(Parameters pars) {
-		double sigma = MathRef.calcSigma(pars.wavelength, pars.pulseWidth);
-		return MathRef.calcPeakByReflectance(sigma, 0.0);
+		return calcConnectorHeightInt(0.0, pars);
 	}
 
 	/**
@@ -581,7 +584,7 @@ public class TraceGenerator {
 		// Создаем набор моделируемых событий
 		ModelEvent me[] = new ModelEvent[] {
 				// начало
-				ModelEvent.createReflective(1.0, -5),
+				ModelEvent.createReflective(1.0, -20),
 				// todo ошибка - потеря точности при малых затуханиях
 				// раскомментировать следующую строку для воспроизведения ошибки "малые затухания"
 				//ModelEvent.createLinear(100.3, 1e-18),
@@ -591,9 +594,9 @@ public class TraceGenerator {
 				ModelEvent.createSlice(0.2),
 				ModelEvent.createLinear(3000.0, 2e-4),
 				// два близких отражения
-				ModelEvent.createReflective(0.0, -5),
+				ModelEvent.createReflective(0.0, -10),
 				ModelEvent.createLinear(80, 2e-4),
-				ModelEvent.createReflective(1.0, -5),
+				ModelEvent.createReflective(1.0, -15),
 				ModelEvent.createLinear(12000.0, 2e-4),
 				// конец волокна
 				ModelEvent.createReflective(1.0, -20)
@@ -631,7 +634,7 @@ public class TraceGenerator {
 		}
 		ModelEvent[] me = events.toArray(new ModelEvent[events.size()]);
 		Parameters pars = new Parameters(-5.0, -30.0, -40.0,
-				8.0, 100000.0, 1625, 1000, 1.467);
+				4.0, 100000.0, 1625, 1000, 1.467);
 
 		return new TraceGenerator(pars, me);
 	}
@@ -647,8 +650,8 @@ public class TraceGenerator {
 		//TraceGenerator tg = myTestGenerator2();
 
 		// При желании, проводим фильтрацию
-//		tg.performRCFiltering(14);
-//		tg.performBoxCarFiltering(9);
+		tg.performRCFiltering(14);
+		tg.performBoxCarFiltering(9);
 
 		//tg.printTrace(new PrintStream(new File("dump.txt")));
 
