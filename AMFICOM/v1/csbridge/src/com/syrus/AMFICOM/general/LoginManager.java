@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.35 2005/11/28 12:18:43 arseniy Exp $
+ * $Id: LoginManager.java,v 1.36 2005/11/28 13:17:11 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/11/28 12:18:43 $
+ * @version $Revision: 1.36 $, $Date: 2005/11/28 13:17:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -165,8 +165,8 @@ public final class LoginManager {
 	 * @throws CommunicationException
 	 */
 	public static boolean restoreLogin() throws CommunicationException, LoginException {
-		resetSessionKey();
 		if (loginRestorer != null && loginRestorer.restoreLogin()) {
+			resetSessionKey();
 			login(loginRestorer.getLogin(), loginRestorer.getPassword(), loginRestorer.getDomainId());
 			return true;
 		}
