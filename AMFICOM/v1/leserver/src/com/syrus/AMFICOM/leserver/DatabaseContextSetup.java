@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContextSetup.java,v 1.14 2005/11/11 05:19:19 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.15 2005/11/28 15:00:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,13 @@ import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableLinkDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadDatabase;
+import com.syrus.AMFICOM.scheme.SchemeDatabase;
 import com.syrus.AMFICOM.scheme.SchemeElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeLinkDatabase;
 import com.syrus.AMFICOM.scheme.SchemePathDatabase;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/11/11 05:19:19 $
+ * @version $Revision: 1.15 $, $Date: 2005/11/28 15:00:19 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -69,6 +70,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new EventSourceDatabase());
 		DatabaseContext.registerDatabase(new DeliveryAttributesDatabase());
 
+		DatabaseContext.registerDatabase(new SchemeDatabase());
 		DatabaseContext.registerDatabase(new SchemeLinkDatabase());
 		DatabaseContext.registerDatabase(new SchemeCableLinkDatabase());
 		DatabaseContext.registerDatabase(new SchemeCableThreadDatabase());
