@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractPerspective.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: AbstractPerspective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.manager.perspective;
 
+import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,17 +34,19 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.manager.UI.AbstractItemPopupMenu;
+import com.syrus.AMFICOM.manager.UI.ActionMutableTreeNode;
 import com.syrus.AMFICOM.manager.UI.GraphRoutines;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.AbstractBeanFactory;
+import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,11 +57,20 @@ public abstract class AbstractPerspective implements Perspective {
 
 	protected PerspectiveData perspectiveData;
 	
-	protected Set<AbstractBean>	layoutBeans;
+	protected List<AbstractBean>	layoutBeans;
 	
 	protected Map<String, Perspective> perspectiveMap;
 	
 	protected Set<Perspective> perspectives;
+	
+	protected List<AbstractAction> actions;
+	
+	private List<ActionMutableTreeNode> actionNodes;
+	
+	private List<PropertyChangeListener> listeners;	
+	
+	private final PropertyChangeEvent propertyChangeEvent = 
+			new PropertyChangeEvent(this, "layoutBeans", null, null);
 
 	public final void setManagerMainFrame(ManagerMainFrame managerMainFrame) {
 		this.managerMainFrame = managerMainFrame;
@@ -63,7 +79,52 @@ public abstract class AbstractPerspective implements Perspective {
 	public final ManagerMainFrame getManagerMainFrame() {
 		return this.managerMainFrame;
 	}
+	
+	public final void addPropertyChangeListener(final PropertyChangeListener listener) {
+		assert Log.debugMessage(listener + this.getCodename(), Log.DEBUGLEVEL03);
+		if (this.listeners == null) {
+			this.listeners = new ArrayList<PropertyChangeListener>();
+		}
+		if (!this.listeners.contains(listener)) {
+			assert Log.debugMessage("add " + listener + " to " + this.getCodename(), 
+				Log.DEBUGLEVEL10);
+			this.listeners.add(0, listener);
+		}
+	}
+	
+	public final void removePropertyChangeListener(final PropertyChangeListener listener) {
+		if (this.listeners != null && this.listeners.contains(listener)) {
+			this.listeners.remove(listener);
+		}		
+	}
+	
+	public void firePropertyChangeEvent(final PropertyChangeEvent event) {
+		if (this.listeners != null && !this.listeners.isEmpty()) {
+			for (final PropertyChangeListener listener : this.listeners) {
+				listener.propertyChange(event);
+			}
+		}
+	}
 
+	protected abstract void createActions() throws ApplicationException;
+	
+	public final List<AbstractAction> getActions() throws ApplicationException {
+		if (this.actions == null) {
+			this.createActions();
+		}
+		return this.actions;
+	}
+	public final List<ActionMutableTreeNode> getActionNodes() throws ApplicationException {
+		if (this.actionNodes == null) {
+			final List<AbstractAction> actions2 = this.getActions();
+			this.actionNodes = new ArrayList<ActionMutableTreeNode>(actions2.size());
+			for (final AbstractAction action : actions2) {
+				this.actionNodes.add(new ActionMutableTreeNode(action, this));
+			}
+		}
+		return this.actionNodes;
+	}
+	
 	protected final AbstractAction createAction(final AbstractBeanFactory<?> factory) 
 	throws ApplicationException {
 		return this.createAction(factory, null);
@@ -73,7 +134,7 @@ public abstract class AbstractPerspective implements Perspective {
 	protected final AbstractAction createGetTheSameOrCreateNewAction(final AbstractBeanFactory<?> factory,
 				final Chechable chechable,
 				final DefaultGraphCell parentCell) 
-	throws ApplicationException {
+	throws ApplicationException {		
    		final String name = factory.getName();
    		final String codename = factory.getCodename();
 		final BeanUI beanUI = this.getBeanUI(codename);
@@ -85,25 +146,32 @@ public abstract class AbstractPerspective implements Perspective {
    		
    		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
    			
+			@SuppressWarnings("unqualified-field-access")
 			public void actionPerformed(final ActionEvent e) {
-   				
    				try {
-   					
-   					for(final AbstractBean abstractBean : getLayoutBeans()) {
+   					final Perspective currentPerspective = managerMainFrame.getPerspective();
+					if (currentPerspective != perspective) {
+						return;
+					}
+   					final List<AbstractBean> layoutBeans2 = getLayoutBeans();
+					for(final AbstractBean abstractBean : layoutBeans2) {
 						if (chechable.isNeedIn(abstractBean)) {
 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
-							selectionModel.setSelectionCell(graphRoutines.getDefaultGraphCell(abstractBean));
+							selectionModel.setSelectionCell(graphRoutines.getDefaultGraphCell(abstractBean, perspective));
+							assert Log.debugMessage("found", Log.DEBUGLEVEL10);
 							return;
 						}
    					}
    					
    					final AbstractBean bean = factory.createBean(perspective);
    					
-   					graphRoutines.createChild(parentCell, 
+   					final Point dropLocation = managerMainFrame.getDropLocation();
+					graphRoutines.createChild(perspective,
+   						parentCell, 
    						factory.getShortName(), 
    						bean, 
-   						20, 
-   						20, 
+   						dropLocation.getX(), 
+   						dropLocation.getY(), 
    						0, 
    						0, 
    						beanUI.getImage(bean));
@@ -133,35 +201,41 @@ public abstract class AbstractPerspective implements Perspective {
     		
     		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
     		final JGraph graph = this.managerMainFrame.getGraph();
-    		
+    		final Perspective perspective = this;
     		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
     			
-    			public void actionPerformed(final ActionEvent e) {
-    				
+    			@SuppressWarnings("unqualified-field-access")
+				public void actionPerformed(final ActionEvent e) {
     				try {
+    					final Perspective currentPerspective = managerMainFrame.getPerspective();
+    					if (currentPerspective != perspective) {
+    						return;
+    					}
     					
     					for(final AbstractBean abstractBean : getLayoutBeans()) {
-	    					assert Log.debugMessage(abstractBean, Log.DEBUGLEVEL03);
 	 						if (chechable.isNeedIn(abstractBean)) {
 	 							final GraphSelectionModel selectionModel = graph.getSelectionModel();
-	 							selectionModel.setSelectionCell(graphRoutines.getDefaultGraphCell(abstractBean));
+	 							final ManagerGraphCell cell = 
+	 								graphRoutines.getDefaultGraphCell(abstractBean, perspective);
+								selectionModel.setSelectionCell(cell);
 	 							return;
 	 						}
     					}
     					
     					final AbstractBean bean = factory.createBean(codename);
     					
-    					
-    					graphRoutines.createChild(parentCell, 
+    					final Point dropLocation = managerMainFrame.getDropLocation();
+    					graphRoutines.createChild(perspective,
+    						parentCell, 
     						bean.getName(), 
     						bean, 
-    						20, 
-    						20, 
+       						dropLocation.getX(), 
+       						dropLocation.getY(), 
     						0, 
     						0, 
     						beanUI.getImage(bean));
     					
-    					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL03);
+    					assert Log.debugMessage("Create " + bean, Log.DEBUGLEVEL10);
 
     				} catch (final ApplicationException ae) {
     					ae.printStackTrace();
@@ -183,18 +257,25 @@ public abstract class AbstractPerspective implements Perspective {
 	throws ApplicationException {
 		final String name = factory.getName();
 		final BeanUI beanUI = this.getBeanUI(factory.getCodename());
-		Icon icon = beanUI.getIcon(factory);
-		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
+		final Icon icon = beanUI.getIcon(factory);
+		final Perspective perspective = this;
+		final AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
 			
 			@SuppressWarnings("unqualified-field-access")
 			public void actionPerformed(final ActionEvent e) {
 				try {
-					final AbstractBean bean = factory.createBean(managerMainFrame.getPerspective());
-					managerMainFrame.getGraphRoutines().createChild(parentCell, 
+					final Perspective currentPerspective = managerMainFrame.getPerspective();
+					if (currentPerspective != perspective) {
+						return;
+					}
+					final AbstractBean bean = factory.createBean(perspective);
+					final Point dropLocation = managerMainFrame.getDropLocation();
+					managerMainFrame.getGraphRoutines().createChild(perspective,
+						parentCell, 
 						factory.getShortName() + "-" + factory.getCount(), 
 						bean, 
-						20, 
-						20, 
+						dropLocation.getX(),
+   						dropLocation.getY(),
 						0, 
 						0, 
 						beanUI.getImage(bean));
@@ -364,11 +445,6 @@ public abstract class AbstractPerspective implements Perspective {
 		return popupMenu;
 	}
 	
-	public boolean isDeletable(final AbstractBean abstractBean) {
-		final String codename = abstractBean.getCodename();
-		return !this.perspectiveData.isUndeletable(codename);
-	}
-	
 	public Validator getValidator() {
 		return this.perspectiveData.getValidator();
 	}
@@ -384,20 +460,24 @@ public abstract class AbstractPerspective implements Perspective {
 	}
 
 	
-	public final Set<AbstractBean> getLayoutBeans() {
+	public final List<AbstractBean> getLayoutBeans() {
 		return this.layoutBeans;
 	}
 	
-	public final void setLayoutBeans(final Set<AbstractBean> layoutBeans) {
+	public final void setLayoutBeans(final List<AbstractBean> layoutBeans) {
 		this.layoutBeans = layoutBeans;
+		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 	
 	public final void addLayoutBean(final AbstractBean bean) {
 		this.layoutBeans.add(bean);
+		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 	
 	public final void removeLayoutBean(final AbstractBean bean) {
-		this.layoutBeans.remove(bean);
+		assert Log.debugMessage(bean, Log.DEBUGLEVEL03);
+		this.layoutBeans.remove(bean);		
+		this.firePropertyChangeEvent(this.propertyChangeEvent);
 	}
 }
 

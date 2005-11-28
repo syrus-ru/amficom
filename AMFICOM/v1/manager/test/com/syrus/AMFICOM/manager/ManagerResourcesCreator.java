@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerResourcesCreator.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: ManagerResourcesCreator.java,v 1.2 2005/11/28 14:47:18 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,8 +27,6 @@ import com.syrus.AMFICOM.extensions.manager.PopupMenu;
 import com.syrus.AMFICOM.extensions.manager.UiHandler;
 import com.syrus.AMFICOM.extensions.manager.Validator;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.manager.UI.DomainPopupMenu;
-import com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu;
 import com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu;
 import com.syrus.AMFICOM.manager.beans.DomainBeanFactory;
 import com.syrus.AMFICOM.manager.beans.MCMBeanFactory;
@@ -42,6 +40,8 @@ import com.syrus.AMFICOM.manager.beans.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.beans.UserBeanFactory;
 import com.syrus.AMFICOM.manager.beans.WorkstationBeanFactory;
 import com.syrus.AMFICOM.manager.perspective.DomainsPerspective;
+import com.syrus.AMFICOM.manager.perspective.HardSeverityMessagePerpective;
+import com.syrus.AMFICOM.manager.perspective.SoftSeverityMessagePerpective;
 import com.syrus.AMFICOM.manager.viewers.DomainBeanUI;
 import com.syrus.AMFICOM.manager.viewers.KISBeanUI;
 import com.syrus.AMFICOM.manager.viewers.MCMBeanUI;
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.manager.viewers.WorkstationBeanUI;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -116,9 +116,6 @@ public final class ManagerResourcesCreator extends TestCase {
 			netDomainValidator.setSource(NetBeanFactory.NET_CODENAME);
 			netDomainValidator.setTarget(ObjectEntities.DOMAIN);
 			
-			PopupMenu menu = domainsPerspective.addNewPopupMenu();
-			menu.setId(ObjectEntities.DOMAIN);
-			menu.setPopupMenuHandler(DomainPopupMenu.class.getName());
 			}
 			
 //			 create domain perspective 
@@ -130,6 +127,10 @@ public final class ManagerResourcesCreator extends TestCase {
 					UiHandler networkUIHandler = perspective.addNewUiHandler();
 					networkUIHandler.setId(NetBeanFactory.NET_CODENAME);
 					networkUIHandler.setUiHandlerClass(NetBeanUI.class.getName());
+					
+					BeanFactory networkFactory = perspective.addNewBeanFactory();
+					networkFactory.setId(NetBeanFactory.NET_CODENAME);
+					networkFactory.setBeanFactoryClass(NetBeanFactory.class.getName());
 					
 					BeanFactory rtuFactory = perspective.addNewBeanFactory();
 					rtuFactory.setId(ObjectEntities.KIS);
@@ -191,11 +192,6 @@ public final class ManagerResourcesCreator extends TestCase {
 					userWorkstationValidator.setSource(ObjectEntities.SYSTEMUSER);
 					userWorkstationValidator.setTarget(WorkstationBeanFactory.WORKSTATION_CODENAME);
 					
-					PopupMenu menu = perspective.addNewPopupMenu();
-					menu.setId(ObjectEntities.SYSTEMUSER);
-					menu.setPopupMenuHandler(SystemUserDomainPopupMenu.class.getName());
-					
-					perspective.addUndeletable(NetBeanFactory.NET_CODENAME);
 				}
 
 				Perspective userPerspective = perspective.addNewPerspective();
@@ -204,6 +200,10 @@ public final class ManagerResourcesCreator extends TestCase {
 //					final ManagerResource resource = managerExtensions.addNewManagerResource();
 //					final Perspective userPerspective = (Perspective) resource.changeType(Perspective.type);
 					userPerspective.setId(ObjectEntities.SYSTEMUSER);
+					
+					BeanFactory userFactory = userPerspective.addNewBeanFactory();
+					userFactory.setId(ObjectEntities.SYSTEMUSER);
+					userFactory.setBeanFactoryClass(UserBeanFactory.class.getName());
 					
 					UiHandler userUIHandler2 = userPerspective.addNewUiHandler();
 					userUIHandler2.setId(ObjectEntities.SYSTEMUSER);
@@ -239,8 +239,6 @@ public final class ManagerResourcesCreator extends TestCase {
 					PopupMenu userMenu = userPerspective.addNewPopupMenu();
 					userMenu.setId(ObjectEntities.SYSTEMUSER);
 					userMenu.setPopupMenuHandler(SystemUserPermissionPopupMenu.class.getName());
-					
-					userPerspective.addUndeletable(ObjectEntities.SYSTEMUSER);
 			    }	
 
 		    }
@@ -291,17 +289,19 @@ public final class ManagerResourcesCreator extends TestCase {
 			Validator permissionRoleValidator = perspective.addNewValidator();
 			permissionRoleValidator.setSource(ObjectEntities.PERMATTR);
 			permissionRoleValidator.setTarget(ObjectEntities.ROLE);
-			
-			perspective.addUndeletable(ObjectEntities.ROLE);
 	    }
 		
 		// create severity message perspective 
 		{			
 			final Severity[] severities = new Severity[] {Severity.SEVERITY_SOFT, Severity.SEVERITY_HARD};
-			for (final Severity severity : severities) {
+			final Class[] classes = new Class[] {SoftSeverityMessagePerpective.class, HardSeverityMessagePerpective.class};
+			
+			for (int i = 0; i < severities.length; i++) {
+				final Severity severity = severities[i];
 				final ManagerResource resource = managerExtensions.addNewManagerResource();
 				final Perspective perspective = (Perspective) resource.changeType(Perspective.type);
 				perspective.setId(severity.name().replaceAll("_", ""));
+				perspective.setHandler(classes[i].getName());
 				
 				BeanFactory roleFactory = perspective.addNewBeanFactory();
 				roleFactory.setId(ObjectEntities.ROLE);

@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphRoutines.java,v 1.5 2005/11/17 09:00:35 bob Exp $
+* $Id: GraphRoutines.java,v 1.6 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.Icon;
-import javax.swing.JOptionPane;
 import javax.swing.tree.TreeNode;
 
 import org.jgraph.JGraph;
@@ -37,7 +36,6 @@ import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
-import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -47,7 +45,6 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -55,6 +52,7 @@ import com.syrus.AMFICOM.manager.ManagerHandler;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.beans.Bean;
 import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
 import com.syrus.AMFICOM.resource.LayoutItem;
@@ -63,28 +61,23 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public final class GraphRoutines {
 
-	private final JGraph	graph;
+	final JGraph	graph;
 	private ManagerGraphModel	graphModel;
 	private final ManagerMainFrame	managerMainFrame;
-//	private String	layerName;
-//	private Set<AbstractBean>	layoutBeans;
 	private VerticalPortComparator	comparator;
-	
-//	private Map<String, Perspective> perspectives;
 	
 	public GraphRoutines(final ManagerMainFrame managerMainFrame) {
 		this.managerMainFrame = managerMainFrame;
 		this.graph = managerMainFrame.getGraph();
 		this.graphModel = managerMainFrame.graphModel;
 		this.comparator = new VerticalPortComparator();
-//		this.perspectives = new HashMap<String, Perspective>();
 	}
 	
 	private void createEdgeAttributes(final Edge edge) {
@@ -110,6 +103,9 @@ public final class GraphRoutines {
 		if (sourcePort != targetPort) {
 			final boolean canConnect =
 				this.graphModel.isConnectionPermitted(sourcePort, targetPort);
+			assert Log.debugMessage(sourcePort + ">" + targetPort + ", "
+					+ (canConnect ? "can connect" : "cannot connect"), 
+				Log.DEBUGLEVEL10);
 			if (canConnect) {
 				DefaultEdge edge = new DefaultEdge();
 				edge.setSource(sourcePort);
@@ -122,58 +118,58 @@ public final class GraphRoutines {
 				graphLayoutCache.setVisibleImpl(new Object[] {edge}, addToGraph);
 				
 				this.graph.getSelectionModel().clearSelection();
-				try {
-					final CompoundCondition compoundCondition = 
-						new CompoundCondition(new TypicalCondition(
-							this.managerMainFrame.getPerspective().getCodename(), 
-							OperationSort.OPERATION_EQUALS,
-							ObjectEntities.LAYOUT_ITEM_CODE,
-							LayoutItemWrapper.COLUMN_LAYOUT_NAME),
-							CompoundConditionSort.AND,
-							new LinkedIdsCondition(
-								LoginManager.getUserId(),
-								ObjectEntities.LAYOUT_ITEM_CODE) {
-								@Override
-								public boolean isNeedMore(
-								final Set< ? extends Identifiable> storableObjects) {
-									return storableObjects.isEmpty();
-								}
-							});
-					
-					AbstractBean targetBean = targetPort.getBean();
-					AbstractBean sourceBean = sourcePort.getBean();
-					
-					final TypicalCondition condition = new TypicalCondition(
-						sourceBean.getId(), 
-						OperationSort.OPERATION_EQUALS,
-						ObjectEntities.LAYOUT_ITEM_CODE,
-						StorableObjectWrapper.COLUMN_NAME);
-					
-					compoundCondition.addCondition(condition);
-					
-					final Set<LayoutItem> sourceItems = 
-						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-					
-					condition.setValue(targetBean.getId());
-
-					final Set<LayoutItem> targetItems = 
-						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
-					
-					assert !sourceItems.isEmpty();
-					assert !targetItems.isEmpty();
-					
-					final LayoutItem sourceItem = sourceItems.iterator().next();
-					final LayoutItem targetItem = targetItems.iterator().next();
-					
-					sourceItem.setParentId(targetItem.getId());
-					
-				} catch (ApplicationException e) {
-					e.printStackTrace();
-					JOptionPane.showMessageDialog(this.graph, 
-						e.getMessage(), 
-						I18N.getString("Manager.Error"),
-						JOptionPane.ERROR_MESSAGE);
-				}
+//				try {
+//					final CompoundCondition compoundCondition = 
+//						new CompoundCondition(new TypicalCondition(
+//							this.managerMainFrame.getPerspective().getCodename(), 
+//							OperationSort.OPERATION_EQUALS,
+//							ObjectEntities.LAYOUT_ITEM_CODE,
+//							LayoutItemWrapper.COLUMN_LAYOUT_NAME),
+//							CompoundConditionSort.AND,
+//							new LinkedIdsCondition(
+//								LoginManager.getUserId(),
+//								ObjectEntities.LAYOUT_ITEM_CODE) {
+//								@Override
+//								public boolean isNeedMore(
+//								final Set< ? extends Identifiable> storableObjects) {
+//									return storableObjects.isEmpty();
+//								}
+//							});
+//					
+//					AbstractBean targetBean = targetPort.getBean();
+//					AbstractBean sourceBean = sourcePort.getBean();
+//					
+//					final TypicalCondition condition = new TypicalCondition(
+//						sourceBean.getId(), 
+//						OperationSort.OPERATION_EQUALS,
+//						ObjectEntities.LAYOUT_ITEM_CODE,
+//						StorableObjectWrapper.COLUMN_NAME);
+//					
+//					compoundCondition.addCondition(condition);
+//					
+//					final Set<LayoutItem> sourceItems = 
+//						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+//					
+//					condition.setValue(targetBean.getId());
+//
+//					final Set<LayoutItem> targetItems = 
+//						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+//					
+//					assert !sourceItems.isEmpty();
+//					assert !targetItems.isEmpty();
+//					
+//					final LayoutItem sourceItem = sourceItems.iterator().next();
+//					final LayoutItem targetItem = targetItems.iterator().next();
+//					
+//					sourceItem.setParentId(targetItem.getId());
+//					
+//				} catch (ApplicationException e) {
+//					e.printStackTrace();
+//					JOptionPane.showMessageDialog(this.graph, 
+//						e.getMessage(), 
+//						I18N.getString("Manager.Error"),
+//						JOptionPane.ERROR_MESSAGE);
+//				}
 				
 				return edge;
 			}
@@ -182,39 +178,53 @@ public final class GraphRoutines {
 		return null;
 	}
 	
-	public DefaultGraphCell createChild(DefaultGraphCell parentCell, 
-	                                    String name, 
-	                                    Object object, 
-	                                    double x,
-	         	             			double y, 
-	         	             			double w, 
-	         	             			double h, 
-	         	             			Icon image) {
-		DefaultGraphCell cell = this.createVertex(name, object, x, y, w, h, image);
- 		GraphLayoutCache cache = this.graph.getGraphLayoutCache();
+	public ManagerGraphCell createChild(final Perspective perspective,
+			final DefaultGraphCell parentCell, 
+            final String name, 
+            final Object object, 
+            final double x,
+            final double y, 
+            final double w, 
+            final double h, 
+            final Icon image) {
+		final ManagerGraphCell cell = this.createVertex(perspective, name, object, x, y, w, h, image);
+		final GraphLayoutCache cache = this.graph.getGraphLayoutCache();
 		cache.insert(cell);	
-
+		
  		if (parentCell != null) {
- 			DefaultEdge edge = this.createEdge(cell, parentCell);
+ 			final DefaultEdge edge = this.createEdge(cell, parentCell);
+ 			assert Log.debugMessage("Create child "
+ 					+ cell
+ 					+ " for "
+ 					+ parentCell
+ 					+ " in "
+ 					+ perspective, 
+ 				Log.DEBUGLEVEL10);
  			if (object instanceof AbstractBean) {
-				AbstractBean bean = (AbstractBean)object;
+ 				final AbstractBean bean = (AbstractBean)object;
 				// XXX
 //				bean.updateEdgeAttributes(edge, (MPort) parentCell.getChildAt(0));
 			}
+ 		} else {
+
+ 			assert Log.debugMessage("Create child "
+					+ cell, 
+				Log.DEBUGLEVEL10);
  		}
  		return cell;
 	}
 	
-	private DefaultGraphCell createVertex(	final String name,
-	                                      	final Object object,
-	                                      	final double x,
-											final double y,
-											final double w,
-											final double h,
-											final Icon image) {
+	private ManagerGraphCell createVertex(	final Perspective perspective,
+          	final String name,
+          	final Object object,
+          	final double x,
+			final double y,
+			final double w,
+			final double h,
+			final Icon image) {
 
 		// Create vertex with the given name
-		final DefaultGraphCell cell = new DefaultGraphCell(name);
+		final ManagerGraphCell cell = new ManagerGraphCell(name, perspective);
 
 		// Set bounds
 		GraphConstants.setBounds(cell.getAttributes(),
@@ -223,7 +233,7 @@ public final class GraphRoutines {
 		GraphConstants.setAutoSize(cell.getAttributes(), true);
 
 		
-		AttributeMap attributes = cell.getAttributes();
+		final AttributeMap attributes = cell.getAttributes();
 		if (image != null) {
 			GraphConstants.setIcon(attributes, image);
 			attributes.remove(GraphConstants.BORDER);
@@ -231,13 +241,14 @@ public final class GraphRoutines {
 		}
 
 		// Add a Port
-		MPort port = new MPort(object);
+		final MPort port = new MPort(object);
 		cell.add(port);
 		
 		if (object instanceof Bean) {
 			Bean bean = (Bean)object;
 			bean.addPropertyChangeListener(new PropertyChangeListener() {
 
+				@SuppressWarnings("unqualified-field-access")
 				public void propertyChange(PropertyChangeEvent evt) {
 					if (evt.getPropertyName().equals(KEY_NAME)) {
 						final AttributeMap attributeMap = cell.getAttributes();
@@ -262,9 +273,7 @@ public final class GraphRoutines {
 	void arrangeLayoutItems(final Perspective perspective) throws ApplicationException {
 		this.managerMainFrame.arranging = true;
 		final String layoutName = perspective.getCodename();
-		assert Log.debugMessage("Perspective codename:" 
-				+ layoutName, 
-			Log.DEBUGLEVEL10);
+
 		final TypicalCondition typicalCondition = new TypicalCondition(
 			layoutName, 
 			OperationSort.OPERATION_EQUALS,
@@ -291,11 +300,6 @@ public final class GraphRoutines {
 		boolean needAutoArrage = false;
 		
 		for(final LayoutItem layoutItem : layoutItems) {			
-			assert Log.debugMessage(layoutItem.getName() 
-					+ ", " 
-					+ layoutItem.getLayoutName() , 
-				Log.DEBUGLEVEL10);
-			
 			// check is x,y characteristics exists
 			// otherwise item will be arrange
 			
@@ -325,7 +329,7 @@ public final class GraphRoutines {
 				needAutoArrage = true;
 			}
 			
-			this.arrangeCell(layoutItem, layoutName);			
+			this.arrangeCell(layoutItem, layoutName);
 		}
 
 		this.managerMainFrame.arranging = false;	
@@ -341,22 +345,43 @@ public final class GraphRoutines {
 		final String layoutName) 
 	throws NumberFormatException, ApplicationException {
 		
+		if (!item.getLayoutName().equals(layoutName)) {
+			System.err.println("Incorrect layoutName(" 
+					+ layoutName 
+					+ ") for "
+					+ item.getName()
+					+ '@'
+					+ item.getLayoutName());
+			return null;
+		}		
+		
 		assert Log.debugMessage(item, Log.DEBUGLEVEL10);
-		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		GraphModel model = this.graph.getModel();
+		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+		final GraphModel model = this.graph.getModel();
 		
 		DefaultGraphCell parentCell = null;
-		Identifier parentId = item.getParentId();
+		final Identifier parentId = item.getParentId();
+		
+		assert Log.debugMessage("parentId for " 
+				+ item.getName()
+				+ '@'
+				+ item.getLayoutName()
+				+ " is "
+				+ parentId, 
+			Log.DEBUGLEVEL10);
+		final LayoutItem parentItem;
 		if (!parentId.isVoid()) {
-			final LayoutItem parentItem = StorableObjectPool.getStorableObject(parentId, true);
-			if (parentItem.getLayoutName().equals(layoutName)) {
-				parentCell = this.arrangeCell(parentItem, layoutName);
-			}
+			parentItem = StorableObjectPool.getStorableObject(parentId, true);			
+		} else {
+			parentItem = null;
 		}
 		
-		
+		assert Log.debugMessage(item, Log.DEBUGLEVEL10);
+		if (parentItem != null && parentItem.getLayoutName().equals(layoutName)) {
+			parentCell = this.arrangeCell(parentItem, layoutName);
+		}
 				
-		DefaultGraphCell itemCell = null;		
+		ManagerGraphCell itemCell = null;		
 		int x = 0;
 		int y = 0;
 		String title = null;
@@ -376,13 +401,12 @@ public final class GraphRoutines {
 		if (itemCell == null) {
 			AbstractBean bean = this.getBean(item);
 			
-//			final BeanUI beanUI = this.managerMainFrame.managerHandler.getBeanUI(bean.getCodename());
 			final Perspective perspective = this.managerMainFrame.managerHandler.getPerspective(item.getLayoutName());
-//			assert Log.debugMessage("perspective is " + perspective , Log.DEBUGLEVEL03);
 			final BeanUI beanUI = perspective.getBeanUI(bean.getCodename());
 			
 			itemCell = 
-				this.createChild(null, 
+				this.createChild(perspective,
+					parentCell, 
 					title != null ? title : bean.getName(), 
 					bean, 
 					x, 
@@ -394,35 +418,36 @@ public final class GraphRoutines {
 				graphLayoutCache.setVisible(itemCell, true);
 			}
 			
-			if (parentCell != null) {
-				MPort port = (MPort) itemCell.getChildAt(0);
-				MPort parentPort = (MPort) parentCell.getChildAt(0);
-				Edge connectionEdge = null;
-				for(int j = 0; j<model.getRootCount(); j++) {
-					DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
-					if (model.isEdge(edgeCell)) {
-						Edge edge = (Edge) edgeCell;
-						Object target = edge.getSource();
-						Object source = edge.getTarget();
-						
-						if (target == port && source == parentPort) {
-							connectionEdge = edge;
-							break;
-						}
-					}
-				}
-				
-				if (connectionEdge != null) {
-					// make edge visible
-					if (!graphLayoutCache.isVisible(connectionEdge)) {
-						graphLayoutCache.setVisible(connectionEdge, true);
-					}
-				} else {
-					// otherwise create edge
-					this.createEdge(itemCell, parentCell);
-				}
-			}
+//			if (parentCell != null) {
+//				MPort port = (MPort) itemCell.getChildAt(0);
+//				MPort parentPort = (MPort) parentCell.getChildAt(0);
+//				Edge connectionEdge = null;
+//				for(int j = 0; j<model.getRootCount(); j++) {
+//					DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
+//					if (model.isEdge(edgeCell)) {
+//						Edge edge = (Edge) edgeCell;
+//						Object target = edge.getSource();
+//						Object source = edge.getTarget();
+//						
+//						if (target == port && source == parentPort) {
+//							connectionEdge = edge;
+//							break;
+//						}
+//					}
+//				}
+//				
+//				if (connectionEdge != null) {
+//					// make edge visible
+//					if (!graphLayoutCache.isVisible(connectionEdge)) {
+//						graphLayoutCache.setVisible(connectionEdge, true);
+//					}
+//				} else {
+//					// otherwise create edge
+//					this.createEdge(itemCell, parentCell);
+//				}
+//			}
 		} else {
+			
 			final AttributeMap attributeMap = new AttributeMap();
 			GraphConstants.setBounds(attributeMap,
 				new Rectangle2D.Double(x, y, 0, 0));
@@ -564,9 +589,9 @@ public final class GraphRoutines {
 		double vMaxH = parentRectangle2D.getY();
 
 		final List<Port> sources = parentPort.getSources();
-		final List<DefaultGraphCell> sourceCells = new ArrayList<DefaultGraphCell>();
+		final List<ManagerGraphCell> sourceCells = new ArrayList<ManagerGraphCell>();
 		for (final Port port : sources) {
-			final DefaultGraphCell cell = (DefaultGraphCell) ((MPort)port).getParent();
+			final ManagerGraphCell cell = (ManagerGraphCell) ((MPort)port).getParent();
 			if (graphLayoutCache.isVisible(cell)) {
 				sourceCells.add(cell);
 			}
@@ -583,7 +608,7 @@ public final class GraphRoutines {
 		
 		assert Log.debugMessage(spaces + "Children of " + parentCell + " are " + sourceCells , Log.DEBUGLEVEL10);
 		
-		for (final DefaultGraphCell cell : sourceCells) {			
+		for (final ManagerGraphCell cell : sourceCells) {			
 			final AttributeMap attributes = cell.getAttributes();
 			final Rectangle2D rectangle2D = GraphConstants.getBounds(attributes);
 			this.verticalSeparation(cell, deep + 1);					
@@ -824,26 +849,31 @@ public final class GraphRoutines {
 		}
 	}
 	
-	public DefaultGraphCell getDefaultGraphCell(final LayoutItem item) {
-		return this.getDefaultGraphCell(item, true);
+	public ManagerGraphCell getDefaultGraphCell(final LayoutItem item) {
+		return this.getDefaultGraphCell(item, false);
 	}
 	
-	private DefaultGraphCell getDefaultGraphCell(final LayoutItem item, boolean visible) {
+	public ManagerGraphCell getDefaultGraphCell(final LayoutItem item, 
+			final boolean visible) {
 		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		final GraphModel model = this.graph.getModel();
 		
 		final String name = item.getName();
+		final String layoutName = item.getLayoutName();
 		for(int i = 0; i < model.getRootCount(); i++) {
-			DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
+			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
 			if (!model.isEdge(cell) && !model.isPort(cell)) {				
-				MPort port = (MPort) cell.getChildAt(0);
-				AbstractBean bean = port.getBean();
-				if (name.equals(bean.getId())) {
+				final ManagerGraphCell graphCell = (ManagerGraphCell) cell;
+				final AbstractBean bean = graphCell.getAbstractBean();				
+				final Perspective perspective = graphCell.getPerspective();
+				final String codename = perspective.getCodename();
+				if (codename.equals(layoutName) && 
+						name.equals(bean.getId())) {
 					if (visible && !graphLayoutCache.isVisible(cell)) {
 						graphLayoutCache.setVisible(cell, true);
 					}
 					
-					return cell;
+					return (ManagerGraphCell) cell;
 				}
 			}
 		}
@@ -852,15 +882,17 @@ public final class GraphRoutines {
 	}
 	
 	
-	public DefaultGraphCell getDefaultGraphCell(final AbstractBean bean) {
+	public ManagerGraphCell getDefaultGraphCell(final AbstractBean bean,
+			final Perspective perspective) {
 		final GraphModel model = this.graph.getModel();
-		
 		for(int i = 0; i < model.getRootCount(); i++) {
-			DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
-			if (!model.isEdge(cell) && !model.isPort(cell)) {				
-				MPort port = (MPort) cell.getChildAt(0);
-				if (port.getBean() == bean) {
-					return cell;
+			final DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
+			if (!model.isEdge(cell) && !model.isPort(cell)) {
+				final ManagerGraphCell managerGraphCell = (ManagerGraphCell) cell;
+				final Perspective cellPerspective = managerGraphCell.getPerspective();
+				if (managerGraphCell.getAbstractBean() == bean && 
+						cellPerspective == perspective) {
+					return managerGraphCell;
 				}
 			}
 		}
@@ -871,7 +903,7 @@ public final class GraphRoutines {
 	
 	public AbstractBean getBean(final LayoutItem layoutItem) 
 	throws ApplicationException {
-		final DefaultGraphCell defaultGraphCell = this.getDefaultGraphCell(layoutItem, false);
+		final ManagerGraphCell defaultGraphCell = this.getDefaultGraphCell(layoutItem, false);
 
 		if (defaultGraphCell != null) {
 			MPort port = (MPort) defaultGraphCell.getChildAt(0);
@@ -883,38 +915,40 @@ public final class GraphRoutines {
 		return perspective.createBean(layoutItem.getName());
 	}	
 	
-	private Set<AbstractBean> getLayoutBeans(final String layerName) 
+	private List<AbstractBean> getLayoutBeans(final String layerName) 
 	throws ApplicationException {
 		final ManagerHandler managerHandler = this.managerMainFrame.getManagerHandler();
 		final Perspective perspective = managerHandler.getPerspective(layerName);
 		
-		Set<AbstractBean> layoutBeans = perspective.getLayoutBeans();
+		List<AbstractBean> layoutBeans = perspective.getLayoutBeans();
 		
 		if (layoutBeans == null) {
-			final Set<LayoutItem> layoutItems = StorableObjectPool.getStorableObjectsByCondition(
-				new TypicalCondition(layerName, 
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.LAYOUT_ITEM_CODE,
-					LayoutItemWrapper.COLUMN_LAYOUT_NAME), 
-				true);
+			final Set<LayoutItem> layoutItems = 
+				StorableObjectPool.getStorableObjectsByCondition(
+					new TypicalCondition(layerName, 
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.LAYOUT_ITEM_CODE,
+						LayoutItemWrapper.COLUMN_LAYOUT_NAME), 
+					true);
 
-			layoutBeans = new HashSet<AbstractBean>(layoutItems.size());
-			perspective.setLayoutBeans(layoutBeans);
-			
+			layoutBeans = new ArrayList<AbstractBean>(layoutItems.size());			
 			for (final LayoutItem layoutItem : layoutItems) {
 				layoutBeans.add(this.getBean(layoutItem));
 			}		
+			perspective.setLayoutBeans(layoutBeans);
+
 		}
 		return layoutBeans;
 	}
 	
 	
 	
-	public void showLayerName(final String layerName) 
+	public void showLayerName(final String layerName, boolean show) 
 	throws ApplicationException {		
 		
-		final Set<AbstractBean> layoutBeans = this.getLayoutBeans(layerName);
+		final List<AbstractBean> layoutBeans = this.getLayoutBeans(layerName);
 		
+		if (show) {
 		final GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		final GraphModel model = this.graph.getModel();
 		
@@ -926,20 +960,22 @@ public final class GraphRoutines {
 				boolean visible = layoutBeans.contains(bean);
 				
 				assert Log.debugMessage("port:" + port + (visible ? " visible" : " hide"), 
-					Log.DEBUGLEVEL10);
-				graphLayoutCache.setVisible(port.getParent(), visible);
+					Log.DEBUGLEVEL10);				
+				final TreeNode parent = port.getParent();
+				graphLayoutCache.setVisible(parent, visible);
 			}
 		}
 		
 		this.graph.repaint();
+		}
 		this.managerMainFrame.undoManager.discardAllEdits();
 		this.managerMainFrame.updateHistoryButtons();
 	}
 	
-	private class VerticalPortComparator implements Comparator<DefaultGraphCell>{
+	private class VerticalPortComparator implements Comparator<ManagerGraphCell>{
 
-		public int compare(	DefaultGraphCell cell1,
-		                   	DefaultGraphCell cell2) {
+		public int compare(	final ManagerGraphCell cell1,
+				final ManagerGraphCell cell2) {
 			final AttributeMap attributes1 = cell1.getAttributes();
 			final Rectangle2D rectangle2D1 = GraphConstants.getBounds(attributes1);
 			

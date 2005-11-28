@@ -1,5 +1,5 @@
 /*-
-* $Id: SoftSeverityMessagePerspectiveCommand.java,v 1.2 2005/11/17 09:00:35 bob Exp $
+* $Id: SoftSeverityMessagePerspectiveCommand.java,v 1.3 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.manager.perspective.SoftSeverityMessagePerpective;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -28,7 +28,6 @@ public final class SoftSeverityMessagePerspectiveCommand extends AbstractCommand
 	@Override
 	public void execute() {
 		this.graphText.setPerspective(new SoftSeverityMessagePerpective());
-
 	}
 	
 	

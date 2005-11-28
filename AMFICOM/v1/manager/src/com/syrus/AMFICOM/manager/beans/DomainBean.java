@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: DomainBean.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,15 +22,15 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainBean extends Bean {
+public final class DomainBean extends Bean {
 	
 	private Domain domain;
-
+	
 	@Override
 	protected void setIdentifier(Identifier storableObject) throws ApplicationException {
 		super.setIdentifier(storableObject);
@@ -60,7 +60,7 @@ public class DomainBean extends Bean {
 	public final void setName(final String name) {
 		String name2 = this.domain.getName().intern();
 		if (name2 != name.intern() ) {
-			assert Log.debugMessage("DomainBean.setName | was:" + name2 + ", now:" + name, Log.DEBUGLEVEL09);
+			assert Log.debugMessage("was:" + name2 + ", now:" + name, Log.DEBUGLEVEL09);
 			this.domain.setName(name);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
 		}

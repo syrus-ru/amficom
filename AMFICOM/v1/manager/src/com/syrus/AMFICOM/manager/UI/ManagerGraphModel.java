@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.14 2005/11/17 09:00:35 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.15 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.15 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -113,9 +113,10 @@ public class ManagerGraphModel extends DefaultGraphModel {
 				!this.isLooped(source, target);
 			Log.debugMessage("ManagerGraphModel.isTargetValid | " + result, 
 				Log.DEBUGLEVEL10);
-			return result;
+//			return result;
 		}
-		return false;
+//		return false;
+		return true;
 	}
 	
 	@Override

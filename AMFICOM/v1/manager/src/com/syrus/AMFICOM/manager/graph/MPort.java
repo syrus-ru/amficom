@@ -1,5 +1,5 @@
 /*-
- * $Id: MPort.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+ * $Id: MPort.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import org.jgraph.graph.Port;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -86,6 +86,13 @@ public class MPort extends DefaultGraphCell implements Port {
 	 * Adds <code>edge</code> to the list of ports.
 	 */
 	public boolean addEdge(Object oEdge) {
+//		try {
+//			throw new Exception("MPort.addEdge | " + this);
+//		} catch (final Exception e) {
+//			e.printStackTrace();
+//		}		
+
+		
 		Edge edge = (Edge) oEdge;
 		
 		if (edge == null) {

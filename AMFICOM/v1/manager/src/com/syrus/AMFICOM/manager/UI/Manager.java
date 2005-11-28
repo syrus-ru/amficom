@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.17 2005/11/17 09:00:35 bob Exp $
+* $Id: Manager.java,v 1.18 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.manager.UI;
 import java.awt.Toolkit;
 import java.util.Set;
 
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.Role;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
@@ -21,6 +22,7 @@ import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -31,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.18 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,11 +54,13 @@ public class Manager extends AbstractApplication {
 		super.aContext.setApplicationModel(new ManagerModel(super.aContext));
 
 		
-		if (ApplicationProperties.getBoolean(XMLSESSION_KEY, false)) {
-			assert Log.debugMessage("XML session" , Log.DEBUGLEVEL03);
+		final boolean xmlSession = ApplicationProperties.getBoolean(XMLSESSION_KEY, false);
+		if (xmlSession) {
+			assert Log.debugMessage("XML session" , Log.DEBUGLEVEL10);
 			try {
 				this.initUser();
 				this.createDeliveryAttributes();
+				this.loadDomainMembers();
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -64,10 +68,29 @@ public class Manager extends AbstractApplication {
 			}		
 		}
 		
-		super.startMainFrame(new ManagerMainFrame(super.aContext), 
+		final ManagerMainFrame managerMainFrame = new ManagerMainFrame(super.aContext);
+		super.startMainFrame(managerMainFrame, 
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif"));
+		if (xmlSession) {
+			managerMainFrame.loggedIn();
+		}
 	}
 
+	
+	private void loadDomainMembers() throws ApplicationException {
+		// XXX see bug # 312
+		final Set<Domain> domains = 
+			StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_CODE), true);
+		
+		final Set<Identifier> domainIds = Identifier.createIdentifiers(domains);
+		
+		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.KIS_CODE), true);
+		
+		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.MCM_CODE), true);
+		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.SERVER_CODE), true);
+		StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(domainIds, ObjectEntities.PERMATTR_CODE), true);
+	}
+	
 	private void initUser() throws ApplicationException {
 		final Set<SystemUser> systemUserWithLoginSys = 
 			StorableObjectPool.getStorableObjectsByCondition(
@@ -88,7 +111,7 @@ public class Manager extends AbstractApplication {
 	void createDeliveryAttributes() throws ApplicationException {
 		final Identifier userId = LoginManager.getUserId();
 		final DeliveryAttributes attributes = 
-			DeliveryAttributes.createInstance(userId, Severity.SEVERITY_SOFT);
+			DeliveryAttributes.getInstance(userId, Severity.SEVERITY_SOFT);
 		final Set<Role> roles = StorableObjectPool.getStorableObjectsByCondition(
 			new EquivalentCondition(ObjectEntities.ROLE_CODE),
 			true);

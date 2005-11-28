@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: UserBean.java,v 1.2 2005/11/28 14:47:04 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -73,7 +73,7 @@ public class UserBean extends Bean implements WorkstationItem {
 		// TODO Auto-generated method stub
 		
 	}	
-
+	
 	@Override
 	public void dispose() throws ApplicationException {
 		assert Log.debugMessage("UserBean.dispose | " 
@@ -83,7 +83,7 @@ public class UserBean extends Bean implements WorkstationItem {
 		StorableObjectPool.delete(this.user.getCharacteristics(false));
 		StorableObjectPool.delete(this.identifier);		
 		
-		final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 		for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 			Bean portBean = 
 				(Bean) graphRoutines.getBean(layoutItem);
@@ -112,7 +112,7 @@ public class UserBean extends Bean implements WorkstationItem {
 
 	private void refreshRoles() throws ApplicationException {
 		Log.debugMessage(Log.DEBUGLEVEL09);
-		final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 		for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 			assert Log.debugMessage(layoutItem.getName() +", " + layoutItem.getLayoutName() , Log.DEBUGLEVEL09);
 			final Bean bean = 
@@ -221,7 +221,7 @@ public class UserBean extends Bean implements WorkstationItem {
 				!name.equals(name2))) {
 			String oldValue = name2;
 			this.user.setName(name);
-			final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+			final ManagerModel managerModel = (ManagerModel)this.managerMainFrame.getModel();
 			final Dispatcher dispatcher = managerModel.getDispatcher();
 			dispatcher.firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, this));
@@ -406,7 +406,7 @@ public class UserBean extends Bean implements WorkstationItem {
 				+ ", now:" + newDomainId, 
 			Log.DEBUGLEVEL09);
 		try {			
-			final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				assert Log.debugMessage(layoutItem.getName() 
 					+ '@' + layoutItem.getLayoutName(), 
@@ -440,7 +440,7 @@ public class UserBean extends Bean implements WorkstationItem {
 	}
 	
 	protected PermissionAttributes getPermissionAttributes(final Module module) throws ApplicationException {
-		final Perspective perspective = this.graphText.getPerspective();
+		final Perspective perspective = this.managerMainFrame.getPerspective();
 		// XXX think and refactor
 		if (perspective instanceof DomainPerpective) {
 			DomainPerpective domainPerpective = (DomainPerpective) perspective;

@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphSelectionListener.java,v 1.4 2005/11/17 09:00:35 bob Exp $
+* $Id: ManagerGraphSelectionListener.java,v 1.5 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,11 +28,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,7 +47,11 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 	}
 	
 	@SuppressWarnings({"unqualified-field-access","unchecked"})
-	public void valueChanged(GraphSelectionEvent e) {		
+	public void valueChanged(final GraphSelectionEvent e) {
+		if (managerMainFrame.arranging) {
+			return;
+		}
+		
 		final JInternalFrame frame = 
 			(JInternalFrame) managerMainFrame.frames.get(ManagerMainFrame.PROPERTIES_FRAME);
 		frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME));
@@ -63,7 +67,7 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		final Object cell = e.getCell();
 		final TreeSelectionModel selectionModel = managerMainFrame.tree.getSelectionModel();
 		final GraphModel model = managerMainFrame.graph.getModel();
-		final NonRootGraphTreeModel treeModel = managerMainFrame.getTreeModel();
+		final PerspectiveTreeModel treeModel = managerMainFrame.getTreeModel();
 		
 		final Perspective perspective = managerMainFrame.getPerspective();
 		
@@ -71,14 +75,19 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		
 		if (model.isEdge(cell)) {
 			if (e.isAddedCell()) {
-				Edge edge = (Edge)cell;
-				TreeNode sourceNode = (TreeNode) edge.getSource();
-				TreeNode targetNode = (TreeNode) edge.getSource();
+				deleteAllow = false;
+				final Edge edge = (Edge)cell;
+				final TreeNode sourceNode = (TreeNode) edge.getSource();
+				final TreeNode targetNode = (TreeNode) edge.getSource();
 				if (sourceNode != null) {
-					managerMainFrame.tree.scrollPathToVisible(new TreePath(treeModel.getPathToRoot(sourceNode)));
+					final TreePath treePath = new TreePath(treeModel.getPathToRoot(sourceNode));
+//					assert Log.debugMessage("1:" + treePath, Log.DEBUGLEVEL03);
+					managerMainFrame.tree.scrollPathToVisible(treePath);
 				}
 				if (targetNode != null) {
-					managerMainFrame.tree.scrollPathToVisible(new TreePath(treeModel.getPathToRoot(targetNode)));
+					final TreePath treePath = new TreePath(treeModel.getPathToRoot(targetNode));
+//					assert Log.debugMessage("2:" + treePath, Log.DEBUGLEVEL03);
+					managerMainFrame.tree.scrollPathToVisible(treePath);
 				}
 			} else {
 				selectionModel.clearSelection();
@@ -88,8 +97,9 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 				if (!model.isPort(cell) && !model.isEdge(cell)) {
 					TreeNode[] pathToRoot = treeModel.getPathToRoot((TreeNode) cell);
 					if (pathToRoot != null) {
-						TreePath path = new TreePath(pathToRoot);
-						selectionModel.setSelectionPath(path);
+						final TreePath treePath = new TreePath(pathToRoot);
+//						assert Log.debugMessage("3:" + treePath, Log.DEBUGLEVEL03);
+						selectionModel.setSelectionPath(treePath);
 					} else {
 						selectionModel.clearSelection();
 					}
@@ -101,27 +111,31 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 				if (userObject instanceof AbstractBean) {
 					final AbstractBean abstractBean = (AbstractBean)userObject;
 					if (perspective.isSupported(abstractBean)) {
-						deleteAllow &= perspective.isDeletable(abstractBean);
+						final LayoutItem parentLayoutItem = perspective.getParentLayoutItem();
+						if (parentLayoutItem != null) {	
+							try {
+								final GraphRoutines graphRoutines = managerMainFrame.getGraphRoutines();
+								deleteAllow &= graphRoutines.getBean(parentLayoutItem) != abstractBean;
 	
-						try {
-							managerMainFrame.beanUI = perspective.getBeanUI(abstractBean.getCodename());
-							JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
-							if (propertyPanel2 != null) {
-								frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME)
-									+ " : "
-									+ ((AbstractBean)userObject).getName());
-								final GridBagLayout gridBagLayout = 
-									(GridBagLayout) panel.getLayout();
-								final GridBagConstraints gbc = gridBagLayout.getConstraints(panel);
-								gbc.fill = GridBagConstraints.BOTH;
-								gbc.weightx = 1.0;
-								gbc.weighty = 1.0;
-								gbc.gridwidth = GridBagConstraints.REMAINDER;
-								panel.add(propertyPanel2, gbc);
+								managerMainFrame.beanUI = perspective.getBeanUI(abstractBean.getCodename());
+								JPanel propertyPanel2 = managerMainFrame.beanUI.getPropertyPanel(abstractBean);
+								if (propertyPanel2 != null) {
+									frame.setTitle(I18N.getString(ManagerMainFrame.PROPERTIES_FRAME)
+										+ " : "
+										+ ((AbstractBean)userObject).getName());
+									final GridBagLayout gridBagLayout = 
+										(GridBagLayout) panel.getLayout();
+									final GridBagConstraints gbc = gridBagLayout.getConstraints(panel);
+									gbc.fill = GridBagConstraints.BOTH;
+									gbc.weightx = 1.0;
+									gbc.weighty = 1.0;
+									gbc.gridwidth = GridBagConstraints.REMAINDER;
+									panel.add(propertyPanel2, gbc);
+								}
+							} catch (ApplicationException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
 							}
-						} catch (ApplicationException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
 						}
 					}
 										
@@ -135,7 +149,6 @@ final class ManagerGraphSelectionListener implements GraphSelectionListener {
 		panel.repaint();
 		
 		boolean enabled = !managerMainFrame.graph.isSelectionEmpty();
-		
 		managerMainFrame.remove.setEnabled(enabled && deleteAllow);
 	}
 }

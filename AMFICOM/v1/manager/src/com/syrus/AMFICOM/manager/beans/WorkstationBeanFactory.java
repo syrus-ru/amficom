@@ -1,5 +1,5 @@
 /*-
- * $Id: WorkstationBeanFactory.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: WorkstationBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -51,7 +51,7 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 		++super.count;
 		final WorkstationBean bean = new WorkstationBean();
 		bean.setName(this.getName());
-		bean.setGraphText(super.graphText);
+		bean.setManagerMainFrame(super.graphText);
 		bean.setId(codename);
 		bean.setIdentifier(Identifier.VOID_IDENTIFIER);		
 		return bean;
@@ -84,7 +84,7 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 		
 		@Override
 		public void dispose() throws ApplicationException {			
-			final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 			for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 				if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {					
 					Log.debugMessage(layoutItem.getId() + ", "
@@ -109,7 +109,7 @@ public final class WorkstationBeanFactory extends AbstractBeanFactory<NonStorabl
 		public void setDomainId(Identifier oldDomainId,
 								Identifier newDomainId) {
 			try {
-				final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+				final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 				for(final LayoutItem layoutItem : this.getBeanChildrenLayoutItems()) {
 					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
 						final String layoutName = !newDomainId.isVoid() ? 

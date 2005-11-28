@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: ServerBean.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -66,7 +66,7 @@ public class ServerBean extends Bean implements DomainNetworkItem {
 				(name2 != null && !name2.equals(name) ||
 				!name.equals(name2))) {
 			this.server.setName(name);
-			final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+			final ManagerModel managerModel = (ManagerModel)this.managerMainFrame.getModel();
 			final Dispatcher dispatcher = managerModel.getDispatcher();
 			dispatcher.firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.SERVER, null, this));

@@ -8,8 +8,8 @@
       <man:uiHandler id="Net" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.NetBeanUI"/>
       <man:validator source="Domain" target="Domain"/>
       <man:validator source="Net" target="Domain"/>
-      <man:popupMenu id="Domain" popupMenuHandler="com.syrus.AMFICOM.manager.UI.DomainPopupMenu"/>
       <man:perspective id="Domain">
+        <man:beanFactory id="Net" beanFactoryClass="com.syrus.AMFICOM.manager.beans.NetBeanFactory"/>
         <man:beanFactory id="KIS" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RTUBeanFactory"/>
         <man:beanFactory id="Server" beanFactoryClass="com.syrus.AMFICOM.manager.beans.ServerBeanFactory"/>
         <man:beanFactory id="MCM" beanFactoryClass="com.syrus.AMFICOM.manager.beans.MCMBeanFactory"/>
@@ -26,9 +26,8 @@
         <man:validator source="Server" target="Net"/>
         <man:validator source="Workstation" target="Net"/>
         <man:validator source="SystemUser" target="Workstation"/>
-        <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserDomainPopupMenu"/>
-        <man:undeletable>Net</man:undeletable>
         <man:perspective id="SystemUser">
+          <man:beanFactory id="SystemUser" beanFactoryClass="com.syrus.AMFICOM.manager.beans.UserBeanFactory"/>
           <man:beanFactory id="PermissionAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
           <man:beanFactory id="administration" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
           <man:beanFactory id="scheme" beanFactoryClass="com.syrus.AMFICOM.manager.beans.PermissionBeanFactory"/>
@@ -73,7 +72,6 @@
           <man:validator source="report" target="SystemUser"/>
           <man:validator source="PermissionAttributes" target="SystemUser"/>
           <man:popupMenu id="SystemUser" popupMenuHandler="com.syrus.AMFICOM.manager.UI.SystemUserPermissionPopupMenu"/>
-          <man:undeletable>SystemUser</man:undeletable>
         </man:perspective>
       </man:perspective>
     </man:managerResource>
@@ -122,9 +120,9 @@
       <man:validator source="prediction" target="Role"/>
       <man:validator source="report" target="Role"/>
       <man:validator source="PermissionAttributes" target="Role"/>
-      <man:undeletable>Role</man:undeletable>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="SEVERITYSOFT">
+      <man:handler>com.syrus.AMFICOM.manager.perspective.SoftSeverityMessagePerpective</man:handler>
       <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RoleBeanFactory"/>
       <man:beanFactory id="DeliveryAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.MessageBeanFactory"/>
       <man:uiHandler id="Role" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RoleBeanUI"/>
@@ -132,6 +130,7 @@
       <man:validator source="Role" target="DeliveryAttributes"/>
     </man:managerResource>
     <man:managerResource xsi:type="man:perspective" id="SEVERITYHARD">
+      <man:handler>com.syrus.AMFICOM.manager.perspective.HardSeverityMessagePerpective</man:handler>
       <man:beanFactory id="Role" beanFactoryClass="com.syrus.AMFICOM.manager.beans.RoleBeanFactory"/>
       <man:beanFactory id="DeliveryAttributes" beanFactoryClass="com.syrus.AMFICOM.manager.beans.MessageBeanFactory"/>
       <man:uiHandler id="Role" uiHandlerClass="com.syrus.AMFICOM.manager.viewers.RoleBeanUI"/>

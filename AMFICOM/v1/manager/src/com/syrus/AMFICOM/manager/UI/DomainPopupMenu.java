@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPopupMenu.java,v 1.2 2005/11/17 09:00:35 bob Exp $
+* $Id: DomainPopupMenu.java,v 1.3 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -80,10 +80,10 @@ public class DomainPopupMenu extends AbstractItemPopupMenu<DomainsPerspective> {
 					}
 					
 					final ManagerMainFrame managerMainFrame = perspective.getManagerMainFrame();
-					final DomainPerpective domainPerspective = 
-						perspective.getDomainPerspective((DomainBean) port.getBean());
-					
+					final DomainPerpective domainPerspective = perspective.getDomainPerspective((DomainBean) port.getBean());
 					managerMainFrame.setPerspective(domainPerspective);
+					
+					
 					
 					
 				}

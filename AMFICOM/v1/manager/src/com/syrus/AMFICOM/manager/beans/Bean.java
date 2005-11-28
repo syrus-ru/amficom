@@ -1,5 +1,5 @@
 /*-
-* $Id: Bean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+* $Id: Bean.java,v 1.2 2005/11/28 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -45,6 +45,5 @@ public abstract class Bean extends AbstractBean {
 			this.propertyChangeListeners.remove(propertyChangeListener);
 		}
 	}
-
 }
 

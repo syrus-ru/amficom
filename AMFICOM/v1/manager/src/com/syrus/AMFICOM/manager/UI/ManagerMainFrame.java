@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.21 2005/11/17 09:00:35 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.22 2005/11/28 14:47:04 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,21 +10,21 @@ package com.syrus.AMFICOM.manager.UI;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.TooManyListenersException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
@@ -32,16 +32,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
-import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.UndoableEditEvent;
@@ -55,26 +51,23 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.client.UI.WindowArranger;
-import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
-import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.extensions.ExtensionLauncher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.ManagerHandler;
+import com.syrus.AMFICOM.manager.graph.ManagerGraphCell;
 import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
-import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
-import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.21 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.22 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -85,7 +78,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 
 	JTree						tree;
 
-	private NonRootGraphTreeModel		treeModel;
+	private PerspectiveTreeModel treeModel;
 
 	JPanel				propertyPanel;
 
@@ -108,24 +101,15 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	static final String							GRAPH_FRAME			= "Manager.Label.Graph";
 	static final String							PROPERTIES_FRAME	= "Manager.Label.Properties";
 
-	private JToolBar	entityToolBar;
-	
 	JScrollPane pane;
-	JTabbedPane tabbedPane;
-
-	Map<JComponent, Perspective>	perspectiveMap;
 
 	BeanUI	beanUI;
-
+	
 	ManagerHandler	managerHandler;
 
 	private GraphRoutines	graphRoutines;
 
-	private JButton	domainButton;
-
-	private JButton	softMessageActionButton;
-
-	private JButton	hardMessageActionButton;
+	private Point	location;
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
 		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
@@ -192,64 +176,6 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		}, new AbstractMainToolBar() {});
 		
 		final JDesktopPane desktopPane1 = this.desktopPane;
-		
-		
-//		final boolean localDomainAccess = Boolean.parseBoolean(System.getProperty("manager.localdomain.access"));
-//		if (localDomainAccess)
-		{
-			// XXX testing bypass
-			super.toolBar.addSeparator();
-			final AbstractAction enterDomains = new AbstractAction(I18N.getString("Manager.Action.Domains")) {	
-				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
-				public void actionPerformed(ActionEvent e) {
-					final JButton button = (JButton) e.getSource();
-					button.setEnabled(false);
-					windowArranger.arrange();
-					ApplicationContext context = ManagerMainFrame.this.getContext();
-					ApplicationModel applicationModel = context.getApplicationModel();
-					Command command = applicationModel.getCommand(ManagerModel.DOMAINS_COMMAND);
-					command.execute();				
-				}
-			};			
-			enterDomains.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('D'));
-			enterDomains.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_D));
-			this.domainButton = super.toolBar.add(enterDomains);		
-			
-			final AbstractAction enterSoftMessages = new AbstractAction(Severity.SEVERITY_SOFT.getLocalizedName()) {	
-				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
-				public void actionPerformed(ActionEvent e) {
-					final JButton button = (JButton) e.getSource();
-					button.setEnabled(false);
-					windowArranger.arrange();
-					ApplicationContext context = ManagerMainFrame.this.getContext();
-					ApplicationModel applicationModel = context.getApplicationModel();
-					Command command = applicationModel.getCommand(ManagerModel.SOFT_MESSAGE_COMMAND);
-					command.execute();				
-				}
-			};			
-			enterSoftMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('S'));
-			enterSoftMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_S));
-			this.softMessageActionButton = super.toolBar.add(enterSoftMessages);
-			
-			final AbstractAction enterHardMessages = new AbstractAction(Severity.SEVERITY_HARD.getLocalizedName()) {	
-				@SuppressWarnings({"unqualified-field-access","synthetic-access"})
-				public void actionPerformed(ActionEvent e) {
-					final JButton button = (JButton) e.getSource();
-					button.setEnabled(false);
-					windowArranger.arrange();
-					ApplicationContext context = ManagerMainFrame.this.getContext();
-					ApplicationModel applicationModel = context.getApplicationModel();
-					Command command = applicationModel.getCommand(ManagerModel.HARD_MESSAGE_COMMAND);
-					command.execute();				
-				}
-			};			
-			enterHardMessages.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke('H'));
-			enterHardMessages.putValue(Action.MNEMONIC_KEY, Integer.valueOf(KeyEvent.VK_H));			
-			this.hardMessageActionButton = super.toolBar.add(enterHardMessages);
-			
-			this.updateButtons();
-		}
-		
 		
 		
 		this.setWindowArranger(new WindowArranger(this) {
@@ -348,33 +274,11 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			
 			gbc.gridheight = GridBagConstraints.RELATIVE;
 			
-			panel.add(createEntityToolBar(), gbc);
-			
 			ManagerMainFrame.this.pane = new JScrollPane(ManagerMainFrame.this.graph);
 			
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			
-			ManagerMainFrame.this.tabbedPane = new JTabbedPane();
-			
-			tabbedPane.getModel().addChangeListener(new ChangeListener() {
-					
-				
-					private ChangeEvent	event;
-
-					public void stateChanged(final ChangeEvent evt) {						
-						if (this.event != null) {
-							return;
-						}						
-						this.event = evt;
-						ManagerMainFrame.this.setPerspectiveTab(isPerspectiveValid() ?
-							ManagerMainFrame.this.perspectiveMap.get(
-								ManagerMainFrame.this.tabbedPane.getComponentAt(ManagerMainFrame.this.tabbedPane.getSelectedIndex())) :
-							ManagerMainFrame.this.perspective);
-						this.event = null;
-					}	
-			});
-			
-			panel.add(ManagerMainFrame.this.tabbedPane, gbc);
+			panel.add(ManagerMainFrame.this.pane, gbc);
 			
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.weighty = 0.0;
@@ -383,6 +287,7 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 			frame.setIconifiable(true);
 			desktopPane1.add(frame);
 			frame.getContentPane().add(panel);
+			frame.pack();
 
 			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));			
 			return frame;
@@ -413,9 +318,6 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		});	
 		
 		final ApplicationModel applicationModel = this.aContext.getApplicationModel();
-		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspectiveCommand(this));
-		applicationModel.setCommand(ManagerModel.SOFT_MESSAGE_COMMAND, new SoftSeverityMessagePerspectiveCommand(this));
-		applicationModel.setCommand(ManagerModel.HARD_MESSAGE_COMMAND, new HardSeverityMessagePerspectiveCommand(this));
 		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand(this));	
 		
 		applicationModel.setCommand(TREE_FRAME, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));
@@ -451,6 +353,8 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		
 //		this.graph.setToolTipText("");
 		
+
+		
 		this.graphRoutines = new GraphRoutines(this);
 		
 		//	Use a Custom Marquee Handler
@@ -465,7 +369,6 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		// When over a cell, jump to its default port (we only have one, anyway)
 		this.graph.setJumpToDefaultPort(true);
 		
-		this.createTreeModel();
 		
 		this.undoManager = new GraphUndoManager() {
 			// Override Superclass
@@ -481,34 +384,48 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		// Register UndoManager with the Model
 		this.graph.getModel().addUndoableEditListener(this.undoManager);
 
-		this.createModelListener();		
+		this.createModelListener();
+		
+		this.frames.get(GRAPH_FRAME);
+		
+		this.createPerspectives();
+		
+		this.createTreeModel();
+
+		this.enableDragAndDrop();
+
 	}
+
+	private void createPerspectives() {
+		final Collection<Perspective> perspectives = this.managerHandler.getPerspectives();
+		for (final Perspective perspective : perspectives) {
+			this.setPerspective(perspective);
+		}		
+	}
+
 
 	@Override
 	public void loggedIn() {
-		final ApplicationModel model = this.getModel();
-		model.setEnabled(ManagerModel.DOMAINS_COMMAND, true);
-		model.setEnabled(ManagerModel.SOFT_MESSAGE_COMMAND, true);
-		model.setEnabled(ManagerModel.HARD_MESSAGE_COMMAND, true);
-		this.updateButtons();
+		final ApplicationModel model = this.aContext.getApplicationModel();
+		model.setEnabled(ApplicationModel.MENU_VIEW, true);
+		model.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
+		model.setEnabled(TREE_FRAME, true);
+		model.setEnabled(GRAPH_FRAME, true);
+		model.setEnabled(PROPERTIES_FRAME, true);
+
+		model.setVisible(ApplicationModel.MENU_VIEW, true);
+		model.setVisible(ApplicationModel.MENU_VIEW_ARRANGE, true);
+		model.setVisible(TREE_FRAME, true);
+		model.setVisible(GRAPH_FRAME, true);
+		model.setVisible(PROPERTIES_FRAME, true);
+		
+		model.fireModelChanged();
+
+		this.windowArranger.arrange();
 	}
 	
 	@Override
 	public void loggedOut() {
-		final ApplicationModel model = this.getModel();
-		model.setEnabled(ManagerModel.DOMAINS_COMMAND, false);
-		model.setEnabled(ManagerModel.SOFT_MESSAGE_COMMAND, false);
-		model.setEnabled(ManagerModel.HARD_MESSAGE_COMMAND, false);
-		this.updateButtons();		
-	}
-	
-	private void updateButtons() {
-		final ApplicationModel model = this.getModel();
-		boolean xmlSession = ApplicationProperties.getBoolean(AbstractApplication.XMLSESSION_KEY, false);
-		final boolean enabled2 = xmlSession | model.isEnabled(ManagerModel.HARD_MESSAGE_COMMAND);
-		this.hardMessageActionButton.setEnabled(enabled2);
-		this.domainButton.setEnabled(xmlSession | model.isEnabled(ManagerModel.DOMAINS_COMMAND));
-		this.softMessageActionButton.setEnabled(xmlSession | model.isEnabled(ManagerModel.SOFT_MESSAGE_COMMAND));
 	}
 	
 	@Override
@@ -735,102 +652,82 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 		this.undo.setEnabled(this.undoManager.canUndo(this.graph.getGraphLayoutCache()));
 		this.redo.setEnabled(this.undoManager.canRedo(this.graph.getGraphLayoutCache()));
 	}
-	
-	final JToolBar createEntityToolBar() {
-		this.entityToolBar = new JToolBar(SwingConstants.VERTICAL);
-		this.entityToolBar.setFloatable(false);
-		return this.entityToolBar;
-	}
-	
-	public final JButton addAction(final AbstractAction abstractAction) {
-		return this.entityToolBar.add(abstractAction);
-	}	
 
 	private void createTreeModel() {		
-		this.treeModel = new NonRootGraphTreeModel(this);
+//		this.treeModel = new NonRootGraphTreeModel(this);
+		this.treeModel = new PerspectiveTreeModel(this);
 		this.tree = new JTree(this.treeModel);
 		
 		this.tree.setRootVisible(true);
+
+		this.tree.setCellRenderer(new MTreeCellRenderer());
 		
 		this.graph.getSelectionModel().addGraphSelectionListener(new ManagerGraphSelectionListener(this));
 		
 		this.tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
+			public void valueChanged(final TreeSelectionEvent e) {
 				final Object lastPathComponent = e.getPath().getLastPathComponent();
 				final GraphSelectionModel selectionModel = ManagerMainFrame.this.graph.getSelectionModel();
-				if (e.isAddedPath()) {
-					selectionModel.setSelectionCell(lastPathComponent);
-				} 
+				if (lastPathComponent instanceof ManagerGraphCell) {
+					final ManagerGraphCell cell = (ManagerGraphCell) lastPathComponent;
+					setPerspective(cell.getPerspective());
+					if (e.isAddedPath()) {
+						selectionModel.setSelectionCell(lastPathComponent);
+					} 
+				} else if (lastPathComponent instanceof ActionMutableTreeNode){
+					final ActionMutableTreeNode actionTreeNode = 
+						(ActionMutableTreeNode) lastPathComponent;
+					setPerspective(actionTreeNode.getPerspective());
+				}
 			}
 		});
+		
+		
+	}
+	
+	private void enableDragAndDrop() {
+//		 enable d'n'd
+		final ActionTransferHandler transferHandler = new ActionTransferHandler(this);
+		this.tree.setTransferHandler(transferHandler);
+		this.tree.setDragEnabled(true);
+		this.graph.setTransferHandler(transferHandler);
+		this.graph.setDragEnabled(true);
+		
+		try {
+			this.graph.getDropTarget().addDropTargetListener(new DropTargetAdapter() {
+				public void drop(final DropTargetDropEvent dtde) {
+					setDropLocation(dtde.getLocation());
+					transferHandler.getAction().actionPerformed(null);
+				}
+			});
+		} catch (final TooManyListenersException e1) {
+			// never occur, just only one listener
+			assert false;
+		}
+	}
+	
+	void setDropLocation(final Point location) {
+		this.location = location;		
+	}
+	
+	public final Point getDropLocation() {
+		return this.location;
 	}
 	
 	final void setPerspectiveTab(final Perspective perspective) {
 		try {		
-			
-			final String codename = perspective.getCodename();
-			int index = -1;
-			for(int i=0; i < this.tabbedPane.getTabCount(); i++) {
-				if (this.perspectiveMap.get(this.tabbedPane.getComponentAt(i)).getCodename().equals(codename)) {
-					index = i;
-					break;
-				}
-			}			
-			
-			if (index == -1) {
-				final JPanel panel = new JPanel(new GridBagLayout());
-				GridBagConstraints gbc = new GridBagConstraints();
-				gbc.fill = GridBagConstraints.BOTH;
-				gbc.weightx = 1.0;
-				gbc.weighty = 1.0;
-				gbc.gridwidth = GridBagConstraints.REMAINDER;
-				gbc.gridheight = GridBagConstraints.REMAINDER;				
-				panel.add(this.pane, gbc);
-				
-				if (this.perspectiveMap == null) {
-					this.perspectiveMap = new HashMap<JComponent, Perspective>();
-				}
-				
-				this.perspectiveMap.put(panel, perspective);
-				this.tabbedPane.addTab(perspective.getName(), panel);
-				this.tabbedPane.setSelectedComponent(panel);
-				return;
-			}
-			
-			final JPanel panel = (JPanel) this.tabbedPane.getComponentAt(index);
-			panel.removeAll();
-			final GridBagLayout gridLayout = (GridBagLayout) panel.getLayout();
-			final GridBagConstraints gbc = gridLayout.getConstraints(panel);
-			gbc.fill = GridBagConstraints.BOTH;
-			gbc.weightx = 1.0;
-			gbc.weighty = 1.0;
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			gbc.gridheight = GridBagConstraints.REMAINDER;				
-			panel.add(this.pane, gbc);
-			this.tabbedPane.setSelectedIndex(index);		
-	
 			this.perspective = perspective;
 			this.putPerspective(perspective);
-//			this.perspective.createNecessaryItems();	
-			
-////			 here items put into graphCache, when they can be used
-//			this.graphRoutines.arrangeLayoutItems();
-			
-//			this.perspective.perspectiveApplied();
+
 			final JInternalFrame frame = 
 				(JInternalFrame) this.frames.get(GRAPH_FRAME);
 			frame.setTitle(I18N.getString(GRAPH_FRAME) 
 				+ " : " 
 				+ this.perspective.getName());
 						
-			this.entityToolBar.removeAll();
-			this.perspective.addEntities(this.entityToolBar);
-			this.entityToolBar.revalidate();
-			this.entityToolBar.repaint();
-//			this.graphRoutines.fixLayoutItemCharacteristics();
 			this.graphRoutines.arrangeLayoutItems(perspective);
-			this.graphRoutines.showLayerName(perspective.getCodename());
-			
+			this.graphRoutines.showLayerName(perspective.getCodename(), true);
+			this.graphRoutines.fixLayoutItemCharacteristics();
 		} catch (final ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -839,10 +736,10 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	
 	public final void putPerspective(final Perspective perspective) 
 	throws ApplicationException {
-//		 here items put into graphCache, when they can be used
+////		 here items put into graphCache, when they can be used
 		this.graphRoutines.arrangeLayoutItems(perspective);
 		perspective.perspectiveApplied();
-		this.graphRoutines.fixLayoutItemCharacteristics();
+//		this.graphRoutines.fixLayoutItemCharacteristics();
 	}
 	
 	public boolean isPerspectiveValid() {
@@ -869,7 +766,11 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	}
 	
 	public final void setPerspective(final Perspective perspective) {
-		assert perspective != null;		
+		assert perspective != null;
+		if (this.perspective == perspective) {
+			return;
+		}
+
 		if (!this.isPerspectiveValid()) {
 			return;
 		}
@@ -883,10 +784,9 @@ public final class ManagerMainFrame extends AbstractMainFrame {
 	public final GraphRoutines getGraphRoutines() {
 		return this.graphRoutines;
 	}
-
-
 	
-	public final NonRootGraphTreeModel getTreeModel() {
+	public final PerspectiveTreeModel getTreeModel() {
 		return this.treeModel;
 	}
+
 }

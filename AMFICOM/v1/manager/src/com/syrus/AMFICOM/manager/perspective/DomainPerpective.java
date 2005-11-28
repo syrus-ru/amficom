@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: DomainPerpective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.manager.perspective;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JToolBar;
+import javax.swing.AbstractAction;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
@@ -22,6 +22,7 @@ import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
 
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
@@ -55,12 +56,12 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainPerpective extends AbstractPerspective {
+public final class DomainPerpective extends AbstractPerspective {
 
 	private final DomainBean domainBean;
 	private LayoutItem	domainNetworkItem;
@@ -68,35 +69,35 @@ public class DomainPerpective extends AbstractPerspective {
 	private boolean	firstStart;
 	
 	public DomainPerpective(final DomainBean domainBean) {
+		assert Log.debugMessage(domainBean.getIdentifier(), Log.DEBUGLEVEL03);
 		this.domainBean = domainBean;
 		this.userPerspectiveMap = new HashMap<Identifier, SystemUserPerpective>();
 		this.firstStart = true;
 	}	
 	
-	public void addEntities(final JToolBar entityToolBar) throws ApplicationException {
+	@Override
+	protected void createActions() throws ApplicationException {
+		this.actions = new ArrayList<AbstractAction>();
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 
 		final DefaultGraphCell networkCell = 
 			graphRoutines.getDefaultGraphCell(this.domainNetworkItem);
 		
-		this.managerMainFrame.addAction(
+		this.actions.add(
 			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SYSTEMUSER)));
 
-		this.managerMainFrame.addAction(
+		this.actions.add(
 			super.createAction(this.perspectiveData.getBeanFactory(WorkstationBeanFactory.WORKSTATION_CODENAME), 
 				networkCell));
-		
-		entityToolBar.addSeparator();
-		this.managerMainFrame.addAction(
+		this.actions.add(
 			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.KIS), 
 				networkCell));
-		this.managerMainFrame.addAction(
+		this.actions.add(
 			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.SERVER), 
 				networkCell));
-		this.managerMainFrame.addAction(
+		this.actions.add(
 			super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.MCM), 
 				networkCell));
-		entityToolBar.addSeparator();		
 	}
 	
 	public String getCodename() {
@@ -140,28 +141,31 @@ public class DomainPerpective extends AbstractPerspective {
 		Identifier beanId = bean.getIdentifier();
 		if (beanId != null) {
 			try {
-				StorableObject storableObject = StorableObjectPool.getStorableObject(beanId, true);
+				final StorableObject storableObject = 
+					StorableObjectPool.getStorableObject(beanId, true);
 				if (storableObject instanceof DomainMember) {
 					DomainMember  domainMember = (DomainMember)storableObject;
 					domainMember.setDomainId(this.getDomainId());
 				}
 				if (storableObject instanceof SystemUser) {
-					SystemUser systemUser = (SystemUser) storableObject;
-					Identifier userId = systemUser.getId();
+					final SystemUser systemUser = (SystemUser) storableObject;
+					final Identifier userId = systemUser.getId();
 					
 					for(final Module module : Module.getValueList()) {
 						if (!module.isEnable()) {
 							continue;
 						}
+						final Domain domain = this.domainBean.getDomain();
 						PermissionAttributes permissionAttributes = 
-							this.domainBean.getDomain().getPermissionAttributes(systemUser.getId(), module);
+							domain.getPermissionAttributes(userId, module);
 						
 						if (permissionAttributes == null) {
-							permissionAttributes = PermissionAttributes.createInstance(
-								LoginManager.getUserId(),
-								this.getDomainId(),
-								userId,
-								module);
+							permissionAttributes = 
+								PermissionAttributes.createInstance(
+									LoginManager.getUserId(),
+									domain.getId(),
+									userId,
+									module);
 						}
 					}
 				}
@@ -172,37 +176,19 @@ public class DomainPerpective extends AbstractPerspective {
 		}
 	}
 	
-	private LayoutItem getDomainNetworkItem(final Identifier domainId,
-			final LinkedIdsCondition currentUserCondition,
+	public final LayoutItem getParentLayoutItem() {
+		return this.domainNetworkItem;
+	}
+	
+	private LayoutItem getDomainNetworkItem(final LinkedIdsCondition currentUserCondition,
 			final TypicalCondition layoutCondition) 
 	throws ApplicationException {
 
-		final TypicalCondition domainLayoutItemCondition = 
-			new TypicalCondition(domainId.getIdentifierString(),
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.LAYOUT_ITEM_CODE,
-				StorableObjectWrapper.COLUMN_NAME);
-		
-		final Set<LayoutItem> domainLayoutItems = 
-			StorableObjectPool.getStorableObjectsByCondition(
-				new CompoundCondition(currentUserCondition,
-					CompoundConditionSort.AND,
-					domainLayoutItemCondition), 
-				true);
-		
-		assert domainLayoutItems.size() == 1;
-		
-		final LayoutItem domainLayoutItem = domainLayoutItems.iterator().next();
-		
 		final Set<StorableObjectCondition> domainsTypicalConditions = 
 			new HashSet<StorableObjectCondition>(3);
 		
 		domainsTypicalConditions.add(currentUserCondition);
 		domainsTypicalConditions.add(layoutCondition);
-		final Identifier domainLayoutItemId = domainLayoutItem.getId();
-		domainsTypicalConditions.add(
-			new LinkedIdsCondition(domainLayoutItemId, 
-				ObjectEntities.LAYOUT_ITEM_CODE));
 		
 		final Set<LayoutItem> domainNetworkItems = 
 			StorableObjectPool.getStorableObjectsByCondition(
@@ -212,9 +198,9 @@ public class DomainPerpective extends AbstractPerspective {
 		
 		if (domainNetworkItems.isEmpty()) {
 			return LayoutItem.createInstance(LoginManager.getUserId(), 
-				domainLayoutItemId, 
-					this.getCodename(), 
-					NetBeanFactory.NET_CODENAME);
+				Identifier.VOID_IDENTIFIER, 
+				this.getCodename(), 
+				NetBeanFactory.NET_CODENAME);
 		}
 		
 		assert domainNetworkItems.size() == 1;
@@ -244,10 +230,15 @@ public class DomainPerpective extends AbstractPerspective {
 		workstationConditions.add(networkCondition);
 		workstationConditions.add(typicalCondition);
 		
+		final CompoundCondition compoundCondition = 
+			new CompoundCondition(workstationConditions,
+					CompoundConditionSort.AND);
+		
+		assert Log.debugMessage(this.toString() + " > " + compoundCondition, Log.DEBUGLEVEL10);
+		
 		final Set<LayoutItem> workstationNetworkItems = 
 			StorableObjectPool.getStorableObjectsByCondition(
-				new CompoundCondition(workstationConditions,
-					CompoundConditionSort.AND), 
+				compoundCondition, 
 				true);
 		
 		
@@ -265,7 +256,7 @@ public class DomainPerpective extends AbstractPerspective {
 		assert workstationNetworkItems.size() == 1;
 		return workstationNetworkItems.iterator().next();
 	}
-	
+
 	public void createNecessaryItems() throws ApplicationException {
 		final Identifier domainId = this.domainBean.getIdentifier();
 
@@ -281,14 +272,15 @@ public class DomainPerpective extends AbstractPerspective {
 				LayoutItemWrapper.COLUMN_LAYOUT_NAME);
 		
 		this.domainNetworkItem = 
-			this.getDomainNetworkItem(domainId, 
-				currentUserCondition,
+			this.getDomainNetworkItem(currentUserCondition,
 				layoutCondition);
 
 		// acquire network item
 		final Identifier domainNetworkItemId = this.domainNetworkItem.getId();
 		
-		assert Log.debugMessage("domainNetworkItemId:" + domainNetworkItemId , Log.DEBUGLEVEL10);
+		assert Log.debugMessage("domainNetworkItem:" 
+				+ this.domainNetworkItem,
+			Log.DEBUGLEVEL03);
 		
 		
 		final Set<LayoutItem> domainLayoutItems = 
@@ -306,7 +298,12 @@ public class DomainPerpective extends AbstractPerspective {
 			StorableObjectPool.getStorableObjectsByCondition(
 				new LinkedIdsCondition(domainId, ObjectEntities.KIS_CODE), 
 				true);
-		
+//		for (final Iterator<KIS> iterator = kiss.iterator();iterator.hasNext();) {
+//			final KIS kis = iterator.next(); 
+//			if (!kis.getDomainId().equals(domainId)) {
+//				iterator.remove();
+//			}
+//		}
 		assert Log.debugMessage("kiss:" + kiss , Log.DEBUGLEVEL10);
 		
 		this.addItems(kiss, existsNetworkLayoutItems, domainLayoutItems);
@@ -321,7 +318,13 @@ public class DomainPerpective extends AbstractPerspective {
 			StorableObjectPool.getStorableObjectsByCondition(
 				new LinkedIdsCondition(domainId, ObjectEntities.SERVER_CODE), 
 				true);
-		
+//		for (final Iterator<Server> iterator = servers.iterator();iterator.hasNext();) {
+//			final Server server = iterator.next(); 
+//			if (!server.getDomainId().equals(domainId)) {
+//				iterator.remove();
+//			}
+//		}
+
 		assert Log.debugMessage("servers:" + servers , Log.DEBUGLEVEL10);
 		this.addItems(servers, existsNetworkLayoutItems, domainLayoutItems);
 		// create domain networks accorning to exist servers
@@ -335,6 +338,12 @@ public class DomainPerpective extends AbstractPerspective {
 			StorableObjectPool.getStorableObjectsByCondition(
 				new LinkedIdsCondition(domainId, ObjectEntities.MCM_CODE), 
 				true);
+//		for (final Iterator<MCM> iterator = mcms.iterator();iterator.hasNext();) {
+//			final MCM mcm = iterator.next(); 
+//			if (!mcm.getDomainId().equals(domainId)) {
+//				iterator.remove();
+//			}
+//		}
 		this.addItems(mcms, existsNetworkLayoutItems, domainLayoutItems);
 		assert Log.debugMessage("mcms:" + mcms , Log.DEBUGLEVEL10);
 		
@@ -349,7 +358,12 @@ public class DomainPerpective extends AbstractPerspective {
 			StorableObjectPool.getStorableObjectsByCondition(				
 				new LinkedIdsCondition(domainId, ObjectEntities.PERMATTR_CODE),
 				true);
-		
+//		for (final Iterator<PermissionAttributes> iterator = permissionAttributes.iterator();iterator.hasNext();) {
+//			final PermissionAttributes attributes = iterator.next(); 
+//			if (!attributes.getDomainId().equals(domainId)) {
+//				iterator.remove();
+//			}
+//		}
 		assert Log.debugMessage("permissionAttributes:" + permissionAttributes , 
 			Log.DEBUGLEVEL10);
 		
@@ -361,7 +375,12 @@ public class DomainPerpective extends AbstractPerspective {
 			
 			final Identifier networkWorkstationItemId = networkWorkstationItem.getId();
 			
-			assert Log.debugMessage("networkWorkstationItemId:" + networkWorkstationItemId, 
+			assert Log.debugMessage("networkWorkstationItemId:" 
+					+ networkWorkstationItemId
+					+ ", " 
+					+ networkWorkstationItem.getName()
+					+ '@'
+					+ networkWorkstationItem.getLayoutName(), 
 				Log.DEBUGLEVEL10);			
 			//	create workstation items accorning to exist permissionAttributes
 			
@@ -381,8 +400,6 @@ public class DomainPerpective extends AbstractPerspective {
 	}
 	
 	public SystemUserPerpective getSystemUserPerspective(final UserBean userBean) {
-//		final MPort port = (MPort) userCell.getChildAt(0);
-//		final UserBean userBean = (UserBean) port.getBean();
 		final Identifier id = userBean.getIdentifier();
 		
 		final SystemUserPerpective systemUserPerpective = 
@@ -394,7 +411,7 @@ public class DomainPerpective extends AbstractPerspective {
 		}	
 		
 		// otherwise create perspective
-		final SystemUserPerpective perpective = new SystemUserPerpective(userBean);
+		final SystemUserPerpective perpective = new SystemUserPerpective(userBean, this);
 		perpective.setManagerMainFrame(this.managerMainFrame);
 		final PerspectiveData subperspectiveData = 
 			this.perspectiveData.getSubperspectiveData(ObjectEntities.SYSTEMUSER);
@@ -403,7 +420,7 @@ public class DomainPerpective extends AbstractPerspective {
 		assert Log.debugMessage("User perspective for " 
 				+ id 
 				+ " created", 
-			Log.DEBUGLEVEL03);
+			Log.DEBUGLEVEL10);
 		return perpective;
 	}
 	
@@ -411,18 +428,7 @@ public class DomainPerpective extends AbstractPerspective {
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 		
 		final String codename = this.getCodename();
-		graphRoutines.showLayerName(codename);
-		
-		final DefaultGraphCell networkCell = 
-			graphRoutines.getDefaultGraphCell(this.domainNetworkItem);
-		
-		final MPort port = (MPort) networkCell.getChildAt(0);
-		
-		final List<Port> targets = port.getTargets();		
-		
-		DefaultGraphCell domainCell = (DefaultGraphCell) ((MPort)targets.get(0)).getParent();
-		
-		this.managerMainFrame.getTreeModel().setRoot(domainCell);		
+		graphRoutines.showLayerName(codename, false);
 	
 		if (this.firstStart) {
 		for (final AbstractBean bean : this.getLayoutBeans()) {
@@ -433,13 +439,29 @@ public class DomainPerpective extends AbstractPerspective {
 				this.managerMainFrame.putPerspective(systemUserPerpective);
 			}
 		}
-		graphRoutines.showLayerName(codename);
-		this.managerMainFrame.getTreeModel().setRoot(domainCell);		
 		this.firstStart = false;
 		}
 	}
+
+	public Perspective getSuperPerspective() {
+		return this.managerMainFrame.getManagerHandler().getPerspective("domains");
+	}
 	
-	 
+	public Perspective getSubPerspective(final AbstractBean bean) {
+		if (bean.getCodename().equals(ObjectEntities.SYSTEMUSER)) {
+			final UserBean userBean = (UserBean) bean;
+			final DomainsPerspective domainsPerspective  = 
+				(DomainsPerspective) this.managerMainFrame.getManagerHandler().getPerspective("domains");
+			final String identifierString = userBean.getIdentifier().getIdentifierString();
+			final Perspective perspective = domainsPerspective.getPerspective(identifierString);
+			return perspective;
+		}
+		return null;
+	}
 	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + " for " + this.domainBean.getIdentifier().getIdentifierString();
+	}
 }
 

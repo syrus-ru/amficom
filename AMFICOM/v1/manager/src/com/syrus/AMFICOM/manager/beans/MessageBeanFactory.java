@@ -1,5 +1,5 @@
 /*-
- * $Id: MessageBeanFactory.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: MessageBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -69,7 +69,7 @@ public final class MessageBeanFactory extends AbstractBeanFactory<MessageBean> {
 	public MessageBean createBean(final Perspective perspective) 
 	throws ApplicationException {
 		final DeliveryAttributes deliveryAttributes = 
-			DeliveryAttributes.createInstance(LoginManager.getUserId(), this.severity);
+			DeliveryAttributes.getInstance(LoginManager.getUserId(), this.severity);
 		return this.createBean(deliveryAttributes.getId());
 	}
 	
@@ -83,7 +83,7 @@ public final class MessageBeanFactory extends AbstractBeanFactory<MessageBean> {
 	throws ApplicationException {
 		++super.count;
 		final MessageBean bean = new MessageBean();
-		bean.setGraphText(super.graphText);
+		bean.setManagerMainFrame(super.graphText);
 		bean.setIdentifier(identifier);		
 		bean.setId(identifier.getIdentifierString());
 		return bean;

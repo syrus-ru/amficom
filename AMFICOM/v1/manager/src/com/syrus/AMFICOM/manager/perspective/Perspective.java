@@ -1,5 +1,5 @@
 /*-
-* $Id: Perspective.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: Perspective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,19 +8,24 @@
 
 package com.syrus.AMFICOM.manager.perspective;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.List;
 import java.util.Set;
 
-import javax.swing.JToolBar;
+import javax.swing.AbstractAction;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.manager.UI.AbstractItemPopupMenu;
+import com.syrus.AMFICOM.manager.UI.ActionMutableTreeNode;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.viewers.BeanUI;
+import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -37,11 +42,7 @@ public interface Perspective {
 	
 	void perspectiveApplied() throws ApplicationException;
 	
-	void addEntities(final JToolBar entityToolBar) throws ApplicationException;
-	
 	void createNecessaryItems() throws ApplicationException;
-	
-	boolean isDeletable(final AbstractBean abstractBean);
 	
 	AbstractItemPopupMenu getPopupMenu(final String codename);
 	
@@ -55,9 +56,9 @@ public interface Perspective {
 	
 	void setPerspectiveData(final PerspectiveData perspectiveData);
 	
-	Set<AbstractBean> getLayoutBeans();
+	List<AbstractBean> getLayoutBeans();
 	
-	void setLayoutBeans(final Set<AbstractBean> layoutBeans);
+	void setLayoutBeans(final List<AbstractBean> layoutBeans);
 	
 	void addLayoutBean(final AbstractBean bean);
 	
@@ -66,5 +67,21 @@ public interface Perspective {
 	Perspective getPerspective(final String layoutName);
 	
 	Set<Perspective> getPerspectives();
+	
+	List<ActionMutableTreeNode> getActionNodes() throws ApplicationException;
+	
+	List<AbstractAction> getActions() throws ApplicationException;
+	
+	Perspective getSubPerspective(final AbstractBean bean);
+	
+	Perspective getSuperPerspective();
+	
+	LayoutItem getParentLayoutItem();
+	
+	void addPropertyChangeListener(final PropertyChangeListener listener);
+	
+	void removePropertyChangeListener(final PropertyChangeListener listener);
+	
+	void firePropertyChangeEvent(final PropertyChangeEvent event);
 }
 

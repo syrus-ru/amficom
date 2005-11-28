@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: MCMBean.java,v 1.2 2005/11/28 14:47:04 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.manager.graph.MPort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -68,7 +68,7 @@ public class MCMBean extends Bean implements DomainNetworkItem {
 				!name.equals(name2))) {
 			this.mcm.setName(name);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
-			final ManagerModel managerModel = (ManagerModel)this.graphText.getModel();
+			final ManagerModel managerModel = (ManagerModel)this.managerMainFrame.getModel();
 			managerModel.getDispatcher().firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.MCM, null, this));
 

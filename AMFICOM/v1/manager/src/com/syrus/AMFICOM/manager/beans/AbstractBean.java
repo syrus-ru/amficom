@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: AbstractBean.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,11 +24,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,7 +40,7 @@ public abstract class AbstractBean {
 
 	protected String		id;
 	
-	protected ManagerMainFrame	graphText;
+	protected ManagerMainFrame	managerMainFrame;
 	
 	protected AbstractBean() {
 		// nothing
@@ -113,8 +114,8 @@ public abstract class AbstractBean {
 		return this.getClass().getName() + " is " + this.id + '/' + this.getName() + '/';
 	}
 	
-	public final void setGraphText(final ManagerMainFrame graphText) {
-		this.graphText = graphText;
+	public final void setManagerMainFrame(final ManagerMainFrame graphText) {
+		this.managerMainFrame = graphText;
 	}
 	
 	protected final LayoutItem getLayoutItem(final String layoutName,

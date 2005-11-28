@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -59,7 +59,7 @@ public final class ServerBeanFactory extends IdentifiableBeanFactory<ServerBean>
 	throws ApplicationException {
 		final ServerBean bean = new ServerBean();
 		++super.count;
-		bean.setGraphText(super.graphText);
+		bean.setManagerMainFrame(super.graphText);
 		bean.setIdentifier(identifier);
 		bean.setId(identifier.getIdentifierString());
 

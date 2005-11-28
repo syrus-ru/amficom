@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.1 2005/11/17 09:00:33 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.manager.perspective.Perspective;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -45,7 +45,7 @@ public final class DomainBeanFactory extends IdentifiableBeanFactory<DomainBean>
 	throws ApplicationException {		
 		final DomainBean bean = new DomainBean();
 		++super.count;
-		bean.setGraphText(super.graphText);
+		bean.setManagerMainFrame(super.graphText);
 		bean.setId(id.getIdentifierString());
 		bean.setIdentifier(id);		
 		return bean;

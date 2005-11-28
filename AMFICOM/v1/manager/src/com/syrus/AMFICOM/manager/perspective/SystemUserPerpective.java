@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserPerpective.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: SystemUserPerpective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.manager.perspective;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JToolBar;
+import javax.swing.AbstractAction;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
@@ -41,29 +42,34 @@ import com.syrus.AMFICOM.manager.beans.PermissionBean;
 import com.syrus.AMFICOM.manager.beans.PermissionBeanFactory;
 import com.syrus.AMFICOM.manager.beans.UserBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
-import com.syrus.AMFICOM.manager.perspective.AbstractPerspective.Chechable;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class SystemUserPerpective extends AbstractPerspective {
+public final class SystemUserPerpective extends AbstractPerspective {
 
-	private final UserBean		userBean;
+	private UserBean		userBean;
+	private final Perspective	superPerspective;
+
 	private LayoutItem	userLayoutItem;
 	
-	public SystemUserPerpective(final UserBean		userBean) {
+	public SystemUserPerpective(final UserBean		userBean,
+			final Perspective superPerspective) {
+		this.superPerspective = superPerspective;
 		this.userBean = userBean;
 	}
 	
-	public void addEntities(final JToolBar entityToolBar) 
-	throws ApplicationException {
+	@Override
+	protected void createActions() throws ApplicationException {
+		this.actions = new ArrayList<AbstractAction>();
+		
 		final PermissionBeanFactory factory = 
 			(PermissionBeanFactory) this.perspectiveData.
 					getBeanFactory(ObjectEntities.PERMATTR);
@@ -88,8 +94,14 @@ public class SystemUserPerpective extends AbstractPerspective {
 		final GraphRoutines graphRoutines = 
 			this.managerMainFrame.getGraphRoutines();
 		
-		final DefaultGraphCell cell = 
-			graphRoutines.getDefaultGraphCell(this.userBean);
+		DefaultGraphCell cell = null;
+		for (final AbstractBean bean : this.getLayoutBeans()) {
+			if (bean instanceof UserBean) {
+				cell = 
+					graphRoutines.getDefaultGraphCell(bean, this);
+				break;
+			}
+		}
 		
 		for(final Module module : Module.getValueList()) {
 			if (!module.isEnable()) {
@@ -98,11 +110,15 @@ public class SystemUserPerpective extends AbstractPerspective {
 			
 			final ModuleCheckable moduleCheckable = new ModuleCheckable(module);
 			
-			this.managerMainFrame.addAction(
+			this.actions.add(
 				this.createGetTheSameOrCreateNewAction(factory.getUserInstance(module), 
 					moduleCheckable, 
 					cell));
 		}
+	}
+	
+	public final LayoutItem getParentLayoutItem() {
+		return this.userLayoutItem;
 	}
 	
 	public String getCodename() {
@@ -148,13 +164,7 @@ public class SystemUserPerpective extends AbstractPerspective {
 
 	public void perspectiveApplied() throws ApplicationException {
 		final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
-		
-		graphRoutines.showLayerName(this.getCodename());
-		
-		final DefaultGraphCell userCell = 
-			graphRoutines.getDefaultGraphCell(this.userLayoutItem);
-		
-		this.managerMainFrame.getTreeModel().setRoot(userCell);	
+		graphRoutines.showLayerName(this.getCodename(), false);
 	}
 	
 	private LayoutItem getUserItem(final Identifier userId,
@@ -196,7 +206,7 @@ public class SystemUserPerpective extends AbstractPerspective {
 					+ userItem.getName()
 					+ '@'
 					+ userItem.getLayoutName(), 
-				Log.DEBUGLEVEL03);
+				Log.DEBUGLEVEL10);
 		} else {
 			assert userLayoutItems.size() == 1;			
 			userItem = userLayoutItems.iterator().next();			
@@ -260,6 +270,14 @@ public class SystemUserPerpective extends AbstractPerspective {
 				userLayoutItemId, 
 				existsNetworkLayoutItems);
 		}
+	}
+	
+	public Perspective getSuperPerspective() {
+		return this.superPerspective;
+	}
+	
+	public Perspective getSubPerspective(AbstractBean bean) {
+		return null;
 	}
 }
 

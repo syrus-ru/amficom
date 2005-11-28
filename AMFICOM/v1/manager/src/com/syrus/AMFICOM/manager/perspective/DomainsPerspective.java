@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.1 2005/11/17 09:00:35 bob Exp $
+* $Id: DomainsPerspective.java,v 1.2 2005/11/28 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,13 +8,16 @@
 
 package com.syrus.AMFICOM.manager.perspective;
 
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JToolBar;
+import javax.swing.AbstractAction;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultGraphCell;
@@ -52,7 +55,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -67,19 +70,20 @@ public final class DomainsPerspective extends AbstractPerspective {
 		this.firstStart = true;
 	}
 	
+	@Override
+	protected void createActions() throws ApplicationException {
+		this.actions = new ArrayList<AbstractAction>(2);
+		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(NetBeanFactory.NET_CODENAME)));
+		this.actions.add(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.DOMAIN)));
+	}
+	
 	public String getCodename() {
 		return "domains";
 	}
 	
 	public String getName() {
 		return I18N.getString("Manager.Label.DomainsLevel");
-	}
-	
-	public void addEntities(final JToolBar entityToolBar) throws ApplicationException {
-		this.managerMainFrame.addAction(super.createAction(this.perspectiveData.getBeanFactory(NetBeanFactory.NET_CODENAME)));
-		entityToolBar.addSeparator();
-		this.managerMainFrame.addAction(super.createAction(this.perspectiveData.getBeanFactory(ObjectEntities.DOMAIN)));
-	}
+	}	
 	
 	public boolean isValid() {
 		final JGraph graph = this.managerMainFrame.getGraph();
@@ -107,11 +111,10 @@ public final class DomainsPerspective extends AbstractPerspective {
 	}
 
 	public void perspectiveApplied() throws ApplicationException {
-		this.managerMainFrame.getTreeModel().setRoot(null);
 		final GraphRoutines graphRoutines = 
 			this.managerMainFrame.getGraphRoutines();
 		final String codename = this.getCodename();
-		graphRoutines.showLayerName(codename);
+		graphRoutines.showLayerName(codename, false);
 		
 		if (this.firstStart) {
 			for (final AbstractBean bean : this.getLayoutBeans()) {
@@ -123,9 +126,8 @@ public final class DomainsPerspective extends AbstractPerspective {
 				}
 			}
 			
-			this.managerMainFrame.getTreeModel().setRoot(null);
-			graphRoutines.showLayerName(codename);
 			this.firstStart = false;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, "layoutBeans", null, null));
 		}
 	}
 
@@ -150,7 +152,7 @@ public final class DomainsPerspective extends AbstractPerspective {
 		assert Log.debugMessage("Domain perspective for " 
 				+ id 
 				+ " created", 
-			Log.DEBUGLEVEL03);
+			Log.DEBUGLEVEL10);
 		return perpective;
 	}
 	
@@ -312,55 +314,109 @@ public final class DomainsPerspective extends AbstractPerspective {
 			}
 		}
 		
-		// create necessary network items
-		final Set<KIS> kiss = 
-			StorableObjectPool.getStorableObjectsByCondition(
-				new LinkedIdsCondition(copyDomainIds, ObjectEntities.KIS_CODE), 
-				true);
-		
-		//	create domain networks accorning to exist RTUs
-		for (final KIS kis : kiss) {
-			this.getNetworkLayoutItem(kis.getDomainId(), 
-				existsDomainLayoutItems, 
-				existsNetworkLayoutItems);
-		}
-		
-		final Set<Server> servers = 
-			StorableObjectPool.getStorableObjectsByCondition(
-				new LinkedIdsCondition(copyDomainIds, ObjectEntities.SERVER_CODE), 
-				true);
-		
-		// create domain networks accorning to exist servers
-		for (final Server server : servers) {
-			this.getNetworkLayoutItem(server.getDomainId(), 
-				existsDomainLayoutItems, 
-				existsNetworkLayoutItems);
-		}
-		
-		final Set<MCM> mcms = 
-			StorableObjectPool.getStorableObjectsByCondition(
-				new LinkedIdsCondition(copyDomainIds, ObjectEntities.MCM_CODE), 
-				true);
-		
-//		 create domain networks accorning to exist mcms
-		for (final MCM mcm : mcms) {
-			this.getNetworkLayoutItem(mcm.getDomainId(), 
-				existsDomainLayoutItems, 
-				existsNetworkLayoutItems);
-		}
-		
-		final Set<PermissionAttributes> permissionAttributes =
-			StorableObjectPool.getStorableObjectsByCondition(				
-				new LinkedIdsCondition(copyDomainIds, ObjectEntities.PERMATTR_CODE),
-				true);
-
-//		 create domain networks accorning to exist user permissions
-		for (final PermissionAttributes attributes : permissionAttributes) {
-			this.getNetworkLayoutItem(attributes.getDomainId(), 
-				existsDomainLayoutItems, 
-				existsNetworkLayoutItems);
-		}
+//		// create necessary network items
+//		final Set<KIS> kiss = 
+//			StorableObjectPool.getStorableObjectsByCondition(
+//				new LinkedIdsCondition(copyDomainIds, ObjectEntities.KIS_CODE), 
+//				true);
+//		
+//		//	create domain networks accorning to exist RTUs
+//		for (final KIS kis : kiss) {
+//			this.getNetworkLayoutItem(kis.getDomainId(), 
+//				existsDomainLayoutItems, 
+//				existsNetworkLayoutItems);
+//		}
+//		
+//		final Set<Server> servers = 
+//			StorableObjectPool.getStorableObjectsByCondition(
+//				new LinkedIdsCondition(copyDomainIds, ObjectEntities.SERVER_CODE), 
+//				true);
+//		
+//		// create domain networks accorning to exist servers
+//		for (final Server server : servers) {
+//			this.getNetworkLayoutItem(server.getDomainId(), 
+//				existsDomainLayoutItems, 
+//				existsNetworkLayoutItems);
+//		}
+//		
+//		final Set<MCM> mcms = 
+//			StorableObjectPool.getStorableObjectsByCondition(
+//				new LinkedIdsCondition(copyDomainIds, ObjectEntities.MCM_CODE), 
+//				true);
+//		
+////		 create domain networks accorning to exist mcms
+//		for (final MCM mcm : mcms) {
+//			this.getNetworkLayoutItem(mcm.getDomainId(), 
+//				existsDomainLayoutItems, 
+//				existsNetworkLayoutItems);
+//		}
+//		
+//		final Set<PermissionAttributes> permissionAttributes =
+//			StorableObjectPool.getStorableObjectsByCondition(				
+//				new LinkedIdsCondition(copyDomainIds, ObjectEntities.PERMATTR_CODE),
+//				true);
+//
+////		 create domain networks accorning to exist user permissions
+//		for (final PermissionAttributes attributes : permissionAttributes) {
+//			this.getNetworkLayoutItem(attributes.getDomainId(), 
+//				existsDomainLayoutItems, 
+//				existsNetworkLayoutItems);
+//		}
 	}
 
+	public Perspective getSuperPerspective() {
+		return null;
+	}
+	
+	public Perspective getSubPerspective(final AbstractBean bean) {
+//		assert Log.debugMessage(bean, Log.DEBUGLEVEL03);
+//		if (bean.getCodename().equals(NetBeanFactory.NET_CODENAME)) {
+//			Identifier parentDomainId = null;
+//			final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
+//			final DefaultGraphCell defaultGraphCell = 
+//				graphRoutines.getDefaultGraphCell(bean, this);
+////				assert Log.debugMessage("defaultGraphCell:" + defaultGraphCell, Log.DEBUGLEVEL03);
+//			
+//			final MPort port = (MPort) defaultGraphCell.getChildAt(0);
+//			final List<Port> targets = port.getTargets();
+////				assert Log.debugMessage("targets:" + targets + ",\n\t" + targets.size(), Log.DEBUGLEVEL03);
+//			if (targets.size() == 1) {
+//				final MPort port2 = (MPort) targets.get(0);
+//				final DomainBean domainBean = (DomainBean) port2.getBean();
+//				parentDomainId = domainBean.getIdentifier();
+////					assert Log.debugMessage("this.parentDomainId:" + this.parentDomainId, Log.DEBUGLEVEL03);
+//			}
+//			
+//			
+//			
+//			if (parentDomainId != null && !parentDomainId.isVoid()) {
+//				final DomainsPerspective domainsPerspective  = 
+//					(DomainsPerspective) this.managerMainFrame.getManagerHandler().getPerspective("domains");
+//				final String identifierString = parentDomainId.getIdentifierString();
+//				final Perspective perspective = domainsPerspective.getPerspective(identifierString);
+////				assert Log.debugMessage(identifierString + ", " + (perspective != null ? perspective.getLayoutBeans() : null) , Log.DEBUGLEVEL03);
+//				return perspective;
+//			}
+//		}
+		if (bean.getCodename().equals(ObjectEntities.DOMAIN)) {
+			final DomainBean domainBean = (DomainBean)bean;		
+			final Identifier parentDomainId = domainBean.getIdentifier();
+			final DomainsPerspective domainsPerspective  = 
+				(DomainsPerspective) this.managerMainFrame.getManagerHandler().getPerspective("domains");
+			final String identifierString = parentDomainId.getIdentifierString();
+			final Perspective perspective = domainsPerspective.getPerspective(identifierString);
+			return perspective;
+		}
+		return null;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName();
+	}
+
+	public final LayoutItem getParentLayoutItem() {
+		return null;
+	}
 }
 

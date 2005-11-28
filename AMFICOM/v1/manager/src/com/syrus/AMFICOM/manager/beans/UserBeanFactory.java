@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.1 2005/11/17 09:00:33 bob Exp $
+* $Id: UserBeanFactory.java,v 1.2 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.WrapperComparator;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -112,7 +112,7 @@ public final class UserBeanFactory extends IdentifiableBeanFactory<UserBean> {
 	throws ApplicationException {
 		final UserBean bean = new UserBean(this.roles);
 		++super.count;
-		bean.setGraphText(super.graphText);
+		bean.setManagerMainFrame(super.graphText);
 		bean.setId(identifier.getIdentifierString());
 		
 		bean.setIdentifier(identifier);

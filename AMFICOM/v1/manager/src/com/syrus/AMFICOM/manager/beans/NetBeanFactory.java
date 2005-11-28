@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.1 2005/11/17 09:00:32 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.2 2005/11/28 14:47:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.manager.beans;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/11/17 09:00:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -54,15 +55,10 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 	public NonStorableBean createBean(final String codename) 
 	throws ApplicationException {
 		++super.count;
-//		
-//		try {
-//			throw new Exception("NetBeanFactory.createBean");
-//		} catch (final Exception e) {
-//			e.printStackTrace();
-//		}
 
 		
 		final NonStorableBean bean = new NonStorableBean() {
+			
 			
 			private Set<LayoutItem> getBeanChildrenLayoutItems() 
 			throws ApplicationException{
@@ -89,17 +85,20 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 					}
 				}
 				
-				final LinkedIdsCondition linkedIdsCondition = 
-					new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
-						ObjectEntities.LAYOUT_ITEM_CODE);
-				
-				final Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
-					linkedIdsCondition, 
-					true, 
-					true);
-				
-				beanChildrenLayoutItems.addAll(beanLayoutItems);
-				return beanChildrenLayoutItems;				
+				if (!beanLayoutItems.isEmpty()) {
+					final LinkedIdsCondition linkedIdsCondition = 
+						new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
+							ObjectEntities.LAYOUT_ITEM_CODE);
+					
+					final Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
+						linkedIdsCondition, 
+						true, 
+						true);
+					
+					beanChildrenLayoutItems.addAll(beanLayoutItems);
+					return beanChildrenLayoutItems;
+				} 
+				return Collections.emptySet();
 			}
 			
 			@Override
@@ -111,14 +110,13 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 						continue;
 					}
 					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
-						Log.debugMessage("NetBean.dispose | " 
-							+ layoutItem.getId() + ", "
+						Log.debugMessage(layoutItem.getId() + ", "
 							+ layoutItem.getName() 
 							+ ", layoutName:" 
 							+ layoutItem.getLayoutName(),							
 						Log.DEBUGLEVEL10);		
 						
-						final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+						final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 						AbstractBean childBean = graphRoutines.getBean(layoutItem);
 //						System.out.println(".dispose() | " + childBean);
 						childBean.dispose();
@@ -128,12 +126,12 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 				
 				super.disposeLayoutItem();
 				
-				this.graphText.getGraph().getSelectionModel().clearSelection();
+				this.managerMainFrame.getGraph().getSelectionModel().clearSelection();
 			}
 			
 			@Override
 			public void applyTargetPort(MPort oldPort, MPort newPort) throws ApplicationException {
-				assert Log.debugMessage("NetBeanFactory.createBean() | " + oldPort + ", " + newPort, Log.DEBUGLEVEL10);
+				assert Log.debugMessage(oldPort + ", " + newPort, Log.DEBUGLEVEL03);
 
 				Identifier parentDomainId = Identifier.VOID_IDENTIFIER;
 				
@@ -168,7 +166,7 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 							Log.DEBUGLEVEL10);		
 							layoutItem.setLayoutName(layoutName);
 							
-							final GraphRoutines graphRoutines = this.graphText.getGraphRoutines();
+							final GraphRoutines graphRoutines = this.managerMainFrame.getGraphRoutines();
 							AbstractBean cell = graphRoutines.getBean(layoutItem);
 							if (cell instanceof DomainNetworkItem) {
 								DomainNetworkItem portBean = (DomainNetworkItem) cell;						
@@ -178,7 +176,7 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 					}
 				}
 				
-				this.graphText.getGraph().getSelectionModel().clearSelection();
+				this.managerMainFrame.getGraph().getSelectionModel().clearSelection();
 			}
 			
 			@Override
@@ -187,7 +185,7 @@ public final class NetBeanFactory extends AbstractBeanFactory<NonStorableBean> {
 			}
 		};
 		bean.setName(this.getName());
-		bean.setGraphText(super.graphText);
+		bean.setManagerMainFrame(super.graphText);
 		bean.setId(codename);
 		bean.setIdentifier(Identifier.VOID_IDENTIFIER);
 		return bean;

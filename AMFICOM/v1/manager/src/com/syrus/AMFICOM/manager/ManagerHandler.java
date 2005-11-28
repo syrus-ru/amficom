@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerHandler.java,v 1.7 2005/11/17 09:00:33 bob Exp $
+* $Id: ManagerHandler.java,v 1.8 2005/11/28 14:47:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/11/17 09:00:33 $
+ * @version $Revision: 1.8 $, $Date: 2005/11/28 14:47:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -144,6 +144,10 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 		}
 	}
 	
+	public Collection<com.syrus.AMFICOM.manager.perspective.Perspective> getPerspectives(){
+		return this.perspectiveMap.values();
+	}
+	
 	public com.syrus.AMFICOM.manager.perspective.Perspective getPerspective(final String codename){
 		
 		assert Log.debugMessage(codename, Log.DEBUGLEVEL10);
@@ -169,8 +173,7 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 		final Map<String, AbstractBeanFactory> perspectiveFactories = 
 			new HashMap<String, AbstractBeanFactory>();
 		final Map<String, BeanUI> beanUI = new HashMap<String, BeanUI>();
-		final Set<String> undeletable = new HashSet<String>();
-		
+
 		final BeanFactory[] beanFactoryArray = perspective.getBeanFactoryArray();
 		for (final BeanFactory factory : beanFactoryArray) {
 			final String beanFactoryClass = factory.getBeanFactoryClass();
@@ -189,8 +192,6 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 		for (final UiHandler handler : uiHandlerArray) {
 			beanUI.put(handler.getId(), this.loadBeanUI(handler.getUiHandlerClass()));
 		}
-		
-		undeletable.addAll(Arrays.asList(perspective.getUndeletableArray()));
 		
 		final Map<String, Set<String>> sourceTargetMap = new HashMap<String, Set<String>>();
 		for (final Validator validator : perspective.getValidatorArray()) {
@@ -226,7 +227,6 @@ public final class ManagerHandler extends AbstractExtensionHandler {
 				beanUI,
 				popupMenus,
 				subperspectiveMap,
-				undeletable,
 				new PerspectiveValidator(sourceTargetMap));
 		
 		final String perspectiveCodename = perspective.getId().intern();

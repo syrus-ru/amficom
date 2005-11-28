@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModelListener.java,v 1.5 2005/11/17 09:00:35 bob Exp $
+* $Id: ManagerGraphModelListener.java,v 1.6 2005/11/28 14:47:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
 import java.util.Set;
 
 import javax.swing.JOptionPane;
@@ -41,13 +42,14 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.beans.AbstractBean;
 import com.syrus.AMFICOM.manager.graph.MPort;
+import com.syrus.AMFICOM.manager.perspective.Perspective;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/11/17 09:00:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/11/28 14:47:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -69,23 +71,28 @@ public class ManagerGraphModelListener implements GraphModelListener {
 			if (this.managerMainFrame.arranging) {
 				return;
 			}
-			GraphModelChange change = e.getChange();
+			final GraphModelChange change = e.getChange();
 			
-			GraphModel model = this.managerMainFrame.graph.getModel();
+			final GraphModel model = this.managerMainFrame.graph.getModel();
 			
-			Object[] inserted = change.getInserted();
-			Object[] changed = change.getChanged();
-			Object[] removed = change.getRemoved();
+			final Object[] inserted = change.getInserted();
+			final Object[] changed = change.getChanged();
+			final Object[] removed = change.getRemoved();
 
-			final NonRootGraphTreeModel treeModel = this.managerMainFrame.getTreeModel();
+			final PerspectiveTreeModel treeModel = this.managerMainFrame.getTreeModel();
 			if (inserted != null) {
-				for(Object insertedObject : inserted) {
+				for(final Object insertedObject : inserted) {
 					assert Log.debugMessage("insertedObject:" + insertedObject , Log.DEBUGLEVEL10);
 					if (model.isPort(insertedObject)) {
-						TreeNode[] pathToRoot = treeModel.getPathToRoot((TreeNode) insertedObject);
+						final TreeNode[] pathToRoot = treeModel.getPathToRoot((TreeNode) insertedObject);
 						if (pathToRoot != null) {
 							this.managerMainFrame.tree.scrollPathToVisible(new TreePath(pathToRoot));
 						}
+					} else {
+						treeModel.reload();
+						final Perspective perspective = this.managerMainFrame.getPerspective();
+						perspective.firePropertyChangeEvent(
+							new PropertyChangeEvent(this, "layoutBeans", null, null));
 					}
 				}
 			}
@@ -105,14 +112,14 @@ public class ManagerGraphModelListener implements GraphModelListener {
 						source.updateCache();
 						target.updateCache();
 						
-						Log.debugMessage(source  +" -> " + target,
+						assert Log.debugMessage(source  +" -> " + target,
 							Log.DEBUGLEVEL10);
-						AbstractBean bean = source.getUserObject();
+						final AbstractBean bean = source.getUserObject();
 						
 						
-						ConnectionSet connectionSet = change.getConnectionSet();							
-						MPort source2 = (MPort) connectionSet.getPort(edge, true);
-						MPort target2 = (MPort) connectionSet.getPort(edge, false);
+						final ConnectionSet connectionSet = change.getConnectionSet();							
+						final MPort source2 = (MPort) connectionSet.getPort(edge, true);
+						final MPort target2 = (MPort) connectionSet.getPort(edge, false);
 
 						Log.debugMessage(source2  +" -> " + target2, Log.DEBUGLEVEL10);
 						
@@ -121,7 +128,7 @@ public class ManagerGraphModelListener implements GraphModelListener {
 						}
 						
 						if (target2 == null) {
-							AbstractBean bean2 = source2.getUserObject();
+							final AbstractBean bean2 = source2.getBean();
 							Log.debugMessage(bean2, Log.DEBUGLEVEL10);
 							bean2.applyTargetPort(null, null);
 							LayoutItem layoutItem = this.getLayoutItem(bean2.getId());
@@ -221,7 +228,8 @@ public class ManagerGraphModelListener implements GraphModelListener {
 									this.managerMainFrame.perspective.addLayoutBean(bean);
 								}
 								
-							} else {
+							} 
+							else {
 								boolean xFound = false;
 								boolean yFound = false;
 								boolean nameFound = false;
@@ -345,6 +353,11 @@ public class ManagerGraphModelListener implements GraphModelListener {
 						 this.managerMainFrame.perspective.removeLayoutBean(bean);
 					 }
 				}
+				
+				treeModel.reload();
+				final Perspective perspective = this.managerMainFrame.getPerspective();
+				perspective.firePropertyChangeEvent(
+					new PropertyChangeEvent(this, "layoutBeans", null, null));
 			}				
 		} catch (final ApplicationException exception) {
 			// TODO Auto-generated catch block
