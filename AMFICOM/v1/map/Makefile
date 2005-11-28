@@ -44,7 +44,7 @@ $(LIBNAME): .mach
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/map/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/map/corba/.cvsignore)
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/map/corba/.cvsignore | grep .java)
 	$(RM) .idl
 
 .PHONY: corba

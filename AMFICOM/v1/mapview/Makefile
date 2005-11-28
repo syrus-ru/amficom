@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.23 2005/10/12 10:03:30 bass Exp $
+# $Id: Makefile,v 1.24 2005/11/28 13:36:42 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -48,7 +48,7 @@ $(LIBNAME): .mach
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/mapview/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/mapview/corba/.cvsignore)
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/mapview/corba/.cvsignore | grep .java)
 	$(RM) .idl
 
 .PHONY: corba
