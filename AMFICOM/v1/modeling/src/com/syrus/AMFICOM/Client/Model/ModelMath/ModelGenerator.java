@@ -246,6 +246,7 @@ public class ModelGenerator {
 				this.reflectoElements.add(event);
 			}
 		}
+		correctModelingEvents();
 		return this.reflectoElements;
 	}
 
