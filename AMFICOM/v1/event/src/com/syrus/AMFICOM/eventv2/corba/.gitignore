@@ -13,3 +13,6 @@ IdlEmailNotificationEvent.java
 IdlSmsNotificationEvent.java
 IdlPopupNotificationEvent.java
 MessageReceiver.java
+MessageReceiverOperations.java
+MessageReceiverPOA.java
+MessageReceiverPOATie.java
