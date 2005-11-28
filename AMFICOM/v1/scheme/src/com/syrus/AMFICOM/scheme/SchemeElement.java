@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.147 2005/10/31 12:29:54 bass Exp $
+ * $Id: SchemeElement.java,v 1.148 2005/11/28 09:09:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -96,7 +96,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.147 $, $Date: 2005/10/31 12:29:54 $
+ * @version $Revision: 1.148 $, $Date: 2005/11/28 09:09:50 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
@@ -2143,6 +2143,9 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 		for (final Scheme scheme : this.getSchemes0(usePool)) {
 			schemeLinks.addAll(scheme.getSchemeLinksRecursively(usePool));
 		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
+			schemeLinks.addAll(schemeElement.getSchemeLinksRecursively(usePool));
+		}
 		return Collections.unmodifiableSet(schemeLinks);
 	}
 
@@ -2154,6 +2157,9 @@ public final class SchemeElement extends AbstractSchemeElement<SchemeElement>
 		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
 		for (final Scheme scheme : this.getSchemes0(usePool)) {
 			schemeCableLinks.addAll(scheme.getSchemeCableLinksRecursively(usePool));
+		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0(usePool)) {
+			schemeCableLinks.addAll(schemeElement.getSchemeCableLinksRecursively(usePool));
 		}
 		return Collections.unmodifiableSet(schemeCableLinks);
 	}
