@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.44 2005/11/28 12:10:07 arseniy Exp $
+ * $Id: event.idl,v 1.45 2005/11/28 15:07:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -262,24 +262,23 @@ module eventv2 {
 		};
 
 		valuetype IdlEmailNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
-			private wstring email;
+			private string email;
 			private wstring subject;
 			private wstring message;
 
-			wstring getEmail();
+			string getEmail();
 			wstring getSubject();
 
-			factory init(in wstring email, in wstring subject,
-					in wstring message);
+			factory init(in string email, in wstring subject, in wstring message);
 		};
 
 		valuetype IdlSmsNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
-			private wstring cellular;
+			private string cellular;
 			private wstring message;
 
-			wstring getCellular();
+			string getCellular();
 			
-			factory init(in wstring cellular, in wstring message);
+			factory init(in string cellular, in wstring message);
 		};
 
 		valuetype IdlPopupNotificationEvent : general::corba::IdlStorableObject, IdlNotificationEvent {
