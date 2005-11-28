@@ -1,5 +1,5 @@
 /*-
- * $Id: Environment.java,v 1.19 2005/11/24 07:53:06 bob Exp $
+ * $Id: Environment.java,v 1.20 2005/11/28 13:18:13 bob Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,10 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
  * Класс инвиромент - остатог дирьма андрюсега
  * 
  * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/11/24 07:53:06 $
+ * @version $Revision: 1.20 $, $Date: 2005/11/28 13:18:13 $
  * @module commonclient
  */
 public final class Environment {
-	private static Dispatcher theDispatcher = new Dispatcher();
-
-	private static JFrame activeWindow = null;
 
 	private Environment() {
 		assert false;
@@ -34,7 +31,7 @@ public final class Environment {
 	 */
 	@Deprecated
 	public static Dispatcher getDispatcher() {
-		return theDispatcher;
+		return AbstractMainFrame.getGlobalDispatcher();
 	}
 
 	/**
@@ -42,7 +39,7 @@ public final class Environment {
 	 */
 	@Deprecated
 	public static void setActiveWindow(JFrame window) {
-		activeWindow = window;
+		AbstractMainFrame.setActiveMainFrame((AbstractMainFrame) window);
 	}
 
 	/**
@@ -50,6 +47,6 @@ public final class Environment {
 	 */
 	@Deprecated
 	public static JFrame getActiveWindow() {
-		return activeWindow;
+		return AbstractMainFrame.getActiveMainFrame();
 	}
 }
