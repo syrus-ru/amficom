@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOpenCommand.java,v 1.1 2005/11/24 15:46:12 stas Exp $
+ * $Id: SchemeOpenCommand.java,v 1.2 2005/11/28 11:51:23 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ public class SchemeOpenCommand extends AbstractCommand {
 			ApplicationModel aModel = this.aContext.getApplicationModel();
 			aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS).execute();
 			aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR).execute();
-			aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS).execute();
+			aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TREE).execute();
 			aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA).execute();
 			aModel.getCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS).execute();
 			
@@ -42,7 +42,7 @@ public class SchemeOpenCommand extends AbstractCommand {
 			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, true);
 			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, true);
 			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, true);
-			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, true);
+			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TREE, true);
 			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, true);
 			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, true);
 			

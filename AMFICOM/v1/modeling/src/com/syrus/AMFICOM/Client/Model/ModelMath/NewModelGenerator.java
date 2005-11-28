@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 //        Size of the weld  =  eventSize !!!                   //
 /////////////////////////////////////////////////////////////////
 
+/*
 public class NewModelGenerator
 {
 	private static final double dDynamicDiapazon = 5.;
@@ -107,7 +108,7 @@ public class NewModelGenerator
 
 		// Noise = A*(exp(s*x)-1); // s = 1/2000;
 //		double maximalNoise = 125./pulsWidth;
-		double coeff = 0.13;
+		double coeff = this.addNoise;
 		double maximalNoise = 50./pulsWidth;
 		double arg = 0.;
 		for(int i=0; i<modelArray.length; i++)
@@ -133,7 +134,7 @@ public class NewModelGenerator
 					modelArray[i] += (rnd(-arg, 0.05*arg)*
 													 (1.+0.02*Math.sin(i*3.14/eventSize) +
 													 0.03*Math.cos(i*3.14/(eventSize*1.1))) * coeff);
-					modelArray[i] += (rnd(addNoise) * coeff);
+//					modelArray[i] += (rnd(addNoise) * coeff);
 				}
 			}
 
@@ -581,3 +582,4 @@ class EventParams2 extends ReflectogramEvent
 				return ret;
 	}
 }
+*/

@@ -144,8 +144,8 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 		menuWindowModelRapameters.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
 		menuWindowModelRapameters.setName(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS);
 		menuWindowModelRapameters.addActionListener(super.actionAdapter);
-		menuWindowPrimaryParameters.setText(I18N.getString(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS));
-		menuWindowPrimaryParameters.setName(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS);
+		menuWindowPrimaryParameters.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_TREE));
+		menuWindowPrimaryParameters.setName(ModelApplicationModel.MENU_WINDOW_TREE);
 		menuWindowPrimaryParameters.addActionListener(super.actionAdapter);
 		menuWindowScheme.setText(I18N.getString(ModelApplicationModel.MENU_WINDOW_SCHEME));
 		menuWindowScheme.setName(ModelApplicationModel.MENU_WINDOW_SCHEME);
@@ -267,8 +267,8 @@ public class ModelMenuBar extends AbstractMainMenuBar {
 				menuWindowMap.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_MAP));
 				menuWindowModelRapameters.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
 				menuWindowModelRapameters.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS));
-				menuWindowPrimaryParameters.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS));
-				menuWindowPrimaryParameters.setEnabled(aModel.isEnabled(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS));
+				menuWindowPrimaryParameters.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_TREE));
+				menuWindowPrimaryParameters.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_TREE));
 				menuWindowScheme.setVisible(aModel.isVisible(ModelApplicationModel.MENU_WINDOW_SCHEME));
 				menuWindowScheme.setEnabled(aModel.isEnabled(ModelApplicationModel.MENU_WINDOW_SCHEME));
 				menuWindowTraceSelector.setVisible(aModel.isVisible(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR));

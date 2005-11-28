@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.modelling.ModelEvent;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
@@ -23,7 +24,7 @@ import com.syrus.util.Log;
 
 public class ModelGenerator {
 	SchemePath path;
-	ArrayList reflectoElements;
+	List<ModelEvent> reflectoElements;
 	List<PathElement> pathelements;
 
 	double defConnectorLoss;
@@ -155,83 +156,74 @@ public class ModelGenerator {
 
 	protected void correctModelingEvents()
 	{
-		ModelingEvent event = (ModelingEvent)reflectoElements.get(0);
-		if(event.type != ModelingEvent.CONNECTOR)
+		ModelEvent event = this.reflectoElements.get(0);
+		if(!event.isReflective())
 		{
-			ModelingEvent dz = new ModelingEvent();
-			dz.setConnector(-40, .1);
-			reflectoElements.add(0, dz);
+			ModelEvent dz = ModelEvent.createReflective(.1, -40);
+			this.reflectoElements.add(0, dz);
 		}
-		event = (ModelingEvent)reflectoElements.get(reflectoElements.size() - 1);
-		if(event.type != ModelingEvent.CONNECTOR)
+		event = this.reflectoElements.get(this.reflectoElements.size() - 1);
+		if(!event.isReflective())
 		{
-			ModelingEvent end = new ModelingEvent();
-			end.setConnector(-40, .1);
-			reflectoElements.add(end);
+			ModelEvent end = ModelEvent.createReflective(0.1, -40);
+			this.reflectoElements.add(end);
 		}
 	}
-
+/*
 	private int getEventSize(int pulsWidth, double delta_x)
 	{
 		int eventSize = (int)((pulsWidth/5.)/delta_x);
 		if(eventSize < 3)
 			eventSize = 3;
 		return eventSize;
-	}
+	}*/
 
-	double getMeanAttenuation()
-	{
+	double getMeanAttenuation() {
 		double meanAtt = 0.;
 		double length = 0.;
-		for(Iterator it = reflectoElements.iterator(); it.hasNext();)
-		{
-			ModelingEvent ev = (ModelingEvent)it.next();
-			if(ev.type == ModelingEvent.LINEAR)
-			{
-				meanAtt += ev.attenuation * ev.length;
-				length += ev.length;
+		for(ModelEvent ev : this.reflectoElements) {
+			if(ev.isLinear()) {
+				meanAtt += ev.getAttenuation() * ev.getLength();
+				length += ev.getLength();
 			}
 		}
-		if(length > 0)
+		if(length > 0) {
 			meanAtt /= length;
-
+		}
 		return meanAtt;
 	}
 
-	public ArrayList createModelingEvents() throws ApplicationException
-	{
-		ArrayList reflectoElements = new ArrayList();
+	public List<ModelEvent> createModelingEvents() throws ApplicationException {
+		this.reflectoElements = new ArrayList<ModelEvent>();
 
-		for(Iterator it = pathelements.iterator(); it.hasNext();)
-		{
-			PathElement pe = (PathElement)it.next();
-			if(pe.getKind() == IdlKind.SCHEME_CABLE_LINK) // CABLE LINK
-			{
+		for(PathElement pe : this.pathelements) {
+			if(pe.getKind() == IdlKind.SCHEME_CABLE_LINK) { // CABLE LINK
+
 				SchemeCableLink scl = pe.getSchemeCableLink();
 				SchemeCableThread thread = pe.getSchemeCableThread();
 
-				ModelingEvent event = addCableLink(scl, thread);
+				ModelEvent event = addCableLink(scl, thread);
 				if (event == null) {
 					System.out.println("Fail creating modeling element from cable " + scl.getName() + "(" +
 														 scl.getId().getIdentifierString() + ")");
 					return null;
 				}
-				reflectoElements.add(event);
+				this.reflectoElements.add(event);
 			}
-			else if (pe.getKind() == IdlKind.SCHEME_LINK)
-			{
+			else if (pe.getKind() == IdlKind.SCHEME_LINK) {
 				SchemeLink sl =	pe.getSchemeLink();
 				SchemePort sourcePort =	sl.getSourceAbstractSchemePort();
-				if(sourcePort == null)
+				if(sourcePort == null) {
 					return null;
+				}
 
-				ModelingEvent event = addPort(sourcePort);
+				ModelEvent event = addPort(sourcePort);
 				if (event == null) {
 					System.out.println("Fail creating modeling element from port " + sourcePort.getName() + "(" +
 														 sourcePort.getId().getIdentifierString() + ")");
 					return null;
 				}
-				reflectoElements.add(event);
+				this.reflectoElements.add(event);
 
 				event = addLink(sl);
 				if (event == null) {
@@ -239,7 +231,7 @@ public class ModelGenerator {
 														 sl.getId().getIdentifierString() + ")");
 					return null;
 				}
-				reflectoElements.add(event);
+				this.reflectoElements.add(event);
 
 				SchemePort targetPort = sl.getTargetAbstractSchemePort();
 				if(targetPort == null)
@@ -251,14 +243,13 @@ public class ModelGenerator {
 														 "(" + targetPort.getId().getIdentifierString() + ")");
 					return null;
 				}
-				reflectoElements.add(event);
+				this.reflectoElements.add(event);
 			}
 		}
-		return reflectoElements;
+		return this.reflectoElements;
 	}
 
-	private ModelingEvent addCableLink(SchemeCableLink scl, SchemeCableThread thread) throws ApplicationException
-	{
+	private ModelEvent addCableLink(SchemeCableLink scl, SchemeCableThread thread) throws ApplicationException {
 		Set<Characteristic> ht = null;
 		Characteristic c;
 		double length;
@@ -289,13 +280,11 @@ public class ModelGenerator {
 		if(length < 0)
 			length = 0;
 
-		ModelingEvent event = new ModelingEvent();
-		event.setLinear(attenuation, length);
+		ModelEvent event = ModelEvent.createLinear(length, attenuation);
 		return event;
 	}
 
-	private ModelingEvent addPort(SchemePort sp) throws ApplicationException
-	{
+	private ModelEvent addPort(SchemePort sp) throws ApplicationException {
 		Set<Characteristic> ht;
 		Characteristic c;
 		double reflectance;
@@ -311,7 +300,7 @@ public class ModelGenerator {
 		else
 			ht = portType.getCharacteristics(false);
 
-		ModelingEvent event = new ModelingEvent();
+		ModelEvent event;
 		if(portType.getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL) // optical connector
 		{
 			c = getCharacteristic(ht, "Attenuation_nom");
@@ -332,7 +321,7 @@ public class ModelGenerator {
 			{
 				reflectance = defReflect;
 			}
-			event.setConnector(Math.abs(reflectance), attenuation);
+			event = ModelEvent.createReflective(attenuation, Math.abs(reflectance));
 		}
 		else // termo connection
 		{
@@ -345,13 +334,12 @@ public class ModelGenerator {
 			{
 				attenuation = defWeldLoss;
 			}
-			event.setWeld(attenuation);
+			event = ModelEvent.createSlice(attenuation);
 		}
 		return event;
 	}
 
-	private ModelingEvent addLink(SchemeLink sl) throws ApplicationException
-	{
+	private ModelEvent addLink(SchemeLink sl) throws ApplicationException {
 		Set<Characteristic> ht = null;
 		Characteristic c;
 		double length;
@@ -362,10 +350,11 @@ public class ModelGenerator {
 		if (ht == null)
 		{
 			LinkType linkType =	sl.getAbstractLinkType();
-			if(linkType == null)
+			if(linkType == null) {
 				return null;
-			else
+			}	else {
 				ht = linkType.getCharacteristics(false);
+			}
 		}
 
 		c = getCharacteristic(ht, attenuationString);
@@ -381,8 +370,7 @@ public class ModelGenerator {
 		if(length < 0)
 			length = 0;
 
-		ModelingEvent event = new ModelingEvent();
-		event.setLinear(attenuation, length);
+		ModelEvent event = ModelEvent.createLinear(length, attenuation);
 		return event;
 	}
 

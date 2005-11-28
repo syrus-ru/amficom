@@ -1,5 +1,5 @@
 /*-
- * $Id: OpenMapViewCommand.java,v 1.1 2005/11/24 15:46:12 stas Exp $
+ * $Id: OpenMapViewCommand.java,v 1.2 2005/11/28 11:51:23 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ public class OpenMapViewCommand extends MapEditorOpenViewCommand {
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS).execute();
 				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR).execute();
-				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TREE).execute();
 				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA).execute();
 				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS).execute();
 				

@@ -2,6 +2,7 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Model;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -12,12 +13,14 @@ import java.util.List;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersLayeredPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersPanel;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.PrimaryParametersFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScalableFrame;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleGraphPanel;
@@ -47,7 +50,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModel;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
-import com.syrus.AMFICOM.analysis.PFTrace;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
@@ -68,10 +70,14 @@ import com.syrus.AMFICOM.client.model.MapSurveyApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.I18N;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeViewerFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeAlarmHandler;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
+import com.syrus.AMFICOM.filter.UI.FilterPanel;
+import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.io.BellcoreStructure;
@@ -84,9 +90,9 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 	ClientAnalysisManager		aManager					= new ClientAnalysisManager();
 	
 	public static final String	SELECTOR_FRAME				= "selectFrame";
-	public static final String	PRIMARY_PARAMETERS_FRAME	= "paramFrame";
 	public static final String	TRANS_DATA_FRAME	= "transData";
 	public static final String	ANALYSIS_FRAME				= "analysisFrame";
+	public static final String	TREE_FRAME = "treeFrame";
 	
 	SchemeTabbedPane schemePane;
 	MapMarkersLayeredPanel layeredPanel;
@@ -204,21 +210,6 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			}
 		});
 		
-		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
-			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
-				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame() {
-					@Override
-					public String getReportTitle() {
-						return PRIMARY_PARAMETERS_FRAME;
-					}
-				};
-				desktopPane.add(paramFrame);
-				ModelMDIMain.this.tables.add(paramFrame);
-				return paramFrame;
-			}
-		});
-		
 		this.frames.put(TRANS_DATA_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TRANS_DATA_FRAME", Level.FINEST);
@@ -247,6 +238,32 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			}
 		});
 		
+		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+			public Object createValue(UIDefaults table) {
+				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
+				JInternalFrame treeFrame = new JInternalFrame();
+				treeFrame.setName(TREE_FRAME);
+				treeFrame.setIconifiable(true);
+				treeFrame.setClosable(true);
+				treeFrame.setResizable(true);
+				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
+				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
+				
+				FullModelChildrenFactory model = new FullModelChildrenFactory(ModelMDIMain.this.aContext);
+				SchemeTreeUI treeUI = new SchemeTreeUI(model.getRoot(), ModelMDIMain.this.aContext);
+//				treeUI.getTreeUI().getTree().setRootVisible(false);
+				TreeFilterUI tfUI = new TreeFilterUI(treeUI, new FilterPanel());
+				
+
+				treeFrame.getContentPane().setLayout(new BorderLayout());
+				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
+
+				ModelMDIMain.this.desktopPane.add(treeFrame);
+				return treeFrame;
+			}
+		});
+		
 		super.setWindowArranger(new WindowArranger(ModelMDIMain.this) {
 			@Override
 			public void arrange() {
@@ -257,7 +274,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				int minh = Math.min(205, h / 4);
 
 				JInternalFrame selectFrame = (JInternalFrame) f.frames.get(ModelMDIMain.SELECTOR_FRAME);
-				JInternalFrame paramFrame = (JInternalFrame) f.frames.get(ModelMDIMain.PRIMARY_PARAMETERS_FRAME);
+				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(ModelMDIMain.TREE_FRAME);
 				JInternalFrame tdFrame = (JInternalFrame) f.frames.get(ModelMDIMain.TRANS_DATA_FRAME);
 				JInternalFrame analysisFrame = (JInternalFrame) f.frames.get(ModelMDIMain.ANALYSIS_FRAME);
 				JInternalFrame modelParamsFrame = (JInternalFrame) f.frames.get(RefModelParamsFrame.NAME);
@@ -267,7 +284,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				JInternalFrame charFrame = (JInternalFrame) f.frames.get(CharacteristicPropertiesFrame.NAME);
 				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(AdditionalPropertiesFrame.NAME);
 				
-				normalize(paramFrame);
+				normalize(treeFrame);
 				normalize(selectFrame);
 				normalize(tdFrame);
 				normalize(analysisFrame);
@@ -277,25 +294,25 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 				normalize(charFrame);
 				normalize(additionalFrame);
 												
-				analysisFrame.setSize(7 * w / 12, 2 * minh);
-				selectFrame.setSize(w / 6, minh);
-				paramFrame.setSize(w / 6, minh);
+				analysisFrame.setSize(11 * w / 20, 2 * minh);
+				selectFrame.setSize(w / 5, minh);
+				treeFrame.setSize(w / 5, h - minh);
 				tdFrame.setSize(w / 4, minh);
 				modelParamsFrame.setSize(w / 4, minh);
-				schemeFrame.setSize(3 * w / 4, h - 2 * minh);
-				generalFrame.setSize(w / 4, (h - 2 * minh) / 2);
+				schemeFrame.setSize(11 * w / 20, h - 2 * minh);
+				generalFrame.setSize(w / 4, 2 * (h - 2 * minh) / 3);
 				charFrame.setSize(w / 4, (h - 2 * minh) / 3);
-				additionalFrame.setSize(w / 4, (h - 2 * minh) / 2);
+				additionalFrame.setSize(w / 4, (h - 2 * minh) / 3);
 								
 				selectFrame.setLocation(0, 0);
-				paramFrame.setLocation(0, minh);
-				analysisFrame.setLocation(w / 6, 0);
+				treeFrame.setLocation(0, minh);
+				analysisFrame.setLocation(w / 5, 0);
 				tdFrame.setLocation(3 * w / 4, minh);
 				modelParamsFrame.setLocation(3 * w / 4, 0);
-				schemeFrame.setLocation(0, 2 * minh);
+				schemeFrame.setLocation(w / 5, 2 * minh);
 				generalFrame.setLocation(3 * w / 4, 2 * minh);
 				charFrame.setLocation(3 * w / 4, 2 * minh + (h - 2 * minh) / 2);
-				additionalFrame.setLocation(3 * w / 4, 2 * minh + (h - 2 * minh) / 2);
+				additionalFrame.setLocation(3 * w / 4, 2 * minh + 2 * (h - 2 * minh) / 3);
 				
 				// optional windows
 				for (final Component component : ModelMDIMain.this.desktopPane.getComponents()) {
@@ -393,7 +410,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		aModel.setCommand("menuReportCreate", rc);
 
 		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, this.getLazyCommand(SELECTOR_FRAME));
-		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, this.getLazyCommand(PRIMARY_PARAMETERS_FRAME));
+		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TREE, this.getLazyCommand(TREE_FRAME));
 		aModel.setCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, this.getLazyCommand(ANALYSIS_FRAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, this.getLazyCommand(TRANS_DATA_FRAME));
 		aModel.setCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, this.getLazyCommand(RefModelParamsFrame.NAME));
@@ -512,8 +529,8 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		analysisFrame.setVisible(b);
 		JInternalFrame tdFrame = (JInternalFrame) this.frames.get(TRANS_DATA_FRAME);
 		tdFrame.setVisible(b);
-		JInternalFrame primFrame = (JInternalFrame) this.frames.get(PRIMARY_PARAMETERS_FRAME);
-		primFrame.setVisible(b);
+		JInternalFrame treeFrame = (JInternalFrame) this.frames.get(TREE_FRAME);
+		treeFrame.setVisible(b);
 		JInternalFrame selectFrame = (JInternalFrame) this.frames.get(SELECTOR_FRAME);
 		selectFrame.setVisible(b);
 		JInternalFrame modelParamsFrame = (JInternalFrame) this.frames.get(RefModelParamsFrame.NAME);
@@ -557,7 +574,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 
 	@Override
 	public void loggedIn() {
-		ApplicationModel aModel = aContext.getApplicationModel();
+		final ApplicationModel aModel = aContext.getApplicationModel();
 
 		aModel.setEnabled("menuViewMapViewOpen", true);
 		aModel.setEnabled("menuViewSchemeOpen", true);
@@ -571,6 +588,22 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 		aModel.setEnabled("menuSessionOpen", false);
 
 		aModel.fireModelChanged();
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TREE).execute();
+				aModel.getCommand(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_TRANS_DATA).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_SCHEME).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_GENERAL_PROPERTIES).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES).execute();
+				aModel.getCommand(ModelApplicationModel.MENU_WINDOW_CHARACTERISTICS).execute();
+				
+				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
+			}
+		});
 	}
 
 	@Override
@@ -619,7 +652,7 @@ public class ModelMDIMain extends AbstractMainFrame implements BsHashChangeListe
 			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_ADDITIONAL_PROPERTIES, true);
 			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_ANALYSIS, true);
 			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_MODEL_PARAMETERS, true);
-			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS, true);
+			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TREE, true);
 			aModel.setEnabled(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR, true);
 			aModel.setEnabled(ModelApplicationModel.MENU_WINDOW_TRANS_DATA, true);
 			aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);

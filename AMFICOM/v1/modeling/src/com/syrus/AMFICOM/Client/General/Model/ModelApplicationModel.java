@@ -16,6 +16,7 @@ public class ModelApplicationModel extends ApplicationModel
 	public static final String MENU_APPEARANCE_MAP = MENU_APPEARANCE + ".Map";
 	
 	private static final String MENU_WINDOW = "Menu.window";
+	public static final String MENU_WINDOW_TREE = MENU_WINDOW + ".tree";
 	public static final String MENU_WINDOW_TRANS_DATA = MENU_WINDOW + ".trans_data";
 	public static final String MENU_WINDOW_MODEL_PARAMETERS = MENU_WINDOW + ".model_parameters";
 	public static final String MENU_WINDOW_SCHEME = MENU_WINDOW + ".scheme";
@@ -76,7 +77,7 @@ public class ModelApplicationModel extends ApplicationModel
 		add(MENU_WINDOW_GENERAL_PROPERTIES);
 		add(MENU_WINDOW_MAP);
 		add(MENU_WINDOW_MODEL_PARAMETERS);
-		add(AnalyseApplicationModel.MENU_WINDOW_PRIMARYPARAMETERS);
+		add(MENU_WINDOW_TREE);
 		add(MENU_WINDOW_SCHEME);
 		add(AnalyseApplicationModel.MENU_WINDOW_TRACESELECTOR);
 		add(MENU_WINDOW_TRANS_DATA);

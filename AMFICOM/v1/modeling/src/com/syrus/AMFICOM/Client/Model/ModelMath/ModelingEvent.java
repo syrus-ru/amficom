@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Model.ModelMath;
 
+/*
 public class ModelingEvent
 {
 	public static final int CONNECTOR = 3;
@@ -50,4 +51,4 @@ public class ModelingEvent
 		ret *= 5d;
 		return ret;
 	}
-}
+}*/

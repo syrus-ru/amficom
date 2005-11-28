@@ -36,8 +36,6 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
 import com.syrus.AMFICOM.Client.Model.ModelMath.ModelGenerator;
-import com.syrus.AMFICOM.Client.Model.ModelMath.ModelingEvent;
-import com.syrus.AMFICOM.Client.Model.ModelMath.NewModelGenerator;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.ATable;
@@ -47,6 +45,9 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.modelling.ModelEvent;
+import com.syrus.AMFICOM.modelling.TraceGenerator;
+import com.syrus.AMFICOM.modelling.TraceGenerator.Parameters;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePathWrapper;
@@ -236,34 +237,38 @@ public class RefModelParamsFrame extends JInternalFrame
 			return null;
 		}
 		//mode((int)wave_length, (int)pulsWidth, formFactor, resolution, connectorAtt, weldAtt, connectorRef, linearAtt);
-		if(reflectoElements == null)
-		{
+		if(reflectoElements == null) {
 			String error = "Неправильно заданы либо отсутствуют данные в схеме.\n";
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
 			return null;
 		}
-		ModelingEvent []rmip = (ModelingEvent [])
-		reflectoElements.toArray(new ModelingEvent[reflectoElements.size()]);
-		if(rmip.length<2)
-		{
+		ModelEvent[] rmip = (ModelEvent[])reflectoElements.toArray(new ModelEvent[reflectoElements.size()]);
+		if(rmip.length < 2) {
 			String error = "Ошибка при определении параметров маршрута.";
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), error, "Ошибка", JOptionPane.OK_OPTION);
 			return null;
 		}
 		
+		Parameters pars = new Parameters(-5.0, -20.0, -30.0,
+				4.0, 8000.0, 1625, 500, 1.468);
+		
+		TraceGenerator generator = new TraceGenerator(pars, rmip);
+		return generator.getBellcore();
+		/*
 		NewModelGenerator mg = new NewModelGenerator(rmip,
 				resolution,
 				dinam_area,
 				pulsWidth,
 				length,
 				addNoise,
-				formFactor);
-		double []y = mg.getModelArray();
+				formFactor);*/
+//		double []y = generator. mg.getModelArray();
 		//double[] y = ReflectogramMath.getReflectogrammFromEvents(re, 0);
 		
-		return createBS (path, y, resolution/1000., wave_length, (int)pulsWidth);
+//		return createBS (path, y, resolution/1000., wave_length, (int)pulsWidth);
 	}
 
+	/*
 	BellcoreStructure createBS (SchemePath path, double[] y, double delta_x, double wl, int pw)
 	{
 		BellcoreStructure bs = new BellcoreStructure();
@@ -285,7 +290,8 @@ public class RefModelParamsFrame extends JInternalFrame
 
 		return bs;
 	}
-
+*/
+	
 ////////////     Additional Necessary Class Definition     ////////////////////
 }
 
@@ -318,7 +324,7 @@ class ParamTableModel extends AbstractTableModel {
 		{"Длительность импульса, нс", pulsWidthComboBox},
 		{"Длина волны, нм", waveLengthComboBox},
 		{"Динамический диапазон, дБ", new Double(40)},
-		{"Добавочный шум, дБ", new Double(0)},
+		{"Коэффициент шума", new Double(0)},
 		{"Форм-фактор коннектора", new Double(0.95)},
 		{"Потери на сварке, дБ", new Double(0.1)},
 		{"Отражение на коннекторе, дБ", new Double(-40)},
