@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.9 2005/11/28 11:22:09 stas Exp $
+ * $Id: TraceGenerator.java,v 1.10 2005/11/28 11:31:23 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,11 +28,31 @@ import com.syrus.io.BellcoreModelWriter;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
 
-
 /**
- * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/11/28 11:22:09 $
- * @module
+ * Моделирует рефлектограмму по заданному набору объектов на трассе.
+ * Моделирует однократное обратное рассеяние, однократное отражение и
+ * многократные переотражения.
+ * Позволяет проводить пост-обработку фильтрами RC и BC.
+ * Умеет генерировать BellcoreStructure.
+ * <h3>Ограничения:</h3>
+ * <p>
+ * Не моделирует рассеяние отраженного сигнала, отражение рассеянного сигнала
+ *   и рассеяние рассеянного сигнала.
+ * </p><p>
+ * Не учитывает следующую специфику рефлектометра:
+ * <ul>
+ * <li> Изменяющийся по дистанции уровень шума (видимо, это изменение
+ *   обусловлено раздельным усреднением);
+ * <li> Специфическое удлинение (сверх длительности импульса) отражательных
+ *   событий;
+ * <li> Специфическая форма спада отражательных событий (зависит от режима
+ *   работы рефлектометра), не описывающаяся RC- и BC- фильтрацией.
+ * </ul>
+ * </p>
+ * @author saa
+ * @author $Author: saa $
+ * @version $Revision: 1.10 $, $Date: 2005/11/28 11:31:23 $
+ * @module modeling
  */
 public class TraceGenerator {
 	public static final double MAX_NOISE = -10.0; // dB
@@ -40,6 +60,20 @@ public class TraceGenerator {
 	private Parameters pars;
 	private ModelEvent[] events;
 	private double[] traceData; // здесь значения отрицательные и нулевые
+
+	/**
+	 * Порядок аппроксимации отражений
+	 * 0: R, 1: R+RRR, 2: R+RRR+RRRRR, 3:...+RRRRRRR
+	 * рекомендуются значение 2 и 3 как достаточно реалистичные.
+	 */
+	private static final int REFLECTION_SIMULATION_ORDER = 3;
+
+	/**
+	 * Пренебрегаем сигналами, амплитуда которых ниже чем
+	 *  (уровень шума + эта величина).
+	 * Полезен при {@link #REFLECTION_SIMULATION_ORDER} более 2 или 3.
+	 */
+	private static final double SIMULATION_PRECISION_TO_NOISE = -20.0;
 
 	/**
 	 * Аггрегирует параметры измерения
@@ -100,9 +134,12 @@ public class TraceGenerator {
 	 * @param events Модельный список объектов
 	 */
 	public TraceGenerator(Parameters pars, ModelEvent[] events) {
+		long t0 = System.nanoTime();
 		this.pars = pars.copy(); // делаем копию, т.к. pars modifiable
 		this.events = events.clone(); // копируем только массив, т.к. events unmodifiable
+		long t1 = System.nanoTime();
 		double[] linTrace = generate();
+		long t2 = System.nanoTime();
 		// накладываем шум и переводим к дБ
 		this.traceData = new double[linTrace.length];
 		double absNoise = log2lin(this.pars.noiseLevel);
@@ -119,6 +156,15 @@ public class TraceGenerator {
 				}
 			}
 		}
+		long t3 = System.nanoTime();
+		long tpct = (t3 - t0) / 100;
+		if (tpct == 0)
+			tpct = 1;
+
+		System.err.println("TraceGenerator():"
+				+ " copy "  + (t1-t0)/1e6 + " ms (" + (t1-t0)/tpct + "%)"
+				+ " gen "   + (t2-t1)/1e6 + " ms (" + (t2-t1)/tpct + "%)"
+				+ " noise " + (t3-t2)/1e6 + " ms (" + (t3-t2)/tpct + "%)");
 	}
 
 	/**
@@ -232,12 +278,24 @@ public class TraceGenerator {
 	 *   по его отражению и параметрам измерения.
 	 * @param ev парметры коннектора
 	 * @param pars параметры измерения
-	 * @return амплитуда коннектора
+	 * @return амплитуда коннектора, дБ с масштабом 5
 	 */
 	private static double getConnectorHeight(ModelEvent ev, Parameters pars) {
 		double refl = ev.getReflection(); // уровень отражения
 		double sigma = MathRef.calcSigma(pars.wavelength, pars.pulseWidth);
 		return MathRef.calcPeakByReflectance(sigma, refl);
+	}
+
+	/**
+	 * Определяет амплитуду коннектора со 100% отражением.
+	 * Используется для оценки глубины просмотра дерева отражений,
+	 * чтобы определить, где отражением можно пренебречь.
+	 * @param pars параметры измерения
+	 * @return амплитуда коннектора, дБ с масштабом 5
+	 */
+	private static double getMaxConnectorHeight(Parameters pars) {
+		double sigma = MathRef.calcSigma(pars.wavelength, pars.pulseWidth);
+		return MathRef.calcPeakByReflectance(sigma, 0.0);
 	}
 
 	/**
@@ -373,9 +431,17 @@ public class TraceGenerator {
 		}
 	}
 
+	/**
+	 * @param y дБ с масштабом 5
+	 * @return интенсивность или отношение интенсивностей
+	 */
 	private static double log2lin(double y) {
 		return Math.pow(10.0, y * 0.2);
 	}
+	/**
+	 * @param power интенсивность или отношение интенсивностей
+	 * @return дБ с масштабом 5
+	 */
 	private static double lin2log(double power) {
 		return 5.0 * log10(power);
 	}
@@ -396,19 +462,17 @@ public class TraceGenerator {
 				/ this.pars.deltaX; // [м]
 		//System.out.println("TraceGenerator: generate(): pulseW " + pulseW);
 
-		// расставляем модельные события
+		double level0 = log2lin(this.pars.initialLevel);
+		// рассчитываем рассеяние (S - процессы)
 		// обеспечиваем переход от метров к точкам, от дБ к лин. ед.
 		{
 			double pos = 0; // текущая дистанция (точки)
-			double level = log2lin(this.pars.initialLevel); // текущий абс. уровень мощности (лин. ед.)
+			double level = level0; // текущий абс. уровень мощности (лин. ед.)
 			// идем по трассе
 			for (int k = 0; k < this.events.length; k++) {
 				ModelEvent ev = events[k];
 				// точечное отражение (в начале участка)
-				if (ev.hasReflection()) {
-					double factor = log2lin(getConnectorHeight(ev, this.pars));
-					addSquarePulse(data, pos, pos + pulseW, level * factor);
-				}
+				//  - игнорируем
 				// точечные потери (в начале участка)
 				if (ev.hasLoss()) {
 					level *= log2lin(-ev.getLoss());
@@ -431,7 +495,82 @@ public class TraceGenerator {
 				}
 			}
 		}
+		// добавляем отражения (R) и фантомные отражения (RRR, RRRRR, ...)
+		// указываем уровень сигнала, отражение которого будет незаметно
+		// на фоне шума.
+		addReflectionsAndPhantoms(true,
+				0,
+				level0,
+				-1,
+				REFLECTION_SIMULATION_ORDER * 2,
+				pulseW,
+				data,
+				log2lin(this.pars.noiseLevel + SIMULATION_PRECISION_TO_NOISE
+						- getMaxConnectorHeight(this.pars)));
 		return data;
+	}
+
+	private void addReflectionsAndPhantoms(boolean forward,
+			double pos0, // суммарное время
+			double level0,
+			int index, // событие, с которого начали
+			int recurse, // остающаяся глубина рекурсии (нечетные начальные значения давать смысла нет, это пустая трата времени)
+			double pulseW,
+			double[] data, // data - аккмулятор света
+			double precision) {
+		double pos = pos0;
+		double level = level0;
+		int sign = forward ? 1 : -1;
+		int kStart = index + sign;
+		int kEnd = forward ? this.events.length - 1 : 0;
+//		System.err.println("recurse " + recurse + " index " + index + " sign " + sign + " kStart " + kStart + " kEnd " + kEnd + " pos " + pos + " level " + level0 + " precision " + precision);
+		for (int k = kStart; k * sign <= kEnd * sign; k += sign) {
+			ModelEvent ev = events[k];
+			if (recurse > 0 && ev.hasReflection()) {
+				final double reflLevel = level * log2lin(ev.getReflection());
+				if (reflLevel > precision) {
+					addReflectionsAndPhantoms(!forward,
+						pos,
+						reflLevel,
+						k,
+						recurse - 1,
+						pulseW,
+						data,
+						precision);
+				}
+			}
+			// Когда идем в обратном направлении, игнорируем и отражения
+			// (четные отражения не видны со стороны рефлектометра)
+			// и потери (потери по пути назад уже учтены по пути вперед
+			// за счет масштаба 5 дБ)
+			if (!forward) {
+				continue;
+			}
+			if (ev.hasReflection()) {
+				// если идем в прямом направлении, то отражение будет
+				// видно приемником рефлектометра
+//				System.err.println("added[" + recurse + "]:" + k + " at " + pos);
+				double factor = log2lin(getConnectorHeight(ev, this.pars));
+				addSquarePulse(data, pos, pos + pulseW, level * factor);
+			}
+			// Учитываем затухание и протяженность.
+			// Мы не можем здесь корректно добавить их в р/г
+			// из-за того, что в таком случае из всех сигналов, полученных
+			// двумя отражениями и рассеянием (ООР), будет добавляться только
+			// тот, у которого сначала идет два отражения, а потом рассеяние.
+			// Сигнал же, который после рассеяния еще был переотражен (ОРО, РОО),
+			// не может быть здесь учтен простым способом.
+			// Чтобы избежать некорректного учета таких процессов,
+			// мы вообще не пытаемся их здесь учитывать, а оставляем это
+			// методу generate().
+			if (ev.hasLoss()) {
+				level *= log2lin(-ev.getLoss());
+			}
+			if (ev.hasLength()) {
+				pos += ev.getLength() / this.pars.deltaX;
+				level *= log2lin(-ev.getLength() * ev.getAttenuation());
+			}
+		}
 	}
 
 	/**
@@ -442,7 +581,7 @@ public class TraceGenerator {
 		// Создаем набор моделируемых событий
 		ModelEvent me[] = new ModelEvent[] {
 				// начало
-				ModelEvent.createReflective(1.0, -20),
+				ModelEvent.createReflective(1.0, -5),
 				// todo ошибка - потеря точности при малых затуханиях
 				// раскомментировать следующую строку для воспроизведения ошибки "малые затухания"
 				//ModelEvent.createLinear(100.3, 1e-18),
@@ -452,17 +591,17 @@ public class TraceGenerator {
 				ModelEvent.createSlice(0.2),
 				ModelEvent.createLinear(3000.0, 2e-4),
 				// два близких отражения
-				ModelEvent.createReflective(0.0, -80),
+				ModelEvent.createReflective(0.0, -5),
 				ModelEvent.createLinear(80, 2e-4),
-				ModelEvent.createReflective(1.0, -60),
-				ModelEvent.createLinear(2000.0, 2e-4),
+				ModelEvent.createReflective(1.0, -5),
+				ModelEvent.createLinear(12000.0, 2e-4),
 				// конец волокна
 				ModelEvent.createReflective(1.0, -20)
 		};
 
 		// Создаем набор параметров тестирования
-		Parameters pars = new Parameters(-5.0, -20.0, -30.0,
-				4.0, 8000.0, 1625, 500, 1.468);
+		Parameters pars = new Parameters(-15.0, -30.0, -40.0,
+				4.0, 18000.0, 1625, 500, 1.468);
 
 		// Выполняем моделирование
 		return new TraceGenerator(pars, me);
@@ -508,8 +647,8 @@ public class TraceGenerator {
 		//TraceGenerator tg = myTestGenerator2();
 
 		// При желании, проводим фильтрацию
-		tg.performRCFiltering(14);
-		tg.performBoxCarFiltering(9);
+//		tg.performRCFiltering(14);
+//		tg.performBoxCarFiltering(9);
 
 		//tg.printTrace(new PrintStream(new File("dump.txt")));
 
@@ -528,6 +667,13 @@ public class TraceGenerator {
 		BufferedOutputStream bos = new BufferedOutputStream(os);
 		bos.write(bar);
 		bos.close();
+
+		// Сохраняем в текстовом формате
+		double[] y = tg.getTraceData();
+		PrintStream out = new PrintStream("./model.dat");
+		for (int i = 0; i < y.length; i++)
+			out.println("" + i + " " + y[i]);
+		out.close();
 
 		// Конец примера
 		System.out.println("Done!");
