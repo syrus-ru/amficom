@@ -2,3 +2,6 @@ logs
 images
 cache
 classes
+.classpath
+.project
+.settings
