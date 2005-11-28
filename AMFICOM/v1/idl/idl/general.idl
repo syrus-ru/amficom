@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.115 2005/10/30 14:26:52 bass Exp $
+ * $Id: general.idl,v 1.116 2005/11/28 12:08:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@
 #define GENERAL_IDL
 
 #include <streams.idl>
-
 #include "dummy.idl"
 
 #ifndef MY_COMPILER_IS_NOT_BRAINDEAD
@@ -254,62 +253,6 @@ module general {
 		};
 
 
-///////////////////////// Common server interfaces //////////////////////////
-
-		/**
-		 * superinterface for all verifiable references
-		\u002a\u002f@SuppressWarnings("all")/**/
-		abstract interface Verifiable {
-			void verify(in octet i);
-		};
-
-		/**
-		 * superinterface for identifier generators
-		\u002a\u002f@SuppressWarnings("all")/**/
-		abstract interface IdentifierGeneratorServer {
-			IdlIdentifier getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
-			IdlIdentifierSeq getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
-		};
-
-		/**
-		 * pair (object id, version)
-		 */
-		struct IdVersion {
-			IdlIdentifier id;
-			long long version;
-		};
-		/*\u002a\u002f@SuppressWarnings("all")/**/
-		typedef sequence<IdVersion> IdVersionSeq;
-
-		/**
-		 * common interface for all servers
-		\u002a\u002f@SuppressWarnings("all")/**/
-		abstract interface CommonServer : Verifiable {
-#pragma version CommonServer 3.0
-
-			IdlStorableObjectSeq transmitStorableObjects(in IdlIdentifierSeq ids,
-					in security::corba::IdlSessionKey sessionKey)
-					raises (AMFICOMRemoteException);
-
-			IdlStorableObjectSeq transmitStorableObjectsButIdsByCondition(in IdlIdentifierSeq ids,
-					in IdlStorableObjectCondition condition,
-					in security::corba::IdlSessionKey sessionKey)
-					raises (AMFICOMRemoteException);
-
-			IdVersionSeq transmitRemoteVersions(in IdlIdentifierSeq ids,
-					in security::corba::IdlSessionKey sessionKey)
-					raises (AMFICOMRemoteException);
-
-			void receiveStorableObjects(in IdlStorableObjectSeq storableObjects,
-					in security::corba::IdlSessionKey sessionKey)
-					raises (AMFICOMRemoteException);
-
-			void delete(in IdlIdentifierSeq ids,
-					in security::corba::IdlSessionKey sessionKey)
-					raises (AMFICOMRemoteException);
-		};
-
-
 //////////////////// CharacteristicType ///////////////////
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -375,6 +318,70 @@ module general {
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlCharacteristic> IdlCharacteristicSeq;
+
+
+///////////////////////// Common interfaces //////////////////////////
+
+		/**
+		 * superinterface for all verifiable references */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface Verifiable {
+			void verify(in octet i);
+		};
+
+		/**
+		 * Superinterface for identifier generators */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		abstract interface IdentifierGeneratorServer {
+			IdlIdentifier getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
+			IdlIdentifierSeq getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
+		};
+
+		/**
+		*	Superinterface for all users in the system - ordinal ones and server processes*/
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface CommonUser {
+			WString64 getHostName();
+		};
+
+		/**
+		 * pair (object id, version)
+		 */
+		struct IdVersion {
+			IdlIdentifier id;
+			long long version;
+		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<IdVersion> IdVersionSeq;
+
+		/**
+		 * common interface for all servers */
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		interface CommonServer : Verifiable, CommonUser {
+#pragma version CommonServer 4.0
+
+			IdlStorableObjectSeq transmitStorableObjects(in IdlIdentifierSeq ids,
+					in security::corba::IdlSessionKey sessionKey)
+					raises (AMFICOMRemoteException);
+
+			IdlStorableObjectSeq transmitStorableObjectsButIdsByCondition(in IdlIdentifierSeq ids,
+					in IdlStorableObjectCondition condition,
+					in security::corba::IdlSessionKey sessionKey)
+					raises (AMFICOMRemoteException);
+
+			IdVersionSeq transmitRemoteVersions(in IdlIdentifierSeq ids,
+					in security::corba::IdlSessionKey sessionKey)
+					raises (AMFICOMRemoteException);
+
+			void receiveStorableObjects(in IdlStorableObjectSeq storableObjects,
+					in security::corba::IdlSessionKey sessionKey)
+					raises (AMFICOMRemoteException);
+
+			void delete(in IdlIdentifierSeq ids,
+					in security::corba::IdlSessionKey sessionKey)
+					raises (AMFICOMRemoteException);
+		};
+
 
 	};
 };
