@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.7 2005/11/28 11:18:21 stas Exp $
+ * $Id: TraceGenerator.java,v 1.8 2005/11/28 11:21:29 stas Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,15 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.analysis.dadara.MathRefModel;
-import com.syrus.io.BellcoreModelWriter;
+//import com.syrus.io.BellcoreModelWriter;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/11/28 11:18:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/11/28 11:21:29 $
  * @module
  */
 public class TraceGenerator {
@@ -237,7 +236,7 @@ public class TraceGenerator {
 	 */
 	private static double getConnectorHeight(ModelEvent ev, Parameters pars) {
 		double refl = ev.getReflection(); // уровень отражения
-		double sigma = MathRefModel.calcSigma(pars.wavelength, pars.pulseWidth);
+		double sigma = MathRef.calcSigma(pars.wavelength, pars.pulseWidth);
 		return MathRef.calcPeakByReflectance(sigma, refl);
 	}
 
