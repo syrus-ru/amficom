@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.29 2005/11/28 11:05:08 bob Exp $
+* $Id: PermissionAttributes.java,v 1.30 2005/11/28 13:20:38 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Observer;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -37,7 +36,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/11/28 11:05:08 $
+ * @version $Revision: 1.30 $, $Date: 2005/11/28 13:20:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
@@ -628,8 +627,6 @@ public final class PermissionAttributes extends DomainMember<PermissionAttribute
 	}
 	
 	private Identifier parentId;
-	
-	private Identifier domainId;
 	
 	private Module module;
 	
