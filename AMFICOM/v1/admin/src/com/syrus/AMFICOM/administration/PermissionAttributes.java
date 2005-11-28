@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.28 2005/11/21 08:30:22 bob Exp $
+* $Id: PermissionAttributes.java,v 1.29 2005/11/28 11:05:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Observer;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -30,19 +31,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/11/21 08:30:22 $
+ * @version $Revision: 1.29 $, $Date: 2005/11/28 11:05:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
-public final class PermissionAttributes extends StorableObject<PermissionAttributes> {
+public final class PermissionAttributes extends DomainMember<PermissionAttributes> {
 
 	// TODO generate serialVersionUID when all enum will be made 
 
@@ -665,8 +665,8 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				version);
-		this.domainId = domainId;
+				version,
+				domainId);
 		this.parentId = parentId;
 		this.module = module;
 		
@@ -977,16 +977,7 @@ public final class PermissionAttributes extends StorableObject<PermissionAttribu
 		    }
 		}
 	}
-	
-	public final Identifier getDomainId() {
-		return this.domainId;
-	}
-	
-	public final void setDomainId(final Identifier domainId) {
-		this.domainId = domainId;
-		super.markAsChanged();
-	}
-	
+
 	public final Identifier getParentId() {
 		return this.parentId;
 	}
