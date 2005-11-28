@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.24 2005/10/12 10:03:33 bass Exp $
+# $Id: Makefile,v 1.25 2005/11/28 13:22:33 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -49,7 +49,7 @@ $(LIBNAME): .mach
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/administration/corba && \
-		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/administration/corba/.cvsignore)
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/administration/corba/.cvsignore | grep .java)
 	$(RM) .idl
 
 .PHONY: corba
