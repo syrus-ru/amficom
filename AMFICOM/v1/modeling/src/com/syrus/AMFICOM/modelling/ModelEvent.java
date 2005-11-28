@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelEvent.java,v 1.4 2005/08/08 13:34:38 saa Exp $
+ * $Id: ModelEvent.java,v 1.5 2005/11/28 11:30:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 13:34:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/11/28 11:30:05 $
  * @module
  */
 public class ModelEvent {
@@ -48,6 +48,7 @@ public class ModelEvent {
 		return new ModelEvent(LINEAR, length, attenuation, 0.0, 0.0);
 	}
 
+	// FIXME: rename createSlice to createSplice
 	public static ModelEvent createSlice(double loss) {
 		return new ModelEvent(SPLICE, 0.0, 0.0, loss, 0.0);
 	}
