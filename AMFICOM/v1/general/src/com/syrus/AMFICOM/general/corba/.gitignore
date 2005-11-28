@@ -4,8 +4,15 @@
 *Factory.java
 _*Stub.java
 AMFICOMRemoteException.java
+CommonUser.java
+CommonUserOperations.java
+CommonUserPOA.java
+CommonUserPOATie.java
 IdVersion.java
 CommonServer.java
+CommonServerOperations.java
+CommonServerPOA.java
+CommonServerPOATie.java
 IdlDataType.java
 IdlMeasurementUnit.java
 IdlParameterType.java
@@ -16,4 +23,8 @@ IdlIdentifier.java
 IdlStorableObject.java
 IdlStorableObjectCondition.java
 Verifiable.java
+VerifiableOperations.java
+VerifiablePOA.java
+VerifiablePOATie.java
 IdlCreateObjectException.java
+*.swp
