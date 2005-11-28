@@ -1,5 +1,5 @@
 /*-
-* $Id: CORBAServer.java,v 1.26 2005/10/31 12:29:53 bass Exp $
+* $Id: CORBAServer.java,v 1.27 2005/11/28 12:21:52 arseniy Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
@@ -44,8 +43,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/10/31 12:29:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/11/28 12:21:52 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -137,6 +136,9 @@ public class CORBAServer {
 		policies[6] = rootPoa.create_implicit_activation_policy(ImplicitActivationPolicyValue.IMPLICIT_ACTIVATION);
 
 		this.poa = rootPoa.create_POA("poa1", rootPoa.the_POAManager(), policies);
+		for (final Policy policy : policies) {
+			policy.destroy();
+		}
 
 		this.poa.the_POAManager().activate();
 	}
@@ -198,7 +200,19 @@ public class CORBAServer {
 		}
 	}
 */
-
+/*
+	public void activateServant(final Servant servant) throws CommunicationException {
+		if (this.running) {
+			try {
+				this.poa.activate_object(servant);
+			} catch (UserException ue) {
+				throw new CommunicationException("Cannot activate servant '" + servant + "' -- " + ue.getMessage(), ue);
+			}
+		} else {
+			throw new IllegalStateException("Cannot activate '" + servant + "' due to shutdown");
+		}
+	}
+*/
 	public void activateServant(final Servant servant, final String name) throws CommunicationException {
 		if (this.running) {
 			try {
@@ -226,13 +240,11 @@ public class CORBAServer {
 	public void deactivateServant(final String name, final boolean isOwner) throws CommunicationException {
 		if (this.running) {
 			try {
-				final NameComponent[] nameComponents = this.namingContext.to_name(name);
-				final org.omg.CORBA.Object reference = this.namingContext.resolve(nameComponents);
-
-				this.namingContext.unbind(nameComponents);
-				this.servantNames.remove(name);
+				this.unbindServant(name);
 
 				if (isOwner) {
+					final NameComponent[] nameComponents = this.namingContext.to_name(name);
+					final org.omg.CORBA.Object reference = this.namingContext.resolve(nameComponents);
 					final byte[] id = this.poa.reference_to_id(reference);
 					this.poa.deactivate_object(id);
 				}
@@ -255,6 +267,14 @@ public class CORBAServer {
 		} catch (UserException nf) {
 			throw new CommunicationException('\'' + name + "' " + I18N.getString("Error.Text.NotFound"), nf);
 		}
+	}
+
+	public String objectToString(final org.omg.CORBA.Object ref) {
+		return this.orb.object_to_string(ref);
+	}
+
+	public org.omg.CORBA.Object stringToObject(final String ior) {
+		return this.orb.string_to_object(ior);
 	}
 
 	/* TODO Maybe return set of CORBA references instead of strings */
@@ -350,14 +370,12 @@ public class CORBAServer {
 
 		this.runHooks();
 
-		synchronized (this.servantNames) {
-			for (final Iterator<String> it = this.servantNames.iterator(); it.hasNext();) {
-				try {
-					this.unbindServant(it.next());
-					it.remove();
-				} catch (CommunicationException ce) {
-					Log.errorMessage(ce);
-				}
+		final Set<String> servantnames = new HashSet<String>(this.servantNames);
+		for (final String servantName : servantnames) {
+			try {
+				this.unbindServant(servantName);
+			} catch (CommunicationException ce) {
+				Log.errorMessage(ce);
 			}
 		}
 
@@ -374,11 +392,11 @@ public class CORBAServer {
 		try {
 			final NameComponent[] nameComponents = this.namingContext.to_name(name);
 			this.namingContext.unbind(nameComponents);
-			//this.servantNames.remove(name);
-			Log.debugMessage("Deactivated servant '" + name + "'", Log.DEBUGLEVEL05);
+			this.servantNames.remove(name);
+			Log.debugMessage("Unbinded servant '" + name + "'", Log.DEBUGLEVEL05);
 		}
 		catch (NotFound nf) {
-			Log.errorMessage("Cannot deactivate servant '" + name + "' -- no such servant");
+			Log.errorMessage("Cannot unbind servant '" + name + "' -- no such servant");
 		}
 		catch (UserException ue) {
 			throw new CommunicationException("Cannot deactivate servant '" + name + "'", ue);
