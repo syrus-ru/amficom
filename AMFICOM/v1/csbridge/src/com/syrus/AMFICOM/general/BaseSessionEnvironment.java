@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.31 2005/10/31 12:29:53 bass Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.32 2005/11/28 12:19:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Date;
 
+import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/10/31 12:29:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/11/28 12:19:46 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -42,27 +43,30 @@ public abstract class BaseSessionEnvironment {
 
 	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
 			final PoolContext poolContext,
+			final CommonUser commonUser,
 			final LoginRestorer loginRestorer) {
-		this.init0(baseConnectionManager, poolContext, loginRestorer);
+		this.init0(baseConnectionManager, poolContext, commonUser, loginRestorer);
 		IdentifierPool.init(this.baseConnectionManager);
 	}
 
 	public BaseSessionEnvironment(final BaseConnectionManager baseConnectionManager,
 			final PoolContext poolContext,
+			final CommonUser commonUser,
 			final LoginRestorer loginRestorer,
 			final CORBAActionProcessor identifierPoolCORBAActionProcessor) {
-		this.init0(baseConnectionManager, poolContext, loginRestorer);
+		this.init0(baseConnectionManager, poolContext, commonUser, loginRestorer);
 		IdentifierPool.init(this.baseConnectionManager, identifierPoolCORBAActionProcessor);
 	}
 
 	private void init0(final BaseConnectionManager baseConnectionManager1,
 			final PoolContext poolContext1,
+			final CommonUser commonUser,
 			final LoginRestorer loginRestorer) {
 		this.baseConnectionManager = baseConnectionManager1;
 		this.poolContext = poolContext1;
 
 		this.poolContext.init();
-		LoginManager.init(this.baseConnectionManager, loginRestorer);
+		LoginManager.init(this.baseConnectionManager, commonUser, loginRestorer);
 
 		this.logoutShutdownHook = new LogoutShutdownHook();
 
@@ -87,15 +91,13 @@ public abstract class BaseSessionEnvironment {
 	}
 
 	/**
-	 * Overridden in ClientSessionEnvironment
 	 * @param login
 	 * @param password
 	 * @throws CommunicationException
 	 * @throws LoginException
 	 */
-	public void login(final String login, final String password, final Identifier domainId)
-			throws CommunicationException,
-				LoginException {
+	public final void login(final String login, final String password, final Identifier domainId)
+			throws CommunicationException, LoginException {
 		LoginManager.login(login, password, domainId);
 		try {
 			StorableObjectPool.deserialize(this.poolContext.getLRUSaver());
@@ -116,11 +118,10 @@ public abstract class BaseSessionEnvironment {
 	}
 
 	/**
-	 * Overridden in ClientSessionEnvironment
 	 * @throws CommunicationException
 	 * @throws LoginException
 	 */
-	public void logout() throws CommunicationException, LoginException {
+	public final void logout() throws CommunicationException, LoginException {
 		this.baseConnectionManager.getCORBAServer().removeShutdownHook(this.logoutShutdownHook);
 
 		this.logout0();

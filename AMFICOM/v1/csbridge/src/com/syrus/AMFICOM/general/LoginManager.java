@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginManager.java,v 1.34 2005/11/23 10:22:49 arseniy Exp $
+ * $Id: LoginManager.java,v 1.35 2005/11/28 12:18:43 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,6 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Set;
 
 import org.omg.CORBA.SystemException;
@@ -22,6 +20,7 @@ import org.omg.CORBA.SystemException;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.CommonUser;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKeyHolder;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/11/23 10:22:49 $
+ * @version $Revision: 1.35 $, $Date: 2005/11/28 12:18:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -58,6 +57,7 @@ public final class LoginManager {
 	private static IdlSessionKey idlSessionKey;
 	private static Identifier userId;
 	private static Identifier domainId;
+	private static CommonUser commonUser;
 
 	private LoginManager() {
 		assert false;
@@ -67,8 +67,11 @@ public final class LoginManager {
 		resetSessionKey();
 	}
 
-	public static void init(final LoginServerConnectionManager loginServerConnectionManager1, final LoginRestorer loginRestorer1) {
+	public static void init(final LoginServerConnectionManager loginServerConnectionManager1,
+			final CommonUser commonUser1,
+			final LoginRestorer loginRestorer1) {
 		loginServerConnectionManager = loginServerConnectionManager1;
+		commonUser = commonUser1;
 		loginRestorer = loginRestorer1;
 	}
 
@@ -93,8 +96,9 @@ public final class LoginManager {
 	/*
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
-	public static void login(final String login, final String password, final Identifier loginDomainId)
-			throws CommunicationException, LoginException {
+	public static void login(final String login,
+			final String password,
+			final Identifier loginDomainId) throws CommunicationException, LoginException {
 		assert login != null : NON_NULL_EXPECTED;
 		assert password != null : NON_NULL_EXPECTED;
 		assert loginDomainId != null : NON_NULL_EXPECTED;
@@ -105,10 +109,9 @@ public final class LoginManager {
 
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			final String localHostName = InetAddress.getLocalHost().getHostName();
 			final IdlSessionKeyHolder idlSessionKeyHolder = new IdlSessionKeyHolder();
 			final IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
-			loginServer.login(login, password, loginDomainId.getTransferable(), localHostName, idlSessionKeyHolder, userIdHolder);
+			loginServer.login(login, password, loginDomainId.getTransferable(), commonUser, idlSessionKeyHolder, userIdHolder);
 
 			idlSessionKey = idlSessionKeyHolder.value;
 			sessionKey = new SessionKey(idlSessionKey);
@@ -129,8 +132,6 @@ public final class LoginManager {
 			}
 		} catch (final SystemException se) {
 			throw new LoginException(I18N.getString("Error.CannotLogin") + " -- " + se.getMessage());
-		} catch (UnknownHostException uhe) {
-			throw new LoginException(I18N.getString("Error.CannotLogin") + " -- " + uhe.getMessage());
 		}
 	}
 
