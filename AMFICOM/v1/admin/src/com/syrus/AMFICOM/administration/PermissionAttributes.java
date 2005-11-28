@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.30 2005/11/28 13:20:38 bob Exp $
+* $Id: PermissionAttributes.java,v 1.31 2005/11/28 13:47:40 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,18 +30,19 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/11/28 13:20:38 $
+ * @version $Revision: 1.31 $, $Date: 2005/11/28 13:47:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module administration
  */
-public final class PermissionAttributes extends DomainMember<PermissionAttributes> {
+public final class PermissionAttributes extends StorableObject<PermissionAttributes> {
 
 	// TODO generate serialVersionUID when all enum will be made 
 
@@ -628,6 +629,8 @@ public final class PermissionAttributes extends DomainMember<PermissionAttribute
 	
 	private Identifier parentId;
 	
+	private Identifier domainId;
+	
 	private Module module;
 	
 	private BitSet permissions;
@@ -662,8 +665,8 @@ public final class PermissionAttributes extends DomainMember<PermissionAttribute
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				version,
-				domainId);
+				version);
+		this.domainId = domainId;
 		this.parentId = parentId;
 		this.module = module;
 		
@@ -974,7 +977,16 @@ public final class PermissionAttributes extends DomainMember<PermissionAttribute
 		    }
 		}
 	}
-
+	
+	public final Identifier getDomainId() {
+		return this.domainId;
+	}
+	
+	public final void setDomainId(final Identifier domainId) {
+		this.domainId = domainId;
+		super.markAsChanged();
+	}
+	
 	public final Identifier getParentId() {
 		return this.parentId;
 	}

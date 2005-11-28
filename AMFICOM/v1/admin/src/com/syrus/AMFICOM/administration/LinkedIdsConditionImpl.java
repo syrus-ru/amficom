@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.33 2005/11/28 11:05:31 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.34 2005/11/28 13:47:40 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/11/28 11:05:31 $
+ * @version $Revision: 1.34 $, $Date: 2005/11/28 13:47:40 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -42,6 +42,26 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		try {
 			final Domain dmDomain = 
 				StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				final Identifier id = (Identifier) it.next();
+				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
+					final Domain domain = StorableObjectPool.getStorableObject(id, true);
+					if (dmDomain.equals(domain) || dmDomain.isChild(domain))
+						condition = true;
+				}
+			}
+		}
+		catch (final ApplicationException ae) {
+			Log.errorMessage(ae);
+		}
+		return condition;
+	}
+	
+	private boolean checkDomain(final PermissionAttributes permissionAttributes) {
+		boolean condition = false;
+		try {
+			final Domain dmDomain = 
+				StorableObjectPool.getStorableObject(permissionAttributes.getDomainId(), true);
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 				final Identifier id = (Identifier) it.next();
 				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
