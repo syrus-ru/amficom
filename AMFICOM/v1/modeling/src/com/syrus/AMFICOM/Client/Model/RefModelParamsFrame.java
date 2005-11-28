@@ -219,8 +219,8 @@ public class RefModelParamsFrame extends JInternalFrame
 	private BellcoreStructure getTrace(SchemePath path) {
 		double length = ((Integer)this.tableModel.getValueAt(0, 1)).doubleValue() * 1000;
 		double resolution = ((Double)this.tableModel.getValueAt(1, 1)).doubleValue();
-		double pulsWidth = ((Integer)this.tableModel.getValueAt(2, 1)).doubleValue();
-		double wave_length = ((Integer)this.tableModel.getValueAt(3, 1)).doubleValue();
+		int pulsWidth = ((Integer)this.tableModel.getValueAt(2, 1)).intValue();
+		int wave_length = ((Integer)this.tableModel.getValueAt(3, 1)).intValue();
 		double dinam_area = ((Double)this.tableModel.getValueAt(4, 1)).doubleValue();
 		double addNoise = Math.abs(((Double)this.tableModel.getValueAt(5,1)).doubleValue());
 		double formFactor = ((Double)this.tableModel.getValueAt(6, 1)).doubleValue();
@@ -249,8 +249,8 @@ public class RefModelParamsFrame extends JInternalFrame
 			return null;
 		}
 		
-		Parameters pars = new Parameters(-5.0, -20.0, -30.0,
-				4.0, 8000.0, 1625, 500, 1.468);
+		Parameters pars = new Parameters(-5.0, -dinam_area + 10.0, -dinam_area,
+				resolution, length, wave_length, pulsWidth, 1.468);
 		
 		TraceGenerator generator = new TraceGenerator(pars, rmip);
 		return generator.getBellcore();

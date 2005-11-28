@@ -280,7 +280,7 @@ public class ModelGenerator {
 		if(length < 0)
 			length = 0;
 
-		ModelEvent event = ModelEvent.createLinear(length, attenuation);
+		ModelEvent event = ModelEvent.createLinear(length, attenuation / 1000);
 		return event;
 	}
 
@@ -315,13 +315,13 @@ public class ModelGenerator {
 			c = getCharacteristic(ht, "Reflectance_nom");
 			try
 			{
-				reflectance = Math.abs(Double.parseDouble(c.getValue()));
+				reflectance = Double.parseDouble(c.getValue());
 			}
 			catch (Exception ex)
 			{
 				reflectance = defReflect;
 			}
-			event = ModelEvent.createReflective(attenuation, Math.abs(reflectance));
+			event = ModelEvent.createReflective(attenuation, reflectance);
 		}
 		else // termo connection
 		{
@@ -370,7 +370,7 @@ public class ModelGenerator {
 		if(length < 0)
 			length = 0;
 
-		ModelEvent event = ModelEvent.createLinear(length, attenuation);
+		ModelEvent event = ModelEvent.createLinear(length, attenuation / 1000);
 		return event;
 	}
 
