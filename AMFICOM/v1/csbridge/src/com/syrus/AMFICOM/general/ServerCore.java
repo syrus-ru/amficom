@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.40 2005/10/31 12:29:53 bass Exp $
+ * $Id: ServerCore.java,v 1.41 2005/11/28 12:17:08 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -15,7 +17,7 @@ import java.util.logging.Level;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CommonServer;
+import com.syrus.AMFICOM.general.corba.CommonServerOperations;
 import com.syrus.AMFICOM.general.corba.IdVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
@@ -28,23 +30,41 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/10/31 12:29:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/11/28 12:17:08 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
-public abstract class ServerCore implements CommonServer {
+public abstract class ServerCore implements CommonServerOperations {
 	private static final long serialVersionUID = 2873567194611284256L;
 
 	private LoginServerConnectionManager loginServerConnectionManager;
 	private ORB orb;
+	private String hostName;
 
 	protected ServerCore(final LoginServerConnectionManager loginServerConnectionManager, final ORB orb) {
 		this.loginServerConnectionManager = loginServerConnectionManager;
 		this.orb = orb;
+
+		String hostname;
+		try {
+			hostname = InetAddress.getLocalHost().getCanonicalHostName();
+		} catch (UnknownHostException uhe) {
+			hostname = "unknown";
+			//Не бывать тому!
+			Log.errorMessage(uhe);
+		}
+		this.hostName = hostname;
 	}
 
+
+
+	// ///////////////////////////// CommonUser ///////////////////////////////////////////////
+
+	public final String getHostName() {
+		return this.hostName;
+	}
 
 
 	// ///////////////////////////// CommonServer ///////////////////////////////////////////////
