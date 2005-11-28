@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.11 2005/10/22 19:21:51 arseniy Exp $
+ * $Id: leserver.idl,v 1.12 2005/11/28 12:12:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,43 +31,30 @@ module corba {
 		void login(in general::corba::WString32 login,
 			in general::corba::WString32 password,
 			in general::corba::IdlIdentifier domainId,
-			in general::corba::WString64 userHostName,
+			in general::corba::CommonUser commonUser,
 			out security::corba::IdlSessionKey sessionKey,
 			out general::corba::IdlIdentifier userId)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void logout(in security::corba::IdlSessionKey sessionKeyT)
+		void logout(in security::corba::IdlSessionKey sessionKey)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void validateAccess(in security::corba::IdlSessionKey sessionKeyT,
+		void validateAccess(in security::corba::IdlSessionKey sessionKey,
 			out general::corba::IdlIdentifier userId,
 			out general::corba::IdlIdentifier domainId)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void setPassword(in security::corba::IdlSessionKey sessionKeyT,
+		void setPassword(in security::corba::IdlSessionKey sessionKey,
 			in general::corba::IdlIdentifier userId,
 			in general::corba::WString32 password)
 			raises (general::corba::AMFICOMRemoteException);
 		
 	};
 
-	/**
-	 * This is just a temporary interface that will be removed
-	 * as soon as alternative message delivery technique is implemented.
-	 *
-	 * \u002a\u002f@SuppressWarnings("all")/*
-	 */
-	abstract interface MessageReceiverExt {
-		general::corba::IdlIdentifier getSystemUserId();
-	};
-
 	interface EventServer : general::corba::Verifiable {
 		exception IdlEventProcessingException {
 			wstring message;
 		};
-
-		void eventGeneration(in event::corba::IdlEvent event)
-			raises (general::corba::AMFICOMRemoteException);
 
 		void receiveEvents(in eventv2::corba::IdlEventSeq events)
 			raises (IdlEventProcessingException);
