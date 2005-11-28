@@ -62,10 +62,7 @@ public class ReflectogramEvent {
 // Delta_x
 	private double delta_x = 1.;
 
-	public Threshold threshold;
-
 	public ReflectogramEvent() {
-		threshold = new Threshold(this);
 	}
 
 	public ReflectogramEvent(byte[] b) {
@@ -120,14 +117,6 @@ public class ReflectogramEvent {
 			System.out.println("Exception while converting byte array to ReflectogramEvent: " + e.getMessage());
 			e.printStackTrace();
 		}
-	}
-
-	public Threshold getThreshold()	{
-		return threshold;
-	}
-
-	public void setThreshold(Threshold threshold)	{
-		this.threshold = threshold;
 	}
 
 	public double connectorF(int x) {
@@ -447,136 +436,6 @@ public class ReflectogramEvent {
 				return ret;
 	}
 
-
-	public double connectorThresholdF(int x, int thresholdNumeral)
-	{
-		double dL;
-		double dA;
-		double dX;
-		double dC;
-		if(threshold == null) //if threshold is not set;
-			return 0.;
-		else
-		{
-			dL = threshold.dL[thresholdNumeral];
-			dA = threshold.dA[thresholdNumeral];
-			dX = threshold.dX[thresholdNumeral];
-			dC = threshold.dC[thresholdNumeral];
-		}
-
-
-		double ret = 0.;
-		double arg;
-		double arg1;
-		double arg2;
-
-		double width_connector = this.width_connector+dX*2.;
-		double a1_connector = this.a1_connector+dA;
-		double a2_connector = this.a2_connector+dA;
-		double aLet_connector = this.aLet_connector+dL;
-		double center_connector = this.center_connector+dC;
-
-		arg = x-center_connector;
-		arg1 = arg+width_connector/2.;
-		arg2 = arg-width_connector/2.;
-
-		if(arg<-width_connector/2.)	{
-			ret = a1_connector;
-		}
-		else
-			if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-				ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-							a1_connector;
-			}
-			else
-				if(arg>width_connector/2.) {
-					ret = (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-							sigma1_connector))) -
-								(a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-								sigma1_connector))-a2_connector)*
-								(1. - expa(arg2, sigma2_connector,
-								sigmaFit_connector, k_connector) );
-				}
-				else
-					ret = 0.;
-
-				return ret;
-	}
-
-
-	public double linearThresholdF(int x, double dA)	{
-		double ret;
-		double arg = x-begin;
-		double a_linear = this.a_linear+dA;
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-
-	public double linearThresholdF(int x, int thresholdNumeral)
-	{
-		double dA;
-		if(threshold == null) // Case, when threshold is not set;
-			return 0.;
-		else
-		{
-			dA = threshold.dA[thresholdNumeral];
-		}
-
-		double ret;
-		double arg = x-begin;
-
-		double a_linear = this.a_linear+dA;
-
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-	public double weldThresholdF(int x, double dA, double dX) {
-
-		double a_weld = this.a_weld + dA;
-
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
-
-	public double weldThresholdF(int x, int thresholdNumeral)
-	{
-		double dA;
-		if(threshold == null)
-			return 0.;
-		else
-		{
-			dA = threshold.dA[thresholdNumeral];
-		}
-
-		double a_weld = this.a_weld + dA;
-
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
 	public int getType() {
 		return type;
 	}
@@ -629,8 +488,6 @@ public class ReflectogramEvent {
 		re.k_connector = k_connector;
 		re.k_connectorError = k_connectorError;
 		re.chi2Connector = chi2Connector;
-
-		re.threshold = threshold;
 		return re;
 	}
 
@@ -714,39 +571,6 @@ public class ReflectogramEvent {
 			e.printStackTrace();
 		}
 		return (ReflectogramEvent[])ll.toArray(new ReflectogramEvent[ll.size()]);
-	}
-
-
-	public ReflectogramEvent getThresholdReflectogramEvent(int thresholdNumeral)
-	{
-		ReflectogramEvent re = this.copy();
-		if(threshold != null && thresholdNumeral>=0 && thresholdNumeral<4)
-		{
-			if(re.type == CONNECTOR)
-			{
-				re.width_connector = this.width_connector + threshold.dX[thresholdNumeral]*2.;
-				re.a1_connector = this.a1_connector + threshold.dA[thresholdNumeral];
-				re.a2_connector = this.a2_connector + threshold.dA[thresholdNumeral];
-				re.aLet_connector = this.aLet_connector + threshold.dL[thresholdNumeral];
-				re.center_connector = this.center_connector + threshold.dC[thresholdNumeral];
-
-				re.begin = (int)(re.begin - threshold.dX[thresholdNumeral] +
-														threshold.dC[thresholdNumeral]);
-
-				re.end = (int)(re.end + threshold.dX[thresholdNumeral] +
-														threshold.dC[thresholdNumeral]);
-			}
-			else if(re.type == LINEAR)
-			{
-				re.a_linear = this.a_linear + threshold.dA[thresholdNumeral];
-			}
-			else
-			{
-				re.a_weld = this.a_weld + threshold.dA[thresholdNumeral];
-			}
-		}
-
-		return re;
 	}
 
 	public void setDeltaX(double delta_x)
