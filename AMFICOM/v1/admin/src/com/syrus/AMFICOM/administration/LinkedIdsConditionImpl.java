@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.32 2005/11/10 14:07:04 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.33 2005/11/28 11:05:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/11/10 14:07:04 $
+ * @version $Revision: 1.33 $, $Date: 2005/11/28 11:05:31 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
@@ -88,7 +88,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final PermissionAttributes permissionAttributes = (PermissionAttributes) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.DOMAIN_CODE:
-						condition = super.conditionTest(permissionAttributes.getDomainId());
+						condition = this.checkDomain(permissionAttributes);
 						break;
 					case ObjectEntities.ROLE_CODE:
 					case ObjectEntities.SYSTEMUSER_CODE:
