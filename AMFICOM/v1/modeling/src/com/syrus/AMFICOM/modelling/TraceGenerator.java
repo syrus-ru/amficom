@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.8 2005/11/28 11:21:29 stas Exp $
+ * $Id: TraceGenerator.java,v 1.9 2005/11/28 11:22:09 stas Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,14 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
-//import com.syrus.io.BellcoreModelWriter;
+import com.syrus.io.BellcoreModelWriter;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/11/28 11:21:29 $
+ * @version $Revision: 1.9 $, $Date: 2005/11/28 11:22:09 $
  * @module
  */
 public class TraceGenerator {
