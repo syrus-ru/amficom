@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.87 2005/11/22 14:26:56 bass Exp $
+ * $Id: MeasurementServer.java,v 1.88 2005/11/28 12:35:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -48,7 +47,6 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -56,8 +54,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/11/22 14:26:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2005/11/28 12:35:30 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
@@ -198,8 +196,11 @@ final class MeasurementServer extends SleepButWorkThread {
 			/*	Create condition for load tests*/
 			createTestLoadCondition();
 
+			/*	Create collection of MCM identifiers for aborting tests*/
+			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet<Identifier>());
+
 			/*	Create session environment*/
-			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds);
+			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds, processCodename);
 
 			/*	Login*/
 			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
@@ -209,14 +210,6 @@ final class MeasurementServer extends SleepButWorkThread {
 			catch (final LoginException le) {
 				Log.errorMessage(le);
 			}
-
-			/*	Create collection of MCM identifiers for aborting tests*/
-			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet<Identifier>());
-
-			/*	Activate servant*/
-			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new MServerPOATie(new MServerImpl(), corbaServer.getPoa()), processCodename);
-			corbaServer.printNamingContext();
 		}
 		catch (final ApplicationException ae) {
 			Log.errorMessage(ae);

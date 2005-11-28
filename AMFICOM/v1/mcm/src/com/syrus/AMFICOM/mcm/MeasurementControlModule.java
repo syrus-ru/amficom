@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.143 2005/11/14 15:52:12 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.144 2005/11/28 12:35:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -40,7 +39,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.mcm.corba.MCMPOATie;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -52,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.143 $, $Date: 2005/11/14 15:52:12 $
+ * @version $Revision: 1.144 $, $Date: 2005/11/28 12:35:30 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -218,7 +216,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			domainId = mcm.getDomainId();
 
 			/*	Create session environment*/
-			MCMSessionEnvironment.createInstance(server.getHostName());
+			MCMSessionEnvironment.createInstance(server.getHostName(), mcmId.toString());
 
 			/*	Login*/
 			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
@@ -244,10 +242,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			eventQueue = new EventQueue();
 			eventQueue.start();
 
-			/*	Activate servant*/
-			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
-			corbaServer.activateServant(new MCMPOATie(new MCMImpl(), corbaServer.getPoa()), mcmId.toString());
-			corbaServer.printNamingContext();
 		} catch (final ApplicationException ae) {
 			Log.errorMessage(ae);
 			System.exit(0);

@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.70 2005/10/31 12:30:20 bass Exp $
+ * $Id: ClientMeasurementServer.java,v 1.71 2005/11/28 12:35:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,6 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
-import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
-import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
@@ -28,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/10/31 12:30:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.71 $, $Date: 2005/11/28 12:35:02 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
@@ -127,7 +125,7 @@ final class ClientMeasurementServer {
 			domainId = server.getDomainId();
 
 			/*	Create session environment*/
-			CMServerSessionEnvironment.createInstance(server.getHostName());
+			CMServerSessionEnvironment.createInstance(server.getHostName(), processCodename);
 	
 			/*	Login*/
 			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
@@ -136,11 +134,6 @@ final class ClientMeasurementServer {
 			} catch (final LoginException le) {
 				Log.errorMessage(le);
 			}
-	
-			/*	Activate servant*/
-			final CORBAServer corbaServer = sessionEnvironment.getCMServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new CMServerPOATie(new CMServerImpl(), corbaServer.getPoa()), processCodename);
-			corbaServer.printNamingContext();
 		} catch (final Exception e) {
 			Log.errorMessage(e);
 			System.exit(0);
