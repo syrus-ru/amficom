@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.38 2005/11/16 10:28:24 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.39 2005/11/28 12:25:54 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,11 @@ import java.beans.PropertyChangeListener;
 import com.syrus.AMFICOM.client.UI.dialogs.DefaultPopupMessageReceiver;
 import com.syrus.AMFICOM.client.event.PopupMessageReceiver;
 import com.syrus.AMFICOM.client.resource.I18N;
-import com.syrus.AMFICOM.general.corba.CORBAClientPOATie;
+import com.syrus.AMFICOM.general.corba.CORBAClient;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/11/16 10:28:24 $
+ * @version $Revision: 1.39 $, $Date: 2005/11/28 12:25:54 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -38,14 +38,19 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 	private static ClientSessionEnvironment instance;
 
-	private CORBAClientImpl corbaClientImpl;
-
+	private CORBAClientImpl corbaClientImplServant;
 	private PopupMessageReceiver	receiver;
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,
-			final LoginRestorer loginRestorer) {
-		super(clientServantManager, clientPoolContext, loginRestorer, new ClientCORBAActionProcessor());
+			final CORBAClient corbaClient,
+			final LoginRestorer loginRestorer,
+			final CORBAClientImpl servant) {
+		super(clientServantManager, clientPoolContext, corbaClient, loginRestorer, new ClientCORBAActionProcessor());
+
+		this.corbaClientImplServant = servant;
+		this.receiver = new DefaultPopupMessageReceiver();
+		this.corbaClientImplServant.addPopupMessageReceiver(this.receiver);
 	}
 
 	public ClientServantManager getClientServantManager() {
@@ -107,7 +112,10 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 		final ClientPoolContext clientPoolContext = new MClientPoolContext(objectLoader);
 
-		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, loginRestorer);
+		final CORBAClientImpl servant = new CORBAClientImpl();
+		final CORBAClient corbaClient = servant._this(mClientServantManager.getCORBAServer().getOrb());
+
+		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, corbaClient, loginRestorer, servant);
 	}
 
 	private static void createMapSchemeSession(final LoginRestorer loginRestorer) throws CommunicationException {
@@ -146,7 +154,10 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
 
-		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
+		final CORBAClientImpl servant = new CORBAClientImpl();
+		final CORBAClient corbaClient = servant._this(mClientServantManager.getCORBAServer().getOrb());
+
+		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, corbaClient, loginRestorer, servant);
 	}
 	
 	private static void createAllSession(final LoginRestorer loginRestorer) throws CommunicationException {
@@ -188,7 +199,10 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
 		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
 
-		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
+		final CORBAClientImpl servant = new CORBAClientImpl();
+		final CORBAClient corbaClient = servant._this(mClientServantManager.getCORBAServer().getOrb());
+
+		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, corbaClient, loginRestorer, servant);
 	}
 
 	public void addPropertyListener(final PropertyChangeListener listener) {
@@ -199,48 +213,11 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		this.getClientServantManager().removePropertyListener(listener);
 	}
 
-	@Override
-	public void login(final String login, final String password, final Identifier domainId)
-			throws CommunicationException,
-				LoginException {
-		super.login(login, password, domainId);
-		this.activateServant();
-	}
-
-	@Override
-	public void logout() throws CommunicationException, LoginException {
-		try {
-			this.deactivateServant();
-		} catch (CommunicationException ce) {
-			Log.errorMessage(ce);
-		}
-		super.logout();
-	}
-
-	void activateServant() throws CommunicationException {
-		final String servantName = ClientServantNameFactory.generateServantName(LoginManager.getSessionKey());// А нахрена его кэшировать?
-		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
-		this.corbaClientImpl = new CORBAClientImpl();
-		if (this.receiver == null) {
-			this.receiver = new DefaultPopupMessageReceiver();
-		}
-		this.corbaClientImpl.addPopupMessageReceiver(this.receiver);
-		corbaServer.activateServant(new CORBAClientPOATie(this.corbaClientImpl, corbaServer.getPoa()), servantName);
-		corbaServer.printNamingContext();
-	}
-
-	private void deactivateServant() throws CommunicationException {
-		final String servantName = ClientServantNameFactory.generateServantName(LoginManager.getSessionKey());// А нахрена его кэшировать?
-		final CORBAServer corbaServer = instance.baseConnectionManager.getCORBAServer();
-		corbaServer.deactivateServant(servantName, true);
-		this.corbaClientImpl.removePopupMessageReceiver(this.receiver);
-	}
-
 	public void addPopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
-		this.corbaClientImpl.addPopupMessageReceiver(popupMessageReceiver);
+		this.corbaClientImplServant.addPopupMessageReceiver(popupMessageReceiver);
 	}
 
 	public void removePopupMessageReceiver(final PopupMessageReceiver popupMessageReceiver) {
-		this.corbaClientImpl.removePopupMessageReceiver(popupMessageReceiver);
+		this.corbaClientImplServant.removePopupMessageReceiver(popupMessageReceiver);
 	}
 }
