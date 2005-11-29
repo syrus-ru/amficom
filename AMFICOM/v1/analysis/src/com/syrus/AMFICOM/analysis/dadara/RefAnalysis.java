@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 public class RefAnalysis {
 	public double[] noise; // hope nobody will change it
 	public TraceEvent overallStats; // hope nobody will change it
-	private double[] filtered; // hope nobody will change it
 
 	private PFTrace pfTrace;
 	private AnalysisResult ar;
@@ -180,7 +179,6 @@ public class RefAnalysis {
 			this.overallStats.setData(data);
 		}
 
-		this.filtered = new double[veryLastPoint];
 		this.noise = new double[lastPoint];
 
 		// long t0 = System.currentTimeMillis();
@@ -189,9 +187,8 @@ public class RefAnalysis {
 			int posTo = de[i].getEnd(); // excl.
 			double[] yArrMT = mt.getYArrayZeroPad(posFrom, posTo - posFrom);
 			for (int j = posFrom; j < posTo && j < veryLastPoint; j++) {
-				this.filtered[j] = yArrMT[j - posFrom];
 				if (j < lastPoint) {
-					this.noise[j] = Math.abs(y[j] - this.filtered[j]);
+					this.noise[j] = Math.abs(y[j] - yArrMT[j - posFrom]);
 				}
 			}
 		}
