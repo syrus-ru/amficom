@@ -1,5 +1,5 @@
 /*-
- * $Id: DeliveryAttributes.java,v 1.7 2005/11/22 10:24:47 bass Exp $
+ * $Id: DeliveryAttributes.java,v 1.8 2005/11/29 14:49:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.reflectometry.ReflectogramMismatch.Severity;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/11/22 10:24:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/11/29 14:49:06 $
  * @module event
  */
 public final class DeliveryAttributes extends StorableObject<DeliveryAttributes> {
@@ -148,10 +148,11 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 
 	/**
 	 * This method either returns an object previously saved in a database,
-	 * if one found, or creates a new one otherwise, invoking
+	 * if one found (invoking {@link StorableObjectPool#refresh(Set) on it}),
+	 * or creates a new one otherwise (invoking
 	 * {@link StorableObjectPool#flush(Identifiable, Identifier, boolean)}
-	 * on it. Thus, a {@code StorableObject} returned by this method is
-	 * always unchanged.
+	 * on it). Thus, a {@code StorableObject} returned by this method is,
+	 * first, always unchanged and, second, has the most recent version.
 	 *
 	 * @param creatorId
 	 * @param severity
@@ -185,6 +186,7 @@ public final class DeliveryAttributes extends StorableObject<DeliveryAttributes>
 				final int size = deliveryAttributesSet.size();
 				assert size == 1 : size;
 				deliveryAttributes = deliveryAttributesSet.iterator().next();
+				StorableObjectPool.refresh(Collections.singleton(deliveryAttributes.getId()));
 			}
 			return deliveryAttributes;
 		} catch (final CreateObjectException coe) {
