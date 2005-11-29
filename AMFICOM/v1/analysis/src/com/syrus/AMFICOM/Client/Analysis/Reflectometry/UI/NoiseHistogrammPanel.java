@@ -13,6 +13,12 @@ import com.syrus.AMFICOM.analysis.dadara.Histogramm;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 
+/**
+ * Окно "Гистограмма области шумов"
+ * @author $Author: saa $
+ * @version $Revision: 1.12 $, $Date: 2005/11/29 08:27:38 $
+ * @module analysis
+ */
 public class NoiseHistogrammPanel extends ScaledGraphPanel {
 	private int nBins = 400;
 

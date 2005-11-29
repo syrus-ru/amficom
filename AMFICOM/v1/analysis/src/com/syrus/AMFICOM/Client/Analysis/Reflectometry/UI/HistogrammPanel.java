@@ -23,6 +23,13 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.Wavelet;
 
+/**
+ * Окно "Гистограмма рабочей области"
+ * (с гауссовой фитировкой и линией порога чувствительности распознавания)
+ * @author $Author: saa $
+ * @version $Revision: 1.50 $, $Date: 2005/11/29 08:27:38 $
+ * @module analysis
+ */
 public class HistogrammPanel extends ScaledGraphPanel
 {
 	// Note about SINX or ABSXSINX
